@@ -208,7 +208,7 @@ void Vec3<typename NumberType>::crossBy(const Vec3& v3)
 template <typename NumberType>
 void Vec3<typename NumberType>::reflectBy(const Vec3& nv)
 {
-    NumberType idotn2 = (x * nv.x + y * nv.y + z * nv.z) * 2.0;
+    NumberType idotn2 = (x * nv.x + y * nv.y + z * nv.z) * 2.0f;
     x                 = x - idotn2 * nv.x;
     y                 = y - idotn2 * nv.y;
     z                 = z - idotn2 * nv.z;
