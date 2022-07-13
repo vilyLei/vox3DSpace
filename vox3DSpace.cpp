@@ -8,7 +8,8 @@ int main()
 {
     std::cout << "Hello VOX 3D Space!\n";
 
-    demo::voxengineDemo::math::testBase();
+    //demo::voxengineDemo::math::testBase();
+    demo::voxengineDemo::math::testCamera();
 
 
     return EXIT_SUCCESS;
