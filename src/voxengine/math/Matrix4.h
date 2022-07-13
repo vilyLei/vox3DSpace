@@ -19,6 +19,11 @@ public:
     void        copyRowFrom(unsigned int row_index, const Vec3<NumberType>& v3);
     void        transformVector3Self(Vec3<NumberType>& v3);
     void        transformVectorSelf(Vec3<NumberType>& v3);
+
+    NumberType  determinant();
+    Matrix4*    multiplyMatrices(Matrix4* a, Matrix4* b);
+    Matrix4*    multiply(Matrix4* ma, Matrix4* mb = nullptr);
+    Matrix4*    premultiply(Matrix4* ma);
     void        append(Matrix4& lhs);
 
     void        perspectiveRH(NumberType fovy, NumberType aspect, NumberType zNear, NumberType zFar);
