@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include "Vec3.h"
+#include "IEuler.h"
 namespace voxengine
 {
 namespace math
@@ -46,6 +47,7 @@ public:
     void rotationX(NumberType radian);
     void rotationY(NumberType radian);
     void rotationZ(NumberType radian);
+    Matrix4* setRotationFromEuler(const IEuler<NumberType>& euler);
 
 	Matrix4* extractRotation(const Matrix4& m);
     Matrix4* copyTranslation(const Matrix4& m);

@@ -75,7 +75,7 @@ NumberType& Vec3<typename NumberType>::operator[](unsigned int i)
 }
 
 template <typename NumberType>
-void Vec3<typename NumberType>::set(NumberType px, NumberType py, NumberType pz, NumberType pw)
+void Vec3<NumberType>::set(NumberType px, NumberType py, NumberType pz, NumberType pw)
 {
     x = px;
     y = py;
@@ -84,7 +84,7 @@ void Vec3<typename NumberType>::set(NumberType px, NumberType py, NumberType pz,
 }
 
 template <typename NumberType>
-void Vec3<typename NumberType>::setXYZ(NumberType px, NumberType py, NumberType pz)
+void Vec3<NumberType>::setXYZ(NumberType px, NumberType py, NumberType pz)
 {
     x = px;
     y = py;
@@ -97,32 +97,32 @@ NumberType Vec3<typename NumberType>::dot(const Vec3& v3) const
     return x * v3.x + y * v3.y + z * v3.z;
 }
 template <typename NumberType>
-NumberType Vec3<typename NumberType>::getLength() const
+NumberType Vec3<NumberType>::getLength() const
 {
     return std::sqrt(x * x + y * y + z * z);
 }
 template <typename NumberType>
-NumberType Vec3<typename NumberType>::getLengthSquared() const
+NumberType Vec3<NumberType>::getLengthSquared() const
 {
     return x * x + y * y + z * z;
 }
 
 template <typename NumberType>
-void Vec3<typename NumberType>::copyFrom(const Vec3& v3)
+void Vec3<NumberType>::copyFrom(const Vec3& v3)
 {
     x = v3.x;
     y = v3.y;
     z = v3.z;
 }
 template <typename NumberType>
-void Vec3<typename NumberType>::multBy(const Vec3& v3)
+void Vec3<NumberType>::multBy(const Vec3& v3)
 {
     x *= v3.x;
     y *= v3.y;
     z *= v3.z;
 }
 template <typename NumberType>
-void Vec3<typename NumberType>::normalize()
+void Vec3<NumberType>::normalize()
 {
     NumberType d = sqrt(x * x + y * y + z * z);
     if (d > s_minv)
@@ -133,7 +133,7 @@ void Vec3<typename NumberType>::normalize()
     }
 }
 template <typename NumberType>
-void Vec3<typename NumberType>::normalizeTo(Vec3& v3) const
+void Vec3<NumberType>::normalizeTo(Vec3& v3) const
 {
     auto d = static_cast<NumberType>( std::sqrt(x * x + y * y + z * z) );
     if (d > s_minv)
@@ -150,38 +150,38 @@ void Vec3<typename NumberType>::normalizeTo(Vec3& v3) const
     }
 }
 template <typename NumberType>
-void Vec3<typename NumberType>::scaleVector(const Vec3& v3)
+void Vec3<NumberType>::scaleVector(const Vec3& v3)
 {
     x *= v3.x;
     y *= v3.y;
     z *= v3.z;
 }
 template <typename NumberType>
-void Vec3<typename NumberType>::scaleBy(NumberType s)
+void Vec3<NumberType>::scaleBy(NumberType s)
 {
     x *= s;
     y *= s;
     z *= s;
 }
 template <typename NumberType>
-void Vec3<typename NumberType>::negate()
+void Vec3<NumberType>::negate()
 {
     x = -x;
     y = -y;
     z = -z;
 }
 template <typename NumberType>
-bool Vec3<typename NumberType>::equalsXYZ(const Vec3& v3)
+bool Vec3<NumberType>::equalsXYZ(const Vec3& v3)
 {
     return std::abs(x - v3.x) < s_minv && std::abs(y - v3.y) < s_minv && std::abs(z - v3.z) < s_minv;
 }
 template <typename NumberType>
-bool Vec3<typename NumberType>::equalsAll(const Vec3& v3)
+bool Vec3<NumberType>::equalsAll(const Vec3& v3)
 {
     return std::abs(x - v3.x) < s_minv && std::abs(y - v3.y) < s_minv && std::abs(z - v3.z) < s_minv && std::abs(w - v3.w) < s_minv;
 }
 template <typename NumberType>
-void Vec3<typename NumberType>::project()
+void Vec3<NumberType>::project()
 {
     NumberType t = 1.0f / w;
     x *= t;
@@ -189,21 +189,21 @@ void Vec3<typename NumberType>::project()
     z *= t;
 }
 template <typename NumberType>
-void Vec3<typename NumberType>::addBy(const Vec3& v3)
+void Vec3<NumberType>::addBy(const Vec3& v3)
 {
     x += v3.x;
     y += v3.y;
     z += v3.z;
 }
 template <typename NumberType>
-void Vec3<typename NumberType>::subtractBy(const Vec3& v3)
+void Vec3<NumberType>::subtractBy(const Vec3& v3)
 {
     x -= v3.x;
     y -= v3.y;
     z -= v3.z;
 }
 template <typename NumberType>
-void Vec3<typename NumberType>::crossBy(const Vec3& v3)
+void Vec3<NumberType>::crossBy(const Vec3& v3)
 {
     NumberType px = y * v3.z - z * v3.y;
     NumberType py = z * v3.x - x * v3.z;
@@ -213,7 +213,7 @@ void Vec3<typename NumberType>::crossBy(const Vec3& v3)
     z             = pz;
 }
 template <typename NumberType>
-void Vec3<typename NumberType>::reflectBy(const Vec3& nv)
+void Vec3<NumberType>::reflectBy(const Vec3& nv)
 {
     NumberType idotn2 = (x * nv.x + y * nv.y + z * nv.z) * 2.0f;
     x                 = x - idotn2 * nv.x;
@@ -228,38 +228,38 @@ void Vec3<typename NumberType>::scaleVecTo(const Vec3& va, NumberType scale)
     z = va.z * scale;
 }
 template <typename NumberType>
-void Vec3<typename NumberType>::subVecsTo(const Vec3& va, const Vec3& vb)
+void Vec3<NumberType>::subVecsTo(const Vec3& va, const Vec3& vb)
 {
     x = va.x - vb.x;
     y = va.y - vb.y;
     z = va.z - vb.z;
 }
 template <typename NumberType>
-void Vec3<typename NumberType>::addVecsTo(const Vec3& va, const Vec3& vb)
+void Vec3<NumberType>::addVecsTo(const Vec3& va, const Vec3& vb)
 {
     x = va.x + vb.x;
     y = va.y + vb.y;
     z = va.z + vb.z;
 }
 template <typename NumberType>
-void Vec3<typename NumberType>::crossVecsTo(const Vec3& va, const Vec3& vb)
+void Vec3<NumberType>::crossVecsTo(const Vec3& va, const Vec3& vb)
 {
     x = va.y * vb.z - va.z * vb.y;
     y = va.z * vb.x - va.x * vb.z;
     z = va.x * vb.y - va.y * vb.x;
 }
 template <typename NumberType>
-Vec3<typename NumberType> Vec3<typename NumberType>::subtract(const Vec3& v3) const
+Vec3<NumberType> Vec3<typename NumberType>::subtract(const Vec3& v3) const
 {
     return Vec3<NumberType>(x - v3.x, y - v3.y, z - v3.z);
 }
 template <typename NumberType>
-Vec3<typename NumberType> Vec3<typename NumberType>::crossProduct(const Vec3& v3) const
+Vec3<NumberType> Vec3<typename NumberType>::crossProduct(const Vec3& v3) const
 {
     return Vec3<NumberType>(y * v3.z - z * v3.y, z * v3.x - x * v3.z, x * v3.y - y * v3.x);
 }
 template <typename NumberType>
-Vec3<typename NumberType> Vec3<typename NumberType>::clone() const
+Vec3<NumberType> Vec3<typename NumberType>::clone() const
 {
     return Vec3<NumberType>(x, y, z, w);
 }
@@ -295,13 +295,13 @@ Vec3<NumberType>* Vec3<typename NumberType>::fromArray4(NumberType* arr, unsigne
 
 
 template <typename NumberType>
-std::string Vec3<typename NumberType>::toString()
+std::string Vec3<NumberType>::toString()
 {
     return "Vec3(" + std::to_string(x) + "," + std::to_string(y) + "," + std::to_string(z) + "," + std::to_string(w) + ")";
 }
 
 template <typename NumberType>
-void Vec3<typename NumberType>::cross(const Vec3& a, const Vec3& b, Vec3& result)
+void Vec3<NumberType>::cross(const Vec3& a, const Vec3& b, Vec3& result)
 {
     result.x = a.y * b.z - a.z * b.y;
     result.y = a.z * b.x - a.x * b.z;
@@ -309,7 +309,7 @@ void Vec3<typename NumberType>::cross(const Vec3& a, const Vec3& b, Vec3& result
 }
 // (va1 - va0) 叉乘 (vb1 - vb0), 右手法则(为正)
 template <typename NumberType>
-void Vec3<typename NumberType>::crossSubtract(const Vec3& va0, const Vec3& va1, const Vec3& vb0, const Vec3& vb1, Vec3& result)
+void Vec3<NumberType>::crossSubtract(const Vec3& va0, const Vec3& va1, const Vec3& vb0, const Vec3& vb1, Vec3& result)
 {
     s_v0.x = va1.x - va0.x;
     s_v0.y = va1.y - va0.y;
@@ -325,14 +325,14 @@ void Vec3<typename NumberType>::crossSubtract(const Vec3& va0, const Vec3& va1, 
     result.z = v0.x * v1.y - v0.y * v1.x;
 }
 template <typename NumberType>
-void Vec3<typename NumberType>::subtract(const Vec3& a, const Vec3& b, Vec3& result)
+void Vec3<NumberType>::subtract(const Vec3& a, const Vec3& b, Vec3& result)
 {
     result.x = a.x - b.x;
     result.y = a.y - b.y;
     result.z = a.z - b.z;
 }
 template <typename NumberType>
-NumberType Vec3<typename NumberType>::distanceSquared(const Vec3& a, const Vec3& b)
+NumberType Vec3<NumberType>::distanceSquared(const Vec3& a, const Vec3& b)
 {
     s_v0.x = a.x - b.x;
     s_v0.y = a.y - b.y;
@@ -340,7 +340,7 @@ NumberType Vec3<typename NumberType>::distanceSquared(const Vec3& a, const Vec3&
     return s_v0.getLengthSquared();
 }
 template <typename NumberType>
-NumberType Vec3<typename NumberType>::distanceXYZ(NumberType x0, NumberType y0, NumberType z0, NumberType x1, NumberType y1, NumberType z1)
+NumberType Vec3<NumberType>::distanceXYZ(NumberType x0, NumberType y0, NumberType z0, NumberType x1, NumberType y1, NumberType z1)
 {
     s_v0.x = x0 - x1;
     s_v0.y = y0 - y1;
@@ -348,7 +348,7 @@ NumberType Vec3<typename NumberType>::distanceXYZ(NumberType x0, NumberType y0, 
     return s_v0.getLength();
 }
 template <typename NumberType>
-NumberType Vec3<typename NumberType>::distance(const Vec3& v0, const Vec3& v1)
+NumberType Vec3<NumberType>::distance(const Vec3& v0, const Vec3& v1)
 {
     s_v0.x = v0.x - v1.x;
     s_v0.y = v0.y - v1.y;
@@ -363,7 +363,7 @@ NumberType Vec3<typename NumberType>::distance(const Vec3& v0, const Vec3& v1)
   * @returns angle degree
   */
 template <typename NumberType>
-NumberType Vec3<typename NumberType>::angleBetween(const Vec3& v0, const Vec3& v1)
+NumberType Vec3<NumberType>::angleBetween(const Vec3& v0, const Vec3& v1)
 {
     v0.normalizeTo(s_v0);
     v1.normalizeTo(s_v1);
@@ -376,7 +376,7 @@ NumberType Vec3<typename NumberType>::angleBetween(const Vec3& v0, const Vec3& v
   * @returns angle radian
   */
 template <typename NumberType>
-NumberType Vec3<typename NumberType>::radianBetween(const Vec3& v0, const Vec3& v1)
+NumberType Vec3<NumberType>::radianBetween(const Vec3& v0, const Vec3& v1)
 {
     v0.normalizeTo(s_v0);
     v1.normalizeTo(s_v1);
@@ -384,7 +384,7 @@ NumberType Vec3<typename NumberType>::radianBetween(const Vec3& v0, const Vec3& 
 }
 
 template <typename NumberType>
-NumberType Vec3<typename NumberType>::radianBetween2(const Vec3& v0, const Vec3& v1)
+NumberType Vec3<NumberType>::radianBetween2(const Vec3& v0, const Vec3& v1)
 {
     //  // c^2 = a^2 + b^2 - 2*a*b * cos(x)
     //  // cos(x) = (a^2 + b^2 - c^2) / 2*a*b
@@ -396,7 +396,7 @@ NumberType Vec3<typename NumberType>::radianBetween2(const Vec3& v0, const Vec3&
     return std::acos((pa + pb - s_v0.getLengthSquared()) / (2.0f * std::sqrt(pa) * std::sqrt(pb)));
 }
 template <typename NumberType>
-void Vec3<typename NumberType>::reflect(const Vec3& iv, const Vec3& nv, Vec3& rv)
+void Vec3<NumberType>::reflect(const Vec3& iv, const Vec3& nv, Vec3& rv)
 {
     auto idotn2 = (iv.x * nv.x + iv.y * nv.y + iv.z * nv.z) * 2.0f;
     rv.x         = iv.x - idotn2 * nv.x;

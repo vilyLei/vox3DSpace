@@ -376,6 +376,11 @@ void Matrix4<NumberType>::appendRotationZ(NumberType radian)
     s_mat.rotationZ(radian);
     append3x3(s_mat);
 }
+template <typename NumberType>
+Matrix4<NumberType>* Matrix4<NumberType>::setRotationFromEuler(const IEuler<NumberType>& euler)
+{
+    return nullptr;
+}
 // 用欧拉角形式旋转(heading->pitch->bank) => (y->x->z)
 template <typename NumberType>
 void Matrix4<NumberType>::appendRotationEulerAngle(NumberType radianX, NumberType radianY, NumberType radianZ)
