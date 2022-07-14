@@ -1,7 +1,7 @@
 #pragma once
 #include <iostream>
 #include "../../../voxengine/math/mathDefine.h"
-#include "../../../voxengine/math/vec3.h"
+#include "../../../voxengine/math/Vec3.h"
 #include "../../../voxengine/math/Matrix4.h"
 #include "../../../voxengine/view/camera.h"
 

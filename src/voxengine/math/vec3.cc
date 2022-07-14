@@ -1,7 +1,7 @@
 #include <iostream>
 #include <cmath>
 #include "mathDefine.h"
-#include "vec3.h"
+#include "Vec3.h"
 
 namespace voxengine
 {

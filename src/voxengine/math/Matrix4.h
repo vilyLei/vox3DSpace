@@ -1,6 +1,6 @@
 #pragma once
 #include <string>
-#include "vec3.h"
+#include "Vec3.h"
 namespace voxengine
 {
 namespace math
