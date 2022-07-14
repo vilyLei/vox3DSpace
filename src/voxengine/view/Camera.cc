@@ -231,7 +231,7 @@ template <typename NumberType>
 void Camera<NumberType>::calcScreenNormalizeXYByWorldPos(Vec3<NumberType>& pv3, Vec3<NumberType>& scPV3)
 {
     scPV3.copyFrom(pv3);
-    m_vpMat.transformVectorSelf(scPV3);
+    m_vpMat.transformVector4Self(scPV3);
     scPV3.x /= scPV3.w;
     scPV3.y /= scPV3.w;
 }
@@ -242,7 +242,7 @@ template <typename NumberType>
 void Camera<NumberType>::worldPosToScreen(Vec3<NumberType>& pv)
 {
     m_viewMat.transformVector3Self(pv);
-    m_projMat.transformVectorSelf(pv);
+    m_projMat.transformVector4Self(pv);
     pv.x /= pv.w;
     pv.y /= pv.w;
     pv.x *= m_viewHalfW;

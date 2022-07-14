@@ -35,16 +35,23 @@ Vec3<typename NumberType>::Vec3(NumberType px, NumberType py, NumberType pz, Num
     :
     x(px), y(py), z(pz), w(pw)
 {
+    //std::cout << "Vec3::constructor() ..." << std::endl;
 }
 template <typename NumberType>
 Vec3<typename NumberType>::Vec3() noexcept
     :
     x(0.0f), y(0.0f), z(0.0f), w(1.0f)
 {
+    //std::cout << "Vec3::constructor() default..." << std::endl;
     //std::cout << std::boolalpha
     //std::cout << "sizeof(NumberType): " << sizeof(NumberType) << ", s_minv: " << s_minv << std::endl;
     //std::cout << "0.0000001 > s_minv: " << (0.0000001 > s_minv) << std::endl;
 }
+//template <typename NumberType>
+//Vec3<typename NumberType>::~Vec3()
+//{
+//    //std::cout << "Vec3::deconstructor()..." << std::endl;
+//}
 
 template <typename NumberType>
 NumberType& Vec3<typename NumberType>::operator[](unsigned int i)
@@ -252,6 +259,42 @@ Vec3<typename NumberType> Vec3<typename NumberType>::crossProduct(const Vec3& v3
     return Vec3<NumberType>(y * v3.z - z * v3.y, z * v3.x - x * v3.z, x * v3.y - y * v3.x);
 }
 template <typename NumberType>
+Vec3<typename NumberType> Vec3<typename NumberType>::clone() const
+{
+    return Vec3<NumberType>(x, y, z, w);
+}
+
+
+
+template <typename NumberType>
+Vec3<NumberType>* Vec3<typename NumberType>::fromArray3(NumberType* arr, unsigned int offset)
+{
+    if (arr != nullptr)
+    {
+        auto ls = arr + offset;
+        x = ls[0];
+        y = ls[1];
+        z = ls[2];
+    }
+    return this;
+}
+
+template <typename NumberType>
+Vec3<NumberType>* Vec3<typename NumberType>::fromArray4(NumberType* arr, unsigned int offset)
+{
+    if (arr != nullptr)
+    {
+        auto ls = arr + offset;
+        x       = ls[0];
+        y       = ls[1];
+        z       = ls[2];
+        w       = ls[3];
+    }
+    return this;
+}
+
+
+template <typename NumberType>
 std::string Vec3<typename NumberType>::toString()
 {
     return "Vec3(" + std::to_string(x) + "," + std::to_string(y) + "," + std::to_string(z) + "," + std::to_string(w) + ")";
@@ -369,6 +412,7 @@ void __$templateConstructVec3(NumberType value)
     Vec3<NumberType> va{};
     Vec3<NumberType> v{};
 
+    NumberType vs[4]{value, value, value, value};
 
     v[0] += value;
     v.set(value, value, value, value);
@@ -400,7 +444,18 @@ void __$templateConstructVec3(NumberType value)
     v.subtract(va);
     v.crossProduct(va);
 
+    auto v1 = v.clone();
+
+    v.fromArray3(vs);
+    v.fromArray4(vs);
+
     v.toString();
+
+    auto pv0 = Vec3<NumberType>::X_AXIS;
+    auto pv1 = Vec3<NumberType>::Y_AXIS;
+    auto pv2 = Vec3<NumberType>::Z_AXIS;
+    auto pv3 = Vec3<NumberType>::ONE;
+    auto pv4 = Vec3<NumberType>::ZERO;
 
     Vec3<NumberType>::cross(va, va, va);
     Vec3<NumberType>::crossSubtract(va, va, va, va, va);

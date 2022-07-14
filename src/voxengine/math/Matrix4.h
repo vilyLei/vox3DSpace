@@ -17,14 +17,49 @@ public:
     NumberType* getLocalFS() const;
     void        copyFrom(const Matrix4<NumberType>& mat);
     void        copyRowFrom(unsigned int row_index, const Vec3<NumberType>& v3);
+    void        copyColumnTo(unsigned int column_index, Vec3<NumberType>& outV3) const;
     void        transformVector3Self(Vec3<NumberType>& v3);
-    void        transformVectorSelf(Vec3<NumberType>& v3);
+    void        transformVector4Self(Vec3<NumberType>& v3);
 
     NumberType  determinant();
     Matrix4*    multiplyMatrices(Matrix4* a, Matrix4* b);
     Matrix4*    multiply(Matrix4* ma, Matrix4* mb = nullptr);
     Matrix4*    premultiply(Matrix4* ma);
-    void        append(Matrix4& lhs);
+    void        append(const Matrix4& lhs);
+    void        append3x3(const Matrix4& lhs);
+
+    void appendRotationPivot(NumberType radian, const Vec3<NumberType>& axis, Vec3<NumberType>* pivotPoint);
+    void appendRotation(NumberType radian, const Vec3<NumberType>& axis);
+    void appendRotationX(NumberType radian);
+    void appendRotationY(NumberType radian);
+    void appendRotationZ(NumberType radian);
+
+    // 用欧拉角形式旋转(heading->pitch->bank) => (y->x->z)
+    void appendRotationEulerAngle(NumberType radianX, NumberType radianY, NumberType radianZ);
+    Matrix4* setScale(const Vec3<NumberType>& v3);
+    void setScaleXYZ(NumberType xScale, NumberType yScale, NumberType zScale);
+    void getScale(Vec3<NumberType>& outV3);
+
+    void setRotationEulerAngle(NumberType radianX, NumberType radianY, NumberType radianZ);
+    void setRotationEulerAngleWithTriFunc(NumberType cosX, NumberType sinX, NumberType cosY, NumberType sinY, NumberType cosZ, NumberType sinZ);
+    void getAxisRotation(NumberType x, NumberType y, NumberType z, NumberType radian);
+    void rotationX(NumberType radian);
+    void rotationY(NumberType radian);
+    void rotationZ(NumberType radian);
+
+	Matrix4* extractRotation(const Matrix4& m);
+    Matrix4* copyTranslation(const Matrix4& m);
+
+    void setTranslationXYZ(NumberType px, NumberType py, NumberType pz);
+    void setTranslation(const Vec3<NumberType>& v3);
+    void appendScaleXYZ(NumberType xScale, NumberType yScale, NumberType zScale);
+
+    void appendScaleXY(NumberType xScale, NumberType yScale);
+    void appendTranslationXYZ(NumberType px, NumberType py, NumberType pz);
+    void appendTranslation(const Vec3<NumberType>& v3);
+
+    Matrix4 clone();
+
 
     void        perspectiveRH(NumberType fovy, NumberType aspect, NumberType zNear, NumberType zFar);
     void        perspectiveLH(NumberType fovy, NumberType aspect, NumberType zNear, NumberType zFar);
@@ -45,6 +80,7 @@ private:
 
     const static NumberType s_initData[16];
     static Vec3<NumberType> s_v3;
+    static Matrix4          s_mat;
 };
 
 } // namespace math

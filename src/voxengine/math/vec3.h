@@ -11,6 +11,7 @@ public:
     explicit Vec3(NumberType px, NumberType py, NumberType pz, NumberType pw = 1.0f) noexcept;
     Vec3() noexcept;
     ~Vec3() = default;
+    //virtual ~Vec3();
 
     NumberType x;
     NumberType y;
@@ -47,7 +48,10 @@ public:
     void crossVecsTo(const Vec3& va, const Vec3& vb);
     Vec3 subtract(const Vec3& v3) const;
     Vec3 crossProduct(const Vec3& v3) const;
+    Vec3 clone() const;
 
+    Vec3*       fromArray3(NumberType* arr, unsigned int offset = 0);
+    Vec3*       fromArray4(NumberType* arr, unsigned int offset = 0);
     std::string toString();
 
 
