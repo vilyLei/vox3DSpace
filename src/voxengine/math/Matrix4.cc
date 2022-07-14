@@ -614,19 +614,19 @@ void Matrix4<NumberType>::setTranslation(const Vec3<NumberType>& v3)
 template <typename NumberType>
 void Matrix4<NumberType>::appendScaleXYZ(NumberType xScale, NumberType yScale, NumberType zScale)
 {
-    auto& sys = m_localFS;
-    sys[0] *= xScale;
-    sys[1] *= xScale;
-    sys[2] *= xScale;
-    sys[3] *= xScale;
-    sys[4] *= yScale;
-    sys[5] *= yScale;
-    sys[6] *= yScale;
-    sys[7] *= yScale;
-    sys[8] *= zScale;
-    sys[9] *= zScale;
-    sys[10] *= zScale;
-    sys[11] *= zScale;
+    auto& sfs = m_localFS;
+    sfs[0] *= xScale;
+    sfs[1] *= xScale;
+    sfs[2] *= xScale;
+    sfs[3] *= xScale;
+    sfs[4] *= yScale;
+    sfs[5] *= yScale;
+    sfs[6] *= yScale;
+    sfs[7] *= yScale;
+    sfs[8] *= zScale;
+    sfs[9] *= zScale;
+    sfs[10] *= zScale;
+    sfs[11] *= zScale;
 }
 
 template <typename NumberType>
