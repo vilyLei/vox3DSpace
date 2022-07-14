@@ -404,8 +404,6 @@ void Vec3<NumberType>::reflect(const Vec3& iv, const Vec3& nv, Vec3& rv)
     rv.z         = iv.z - idotn2 * nv.z;
 }
 
-
-
 template <typename NumberType>
 void __$templateConstructVec3(NumberType value)
 {

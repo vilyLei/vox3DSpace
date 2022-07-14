@@ -2,6 +2,7 @@
 #include <cmath>
 #include <iostream>
 #include "mathDefine.h"
+#include "Euler.h"
 #include "Matrix4.h"
 namespace voxengine
 {
@@ -861,6 +862,9 @@ void __$templateConstructMatrix4(NumberType value)
     ma.rotationX(value);
     ma.rotationY(value);
     ma.rotationZ(value);
+
+    Euler<NumberType> eu0;
+    ma.setRotationFromEuler( eu0 );
 
     ma.extractRotation(mb);
     ma.copyTranslation(mb);
