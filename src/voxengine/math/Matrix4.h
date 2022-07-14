@@ -57,6 +57,8 @@ public:
     void appendScaleXY(NumberType xScale, NumberType yScale);
     void appendTranslationXYZ(NumberType px, NumberType py, NumberType pz);
     void appendTranslation(const Vec3<NumberType>& v3);
+    bool invert();
+    Matrix4* invertThis();
 
     Matrix4 clone();
 
@@ -81,6 +83,7 @@ private:
     const static NumberType s_initData[16];
     static Vec3<NumberType> s_v3;
     static Matrix4          s_mat;
+    const static NumberType  s_minv;
 };
 
 } // namespace math

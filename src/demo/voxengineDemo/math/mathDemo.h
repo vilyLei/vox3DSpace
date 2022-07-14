@@ -39,8 +39,8 @@ void testBase()
     std::cout << "B pos0: " << pos0.toString() << std::endl;
     pos0.fromArray4(float32Arr4, 2);
     std::cout << "B pos0: " << pos0.toString() << std::endl;
-    pos0.setXYZ(0.5, 0.5, 0.501);
-    Vec3HPType hPos0(0.5, 0.5, 0.5);
+    pos0.setXYZ(0.5f, 0.5f, 0.501f);
+    Vec3HPType hPos0(0.5f, 0.5f, 0.5f);
 
     std::cout << "pos0.equalsXYZ(pos1): " << pos0.equalsXYZ(pos1) << std::endl;
 

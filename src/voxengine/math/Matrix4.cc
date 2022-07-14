@@ -1,24 +1,26 @@
 #include <cassert>
 #include <cmath>
 #include <iostream>
+#include "mathDefine.h"
 #include "Matrix4.h"
 namespace voxengine
 {
 namespace math
 {
-
-template <typename NumberType>
-Matrix4<typename NumberType> Matrix4<typename NumberType>::s_mat{};
-template <typename NumberType>
-Vec3<typename NumberType> Matrix4<typename NumberType>::s_v3{};
-
-
 template <typename NumberType>
 const NumberType Matrix4<NumberType>::s_initData[16]{
     1.0f, 0.0f, 0.0f, 0.0f,
     0.0f, 1.0f, 0.0f, 0.0f,
     0.0f, 0.0f, 1.0f, 0.0f,
     0.0f, 0.0f, 0.0f, 1.0f};
+template <typename NumberType>
+Vec3<typename NumberType> Matrix4<typename NumberType>::s_v3{};
+template <typename NumberType>
+Matrix4<typename NumberType> Matrix4<typename NumberType>::s_mat{};
+template <typename NumberType>
+const NumberType Matrix4<typename NumberType>::s_minv = getPositiveMinValue<NumberType>();
+
+
 template <typename NumberType>
 Matrix4<NumberType>::Matrix4(NumberType* pfs, unsigned int index) noexcept
     :
@@ -314,15 +316,15 @@ void Matrix4<NumberType>::append3x3(const Matrix4& lhs)
     auto m213 = lfs[2];
     auto m223 = lfs[6];
     auto m233 = lfs[10];
-    sfs[0]     = m111 * m211 + m112 * m221 + m113 * m231;
-    sfs[1]     = m111 * m212 + m112 * m222 + m113 * m232;
-    sfs[2]     = m111 * m213 + m112 * m223 + m113 * m233;
-    sfs[4]     = m121 * m211 + m122 * m221 + m123 * m231;
-    sfs[5]     = m121 * m212 + m122 * m222 + m123 * m232;
-    sfs[6]     = m121 * m213 + m122 * m223 + m123 * m233;
-    sfs[8]     = m131 * m211 + m132 * m221 + m133 * m231;
-    sfs[9]     = m131 * m212 + m132 * m222 + m133 * m232;
-    sfs[10]    = m131 * m213 + m132 * m223 + m133 * m233;
+    sfs[0]    = m111 * m211 + m112 * m221 + m113 * m231;
+    sfs[1]    = m111 * m212 + m112 * m222 + m113 * m232;
+    sfs[2]    = m111 * m213 + m112 * m223 + m113 * m233;
+    sfs[4]    = m121 * m211 + m122 * m221 + m123 * m231;
+    sfs[5]    = m121 * m212 + m122 * m222 + m123 * m232;
+    sfs[6]    = m121 * m213 + m122 * m223 + m123 * m233;
+    sfs[8]    = m131 * m211 + m132 * m221 + m133 * m231;
+    sfs[9]    = m131 * m212 + m132 * m222 + m133 * m232;
+    sfs[10]   = m131 * m213 + m132 * m223 + m133 * m233;
 }
 
 template <typename NumberType>
@@ -475,26 +477,26 @@ void Matrix4<NumberType>::setRotationEulerAngleWithTriFunc(NumberType cosX, Numb
 template <typename NumberType>
 void Matrix4<NumberType>::getAxisRotation(NumberType x, NumberType y, NumberType z, NumberType radian)
 {
-    radian     = -radian;
-    auto sfs   = m_localFS;
+    radian    = -radian;
+    auto sfs  = m_localFS;
     auto s    = std::sin(radian);
     auto c    = std::cos(radian);
     auto t    = 1.0f - c;
-    sfs[0]     = c + x * x * t;
-    sfs[5]     = c + y * y * t;
-    sfs[10]    = c + z * z * t;
+    sfs[0]    = c + x * x * t;
+    sfs[5]    = c + y * y * t;
+    sfs[10]   = c + z * z * t;
     auto tmp1 = x * y * t;
     auto tmp2 = z * s;
-    sfs[4]     = tmp1 + tmp2;
-    sfs[1]     = tmp1 - tmp2;
-    tmp1       = x * z * t;
-    tmp2       = y * s;
-    sfs[8]     = tmp1 - tmp2;
-    sfs[2]     = tmp1 + tmp2;
-    tmp1       = y * z * t;
-    tmp2       = x * s;
-    sfs[9]     = tmp1 + tmp2;
-    sfs[6]     = tmp1 - tmp2;
+    sfs[4]    = tmp1 + tmp2;
+    sfs[1]    = tmp1 - tmp2;
+    tmp1      = x * z * t;
+    tmp2      = y * s;
+    sfs[8]    = tmp1 - tmp2;
+    sfs[2]    = tmp1 + tmp2;
+    tmp1      = y * z * t;
+    tmp2      = x * s;
+    sfs[9]    = tmp1 + tmp2;
+    sfs[6]    = tmp1 - tmp2;
 }
 
 template <typename NumberType>
@@ -516,8 +518,8 @@ void Matrix4<NumberType>::rotationX(NumberType radian)
 template <typename NumberType>
 void Matrix4<NumberType>::rotationY(NumberType radian)
 {
-    auto s            = std::sin(radian);
-    auto c            = std::cos(radian);
+    auto s        = std::sin(radian);
+    auto c        = std::cos(radian);
     m_localFS[0]  = c;
     m_localFS[1]  = 0.0f;
     m_localFS[2]  = -s;
@@ -531,8 +533,8 @@ void Matrix4<NumberType>::rotationY(NumberType radian)
 template <typename NumberType>
 void Matrix4<NumberType>::rotationZ(NumberType radian)
 {
-    auto s            = std::sin(radian);
-    auto c            = std::cos(radian);
+    auto s        = std::sin(radian);
+    auto c        = std::cos(radian);
     m_localFS[0]  = c;
     m_localFS[1]  = s;
     m_localFS[2]  = 0.0f;
@@ -550,8 +552,8 @@ Matrix4<NumberType>* Matrix4<NumberType>::extractRotation(const Matrix4& m)
 
     // this method does not support reflection matrices
 
-    auto te = m_localFS;
-    auto me = m.getLocalFS();
+    auto  te = m_localFS;
+    auto  me = m.getLocalFS();
     auto& v3 = s_v3;
     m.copyColumnTo(0, v3);
     auto scaleX = 1.0f / v3.getLength();
@@ -587,7 +589,7 @@ template <typename NumberType>
 Matrix4<NumberType>* Matrix4<NumberType>::copyTranslation(const Matrix4& m)
 {
     auto te = m_localFS;
-    auto me       = m.getLocalFS();
+    auto me = m.getLocalFS();
 
     te[12] = me[12];
     te[13] = me[13];
@@ -657,6 +659,56 @@ void Matrix4<NumberType>::appendTranslation(const Vec3<NumberType>& v3)
 }
 
 
+template <typename NumberType>
+bool Matrix4<NumberType>::invert()
+{
+    auto d = determinant();
+    bool invertable = std::abs(d) > s_minv;
+    if (invertable)
+    {
+        auto sfs = m_localFS;
+        d        = 1.0f / d;
+        auto m11 = sfs[0];
+        auto m21 = sfs[4];
+        auto m31 = sfs[8];
+        auto m41 = sfs[12];
+        auto m12 = sfs[1];
+        auto m22 = sfs[5];
+        auto m32 = sfs[9];
+        auto m42 = sfs[13];
+        auto m13 = sfs[2];
+        auto m23 = sfs[6];
+        auto m33 = sfs[10];
+        auto m43 = sfs[14];
+        auto m14 = sfs[3];
+        auto m24 = sfs[7];
+        auto m34 = sfs[11];
+        auto m44 = sfs[15];
+        sfs[0]   = d * (m22 * (m33 * m44 - m43 * m34) - m32 * (m23 * m44 - m43 * m24) + m42 * (m23 * m34 - m33 * m24));
+        sfs[1]   = -d * (m12 * (m33 * m44 - m43 * m34) - m32 * (m13 * m44 - m43 * m14) + m42 * (m13 * m34 - m33 * m14));
+        sfs[2]   = d * (m12 * (m23 * m44 - m43 * m24) - m22 * (m13 * m44 - m43 * m14) + m42 * (m13 * m24 - m23 * m14));
+        sfs[3]   = -d * (m12 * (m23 * m34 - m33 * m24) - m22 * (m13 * m34 - m33 * m14) + m32 * (m13 * m24 - m23 * m14));
+        sfs[4]   = -d * (m21 * (m33 * m44 - m43 * m34) - m31 * (m23 * m44 - m43 * m24) + m41 * (m23 * m34 - m33 * m24));
+        sfs[5]   = d * (m11 * (m33 * m44 - m43 * m34) - m31 * (m13 * m44 - m43 * m14) + m41 * (m13 * m34 - m33 * m14));
+        sfs[6]   = -d * (m11 * (m23 * m44 - m43 * m24) - m21 * (m13 * m44 - m43 * m14) + m41 * (m13 * m24 - m23 * m14));
+        sfs[7]   = d * (m11 * (m23 * m34 - m33 * m24) - m21 * (m13 * m34 - m33 * m14) + m31 * (m13 * m24 - m23 * m14));
+        sfs[8]   = d * (m21 * (m32 * m44 - m42 * m34) - m31 * (m22 * m44 - m42 * m24) + m41 * (m22 * m34 - m32 * m24));
+        sfs[9]   = -d * (m11 * (m32 * m44 - m42 * m34) - m31 * (m12 * m44 - m42 * m14) + m41 * (m12 * m34 - m32 * m14));
+        sfs[10]  = d * (m11 * (m22 * m44 - m42 * m24) - m21 * (m12 * m44 - m42 * m14) + m41 * (m12 * m24 - m22 * m14));
+        sfs[11]  = -d * (m11 * (m22 * m34 - m32 * m24) - m21 * (m12 * m34 - m32 * m14) + m31 * (m12 * m24 - m22 * m14));
+        sfs[12]  = -d * (m21 * (m32 * m43 - m42 * m33) - m31 * (m22 * m43 - m42 * m23) + m41 * (m22 * m33 - m32 * m23));
+        sfs[13]  = d * (m11 * (m32 * m43 - m42 * m33) - m31 * (m12 * m43 - m42 * m13) + m41 * (m12 * m33 - m32 * m13));
+        sfs[14]  = -d * (m11 * (m22 * m43 - m42 * m23) - m21 * (m12 * m43 - m42 * m13) + m41 * (m12 * m23 - m22 * m13));
+        sfs[15]  = d * (m11 * (m22 * m33 - m32 * m23) - m21 * (m12 * m33 - m32 * m13) + m31 * (m12 * m23 - m22 * m13));
+    };
+    return invertable;
+}
+template <typename NumberType>
+Matrix4<NumberType>* Matrix4<NumberType>::invertThis()
+{
+    invert();
+    return this;
+}
 template <typename NumberType>
 Matrix4<NumberType> Matrix4<NumberType>::clone()
 {
@@ -805,7 +857,7 @@ void __$templateConstructMatrix4(NumberType value)
     ma.rotationY(value);
     ma.rotationZ(value);
 
-	ma.extractRotation(mb);
+    ma.extractRotation(mb);
     ma.copyTranslation(mb);
 
     ma.setTranslationXYZ(value, value, value);
@@ -815,6 +867,9 @@ void __$templateConstructMatrix4(NumberType value)
     ma.appendScaleXY(value, value);
     ma.appendTranslationXYZ(value, value, value);
     ma.appendTranslation(va);
+
+    ma.invert();
+    ma.invertThis();
 
     auto cm = ma.clone();
 
