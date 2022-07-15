@@ -1,4 +1,5 @@
 #pragma once
+#include "IMatrix4.h"
 #include "IEuler.h"
 namespace voxengine
 {
@@ -16,6 +17,7 @@ public:
     NumberType z;
     EulerOrder order;
     void set(NumberType px, NumberType py, NumberType pz, EulerOrder porder = EulerOrder::XYZ);
+    Euler*     setFromRotationMatrix(const IMatrix4<NumberType>& m, EulerOrder order = EulerOrder::XYZ);
 
 private:
 };

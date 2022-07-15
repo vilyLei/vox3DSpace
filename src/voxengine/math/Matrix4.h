@@ -1,13 +1,14 @@
 #pragma once
 #include <string>
 #include "Vec3.h"
+#include "IMatrix4.h"
 #include "IEuler.h"
 namespace voxengine
 {
 namespace math
 {
 template <typename NumberType>
-class Matrix4
+class Matrix4 : public IMatrix4<NumberType>
 {
 public:
     Matrix4(NumberType* pfs, unsigned int index = 0) noexcept;

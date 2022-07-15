@@ -1,4 +1,5 @@
 #include "Euler.h"
+#include "Matrix4.h"
 namespace voxengine
 {
 namespace math
@@ -16,13 +17,20 @@ void Euler<NumberType>::set(NumberType px, NumberType py, NumberType pz, EulerOr
 
 }
 
+template <typename NumberType>
+Euler<NumberType>* Euler<NumberType>::setFromRotationMatrix(const IMatrix4<NumberType>& m, EulerOrder order)
+{
+    return this;
+}
 
 template <typename NumberType>
 void __$templateConstructEuler(NumberType value)
 {
 
     Euler<NumberType> eu0;
+    Matrix4<NumberType> mat0;
     eu0.set(value, value, value);
+    eu0.setFromRotationMatrix(mat0);
 }
 void __$templateImplyEuler()
 {
