@@ -12,7 +12,7 @@ class Matrix4 : public IMatrix4<NumberType>
 {
 public:
     Matrix4(NumberType* pfs, unsigned int index = 0) noexcept;
-    Matrix4();
+    Matrix4() noexcept;
     virtual ~Matrix4();
 
     void        identity();

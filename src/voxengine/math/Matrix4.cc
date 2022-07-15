@@ -27,30 +27,28 @@ Matrix4<NumberType>::Matrix4(NumberType* pfs, unsigned int index) noexcept
     :
     m_fs(pfs),
     m_index(index),
+    m_type(1),
     m_localFSBytesTotal(sizeof(NumberType) << 4)
 {
     assert(pfs != nullptr);
     m_localFS = pfs + index;
-    m_type    = 1;
 }
 
 template <typename NumberType>
-Matrix4<NumberType>::Matrix4()
+Matrix4<NumberType>::Matrix4() noexcept
+    :
+    m_index(0),
+    m_type(0),
+    m_localFSBytesTotal(sizeof(NumberType) << 4)
 {
-    m_fs = new NumberType[16]{
-        1.0, 0.0, 0.0, 0.0,
-        0.0, 1.0, 0.0, 0.0,
-        0.0, 0.0, 1.0, 0.0,
-        0.0, 0.0, 0.0, 1.0};
-    m_index             = 0;
+    m_fs                = new NumberType[16];
+    memcpy(m_fs, s_initData, m_localFSBytesTotal);
     m_localFS           = m_fs;
-    m_type              = 0;
-    m_localFSBytesTotal = sizeof(NumberType) << 4;
 }
 template <typename NumberType>
 Matrix4<NumberType>::~Matrix4()
 {
-    if (m_type == 0)
+    if (m_type == 0 && m_fs != nullptr)
     {
         delete[] m_fs;
     }
