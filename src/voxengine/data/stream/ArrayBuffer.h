@@ -1,8 +1,10 @@
 #pragma once
 #include "streamDef.h"
-namespace model
+namespace voxengine
 {
-namespace base
+namespace data
+{
+namespace stream
 {
 class ArrayBuffer
 {
@@ -19,4 +21,5 @@ private:
 };
 
 } // namespace base
-} // namespace model
+} // namespace voxengine
+}

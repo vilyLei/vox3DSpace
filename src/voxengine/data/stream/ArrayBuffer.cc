@@ -1,8 +1,10 @@
 #include "ArrayBuffer.h"
 
-namespace model
+namespace voxengine
 {
-namespace base
+namespace data
+{
+namespace stream
 {
 ArrayBuffer::ArrayBuffer(Int32 byteLength) :
     m_byteLength(byteLength)
@@ -27,4 +29,5 @@ Int8* ArrayBuffer::getBytes()
 }
 
 } // namespace base
-} // namespace model
+} // namespace voxengine
+}

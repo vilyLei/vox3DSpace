@@ -1,8 +1,10 @@
 #include <cassert>
 #include "DataView.h"
-namespace model
+namespace voxengine
 {
-namespace base
+namespace data
+{
+namespace stream
 {
 DataView::DataView(std::shared_ptr<ArrayBuffer> arrBuf, Uint32 byteOffset, Uint32 length) :
     m_buildType(0), m_arrBuf(arrBuf), m_byteLength(arrBuf->getByteLength()), m_byteOffset(byteOffset), m_length(length), m_bytes(arrBuf->getBytes())
@@ -69,4 +71,5 @@ void DataView::assertIndex(Int32 i)
     assert(i >= 0 && i < m_length);
 }
 } // namespace base
-} // namespace model
+} // namespace voxengine
+}

@@ -2,9 +2,11 @@
 #include <memory>
 #include "streamDef.h"
 #include "ArrayBuffer.h"
-namespace model
+namespace voxengine
 {
-namespace base
+namespace data
+{
+namespace stream
 {
 class DataView
 {
@@ -37,4 +39,5 @@ private:
 };
 
 } // namespace base
-} // namespace model
+} // namespace voxengine
+}
