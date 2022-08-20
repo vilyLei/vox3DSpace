@@ -1,8 +1,9 @@
 #pragma once
 
-/***************************************************************************************************************************************************
-* if the float number value is MATH_MAX_NEGATIVE < value < MATH_MIN_POSITIVE, the value can be considered ZERO, otherwise the value is not ZERO.
-***************************************************************************************************************************************************/
+/*******************************************************************************
+* If the float number value is MATH_MAX_NEGATIVE < value < MATH_MIN_POSITIVE, 
+* the value can be considered ZERO, otherwise the value is not ZERO.
+*******************************************************************************/
 
 /**
  * principle: x < MATH_MIN_POSITIVE, or x >= MATH_MIN_POSITIVE
