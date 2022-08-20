@@ -23,3 +23,4 @@ typedef float          Float32;
         delete[] objArrPtr;                   \
         objArrPtr = nullptr;                  \
     }
+//
