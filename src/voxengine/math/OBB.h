@@ -1,6 +1,5 @@
 #pragma once
 #include "Vec3.h"
-#include <array>
 
 namespace voxengine
 {
@@ -17,8 +16,8 @@ public:
     /**
      * three axes normalization 3d vectors
      */
-    std::array<Vec3<NumberType>, 3> axes;
-    std::array<NumberType, 3>             extents;
+    Vec3<NumberType> axes[3];
+    NumberType       extents[3];
     /**
      * half length of these three axes
      */

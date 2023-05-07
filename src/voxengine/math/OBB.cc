@@ -18,7 +18,8 @@ OBB<typename NumberType>::OBB() noexcept
     :
     version(-1),
     radius(0.0f),
-    m_ts{0.0f}
+    m_ts{0.0f},
+    extents{0.0}
 {
 }
 
@@ -29,7 +30,8 @@ void OBB<NumberType>::update()
     for (auto i = 0; i < 3; ++i) axes[i].normalize();
     auto et      = extent;
     radius = et.getLength();
-    et.toArray3(extents.data());
+    //et.toArray3(extents.data());
+    et.toArray3(extents);
 }
 template <typename NumberType>
 bool OBB<NumberType>::containsV(const Vec3<NumberType>& pv) noexcept
