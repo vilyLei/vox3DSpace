@@ -19,7 +19,7 @@
 #ifndef TNT_FILAMENT_BOX_H
 #define TNT_FILAMENT_BOX_H
 
-#include "FCConfig.h"
+#include "../base/commonDef.h"
 #include <limits>
 #include "mat4.h"
 #include "vec3.h"

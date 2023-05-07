@@ -1,11 +1,11 @@
-/** \file FCConfig.h
+/** \file commonDef.h
  *  \brief Include all needed defines and macros
  *  Here all defines and macro switching is done for FreeCAD.
  *  Every used library has its own section to define the configuration.
  *  This file keeps the makefiles and project files cleaner.
  */
-#ifndef FC_CONFIG_H
-#define FC_CONFIG_H
+#ifndef COMMON_DEF_H
+#define COMMON_DEF_H
 
 #define  FC_ENDIAN_LITTLE   0
 #define  FC_ENDIAN_BIG      1	  	
@@ -344,4 +344,4 @@ typedef unsigned __int64    uint64_t;
 
 
 
-#endif //FC_CONFIG_H
+#endif //COMMON_DEF_H

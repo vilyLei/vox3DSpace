@@ -164,11 +164,6 @@ namespace baseMath
 
 } // namespace filament
 
-//template <typename T>
-//using is_arithmetic = std::disjunction<
-//	std::is_arithmetic<T>,
-//	std::is_same<T, baseMath::half>
-//>;
 
 namespace std {
 
@@ -218,4 +213,4 @@ namespace std {
 
 } // namespace std
 
-#endif // TNT_MATH_HALF_H
+#endif

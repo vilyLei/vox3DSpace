@@ -1,7 +1,7 @@
-#ifndef BASE_PRECOMPILED_H
-#define BASE_PRECOMPILED_H
+#ifndef PRE_COMPILE_DEF_H
+#define PRE_COMPILE_DEF_H
 
-#include "FCConfig.h"
+#include "commonDef.h"
 
 // standard
 #include <fcntl.h>
@@ -31,7 +31,7 @@
 #include <Rpc.h>
 #endif
 
-#include "BaseType.h"
+#include "commonType.h"
 
-#endif // BASE_PRECOMPILED_H
+#endif // PRE_COMPILE_DEF_H
 

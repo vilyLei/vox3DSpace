@@ -1,5 +1,5 @@
 #pragma  once 
-#include "FCConfig.h"
+#include "commonDef.h"
 #include <limits>
 #include "vec3.h"
 #include "mathutil.h"
