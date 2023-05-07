@@ -14,7 +14,7 @@ template <typename NumberType>
 NumberType OBB<NumberType>::R[3][3]{0.0f};
 
 template <typename NumberType>
-OBB<typename NumberType>::OBB() noexcept
+OBB<NumberType>::OBB() noexcept
     :
     version(-1),
     radius(0.0f),
