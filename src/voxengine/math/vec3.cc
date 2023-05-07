@@ -9,36 +9,36 @@ namespace math
 {
 
 template <typename NumberType>
-const NumberType Vec3<typename NumberType>::s_180OverPi = static_cast<NumberType>(MATH_180_OVER_PI);
+const NumberType Vec3<NumberType>::s_180OverPi = static_cast<NumberType>(MATH_180_OVER_PI);
 template <typename NumberType>
 const NumberType Vec3<typename NumberType>::s_minv = getPositiveMinValue<NumberType>();
 
 template <typename NumberType>
-const Vec3<typename NumberType> Vec3<typename NumberType>::X_AXIS{1.0f, 0.0f, 0.0f, 0.0};
+const Vec3<NumberType> Vec3<NumberType>::X_AXIS{1.0f, 0.0f, 0.0f, 0.0};
 template <typename NumberType>
-const Vec3<typename NumberType> Vec3<typename NumberType>::Y_AXIS{0.0f, 1.0f, 0.0f, 0.0};
+const Vec3<NumberType> Vec3<NumberType>::Y_AXIS{0.0f, 1.0f, 0.0f, 0.0};
 template <typename NumberType>
-const Vec3<typename NumberType> Vec3<typename NumberType>::Z_AXIS{0.0f, 1.0f, 0.0f, 0.0};
+const Vec3<NumberType> Vec3<NumberType>::Z_AXIS{0.0f, 1.0f, 0.0f, 0.0};
 template <typename NumberType>
-const Vec3<typename NumberType> Vec3<typename NumberType>::ZERO{0.0f, 0.0f, 0.0f, 0.0};
+const Vec3<NumberType> Vec3<NumberType>::ZERO{0.0f, 0.0f, 0.0f, 0.0};
 template <typename NumberType>
-const Vec3<typename NumberType> Vec3<typename NumberType>::ONE{1.0f, 1.0f, 1.0f, 1.0};
+const Vec3<NumberType> Vec3<NumberType>::ONE{1.0f, 1.0f, 1.0f, 1.0};
 
 template <typename NumberType>
-Vec3<typename NumberType> Vec3<typename NumberType>::s_v0{};
+Vec3<NumberType> Vec3<NumberType>::s_v0{};
 template <typename NumberType>
-Vec3<typename NumberType> Vec3<typename NumberType>::s_v1{};
+Vec3<NumberType> Vec3<NumberType>::s_v1{};
 
 
 template <typename NumberType>
-Vec3<typename NumberType>::Vec3(NumberType px, NumberType py, NumberType pz, NumberType pw) noexcept
+Vec3<NumberType>::Vec3(NumberType px, NumberType py, NumberType pz, NumberType pw) noexcept
     :
     x(px), y(py), z(pz), w(pw)
 {
     //std::cout << "Vec3::constructor() ..." << std::endl;
 }
 template <typename NumberType>
-Vec3<typename NumberType>::Vec3() noexcept
+Vec3<NumberType>::Vec3() noexcept
     :
     x(0.0f), y(0.0f), z(0.0f), w(1.0f)
 {
@@ -49,7 +49,7 @@ Vec3<typename NumberType>::Vec3() noexcept
 }
 
 template <typename NumberType>
-NumberType& Vec3<typename NumberType>::operator[](unsigned int i)
+NumberType& Vec3<NumberType>::operator[](unsigned int i)
 {
 
     switch (i)
@@ -261,7 +261,7 @@ Vec3<NumberType> Vec3<NumberType>::clone() const
 
 
 template <typename NumberType>
-void Vec3<typename NumberType>::toArray3(NumberType* arr, unsigned int offset)
+void Vec3<NumberType>::toArray3(NumberType* arr, unsigned int offset)
 {
     if (arr != nullptr)
     {
@@ -272,7 +272,7 @@ void Vec3<typename NumberType>::toArray3(NumberType* arr, unsigned int offset)
     }
 }
 template <typename NumberType>
-void Vec3<typename NumberType>::toArray4(NumberType* arr, unsigned int offset)
+void Vec3<NumberType>::toArray4(NumberType* arr, unsigned int offset)
 {
     if (arr != nullptr)
     {

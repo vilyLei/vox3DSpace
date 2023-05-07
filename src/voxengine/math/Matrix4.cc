@@ -15,11 +15,11 @@ const NumberType Matrix4<NumberType>::s_initData[16]{
     0.0f, 0.0f, 1.0f, 0.0f,
     0.0f, 0.0f, 0.0f, 1.0f};
 template <typename NumberType>
-Vec3<typename NumberType> Matrix4<typename NumberType>::s_v3{};
+Vec3<NumberType> Matrix4<NumberType>::s_v3{};
 template <typename NumberType>
-Matrix4<typename NumberType> Matrix4<typename NumberType>::s_mat{};
+Matrix4<NumberType> Matrix4<NumberType>::s_mat{};
 template <typename NumberType>
-const NumberType Matrix4<typename NumberType>::s_minv = getPositiveMinValue<NumberType>();
+const NumberType Matrix4<NumberType>::s_minv = getPositiveMinValue<NumberType>();
 
 
 template <typename NumberType>
