@@ -117,7 +117,7 @@ namespace voxengine
             void testBase()
             {
                 ///*
-                std::cout << "------- ctm testBase begin --------------" << std::endl;
+                std::cout << "------- streamDemo testBase begin --------------" << std::endl;
 
                 Uint8Array u8Arr(22);
                 u8Arr[11] += 12;
@@ -146,7 +146,7 @@ namespace voxengine
                 for (auto i = 0; i < f32Arr.getLength(); ++i) f32Arr[i] = 10.0f + static_cast<Float32>(i) / 10.0f;
                 showArrayView(f32Arr, "f32Arr");
 
-                std::cout << "------- ctm testBase end --------------" << std::endl;
+                std::cout << "------- streamDemo testBase end --------------" << std::endl;
             }
 
             void test()
