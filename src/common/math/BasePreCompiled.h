@@ -33,11 +33,5 @@
 
 #include "BaseType.h"
 
-// 2D rendering macros
-//#ifndef    RHI_GENERATE_2D_COMMAND
-//#	define RHI_GENERATE_2D_COMMAND
-//#endif
-
-
 #endif // BASE_PRECOMPILED_H
 
