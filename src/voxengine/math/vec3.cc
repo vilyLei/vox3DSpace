@@ -375,9 +375,9 @@ NumberType Vec3<NumberType>::distance(const Vec3& v0, const Vec3& v1)
 }
 
 /**
-  * get angle degree between two Vector3D objects
-  * @param v0 src Vector3D object
-  * @param v1 dst Vector3D object
+  * get angle degree between two Vec3 objects
+  * @param v0 src Vec3 object
+  * @param v1 dst Vec3 object
   * @returns angle degree
   */
 template <typename NumberType>
@@ -388,9 +388,9 @@ NumberType Vec3<NumberType>::angleBetween(const Vec3& v0, const Vec3& v1)
     return std::acos(s_v0.dot(s_v1)) * s_180OverPi;
 }
 /**
-  * get angle radian between two Vector3D objects
-  * @param v0 src Vector3D object
-  * @param v1 dst Vector3D object
+  * get angle radian between two Vec3 objects
+  * @param v0 src Vec3 object
+  * @param v1 dst Vec3 object
   * @returns angle radian
   */
 template <typename NumberType>
@@ -404,8 +404,8 @@ NumberType Vec3<NumberType>::radianBetween(const Vec3& v0, const Vec3& v1)
 template <typename NumberType>
 NumberType Vec3<NumberType>::radianBetween2(const Vec3& v0, const Vec3& v1)
 {
-    //  // c^2 = a^2 + b^2 - 2*a*b * cos(x)
-    //  // cos(x) = (a^2 + b^2 - c^2) / 2*a*b
+    //  c^2 = a^2 + b^2 - 2*a*b * cos(x)
+    //  cos(x) = (a^2 + b^2 - c^2) / 2*a*b
     auto pa = v0.getLengthSquared();
     auto pb = v1.getLengthSquared();
     s_v0.x   = v0.x - v1.x;

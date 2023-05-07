@@ -424,9 +424,6 @@ template <typename NumberType>
 void Matrix4<NumberType>::setRotationEulerAngle(NumberType radianX, NumberType radianY, NumberType radianZ)
 {
     auto sfs = m_localFS;
-    //auto& sx = sfs[0];
-    //auto& sy = sfs[5];
-    //auto& sz = sfs[10];
 
     auto cosX = std::cos(radianX);
     auto sinX = std::sin(radianX);

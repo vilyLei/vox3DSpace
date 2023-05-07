@@ -69,16 +69,16 @@ public:
     static NumberType distance(const Vec3& v0, const Vec3& v1);
 
     /**
-     * get angle degree between two Vector3D objects
-     * @param v0 src Vector3D object
-     * @param v1 dst Vector3D object
+     * get angle degree between two Vec3 objects
+     * @param v0 src Vec3 object
+     * @param v1 dst Vec3 object
      * @returns angle degree
      */
     static NumberType angleBetween(const Vec3& v0, const Vec3& v1);
     /**
-     * get angle radian between two Vector3D objects
-     * @param v0 src Vector3D object
-     * @param v1 dst Vector3D object
+     * get angle radian between two Vec3 objects
+     * @param v0 src Vec3 object
+     * @param v1 dst Vec3 object
      * @returns angle radian
      */
     static NumberType radianBetween(const Vec3& v0, const Vec3& v1);
