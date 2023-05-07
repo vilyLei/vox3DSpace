@@ -50,6 +50,8 @@ public:
     Vec3 crossProduct(const Vec3& v3) const;
     Vec3 clone() const;
 
+    void toArray3(NumberType* arr, unsigned int offset = 0);
+    void toArray4(NumberType* arr, unsigned int offset = 0);
     Vec3*       fromArray3(NumberType* arr, unsigned int offset = 0);
     Vec3*       fromArray4(NumberType* arr, unsigned int offset = 0);
     std::string toString();
@@ -60,9 +62,9 @@ public:
      */
     static void cross(const Vec3& a, const Vec3& b, Vec3& result);
     // (va1 - va0) 叉乘 (vb1 - vb0), 右手法则(为正)
-    static void crossSubtract(const Vec3& va0, const Vec3& va1, const Vec3& vb0, const Vec3& vb1, Vec3& result);
-    static void subtract(const Vec3& a, const Vec3& b, Vec3& result);
-    static NumberType distanceSquared(const Vec3& a, const Vec3& b); 
+    static void       crossSubtract(const Vec3& va0, const Vec3& va1, const Vec3& vb0, const Vec3& vb1, Vec3& result);
+    static void       subtract(const Vec3& a, const Vec3& b, Vec3& result);
+    static NumberType distanceSquared(const Vec3& a, const Vec3& b);
     static NumberType distanceXYZ(NumberType x0, NumberType y0, NumberType z0, NumberType x1, NumberType y1, NumberType z1);
     static NumberType distance(const Vec3& v0, const Vec3& v1);
 
@@ -81,7 +83,7 @@ public:
      */
     static NumberType radianBetween(const Vec3& v0, const Vec3& v1);
     static NumberType radianBetween2(const Vec3& v0, const Vec3& v1);
-    static void reflect(const Vec3& iv, const Vec3& nv, Vec3& rv);
+    static void       reflect(const Vec3& iv, const Vec3& nv, Vec3& rv);
 
     const static Vec3 X_AXIS;
     const static Vec3 Y_AXIS;
@@ -92,8 +94,8 @@ public:
 private:
     const static NumberType s_180OverPi;
     const static NumberType s_minv;
-    static Vec3       s_v0;
-    static Vec3       s_v1;
+    static Vec3             s_v0;
+    static Vec3             s_v1;
 };
 } // namespace math
 } // namespace voxengine

@@ -47,11 +47,6 @@ Vec3<typename NumberType>::Vec3() noexcept
     //std::cout << "sizeof(NumberType): " << sizeof(NumberType) << ", s_minv: " << s_minv << std::endl;
     //std::cout << "0.0000001 > s_minv: " << (0.0000001 > s_minv) << std::endl;
 }
-//template <typename NumberType>
-//Vec3<typename NumberType>::~Vec3()
-//{
-//    //std::cout << "Vec3::deconstructor()..." << std::endl;
-//}
 
 template <typename NumberType>
 NumberType& Vec3<typename NumberType>::operator[](unsigned int i)
@@ -92,7 +87,7 @@ void Vec3<NumberType>::setXYZ(NumberType px, NumberType py, NumberType pz)
 }
 
 template <typename NumberType>
-NumberType Vec3<typename NumberType>::dot(const Vec3& v3) const
+NumberType Vec3<NumberType>::dot(const Vec3& v3) const
 {
     return x * v3.x + y * v3.y + z * v3.z;
 }
@@ -249,22 +244,45 @@ void Vec3<NumberType>::crossVecsTo(const Vec3& va, const Vec3& vb)
     z = va.x * vb.y - va.y * vb.x;
 }
 template <typename NumberType>
-Vec3<NumberType> Vec3<typename NumberType>::subtract(const Vec3& v3) const
+Vec3<NumberType> Vec3<NumberType>::subtract(const Vec3& v3) const
 {
     return Vec3<NumberType>(x - v3.x, y - v3.y, z - v3.z);
 }
 template <typename NumberType>
-Vec3<NumberType> Vec3<typename NumberType>::crossProduct(const Vec3& v3) const
+Vec3<NumberType> Vec3<NumberType>::crossProduct(const Vec3& v3) const
 {
     return Vec3<NumberType>(y * v3.z - z * v3.y, z * v3.x - x * v3.z, x * v3.y - y * v3.x);
 }
 template <typename NumberType>
-Vec3<NumberType> Vec3<typename NumberType>::clone() const
+Vec3<NumberType> Vec3<NumberType>::clone() const
 {
     return Vec3<NumberType>(x, y, z, w);
 }
 
 
+template <typename NumberType>
+void Vec3<typename NumberType>::toArray3(NumberType* arr, unsigned int offset)
+{
+    if (arr != nullptr)
+    {
+        auto ls = arr + offset;
+        ls[0]   = x;
+        ls[1]   = y;
+        ls[2]   = z;
+    }
+}
+template <typename NumberType>
+void Vec3<typename NumberType>::toArray4(NumberType* arr, unsigned int offset)
+{
+    if (arr != nullptr)
+    {
+        auto ls = arr + offset;
+        ls[0] = x;
+        ls[1] = y;
+        ls[2] = z;
+        ls[3] = w;
+    }
+}
 
 template <typename NumberType>
 Vec3<NumberType>* Vec3<typename NumberType>::fromArray3(NumberType* arr, unsigned int offset)
@@ -444,6 +462,8 @@ void __$templateConstructVec3(NumberType value)
 
     auto v1 = v.clone();
 
+    v.toArray3(vs);
+    v.toArray4(vs);
     v.fromArray3(vs);
     v.fromArray4(vs);
 
