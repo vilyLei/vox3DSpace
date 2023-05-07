@@ -1,5 +1,5 @@
 #pragma once
-#include "commonDef.h"
+#include "../base/commonDef.h"
 #include "vec3.h"
 #include "mathutil.h"
 
