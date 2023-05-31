@@ -1,0 +1,18 @@
+{
+    "renderer-proc": "./proc01.exe",
+    "renderer-instance": {
+        "name": "high-image-renderer",
+        "status": "stop"
+    },
+    "resource": {
+        "type": "obj",
+        "models": [
+            "base.obj"
+        ]
+    },
+    "task": {
+        "taskID": 1011,
+        "times": 11,
+        "outputPath": ""
+    }
+}
