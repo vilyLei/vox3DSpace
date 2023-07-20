@@ -432,6 +432,8 @@ if(EXEC_BUILD_FLAG)
                        "-D_UNICODE"
                        LIB_DEPS
                        ${vox3dspace_dx11_dependency})
+  # dx12 demo
+  # cuda demo
   # vox3dspace_setup_install_target()
   # vox3dspace_setup_test_targets()
 endif()
