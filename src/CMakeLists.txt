@@ -23,10 +23,12 @@ if("${vox3dspace_root}" STREQUAL "${vox3dspace_build}")
 endif()
 # find vulkan sdk
 find_package(Vulkan)
-message("--- 2 Vulkan_FOUND: ${Vulkan_FOUND}")
-message("--- 2 Vulkan: ${Vulkan}")
-message("--- 2 Vulkan_LIBRARY: ${Vulkan_LIBRARY}")
-message("--- 2 Vulkan_INCLUDE_DIR: ${Vulkan_INCLUDE_DIR}")
+# message("--- 2 Vulkan_FOUND: ${Vulkan_FOUND}")
+# message("--- 2 Vulkan: ${Vulkan}")
+# message("--- 2 Vulkan_LIBRARY: ${Vulkan_LIBRARY}")
+# message("--- 2 Vulkan_INCLUDE_DIR: ${Vulkan_INCLUDE_DIR}")
+message("--- 3 PROJECT_BINARY_DIR: ${PROJECT_BINARY_DIR}")
+message("--- 3 CMAKE_CURRENT_BINARY_DIR: ${CMAKE_CURRENT_BINARY_DIR}")
 
 # if(WIN32)
 # 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DVK_USE_PLATFORM_WIN32_KHR")
@@ -406,6 +408,7 @@ if(EXEC_BUILD_FLAG)
                        ${vox3dspace_vulkan_libs_paths}
                        LIB_DEPS
                        ${vox3dspace_vulkan_dependency})
+	if(WIN32)
   # dx11 demo
   vox3dspace_add_executable(NAME
                        demo_graphics_d3dx11
@@ -458,6 +461,9 @@ if(EXEC_BUILD_FLAG)
 											"-D_UNICODE"
 											LIB_DEPS
 											${vox3dspace_dx12_dependency})
+	#
+	file(COPY "${vox3dspace_root}/demos/directx12/shaders.hlsl" DESTINATION "${PROJECT_BINARY_DIR}/Debug")
+	endif()
   # cuda demo
   # vox3dspace_setup_install_target()
   # vox3dspace_setup_test_targets()
