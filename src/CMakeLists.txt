@@ -408,7 +408,7 @@ if(EXEC_BUILD_FLAG)
                        ${vox3dspace_vulkan_dependency})
   # dx11 demo
   vox3dspace_add_executable(NAME
-                       demo_graphics_dx11
+                       demo_graphics_d3dx11
                        SOURCES
                        "${vox3dspace_root}/demos/directx11/d3dApp.cc"
                        "${vox3dspace_root}/demos/directx11/d3dApp.h"
@@ -432,7 +432,32 @@ if(EXEC_BUILD_FLAG)
                        "-D_UNICODE"
                        LIB_DEPS
                        ${vox3dspace_dx11_dependency})
-  # dx12 demo
+  # dx12 demo, warn: copy shaders.hlsl file to debug dir
+  vox3dspace_add_executable(NAME
+											demo_graphics_d3dx12
+											SOURCES
+											"${vox3dspace_root}/demos/directx12/D3D12HelloTriangle.cc"
+											"${vox3dspace_root}/demos/directx12/D3D12HelloTriangle.h"
+											"${vox3dspace_root}/demos/directx12/d3dx12.h"
+											"${vox3dspace_root}/demos/directx12/DXSample.cc"
+											"${vox3dspace_root}/demos/directx12/DXSample.h"
+											"${vox3dspace_root}/demos/directx12/DXSampleHelper.h"
+											"${vox3dspace_root}/demos/directx12/Main.cc"
+											"${vox3dspace_root}/demos/directx12/stdafx.cc"
+											"${vox3dspace_root}/demos/directx12/stdafx.h"
+											"${vox3dspace_root}/demos/directx12/Win32Application.h"
+											"${vox3dspace_root}/demos/directx12/Win32Application.cc"
+											DEFINES
+											${vox3dspace_defines}
+											EXEC_SYS
+											"WIN32"
+											LINK_FLAGS
+											"-mwindows"
+											DEFINES
+											"-DUNICODE"
+											"-D_UNICODE"
+											LIB_DEPS
+											${vox3dspace_dx12_dependency})
   # cuda demo
   # vox3dspace_setup_install_target()
   # vox3dspace_setup_test_targets()

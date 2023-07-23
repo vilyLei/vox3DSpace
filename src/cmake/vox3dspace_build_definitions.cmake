@@ -47,6 +47,14 @@ macro(set_vox3dspace_target)
       )
     set(vox3dspace_dx11_dependency ${vox3dspace_dx11_libs_deps})
 
+    # dx12 libs info define
+    list(APPEND vox3dspace_dx12_libs_deps
+      "d3d12"
+      "dxgi"
+      "D3DCompiler"
+      )
+    set(vox3dspace_dx12_dependency ${vox3dspace_dx12_libs_deps})
+
   else()
     if(BUILD_SHARED_LIBS)
       set(vox3dspace_dependency vox3dspace_shared)

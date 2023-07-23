@@ -4,6 +4,17 @@ if(VOX3DSPACE_CMAKE_VOX3DSPACE_TARGETS_CMAKE_)
 endif() # VOX3DSPACE_CMAKE_VOX3DSPACE_TARGETS_CMAKE_
 set(VOX3DSPACE_CMAKE_VOX3DSPACE_TARGETS_CMAKE_ 1)
 
+##定义延迟加载的宏
+macro(vox3dspace_add_delayload_flags flagsVar)
+  set(dlls "${ARGN}")
+  foreach(dll ${dlls})
+    set(${flagsVar} "${${flagsVar}} /DELAYLOAD:${dll}.dll")
+  endforeach()
+endmacro()
+
+### 
+# vox3dspace_add_delayload_flags(CMAKE_EXE_LINKER_FLAGS dll1 dll2)
+
 # Resets list variables used to track vox3dspace targets.
 macro(vox3dspace_reset_target_lists)
   unset(vox3dspace_targets)
