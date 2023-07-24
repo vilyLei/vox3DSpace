@@ -201,6 +201,8 @@ macro(vox3dspace_test_exe_linker_flag)
     unset(CMAKE_EXE_LINKER_FLAGS)
   endif()
 
+  message("--- CMAKE_EXE_LINKER_FLAGS: ${CMAKE_EXE_LINKER_FLAGS}")
+
   list(APPEND VOX3DSPACE_EXE_LINKER_FLAGS ${${link_FLAG_LIST_VAR_NAME}})
   list(REMOVE_DUPLICATES VOX3DSPACE_EXE_LINKER_FLAGS)
 endmacro()

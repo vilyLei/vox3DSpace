@@ -42,6 +42,6 @@ Debug/
 Release/
 jsonTest/
 rendererTest/
-space3d/src_vs/
-space3d/src-vs/
+space3d_vs/
+space3d-vs/
 *.code-workspace

@@ -55,6 +55,13 @@ macro(set_vox3dspace_target)
       )
     set(vox3dspace_dx12_dependency ${vox3dspace_dx12_libs_deps})
 
+    # cuda libs info define
+    list(APPEND vox3dspace_cuda_libs_deps
+      "cudadevrt"
+      "cudart_static"
+      )
+    set(vox3dspace_cuda_dependency ${vox3dspace_cuda_libs_deps})
+
   else()
     if(BUILD_SHARED_LIBS)
       set(vox3dspace_dependency vox3dspace_shared)
@@ -110,15 +117,20 @@ macro(vox3dspace_set_build_definitions)
     )
   ####################################################################################
   # opengl libs info define
-  list(APPEND vox3dspace_opengl_libs_include_paths "${vox3dspace_root}/openglLibs/x64")
-  list(APPEND vox3dspace_opengl_libs_paths "${vox3dspace_root}/openglLibs/x64/lib")
+  list(APPEND vox3dspace_opengl_libs_include_paths "${vox3dspace_root}/openglLibs/libx64")
+  list(APPEND vox3dspace_opengl_libs_paths "${vox3dspace_root}/openglLibs/libx64/lib")
   ####################################################################################
   # vulkan libs info define
   list(APPEND vox3dspace_vulkan_libs_include_paths
-    "${vox3dspace_root}/openglLibs/x64"
+    "${vox3dspace_root}/openglLibs/libx64"
     ${Vulkan_INCLUDE_DIR}
   )
-  list(APPEND vox3dspace_vulkan_libs_paths "${vox3dspace_root}/openglLibs/x64/lib")
+  list(APPEND vox3dspace_vulkan_libs_paths "${vox3dspace_root}/openglLibs/libx64/lib")
+
+  
+  # cuda libs info define
+  list(APPEND vox3dspace_cuda_libs_include_paths "${vox3dspace_root}/demos/cuda")
+  list(APPEND vox3dspace_cuda_libs_paths "${vox3dspace_root}/demos/cuda")
 
   if(VOX3DSPACE_ABSL)
     list(APPEND vox3dspace_include_paths "${vox3dspace_root}/third_party/abseil-cpp")

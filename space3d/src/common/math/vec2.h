@@ -17,7 +17,7 @@
 #ifndef MATH_VEC2_H_
 #define MATH_VEC2_H_
 
-#include "../stream/preCompileDef.h" 
+#include "../base/preCompileDef.h" 
 #include "TVecHelpers.h"
 #include "half.h"
 

@@ -1,5 +1,5 @@
 #pragma  once 
-#include "../stream/commonDef.h"
+#include "../base/commonDef.h"
 #include <limits>
 #include "vec3.h"
 #include "mathutil.h"

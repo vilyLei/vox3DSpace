@@ -60,12 +60,13 @@ macro(vox3dspace_add_executable)
   unset(exe_LIB_INCLUDES)
   unset(exe_EXEC_SYS)
   unset(exe_COMPILE_FLAGS)
+  unset(exe_RPOJECT_FLAGS)
   unset(exe_LINK_FLAGS)
   unset(exe_OBJLIB_DEPS)
   unset(exe_LIB_DEPS)
   set(optional_args TEST)
   set(single_value_args NAME OUTPUT_NAME)
-  set(multi_value_args SOURCES DEFINES INCLUDES LIB_INCLUDES EXEC_SYS COMPILE_FLAGS LINK_FLAGS
+  set(multi_value_args SOURCES DEFINES INCLUDES LIB_INCLUDES EXEC_SYS COMPILE_FLAGS RPOJECT_FLAGS LINK_FLAGS
                        OBJLIB_DEPS LIB_DEPS)
 
   cmake_parse_arguments(exe "${optional_args}" "${single_value_args}"
@@ -83,6 +84,7 @@ macro(vox3dspace_add_executable)
             "exe_LIB_INCLUDES=${exe_LIB_INCLUDES}\n"
             "exe_EXEC_SYS=${exe_EXEC_SYS}\n"
             "exe_COMPILE_FLAGS=${exe_COMPILE_FLAGS}\n"
+            "exe_RPOJECT_FLAGS=${exe_RPOJECT_FLAGS}\n"
             "exe_LINK_FLAGS=${exe_LINK_FLAGS}\n"
             "exe_OBJLIB_DEPS=${exe_OBJLIB_DEPS}\n"
             "exe_LIB_DEPS=${exe_LIB_DEPS}\n"
@@ -111,12 +113,10 @@ macro(vox3dspace_add_executable)
   target_compile_features(${exe_NAME} PRIVATE cxx_std_17)
 
   if(NOT EMSCRIPTEN)
-    message(STATUS "A exe_NAME: ${exe_NAME}, VOX3DSPACE_VERSION: ${VOX3DSPACE_VERSION}")
     set_target_properties(${exe_NAME} PROPERTIES VERSION ${VOX3DSPACE_VERSION})
   endif()
 
   if(exe_OUTPUT_NAME)
-    message(STATUS "B exe_NAME: ${exe_NAME}, exe_OUTPUT_NAME: ${exe_OUTPUT_NAME}")
     set_target_properties(${exe_NAME} PROPERTIES OUTPUT_NAME ${exe_OUTPUT_NAME})
   endif()
 
@@ -126,13 +126,14 @@ macro(vox3dspace_add_executable)
     target_compile_definitions(${exe_NAME} PRIVATE ${exe_DEFINES})
   endif()
 
+  message(STATUS "--- A01 exe_INCLUDES: ${exe_INCLUDES}")
   if(exe_INCLUDES)
     target_include_directories(${exe_NAME} PRIVATE ${exe_INCLUDES})
   endif()
 
-  if(exe_COMPILE_FLAGS OR VOX3DSPACE_CXX_FLAGS)
+  if(exe_COMPILE_FLAGS OR exe_RPOJECT_FLAGS)
     target_compile_options(${exe_NAME}
-                           PRIVATE ${exe_COMPILE_FLAGS} ${VOX3DSPACE_CXX_FLAGS})
+                           PRIVATE ${exe_COMPILE_FLAGS} ${exe_RPOJECT_FLAGS})
   endif()
 
   if(exe_LINK_FLAGS OR VOX3DSPACE_EXE_LINKER_FLAGS)
@@ -284,6 +285,8 @@ macro(vox3dspace_add_library)
       message(WARNING "vox3dspace_add_library: Unhandled type: ${lib_TYPE}")
     endif()
   endif()
+
+  # cuda_add_library(${lib_NAME} ${lib_TYPE} ${lib_SOURCES})
 
   add_library(${lib_NAME} ${lib_TYPE} ${lib_SOURCES})
   target_compile_features(${lib_NAME} PUBLIC cxx_std_11)
