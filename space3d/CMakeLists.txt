@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.21 FATAL_ERROR)
 project(vox3dspace C CXX CUDA)
 
+# set(CMAKE_CXX_STANDARD 17)
+
 if(NOT CMAKE_BUILD_TYPE)
   # set(CMAKE_BUILD_TYPE Release)
   set(CMAKE_BUILD_TYPE Debug)
@@ -30,6 +32,8 @@ find_package(Vulkan)
 message("--- 3 PROJECT_BINARY_DIR: ${PROJECT_BINARY_DIR}")
 message("--- 3 CMAKE_CURRENT_BINARY_DIR: ${CMAKE_CURRENT_BINARY_DIR}")
 
+find_package(CUDAToolkit REQUIRED)
+
 # if(WIN32)
 # 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DVK_USE_PLATFORM_WIN32_KHR")
 # endif()
@@ -56,6 +60,8 @@ execute_process(
   )
 message(STATUS "RESULT_VARIABLE is: ${_status}")
 message(STATUS "OUTPUT_VARIABLE is: ${_hello_world}")
+
+
 # C++ and linker flags.
 vox3dspace_track_configuration_variable(VOX3DSPACE_CXX_FLAGS)
 vox3dspace_track_configuration_variable(VOX3DSPACE_EXE_LINKER_FLAGS)
@@ -463,8 +469,8 @@ if(EXEC_BUILD_FLAG)
 											${vox3dspace_dx12_dependency})
 	#
 	file(COPY "${vox3dspace_root}/demos/directx12/shaders.hlsl" DESTINATION "${PROJECT_BINARY_DIR}/Debug")
-	endif()
   # cuda demo
+	endif()
   # vox3dspace_setup_install_target()
   # vox3dspace_setup_test_targets()
 endif()
