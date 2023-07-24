@@ -55,6 +55,20 @@ macro(build_executable_projects)
                        ${vox3dspace_libs_paths}
                        LIB_DEPS
                        ${vox3dspace_json_dependency})
+
+  # boost demo
+  vox3dspace_add_executable(NAME
+                      demo_boost
+                      SOURCES
+                      "${vox3dspace_root}/demos/boost/baseTest.cc"
+                      DEFINES
+                      ${vox3dspace_defines}
+                      RPOJECT_FLAGS
+                      ${VOX3DSPACE_CXX_FLAGS}
+                      INCLUDES
+                      ${vox3dspace_boost_libs_include_paths}
+                      LIB_INCLUDES
+                      ${vox3dspace_boost_libs_paths})
   # tiny obj demo
   vox3dspace_add_executable(NAME
                        demo_tinyObj

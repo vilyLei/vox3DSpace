@@ -116,6 +116,18 @@ macro(vox3dspace_set_build_definitions)
     "${vox3dspace_libs_root}/tinyObj/lib"
     )
   ####################################################################################
+  # bost libs info define
+  # set(boost_root_dir $ENV{BOOST_ROOT_DIR})
+  set(boost_root_dir $ENV{BOOST_ROOT_DIR})
+  file(TO_CMAKE_PATH ${boost_root_dir} boost_root_dir)
+  message(STATUS "boost_root_dir: ${boost_root_dir}")
+
+  set(boost_lib_dir $ENV{BOOST_LIB_DIR})
+  file(TO_CMAKE_PATH ${boost_lib_dir} boost_lib_dir)
+  message(STATUS "boost_lib_dir: ${boost_lib_dir}")
+
+  list(APPEND vox3dspace_boost_libs_include_paths "${boost_root_dir}")
+  list(APPEND vox3dspace_boost_libs_paths "${boost_lib_dir}")
   # opengl libs info define
   list(APPEND vox3dspace_opengl_libs_include_paths "${vox3dspace_root}/openglLibs/libx64")
   list(APPEND vox3dspace_opengl_libs_paths "${vox3dspace_root}/openglLibs/libx64/lib")
