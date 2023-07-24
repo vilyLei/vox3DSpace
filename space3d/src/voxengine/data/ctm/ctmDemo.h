@@ -120,7 +120,7 @@ std::shared_ptr<Uint8Array> readFile(std::string path)
     }
     return u8Arr;
 }
-void loadAndParseCTM()
+bool loadAndParseCTM()
 {
     std::cout << "<<<< -------------- loadAndParseCTM begin ---------------------\n"
               << std::endl;
@@ -136,7 +136,7 @@ void loadAndParseCTM()
     auto        dataU8Arr = readFile(url);
     if (dataU8Arr == nullptr)
     {
-        return;
+        return false;
     }
 
     //std::cout << "dataU8Arr->getLength(): " << dataU8Arr->getLength() << std::endl;
@@ -159,39 +159,60 @@ void loadAndParseCTM()
     showArrayViewPtr(ctmBody->vertices, "ctmBody->vertices\n");
     //*/
     //std::cout << "\n>>>> ---------------------- loadAndParseCTM end ---------------------" << std::endl;
+    return true;
 }
 
-void testCTMParse()
+bool testCTMParse()
 {
     std::cout << "---------------------- testCTMParse begin ---------------------\n"
               << std::endl;
 
     auto flag = isLittleEndian();
     std::cout << ">>>>> isLittleEndian():  " << flag << std::endl;
-
+    bool enabled = true;
     for (auto i = 0; i < 1; ++i)
     {
         std::cout << ">>>>> $$$ Step " << i << std::endl;
-        loadAndParseCTM();
+        if (!loadAndParseCTM()) {
+            enabled = false;
+            break;
+        }
     }
     std::cout << "\n---------------------- testCTMParse end ---------------------" << std::endl;
+    return enabled;
+
 }
 
 void testCircleCTMParse()
 {
 
     std::cout << "\n---------------------- testCircleCTMParse begin ---------------------" << std::endl;
+    bool enabled = true;
     int total = 50000;
     for (auto i = 0; i < total; ++i)
     {
         std::cout << ">>>>> progress: " << i << "/" << total << std::endl;
-        loadAndParseCTM();
-        std::this_thread::sleep_for(std::chrono::milliseconds(50));
+        if (loadAndParseCTM())
+        {
+            std::this_thread::sleep_for(std::chrono::milliseconds(50));
+        }
+        else
+        {
+            enabled = false;
+            break;
+        }
     }
     std::cout << "\n---------------------- testCircleCTMParse end ---------------------" << std::endl;
-    for (auto i = 0; i < 200; ++i)
+    if (enabled)
     {
-        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+        for (auto i = 0; i < 200; ++i)
+        {
+            std::this_thread::sleep_for(std::chrono::milliseconds(100));
+        }
+    }
+    else
+    {
+        std::cout << "---------------------- parsed failed !!! ---------------------" << std::endl;
     }
     std::cout << "---------------------- exec end ---------------------" << std::endl;
 }
