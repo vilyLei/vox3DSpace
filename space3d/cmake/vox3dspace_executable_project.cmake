@@ -14,7 +14,18 @@ macro(build_executable_projects)
       set(vox3dspace_lib_type STATIC)
     endif()
   endif()
-  # Vox3DSpace app targets.
+  # Vox3DSpace app targets.  
+  vox3dspace_add_executable(NAME
+                       demo_ccplus
+                       SOURCES
+                       "${vox3dspace_root}/demos/ccplus/testMain.cc"
+                       DEFINES
+                       ${vox3dspace_defines}
+                       RPOJECT_FLAGS
+                       ${VOX3DSPACE_CXX_FLAGS}
+                       INCLUDES
+                       ${vox3dspace_ccplus_libs_include_paths})
+
   vox3dspace_add_executable(NAME
                        demo_vox3dspace_engine
                        SOURCES
@@ -103,9 +114,10 @@ macro(build_executable_projects)
   vox3dspace_add_executable(NAME
                        demo_graphics_opengl
                        SOURCES
-                      #  "${vox3dspace_root}/demos/opengl/oglTest.cc"
-                      #  "${vox3dspace_root}/demos/opengl/player.cc"
-                      #  "${vox3dspace_root}/demos/opengl/player.h"
+                      #  "${ogl_demo_dir}/oglTest.cc"
+                      #  "${ogl_demo_dir}/player.cc"
+                      #  "${ogl_demo_dir}/player.h"
+
                        "${ogl_demo_dir}/colorTri.frag"
                        "${ogl_demo_dir}/colorTri.vert"
                        "${ogl_demo_dir}/shader.cc"
@@ -125,6 +137,33 @@ macro(build_executable_projects)
 	# file(COPY "${vox3dspace_root}/demos/opengl/colorTri.frag" DESTINATION "${PROJECT_BINARY_DIR}/Debug")
 	# file(COPY "${vox3dspace_root}/demos/opengl/colorTri.vert" DESTINATION "${PROJECT_BINARY_DIR}")
 	# file(COPY "${vox3dspace_root}/demos/opengl/colorTri.frag" DESTINATION "${PROJECT_BINARY_DIR}")
+  # ogl compute demo
+  set(ogl_demo_dir "${vox3dspace_root}/demos/opengl_compute")
+  vox3dspace_add_executable(NAME
+                       demo_graphics_opengl_compute
+                       SOURCES
+
+                       "${ogl_demo_dir}/texv.comp"
+                       "${ogl_demo_dir}/texv.frag"
+                       "${ogl_demo_dir}/texv.vert"
+                       "${ogl_demo_dir}/buffer.h"
+                       "${ogl_demo_dir}/texture.h"
+                       "${ogl_demo_dir}/shader.h"
+                       "${ogl_demo_dir}/vertex_array_object.h"
+                       "${ogl_demo_dir}/quad.h"
+                       "${ogl_demo_dir}/renderer.h"
+                       "${ogl_demo_dir}/testMain.cc"
+                       
+                       DEFINES
+                       ${vox3dspace_defines}
+                       RPOJECT_FLAGS
+                       ${VOX3DSPACE_CXX_FLAGS}
+                       INCLUDES
+                       ${vox3dspace_opengl_compute_libs_include_paths}
+                       LIB_INCLUDES
+                       ${vox3dspace_opengl_libs_paths}
+                       LIB_DEPS
+                       ${vox3dspace_opengl_compute_dependency})
   # vulkan demo
   vox3dspace_add_executable(NAME
                        demo_graphics_vulkan

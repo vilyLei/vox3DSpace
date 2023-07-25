@@ -103,6 +103,8 @@ macro(build_projects_sources)
     vox3dspace_engine_math_sources
       "${vox3dspace_src_root}/voxengine/math/mathDefine.h"
       "${vox3dspace_src_root}/voxengine/math/Float.h"
+      "${vox3dspace_src_root}/voxengine/math/vec2.cc"
+      "${vox3dspace_src_root}/voxengine/math/vec2.h"
       "${vox3dspace_src_root}/voxengine/math/vec3.cc"
       "${vox3dspace_src_root}/voxengine/math/vec3.h"
       "${vox3dspace_src_root}/voxengine/math/EulerOrder.h"

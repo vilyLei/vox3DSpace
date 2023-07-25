@@ -10,6 +10,7 @@
 #include "./src/voxengine/data/stream/streamDemo.h"
 #include "./src/voxengine/math/Float.h"
 #include "./src/voxengine/math/OBB.h"
+#include "./src/voxengine/math/vec2.h"
 #include "./src/voxengine/text/BaseText.h"
 
 #include <cstdlib>
@@ -60,7 +61,24 @@ int main()
     float(*arr3)[3][3] = new float[3][3][3];
 
     voxengine::math::Vec3<float> v3;
-    v3.setXYZ(-22.798999786376953, 33.0, -15.0);
+    v3.setXYZ(-22.7989f, 33.6f, -15.3f);
+    voxengine::math::UVec3 uv3;
+    uv3.setXYZ(325,3,5);
+    std::cout << "v3.x: " << v3.x << std::endl;
+    std::cout << "uv3.x: " << uv3.x << std::endl;
+
+    
+    voxengine::math::Vec2<float> v2;
+    v2.setXY(33.17f, -15.1f);
+    voxengine::math::UVec2 uv2;
+    uv2.setXY(125, 8);
+    std::cout << "v2.x: " << v2.x << std::endl;
+    std::cout << "uv2.x: " << uv2.x << ", uv2.y: " << uv2.y << std::endl;
+
+    voxengine::math::UVec2 uv2b;
+    uv2b = uv2;
+    std::cout << "uv2b.x: " << uv2b.x << ", uv2b.y: " << uv2b.y << std::endl;
+
 
     std::cout << "\ntest engine module:\n";
     std::boolalpha(std::cout);

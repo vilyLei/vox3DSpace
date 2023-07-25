@@ -1,9 +1,9 @@
 #include <iostream>
 #include <filesystem>
 //#include <windows.h>
-// GLEW    
+// GLEW
 #define GLEW_STATIC    
-#include <include/GL/glew.h>    
+#include <include/GL/glew.h>
 
 // GLFW
 #include <include/glfw3.h>
@@ -65,7 +65,6 @@ int main()
 	// GLuint programID = LoadShaders("colorTri.vert", "colorTri.frag");
     auto   path_vert = std::filesystem::path(CMAKE_CURRENT_SOURCE_DIR) / "demos/opengl/colorTri.vert";
     auto   path_vertString = path_vert.string();
-    std::cout << "path_vertString: " << path_vertString << std::endl;
     auto   path_frag  = std::filesystem::path(CMAKE_CURRENT_SOURCE_DIR) / "demos/opengl/colorTri.frag";
     auto   path_fragString = path_frag.string();
     GLuint programID       = LoadShaders(path_vertString.c_str(), path_fragString.c_str());

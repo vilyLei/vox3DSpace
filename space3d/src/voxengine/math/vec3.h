@@ -8,7 +8,7 @@ template <typename NumberType>
 class Vec3
 {
 public:
-    explicit Vec3(NumberType px, NumberType py, NumberType pz, NumberType pw = 1.0f) noexcept;
+    explicit Vec3(NumberType px, NumberType py, NumberType pz, NumberType pw = static_cast<NumberType>(1)) noexcept;
     Vec3() noexcept;
     ~Vec3() = default;
     //virtual ~Vec3();
@@ -58,10 +58,10 @@ public:
 
 
     /**
-     * ÓÒÊÖ·¨Ôò(ÎªÕý)
+     * ï¿½ï¿½ï¿½Ö·ï¿½ï¿½ï¿½(Îªï¿½ï¿½)
      */
     static void cross(const Vec3& a, const Vec3& b, Vec3& result);
-    // (va1 - va0) ²æ³Ë (vb1 - vb0), ÓÒÊÖ·¨Ôò(ÎªÕý)
+    // (va1 - va0) ï¿½ï¿½ï¿½ (vb1 - vb0), ï¿½ï¿½ï¿½Ö·ï¿½ï¿½ï¿½(Îªï¿½ï¿½)
     static void       crossSubtract(const Vec3& va0, const Vec3& va1, const Vec3& vb0, const Vec3& vb1, Vec3& result);
     static void       subtract(const Vec3& a, const Vec3& b, Vec3& result);
     static NumberType distanceSquared(const Vec3& a, const Vec3& b);
@@ -97,5 +97,7 @@ private:
     static Vec3             s_v0;
     static Vec3             s_v1;
 };
+
+typedef Vec3<unsigned int> UVec3;
 } // namespace math
 } // namespace voxengine

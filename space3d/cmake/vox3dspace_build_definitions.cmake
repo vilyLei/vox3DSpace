@@ -24,7 +24,8 @@ macro(set_vox3dspace_target)
       "opengl32"
       )
     set(vox3dspace_opengl_dependency ${vox3dspace_opengl_libs_deps})
-
+    #
+    list(APPEND vox3dspace_opengl_compute_dependency ${vox3dspace_opengl_libs_deps} vox3dspace_engine_math)
     
     ####################################################################################
     # vulkan libs info define
@@ -117,6 +118,7 @@ macro(vox3dspace_set_build_definitions)
     )
   ####################################################################################
   # bost libs info define
+  
   # set(boost_root_dir $ENV{BOOST_ROOT_DIR})
   set(boost_root_dir $ENV{BOOST_ROOT_DIR})
   file(TO_CMAKE_PATH ${boost_root_dir} boost_root_dir)
@@ -126,11 +128,19 @@ macro(vox3dspace_set_build_definitions)
   file(TO_CMAKE_PATH ${boost_lib_dir} boost_lib_dir)
   message(STATUS "boost_lib_dir: ${boost_lib_dir}")
 
+  
+  # ccplus demo libs info define
+  list(APPEND vox3dspace_ccplus_libs_include_paths "${vox3dspace_root}/demos/ccplus")
+
   list(APPEND vox3dspace_boost_libs_include_paths "${boost_root_dir}")
   list(APPEND vox3dspace_boost_libs_paths "${boost_lib_dir}")
   # opengl libs info define
   list(APPEND vox3dspace_opengl_libs_include_paths "${vox3dspace_root}/openglLibs/libx64")
   list(APPEND vox3dspace_opengl_libs_paths "${vox3dspace_root}/openglLibs/libx64/lib")
+
+  
+  # opengl compute libs info define
+  list(APPEND vox3dspace_opengl_compute_libs_include_paths "${vox3dspace_root}/openglLibs/libx64" ${vox3dspace_include_paths})
   ####################################################################################
   # vulkan libs info define
   list(APPEND vox3dspace_vulkan_libs_include_paths

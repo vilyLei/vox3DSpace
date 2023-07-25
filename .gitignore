@@ -44,4 +44,5 @@ jsonTest/
 rendererTest/
 space3d_vs/
 space3d-vs/
+space3d/libs/spdlog/lib/
 *.code-workspace

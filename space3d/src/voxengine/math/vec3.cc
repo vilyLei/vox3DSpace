@@ -14,15 +14,15 @@ template <typename NumberType>
 const NumberType Vec3<typename NumberType>::s_minv = getPositiveMinValue<NumberType>();
 
 template <typename NumberType>
-const Vec3<NumberType> Vec3<NumberType>::X_AXIS{1.0f, 0.0f, 0.0f, 0.0};
+const Vec3<NumberType> Vec3<NumberType>::X_AXIS{static_cast<NumberType>(1), static_cast<NumberType>(0), static_cast<NumberType>(0), static_cast<NumberType>(0)};
 template <typename NumberType>
-const Vec3<NumberType> Vec3<NumberType>::Y_AXIS{0.0f, 1.0f, 0.0f, 0.0};
+const Vec3<NumberType> Vec3<NumberType>::Y_AXIS{static_cast<NumberType>(0), static_cast<NumberType>(1), static_cast<NumberType>(0), static_cast<NumberType>(0)};
 template <typename NumberType>
-const Vec3<NumberType> Vec3<NumberType>::Z_AXIS{0.0f, 1.0f, 0.0f, 0.0};
+const Vec3<NumberType> Vec3<NumberType>::Z_AXIS{static_cast<NumberType>(0), static_cast<NumberType>(1), static_cast<NumberType>(0), static_cast<NumberType>(0)};
 template <typename NumberType>
-const Vec3<NumberType> Vec3<NumberType>::ZERO{0.0f, 0.0f, 0.0f, 0.0};
+const Vec3<NumberType> Vec3<NumberType>::ZERO{static_cast<NumberType>(0), static_cast<NumberType>(0), static_cast<NumberType>(0), static_cast<NumberType>(0)};
 template <typename NumberType>
-const Vec3<NumberType> Vec3<NumberType>::ONE{1.0f, 1.0f, 1.0f, 1.0};
+const Vec3<NumberType> Vec3<NumberType>::ONE{static_cast<NumberType>(1), static_cast<NumberType>(1), static_cast<NumberType>(1), static_cast<NumberType>(1)};
 
 template <typename NumberType>
 Vec3<NumberType> Vec3<NumberType>::s_v0{};
@@ -40,7 +40,7 @@ Vec3<NumberType>::Vec3(NumberType px, NumberType py, NumberType pz, NumberType p
 template <typename NumberType>
 Vec3<NumberType>::Vec3() noexcept
     :
-    x(0.0f), y(0.0f), z(0.0f), w(1.0f)
+    x(static_cast<NumberType>(0)), y(static_cast<NumberType>(0)), z(static_cast<NumberType>(0)), w(static_cast<NumberType>(1))
 {
     //std::cout << "Vec3::constructor() default..." << std::endl;
     //std::cout << std::boolalpha
@@ -178,7 +178,7 @@ bool Vec3<NumberType>::equalsAll(const Vec3& v3)
 template <typename NumberType>
 void Vec3<NumberType>::project()
 {
-    NumberType t = 1.0f / w;
+    NumberType t = static_cast<NumberType>(1) / w;
     x *= t;
     y *= t;
     z *= t;
@@ -210,7 +210,7 @@ void Vec3<NumberType>::crossBy(const Vec3& v3)
 template <typename NumberType>
 void Vec3<NumberType>::reflectBy(const Vec3& nv)
 {
-    NumberType idotn2 = (x * nv.x + y * nv.y + z * nv.z) * 2.0f;
+    NumberType idotn2 = (x * nv.x + y * nv.y + z * nv.z) * static_cast<NumberType>(2);
     x                 = x - idotn2 * nv.x;
     y                 = y - idotn2 * nv.y;
     z                 = z - idotn2 * nv.z;
@@ -315,7 +315,7 @@ Vec3<NumberType>* Vec3<typename NumberType>::fromArray4(NumberType* arr, unsigne
 template <typename NumberType>
 std::string Vec3<NumberType>::toString()
 {
-    return "Vec3(" + std::to_string(x) + "," + std::to_string(y) + "," + std::to_string(z) + "," + std::to_string(w) + ")";
+    return "Vec3(x=" + std::to_string(x) + ",y=" + std::to_string(y) + ",z=" + std::to_string(z) + ",w=" + std::to_string(w) + ")";
 }
 
 template <typename NumberType>
@@ -411,12 +411,12 @@ NumberType Vec3<NumberType>::radianBetween2(const Vec3& v0, const Vec3& v1)
     s_v0.x   = v0.x - v1.x;
     s_v0.y   = v0.y - v1.y;
     s_v0.z   = v0.z - v1.z;
-    return std::acos((pa + pb - s_v0.getLengthSquared()) / (2.0f * std::sqrt(pa) * std::sqrt(pb)));
+    return std::acos((pa + pb - s_v0.getLengthSquared()) / (static_cast<NumberType>(2) * std::sqrt(pa) * std::sqrt(pb)));
 }
 template <typename NumberType>
 void Vec3<NumberType>::reflect(const Vec3& iv, const Vec3& nv, Vec3& rv)
 {
-    auto idotn2 = (iv.x * nv.x + iv.y * nv.y + iv.z * nv.z) * 2.0f;
+    auto idotn2  = (iv.x * nv.x + iv.y * nv.y + iv.z * nv.z) * static_cast<NumberType>(2);
     rv.x         = iv.x - idotn2 * nv.x;
     rv.y         = iv.y - idotn2 * nv.y;
     rv.z         = iv.z - idotn2 * nv.z;
@@ -485,12 +485,16 @@ void __$templateConstructVec3(NumberType value)
     Vec3<NumberType>::radianBetween(va, va);
     Vec3<NumberType>::radianBetween2(va, va);
     Vec3<NumberType>::reflect(va, va, va);
+
 }
 void __$templateImplyVec3()
 {
     __$templateConstructVec3(1.0);
     __$templateConstructVec3(1.0f);
-}
+    __$templateConstructVec3(long(1));
 
+    UVec3 v3;
+    v3.setXYZ(1, 2, 3);
+}
 } // namespace math
 } // namespace voxengine
