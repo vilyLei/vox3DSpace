@@ -25,7 +25,11 @@ PSInput VSMain(float4 position : POSITION, float4 color : COLOR)
     return result;
 }
 
+static float gamma = 2.2;
 float4 PSMain(PSInput input) : SV_TARGET
 {
+    float3 color = input.color.xyz;
+    color.xyz = pow(color.xyz, 1.0/gamma);
+    input.color.xyz = color;
     return input.color;
 }

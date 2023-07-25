@@ -157,6 +157,7 @@ macro(vox3dspace_set_build_definitions)
 
   list(APPEND vox3dspace_defines "VOX3DSPACE_CMAKE=1"
               "VOX3DSPACE_FLAGS_SRCDIR=\"${vox3dspace_root}\""
+              "CMAKE_CURRENT_SOURCE_DIR=\"${CMAKE_CURRENT_SOURCE_DIR}\""
               "VOX3DSPACE_FLAGS_TMPDIR=\"/tmp\"")
 
   if(MSVC OR WIN32)

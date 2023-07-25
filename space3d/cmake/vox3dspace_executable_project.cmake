@@ -99,12 +99,18 @@ macro(build_executable_projects)
                        ${vox3dspace_profile_dependency})
   
   # ogl demo
+  set(ogl_demo_dir "${vox3dspace_root}/demos/opengl")
   vox3dspace_add_executable(NAME
                        demo_graphics_opengl
                        SOURCES
-                       "${vox3dspace_root}/demos/opengl/oglTest.cc"
-                       "${vox3dspace_root}/demos/opengl/player.cc"
-                       "${vox3dspace_root}/demos/opengl/player.h"
+                      #  "${vox3dspace_root}/demos/opengl/oglTest.cc"
+                      #  "${vox3dspace_root}/demos/opengl/player.cc"
+                      #  "${vox3dspace_root}/demos/opengl/player.h"
+                       "${ogl_demo_dir}/colorTri.frag"
+                       "${ogl_demo_dir}/colorTri.vert"
+                       "${ogl_demo_dir}/shader.cc"
+                       "${ogl_demo_dir}/shader.h"
+                       "${ogl_demo_dir}/colorTriMain.cc"
                        DEFINES
                        ${vox3dspace_defines}
                        RPOJECT_FLAGS
@@ -115,6 +121,10 @@ macro(build_executable_projects)
                        ${vox3dspace_opengl_libs_paths}
                        LIB_DEPS
                        ${vox3dspace_opengl_dependency})
+	# file(COPY "${vox3dspace_root}/demos/opengl/colorTri.vert" DESTINATION "${PROJECT_BINARY_DIR}/Debug")
+	# file(COPY "${vox3dspace_root}/demos/opengl/colorTri.frag" DESTINATION "${PROJECT_BINARY_DIR}/Debug")
+	# file(COPY "${vox3dspace_root}/demos/opengl/colorTri.vert" DESTINATION "${PROJECT_BINARY_DIR}")
+	# file(COPY "${vox3dspace_root}/demos/opengl/colorTri.frag" DESTINATION "${PROJECT_BINARY_DIR}")
   # vulkan demo
   vox3dspace_add_executable(NAME
                        demo_graphics_vulkan
@@ -159,7 +169,7 @@ macro(build_executable_projects)
                        "-D_UNICODE"
                        LIB_DEPS
                        ${vox3dspace_dx11_dependency})
-  # dx12 demo, warn: copy shaders.hlsl file to debug dir
+  # dx12 demo, warn: copy shaders.hshd file to debug dir
   vox3dspace_add_executable(NAME
 											demo_graphics_d3dx12
 											SOURCES
@@ -174,6 +184,7 @@ macro(build_executable_projects)
 											"${vox3dspace_root}/demos/directx12/stdafx.h"
 											"${vox3dspace_root}/demos/directx12/Win32Application.h"
 											"${vox3dspace_root}/demos/directx12/Win32Application.cc"
+											"${vox3dspace_root}/demos/directx12/shaders.hshd"
 											DEFINES
 											${vox3dspace_defines}
                       RPOJECT_FLAGS
@@ -188,10 +199,10 @@ macro(build_executable_projects)
 											LIB_DEPS
 											${vox3dspace_dx12_dependency})
 	#
-	file(COPY "${vox3dspace_root}/demos/directx12/shaders.hlsl" DESTINATION "${PROJECT_BINARY_DIR}/Debug")
+	# file(COPY "${vox3dspace_root}/demos/directx12/shaders.hshd" DESTINATION "${PROJECT_BINARY_DIR}/Debug")
+
   # cuda demo
-  # enable_language(CUDA)
-  
+  # enable_language(CUDA)  
   vox3dspace_add_executable(NAME
 											demo_cuda
 											SOURCES
