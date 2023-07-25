@@ -2,7 +2,7 @@
 // Contact: webmaster@saschawillems.de
 
 #define GLFW_INCLUDE_VULKAN
-#include <glfw3.h>
+#include <include/glfw3.h>
 
 #define GLM_FORCE_RADIANS
 #include <glm/glm.hpp>
@@ -22,6 +22,7 @@
 #include <optional>
 #include <set>
 #include <random>
+#include <filesystem>
 
 const uint32_t WIDTH = 800;
 const uint32_t HEIGHT = 600;
@@ -593,8 +594,12 @@ private:
 
 
     void createGraphicsPipeline() {
-        auto vertShaderCode = readFile("test_vert.spv");
-        auto fragShaderCode = readFile("test_frag.spv");
+        auto   path_vert = std::filesystem::path(CMAKE_CURRENT_SOURCE_DIR) / "demos/vulkan_compute/test_vert.spv";
+        auto   path_vertString = path_vert.string();
+        auto   path_frag = std::filesystem::path(CMAKE_CURRENT_SOURCE_DIR) / "demos/vulkan_compute/test_vert.spv";
+        auto   path_fragString = path_frag.string();
+        auto vertShaderCode = readFile(path_vertString);
+        auto fragShaderCode = readFile(path_fragString);
 
         VkShaderModule vertShaderModule = createShaderModule(vertShaderCode);
         VkShaderModule fragShaderModule = createShaderModule(fragShaderCode);
@@ -713,7 +718,9 @@ private:
     }
 
     void createComputePipeline() {
-        auto computeShaderCode = readFile("test_comp.spv");
+        auto   path_comp = std::filesystem::path(CMAKE_CURRENT_SOURCE_DIR) / "demos/vulkan_compute/test_comp.spv";
+        auto   path_compString = path_comp.string();
+        auto computeShaderCode = readFile(path_vertString);
 
         VkShaderModule computeShaderModule = createShaderModule(computeShaderCode);
 
