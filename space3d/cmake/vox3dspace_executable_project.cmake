@@ -137,22 +137,22 @@ macro(build_executable_projects)
 	# file(COPY "${vox3dspace_root}/demos/opengl/colorTri.frag" DESTINATION "${PROJECT_BINARY_DIR}/Debug")
 	# file(COPY "${vox3dspace_root}/demos/opengl/colorTri.vert" DESTINATION "${PROJECT_BINARY_DIR}")
 	# file(COPY "${vox3dspace_root}/demos/opengl/colorTri.frag" DESTINATION "${PROJECT_BINARY_DIR}")
-  # ogl compute demo
-  set(ogl_demo_dir "${vox3dspace_root}/demos/opengl_compute")
+  # ogl compute compute demo
+  set(ogl_c_demo_dir "${vox3dspace_root}/demos/opengl_compute")
   vox3dspace_add_executable(NAME
                        demo_graphics_opengl_compute
                        SOURCES
 
-                       "${ogl_demo_dir}/texv.comp"
-                       "${ogl_demo_dir}/texv.frag"
-                       "${ogl_demo_dir}/texv.vert"
-                       "${ogl_demo_dir}/buffer.h"
-                       "${ogl_demo_dir}/texture.h"
-                       "${ogl_demo_dir}/shader.h"
-                       "${ogl_demo_dir}/vertex_array_object.h"
-                       "${ogl_demo_dir}/quad.h"
-                       "${ogl_demo_dir}/renderer.h"
-                       "${ogl_demo_dir}/testMain.cc"
+                       "${ogl_c_demo_dir}/texv.comp"
+                       "${ogl_c_demo_dir}/texv.frag"
+                       "${ogl_c_demo_dir}/texv.vert"
+                       "${ogl_c_demo_dir}/buffer.h"
+                       "${ogl_c_demo_dir}/texture.h"
+                       "${ogl_c_demo_dir}/shader.h"
+                       "${ogl_c_demo_dir}/vertex_array_object.h"
+                       "${ogl_c_demo_dir}/quad.h"
+                       "${ogl_c_demo_dir}/renderer.h"
+                       "${ogl_c_demo_dir}/testMain.cc"
                        
                        DEFINES
                        ${vox3dspace_defines}
@@ -169,6 +169,25 @@ macro(build_executable_projects)
                        demo_graphics_vulkan
                        SOURCES
                        "${vox3dspace_root}/demos/vulkan/vulkanTest.cc"
+                       DEFINES
+                       ${vox3dspace_defines}
+                       RPOJECT_FLAGS
+                       ${VOX3DSPACE_CXX_FLAGS}
+                       INCLUDES
+                       ${vox3dspace_vulkan_libs_include_paths}
+                       LIB_INCLUDES
+                       ${vox3dspace_vulkan_libs_paths}
+                       LIB_DEPS
+                       ${vox3dspace_vulkan_dependency})
+  # vulkan compute shader demo
+  set(vlk_c_demo_dir "${vox3dspace_root}/demos/vulkan_compute")
+  vox3dspace_add_executable(NAME
+                       demo_graphics_vulkan_compute
+                       SOURCES
+                       "${vlk_c_demo_dir}/computeMain.cc"
+                       "${vlk_c_demo_dir}/test.vert"
+                       "${vlk_c_demo_dir}/test.frag"
+                       "${vlk_c_demo_dir}/test.comp"
                        DEFINES
                        ${vox3dspace_defines}
                        RPOJECT_FLAGS

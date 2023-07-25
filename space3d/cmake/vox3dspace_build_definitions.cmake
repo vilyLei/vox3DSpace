@@ -129,6 +129,12 @@ macro(vox3dspace_set_build_definitions)
   message(STATUS "boost_lib_dir: ${boost_lib_dir}")
 
   
+  set(vulkan_sdk_dir $ENV{VULKAN_SDK})
+  file(TO_CMAKE_PATH ${vulkan_sdk_dir} vulkan_sdk_dir)
+  message(STATUS "vulkan_sdk_dir: ${vulkan_sdk_dir}")
+
+
+  
   # ccplus demo libs info define
   list(APPEND vox3dspace_ccplus_libs_include_paths "${vox3dspace_root}/demos/ccplus")
 
@@ -146,9 +152,10 @@ macro(vox3dspace_set_build_definitions)
   list(APPEND vox3dspace_vulkan_libs_include_paths
     "${vox3dspace_root}/openglLibs/libx64"
     ${Vulkan_INCLUDE_DIR}
+    "${vulkan_sdk_dir}/Third-Party/Include"
   )
   list(APPEND vox3dspace_vulkan_libs_paths "${vox3dspace_root}/openglLibs/libx64/lib")
-
+  #Third-Party\glm
   
   # cuda libs info define
   list(APPEND vox3dspace_cuda_libs_include_paths "${vox3dspace_root}/demos/cuda")

@@ -13,6 +13,8 @@ class Shader {
   GLuint program;
 
   static std::string loadStringFromFile(const std::filesystem::path& filepath) {
+
+    std::cout << "Shader::constructure(), filepath.string(): " << filepath.string() << std::endl;
     std::ifstream file(filepath);
     if (!file.is_open()) {
       // spdlog::error("[Shader] failed to open {}", filepath.generic_string());
