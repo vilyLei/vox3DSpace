@@ -115,6 +115,7 @@ macro(vox3dspace_set_build_definitions)
   list(APPEND vox3dspace_libs_paths
     "${vox3dspace_libs_root}/json/lib"
     "${vox3dspace_libs_root}/tinyObj/lib"
+    "${vox3dspace_libs_root}/tbb/lib"
     )
   ####################################################################################
   # bost libs info define
@@ -128,16 +129,21 @@ macro(vox3dspace_set_build_definitions)
   file(TO_CMAKE_PATH ${boost_lib_dir} boost_lib_dir)
   message(STATUS "boost_lib_dir: ${boost_lib_dir}")
 
-  
   set(vulkan_sdk_dir $ENV{VULKAN_SDK})
   file(TO_CMAKE_PATH ${vulkan_sdk_dir} vulkan_sdk_dir)
   message(STATUS "vulkan_sdk_dir: ${vulkan_sdk_dir}")
+
+  set(tbb_root_dir $ENV{TBB_ROOT_DIR})
+  file(TO_CMAKE_PATH ${tbb_root_dir} tbb_root_dir)
+  message(STATUS "tbb_root_dir: ${tbb_root_dir}")
 
 
   
   # ccplus demo libs info define
   list(APPEND vox3dspace_ccplus_libs_include_paths "${vox3dspace_root}/demos/ccplus")
-
+  # tbb demo libs info define
+  list(APPEND vox3dspace_tbb_libs_include_paths "${tbb_root_dir}/include")
+  # boost demo libs info define
   list(APPEND vox3dspace_boost_libs_include_paths "${boost_root_dir}")
   list(APPEND vox3dspace_boost_libs_paths "${boost_lib_dir}")
   # opengl libs info define

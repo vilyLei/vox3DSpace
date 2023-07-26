@@ -67,6 +67,22 @@ macro(build_executable_projects)
                        LIB_DEPS
                        ${vox3dspace_json_dependency})
 
+  # tbb demo
+  vox3dspace_add_executable(NAME
+                       demo_tbb
+                       SOURCES
+                       "${vox3dspace_root}/demos/tbb/testMain.cc"
+                       DEFINES
+                       ${vox3dspace_defines}
+                       RPOJECT_FLAGS
+                       ${VOX3DSPACE_CXX_FLAGS}
+                       INCLUDES
+                       ${vox3dspace_tbb_libs_include_paths}
+                       LIB_INCLUDES
+                       ${vox3dspace_libs_paths})
+  
+	file(COPY "${vox3dspace_root}/libs/tbb/lib/" DESTINATION "${PROJECT_BINARY_DIR}/${CMAKE_BUILD_TYPE}")
+	file(COPY "${vox3dspace_root}/libs/tbb/lib/" DESTINATION "${PROJECT_BINARY_DIR}/")
   # boost demo
   vox3dspace_add_executable(NAME
                       demo_boost
@@ -133,9 +149,6 @@ macro(build_executable_projects)
                        ${vox3dspace_opengl_libs_paths}
                        LIB_DEPS
                        ${vox3dspace_opengl_dependency})
-	# file(COPY "${vox3dspace_root}/demos/opengl/colorTri.vert" DESTINATION "${PROJECT_BINARY_DIR}/Debug")
-	# file(COPY "${vox3dspace_root}/demos/opengl/colorTri.frag" DESTINATION "${PROJECT_BINARY_DIR}/Debug")
-	# file(COPY "${vox3dspace_root}/demos/opengl/colorTri.vert" DESTINATION "${PROJECT_BINARY_DIR}")
 	# file(COPY "${vox3dspace_root}/demos/opengl/colorTri.frag" DESTINATION "${PROJECT_BINARY_DIR}")
   # ogl compute compute demo
   set(ogl_c_demo_dir "${vox3dspace_root}/demos/opengl_compute")
@@ -179,6 +192,21 @@ macro(build_executable_projects)
                        ${vox3dspace_vulkan_libs_paths}
                        LIB_DEPS
                        ${vox3dspace_vulkan_dependency})
+  # vulkan rendering demo
+  vox3dspace_add_executable(NAME
+                       demo_graphics_vulkan_rendering
+                       SOURCES
+                       "${vox3dspace_root}/demos/vulkan_rendering/renderingMain.cc"
+                       DEFINES
+                       ${vox3dspace_defines}
+                       RPOJECT_FLAGS
+                       ${VOX3DSPACE_CXX_FLAGS}
+                       INCLUDES
+                       ${vox3dspace_vulkan_libs_include_paths}
+                       LIB_INCLUDES
+                       ${vox3dspace_vulkan_libs_paths}
+                       LIB_DEPS
+                       ${vox3dspace_vulkan_dependency})
   # vulkan compute shader demo
   set(vlk_c_demo_dir "${vox3dspace_root}/demos/vulkan_compute")
   vox3dspace_add_executable(NAME
@@ -200,20 +228,50 @@ macro(build_executable_projects)
                        ${vox3dspace_vulkan_dependency})
 	if(WIN32)
   # dx11 demo
+  set(dx11_demo_dir "${vox3dspace_root}/demos/directx11/")
   vox3dspace_add_executable(NAME
                        demo_graphics_d3dx11
                        SOURCES
-                       "${vox3dspace_root}/demos/directx11/d3dApp.cc"
-                       "${vox3dspace_root}/demos/directx11/d3dApp.h"
-                       "${vox3dspace_root}/demos/directx11/d3dUtil.cc"
-                       "${vox3dspace_root}/demos/directx11/d3dUtil.h"
-                       "${vox3dspace_root}/demos/directx11/DXTrace.cc"
-                       "${vox3dspace_root}/demos/directx11/DXTrace.h"
-                       "${vox3dspace_root}/demos/directx11/GameApp.cc"
-                       "${vox3dspace_root}/demos/directx11/GameApp.h"
-                       "${vox3dspace_root}/demos/directx11/GameTimer.cc"
-                       "${vox3dspace_root}/demos/directx11/GameTimer.h"
-                       "${vox3dspace_root}/demos/directx11/Main.cc"
+                       "${dx11_demo_dir}/d3dApp.cc"
+                       "${dx11_demo_dir}/d3dApp.h"
+                       "${dx11_demo_dir}/d3dUtil.cc"
+                       "${dx11_demo_dir}/d3dUtil.h"
+                       "${dx11_demo_dir}/DXTrace.cc"
+                       "${dx11_demo_dir}/DXTrace.h"
+                       "${dx11_demo_dir}/GameApp.cc"
+                       "${dx11_demo_dir}/GameApp.h"
+                       "${dx11_demo_dir}/GameTimer.cc"
+                       "${dx11_demo_dir}/GameTimer.h"
+                       "${dx11_demo_dir}/Main.cc"
+                       DEFINES
+                       ${vox3dspace_defines}
+                       RPOJECT_FLAGS
+                       ${VOX3DSPACE_CXX_FLAGS}
+                       EXEC_SYS
+                       "WIN32"
+                       LINK_FLAGS
+                       "-mwindows"
+                       DEFINES
+                       "-DUNICODE"
+                       "-D_UNICODE"
+                       LIB_DEPS
+                       ${vox3dspace_dx11_dependency})
+  # dx11 rendering demo
+  set(dx11_r_demo_dir "${vox3dspace_root}/demos/directx11_rendering/")
+  vox3dspace_add_executable(NAME
+                       demo_graphics_d3dx11_rendering
+                       SOURCES
+                       "${dx11_r_demo_dir}/d3dApp.cc"
+                       "${dx11_r_demo_dir}/d3dApp.h"
+                       "${dx11_r_demo_dir}/d3dUtil.cc"
+                       "${dx11_r_demo_dir}/d3dUtil.h"
+                       "${dx11_r_demo_dir}/DXTrace.cc"
+                       "${dx11_r_demo_dir}/DXTrace.h"
+                       "${dx11_r_demo_dir}/GameApp.cc"
+                       "${dx11_r_demo_dir}/GameApp.h"
+                       "${dx11_r_demo_dir}/GameTimer.cc"
+                       "${dx11_r_demo_dir}/GameTimer.h"
+                       "${dx11_r_demo_dir}/Main.cc"
                        DEFINES
                        ${vox3dspace_defines}
                        RPOJECT_FLAGS
@@ -257,6 +315,9 @@ macro(build_executable_projects)
 											LIB_DEPS
 											${vox3dspace_dx12_dependency})
 	#
+  
+  message(STATUS "CMAKE_BUILD_TYPE: ${CMAKE_BUILD_TYPE}")
+  message(STATUS "CMAKE_INTDIR: ${CMAKE_INTDIR}")
 	# file(COPY "${vox3dspace_root}/demos/directx12/shaders.hshd" DESTINATION "${PROJECT_BINARY_DIR}/Debug")
 
   # cuda demo
