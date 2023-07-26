@@ -658,7 +658,7 @@ private:
         auto path_vert       = std::filesystem::path(CMAKE_CURRENT_SOURCE_DIR).string() + "/demos/vulkan_compute/test_vert.spv";
         auto path_vertString = path_vert;
         std::cout << "path_vertString: " << path_vertString << std::endl;
-        auto path_frag       = std::filesystem::path(CMAKE_CURRENT_SOURCE_DIR).string() + "/demos/vulkan_compute/test_vert.spv";
+        auto path_frag       = std::filesystem::path(CMAKE_CURRENT_SOURCE_DIR).string() + "/demos/vulkan_compute/test_frag.spv";
         auto path_fragString = path_frag;
         std::cout << "path_fragString: " << path_fragString << std::endl;
         auto vertShaderCode = readFile(path_vertString.c_str());
