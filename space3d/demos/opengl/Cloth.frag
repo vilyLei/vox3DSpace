@@ -130,7 +130,7 @@ VEC3 texNormalValue;
 #if (defined MATERIAL_WITH_TEX_NORMAL) || (defined MATERIAL_WITH_TEX_NORMAL_BACK)
 	vec2 uvTex = (g_material.uvMatrixNormal * VEC4(v_texCoord.xy, 0, 1)).xy;
 	mat3 TBNTex = CotangentFrame(N, V, uvTex);
-	float strength = g_material.normalMapStrength;//#TODO ·¨ÏßÍ¼µ÷Õû
+	float strength = g_material.normalMapStrength;//#TODO ï¿½ï¿½ï¿½ï¿½Í¼ï¿½ï¿½ï¿½ï¿½
 	if (g_isFront) {
 #ifdef MATERIAL_WITH_TEX_NORMAL
 		texNormalValue = texture2D(texNormal, uvTex).xyz;
@@ -207,35 +207,35 @@ vec3 GetFaceNormal(vec3 pos) {
 void main()
 {
 
-	//³õÊ¼»¯²ÄÖÊÐÅÏ¢
+	//ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢
 	InitMaterial();
 
-	//·¨Ïß»ñÈ¡
+	//ï¿½ï¿½ï¿½ß»ï¿½È¡
 	vec3 normal = normalize(v_normal);
 #ifdef SHADING_WITH_FACE_NORMAL
 	normal = GetFaceNormal(v_position);
 #endif
-	//Ë«ÃæäÖÈ¾·¨ÏßÐÞÕý
+	//Ë«ï¿½ï¿½ï¿½ï¿½È¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 #ifdef SHADING_WITH_DOUBLE_SIDE
 	if (!gl_FrontFacing) 
 		normal = -normal;
 #endif
-	//·¨ÏßÌùÍ¼·¨ÏßÐÞÕý
+	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	vec3 N = PerturbNormal(normal, v_position);
 
-	//ÊÓÏßÏòÁ¿
+	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	vec3 V = -normalize(v_position); //Eye - v_Position
 	float dotNV = clamp(dot(N, V), 0.0f, 1.0f);
 	float dotNormalV = clamp(dot(normalize(normal), V), 0.0f, 1.0f);
 	float crossNormalV = sqrt(1 - dotNormalV*dotNormalV);
 
-	//·¨ÏßÄ£Ê½
+	//ï¿½ï¿½ï¿½ï¿½Ä£Ê½
 #ifdef SHADING_WITH_NORMAL_DEBUG
 	FragColor = VEC4(0.5*N + 0.5, 1.0);
 	return;
 #endif //SHADING_WITH_NORMAL_DEBUG
 
-	//´¿É«Ä£Ê½
+	//ï¿½ï¿½É«Ä£Ê½
 #ifdef VBO_WITH_COLOR
 	if (v_color.x >= -0.1)
 	{
@@ -244,55 +244,55 @@ void main()
 	}
 #endif //VBO_WITH_COLOR
 
-	//»ñÈ¡¿ÉÔ¤ÉèµÄ²ÄÖÊ²ÎÊý
+	//ï¿½ï¿½È¡ï¿½ï¿½Ô¤ï¿½ï¿½Ä²ï¿½ï¿½Ê²ï¿½ï¿½ï¿½
 #if defined DEBUG_SILK
 	int matIsSpecularPass = 1;//
-	float matReflectionIntensity = 0.75f; //·´ÉäÇ¿¶È
-	float matFrontColorScale = 1.0f; //ÕýÃæÑÕÉ«Ëõ·Å
-	float matSideColorScale = 1.0f;//²àÃæÑÕÉ«Ëõ·Å
-	float matMetalness = 0.0f; //½ðÊô¶È
-	g_material.roughness = 0.35f; //¹â»¬¶È
-	float sideLightIntensity = 0.0f;//²àÃæ¹âÇ¿¶È
+	float matReflectionIntensity = 0.75f; //ï¿½ï¿½ï¿½ï¿½Ç¿ï¿½ï¿½
+	float matFrontColorScale = 1.0f; //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½É«ï¿½ï¿½ï¿½ï¿½
+	float matSideColorScale = 1.0f;//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½É«ï¿½ï¿½ï¿½ï¿½
+	float matMetalness = 0.0f; //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	g_material.roughness = 0.35f; //ï¿½â»¬ï¿½ï¿½
+	float sideLightIntensity = 0.0f;//ï¿½ï¿½ï¿½ï¿½ï¿½Ç¿ï¿½ï¿½
 	g_material.reflection = matReflectionIntensity;
 #elif defined DEBUG_MATTE
 	int matIsSpecularPass = 0;//
-	float matReflectionIntensity = 0.15f; //·´ÉäÇ¿¶È
-	float matFrontColorScale = 1.0f; //ÕýÃæÑÕÉ«Ëõ·Å
-	float matSideColorScale = 1.0f;//²àÃæÑÕÉ«Ëõ·Å
-	float matMetalness = 0.0f; //½ðÊô¶È
-	g_material.roughness = 0.5f; //¹â»¬¶È
-	float sideLightIntensity = 0.0f;//²àÃæ¹âÇ¿¶È
+	float matReflectionIntensity = 0.15f; //ï¿½ï¿½ï¿½ï¿½Ç¿ï¿½ï¿½
+	float matFrontColorScale = 1.0f; //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½É«ï¿½ï¿½ï¿½ï¿½
+	float matSideColorScale = 1.0f;//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½É«ï¿½ï¿½ï¿½ï¿½
+	float matMetalness = 0.0f; //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	g_material.roughness = 0.5f; //ï¿½â»¬ï¿½ï¿½
+	float sideLightIntensity = 0.0f;//ï¿½ï¿½ï¿½ï¿½ï¿½Ç¿ï¿½ï¿½
 	g_material.reflection = matReflectionIntensity;
 #elif defined DEBUG_SHINY
 	int matIsSpecularPass = 0;//
-	float matReflectionIntensity = 0.4f; //·´ÉäÇ¿¶È
-	float matFrontColorScale = 1.0f; //ÕýÃæÑÕÉ«Ëõ·Å
-	float matSideColorScale = 1.0f;//²àÃæÑÕÉ«Ëõ·Å
-	float matMetalness = 0.0f; //½ðÊô¶È
-	g_material.roughness = 0.3f; //¹â»¬¶È
-	float sideLightIntensity = 0.0f;//²àÃæ¹âÇ¿¶È
+	float matReflectionIntensity = 0.4f; //ï¿½ï¿½ï¿½ï¿½Ç¿ï¿½ï¿½
+	float matFrontColorScale = 1.0f; //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½É«ï¿½ï¿½ï¿½ï¿½
+	float matSideColorScale = 1.0f;//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½É«ï¿½ï¿½ï¿½ï¿½
+	float matMetalness = 0.0f; //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	g_material.roughness = 0.3f; //ï¿½â»¬ï¿½ï¿½
+	float sideLightIntensity = 0.0f;//ï¿½ï¿½ï¿½ï¿½ï¿½Ç¿ï¿½ï¿½
 	g_material.reflection = matReflectionIntensity;
 #else
 	int matIsSpecularPass = g_material.isSpecularPass;//
-	float matReflectionIntensity = g_material.reflection;//·´ÉäÇ¿¶È
-	float matFrontColorScale = g_material.frontScale;//ÕýÃæÑÕÉ«Ëõ·Å
-	float matSideColorScale = g_material.sideScale;//²àÃæÑÕÉ«Ëõ·Å
-	float matMetalness = GetMetalness();//½ðÊô¶È//g_material.metalness;
+	float matReflectionIntensity = g_material.reflection;//ï¿½ï¿½ï¿½ï¿½Ç¿ï¿½ï¿½
+	float matFrontColorScale = g_material.frontScale;//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½É«ï¿½ï¿½ï¿½ï¿½
+	float matSideColorScale = g_material.sideScale;//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½É«ï¿½ï¿½ï¿½ï¿½
+	float matMetalness = GetMetalness();//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½//g_material.metalness;
 	float sideLightIntensity = g_material.sideLight;
 #endif
-	//´Ö²Ú¶ÈºÍÏà¹ØÏµÊý
+	//ï¿½Ö²Ú¶Èºï¿½ï¿½ï¿½ï¿½Ïµï¿½ï¿½
 	float matRoughness = 1- GetGlossiness(); 
 	float glossinessLinear = (1-matRoughness) * (1-matRoughness);
 	float specularPower = exp2(10.0 * glossinessLinear + 1.0);
-	//ÎÆÀíÑÕÉ«
+	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½É«
 	VEC4 colorInput = GetDiffuse();//VEC4(0.8, 0.125, 0.125, 1);
 	VEC3 matBaseColor = colorInput.rgb;	
-	//Í¸Ã÷¶È¡¢»ìºÏÑÕÉ«¡¢Ë¥¼õÏµÊý
+	//Í¸ï¿½ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½É«ï¿½ï¿½Ë¥ï¿½ï¿½Ïµï¿½ï¿½
 	float matAlpha = GetAlpha(colorInput.w);
 	vec4 blendColor = g_material.blendColor;	
 	float frontAttenuation = g_frontAttenuation;
 
-	//¼ÆËãdiffuseColor¡¢specularColor
+	//ï¿½ï¿½ï¿½ï¿½diffuseColorï¿½ï¿½specularColor
 	VEC3 diffuseColor, specularColor;
 	VEC3 baseColorInv = GammaCorrectionInv(matBaseColor.rgb);
 	if (matIsSpecularPass == 1)
@@ -313,7 +313,7 @@ void main()
 		diffuseColor = mix(baseColorInv, vec3(0.0), matMetalness);
 	}
 
-	//²àÃæÓëÕýÃæÇ¿¶È
+	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç¿ï¿½ï¿½
 	float sideFactorIntensity = GetSideFactorIntensity(dotNV, matFrontColorScale, matSideColorScale);
 	diffuseColor *= sideFactorIntensity;
 	specularColor *= sideFactorIntensity * matFrontColorScale;
@@ -321,7 +321,7 @@ void main()
 	vec3 diffuseTotal = vec3(0.0);
 	vec3 specularTotal = vec3(0.0);
 
-	//²àÃæ¹â
+	//ï¿½ï¿½ï¿½ï¿½ï¿½
 	vec3 sideMixedColor = mix(diffuseColor , vec3(1.0) , 0.05);
 	float sideCorrection = SideCorrection( ColorIntensity(diffuseColor));
 
@@ -332,8 +332,8 @@ void main()
 #endif
 
 #ifdef SHADING_WITH_ENVIRONMENT
-	//»·¾³Í¼¼ÆËã
-	float envIntensity = g_Scene.envLightIntensity; //»·¾³Í¼ÁÁ¶È
+	//ï¿½ï¿½ï¿½ï¿½Í¼ï¿½ï¿½ï¿½ï¿½
+	float envIntensity = g_Scene.envLightIntensity; //ï¿½ï¿½ï¿½ï¿½Í¼ï¿½ï¿½ï¿½ï¿½
 	vec3 envDir = GetEnvDir(g_Scene.envLightRotateAngle, N);
 	//Diffuse
 	vec3 diffuseEnvColor = frontAttenuation * envIntensity * (g_Scene.envLightColor.xyz) * texture(texEnvDiffuse, envDir).xyz;
@@ -346,7 +346,7 @@ void main()
 		diffuseEnvColor = mix(diffuseEnvColor,lightMapColor , lightmapIntensity);
 	}
 #endif
-	//²àÃæ¹â
+	//ï¿½ï¿½ï¿½ï¿½ï¿½
 	vec3 sideEnvDiffuseColor = GetSideEnvDiffuseColor(sideMixedColor,sideLightIntensity,dotNormalV/crossNormalV);
 	vec3 diffuseTotalEnv = (diffuseColor + sideEnvDiffuseColor) * diffuseEnvColor;
 	diffuseTotalEnv = LaserGetDiffuseTotalEnv(laser, diffuseTotalEnv);
@@ -362,19 +362,19 @@ void main()
 	}
 #endif
 
-	//ÒõÓ°´¦Àí
+	//ï¿½ï¿½Ó°ï¿½ï¿½ï¿½ï¿½
 #ifdef SHADING_WITH_SHADOW
 	vec4 lightPosition = g_lightMatrix.VP * VEC4(v_worldPosition, 1);
 	lightPosition /= lightPosition.w;
 	lightPosition = 0.5*lightPosition + 0.5;
-	//ÒõÓ°Éî¶ÈÆ«ÒÆ¼ÆËã¡£·¨ÏßºÍ¹âÏß½Ç¶È´ó,Æ«ÒÆÔ½´ó£»·¶Î§ÔÚ[0.0002, 0.001]
+	//ï¿½ï¿½Ó°ï¿½ï¿½ï¿½Æ«ï¿½Æ¼ï¿½ï¿½ã¡£ï¿½ï¿½ï¿½ßºÍ¹ï¿½ï¿½ß½Ç¶È´ï¿½,Æ«ï¿½ï¿½Ô½ï¿½ó£»·ï¿½Î§ï¿½ï¿½[0.0002, 0.001]
 	VEC4 lightDir = g_LightArray.lights[3].direction;
 	if(g_LightArray.lights[3].isFollowCamera == 0)
 	{
 		lightDir = g_Camera.V * lightDir;
 	}
 	float dotNLShadow = dot(N, normalize(lightDir.xyz));
-	if (dotNLShadow > 0.001) //ÒõÓ°ÔÚ ÒõÓ°¹âÏßºÍ·¨Ïß·½ÏòÏà·´µÄÊ±ºò²»Æð×÷ÓÃ
+	if (dotNLShadow > 0.001) //ï¿½ï¿½Ó°ï¿½ï¿½ ï¿½ï¿½Ó°ï¿½ï¿½ï¿½ßºÍ·ï¿½ï¿½ß·ï¿½ï¿½ï¿½ï¿½à·´ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	{
 		float bias = max(0.001 * (1.0 - abs(dotNLShadow)), 0.0002);
 		lightPosition.z -= bias;
@@ -393,7 +393,7 @@ void main()
 	{
 		SDParamLight light = g_LightArray.lights[iLight];
 		vec3 lightColor = pow(light.color.rgb, vec3(GAMMA)) * light.intensity;
-		VEC4 lightDir = light.direction; //½«ÊÀ½ç×ø±êÏµµÄ·½Ïò×ªµ½ÊÓµã×ø±êÏµ
+		VEC4 lightDir = light.direction; //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ïµï¿½Ä·ï¿½ï¿½ï¿½×ªï¿½ï¿½ï¿½Óµï¿½ï¿½ï¿½ï¿½ï¿½Ïµ
 		if(light.isFollowCamera == 0)
 		{
 			lightDir = g_Camera.V * lightDir;
@@ -428,7 +428,7 @@ void main()
 #pragma endregion PBRLightComputing
 
 	
-	specularTotal *= GammaCorrectionInv(GetSpecularColor()); //¸ß¹âÑÕÉ«µþ¼Ó
+	specularTotal *= GammaCorrectionInv(GetSpecularColor()); //ï¿½ß¹ï¿½ï¿½ï¿½É«ï¿½ï¿½ï¿½ï¿½
 
 	FragColor.rgb = diffuseTotal + specularTotal;
 
@@ -443,7 +443,7 @@ void main()
 
 
 
-	//»ìºÏÑÕÉ«´¦Àí
+	//ï¿½ï¿½ï¿½ï¿½ï¿½É«ï¿½ï¿½ï¿½ï¿½
 	FragColor = FragColor*(1 - blendColor.a) + blendColor*blendColor.a;
 
 	FragColor.rgb = GammaCorrection(FragColor.rgb);
