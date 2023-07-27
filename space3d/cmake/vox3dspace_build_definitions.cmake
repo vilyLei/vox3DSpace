@@ -137,6 +137,9 @@ macro(vox3dspace_set_build_definitions)
   file(TO_CMAKE_PATH ${tbb_root_dir} tbb_root_dir)
   message(STATUS "tbb_root_dir: ${tbb_root_dir}")
 
+  # externals\glm
+  set(glm_root_dir "${vox3dspace_root}/externals/glm")
+  message(STATUS "glm_root_dir: ${glm_root_dir}")
 
   
   # ccplus demo libs info define
@@ -158,7 +161,7 @@ macro(vox3dspace_set_build_definitions)
   list(APPEND vox3dspace_vulkan_libs_include_paths
     "${vox3dspace_root}/openglLibs/libx64"
     ${Vulkan_INCLUDE_DIR}
-    "${vulkan_sdk_dir}/Third-Party/Include"
+    # "${vulkan_sdk_dir}/Third-Party/Include"
   )
   list(APPEND vox3dspace_vulkan_libs_paths "${vox3dspace_root}/openglLibs/libx64/lib")
   #Third-Party\glm
