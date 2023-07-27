@@ -161,6 +161,7 @@ macro(vox3dspace_set_build_definitions)
   list(APPEND vox3dspace_vulkan_libs_include_paths
     "${vox3dspace_root}/openglLibs/libx64"
     ${Vulkan_INCLUDE_DIR}
+    ${glm_root_dir}
     # "${vulkan_sdk_dir}/Third-Party/Include"
   )
   list(APPEND vox3dspace_vulkan_libs_paths "${vox3dspace_root}/openglLibs/libx64/lib")
