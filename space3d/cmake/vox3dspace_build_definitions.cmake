@@ -164,7 +164,11 @@ macro(vox3dspace_set_build_definitions)
     # "${vulkan_sdk_dir}/Third-Party/Include"
   )
   list(APPEND vox3dspace_vulkan_libs_paths "${vox3dspace_root}/openglLibs/libx64/lib")
-  #Third-Party\glm
+  
+  
+  # dx12dxr demos
+  list(APPEND vox3dspace_dx12demos_include_paths "${vox3dspace_root}/testCases/dx12dxrDemos" ${glm_root_dir})
+
   
   # cuda libs info define
   list(APPEND vox3dspace_cuda_libs_include_paths "${vox3dspace_root}/demos/cuda")
