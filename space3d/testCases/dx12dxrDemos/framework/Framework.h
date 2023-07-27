@@ -45,6 +45,7 @@
 #include "externals/dxcapi/dxcapi.use.h"
 #include <vector>
 #include <array>
+#include <filesystem>
 
 using namespace glm;
 
@@ -65,6 +66,9 @@ MAKE_SMART_COM_PTR(ID3D12StateObject);
 MAKE_SMART_COM_PTR(ID3D12RootSignature);
 MAKE_SMART_COM_PTR(ID3DBlob);
 MAKE_SMART_COM_PTR(IDxcBlobEncoding);
+
+void OutputDebugStdString(const std::wstring& info);
+void OutputDebugStdString(const std::string& info);
 
 // Interface for the tutorials
 class Tutorial
