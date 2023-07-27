@@ -29,7 +29,7 @@ private:
         glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
         glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 
-        window = glfwCreateWindow(WIDTH, HEIGHT, "Vulkan_Instance", nullptr, nullptr);
+        window = glfwCreateWindow(WIDTH, HEIGHT, "VulkanContext", nullptr, nullptr);
     }
 
     void initVulkan() {

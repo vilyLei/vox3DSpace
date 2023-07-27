@@ -111,7 +111,7 @@ private:
         glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
         glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 
-        window = glfwCreateWindow(WIDTH, HEIGHT, "Vulkan_renderingAndPresentation", nullptr, nullptr);
+        window = glfwCreateWindow(WIDTH, HEIGHT, "VulkanRendering", nullptr, nullptr);
     }
 
     void initVulkan() {
@@ -430,8 +430,8 @@ private:
     void createGraphicsPipeline() {
         std::string rootDir = std::filesystem::path(CMAKE_CURRENT_SOURCE_DIR).string() + "/demos/vulkan_rendering/";
 
-        auto path_vert = rootDir + "vert.spv";
-        auto path_frag = rootDir + "frag.spv";
+        auto path_vert = rootDir + "shader.vert.spv";
+        auto path_frag = rootDir + "shader.frag.spv";
         //auto vertShaderCode = readFile("vert.spv");
         //auto fragShaderCode  = readFile("frag.spv");
         auto vertShaderCode = readFile(path_vert.c_str());

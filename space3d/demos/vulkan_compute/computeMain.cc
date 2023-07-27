@@ -196,7 +196,7 @@ private:
 
         glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
 
-        window = glfwCreateWindow(WIDTH, HEIGHT, "Vulkan_ComputeShader", nullptr, nullptr);
+        window = glfwCreateWindow(WIDTH, HEIGHT, "VulkanComputeShader", nullptr, nullptr);
         glfwSetWindowUserPointer(window, this);
         glfwSetFramebufferSizeCallback(window, framebufferResizeCallback);
 
