@@ -147,15 +147,9 @@ macro(build_executable_projects)
   vox3dspace_add_executable(NAME
                        demo_graphics_opengl
                        SOURCES
-                      #  "${ogl_demo_dir}/oglTest.cc"
-                      #  "${ogl_demo_dir}/player.cc"
-                      #  "${ogl_demo_dir}/player.h"
-
-                       "${ogl_demo_dir}/colorTri.frag"
-                       "${ogl_demo_dir}/colorTri.vert"
-                       "${ogl_demo_dir}/shader.cc"
-                       "${ogl_demo_dir}/shader.h"
-                       "${ogl_demo_dir}/colorTriMain.cc"
+                       "${ogl_demo_dir}/oglTest.cc"
+                       "${ogl_demo_dir}/player.cc"
+                       "${ogl_demo_dir}/player.h"
                        FOLDER
                        ${test_demo_folder_name}
                        DEFINES
@@ -168,6 +162,52 @@ macro(build_executable_projects)
                        ${vox3dspace_opengl_libs_paths}
                        LIB_DEPS
                        ${vox3dspace_opengl_dependency})
+  
+  # ogl rendering demo
+  set(ogl_r_demo_dir "${vox3dspace_root}/demos/opengl_rendering")
+  vox3dspace_add_executable(NAME
+                       demo_graphics_opengl_rendering
+                       SOURCES
+                       "${ogl_r_demo_dir}/colorTri.frag"
+                       "${ogl_r_demo_dir}/colorTri.vert"
+                       "${ogl_r_demo_dir}/shader.cc"
+                       "${ogl_r_demo_dir}/shader.h"
+                       "${ogl_r_demo_dir}/colorTriMain.cc"
+                       FOLDER
+                       ${test_demo_folder_name}
+                       DEFINES
+                       ${vox3dspace_defines}
+                       RPOJECT_FLAGS
+                       ${VOX3DSPACE_CXX_FLAGS}
+                       INCLUDES
+                       ${vox3dspace_opengl_libs_include_paths}
+                       LIB_INCLUDES
+                       ${vox3dspace_opengl_libs_paths}
+                       LIB_DEPS
+                       ${vox3dspace_opengl_dependency})
+  # opengl_binShader
+  set(ogl_bs_demo_dir "${vox3dspace_root}/demos/opengl_binShader")
+  vox3dspace_add_executable(NAME
+                       demo_graphics_opengl_binShader
+                       SOURCES
+                       "${ogl_bs_demo_dir}/colorTri.frag"
+                       "${ogl_bs_demo_dir}/colorTri.vert"
+                       "${ogl_bs_demo_dir}/shader.cc"
+                       "${ogl_bs_demo_dir}/shader.h"
+                       "${ogl_bs_demo_dir}/colorTriMain.cc"
+                       FOLDER
+                       ${test_demo_folder_name}
+                       DEFINES
+                       ${vox3dspace_defines}
+                       RPOJECT_FLAGS
+                       ${VOX3DSPACE_CXX_FLAGS}
+                       INCLUDES
+                       ${vox3dspace_opengl_libs_include_paths}
+                       LIB_INCLUDES
+                       ${vox3dspace_opengl_libs_paths}
+                       LIB_DEPS
+                       ${vox3dspace_opengl_dependency})
+
 	# file(COPY "${vox3dspace_root}/demos/opengl/colorTri.frag" DESTINATION "${PROJECT_BINARY_DIR}")
   # ogl compute compute demo
   set(ogl_c_demo_dir "${vox3dspace_root}/demos/opengl_compute")
