@@ -14,11 +14,14 @@ macro(build_executable_projects)
       set(vox3dspace_lib_type STATIC)
     endif()
   endif()
+  set(test_demo_folder_name "TestDemo")
   # Vox3DSpace app targets.  
   vox3dspace_add_executable(NAME
                        demo_ccplus
                        SOURCES
                        "${vox3dspace_root}/demos/ccplus/testMain.cc"
+                       FOLDER
+                       ${test_demo_folder_name}
                        DEFINES
                        ${vox3dspace_defines}
                        RPOJECT_FLAGS
@@ -30,6 +33,8 @@ macro(build_executable_projects)
                        demo_vox3dspace_engine
                        SOURCES
                        "${vox3dspace_root}/demos/voxengine/voxengineTest.cc"
+                       FOLDER
+                       ${test_demo_folder_name}
                        DEFINES
                        ${vox3dspace_defines}
                        RPOJECT_FLAGS
@@ -43,6 +48,8 @@ macro(build_executable_projects)
                        demo_ctm
                        SOURCES
                        "${vox3dspace_root}/demos/ctm/ctmTest.cc"
+                       FOLDER
+                       ${test_demo_folder_name}
                        DEFINES
                        ${vox3dspace_defines}
                        RPOJECT_FLAGS
@@ -56,6 +63,8 @@ macro(build_executable_projects)
                        demo_json
                        SOURCES
                        "${vox3dspace_root}/demos/json/jsonTest.cc"
+                       FOLDER
+                       ${test_demo_folder_name}
                        DEFINES
                        ${vox3dspace_defines}
                        RPOJECT_FLAGS
@@ -72,6 +81,8 @@ macro(build_executable_projects)
                        demo_tbb
                        SOURCES
                        "${vox3dspace_root}/demos/tbb/testMain.cc"
+                       FOLDER
+                       ${test_demo_folder_name}
                        DEFINES
                        ${vox3dspace_defines}
                        RPOJECT_FLAGS
@@ -88,6 +99,8 @@ macro(build_executable_projects)
                       demo_boost
                       SOURCES
                       "${vox3dspace_root}/demos/boost/baseTest.cc"
+                      FOLDER
+                      ${test_demo_folder_name}
                       DEFINES
                       ${vox3dspace_defines}
                       RPOJECT_FLAGS
@@ -101,6 +114,8 @@ macro(build_executable_projects)
                        demo_tinyObj
                        SOURCES
                        "${vox3dspace_root}/demos/tinyObj/tinyObjTest.cc"
+                       FOLDER
+                       ${test_demo_folder_name}
                        DEFINES
                        ${vox3dspace_defines}
                        RPOJECT_FLAGS
@@ -116,6 +131,8 @@ macro(build_executable_projects)
                        demo_profile_log
                        SOURCES
                        "${vox3dspace_root}/demos/profile/logerTest.cc"
+                       FOLDER
+                       ${test_demo_folder_name}
                        DEFINES
                        ${vox3dspace_defines}
                        RPOJECT_FLAGS
@@ -139,6 +156,8 @@ macro(build_executable_projects)
                        "${ogl_demo_dir}/shader.cc"
                        "${ogl_demo_dir}/shader.h"
                        "${ogl_demo_dir}/colorTriMain.cc"
+                       FOLDER
+                       ${test_demo_folder_name}
                        DEFINES
                        ${vox3dspace_defines}
                        RPOJECT_FLAGS
@@ -167,6 +186,8 @@ macro(build_executable_projects)
                        "${ogl_c_demo_dir}/renderer.h"
                        "${ogl_c_demo_dir}/testMain.cc"
                        
+                       FOLDER
+                       ${test_demo_folder_name}
                        DEFINES
                        ${vox3dspace_defines}
                        RPOJECT_FLAGS
@@ -182,6 +203,8 @@ macro(build_executable_projects)
                        demo_graphics_vulkan
                        SOURCES
                        "${vox3dspace_root}/demos/vulkan/vulkanTest.cc"
+                       FOLDER
+                       ${test_demo_folder_name}
                        DEFINES
                        ${vox3dspace_defines}
                        RPOJECT_FLAGS
@@ -197,6 +220,8 @@ macro(build_executable_projects)
                        demo_graphics_vulkan_rendering
                        SOURCES
                        "${vox3dspace_root}/demos/vulkan_rendering/renderingMain.cc"
+                       FOLDER
+                       ${test_demo_folder_name}
                        DEFINES
                        ${vox3dspace_defines}
                        RPOJECT_FLAGS
@@ -216,6 +241,8 @@ macro(build_executable_projects)
                        "${vlk_c_demo_dir}/test.vert"
                        "${vlk_c_demo_dir}/test.frag"
                        "${vlk_c_demo_dir}/test.comp"
+                       FOLDER
+                       ${test_demo_folder_name}
                        DEFINES
                        ${vox3dspace_defines}
                        RPOJECT_FLAGS
@@ -243,6 +270,8 @@ macro(build_executable_projects)
                        "${dx11_demo_dir}/GameTimer.cc"
                        "${dx11_demo_dir}/GameTimer.h"
                        "${dx11_demo_dir}/Main.cc"
+                       FOLDER
+                       ${test_demo_folder_name}
                        DEFINES
                        ${vox3dspace_defines}
                        RPOJECT_FLAGS
@@ -272,6 +301,8 @@ macro(build_executable_projects)
                        "${dx11_r_demo_dir}/GameTimer.cc"
                        "${dx11_r_demo_dir}/GameTimer.h"
                        "${dx11_r_demo_dir}/Main.cc"
+                       FOLDER
+                       ${test_demo_folder_name}
                        DEFINES
                        ${vox3dspace_defines}
                        RPOJECT_FLAGS
@@ -301,6 +332,8 @@ macro(build_executable_projects)
 											"${vox3dspace_root}/demos/directx12/Win32Application.h"
 											"${vox3dspace_root}/demos/directx12/Win32Application.cc"
 											"${vox3dspace_root}/demos/directx12/shaders.hshd"
+                      FOLDER
+                      ${test_demo_folder_name}
 											DEFINES
 											${vox3dspace_defines}
                       RPOJECT_FLAGS
@@ -331,6 +364,8 @@ macro(build_executable_projects)
 											"${vox3dspace_root}/demos/cuda/helper_cuda.h"
 											"${vox3dspace_root}/demos/cuda/helper_functions.h"
 											"${vox3dspace_root}/demos/cuda/asyncAPI.cu"
+                      FOLDER
+                      ${test_demo_folder_name}
 											DEFINES
 											${vox3dspace_defines}
                       INCLUDES

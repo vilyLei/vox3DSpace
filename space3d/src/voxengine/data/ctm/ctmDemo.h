@@ -1,6 +1,7 @@
 #pragma once
 
 #include <iostream>
+#include <filesystem>
 #include <cmath>
 #include <cassert>
 #include <string>
@@ -125,14 +126,8 @@ bool loadAndParseCTM()
     std::cout << "<<<< -------------- loadAndParseCTM begin ---------------------\n"
               << std::endl;
 
-    //std::string url("D:\\dev\\res\\assets\\box01.ctm");
-    //std::string url(".\\assets\\tri01.ctm");
-    //std::string url(".\\assets\\box01.ctm");
-    //std::string url(".\\assets\\sh202_0.ctm");
-    //std::string url(".\\assets\\sh202_20.ctm");
-    //std::string url(".\\assets\\sh202_22.ctm");
-
-    std::string url(".\\assets\\sh202_26.ctm");
+    auto        path = std::filesystem::path(CMAKE_CURRENT_SOURCE_DIR) / "assets/model/ctm/model01.ctm";
+    std::string url       = path.generic_string();
     auto        dataU8Arr = readFile(url);
     if (dataU8Arr == nullptr)
     {
@@ -228,10 +223,9 @@ void testCTMBase()
 {
 
     std::cout << "Current path is " << std::filesystem::current_path() << std::endl;
-    //std::string url(".\\assets\\tri01.ctm");
-    //std::string url("D:\\dev\\res\\assets\\box01.ctm");
-    std::string url("D:\\dev\\res\\assets\\box01.ctm");
-    auto        ctmDataU8Arr = readFile(url);
+
+    auto path         = std::filesystem::path(CMAKE_CURRENT_SOURCE_DIR) / "assets/model/ctm/box01.ctm";
+    auto ctmDataU8Arr = readFile(path.string());
     if (ctmDataU8Arr == nullptr)
     {
         return;

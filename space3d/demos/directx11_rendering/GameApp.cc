@@ -74,7 +74,7 @@ bool GameApp::InitEffect()
     auto             path_ps_cso = std::filesystem::path(CMAKE_CURRENT_SOURCE_DIR) / "demos/directx11_rendering/hlsl/cube_frag.cso";
     std::string      debugStr       = "Debug status:  testing.\n";
     std::wstring     winDebugStr     = std::wstring(debugStr.begin(), debugStr.end());
-    OutputDebugStringW(winDebugStr.c_str());
+    OutputDebugStringW(winDebugStr.data());
 
     // 创建顶点着色器
     //std::cout<<

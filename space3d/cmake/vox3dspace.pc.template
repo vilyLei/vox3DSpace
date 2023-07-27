@@ -1,6 +1,6 @@
 Name: @PROJECT_NAME@
-Description: Draco geometry de(com)pression library.
-Version: @DRACO_VERSION@
+Description: Vox3DSpace de(com)pression library.
+Version: @VOX3DSPACE_VERSION@
 Cflags: -I@includes_path@
-Libs: -L@libs_path@ -ldraco
+Libs: -L@libs_path@ -lvox3dspace
 Libs.private: @CMAKE_THREAD_LIBS_INIT@

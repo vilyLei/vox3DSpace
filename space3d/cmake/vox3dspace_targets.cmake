@@ -64,10 +64,11 @@ macro(vox3dspace_add_executable)
   unset(exe_LINK_FLAGS)
   unset(exe_OBJLIB_DEPS)
   unset(exe_LIB_DEPS)
+  unset(exe_FOLDER)
   set(optional_args TEST)
   set(single_value_args NAME OUTPUT_NAME)
   set(multi_value_args SOURCES DEFINES INCLUDES LIB_INCLUDES EXEC_SYS COMPILE_FLAGS RPOJECT_FLAGS LINK_FLAGS
-                       OBJLIB_DEPS LIB_DEPS)
+                       OBJLIB_DEPS LIB_DEPS FOLDER)
 
   cmake_parse_arguments(exe "${optional_args}" "${single_value_args}"
                         "${multi_value_args}" ${ARGN})
@@ -88,6 +89,7 @@ macro(vox3dspace_add_executable)
             "exe_LINK_FLAGS=${exe_LINK_FLAGS}\n"
             "exe_OBJLIB_DEPS=${exe_OBJLIB_DEPS}\n"
             "exe_LIB_DEPS=${exe_LIB_DEPS}\n"
+            "exe_FOLDER=${exe_FOLDER}\n"
             "------------------------------------------\n")
   endif()
 
@@ -124,6 +126,10 @@ macro(vox3dspace_add_executable)
 
   if(exe_DEFINES)
     target_compile_definitions(${exe_NAME} PRIVATE ${exe_DEFINES})
+  endif()
+  
+  if(exe_FOLDER)
+    set_target_properties(${exe_NAME} PROPERTIES FOLDER ${exe_FOLDER})
   endif()
 
   message(STATUS "--- info exe_INCLUDES: ${exe_INCLUDES}")
