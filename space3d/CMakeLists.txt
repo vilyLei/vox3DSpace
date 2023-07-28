@@ -48,6 +48,8 @@ include("${vox3dspace_root}/cmake/vox3dspace_sources.cmake")
 include("${vox3dspace_root}/cmake/vox3dspace_libraries.cmake")
 include("${vox3dspace_root}/cmake/vox3dspace_executable_project.cmake")
 include("${vox3dspace_root}/cmake/vox3dspace_executable_dx12dxrDemos.cmake")
+include("${vox3dspace_root}/cmake/vox3dspace_executable_vkDemos.cmake")
+include("${vox3dspace_root}/cmake/vox3dspace_executable_oglDemos.cmake")
 
 execute_process(
   COMMAND
@@ -116,11 +118,13 @@ build_projects_sources()
 # Vox3DSpace targets.
 #
 set(EXEC_BUILD_FLAG true)
-if(EXEC_BUILD_FLAG)  
+if(EXEC_BUILD_FLAG)
   build_libraries()
   # # Library targets that consume the object collections.
   build_executable_projects()
   build_executable_dx12dxrDemos()
+  build_executable_vkDemos()
+  build_executable_oglDemos()
   # vox3dspace_setup_install_target()
   # vox3dspace_setup_test_targets()
 endif()
