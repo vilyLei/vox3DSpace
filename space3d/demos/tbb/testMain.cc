@@ -151,7 +151,7 @@ public:
 
     void operator()() const
     {
-        std::cout<<"hello from task" << id << std::endl;
+        std::cout << "hello from task" << id << std::endl;
     }
 };
 
@@ -159,7 +159,7 @@ int main2()
 {
     tbb::spin_rw_mutex lock;
     //tbb::spin_mutex lock;
-    std::cout << "tbb task begin." <<std::endl;
+    std::cout << "tbb task begin." << std::endl;
     tbb::task_group tg;
     tg.run(say_hello("1")); // spawn 1st task and return
     tg.run(say_hello("2")); // spawn 2nd task and return
@@ -174,7 +174,7 @@ tbb::spin_rw_mutex mtx;
 
 
 std::atomic<unsigned> counter;
-unsigned         GetUniqueInterger()
+unsigned              GetUniqueInterger()
 {
     return std::atomic_fetch_add(&counter, 1);
 }
