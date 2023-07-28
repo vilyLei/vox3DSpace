@@ -13,6 +13,7 @@
 #include "oneapi/tbb/task_arena.h"
 #include "oneapi/tbb/blocked_range.h"
 #include "oneapi/tbb/tick_count.h"
+#include "tbbAtomic.h"
 
 static const std::size_t N = 16;
 
@@ -195,7 +196,7 @@ void write1()
     wlock.release();
 }
 
-int main()
+int main3()
 {
     std::vector<std::thread> threads;
     threads.reserve(static_cast<size_t>(10));
@@ -209,5 +210,10 @@ int main()
         t.join();
     }
     read1();
+    return EXIT_SUCCESS;
+}
+int main()
+{
+    tbbAtomic::testMain();
     return EXIT_SUCCESS;
 }
