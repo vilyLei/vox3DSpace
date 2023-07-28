@@ -14,10 +14,21 @@ std::atomic<int> flagValue;
 #else
 int flagValue{0};
 #endif
+void little_sleep(std::chrono::microseconds us)
+{
+    auto start = std::chrono::high_resolution_clock::now();
+    auto end   = start + us;
+    do {
+        std::this_thread::yield();
+    } while (std::chrono::high_resolution_clock::now() < end);
+}
 void thrCall(void)
 {
-    for (int i = 0; i < 100000; i++)
+    for (int i = 0; i < 100; i++)
     {
+        //std::this_thread::sleep_for(std::chrono::milliseconds(5));
+        //std::this_thread::yield();
+        little_sleep(std::chrono::microseconds(1000));
         flagValue += 1;
     }
     std::cout << "thrCall() print ...\n";
