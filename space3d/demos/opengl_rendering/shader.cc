@@ -13,43 +13,6 @@
 #include <include/GL/glew.h>
 
 #include "shader.h"
-/*
-GLuint compile_bin_shader(const std::string& path_to_file, GLenum shader_type)
-{
-    GLuint shader_handle = 0;
-
-    std::ifstream shader_file(path_to_file, std::ios::ate | std::ios::binary);
-    if (!shader_file)
-    {
-        throw std::runtime_error("shader file load error");
-    }
-    size_t            shader_file_size = (size_t)shader_file.tellg();
-    std::vector<char> shader_code(shader_file_size);
-    shader_file.seekg(0);
-    shader_file.read(shader_code.data(), shader_file_size);
-    shader_file.close();
-
-    shader_handle = glCreateShader(shader_type);
-
-    glShaderBinary(1, &shader_handle, GL_SHADER_BINARY_FORMAT_SPIR_V_ARB, shader_code.data(), static_cast<GLsizei>(shader_code.size()));
-    glSpecializeShader(shader_handle, "main", 0, nullptr, nullptr);
-    int32_t is_compiled = 0;
-    glGetShaderiv(shader_handle, GL_COMPILE_STATUS, &is_compiled);
-    if (is_compiled == GL_FALSE)
-    {
-        int32_t len = 0;
-        glGetShaderiv(shader_handle, GL_INFO_LOG_LENGTH, &len);
-        std::vector<GLchar> log(len);
-        glGetShaderInfoLog(shader_handle, len, &len, &log[0]);
-        for (const auto& el : log)
-        {
-            std::cout << el;
-        }
-        throw std::runtime_error("shader compile error");
-    }
-    return shader_handle;
-}
-//*/
 GLuint LoadShaders(const std::string& vertex_file_path, const std::string& fragment_file_path)
 {
 
@@ -66,7 +29,7 @@ GLuint LoadShaders(const std::string& vertex_file_path, const std::string& fragm
 		VertexShaderCode = sstr.str();
 		VertexShaderStream.close();
 	}else{
-		printf("Impossible to open %s. Are you in the right directory ? Don't forget to read the FAQ !\n", vertex_file_path);
+		printf("Impossible to open %s. Are you in the right directory ? Don't forget to read the FAQ !\n", vertex_file_path.c_str());
 		getchar();
 		return 0;
 	}
@@ -85,7 +48,7 @@ GLuint LoadShaders(const std::string& vertex_file_path, const std::string& fragm
 	int InfoLogLength;
 
 	// Compile Vertex Shader
-	printf("Compiling shader : %s\n", vertex_file_path);
+    printf("Compiling shader : %s\n", vertex_file_path.c_str());
 	char const * VertexSourcePointer = VertexShaderCode.c_str();
 	glShaderSource(VertexShaderID, 1, &VertexSourcePointer , NULL);
 	glCompileShader(VertexShaderID);
@@ -102,7 +65,7 @@ GLuint LoadShaders(const std::string& vertex_file_path, const std::string& fragm
 
 
 	// Compile Fragment Shader
-	printf("Compiling shader : %s\n", fragment_file_path);
+    printf("Compiling shader : %s\n", fragment_file_path.c_str());
 	char const * FragmentSourcePointer = FragmentShaderCode.c_str();
 	glShaderSource(FragmentShaderID, 1, &FragmentSourcePointer , NULL);
 	glCompileShader(FragmentShaderID);

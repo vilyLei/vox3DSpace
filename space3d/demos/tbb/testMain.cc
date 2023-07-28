@@ -17,8 +17,13 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include <algorithm> // std::max
+#include <thread>
+#include <atomic>
+#include <algorithm>
+#include <chrono>
 
+#include "tbb/tbb.h"
+#include "tbb/spin_mutex.h"
 #include "oneapi/tbb/parallel_for.h"
 #include "oneapi/tbb/task_arena.h"
 #include "oneapi/tbb/blocked_range.h"
@@ -95,7 +100,7 @@ public:
         pos_array(p) {}
 };
 
-int main()
+int main_01()
 {
     auto max_concurrency = oneapi::tbb::this_task_arena::max_concurrency();
 
@@ -148,4 +153,76 @@ int main()
               << (serial_t1 - serial_t0).seconds() / (parallel_t1 - parallel_t0).seconds() << "\n";
 
     return 0;
+}
+
+class say_hello
+{
+    const char* id;
+
+public:
+    say_hello(const char* s) :
+        id(s) {}
+
+    void operator()() const
+    {
+        std::cout<<"hello from task" << id << std::endl;
+    }
+};
+
+int main2()
+{
+    tbb::spin_rw_mutex lock;
+    //tbb::spin_mutex lock;
+    std::cout << "tbb task begin." <<std::endl;
+    tbb::task_group tg;
+    tg.run(say_hello("1")); // spawn 1st task and return
+    tg.run(say_hello("2")); // spawn 2nd task and return
+    tg.wait();              // wait for tasks to complete
+    std::cout << "tbb task end." << std::endl;
+    return EXIT_SUCCESS;
+}
+
+int a = 0;
+
+tbb::spin_rw_mutex mtx;
+
+
+std::atomic<unsigned> counter;
+unsigned         GetUniqueInterger()
+{
+    return std::atomic_fetch_add(&counter, 1);
+}
+
+// 如果处理器支持HTM，那么请使用 tbb::speculative_spin_rw_mutex mtx;
+void read1()
+{
+    tbb::spin_rw_mutex::scoped_lock rlock;
+    rlock.acquire(mtx, false); // 传入false表示这是一个读锁
+    std::cout << a << std::endl;
+    rlock.release();
+}
+
+void write1()
+{
+    tbb::spin_rw_mutex::scoped_lock wlock;
+    wlock.acquire(mtx); // 默认为写锁
+    for (int i = 0; i < 100000; i++) a++;
+    wlock.release();
+}
+
+int main()
+{
+    std::vector<std::thread> threads;
+    threads.reserve(static_cast<size_t>(10));
+
+    for (int i = 0; i < 10; ++i)
+    {
+        threads.emplace_back(write1);
+    }
+    for (auto& t : threads)
+    {
+        t.join();
+    }
+    read1();
+    return EXIT_SUCCESS;
 }

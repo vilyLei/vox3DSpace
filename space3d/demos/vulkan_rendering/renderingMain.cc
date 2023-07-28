@@ -432,8 +432,7 @@ private:
 
         auto path_vert = rootDir + "shader.vert.spv";
         auto path_frag = rootDir + "shader.frag.spv";
-        //auto vertShaderCode = readFile("vert.spv");
-        //auto fragShaderCode  = readFile("frag.spv");
+
         auto vertShaderCode = readFile(path_vert.c_str());
         auto fragShaderCode = readFile(path_frag.c_str());
 

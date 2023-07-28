@@ -1,4 +1,5 @@
 #include <iostream>
+#include <algorithm>
 #include <variant>
 
 class ValueUnit
@@ -46,6 +47,100 @@ public:
         std::visit(Visitor{program, location}, value);
     }
 };
+
+template <typename T>
+void print(const T& x)
+{
+    std::cout << "print1: " << x << "\n";
+}
+
+int testFunctor1()
+{
+    int arr[5] = {1, 2, 3, 4, 5};
+    std::for_each(arr, arr + 5, print<int>);
+    return 0;
+}
+template <typename T>
+struct Print
+{
+    void operator()(const T& x) const
+    {
+        std::cout << "print2: " << x << "\n";
+    }
+};
+int testFunctor2()
+{
+    int arr[5] = {1, 2, 3, 4, 5};
+    std::for_each(arr, arr + 5, Print<int>{});
+    // for_each(arr, arr + 5, [](auto&& x) { std::cout << x << " "; });
+    return 0;
+}
+struct PrintFuncPtrWrapper
+{
+    typedef void (*Func_Type)(const int&);
+    operator Func_Type() const { return &print<int>; }
+};
+
+
+int testFunctor3()
+{
+    int arr[5] = {1, 2, 3, 4, 5};
+    std::for_each(arr, arr + 5, PrintFuncPtrWrapper{});
+    return 0;
+}
+template <typename T>
+struct PrintCount
+{
+    mutable int count = 0;
+
+    void operator()(const T& x) const
+    {
+        std::cout << "print3 count(" << count << ") : " << x << std::endl;
+        count++;
+    }
+};
+
+int testFunctor4()
+{
+    int arr[5] = {1, 2, 3, 4, 5};
+    std::for_each(arr, arr + 5, PrintCount<int>{});
+    return 0;
+}
+template <typename T, typename Func, typename... Args>
+void for_each_Ex(T* begin, T* end, const Func& f, const Args&... args)
+{
+    while (begin != end) std::invoke(f, args..., *begin++);
+}
+
+template <typename T>
+struct Print_Exciting
+{
+    mutable int count = 0;
+
+    void print(const T& x) const
+    {
+        std::cout << "Print_Exciting " << count << " : " << x << std::endl;
+        count++;
+    }
+};
+
+int testFunctor5()
+{
+    int arr[5] = {1, 2, 3, 4, 5};
+    for_each_Ex(arr, arr + 5, &Print_Exciting<int>::print, Print_Exciting<int>{});
+    return 0;
+}
+template <typename T, typename Func, typename C>
+void for_each_More_Ex(T* begin, T* end, Func C::*f, const C& obj)
+{
+    while (begin != end) (obj.*(f))(*begin++);
+}
+int testFunctor6()
+{
+    int arr[5] = {1, 2, 3, 4, 5};
+    for_each_More_Ex(arr, arr + 5, &Print_Exciting<int>::print, Print_Exciting<int>{});
+    return 0;
+}
 int main()
 {
     std::variant<int, float, std::string> v;
@@ -61,5 +156,11 @@ int main()
     valueUnit.setValue("info01", 11.3f);
     //valueUnit.setValue("info02", std::string("tex_shd"));
     valueUnit.setValue("info03", "ps_shd");
+
+    //testFunctor2();
+    //testFunctor3();
+    //testFunctor4();
+    //testFunctor5();
+    testFunctor6();
     return 0;
 }
