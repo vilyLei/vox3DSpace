@@ -134,11 +134,11 @@ int main()
     glEnable(GL_BLEND);
 
 
-    //glBlendEquation(GL_FUNC_ADD);
+    glBlendEquation(GL_FUNC_ADD);
     //glBlendEquation(GL_MIN);
     //glBlendEquation(GL_MAX);
     //glBlendEquation(GL_FUNC_SUBTRACT);
-    glBlendEquation(GL_FUNC_REVERSE_SUBTRACT);
+    //glBlendEquation(GL_FUNC_REVERSE_SUBTRACT);
     //glBlendFunc(GL_ONE, GL_ZERO);
     //glBlendFunc(GL_ONE, GL_ONE);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

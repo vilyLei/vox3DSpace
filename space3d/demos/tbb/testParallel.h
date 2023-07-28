@@ -14,6 +14,8 @@
 #include "oneapi/tbb/blocked_range.h"
 #include "oneapi/tbb/tick_count.h"
 
+namespace testParallel
+{
 static const std::size_t N = 16;
 
 void SerialSubStringFinder(const std::string&        str,
@@ -210,4 +212,8 @@ int main()
     }
     read1();
     return EXIT_SUCCESS;
+}
+void testMain()
+{
+}
 }

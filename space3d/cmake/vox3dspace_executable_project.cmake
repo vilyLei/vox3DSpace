@@ -81,6 +81,10 @@ macro(build_executable_projects)
                        demo_tbb
                        SOURCES
                        "${vox3dspace_root}/demos/tbb/testMain.cc"
+                       "${vox3dspace_root}/demos/tbb/tbbAtomic.h"
+                       "${vox3dspace_root}/demos/tbb/testMutex.h"
+                       "${vox3dspace_root}/demos/tbb/testTask.h"
+                       "${vox3dspace_root}/demos/tbb/testParallel.h"
                        FOLDER
                        ${test_demo_folder_name}
                        DEFINES

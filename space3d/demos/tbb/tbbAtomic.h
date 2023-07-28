@@ -47,3 +47,10 @@ int main()
     return 0;
 }
 //*/
+namespace tbbAtomic
+{
+void testMain()
+{
+
+}
+} // namespace tbbAtomic

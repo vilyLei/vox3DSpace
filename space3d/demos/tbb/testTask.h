@@ -14,6 +14,7 @@
 #include "oneapi/tbb/blocked_range.h"
 #include "oneapi/tbb/tick_count.h"
 
+namespace testTask {
 static const std::size_t N = 16;
 
 void SerialSubStringFinder(const std::string&        str,
@@ -178,11 +179,11 @@ unsigned         GetUniqueInterger()
     return std::atomic_fetch_add(&counter, 1);
 }
 
-// 如果处理器支持HTM，那么请使用 tbb::speculative_spin_rw_mutex mtx;
+// cpu support HTM: tbb::speculative_spin_rw_mutex mtx;
 void read1()
 {
     tbb::spin_rw_mutex::scoped_lock rlock;
-    rlock.acquire(mtx, false); // inputting false represents reading lock  传入false表示这是一个读锁
+    rlock.acquire(mtx, false); // 锟斤拷锟斤拷false锟斤拷示锟斤拷锟斤拷一锟斤拷锟斤拷锟斤拷
     std::cout << a << std::endl;
     rlock.release();
 }
@@ -190,7 +191,7 @@ void read1()
 void write1()
 {
     tbb::spin_rw_mutex::scoped_lock wlock;
-    wlock.acquire(mtx); // default writing lock 默认为写锁
+    wlock.acquire(mtx); // 默锟斤拷为写锟斤拷
     for (int i = 0; i < 100000; i++) a++;
     wlock.release();
 }
@@ -210,4 +211,8 @@ int main()
     }
     read1();
     return EXIT_SUCCESS;
+}
+void testMain()
+{
+}
 }
