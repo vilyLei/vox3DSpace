@@ -115,7 +115,7 @@ macro(vox3dspace_set_build_definitions)
   list(APPEND vox3dspace_libs_paths
     "${vox3dspace_libs_root}/json/lib"
     "${vox3dspace_libs_root}/tinyObj/lib"
-    "${vox3dspace_libs_root}/tbb/lib"
+    "${vox3dspace_libs_root}/stb/lib"
     )
   ####################################################################################
   # bost libs info define

@@ -1,11 +1,4 @@
-macro(build_executable_dx12dxrDemos)  
-  if(MSVC)
-    if(BUILD_SHARED_LIBS)
-      set(vox3dspace_lib_type SHARED)
-    else()
-      set(vox3dspace_lib_type STATIC)
-    endif()
-  endif()
+macro(build_executable_dx12dxrDemos)
 
   set(test_dx12dxrDemos_folder_name "DXRDemos")
 
