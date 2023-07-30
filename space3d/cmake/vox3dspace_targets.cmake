@@ -12,7 +12,7 @@ macro(vox3dspace_add_delayload_flags flagsVar)
   endforeach()
 endmacro()
 
-### 
+# some cases
 # vox3dspace_add_delayload_flags(CMAKE_EXE_LINKER_FLAGS dll1 dll2)
 
 # Resets list variables used to track vox3dspace targets.
