@@ -121,6 +121,7 @@ macro(vox3dspace_set_build_definitions)
   # bost libs info define
   
   # set(boost_root_dir $ENV{BOOST_ROOT_DIR})
+  
   set(boost_root_dir $ENV{BOOST_ROOT_DIR})
   file(TO_CMAKE_PATH ${boost_root_dir} boost_root_dir)
   message(STATUS "boost_root_dir: ${boost_root_dir}")

@@ -15,11 +15,13 @@ macro(build_executable_projects)
     endif()
   endif()
   set(test_demo_folder_name "TestDemo")
-  # Vox3DSpace app targets.  
+  # Vox3DSpace app targets.
+  set(ccplus_dir "${vox3dspace_root}/demos/ccplus")
   vox3dspace_add_executable(NAME
                        demo_ccplus
                        SOURCES
-                       "${vox3dspace_root}/demos/ccplus/testMain.cc"
+                       "${ccplus_dir}/thread/testAtomic.h"
+                       "${ccplus_dir}/ccplusMain.cc"
                        FOLDER
                        ${test_demo_folder_name}
                        DEFINES
