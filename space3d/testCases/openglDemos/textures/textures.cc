@@ -250,12 +250,6 @@ int main()
     glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
     glEnableVertexAttribArray(2);
 
-
-    //int            width       = 128;
-    //int            height      = 128;
-    //int            nrChannels  = 3;
-    //unsigned char* resData     = nullptr;
-    //bool           rgbaEnabled = false;
     TexData        texData{};
 
     auto resFlag = false;

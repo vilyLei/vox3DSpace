@@ -4,7 +4,7 @@ if(VOX3DSPACE_CMAKE_VOX3DSPACE_TARGETS_CMAKE_)
 endif() # VOX3DSPACE_CMAKE_VOX3DSPACE_TARGETS_CMAKE_
 set(VOX3DSPACE_CMAKE_VOX3DSPACE_TARGETS_CMAKE_ 1)
 
-##定义延迟加载的宏
+# 定义延迟加载的宏
 macro(vox3dspace_add_delayload_flags flagsVar)
   set(dlls "${ARGN}")
   foreach(dll ${dlls})
@@ -155,14 +155,12 @@ macro(vox3dspace_add_executable)
     endif()
   endif()
 
-  # message("XXXXXX 1 exe_LIB_DEPS: ${exe_OBJLIB_DEPS}")
   if(exe_OBJLIB_DEPS)
     foreach(objlib_dep ${exe_OBJLIB_DEPS})
       target_sources(${exe_NAME} PRIVATE $<TARGET_OBJECTS:${objlib_dep}>)
     endforeach()
   endif()
 
-  # message("XXXXXX 2 CMAKE_THREAD_LIBS_INIT: ${CMAKE_THREAD_LIBS_INIT}")
   if(CMAKE_THREAD_LIBS_INIT)
     list(APPEND exe_LIB_DEPS ${CMAKE_THREAD_LIBS_INIT})
   endif()

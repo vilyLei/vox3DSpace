@@ -1,3 +1,8 @@
+if(VOX3DSPACE_CMAKE_BUILD_EXECUTEABLE_VK_DEMOS_)
+  return()
+endif() # VOX3DSPACE_CMAKE_BUILD_EXECUTEABLE_VK_DEMOS_
+set(VOX3DSPACE_CMAKE_BUILD_EXECUTEABLE_VK_DEMOS_ 1)
+
 macro(build_executable_vkDemos)  
 
   set(test_vkDemos_folder_name "VulkanDemos")

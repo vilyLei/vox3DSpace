@@ -1,3 +1,8 @@
+if(VOX3DSPACE_CMAKE_BUILD_EXECUTEABLE_OGL_DEMOS_)
+  return()
+endif() # VOX3DSPACE_CMAKE_BUILD_EXECUTEABLE_OGL_DEMOS_
+set(VOX3DSPACE_CMAKE_BUILD_EXECUTEABLE_OGL_DEMOS_ 1)
+
 macro(build_executable_oglDemos)  
 
   set(test_oglDemos_folder_name "OpenglDemos")

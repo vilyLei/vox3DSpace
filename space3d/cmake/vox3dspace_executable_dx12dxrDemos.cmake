@@ -1,3 +1,8 @@
+if(VOX3DSPACE_CMAKE_BUILD_EXECUTEABLE_DX12DXR_DEMOS_)
+  return()
+endif() # VOX3DSPACE_CMAKE_BUILD_EXECUTEABLE_DX12DXR_DEMOS_
+set(VOX3DSPACE_CMAKE_BUILD_EXECUTEABLE_DX12DXR_DEMOS_ 1)
+
 macro(build_executable_dx12dxrDemos)
 
   set(test_dx12dxrDemos_folder_name "DXRDemos")
