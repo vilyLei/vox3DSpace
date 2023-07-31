@@ -25,7 +25,10 @@ macro(build_executable_projects)
                        "${ccplus_dir}/thread/testMutex.h"
                        "${ccplus_dir}/thread/testMemoryOrder.h"
                        "${ccplus_dir}/thread/testSyncConcurrent.h"
+                       "${ccplus_dir}/thread/testAsync.h"
                        "${ccplus_dir}/base/testConstexpr.h"
+                       "${ccplus_dir}/base/testForward.h"
+                       "${ccplus_dir}/base/testTypeInfo.h"
                        "${ccplus_dir}/ccplusMain.cc"
                        FOLDER
                        ${test_demo_folder_name}

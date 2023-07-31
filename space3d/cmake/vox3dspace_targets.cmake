@@ -111,8 +111,10 @@ macro(vox3dspace_add_executable)
   endif()
 
   add_executable(${exe_NAME} ${exe_EXEC_SYS} ${exe_SOURCES})
-
-  target_compile_features(${exe_NAME} PRIVATE cxx_std_17)
+  # thanks: https://cmake.org/cmake/help/latest/manual/cmake-compile-features.7.html#requiring-language-standards
+  # thanks: https://cmake.org/cmake/help/latest/prop_gbl/CMAKE_CXX_KNOWN_FEATURES.html#prop_gbl:CMAKE_CXX_KNOWN_FEATURES
+  # target_compile_features(${exe_NAME} PRIVATE cxx_std_17)
+  target_compile_features(${exe_NAME} PRIVATE ${CXX_STD_VERSION})
 
   if(NOT EMSCRIPTEN)
     set_target_properties(${exe_NAME} PROPERTIES VERSION ${VOX3DSPACE_VERSION})

@@ -4,7 +4,10 @@
 
 #include "thread/testAtomic.h"
 #include "thread/testMutex.h"
+#include "thread/testSyncConcurrent.h"
+#include "thread/testAsync.h"
 #include "base/testConstexpr.h"
+#include "base/testForward.h"
 
 class ValueUnit
 {
@@ -175,11 +178,17 @@ int main()
     //baseMain();
     // thanks: https://learn.microsoft.com/zh-cn/cpp/build/reference/zc-conformance?view=msvc-170
     // thanks: https://learn.microsoft.com/en-us/cpp/preprocessor/predefined-macros?view=msvc-170&viewFallbackFrom=vs-2022
-    std::cout << "_MSC_VER : " << _MSC_VER << "\n";
-    std::cout << "_MSVC_LANG  : " << _MSVC_LANG << "\n";
+    //std::cout << "_MSC_VER : " << _MSC_VER << "\n";
+    //std::cout << "_MSVC_LANG  : " << _MSVC_LANG << "\n";
 
     //base::demoConstexpr::testMain();
     //thread::atomic::testMain();
-    thread::mutex::testMain();
+    //thread::mutex::testMain();
+
+    base::demoForward::testMain();
+
+    thread::syncConcurrent::testMain();
+    std::cout << "\n";
+    thread::asyncDemo::testMain();
     return EXIT_SUCCESS;
 }

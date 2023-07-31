@@ -1,6 +1,9 @@
 cmake_minimum_required(VERSION 3.21 FATAL_ERROR)
 project(vox3dspace C CXX CUDA)
 
+# thanks: https://cmake.org/cmake/help/latest/prop_gbl/CMAKE_CXX_KNOWN_FEATURES.html#prop_gbl:CMAKE_CXX_KNOWN_FEATURES
+set(CXX_STD_VERSION cxx_std_20)
+
 if(NOT CMAKE_BUILD_TYPE)
   # set(CMAKE_BUILD_TYPE Release)
   set(CMAKE_BUILD_TYPE Debug)

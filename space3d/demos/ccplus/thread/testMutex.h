@@ -7,11 +7,84 @@
 #include <list>
 #include <mutex>
 #include <algorithm>
+#include <shared_mutex>
+#include <syncstream>
 
 namespace thread
 {
 namespace mutex
 {
+namespace shared_mutex_demo
+{
+class ThreadSafeCounter
+{
+public:
+    ThreadSafeCounter() = default;
+
+    // Multiple threads/readers can read the counter's value at the same time.
+    unsigned int get() const
+    {
+        std::shared_lock lock(mutex_);
+        return value_;
+    }
+
+    // Only one thread/writer can increment/write the counter's value.
+    void increment()
+    {
+        std::unique_lock lock(mutex_);
+        ++value_;
+    }
+
+    // Only one thread/writer can reset/write the counter's value.
+    void reset()
+    {
+        std::unique_lock lock(mutex_);
+        value_ = 0;
+    }
+
+private:
+    mutable std::shared_mutex mutex_;
+    unsigned int              value_{};
+};
+
+int testMain()
+{
+    std::osyncstream(std::cout) << "thread::mutex::shared_mutex_demo::testMain() begin.\n";
+    // binary integer literal
+    auto otc_int = 010;     // octal integer literal
+    auto bin_int = 0b101;   // binary integer literal
+    std::osyncstream(std::cout) << "otc_int: " << otc_int << "\n";
+    std::osyncstream(std::cout) << "bin_int: " << bin_int << "\n";
+    ThreadSafeCounter counter;
+
+    auto increment_and_print = [&counter]() {
+        for (int i{}; i != 3; ++i)
+        {
+            counter.increment();
+            std::osyncstream(std::cout)
+                << std::this_thread::get_id() << ' ' << counter.get() << '\n';
+        }
+    };
+
+    std::vector<std::thread> threads;
+    for (int i = 0; i < 3; ++i)
+    {
+        threads.emplace_back(increment_and_print);
+    }
+    for (auto& t : threads)
+    {
+        t.join();
+    }
+
+    // std::thread thread1(increment_and_print);
+    // std::thread thread2(increment_and_print);
+
+    // thread1.join();
+    // thread2.join();
+    std::osyncstream(std::cout) << "thread::mutex::shared_mutex_demo::testMain() begin.\n";
+    return EXIT_SUCCESS;
+}
+}
 namespace call_once_demo
 {
 
@@ -122,11 +195,13 @@ void testMain()
 } // namespace lockGuard
 void testMain()
 {
-    std::boolalpha(std::cout);
+    //std::boolalpha(std::cout);
     std::cout << "thread::mutex::testMain() begin.\n";
-    std::cout << std::atomic<int>::is_always_lock_free << "\n";
+    //std::cout << std::atomic<int>::is_always_lock_free << "\n";
+
     //lockGuard::testMain();
-    call_once_demo::testMain();
+    //call_once_demo::testMain();
+    shared_mutex_demo::testMain();
     std::cout << "thread::mutex::testMain() end.\n";
 }
 } // namespace mutex
