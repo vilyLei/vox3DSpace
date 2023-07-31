@@ -3,6 +3,8 @@
 #include <variant>
 
 #include "thread/testAtomic.h"
+#include "thread/testMutex.h"
+#include "base/testConstexpr.h"
 
 class ValueUnit
 {
@@ -170,8 +172,14 @@ int baseMain()
 
 int main()
 {
-    baseMain();
-    
-    thread::atomic::testMain();
+    //baseMain();
+    // thanks: https://learn.microsoft.com/zh-cn/cpp/build/reference/zc-conformance?view=msvc-170
+    // thanks: https://learn.microsoft.com/en-us/cpp/preprocessor/predefined-macros?view=msvc-170&viewFallbackFrom=vs-2022
+    std::cout << "_MSC_VER : " << _MSC_VER << "\n";
+    std::cout << "_MSVC_LANG  : " << _MSVC_LANG << "\n";
+
+    //base::demoConstexpr::testMain();
+    //thread::atomic::testMain();
+    thread::mutex::testMain();
     return EXIT_SUCCESS;
 }

@@ -17,10 +17,15 @@ macro(build_executable_projects)
   set(test_demo_folder_name "TestDemo")
   # Vox3DSpace app targets.
   set(ccplus_dir "${vox3dspace_root}/demos/ccplus")
+  # thanks: https://learn.microsoft.com/zh-cn/cpp/build/reference/zc-conformance?view=msvc-170
   vox3dspace_add_executable(NAME
                        demo_ccplus
                        SOURCES
                        "${ccplus_dir}/thread/testAtomic.h"
+                       "${ccplus_dir}/thread/testMutex.h"
+                       "${ccplus_dir}/thread/testMemoryOrder.h"
+                       "${ccplus_dir}/thread/testSyncConcurrent.h"
+                       "${ccplus_dir}/base/testConstexpr.h"
                        "${ccplus_dir}/ccplusMain.cc"
                        FOLDER
                        ${test_demo_folder_name}
@@ -28,6 +33,7 @@ macro(build_executable_projects)
                        ${vox3dspace_defines}
                        RPOJECT_FLAGS
                        ${VOX3DSPACE_CXX_FLAGS}
+                       "/Zc:__cplusplus"
                        INCLUDES
                        ${vox3dspace_ccplus_libs_include_paths})
 

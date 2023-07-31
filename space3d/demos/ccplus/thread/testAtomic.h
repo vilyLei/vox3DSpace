@@ -9,6 +9,75 @@ namespace thread
 {
 namespace atomic
 {
+namespace memory_order_relaxed_1
+{
+std::atomic<int> cnt = {0};
+std::atomic<int> x = {0};
+std::atomic<int> y = {0};
+std::atomic<int> r1 = {0};
+std::atomic<int> r2 = {0};
+
+void thr_func_0()
+{
+    r1 = y.load(std::memory_order_relaxed); // A
+    x.store(r1, std::memory_order_relaxed); // B
+}
+void thr_func_1()
+{
+    r2 = x.load(std::memory_order_relaxed); // C
+    y.store(42, std::memory_order_relaxed); // D
+}
+    void             f()
+{
+    for (int n = 0; n < 1000; ++n)
+    {
+        cnt.fetch_add(1, std::memory_order_relaxed);
+    }
+}
+
+void test02()
+{
+    std::cout << "memory_order_relaxed_1::test02() begin ...\n";
+    std::vector<std::thread> v;
+    v.emplace_back(thr_func_0);
+    v.emplace_back(thr_func_1);
+    for (auto& t : v)
+    {
+        t.join();
+    }
+
+    std::cout << "x: " << x << "\n";
+    std::cout << "y: " << y << "\n";
+    std::cout << "r1: " << r1 << "\n";
+    std::cout << "r2: " << r2 << "\n";
+    std::cout << "memory_order_relaxed_1::test02() end ...\n";
+}
+    void test01()
+{
+    std::cout << "memory_order_relaxed_1::test01() begin ...\n";
+    auto threadsTotal = std::thread::hardware_concurrency();
+    std::cout << "threadsTotal: " << threadsTotal << "\n";
+    std::cout << "memory_order_relaxed_1::test01() begin ...\n";
+    std::vector<std::thread> v;
+    for (int n = 0; n < 10; ++n)
+    {
+        v.emplace_back(f);
+    }
+    for (auto& t : v)
+    {
+        t.join();
+    }
+    assert(cnt == 10000); // never failed
+    std::cout << "cnt: " << cnt << "\n";
+    std::cout << "memory_order_relaxed_1::test01() end ...\n";
+}
+int testMain()
+{
+    //test01();
+    test02();
+    return 0;
+}
+} // namespace memory_order_relaxed_1
 namespace compare_exchange_strong
 {
 std::atomic<int> ai;
@@ -424,7 +493,8 @@ void testMain()
     //mem_order_acq_rel::testMain();
     //mem_order_acq_rel2::testMain();
     //mem_order_acq_rel3::testMain();
-    compare_exchange_strong::testMain();
+    //compare_exchange_strong::testMain();
+    memory_order_relaxed_1::testMain();
 }
 } // namespace atomic
 } // namespace thread
