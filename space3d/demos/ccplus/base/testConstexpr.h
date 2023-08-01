@@ -73,6 +73,7 @@ struct constN
 
 void testMain()
 {
+    // thanks: https://learn.microsoft.com/en-us/cpp/build/reference/zc-cplusplus?view=msvc-170
     std::cout << "__cplusplus: " << __cplusplus <<"\n";
     std::cout << "base::demoConstexpr::constexpr_1() begin ...\n";
     std::cout << "4! = ";
@@ -87,6 +88,7 @@ void testMain()
     constexpr int a[12]    = {0, 1, 2, 3, 4, 5, 6, 7, 8};
     constexpr int length_a = sizeof(a) / sizeof(int); // std::size(a) in C++17,
                                                       // std::ssize(a) in C++20
+    std::cout << "\narray of std::size(a) " << std::size(a) << "\n";
     std::cout << "array of length " << length_a << " has elements: ";
     for (int i = 0; i < length_a; ++i)
         std::cout << a[i] << " ";

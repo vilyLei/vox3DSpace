@@ -40,6 +40,22 @@ macro(build_executable_projects)
                        INCLUDES
                        ${vox3dspace_ccplus_libs_include_paths})
 
+  set(ccwindows_dir "${vox3dspace_root}/demos/ccwindows")  
+  vox3dspace_add_executable(NAME
+                       demo_ccwindows
+                       SOURCES
+                       "${ccwindows_dir}/thread/threadMain.h"
+                       "${ccwindows_dir}/ccwindowsMain.cc"
+                       FOLDER
+                       ${test_demo_folder_name}
+                       DEFINES
+                       ${vox3dspace_defines}
+                       RPOJECT_FLAGS
+                       ${VOX3DSPACE_CXX_FLAGS}
+                       "/Zc:__cplusplus"
+                       INCLUDES
+                       ${vox3dspace_ccwindows_libs_include_paths})
+  # voxengine demos
   vox3dspace_add_executable(NAME
                        demo_vox3dspace_engine
                        SOURCES

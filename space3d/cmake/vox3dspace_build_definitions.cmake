@@ -145,6 +145,8 @@ macro(vox3dspace_set_build_definitions)
   
   # ccplus demo libs info define
   list(APPEND vox3dspace_ccplus_libs_include_paths "${vox3dspace_root}/demos/ccplus")
+  # ccwindows demo libs info define
+  list(APPEND vox3dspace_ccwindows_libs_include_paths "${vox3dspace_root}/demos/ccwindows")
   # tbb demo libs info define
   list(APPEND vox3dspace_tbb_libs_include_paths "${tbb_root_dir}/include")
   # boost demo libs info define

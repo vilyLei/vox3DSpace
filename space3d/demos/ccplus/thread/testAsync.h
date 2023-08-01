@@ -13,6 +13,52 @@ namespace thread
 {
 namespace asyncDemo
 {
+namespace atomic_wait
+{
+#include <atomic>
+#include <chrono>
+#include <future>
+#include <iostream>
+#include <thread>
+
+using namespace std::literals;
+
+int testMain()
+{
+    std::atomic<bool>     all_tasks_completed{false};
+    std::atomic<unsigned> completion_count{};
+    std::future<void>     task_futures[16];
+    std::atomic<unsigned> outstanding_task_count{16};
+
+#if __cplusplus >= 202002L
+    // Spawn several tasks which take different amounts of
+    // time, then decrement the outstanding task count.
+    for (std::future<void>& task_future : task_futures)
+    {
+        task_future = std::async([&] {
+            // This sleep represents doing real work...
+            std::this_thread::sleep_for(50ms);
+
+            ++completion_count;
+            --outstanding_task_count;
+
+            // When the task count falls to zero, notify
+            // the waiter (main thread in this case).
+            if (outstanding_task_count.load() == 0)
+            {
+                all_tasks_completed = true;
+                all_tasks_completed.notify_one();
+            }
+        });
+    }
+
+    all_tasks_completed.wait(false);
+#endif
+
+    std::cout << "Tasks completed = " << completion_count.load() << '\n';
+    return 0;
+}
+} // namespace atomic_wait
 namespace async_demo_1
 {
 std::mutex m;
@@ -75,15 +121,18 @@ int testMain()
     std::cout << "thread::asyncDemo::async_demo_1::testMain() end.\n";
     return 1;
 } // if a1 is not done at this point, destructor of a1 prints "Hello 42" here
-}
+} // namespace async_demo_1
 void testMain()
 {
+    // thanks: https://learn.microsoft.com/en-us/cpp/build/reference/zc-cplusplus?view=msvc-170
+    std::cout << "__cplusplus: " << __cplusplus << "\n";
     std::boolalpha(std::cout);
     std::cout << "thread::asyncDemo::testMain() begin.\n";
 
     std::cout << std::atomic<int>::is_always_lock_free << "\n";
-    async_demo_1::testMain();
+    //async_demo_1::testMain();
+    atomic_wait::testMain();
     std::cout << "thread::asyncDemo::testMain() end.\n";
 }
-} // namespace syncConcurrent
+} // namespace asyncDemo
 } // namespace thread
