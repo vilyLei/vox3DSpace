@@ -10,12 +10,44 @@
 #include <tuple>
 #include <functional>
 #include <memory>
+#include <typeinfo>
 
 namespace base
 {
 namespace typeInfo
 {
+namespace typeinfo_demo
+{
+    class DeskColor
+    {
+    public:
+        std::string name;
+        void showInfo()
+        {
+            std::cout << "DeskColor::showInfo(), name: "<<name<<".\n";
+        }
+        void* operator new(std::size_t size, std::string name_info)
+        {
+            std::cout << "DeskColor::operator new(), name_info: " << name_info << ".\n";
+            return std::malloc(size);
+        }
+    };
+void testMain() 
+{
+    DeskColor* dc = new ("DeskColor_call_new()") DeskColor();
+    dc->name      = "DeskColor";
+    dc->showInfo();
+    std::cout << "base::typeInfo::typeinfo_demo::testMain() begin.\n";
+    int         myint       = 50;
+    std::string mystr       = "string";
+    double*     mydoubleptr = nullptr;
 
+    std::cout << "myint has type: " << typeid(myint).name() << '\n'
+              << "mystr has type: " << typeid(mystr).name() << '\n'
+              << "mydoubleptr has type: " << typeid(mydoubleptr).name() << '\n';
+    std::cout << "base::typeInfo::typeinfo_demo::testMain() end.\n";
+}
+}
 namespace mem_fn_demo
 {
 struct Foo
@@ -153,6 +185,7 @@ void testMain()
     demo_01::testMain();
     demo_01::testMain02();
     mem_fn_demo::testMain();
+    typeinfo_demo::testMain();
     std::cout << "base::typeInfo::testMain() end.\n";
 }
 } // namespace typeInfo
