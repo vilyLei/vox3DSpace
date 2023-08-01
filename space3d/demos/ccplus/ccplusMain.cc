@@ -8,6 +8,8 @@
 #include "thread/testAsync.h"
 #include "base/testConstexpr.h"
 #include "base/testForward.h"
+#include "base/testTypeInfo.h"
+#include "parallel/testExecutionPar.h"
 
 class ValueUnit
 {
@@ -181,11 +183,17 @@ int main()
     //std::cout << "_MSC_VER : " << _MSC_VER << "\n";
     //std::cout << "_MSVC_LANG  : " << _MSVC_LANG << "\n";
 
+    //parallel::execParallel::testMain();
+    //return 1;
+
     //base::demoConstexpr::testMain();
     //thread::atomic::testMain();
     //thread::mutex::testMain();
 
     //base::demoForward::testMain();
+    base::typeInfo::testMain();
+    std::cout << "\n";
+    return EXIT_SUCCESS;
 
     thread::syncConcurrent::testMain();
     std::cout << "\n";
