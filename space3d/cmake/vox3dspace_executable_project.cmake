@@ -30,6 +30,7 @@ macro(build_executable_projects)
                        "${ccplus_dir}/parallel/testExecutionPar.h"
                        "${ccplus_dir}/base/testForward.h"
                        "${ccplus_dir}/base/testTypeInfo.h"
+                       "${ccplus_dir}/base/testString.h"
                        "${ccplus_dir}/ccplusMain.cc"
                        FOLDER
                        ${test_demo_folder_name}

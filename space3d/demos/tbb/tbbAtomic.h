@@ -48,6 +48,7 @@ void thrCall(void)
 void testMain()
 {
     std::cout << "tbbAtomic testMain begin ...\n";
+    auto start_sys_time = std::chrono::system_clock::now();
     auto start_time = std::chrono::high_resolution_clock::now();
     //time.
     std::vector<std::thread> threads;
@@ -58,9 +59,12 @@ void testMain()
     std::for_each(threads.begin(), threads.end(), std::mem_fn(&std::thread::join));
 
     auto current_time = std::chrono::high_resolution_clock::now();
-    auto elapsedTime  = current_time - start_time;
+    auto elapsedTime    = current_time - start_time;
+    auto current_sys_time = std::chrono::system_clock::now();
+    auto elapsedSysTime   = current_sys_time - start_sys_time;
 
     std::cout << "loss time: " << std::chrono::duration_cast<std::chrono::microseconds>(elapsedTime).count() << "us\n";
+    std::cout << "loss sys time: " << std::chrono::duration_cast<std::chrono::microseconds>(elapsedSysTime).count() << "us\n";
     std::cout << "flagValue: " << flagValue << "\n";
     std::cout << "tbbAtomic testMain end ...\n";
 }

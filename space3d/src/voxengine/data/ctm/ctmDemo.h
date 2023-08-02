@@ -126,7 +126,7 @@ bool loadAndParseCTM()
     std::cout << "<<<< -------------- loadAndParseCTM begin ---------------------\n"
               << std::endl;
 
-    auto        path = std::filesystem::path(CMAKE_CURRENT_SOURCE_DIR) / "assets/model/ctm/model01.ctm";
+    auto        path      = std::filesystem::path(CMAKE_CURRENT_SOURCE_DIR) / "assets/model/ctm/model01.ctm";
     std::string url       = path.generic_string();
     auto        dataU8Arr = readFile(url);
     if (dataU8Arr == nullptr)
@@ -168,28 +168,29 @@ bool testCTMParse()
     for (auto i = 0; i < 1; ++i)
     {
         std::cout << ">>>>> $$$ Step " << i << std::endl;
-        if (!loadAndParseCTM()) {
+        if (!loadAndParseCTM())
+        {
             enabled = false;
             break;
         }
     }
     std::cout << "\n---------------------- testCTMParse end ---------------------" << std::endl;
     return enabled;
-
 }
 
 void testCircleCTMParse()
 {
 
+    using namespace std::literals;
     std::cout << "\n---------------------- testCircleCTMParse begin ---------------------" << std::endl;
     bool enabled = true;
-    int total = 50000;
+    int  total   = 50000;
     for (auto i = 0; i < total; ++i)
     {
         std::cout << ">>>>> progress: " << i << "/" << total << std::endl;
         if (loadAndParseCTM())
         {
-            std::this_thread::sleep_for(std::chrono::milliseconds(50));
+            std::this_thread::sleep_for(std::chrono::milliseconds(50ms));
         }
         else
         {
@@ -202,7 +203,8 @@ void testCircleCTMParse()
     {
         for (auto i = 0; i < 200; ++i)
         {
-            std::this_thread::sleep_for(std::chrono::milliseconds(100));
+            //std::this_thread::sleep_for(std::chrono::milliseconds(100ms));
+            std::this_thread::sleep_for(100ms);
         }
     }
     else

@@ -26,10 +26,14 @@ macro(build_executable_multprocessDemos)
       RPOJECT_FLAGS
       ${VOX3DSPACE_CXX_FLAGS}
       INCLUDES
-      ${vox3dspace_opengl_libs_include_paths}
+      ${demoDir}
       "${vox3dspace_root}/libsInclude")
     
   endfunction()
 
-  vox3dspace_add_multprocessDemo_executableByName("sharedMemory" "")
+  set(src_demoName "sharedMemory")
+  set(src_demoDir "${multprocessDemo_dir}/${src_demoName}/")
+  vox3dspace_add_multprocessDemo_executableByName(${src_demoName}
+  "${src_demoDir}/proc/testCreateProcess.h"
+  )
 endmacro()

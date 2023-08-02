@@ -9,6 +9,7 @@
 #include "base/testConstexpr.h"
 #include "base/testForward.h"
 #include "base/testTypeInfo.h"
+#include "base/testString.h"
 #include "parallel/testExecutionPar.h"
 
 class ValueUnit
@@ -173,10 +174,33 @@ int baseMain()
 
     return EXIT_SUCCESS;
 }
-
+//struct VPoint
+//{
+//    double vx, vy, vz;
+//    operator std::string() const
+//    {
+//        std::string s("(vx=" + std::to_string(vx));
+//        s += ",vy=" + std::to_string(vy);
+//        s += ",vz=" + std::to_string(vz) + ")";
+//        return std::move(s);
+//    }
+//};
+//
+//void stringTest()
+//{
+//    VPoint      v0  = {.vx=0.5};
+//    std::string str = "str";
+//    str.insert(0, "First");
+//    std::cout << "str: "<<str << std::endl;
+//    std::string vo_str = v0;
+//    std::cout << "vo_str: " << vo_str << std::endl;
+//
+//}
 
 int main()
 {
+    base::testString::testMain();
+    return 1;
     //baseMain();
     // thanks: https://learn.microsoft.com/zh-cn/cpp/build/reference/zc-conformance?view=msvc-170
     // thanks: https://learn.microsoft.com/en-us/cpp/preprocessor/predefined-macros?view=msvc-170&viewFallbackFrom=vs-2022

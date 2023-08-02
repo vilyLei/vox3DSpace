@@ -7,6 +7,7 @@
 #include <condition_variable>
 #include <future>
 #include <numeric>
+using namespace std::literals;
 
 namespace thread
 {
@@ -197,7 +198,7 @@ void notifyReadyFlag()
     std::cout << "notifyReadyFlag() begin.\n";
     for (auto i = 0; i < 3; ++i) {
         std::this_thread::yield();
-        std::this_thread::sleep_for(std::chrono::milliseconds(300));
+        std::this_thread::sleep_for(std::chrono::milliseconds(300ms));
     }
     std::unique_lock lk(m);
     ready     = true;
