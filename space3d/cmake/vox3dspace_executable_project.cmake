@@ -31,6 +31,7 @@ macro(build_executable_projects)
                        "${ccplus_dir}/base/testForward.h"
                        "${ccplus_dir}/base/testTypeInfo.h"
                        "${ccplus_dir}/base/testString.h"
+                       "${ccplus_dir}/base/testClass.h"
                        "${ccplus_dir}/ccplusMain.cc"
                        FOLDER
                        ${test_demo_folder_name}
@@ -47,6 +48,7 @@ macro(build_executable_projects)
                        demo_ccwindows
                        SOURCES
                        "${ccwindows_dir}/thread/threadMain.h"
+                       "${ccwindows_dir}/thread/mutexMain.h"
                        "${ccwindows_dir}/ccwindowsMain.cc"
                        FOLDER
                        ${test_demo_folder_name}
@@ -111,6 +113,7 @@ macro(build_executable_projects)
                        SOURCES
                        "${vox3dspace_root}/demos/tbb/testMain.cc"
                        "${vox3dspace_root}/demos/tbb/tbbAtomic.h"
+                       "${vox3dspace_root}/demos/tbb/tbbAtomic2.h"
                        "${vox3dspace_root}/demos/tbb/testMutex.h"
                        "${vox3dspace_root}/demos/tbb/testTask.h"
                        "${vox3dspace_root}/demos/tbb/testParallel.h"

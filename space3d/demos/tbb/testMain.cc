@@ -14,6 +14,7 @@
 #include "oneapi/tbb/blocked_range.h"
 #include "oneapi/tbb/tick_count.h"
 #include "tbbAtomic.h"
+#include "tbbAtomic2.h"
 
 static const std::size_t N = 16;
 
@@ -214,6 +215,7 @@ int main3()
 }
 int main()
 {
-    tbbAtomic::testMain();
+    //tbbAtomic::testMain();
+    tbbAtomic2::testMain();
     return EXIT_SUCCESS;
 }

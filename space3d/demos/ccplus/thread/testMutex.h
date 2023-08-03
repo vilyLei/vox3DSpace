@@ -14,6 +14,119 @@ namespace thread
 {
 namespace mutex
 {
+
+namespace shared_mutex_demo_1
+{
+
+//std::mutex count_mutex;
+std::shared_mutex count_mutex;
+
+int  count_total = 0;
+int  count_steps = 10;
+
+void incrementTotal_0()
+{
+    //std::unique_lock lock(count_mutex);
+    //std::lock_guard<std::mutex> guard(count_mutex);
+    
+    using namespace std::literals;
+    //for (auto i = 0; i < 5; ++i)
+    //{
+    //    std::this_thread::sleep_for(20ms);
+    //    std::this_thread::yield();
+    //}
+    std::lock_guard<std::shared_mutex> guard(count_mutex);
+    //std::unique_lock lock(count_mutex);
+    std::cout << "count running" << std::endl;
+    std::this_thread::sleep_for(1000ms);
+    auto temp = 0;
+    for (auto i = 0; i < 1000; ++i)
+    {
+        count_total += 1;
+    }
+    count_steps -= 1;
+    //std::this_thread::yield();
+}
+void incrementTotal_1()
+{
+    //std::unique_lock lock(count_mutex);
+    //std::lock_guard<std::mutex> guard(count_mutex);
+    //std::unique_lock lock(count_mutex);
+    using namespace std::literals;
+    std::this_thread::sleep_for(1000ms);
+    auto temp = 0;
+    for (auto i = 0; i < 1000; ++i)
+    {
+        temp += 1;
+    }
+    std::lock_guard<std::shared_mutex> guard(count_mutex);
+    std::cout << "count running" << std::endl;
+    std::this_thread::sleep_for(10ms);
+    count_total += temp;
+    count_steps -= 1;
+}
+void testMain()
+{    
+    using namespace std::literals;
+
+    auto                     start_time = std::chrono::high_resolution_clock::now();
+    std::vector<std::thread> threads;
+    auto                     steps = count_steps;
+
+    
+    auto blocking = false;
+    auto fast     = true;
+    for (auto i = 0; i < steps; ++i)
+    {
+        if (fast)
+        {
+            threads.emplace_back(incrementTotal_1);
+        }
+        else
+        {
+            threads.emplace_back(incrementTotal_0);
+        }
+    }
+
+    if (blocking)
+    {
+        for (auto& t : threads)
+        {
+            t.join();
+        }
+    }
+    else
+    {
+        for (auto& t : threads)
+        {
+            t.detach();
+        }
+        for (auto i = 0; i < 10000; ++i)
+        {
+            std::cout << "\tmain waiting ..." << std::endl;
+            std::unique_lock lock(count_mutex);
+            if (count_steps < 1)
+            {
+                lock.unlock();
+                std::cout << "\tmain waiting break..." << std::endl;
+                break;
+            }
+            else
+            {
+                lock.unlock();
+                std::this_thread::yield();
+                std::this_thread::sleep_for(300ms);
+            }
+        }
+    }
+    auto end_time = std::chrono::high_resolution_clock::now();
+    auto lossTime     = end_time - start_time;
+    auto dtime    = std::chrono::duration_cast<std::chrono::milliseconds>(lossTime).count();
+    std::cout << "loss time: " << dtime << "ms" << std::endl;
+    std::cout << "count_steps: " << count_steps << std::endl;
+    std::cout << "count_total: " << count_total << std::endl;
+}
+}
 namespace shared_mutex_demo
 {
 class ThreadSafeCounter
@@ -201,7 +314,8 @@ void testMain()
 
     //lockGuard::testMain();
     //call_once_demo::testMain();
-    shared_mutex_demo::testMain();
+    //shared_mutex_demo::testMain();
+    shared_mutex_demo_1::testMain();
     std::cout << "thread::mutex::testMain() end.\n";
 }
 } // namespace mutex

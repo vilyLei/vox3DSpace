@@ -68,7 +68,18 @@ void testMain(int argc, TCHAR* argv[])
     }
     printf("main process run waiting with a blocking.\n");
     // Wait until child process exits.
-    WaitForSingleObject(pi.hProcess, INFINITE);
+    //WaitForSingleObject(pi.hProcess, INFINITE);
+    for (auto i = 0; i < 500000; ++i)
+    {
+        printf("\twaiting.\n");
+        auto waitResult = WaitForSingleObject(pi.hProcess, 800);
+        printf("waitResult: 0x%xL.\n", waitResult);
+        if (waitResult == WAIT_OBJECT_0)
+        {
+            break;
+        }
+    }
+    //WaitForSingleObject(pi.hProcess, 0);
     printf("main process run end.\n");
 
     // Close process and thread handles.

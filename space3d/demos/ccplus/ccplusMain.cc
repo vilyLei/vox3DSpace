@@ -10,6 +10,7 @@
 #include "base/testForward.h"
 #include "base/testTypeInfo.h"
 #include "base/testString.h"
+#include "base/testClass.h"
 #include "parallel/testExecutionPar.h"
 
 class ValueUnit
@@ -199,8 +200,9 @@ int baseMain()
 
 int main()
 {
-    base::testString::testMain();
-    return 1;
+    //base::testString::testMain();
+    //base::demoClass::testMain();
+    //return 1;
     //baseMain();
     // thanks: https://learn.microsoft.com/zh-cn/cpp/build/reference/zc-conformance?view=msvc-170
     // thanks: https://learn.microsoft.com/en-us/cpp/preprocessor/predefined-macros?view=msvc-170&viewFallbackFrom=vs-2022
@@ -212,7 +214,8 @@ int main()
 
     //base::demoConstexpr::testMain();
     //thread::atomic::testMain();
-    //thread::mutex::testMain();
+    thread::mutex::testMain();
+    return EXIT_SUCCESS;
 
     //base::demoForward::testMain();
     base::typeInfo::testMain();
