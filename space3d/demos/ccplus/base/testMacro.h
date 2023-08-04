@@ -14,6 +14,7 @@ namespace base
 {
 namespace demoMacro
 {
+
 namespace test_2
 {
 #if _WIN32 || _WIN64

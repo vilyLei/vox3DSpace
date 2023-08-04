@@ -220,8 +220,10 @@ int main()
 
     //base::demoConstexpr::testMain();
     //thread::atomic::testMain();
+
     msvcAsm::testInline::testMain();
     return EXIT_SUCCESS;
+
     base::demoMacro::testMain();
     return EXIT_SUCCESS;
     thread::mutex::testMain();
