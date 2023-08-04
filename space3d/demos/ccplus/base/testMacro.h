@@ -14,9 +14,29 @@ namespace base
 {
 namespace demoMacro
 {
-
 namespace test_2
 {
+#if _WIN32 || _WIN64
+#    if defined(_M_X64) || defined(__x86_64__) // the latter for MinGW support
+#        define __TBB_x86_64 1
+#    elif defined(_M_IA64)
+#        define __TBB_ipf 1
+#    elif defined(_M_IX86) || defined(__i386__) // the latter for MinGW support
+#        define __TBB_x86_32 1
+#    else
+#        define __TBB_generic_arch 1
+#    endif
+#else /* Assume generic Unix */
+#    if __x86_64__
+#        define __TBB_x86_64 1
+#    elif __ia64__
+#        define __TBB_ipf 1
+#    elif __i386__ || __i386 // __i386 is for Sun OS
+#        define __TBB_x86_32 1
+#    else
+#        define __TBB_generic_arch 1
+#    endif
+#endif
 static inline void machine_pause(int32_t delay)
 {
     while (delay-- > 0)

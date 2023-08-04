@@ -12,6 +12,8 @@
 #include "base/testString.h"
 #include "base/testClass.h"
 #include "base/testMacro.h"
+#include "base/testMemory.h"
+#include "msvcAsm/testInlineAsm.h"
 #include "parallel/testExecutionPar.h"
 
 class ValueUnit
@@ -201,7 +203,10 @@ int baseMain()
 
 int main()
 {
-    //base::testString::testMain();
+    base::testMemory::testMain();
+    return EXIT_SUCCESS;
+    base::testString::testMain();
+    return EXIT_SUCCESS;
     //base::demoClass::testMain();
     //return 1;
     //baseMain();
@@ -215,7 +220,8 @@ int main()
 
     //base::demoConstexpr::testMain();
     //thread::atomic::testMain();
-
+    msvcAsm::testInline::testMain();
+    return EXIT_SUCCESS;
     base::demoMacro::testMain();
     return EXIT_SUCCESS;
     thread::mutex::testMain();
