@@ -86,6 +86,18 @@ namespace base::testMemory
 {
 namespace test_3
 {
+class GoodUnit
+{
+public:
+    std::shared_ptr<GoodUnit> getptr()
+    {
+        return std::shared_ptr<GoodUnit>(this);
+    }
+    virtual ~GoodUnit()
+    {
+        std::cout << "GoodUnit::destructor()...\n";
+    }
+};
 class Good : public std::enable_shared_from_this<Good>
 {
 public:
@@ -128,14 +140,24 @@ struct Bad
     ~Bad() { std::cout << "Bad::~Bad() called\n"; }
 };
 
+void testGoodUnit()
+{
+    // Good: the two shared_ptr's share the same object
+    {
+        std::shared_ptr<GoodUnit> good0 = std::make_shared<GoodUnit>();
+        std::shared_ptr<GoodUnit> good1 = good0->getptr();
+        std::cout << "testGoodUnit(), good1.use_count() = " << good1.use_count() << '\n';
+    }
+    using namespace std::literals;
+    std::this_thread::sleep_for(1s);
+}
 void testGood()
 {
     // Good: the two shared_ptr's share the same object
     {
         std::shared_ptr<Good> good0 = std::make_shared<Good>();
         std::shared_ptr<Good> good1 = good0->getptr();
-        //std::shared_ptr<Good> good1 = good0;
-        std::cout << "good1.use_count() = " << good1.use_count() << '\n';
+        std::cout << "testGood(), good1.use_count() = " << good1.use_count() << '\n';
     }
     using namespace std::literals;
     std::this_thread::sleep_for(1s);
@@ -176,7 +198,8 @@ void testBad()
 
 void testMain()
 {
-    testGood();
+    testGoodUnit();
+    //testGood();
     //misuseGood();
     //testBest();
     //testBad();
