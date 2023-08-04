@@ -9,9 +9,7 @@
 #include <mutex>
 #include <algorithm>
 
-namespace msvcAsm
-{
-namespace testInline
+namespace msvcAsm::testInline
 {
 namespace test_1
 {
@@ -66,5 +64,4 @@ void testMain()
     test_1::testMain();
     std::cout << "msvcAsm::testInline::testMain() end.\n";
 }
-} // namespace testInline
 } // namespace msvcAsm

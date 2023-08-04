@@ -1,5 +1,3 @@
-//#include <cstdio>
-//#include <cstdlib>
 #include <iostream>
 #include <algorithm>
 #include <string>
@@ -142,7 +140,8 @@ struct Bad
 
 void testGoodUnit()
 {
-    // Good: the two shared_ptr's share the same object
+    // testGoodUnit: the two shared_ptr's share the same object
+    // error operations:
     {
         std::shared_ptr<GoodUnit> good0 = std::make_shared<GoodUnit>();
         std::shared_ptr<GoodUnit> good1 = good0->getptr();
@@ -198,8 +197,8 @@ void testBad()
 
 void testMain()
 {
-    testGoodUnit();
-    //testGood();
+    //testGoodUnit();
+    testGood();
     //misuseGood();
     //testBest();
     //testBad();
