@@ -32,6 +32,7 @@ macro(build_executable_projects)
                        "${ccplus_dir}/base/testTypeInfo.h"
                        "${ccplus_dir}/base/testString.h"
                        "${ccplus_dir}/base/testClass.h"
+                       "${ccplus_dir}/base/testMacro.h"
                        "${ccplus_dir}/ccplusMain.cc"
                        FOLDER
                        ${test_demo_folder_name}

@@ -121,10 +121,16 @@ void testMain()
                                         // 1 initializes ex.in_u.a8[3]
     std::cout << "struct SExampleA ex1: \n\t" << std::string(ex1) << std::endl;
 
+#pragma warning(disable : 4838)
     SExampleA ex2 = {80, 257,0};
     std::cout << "struct SExampleA ex2: \n\t" << std::string(ex2) << std::endl;
     SExampleB ex3 = {80, 515, 769};
-    std::cout << "struct SExampleA ex3: \n\t" << std::string(ex3) << std::endl;
+    std::cout << "struct SExampleB ex3: \n\t" << std::string(ex3) << std::endl;
+
+#pragma warning(default : 4838)
+    //SExampleA ex4 = {8101, (char)257, 0};
+    SExampleA ex4 = {8101, 257, 0};
+    std::cout << "struct SExampleA ex4: \n\t" << std::string(ex4) << std::endl;
 
 }
 } // namespace test_1

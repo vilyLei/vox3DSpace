@@ -11,6 +11,7 @@
 #include "base/testTypeInfo.h"
 #include "base/testString.h"
 #include "base/testClass.h"
+#include "base/testMacro.h"
 #include "parallel/testExecutionPar.h"
 
 class ValueUnit
@@ -214,6 +215,9 @@ int main()
 
     //base::demoConstexpr::testMain();
     //thread::atomic::testMain();
+
+    base::demoMacro::testMain();
+    return EXIT_SUCCESS;
     thread::mutex::testMain();
     return EXIT_SUCCESS;
 
