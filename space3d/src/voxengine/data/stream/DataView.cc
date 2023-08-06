@@ -7,12 +7,12 @@ namespace data
 namespace stream
 {
 DataView::DataView(std::shared_ptr<ArrayBuffer> arrBuf, Uint32 byteOffset, Uint32 length) :
-    m_buildType(0), m_arrBuf(arrBuf), m_byteLength(arrBuf->getByteLength()), m_byteOffset(byteOffset), m_length(length), m_bytes(arrBuf->getBytes())
+    m_buildType(0), m_arrBuf(arrBuf), m_byteStride(1), m_byteLength(arrBuf->getByteLength()), m_byteOffset(byteOffset), m_length(length), m_bytes(arrBuf->getBytes())
 {
     //std::cout << "DataView::constructor() type 0 ..." << std::endl;
 }
 DataView::DataView(Uint32 length) :
-    m_buildType(1), m_byteLength(0), m_byteOffset(0), m_length(length), m_bytes(nullptr)
+    m_buildType(1), m_byteStride(1), m_byteLength(0), m_byteOffset(0), m_length(length), m_bytes(nullptr)
 {
     //std::cout << "DataView::constructor() type 1 ..." << std::endl;
 }
@@ -44,6 +44,7 @@ std::shared_ptr<ArrayBuffer> DataView::getBuffer()
 
 void DataView::buildBytesData(Int32 step)
 {
+    m_byteStride     = step;
     auto bitMoveStep = step >> 1;
     if (m_buildType < 1)
     {
@@ -62,6 +63,10 @@ void DataView::buildBytesData(Int32 step)
     }
 }
 
+Int32 DataView::getByteStride()
+{
+    return m_byteStride;
+}
 Int32 DataView::getByteOffset()
 {
     return m_byteOffset;

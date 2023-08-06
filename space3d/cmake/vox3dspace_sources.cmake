@@ -44,6 +44,7 @@ macro(build_projects_sources)
         "${vox3dspace_src_root}/voxengine/data/stream/ArrayBuffer.h"
         "${vox3dspace_src_root}/voxengine/data/stream/DataView.cc"
         "${vox3dspace_src_root}/voxengine/data/stream/DataView.h"
+        "${vox3dspace_src_root}/voxengine/data/stream/BaseTypeArray.h"
         "${vox3dspace_src_root}/voxengine/data/stream/Float32Array.cc"
         "${vox3dspace_src_root}/voxengine/data/stream/Float32Array.h"
         "${vox3dspace_src_root}/voxengine/data/stream/Int8Array.cc"

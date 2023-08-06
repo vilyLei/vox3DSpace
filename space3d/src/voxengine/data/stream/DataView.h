@@ -19,6 +19,7 @@ public:
     Int32 getLength();
     Int32 getByteLength();
     Int8* getBytes();
+    Int32 getByteStride();
     Int32 getByteOffset();
 
     std::shared_ptr<ArrayBuffer> getBuffer();
@@ -31,6 +32,7 @@ protected:
     Int32                        m_buildType;
     Int32                        m_byteOffset;
     Int32                        m_length;
+    Int32                        m_byteStride;
     Int32                        m_byteLength;
     Int8*                        m_bytes;
     std::shared_ptr<ArrayBuffer> m_arrBuf;

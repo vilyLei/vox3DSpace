@@ -7,6 +7,7 @@
 #include "./src/common/math/Sphere.h"
 
 #include "./src/voxengine/data/stream/streamDemo.h"
+#include "./src/voxengine/data/stream/BaseTypeArray.h"
 #include "./src/voxengine/math/Float.h"
 #include "./src/voxengine/math/OBB.h"
 #include "./src/voxengine/math/vec2.h"
@@ -34,6 +35,10 @@ int main()
     std::cout << "\ntest engine base objects:\n";
 
     
+    std::cout << "\n-------------------------  ------------------------  ------------------------------\n";
+    voxengine::data::stream::BaseTypeArray<int> intArray(6);
+    std::cout << "intArray.getByteStride(): " << intArray.getByteStride() << ", intArray.getByteLength(): " << intArray.getByteLength() << std::endl;
+
     std::cout << "\n-------------------------  ------------------------  ------------------------------\n";
     voxengine::math::Matrix4<double> mat4_01{};
     std::cout << "mat4_01: " << mat4_01.toString() << std::endl;
