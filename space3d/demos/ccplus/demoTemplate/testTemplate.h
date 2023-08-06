@@ -10,6 +10,30 @@
 
 namespace demoTemplate::base
 {
+namespace testDemo4
+{
+template <class T, int size = sizeof(T)>
+class ConsumerCount
+{
+public:
+    int countSize;
+    T   users[size];
+    ConsumerCount() :
+        countSize(size)
+    {
+    }
+    void showInfo()
+    {
+        std::cout << "ConsumerCount::showInfo(),"
+                  << "countSize: " << countSize << std::endl;
+    }
+};
+void testMain()
+{
+    ConsumerCount<float, 8> cc01{};
+    cc01.showInfo();
+}
+} // namespace testDemo4
 namespace test_3
 {
 #include <iostream>
@@ -102,14 +126,14 @@ int testMain(void)
     std::cout << comp3.IsEqual(3.14159, 4.14159) << std::endl;
     std::cout << comp3.IsEqual(3.14159, 3.14159) << std::endl;
 
-    std::vector<int> int_vs_0 = {1,3,4,5};
-    std::vector<int> int_vs_1 = {1,3,4,5};
+    std::vector<int>          int_vs_0 = {1, 3, 4, 5};
+    std::vector<int>          int_vs_1 = {1, 3, 4, 5};
     Compare<std::vector<int>> comp4;
     std::cout << comp4.IsEqual(int_vs_0, int_vs_1) << std::endl;
 
-    
-    std::vector<std::string>  str_vs_0 = {"a", "bbg", "fg"};
-    std::vector<std::string>  str_vs_1 = {"a", "bbg", "f9g"};
+
+    std::vector<std::string>          str_vs_0 = {"a", "bbg", "fg"};
+    std::vector<std::string>          str_vs_1 = {"a", "bbg", "f9g"};
     Compare<std::vector<std::string>> comp5;
     std::cout << "comp5.IsEqual(str_vs_0, str_vs_1): " << comp5.IsEqual(str_vs_0, str_vs_1) << std::endl;
     std::cout << "demoTemplate::base::test_3::testMain() end.\n";
@@ -241,7 +265,8 @@ void testMain()
     //std::cout << std::atomic<int>::is_always_lock_free << "\n";
     //test_1::testMain();
     //test_2::testMain();
-    test_3::testMain();
+    //test_3::testMain();
+    testDemo4::testMain();
     std::cout << "demoTemplate::base::testMain() end.\n";
 }
 } // namespace demoTemplate::base

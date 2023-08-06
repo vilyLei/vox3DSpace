@@ -182,9 +182,9 @@ int baseMain()
 
 int main()
 {
-    thread::syncConcurrent::testMain();
-    return EXIT_SUCCESS;
     demoTemplate::base::testMain();
+    return EXIT_SUCCESS;
+    thread::syncConcurrent::testMain();
     return EXIT_SUCCESS;
     base::demoClass::testMain();
     return EXIT_SUCCESS;
