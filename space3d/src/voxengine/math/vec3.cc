@@ -30,17 +30,12 @@ Vec3<NumberType>::Vec3(NumberType px, NumberType py, NumberType pz, NumberType p
     :
     x(px), y(py), z(pz), w(pw)
 {
-    //std::cout << "Vec3::constructor() ..." << std::endl;
 }
 template <typename NumberType>
 Vec3<NumberType>::Vec3() noexcept
     :
     x(static_cast<NumberType>(0)), y(static_cast<NumberType>(0)), z(static_cast<NumberType>(0)), w(static_cast<NumberType>(1))
 {
-    //std::cout << "Vec3::constructor() default..." << std::endl;
-    //std::cout << std::boolalpha
-    //std::cout << "sizeof(NumberType): " << sizeof(NumberType) << ", s_minv: " << s_minv << std::endl;
-    //std::cout << "0.0000001 > s_minv: " << (0.0000001 > s_minv) << std::endl;
 }
 
 template <typename NumberType>

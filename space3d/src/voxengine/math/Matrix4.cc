@@ -331,22 +331,17 @@ void Matrix4<NumberType>::appendRotationPivot(NumberType radian, const Vec3<Numb
 {
     s_mat.identity();
     s_mat.getAxisRotation(axis.x, axis.y, axis.z, radian);
-    //std::cout << "appendRotationPivot 1 : " << s_mat.toString() << std::endl;
     if (pivotPoint == nullptr)
     {
-        //std::cout << "appendRotationPivot A.\n";
         auto& pv = Vec3<NumberType>::Z_AXIS;
         s_mat.appendTranslationXYZ(pv.x, pv.y, pv.z);
     }
     else
     {
-        //std::cout << "appendRotationPivot B.\n";
         auto& pv = (*pivotPoint);
         s_mat.appendTranslationXYZ(pv.x, pv.y, pv.z);
     }
-    //std::cout << "appendRotationPivot 2 : " << s_mat.toString() << std::endl;
     append(s_mat);
-    //std::cout << "appendRotationPivot 3 : " << this->toString() << std::endl;
 }
 template <typename NumberType>
 void Matrix4<NumberType>::appendRotation(NumberType radian, const Vec3<NumberType>& axis)

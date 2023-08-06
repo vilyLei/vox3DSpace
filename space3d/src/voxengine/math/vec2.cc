@@ -29,17 +29,12 @@ Vec2<NumberType>::Vec2(NumberType px, NumberType py, NumberType pw) noexcept
     :
     x(px), y(py), w(pw)
 {
-    //std::cout << "Vec2::constructor() ..." << std::endl;
 }
 template <typename NumberType>
 Vec2<NumberType>::Vec2() noexcept
     :
     x(static_cast<NumberType>(0)), y(static_cast<NumberType>(0)), w(static_cast<NumberType>(1))
 {
-    //std::cout << "Vec2::constructor() default..." << std::endl;
-    //std::cout << std::boolalpha
-    //std::cout << "sizeof(NumberType): " << sizeof(NumberType) << ", s_minv: " << s_minv << std::endl;
-    //std::cout << "0.0000001 > s_minv: " << (0.0000001 > s_minv) << std::endl;
 }
 
 template <typename NumberType>
