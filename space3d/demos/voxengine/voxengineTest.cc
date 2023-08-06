@@ -36,9 +36,16 @@ int main()
 
     
     std::cout << "\n-------------------------  ------------------------  ------------------------------\n";
-    voxengine::data::stream::BaseTypeArray<int> intArray(6);
-    std::cout << "intArray.getByteStride(): " << intArray.getByteStride() << ", intArray.getByteLength(): " << intArray.getByteLength() << std::endl;
-
+    voxengine::data::stream::BaseTypeArray<UINT32> uint32Array(6);
+    std::cout << "uint32Array.getByteStride(): " << uint32Array.getByteStride() << ", uint32Array.getByteLength(): " << uint32Array.getByteLength() << std::endl;
+    voxengine::data::stream::BaseTypeArray<Float32> float32Array(6);
+    float32Array[2] = 0.5f;
+    std::cout << "float32Array.getByteStride(): " << float32Array.getByteStride() << ", float32Array.getByteLength(): " << float32Array.getByteLength() << std::endl;
+    std::cout << "float32Array[2]: " << float32Array[2] << std::endl;
+    // 
+    //voxengine::data::stream::BaseTypeArray<std::string> stringArray(6);
+    //stringArray[2] = "df";
+    //std::cout << "stringArray[2]: " << stringArray[2] << std::endl;
     std::cout << "\n-------------------------  ------------------------  ------------------------------\n";
     voxengine::math::Matrix4<double> mat4_01{};
     std::cout << "mat4_01: " << mat4_01.toString() << std::endl;

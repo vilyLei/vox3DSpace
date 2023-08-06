@@ -63,7 +63,7 @@ struct T2
     }
 
     template <typename Floating,
-              TEnable_if_t<std::is_floating_point<Floating>::value, bool> = 0>
+              TEnable_if_t<std::is_floating_point<Floating>::value, bool> = true>
     T2(Floating) :
         type(float_t) {} // OK
 };
