@@ -13,17 +13,6 @@ const NumberType Vec3<NumberType>::s_180OverPi = static_cast<NumberType>(MATH_18
 template <typename NumberType>
 const NumberType Vec3<typename NumberType>::s_minv = getPositiveMinValue<NumberType>();
 
-//template <typename NumberType>
-//const Vec3<NumberType> Vec3<NumberType>::X_AXIS{static_cast<NumberType>(1), static_cast<NumberType>(0), static_cast<NumberType>(0), static_cast<NumberType>(0)};
-//template <typename NumberType>
-//const Vec3<NumberType> Vec3<NumberType>::Y_AXIS{static_cast<NumberType>(0), static_cast<NumberType>(1), static_cast<NumberType>(0), static_cast<NumberType>(0)};
-//template <typename NumberType>
-//const Vec3<NumberType> Vec3<NumberType>::Z_AXIS{static_cast<NumberType>(0), static_cast<NumberType>(1), static_cast<NumberType>(0), static_cast<NumberType>(0)};
-//template <typename NumberType>
-//const Vec3<NumberType> Vec3<NumberType>::ZERO{static_cast<NumberType>(0), static_cast<NumberType>(0), static_cast<NumberType>(0), static_cast<NumberType>(0)};
-//template <typename NumberType>
-//const Vec3<NumberType> Vec3<NumberType>::ONE{static_cast<NumberType>(1), static_cast<NumberType>(1), static_cast<NumberType>(1), static_cast<NumberType>(1)};
-
 CREATE_SATATIC_VEC3_INS(NumberType, X_AXIS, 1, 0, 0, 0);
 CREATE_SATATIC_VEC3_INS(NumberType, Y_AXIS, 0, 1, 0, 0);
 CREATE_SATATIC_VEC3_INS(NumberType, Z_AXIS, 0, 0, 1, 0);
