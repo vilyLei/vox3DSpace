@@ -817,79 +817,81 @@ std::string Matrix4<NumberType>::toString()
 }
 
 
+template class Matrix4<double>;
+template class Matrix4<float>;
 
-template <typename NumberType>
-void __$templateConstructMatrix4(NumberType value)
-{
-    Matrix4<NumberType> ma{};
-    Matrix4<NumberType> mb{};
-    Vec3<NumberType>    va;
-    ma.identity();
-    ma.perspectiveRH(value, value, value, value);
-    ma.copyFrom(mb);
-    ma.copyRowFrom(0, va);
-    ma.copyColumnTo(0, va);
-    ma.transformVector3Self(va);
-    ma.transformVector4Self(va);
-
-    ma.determinant();
-    ma.multiplyMatrices(&mb, &mb);
-    ma.multiply(&mb, &mb);
-    ma.premultiply(&mb);
-    ma.append(mb);
-    ma.append3x3(mb);
-
-    ma.appendRotationPivot(value, va, &va);
-    ma.appendRotation(value, va);
-    ma.appendRotationX(value);
-    ma.appendRotationY(value);
-    ma.appendRotationZ(value);
-
-    // 用欧拉角形式旋转(heading->pitch->bank) => (y->x->z)
-    ma.appendRotationEulerAngle(value, value, value);
-    ma.setScale(va);
-    ma.setScaleXYZ(value, value, value);
-    ma.getScale(va);
-
-    ma.setRotationEulerAngle(value, value, value);
-    ma.setRotationEulerAngleWithTriFunc(value, value, value, value, value, value);
-    ma.getAxisRotation(value, value, value, value);
-    ma.rotationX(value);
-    ma.rotationY(value);
-    ma.rotationZ(value);
-
-    Euler<NumberType> eu0;
-    ma.setRotationFromEuler( eu0 );
-
-    ma.extractRotation(mb);
-    ma.copyTranslation(mb);
-
-    ma.setTranslationXYZ(value, value, value);
-    ma.setTranslation(va);
-    ma.appendScaleXYZ(value, value, value);
-
-    ma.appendScaleXY(value, value);
-    ma.appendTranslationXYZ(value, value, value);
-    ma.appendTranslation(va);
-
-    ma.invert();
-    ma.invertThis();
-
-    auto cm = ma.clone();
-
-    ma.perspectiveRH(value, value, value, value);
-    ma.perspectiveLH(value, value, value, value);
-    ma.orthoRH(value, value, value, value, value, value);
-    ma.orthoLH(value, value, value, value, value, value);
-    ma.lookAtRH(va, va, va);
-    ma.lookAtLH(va, va, va);
-
-    ma.toString();
-}
-void __$templateImplyMatrix4()
-{
-    __$templateConstructMatrix4(1.0);
-    __$templateConstructMatrix4(1.0f);
-}
+//template <typename NumberType>
+//void __$templateConstructMatrix4(NumberType value)
+//{
+//    Matrix4<NumberType> ma{};
+//    Matrix4<NumberType> mb{};
+//    Vec3<NumberType>    va;
+//    ma.identity();
+//    ma.perspectiveRH(value, value, value, value);
+//    ma.copyFrom(mb);
+//    ma.copyRowFrom(0, va);
+//    ma.copyColumnTo(0, va);
+//    ma.transformVector3Self(va);
+//    ma.transformVector4Self(va);
+//
+//    ma.determinant();
+//    ma.multiplyMatrices(&mb, &mb);
+//    ma.multiply(&mb, &mb);
+//    ma.premultiply(&mb);
+//    ma.append(mb);
+//    ma.append3x3(mb);
+//
+//    ma.appendRotationPivot(value, va, &va);
+//    ma.appendRotation(value, va);
+//    ma.appendRotationX(value);
+//    ma.appendRotationY(value);
+//    ma.appendRotationZ(value);
+//
+//    // 用欧拉角形式旋转(heading->pitch->bank) => (y->x->z)
+//    ma.appendRotationEulerAngle(value, value, value);
+//    ma.setScale(va);
+//    ma.setScaleXYZ(value, value, value);
+//    ma.getScale(va);
+//
+//    ma.setRotationEulerAngle(value, value, value);
+//    ma.setRotationEulerAngleWithTriFunc(value, value, value, value, value, value);
+//    ma.getAxisRotation(value, value, value, value);
+//    ma.rotationX(value);
+//    ma.rotationY(value);
+//    ma.rotationZ(value);
+//
+//    Euler<NumberType> eu0;
+//    ma.setRotationFromEuler( eu0 );
+//
+//    ma.extractRotation(mb);
+//    ma.copyTranslation(mb);
+//
+//    ma.setTranslationXYZ(value, value, value);
+//    ma.setTranslation(va);
+//    ma.appendScaleXYZ(value, value, value);
+//
+//    ma.appendScaleXY(value, value);
+//    ma.appendTranslationXYZ(value, value, value);
+//    ma.appendTranslation(va);
+//
+//    ma.invert();
+//    ma.invertThis();
+//
+//    auto cm = ma.clone();
+//
+//    ma.perspectiveRH(value, value, value, value);
+//    ma.perspectiveLH(value, value, value, value);
+//    ma.orthoRH(value, value, value, value, value, value);
+//    ma.orthoLH(value, value, value, value, value, value);
+//    ma.lookAtRH(va, va, va);
+//    ma.lookAtLH(va, va, va);
+//
+//    ma.toString();
+//}
+//void __$templateImplyMatrix4()
+//{
+//    __$templateConstructMatrix4(1.0);
+//    __$templateConstructMatrix4(1.0f);
+//}
 } // namespace math
 } // namespace voxengine

@@ -15,6 +15,7 @@
 #include "base/testMemory.h"
 #include "msvcAsm/testInlineAsm.h"
 #include "parallel/testExecutionPar.h"
+#include "demoTemplate/testTemplate.h"
 
 class ValueUnit
 {
@@ -178,37 +179,19 @@ int baseMain()
 
     return EXIT_SUCCESS;
 }
-//struct VPoint
-//{
-//    double vx, vy, vz;
-//    operator std::string() const
-//    {
-//        std::string s("(vx=" + std::to_string(vx));
-//        s += ",vy=" + std::to_string(vy);
-//        s += ",vz=" + std::to_string(vz) + ")";
-//        return std::move(s);
-//    }
-//};
-//
-//void stringTest()
-//{
-//    VPoint      v0  = {.vx=0.5};
-//    std::string str = "str";
-//    str.insert(0, "First");
-//    std::cout << "str: "<<str << std::endl;
-//    std::string vo_str = v0;
-//    std::cout << "vo_str: " << vo_str << std::endl;
-//
-//}
 
 int main()
 {
+    thread::syncConcurrent::testMain();
+    return EXIT_SUCCESS;
+    demoTemplate::base::testMain();
+    return EXIT_SUCCESS;
+    base::demoClass::testMain();
+    return EXIT_SUCCESS;
     base::testMemory::testMain();
     return EXIT_SUCCESS;
     base::testString::testMain();
     return EXIT_SUCCESS;
-    //base::demoClass::testMain();
-    //return 1;
     //baseMain();
     // thanks: https://learn.microsoft.com/zh-cn/cpp/build/reference/zc-conformance?view=msvc-170
     // thanks: https://learn.microsoft.com/en-us/cpp/preprocessor/predefined-macros?view=msvc-170&viewFallbackFrom=vs-2022
@@ -234,7 +217,6 @@ int main()
     std::cout << "\n";
     return EXIT_SUCCESS;
 
-    thread::syncConcurrent::testMain();
     std::cout << "\n";
     thread::asyncDemo::testMain();
     return EXIT_SUCCESS;

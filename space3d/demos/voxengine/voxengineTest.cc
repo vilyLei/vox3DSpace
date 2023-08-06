@@ -1,5 +1,4 @@
-﻿// vox3DSpace.cpp : 此文件包含 "main" 函数。程序执行将在此处开始并结束。
-//
+﻿
 //#include "./src/demo/voxengineDemo/math/mathDemo.h"
 
 #include "./src/common/math/vec4.h"
@@ -11,6 +10,7 @@
 #include "./src/voxengine/math/Float.h"
 #include "./src/voxengine/math/OBB.h"
 #include "./src/voxengine/math/vec2.h"
+#include "./src/voxengine/math/Matrix4.h"
 #include "./src/voxengine/text/BaseText.h"
 
 #include <cstdlib>
@@ -32,6 +32,13 @@ int main()
     baseMath::Sphere      sphA{baseMath::Float3(), 10.0f};
 
     std::cout << "\ntest engine base objects:\n";
+
+    
+    std::cout << "\n-------------------------  ------------------------  ------------------------------\n";
+    voxengine::math::Matrix4<double> mat4_01{};
+    std::cout << "mat4_01: " << mat4_01.toString() << std::endl;
+    mat4_01.setRotationEulerAngle(0.5, 0.0, 1.0);
+    std::cout << "mat4_01: " << mat4_01.toString() << std::endl;
 
     voxengine::math::OBB<double> obbA{};
     auto&                        obb = obbA;
@@ -79,6 +86,31 @@ int main()
     uv2b = uv2;
     std::cout << "uv2b.x: " << uv2b.x << ", uv2b.y: " << uv2b.y << std::endl;
 
+    voxengine::math::Vec2<char> v2_char;
+    v2_char.setXY(15, 12);
+    std::cout << "v2_char.x: " << (int)v2_char.x << ", v2_char.y: " << (int)v2_char.y << std::endl;
+
+    voxengine::math::Vec2<short> v2_short;
+    v2_short.setXY(65537, 12);
+    std::cout << "v2_short.x: " << v2_short.x << ", v2_short.y: " << v2_short.y << std::endl;
+
+    auto axis = voxengine::math::Vec2<int>::X_AXIS;
+    std::cout << "vec2 x_axis.toString(): " << axis.toString() << std::endl;
+    axis = voxengine::math::Vec2<int>::Y_AXIS;
+    std::cout << "vec2 y_axis.toString(): " << axis.toString() << std::endl;
+    axis = voxengine::math::Vec2<int>::ZERO;
+    std::cout << "vec2 zero.toString(): " << axis.toString() << std::endl;
+    axis = voxengine::math::Vec2<int>::ONE.clone();
+    std::cout << "vec2 ONE.toString(): " << axis.toString() << std::endl;
+
+    
+    
+    auto v3_axis = voxengine::math::Vec3<int>::Y_AXIS;
+    std::cout << "vec3 y_axis.toString(): " << v3_axis.toString() << std::endl;
+
+    //voxengine::math::Vec2<unsigned short> v2_u_short;
+    //v2_u_short.setXY(65537, 12);
+    //std::cout << "v2_u_short.x: " << v2_u_short.x << ", v2_short.y: " << v2_u_short.y << std::endl;
 
     std::cout << "\ntest engine module:\n";
     std::boolalpha(std::cout);

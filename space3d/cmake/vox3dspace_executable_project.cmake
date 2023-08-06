@@ -35,6 +35,7 @@ macro(build_executable_projects)
                        "${ccplus_dir}/base/testMacro.h"
                        "${ccplus_dir}/base/testMemory.h"
                        "${ccplus_dir}/msvcAsm/testInlineAsm.h"
+                       "${ccplus_dir}/demoTemplate/testTemplate.h"
                        "${ccplus_dir}/ccplusMain.cc"
                        FOLDER
                        ${test_demo_folder_name}
@@ -120,6 +121,7 @@ macro(build_executable_projects)
                        "${vox3dspace_root}/demos/tbb/testMutex.h"
                        "${vox3dspace_root}/demos/tbb/testTask.h"
                        "${vox3dspace_root}/demos/tbb/testParallel.h"
+                       "${tbb_root_dir}/src/tbb/co_context.h"
                        FOLDER
                        ${test_demo_folder_name}
                        DEFINES

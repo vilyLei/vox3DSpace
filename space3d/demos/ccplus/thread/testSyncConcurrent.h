@@ -13,6 +13,36 @@ namespace thread
 {
 namespace syncConcurrent
 {
+namespace test_2
+{
+class ChunkParser
+{
+public:
+    //std::thread_local int stride = 0;
+    thread_local static int Stride;
+    ChunkParser() {}
+    void operator()()
+    {
+        std::cout << "ChunkParser() thread call() ...\n";
+        using namespace std::literals;
+        std::this_thread::sleep_for(700ms);
+    }
+};
+thread_local int ChunkParser::Stride = 0;
+
+void testMain()
+{
+    std::vector<std::thread> thrs;
+    for (auto i = 0; i < 3; ++i)
+    {
+        thrs.emplace_back(ChunkParser());
+    }
+    for (auto& v : thrs)
+    {
+        v.join();
+    }
+}
+} // namespace test_2
 namespace promiseDemo_1
 {
 void accumulate(std::vector<int>::iterator first,
@@ -52,7 +82,7 @@ int testMain()
     new_work_thread.join();
     return 1;
 }
-}
+} // namespace promiseDemo_1
 namespace futureDemo_2
 {
 int testMain()
@@ -89,7 +119,7 @@ int testMain()
     t.join();
     return 1;
 }
-}
+} // namespace futureDemo_2
 namespace futureDemo_1
 {
 int testMain()
@@ -116,19 +146,21 @@ int testMain()
     t.join();
     return 1;
 }
-}
+} // namespace futureDemo_1
 namespace condition_variable_demo_notify_all
 {
-std::condition_variable cv;
-std::mutex              cv_m; // This mutex is used for three purposes:
-                              // 1) to synchronize accesses to i
-                              // 2) to synchronize accesses to std::cerr
-                              // 3) for the condition variable cv
+//std::condition_variable_any cv;
+std::condition_variable_any cv;
+std::mutex                  cv_m; // This mutex is used for three purposes:
+                                    // 1) to synchronize accesses to i
+                                    // 2) to synchronize accesses to std::cerr
+                                    // 3) for the condition variable cv
 int i = 0;
 
 void waits()
 {
     std::unique_lock<std::mutex> lk(cv_m);
+    //std::lock_guard lk(cv_m);
     std::cerr << "Waiting... \n";
     cv.wait(lk, [] { return i == 1; });
     std::cerr << "...finished waiting. i == 1\n";
@@ -162,7 +194,7 @@ int testMain()
     t4.join();
     return 1;
 }
-}
+} // namespace condition_variable_demo_notify_all
 namespace condition_variable_demo
 {
 
@@ -196,19 +228,20 @@ void worker_thread()
 void notifyReadyFlag()
 {
     std::cout << "notifyReadyFlag() begin.\n";
-    for (auto i = 0; i < 3; ++i) {
+    for (auto i = 0; i < 3; ++i)
+    {
         std::this_thread::yield();
         std::this_thread::sleep_for(std::chrono::milliseconds(300ms));
     }
     std::unique_lock lk(m);
-    ready     = true;
+    ready = true;
     //processed = true;
     lk.unlock();
     //cv.notify_one();
     cv02.notify_one();
     std::cout << "notifyReadyFlag() end.\n";
 }
-int  testMain()
+int testMain()
 {
     // thanks: https://en.cppreference.com/w/cpp/thread/condition_variable
     std::thread worker(worker_thread);
@@ -221,7 +254,7 @@ int  testMain()
         std::cout << "main() signals data ready for processing\n";
     }
     //cv.notify_one();
-    // 
+    //
     std::thread notifyWorker(notifyReadyFlag);
     notifyWorker.detach();
     // wait for the worker
@@ -236,16 +269,17 @@ int  testMain()
 
     return 1;
 }
-}
+} // namespace condition_variable_demo
 void testMain()
 {
     std::boolalpha(std::cout);
     std::cout << "thread::syncConcurrent::testMain() begin.\n\n";
 
     //std::cout << std::atomic<int>::is_always_lock_free << "\n";
-    condition_variable_demo::testMain();
-    //condition_variable_demo_notify_all::testMain();
+    //condition_variable_demo::testMain();
+    condition_variable_demo_notify_all::testMain();
     //futureDemo_2::testMain();
+    //test_2::testMain();
     std::cout << "thread::syncConcurrent::testMain() end.\n\n";
 }
 } // namespace syncConcurrent

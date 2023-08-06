@@ -50,8 +50,8 @@ public:
     Vec3 crossProduct(const Vec3& v3) const;
     Vec3 clone() const;
 
-    void toArray3(NumberType* arr, unsigned int offset = 0);
-    void toArray4(NumberType* arr, unsigned int offset = 0);
+    void        toArray3(NumberType* arr, unsigned int offset = 0);
+    void        toArray4(NumberType* arr, unsigned int offset = 0);
     Vec3*       fromArray3(NumberType* arr, unsigned int offset = 0);
     Vec3*       fromArray4(NumberType* arr, unsigned int offset = 0);
     std::string toString();
@@ -98,6 +98,10 @@ private:
     static Vec3             s_v1;
 };
 
-typedef Vec3<unsigned int> UVec3;
+typedef Vec3<long> UVec3;
+
+#define CREATE_SATATIC_VEC3_INS(T, NAME, v0, v1, v2, v3) \
+    template <typename T>                                \
+    const Vec3<T> Vec3<T>::NAME{static_cast<T>(v0), static_cast<T>(v1), static_cast<T>(v2), static_cast<T>(v3)};
 } // namespace math
 } // namespace voxengine

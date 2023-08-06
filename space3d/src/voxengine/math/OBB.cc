@@ -160,21 +160,22 @@ bool OBB<NumberType>::intersect(const OBB& obb, NumberType epsilon)
 
     return true;
 }
-
-template <typename NumberType>
-void __$templateConstructOBB(NumberType value)
-{
-    OBB<NumberType> va{};
-    OBB<NumberType> v{};
-
-    v.containsV(va.center);
-    v.intersect(va);
-    v.update();
-}
-void __$templateImplyOBB()
-{
-    __$templateConstructOBB(1.0);
-    __$templateConstructOBB(1.0f);
-}
+template class OBB<double>;
+template class OBB<float>;
+//template <typename NumberType>
+//void __$templateConstructOBB(NumberType value)
+//{
+//    OBB<NumberType> va{};
+//    OBB<NumberType> v{};
+//
+//    v.containsV(va.center);
+//    v.intersect(va);
+//    v.update();
+//}
+//void __$templateImplyOBB()
+//{
+//    __$templateConstructOBB(1.0);
+//    __$templateConstructOBB(1.0f);
+//}
 } // namespace math
 } // namespace voxengine

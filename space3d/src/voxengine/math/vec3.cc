@@ -13,16 +13,22 @@ const NumberType Vec3<NumberType>::s_180OverPi = static_cast<NumberType>(MATH_18
 template <typename NumberType>
 const NumberType Vec3<typename NumberType>::s_minv = getPositiveMinValue<NumberType>();
 
-template <typename NumberType>
-const Vec3<NumberType> Vec3<NumberType>::X_AXIS{static_cast<NumberType>(1), static_cast<NumberType>(0), static_cast<NumberType>(0), static_cast<NumberType>(0)};
-template <typename NumberType>
-const Vec3<NumberType> Vec3<NumberType>::Y_AXIS{static_cast<NumberType>(0), static_cast<NumberType>(1), static_cast<NumberType>(0), static_cast<NumberType>(0)};
-template <typename NumberType>
-const Vec3<NumberType> Vec3<NumberType>::Z_AXIS{static_cast<NumberType>(0), static_cast<NumberType>(1), static_cast<NumberType>(0), static_cast<NumberType>(0)};
-template <typename NumberType>
-const Vec3<NumberType> Vec3<NumberType>::ZERO{static_cast<NumberType>(0), static_cast<NumberType>(0), static_cast<NumberType>(0), static_cast<NumberType>(0)};
-template <typename NumberType>
-const Vec3<NumberType> Vec3<NumberType>::ONE{static_cast<NumberType>(1), static_cast<NumberType>(1), static_cast<NumberType>(1), static_cast<NumberType>(1)};
+//template <typename NumberType>
+//const Vec3<NumberType> Vec3<NumberType>::X_AXIS{static_cast<NumberType>(1), static_cast<NumberType>(0), static_cast<NumberType>(0), static_cast<NumberType>(0)};
+//template <typename NumberType>
+//const Vec3<NumberType> Vec3<NumberType>::Y_AXIS{static_cast<NumberType>(0), static_cast<NumberType>(1), static_cast<NumberType>(0), static_cast<NumberType>(0)};
+//template <typename NumberType>
+//const Vec3<NumberType> Vec3<NumberType>::Z_AXIS{static_cast<NumberType>(0), static_cast<NumberType>(1), static_cast<NumberType>(0), static_cast<NumberType>(0)};
+//template <typename NumberType>
+//const Vec3<NumberType> Vec3<NumberType>::ZERO{static_cast<NumberType>(0), static_cast<NumberType>(0), static_cast<NumberType>(0), static_cast<NumberType>(0)};
+//template <typename NumberType>
+//const Vec3<NumberType> Vec3<NumberType>::ONE{static_cast<NumberType>(1), static_cast<NumberType>(1), static_cast<NumberType>(1), static_cast<NumberType>(1)};
+
+CREATE_SATATIC_VEC3_INS(NumberType, X_AXIS, 1, 0, 0, 0);
+CREATE_SATATIC_VEC3_INS(NumberType, Y_AXIS, 0, 1, 0, 0);
+CREATE_SATATIC_VEC3_INS(NumberType, Z_AXIS, 0, 0, 1, 0);
+CREATE_SATATIC_VEC3_INS(NumberType, ZERO, 0, 0, 0, 0);
+CREATE_SATATIC_VEC3_INS(NumberType, ONE, 1, 1, 1, 1);
 
 template <typename NumberType>
 Vec3<NumberType> Vec3<NumberType>::s_v0{};
@@ -421,80 +427,89 @@ void Vec3<NumberType>::reflect(const Vec3& iv, const Vec3& nv, Vec3& rv)
     rv.y         = iv.y - idotn2 * nv.y;
     rv.z         = iv.z - idotn2 * nv.z;
 }
+template class Vec3<double>;
+template class Vec3<float>;
+template class Vec3<char>;
+template class Vec3<short>;
+template class Vec3<int>;
+template class Vec3<long>;
 
-template <typename NumberType>
-void __$templateConstructVec3(NumberType value)
-{
-    Vec3<NumberType> va{};
-    Vec3<NumberType> v{};
-
-    NumberType vs[4]{value, value, value, value};
-
-    v[0] += value;
-    v.set(value, value, value, value);
-    v.setXYZ(value, value, value);
-
-    v.dot(va);
-    v.getLength();
-    v.getLengthSquared();
-
-    v.copyFrom(va);
-    v.multBy(va);
-    v.normalize();
-    v.normalizeTo(va);
-    v.scaleVector(va);
-    v.scaleBy(value);
-    v.negate();
-    v.equalsXYZ(va);
-    v.equalsAll(va);
-    v.project();
-    v.addBy(va);
-    v.subtractBy(va);
-    v.crossBy(va);
-    v.reflectBy(va);
-
-    v.scaleVecTo(va, value);
-    v.subVecsTo(va, va);
-    v.addVecsTo(va, va);
-    v.crossVecsTo(va, va);
-    v.subtract(va);
-    v.crossProduct(va);
-
-    auto v1 = v.clone();
-
-    v.toArray3(vs);
-    v.toArray4(vs);
-    v.fromArray3(vs);
-    v.fromArray4(vs);
-
-    v.toString();
-
-    auto pv0 = Vec3<NumberType>::X_AXIS;
-    auto pv1 = Vec3<NumberType>::Y_AXIS;
-    auto pv2 = Vec3<NumberType>::Z_AXIS;
-    auto pv3 = Vec3<NumberType>::ONE;
-    auto pv4 = Vec3<NumberType>::ZERO;
-
-    Vec3<NumberType>::cross(va, va, va);
-    Vec3<NumberType>::crossSubtract(va, va, va, va, va);
-    Vec3<NumberType>::subtract(va, va, va);
-    Vec3<NumberType>::distanceSquared(va, va);
-    Vec3<NumberType>::distanceXYZ(value, value, value, value, value, value);
-    Vec3<NumberType>::distance(va, va);
-    Vec3<NumberType>::angleBetween(va, va);
-    Vec3<NumberType>::radianBetween(va, va);
-    Vec3<NumberType>::radianBetween2(va, va);
-    Vec3<NumberType>::reflect(va, va, va);
-
-}
-void __$templateImplyVec3()
-{
-    __$templateConstructVec3(1.0);
-    __$templateConstructVec3(1.0f);
-    __$templateConstructVec3(long(1));
-
-    UVec3 v3;
-    v3.setXYZ(1, 2, 3);
-}
+//template <typename NumberType>
+//void __$templateConstructVec3(NumberType value)
+//{
+//    Vec3<NumberType> va{};
+//    Vec3<NumberType> v{};
+//
+//    NumberType vs[4]{value, value, value, value};
+//
+//    v[0] += value;
+//    v.set(value, value, value, value);
+//    v.setXYZ(value, value, value);
+//
+//    v.dot(va);
+//    v.getLength();
+//    v.getLengthSquared();
+//
+//    v.copyFrom(va);
+//    v.multBy(va);
+//    v.normalize();
+//    v.normalizeTo(va);
+//    v.scaleVector(va);
+//    v.scaleBy(value);
+//    v.negate();
+//    v.equalsXYZ(va);
+//    v.equalsAll(va);
+//    v.project();
+//    v.addBy(va);
+//    v.subtractBy(va);
+//    v.crossBy(va);
+//    v.reflectBy(va);
+//
+//    v.scaleVecTo(va, value);
+//    v.subVecsTo(va, va);
+//    v.addVecsTo(va, va);
+//    v.crossVecsTo(va, va);
+//    v.subtract(va);
+//    v.crossProduct(va);
+//
+//    auto v1 = v.clone();
+//
+//    v.toArray3(vs);
+//    v.toArray4(vs);
+//    v.fromArray3(vs);
+//    v.fromArray4(vs);
+//
+//    v.toString();
+//
+//    auto pv0 = Vec3<NumberType>::X_AXIS;
+//    auto pv1 = Vec3<NumberType>::Y_AXIS;
+//    auto pv2 = Vec3<NumberType>::Z_AXIS;
+//    auto pv3 = Vec3<NumberType>::ONE;
+//    auto pv4 = Vec3<NumberType>::ZERO;
+//
+//    Vec3<NumberType>::cross(va, va, va);
+//    Vec3<NumberType>::crossSubtract(va, va, va, va, va);
+//    Vec3<NumberType>::subtract(va, va, va);
+//    Vec3<NumberType>::distanceSquared(va, va);
+//    Vec3<NumberType>::distanceXYZ(value, value, value, value, value, value);
+//    Vec3<NumberType>::distance(va, va);
+//    Vec3<NumberType>::angleBetween(va, va);
+//    Vec3<NumberType>::radianBetween(va, va);
+//    Vec3<NumberType>::radianBetween2(va, va);
+//    Vec3<NumberType>::reflect(va, va, va);
+//
+//}
+//void __$templateImplyVec3()
+//{
+//    __$templateConstructVec3(1.0);
+//    __$templateConstructVec3(1.0f);
+//    __$templateConstructVec3(char(1));
+//    __$templateConstructVec3(short(1));
+//    __$templateConstructVec3(int(1));
+//    __$templateConstructVec3(long(1));
+//
+//    UVec3 v3;
+//    v3.setXYZ(1, 2, 3);
+//}
 } // namespace math
 } // namespace voxengine

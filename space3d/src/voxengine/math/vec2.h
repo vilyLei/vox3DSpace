@@ -25,20 +25,20 @@ public:
     NumberType getLength() const;
     NumberType getLengthSquared() const;
 
-    void copyFrom(const Vec2& v2);
-    void multBy(const Vec2& v2);
-    void normalize();
-    void normalizeTo(Vec2& v2) const;
-    void scaleVector(const Vec2& v2);
-    void scaleBy(NumberType s);
-    void negate();
-    bool equalsXYZ(const Vec2& v2);
-    bool equalsAll(const Vec2& v2);
-    void project();
-    void addBy(const Vec2& v2);
-    void subtractBy(const Vec2& v2);
+    void       copyFrom(const Vec2& v2);
+    void       multBy(const Vec2& v2);
+    void       normalize();
+    void       normalizeTo(Vec2& v2) const;
+    void       scaleVector(const Vec2& v2);
+    void       scaleBy(NumberType s);
+    void       negate();
+    bool       equalsXYZ(const Vec2& v2);
+    bool       equalsAll(const Vec2& v2);
+    void       project();
+    void       addBy(const Vec2& v2);
+    void       subtractBy(const Vec2& v2);
     NumberType crossBy(const Vec2& v2) const;
-    void reflectBy(const Vec2& nv);
+    void       reflectBy(const Vec2& nv);
 
     void scaleVecTo(const Vec2& va, NumberType scale);
     void subVecsTo(const Vec2& va, const Vec2& vb);
@@ -47,8 +47,8 @@ public:
     Vec2 subtract(const Vec2& v2) const;
     Vec2 clone() const;
 
-    void toArray2(NumberType* arr, unsigned int offset = 0);
-    void toArray3(NumberType* arr, unsigned int offset = 0);
+    void        toArray2(NumberType* arr, unsigned int offset = 0);
+    void        toArray3(NumberType* arr, unsigned int offset = 0);
     Vec2*       fromArray2(NumberType* arr, unsigned int offset = 0);
     Vec2*       fromArray3(NumberType* arr, unsigned int offset = 0);
     std::string toString();
@@ -66,5 +66,11 @@ private:
 };
 
 typedef Vec2<long> UVec2;
+
+
+#define CREATE_SATATIC_VEC2_INS(T, NAME, v0, v1, v2) \
+    template <typename T>                     \
+    const Vec2<T> Vec2<T>::NAME{static_cast<T>(v0), static_cast<T>(v1), static_cast<T>(v2)};
+
 } // namespace math
 } // namespace voxengine
