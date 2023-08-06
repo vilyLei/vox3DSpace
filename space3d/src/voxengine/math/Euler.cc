@@ -25,20 +25,5 @@ Euler<NumberType>* Euler<NumberType>::setFromRotationMatrix(const IMatrix4<Numbe
 template class Euler<double>;
 template class Euler<float>;
 
-//template <typename NumberType>
-//void __$templateConstructEuler(NumberType value)
-//{
-//
-//    Euler<NumberType> eu0;
-//    Matrix4<NumberType> mat0;
-//    eu0.set(value, value, value);
-//    eu0.setFromRotationMatrix(mat0);
-//}
-//void __$templateImplyEuler()
-//{
-//    __$templateConstructEuler(1.0);
-//    __$templateConstructEuler(1.0f);
-//}
-
 } // namespace math
 } // namespace voxengine

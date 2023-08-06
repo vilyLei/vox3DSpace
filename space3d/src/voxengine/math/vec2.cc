@@ -280,58 +280,6 @@ std::string Vec2<NumberType>::toString()
     return "Vec2(x=" + std::to_string(x) + ",y=" + std::to_string(y) + ",w=" + std::to_string(w) + ")";
 }
 
-//template <typename NumberType>
-//void __$templateConstructVec2(NumberType value)
-//{
-//    Vec2<NumberType> va{};
-//    Vec2<NumberType> v{};
-//
-//    NumberType vs[3]{value, value, value};
-//
-//    v[0] += value;
-//    v.set(value, value, value);
-//    v.setXY(value, value);
-//
-//    v.dot(va);
-//    v.getLength();
-//    v.getLengthSquared();
-//
-//    v.copyFrom(va);
-//    v.multBy(va);
-//    v.normalize();
-//    v.normalizeTo(va);
-//    v.scaleVector(va);
-//    v.scaleBy(value);
-//    v.negate();
-//    v.equalsXYZ(va);
-//    v.equalsAll(va);
-//    v.project();
-//    v.addBy(va);
-//    v.subtractBy(va);
-//    v.crossBy(va);
-//    v.reflectBy(va);
-//
-//    v.scaleVecTo(va, value);
-//    v.subVecsTo(va, va);
-//    v.addVecsTo(va, va);
-//    v.subtract(va);
-//
-//    auto v1 = v.clone();
-//
-//    v.toArray2(vs);
-//    v.toArray3(vs);
-//    v.fromArray2(vs);
-//    v.fromArray3(vs);
-//
-//    v.toString();
-//
-//    auto pv0 = Vec2<NumberType>::X_AXIS;
-//    auto pv1 = Vec2<NumberType>::Y_AXIS;
-//    auto pv3 = Vec2<NumberType>::ONE;
-//    auto pv4 = Vec2<NumberType>::ZERO;
-//
-//}
-
 template class Vec2<double>;
 template class Vec2<float>;
 template class Vec2<char>;
@@ -339,17 +287,5 @@ template class Vec2<short>;
 template class Vec2<int>;
 template class Vec2<long>;
 
-//void __$templateImplyVec2()
-//{
-//    //__$templateConstructVec2(1.0);
-//    //__$templateConstructVec2(1.0f);
-//    //__$templateConstructVec2(char(1));
-//    //__$templateConstructVec2(short(1));
-//    //__$templateConstructVec2(int(1));
-//    //__$templateConstructVec2(long(1));
-//
-//    //UVec2 v2;
-//    //v2.setXY(1, 2);
-//}
 } // namespace math
 } // namespace voxengine
