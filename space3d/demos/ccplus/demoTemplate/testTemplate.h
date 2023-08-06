@@ -10,6 +10,106 @@
 
 namespace demoTemplate::base
 {
+namespace buildEnableIf
+{
+template <bool _Test, class _Ty = void>
+struct TEnable_if
+{}; // no member "type" when !_Test
+
+template <class _Ty>
+struct TEnable_if<true, _Ty>
+{ // type is _Ty for _Test
+    using type = _Ty;
+};
+template <bool _Test, class _Ty = void>
+using TEnable_if_t = typename TEnable_if<_Test, _Ty>::type;
+
+struct T1
+{
+    enum
+    {
+        int_t,
+        float_t,
+        void_t
+    } type;
+
+    template <typename Integer,
+              TEnable_if_t<std::is_integral<Integer>::value, bool> = true>
+    T1(Integer) :
+        type(int_t) {}
+
+    template <typename Floating,
+              TEnable_if_t<std::is_floating_point<Floating>::value, bool> = true>
+    T1(Floating) :
+        type(float_t) {} // OK
+        
+    template <typename VoidT,
+              TEnable_if_t<std::is_void<VoidT>::value, bool> = true>
+    T1(VoidT) :
+        type(void_t) {} // OK
+};
+struct T2
+{
+    enum
+    {
+        int_t,
+        float_t
+    } type;
+
+    template <typename Integer,
+              TEnable_if_t<std::is_integral<Integer>::value, bool> = true>
+    T2(Integer) :
+        type(int_t) {
+    }
+
+    template <typename Floating,
+              TEnable_if_t<std::is_floating_point<Floating>::value, bool> = 0>
+    T2(Floating) :
+        type(float_t) {} // OK
+};
+
+template <typename T>
+typename TEnable_if<std::is_arithmetic<T>::value>::type applyNumber(T value)
+{
+    std::cout << "TEnable_if, applyNumber valye: " << value << std::endl;
+    //return value;
+}
+template <typename T, typename = TEnable_if<std::is_arithmetic<T>::value>::type>
+T calcNumber(T value)
+{
+    std::cout << "TEnable_if, calcNumber valye: " << value << std::endl;
+    return value;
+}
+template <typename T, typename = TEnable_if<std::is_arithmetic<T>::value>>
+T calcNumber2(T value)
+{
+    std::cout << "TEnable_if, calcNumber valye: " << value << std::endl;
+    return value;
+}
+
+void testMain()
+{
+    //std::cout << calcNumber("df") << std::endl;
+    std::cout << calcNumber(31) << std::endl;
+    std::cout << calcNumber(31.4) << std::endl;
+    std::cout << calcNumber2(31) << std::endl;
+    std::cout << calcNumber2(31.4) << std::endl;
+    applyNumber(56);
+    applyNumber(56.0);
+    T1 t1_0{1};
+    T1 t1_1{11.1};
+    //T1 t1_2(void);
+    std::cout << "t1_0: " << t1_0.type << std::endl;
+    std::cout << "t1_1: " << t1_1.type << std::endl;
+    //std::cout << "t1_2: " << t1_2 << std::endl;
+
+    
+    T2 t2_0{1};
+    T2 t2_1{11.1};
+    std::cout << "t2_0: " << t2_0.type << std::endl;
+    std::cout << "t2_1: " << t2_1.type << std::endl;
+}
+} // namespace buildEnableIf
 namespace testDemo4
 {
 template <class T, int size = sizeof(T)>
@@ -219,19 +319,28 @@ int testMain()
 } // namespace test_2
 namespace test_1
 {
-#include <iostream>
-#include <string>
-
 using namespace std;
 
-template <typename T, typename enable_if<is_arithmetic<T>::value, int>::type = 0>
+template <class T>
+typename std::enable_if<std::is_trivially_default_constructible<T>::value>::type
+construct(T*)
+{
+    std::cout << "default constructing trivially default constructible T\n";
+}
+
+template <typename T>
+typename enable_if<is_arithmetic<T>::value>::type applyNumberA(T x)
+{
+    cout << "applyNumberA() x: " << x << endl;
+}
+template <typename T, typename = enable_if<is_arithmetic<T>::value>>
 T applyNumber(T x)
 {
     cout << "applyNumber x: " << x << endl;
     return x;
 }
 
-template <typename T, typename enable_if<is_integral<T>::value, int>::type = 0>
+template <typename T, typename = enable_if<is_integral<T>::value, int>::type>
 T f(T x)
 {
     cout << "param is int" << endl;
@@ -251,6 +360,8 @@ int testMain()
     cout << f(3.14) << endl;
     cout << applyNumber(3.14f) << endl;
     cout << applyNumber(31) << endl;
+    applyNumberA(3.14f);
+    applyNumberA(31);
     return 0;
 }
 
@@ -264,9 +375,10 @@ void testMain()
     std::cout << "demoTemplate::base::testMain() begin.\n";
     //std::cout << std::atomic<int>::is_always_lock_free << "\n";
     //test_1::testMain();
+    buildEnableIf::testMain();
     //test_2::testMain();
     //test_3::testMain();
-    testDemo4::testMain();
+    //testDemo4::testMain();
     std::cout << "demoTemplate::base::testMain() end.\n";
 }
 } // namespace demoTemplate::base
