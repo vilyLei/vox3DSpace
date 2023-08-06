@@ -43,6 +43,7 @@ int main()
     std::cout << "float32Array.getByteStride(): " << float32Array.getByteStride() << ", float32Array.getByteLength(): " << float32Array.getByteLength() << std::endl;
     std::cout << "float32Array[2]: " << float32Array[2] << std::endl;
     // 
+    //voxengine::data::stream::BaseTypeArray<UINT32*> stringArray(6);
     //voxengine::data::stream::BaseTypeArray<std::string> stringArray(6);
     //stringArray[2] = "df";
     //std::cout << "stringArray[2]: " << stringArray[2] << std::endl;
