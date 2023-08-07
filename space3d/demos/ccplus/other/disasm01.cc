@@ -27,3 +27,11 @@ int main(int argc, char** argv)
 // 目标文件反汇编
 // gcc -c -o main.o main.c
 // objdump -s -d main.o > main.o.txt
+
+// GAS assembly instructions are generally suffixed with the letters "b", "s", "w", "l", "q" or "t" to determine what size operand is being manipulated.
+// b = byte (8 bit).
+// s = single (32-bit floating point).
+// w = word (16 bit).
+// l = long (32 bit integer or 64-bit floating point).
+// q = quad (64 bit).
+// t = ten bytes (80-bit floating point).
