@@ -303,7 +303,7 @@ Vec3<NumberType>* Vec3<typename NumberType>::fromArray4(NumberType* arr, unsigne
 
 
 template <typename NumberType>
-std::string Vec3<NumberType>::toString()
+std::string Vec3<NumberType>::toString() const
 {
     return "Vec3(x=" + std::to_string(x) + ",y=" + std::to_string(y) + ",z=" + std::to_string(z) + ",w=" + std::to_string(w) + ")";
 }

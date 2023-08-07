@@ -107,6 +107,13 @@ int main()
     v2_short.setXY(65537, 12);
     std::cout << "v2_short.x: " << v2_short.x << ", v2_short.y: " << v2_short.y << std::endl;
 
+    
+    voxengine::math::Vec2<int> v2_int;
+    v2_int.setXY(65537, 12);
+    std::cout << "v2_int.x: " << v2_int.x << ", v2_int.y: " << v2_int.y << std::endl;
+
+    auto& axis_const = voxengine::math::Vec2<int>::X_AXIS;
+    std::cout << "vec2 const x_axis.toString(): " << axis_const.toString() << std::endl;
     auto axis = voxengine::math::Vec2<int>::X_AXIS;
     std::cout << "vec2 x_axis.toString(): " << axis.toString() << std::endl;
     axis = voxengine::math::Vec2<int>::Y_AXIS;

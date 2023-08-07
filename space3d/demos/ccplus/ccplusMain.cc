@@ -6,6 +6,7 @@
 #include "thread/testMutex.h"
 #include "thread/testSyncConcurrent.h"
 #include "thread/testAsync.h"
+#include "thread/testThrFuture.h"
 #include "base/testConstexpr.h"
 #include "base/testForward.h"
 #include "base/testTypeInfo.h"
@@ -182,6 +183,8 @@ int baseMain()
 
 int main()
 {
+    thread::thrFuture::testMain();
+    return EXIT_SUCCESS;
     demoTemplate::base::testMain();
     return EXIT_SUCCESS;
     thread::syncConcurrent::testMain();
@@ -192,6 +195,7 @@ int main()
     return EXIT_SUCCESS;
     base::testString::testMain();
     return EXIT_SUCCESS;
+
     //baseMain();
     // thanks: https://learn.microsoft.com/zh-cn/cpp/build/reference/zc-conformance?view=msvc-170
     // thanks: https://learn.microsoft.com/en-us/cpp/preprocessor/predefined-macros?view=msvc-170&viewFallbackFrom=vs-2022

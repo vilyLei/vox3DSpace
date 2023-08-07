@@ -26,6 +26,7 @@ macro(build_executable_projects)
                        "${ccplus_dir}/thread/testMemoryOrder.h"
                        "${ccplus_dir}/thread/testSyncConcurrent.h"
                        "${ccplus_dir}/thread/testAsync.h"
+                       "${ccplus_dir}/thread/testThrFuture.h"
                        "${ccplus_dir}/base/testConstexpr.h"
                        "${ccplus_dir}/parallel/testExecutionPar.h"
                        "${ccplus_dir}/base/testForward.h"

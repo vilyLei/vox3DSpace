@@ -122,6 +122,7 @@ int testMain()
 } // namespace futureDemo_2
 namespace futureDemo_1
 {
+
 int testMain()
 {
     // future from a packaged_task
@@ -152,9 +153,9 @@ namespace condition_variable_demo_notify_all
 //std::condition_variable_any cv;
 std::condition_variable_any cv;
 std::mutex                  cv_m; // This mutex is used for three purposes:
-                                    // 1) to synchronize accesses to i
-                                    // 2) to synchronize accesses to std::cerr
-                                    // 3) for the condition variable cv
+                                  // 1) to synchronize accesses to i
+                                  // 2) to synchronize accesses to std::cerr
+                                  // 3) for the condition variable cv
 int i = 0;
 
 void waits()

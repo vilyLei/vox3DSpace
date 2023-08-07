@@ -54,7 +54,7 @@ public:
     void        toArray4(NumberType* arr, unsigned int offset = 0);
     Vec3*       fromArray3(NumberType* arr, unsigned int offset = 0);
     Vec3*       fromArray4(NumberType* arr, unsigned int offset = 0);
-    std::string toString();
+    std::string toString() const;
 
 
     /**

@@ -261,7 +261,7 @@ Vec2<NumberType>* Vec2<typename NumberType>::fromArray3(NumberType* arr, unsigne
 
 
 template <typename NumberType>
-std::string Vec2<NumberType>::toString()
+std::string Vec2<NumberType>::toString() const
 {
     return "Vec2(x=" + std::to_string(x) + ",y=" + std::to_string(y) + ",w=" + std::to_string(w) + ")";
 }

@@ -51,7 +51,7 @@ public:
     void        toArray3(NumberType* arr, unsigned int offset = 0);
     Vec2*       fromArray2(NumberType* arr, unsigned int offset = 0);
     Vec2*       fromArray3(NumberType* arr, unsigned int offset = 0);
-    std::string toString();
+    std::string toString() const;
 
     const static Vec2 X_AXIS;
     const static Vec2 Y_AXIS;
