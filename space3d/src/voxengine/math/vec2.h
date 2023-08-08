@@ -4,53 +4,84 @@ namespace voxengine
 {
 namespace math
 {
-template <typename NumberType>
+template <typename T>
 class Vec2
 {
 public:
-    explicit Vec2(NumberType px, NumberType py, NumberType pw = static_cast<NumberType>(1)) noexcept;
-    Vec2() noexcept;
+    union
+    {
+        struct
+        {
+            T x;
+            T y;
+            T z;
+        };
+        T data[3];
+    };
+
+    //explicit Vec2(T px, T py, T pz = static_cast<T>(1)) noexcept;
+    //Vec2() noexcept;
     ~Vec2() = default;
-    //virtual ~Vec2();
 
-    NumberType x;
-    NumberType y;
-    NumberType w;
+    explicit Vec2(T x, T y, T z = static_cast<T>(1)) noexcept :
+        x(x), y(y), z(z)
+    {}
+    Vec2() noexcept :
+        x(static_cast<T>(0)), y(static_cast<T>(0)), z(static_cast<T>(0))
+    {}
 
-    NumberType& operator[](unsigned int i);
-    void        set(NumberType px, NumberType py, NumberType pw);
-    void        setXY(NumberType px, NumberType py);
+    Vec2(const Vec2& v) :
+        x(v.x), y(v.y), z(v.z)
+    {
+    }
+    Vec2(Vec2&& v) :
+        x(v.x), y(v.y), z(v.z)
+    {}
+    Vec2& operator=(const Vec2& v)
+    {
+        std::memcpy(data, v.data, sizeof(T) * 3);
+        return *this;
+    }
+    Vec2& operator=(Vec2&& v)
+    {
+        std::memcpy(data, v.data, sizeof(T) * 3);
+        return *this;
+    }
+    T&          operator[](unsigned int i);
+    T const&    operator[](unsigned int i) const;
+    void        set(T px, T py, T pz);
+    void        setXY(T px, T py);
 
-    NumberType dot(const Vec2& v2) const;
-    NumberType getLength() const;
-    NumberType getLengthSquared() const;
+    T dot(const Vec2& v2) const;
+    T getLength() const;
+    T getLengthSquared() const;
 
     void       copyFrom(const Vec2& v2);
     void       multBy(const Vec2& v2);
     void       normalize();
     void       normalizeTo(Vec2& v2) const;
     void       scaleVector(const Vec2& v2);
-    void       scaleBy(NumberType s);
+    void       scaleBy(T s);
     void       negate();
     bool       equalsXYZ(const Vec2& v2);
     bool       equalsAll(const Vec2& v2);
     void       project();
     void       addBy(const Vec2& v2);
     void       subtractBy(const Vec2& v2);
-    NumberType crossBy(const Vec2& v2) const;
+    T crossBy(const Vec2& v2) const;
     void       reflectBy(const Vec2& nv);
 
-    void scaleVecTo(const Vec2& va, NumberType scale);
+    void scaleVecTo(const Vec2& va, T scale);
     void subVecsTo(const Vec2& va, const Vec2& vb);
 
     void addVecsTo(const Vec2& va, const Vec2& vb);
     Vec2 subtract(const Vec2& v2) const;
     Vec2 clone() const;
 
-    void        toArray2(NumberType* arr, unsigned int offset = 0);
-    void        toArray3(NumberType* arr, unsigned int offset = 0);
-    Vec2*       fromArray2(NumberType* arr, unsigned int offset = 0);
-    Vec2*       fromArray3(NumberType* arr, unsigned int offset = 0);
+    void        toArray2(T* arr, unsigned int offset = 0);
+    void        toArray3(T* arr, unsigned int offset = 0);
+    Vec2*       fromArray2(T* arr, unsigned int offset = 0);
+    Vec2*       fromArray3(T* arr, unsigned int offset = 0);
     std::string toString() const;
 
     const static Vec2 X_AXIS;
@@ -59,8 +90,8 @@ public:
     const static Vec2 ONE;
 
 private:
-    const static NumberType s_180OverPi;
-    const static NumberType s_minv;
+    const static T s_180OverPi;
+    const static T s_minv;
     static Vec2             s_v0;
     static Vec2             s_v1;
 };

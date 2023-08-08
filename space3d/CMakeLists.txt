@@ -55,6 +55,7 @@ include("${vox3dspace_root}/cmake/vox3dspace_executable_dx12dxrDemos.cmake")
 include("${vox3dspace_root}/cmake/vox3dspace_executable_vkDemos.cmake")
 include("${vox3dspace_root}/cmake/vox3dspace_executable_oglDemos.cmake")
 include("${vox3dspace_root}/cmake/vox3dspace_executable_multiprocessDemos.cmake")
+include("${vox3dspace_root}/cmake/vox3dspace_executable_hpcDemos.cmake")
 
 execute_process(
   COMMAND
@@ -131,6 +132,7 @@ if(EXEC_BUILD_FLAG)
   build_executable_vkDemos()
   build_executable_oglDemos()
   build_executable_multprocessDemos()
+  build_executable_hpcDemos()
   # vox3dspace_setup_install_target()
   # vox3dspace_setup_test_targets()
 endif()

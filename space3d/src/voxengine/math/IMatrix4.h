@@ -4,11 +4,11 @@ namespace voxengine
 namespace math
 {
 
-template <typename NumberType>
+template <typename T>
 class IMatrix4
 {
 public:
-    virtual NumberType* getLocalFS() const = 0;
+    virtual T* getLocalFS() const = 0;
 };
 
 } // namespace math

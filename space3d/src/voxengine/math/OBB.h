@@ -5,7 +5,7 @@ namespace voxengine
 {
 namespace math
 {
-template <typename NumberType>
+template <typename T>
 class OBB
 {
 public:
@@ -16,24 +16,24 @@ public:
     /**
      * three axes normalization 3d vectors
      */
-    Vec3<NumberType> axes[3];
-    NumberType       extents[3];
+    Vec3<T> axes[3];
+    T       extents[3];
     /**
      * half length of these three axes
      */
-    Vec3<NumberType> extent;
-    Vec3<NumberType> center;
+    Vec3<T> extent;
+    Vec3<T> center;
     int              version;
-    NumberType       radius;
+    T       radius;
     void             update();
-    bool             containsV(const Vec3<NumberType>& pv) noexcept;
-    bool             intersect(const OBB& a, NumberType epsilon = 1e-6f);
+    bool             containsV(const Vec3<T>& pv) noexcept;
+    bool             intersect(const OBB& a, T epsilon = 1e-6f);
 
 private:
-    Vec3<NumberType>  m_pv;
-    NumberType        m_ts[3];
-    static NumberType AbsR[3][3];
-    static NumberType R[3][3];
+    Vec3<T>  m_pv;
+    T        m_ts[3];
+    static T AbsR[3][3];
+    static T R[3][3];
 };
 } // namespace math
 } // namespace voxengine

@@ -5,16 +5,16 @@ namespace voxengine
 namespace math
 {
 
-template<typename NumberType>
+template<typename T>
 class IEuler
 {
 public:
-    NumberType x;
-    NumberType y;
-    NumberType z;
+    T x;
+    T y;
+    T z;
     EulerOrder order;
 
-    virtual void set(NumberType px, NumberType py, NumberType pz, EulerOrder porder = EulerOrder::XYZ) = 0;
+    virtual void set(T px, T py, T pz, EulerOrder porder = EulerOrder::XYZ) = 0;
 };
 
 }

@@ -4,6 +4,8 @@
 * If the float number value is MATH_MAX_NEGATIVE < value < MATH_MIN_POSITIVE, 
 * the value can be considered ZERO, otherwise the value is not ZERO.
 *******************************************************************************/
+namespace voxengine::math
+{
 
 /**
  * principle: x < MATH_MIN_POSITIVE, or x >= MATH_MIN_POSITIVE
@@ -77,3 +79,4 @@ inline bool isGreaterRealZero(double v) {
 inline bool isLessRealZero(double v) {
 	return v < 0.0;
 }
+} // namespace voxengine::math

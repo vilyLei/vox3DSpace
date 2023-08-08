@@ -8,110 +8,102 @@ namespace voxengine
 namespace math
 {
 
-template <typename NumberType>
-const NumberType Vec2<NumberType>::s_180OverPi = static_cast<NumberType>(MATH_180_OVER_PI);
-template <typename NumberType>
-const NumberType Vec2<typename NumberType>::s_minv = getPositiveMinValue<NumberType>();
+template <typename T>
+const T Vec2<T>::s_180OverPi = static_cast<T>(MATH_180_OVER_PI);
+template <typename T>
+const T Vec2<typename T>::s_minv = getPositiveMinValue<T>();
 
-CREATE_SATATIC_VEC2_INS(NumberType, X_AXIS, 1, 0, 0);
-CREATE_SATATIC_VEC2_INS(NumberType, Y_AXIS, 0, 1, 0);
-CREATE_SATATIC_VEC2_INS(NumberType, ZERO, 0, 0, 0);
-CREATE_SATATIC_VEC2_INS(NumberType, ONE, 1, 1, 1);
+CREATE_SATATIC_VEC2_INS(T, X_AXIS, 1, 0, 0);
+CREATE_SATATIC_VEC2_INS(T, Y_AXIS, 0, 1, 0);
+CREATE_SATATIC_VEC2_INS(T, ZERO, 0, 0, 0);
+CREATE_SATATIC_VEC2_INS(T, ONE, 1, 1, 1);
 
-template <typename NumberType>
-Vec2<NumberType> Vec2<NumberType>::s_v0{};
-template <typename NumberType>
-Vec2<NumberType> Vec2<NumberType>::s_v1{};
+template <typename T>
+Vec2<T> Vec2<T>::s_v0{};
+template <typename T>
+Vec2<T> Vec2<T>::s_v1{};
 
 
-template <typename NumberType>
-Vec2<NumberType>::Vec2(NumberType px, NumberType py, NumberType pw) noexcept
-    :
-    x(px), y(py), w(pw)
+//template <typename T>
+//Vec2<T>::Vec2(T px, T py, T pz) noexcept
+//    :
+//    x(px), y(py), z(pz)
+//{
+//}
+//template <typename T>
+//Vec2<T>::Vec2() noexcept
+//    :
+//    x(static_cast<T>(0)), y(static_cast<T>(0)), z(static_cast<T>(1))
+//{
+//}
+
+template <typename T>
+T& Vec2<T>::operator[](unsigned int i)
 {
+    return data[i];
 }
-template <typename NumberType>
-Vec2<NumberType>::Vec2() noexcept
-    :
-    x(static_cast<NumberType>(0)), y(static_cast<NumberType>(0)), w(static_cast<NumberType>(1))
+template <typename T>
+T const& Vec2<T>::operator[](unsigned int i) const
 {
+    return data[i];
 }
-
-template <typename NumberType>
-NumberType& Vec2<NumberType>::operator[](unsigned int i)
-{
-
-    switch (i)
-    {
-        case 1:
-            return y;
-            break;
-        case 2:
-            return w;
-            break;
-        default:
-            break;
-    }
-    return x;
-}
-
-template <typename NumberType>
-void Vec2<NumberType>::set(NumberType px, NumberType py, NumberType pw)
+template <typename T>
+void Vec2<T>::set(T px, T py, T pz)
 {
     x = px;
     y = py;
-    w = pw;
+    z = pz;
 }
 
-template <typename NumberType>
-void Vec2<NumberType>::setXY(NumberType px, NumberType py)
+template <typename T>
+void Vec2<T>::setXY(T px, T py)
 {
     x = px;
     y = py;
 }
 
-template <typename NumberType>
-NumberType Vec2<NumberType>::dot(const Vec2& v2) const
+template <typename T>
+T Vec2<T>::dot(const Vec2& v2) const
 {
     return x * v2.x + y * v2.y;
 }
-template <typename NumberType>
-NumberType Vec2<NumberType>::getLength() const
+template <typename T>
+T Vec2<T>::getLength() const
 {
     return std::sqrt(x * x + y * y);
 }
-template <typename NumberType>
-NumberType Vec2<NumberType>::getLengthSquared() const
+template <typename T>
+T Vec2<T>::getLengthSquared() const
 {
     return x * x + y * y;
 }
 
-template <typename NumberType>
-void Vec2<NumberType>::copyFrom(const Vec2& v2)
+template <typename T>
+void Vec2<T>::copyFrom(const Vec2& v2)
 {
     x = v2.x;
     y = v2.y;
 }
-template <typename NumberType>
-void Vec2<NumberType>::multBy(const Vec2& v2)
+template <typename T>
+void Vec2<T>::multBy(const Vec2& v2)
 {
     x *= v2.x;
     y *= v2.y;
 }
-template <typename NumberType>
-void Vec2<NumberType>::normalize()
+template <typename T>
+void Vec2<T>::normalize()
 {
-    NumberType d = sqrt(x * x + y * y);
+    T d = sqrt(x * x + y * y);
     if (d > s_minv)
     {
         x /= d;
         y /= d;
     }
 }
-template <typename NumberType>
-void Vec2<NumberType>::normalizeTo(Vec2& v2) const
+template <typename T>
+void Vec2<T>::normalizeTo(Vec2& v2) const
 {
-    auto d = static_cast<NumberType>( std::sqrt(x * x + y * y) );
+    auto d = static_cast<T>( std::sqrt(x * x + y * y) );
     if (d > s_minv)
     {
         v2.x = x / d;
@@ -123,97 +115,97 @@ void Vec2<NumberType>::normalizeTo(Vec2& v2) const
         v2.y = y;
     }
 }
-template <typename NumberType>
-void Vec2<NumberType>::scaleVector(const Vec2& v2)
+template <typename T>
+void Vec2<T>::scaleVector(const Vec2& v2)
 {
     x *= v2.x;
     y *= v2.y;
 }
-template <typename NumberType>
-void Vec2<NumberType>::scaleBy(NumberType s)
+template <typename T>
+void Vec2<T>::scaleBy(T s)
 {
     x *= s;
     y *= s;
 }
-template <typename NumberType>
-void Vec2<NumberType>::negate()
+template <typename T>
+void Vec2<T>::negate()
 {
     x = -x;
     y = -y;
 }
-template <typename NumberType>
-bool Vec2<NumberType>::equalsXYZ(const Vec2& v2)
+template <typename T>
+bool Vec2<T>::equalsXYZ(const Vec2& v2)
 {
     return std::abs(x - v2.x) < s_minv && std::abs(y - v2.y) < s_minv;
 }
-template <typename NumberType>
-bool Vec2<NumberType>::equalsAll(const Vec2& v2)
+template <typename T>
+bool Vec2<T>::equalsAll(const Vec2& v2)
 {
-    return std::abs(x - v2.x) < s_minv && std::abs(y - v2.y) < s_minv && std::abs(w - v2.w) < s_minv;
+    return std::abs(x - v2.x) < s_minv && std::abs(y - v2.y) < s_minv && std::abs(z - v2.z) < s_minv;
 }
-template <typename NumberType>
-void Vec2<NumberType>::project()
+template <typename T>
+void Vec2<T>::project()
 {
-    NumberType t = static_cast<NumberType>(1) / w;
+    T t = static_cast<T>(1) / z;
     x *= t;
     y *= t;
 }
-template <typename NumberType>
-void Vec2<NumberType>::addBy(const Vec2& v2)
+template <typename T>
+void Vec2<T>::addBy(const Vec2& v2)
 {
     x += v2.x;
     y += v2.y;
 }
-template <typename NumberType>
-void Vec2<NumberType>::subtractBy(const Vec2& v2)
+template <typename T>
+void Vec2<T>::subtractBy(const Vec2& v2)
 {
     x -= v2.x;
     y -= v2.y;
 }
-template <typename NumberType>
-void Vec2<NumberType>::reflectBy(const Vec2& nv)
+template <typename T>
+void Vec2<T>::reflectBy(const Vec2& nv)
 {
-    NumberType idotn2 = (x * nv.x + y * nv.y) * static_cast<NumberType>(2);
+    T idotn2 = (x * nv.x + y * nv.y) * static_cast<T>(2);
     x                 = x - idotn2 * nv.x;
     y                 = y - idotn2 * nv.y;
 }
-template <typename NumberType>
-void Vec2<typename NumberType>::scaleVecTo(const Vec2& va, NumberType scale)
+template <typename T>
+void Vec2<typename T>::scaleVecTo(const Vec2& va, T scale)
 {
     x = va.x * scale;
     y = va.y * scale;
 }
-template <typename NumberType>
-void Vec2<NumberType>::subVecsTo(const Vec2& va, const Vec2& vb)
+template <typename T>
+void Vec2<T>::subVecsTo(const Vec2& va, const Vec2& vb)
 {
     x = va.x - vb.x;
     y = va.y - vb.y;
 }
-template <typename NumberType>
-void Vec2<NumberType>::addVecsTo(const Vec2& va, const Vec2& vb)
+template <typename T>
+void Vec2<T>::addVecsTo(const Vec2& va, const Vec2& vb)
 {
     x = va.x + vb.x;
     y = va.y + vb.y;
 }
-template <typename NumberType>
-Vec2<NumberType> Vec2<NumberType>::subtract(const Vec2& v2) const
+template <typename T>
+Vec2<T> Vec2<T>::subtract(const Vec2& v2) const
 {
-    return Vec2<NumberType>(x - v2.x, y - v2.y);
+    return Vec2<T>(x - v2.x, y - v2.y);
 }
-template <typename NumberType>
-NumberType Vec2<NumberType>::crossBy(const Vec2& v2) const
+template <typename T>
+T Vec2<T>::crossBy(const Vec2& v2) const
 {
     return x * v2.y - y * v2.x;
 }
-template <typename NumberType>
-Vec2<NumberType> Vec2<NumberType>::clone() const
+template <typename T>
+Vec2<T> Vec2<T>::clone() const
 {
-    return Vec2<NumberType>(x, y, w);
+    return Vec2<T>(x, y, z);
 }
 
 
-template <typename NumberType>
-void Vec2<NumberType>::toArray2(NumberType* arr, unsigned int offset)
+template <typename T>
+void Vec2<T>::toArray2(T* arr, unsigned int offset)
 {
     if (arr != nullptr)
     {
@@ -222,20 +214,20 @@ void Vec2<NumberType>::toArray2(NumberType* arr, unsigned int offset)
         ls[1]   = y;
     }
 }
-template <typename NumberType>
-void Vec2<NumberType>::toArray3(NumberType* arr, unsigned int offset)
+template <typename T>
+void Vec2<T>::toArray3(T* arr, unsigned int offset)
 {
     if (arr != nullptr)
     {
         auto ls = arr + offset;
         ls[0] = x;
         ls[1] = y;
-        ls[2] = w;
+        ls[2] = z;
     }
 }
 
-template <typename NumberType>
-Vec2<NumberType>* Vec2<typename NumberType>::fromArray2(NumberType* arr, unsigned int offset)
+template <typename T>
+Vec2<T>* Vec2<typename T>::fromArray2(T* arr, unsigned int offset)
 {
     if (arr != nullptr)
     {
@@ -246,24 +238,24 @@ Vec2<NumberType>* Vec2<typename NumberType>::fromArray2(NumberType* arr, unsigne
     return this;
 }
 
-template <typename NumberType>
-Vec2<NumberType>* Vec2<typename NumberType>::fromArray3(NumberType* arr, unsigned int offset)
+template <typename T>
+Vec2<T>* Vec2<typename T>::fromArray3(T* arr, unsigned int offset)
 {
     if (arr != nullptr)
     {
         auto ls = arr + offset;
         x       = ls[0];
         y       = ls[1];
-        w       = ls[2];
+        z       = ls[2];
     }
     return this;
 }
 
 
-template <typename NumberType>
-std::string Vec2<NumberType>::toString() const
+template <typename T>
+std::string Vec2<T>::toString() const
 {
-    return "Vec2(x=" + std::to_string(x) + ",y=" + std::to_string(y) + ",w=" + std::to_string(w) + ")";
+    return "Vec2(x=" + std::to_string(x) + ",y=" + std::to_string(y) + ",z=" + std::to_string(z) + ")";
 }
 
 template class Vec2<double>;

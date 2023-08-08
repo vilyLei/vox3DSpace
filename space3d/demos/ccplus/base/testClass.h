@@ -14,11 +14,42 @@ namespace demoClass
 {
 namespace test_3
 {
-    class V3
-    {
-    public:
 
+template <typename T>
+class V4
+{
+public:
+    union
+    {
+        struct
+        {
+            T x;
+            T y;
+            T z;
+            T w;
+        };
+        T vs[4];
     };
+    T& operator[](int i)
+    {
+        return vs[i];
+    }
+};
+void testMain()
+{
+    std::cout << "base::demoClass::test_3::testMain() ..." << std::endl;
+
+    V4<float> v4_0{};
+    v4_0.x = 10.0f;
+    v4_0.y = 8.5f;
+    v4_0[0] += 0.7f;
+    v4_0[1] += 0.7f;
+
+    std::cout << " v4_0.x:" << v4_0.x << std::endl;
+    std::cout << " v4_0.y:" << v4_0.y << std::endl;
+    std::cout << " v4_0.vs[0]:" << v4_0.vs[0] << std::endl;
+    std::cout << " v4_0.vs[1]:" << v4_0.vs[1] << std::endl;
+}
 }
 namespace test_2
 {

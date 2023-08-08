@@ -82,10 +82,45 @@ int main()
 
     voxengine::math::Vec3<float> v3;
     v3.setXYZ(-22.7989f, 33.6f, -15.3f);
+    v3.data[0] = 15.7768f;
+    v3.x += 15.0f;
     voxengine::math::UVec3 uv3;
     uv3.setXYZ(325,3,5);
     std::cout << "v3.x: " << v3.x << std::endl;
     std::cout << "uv3.x: " << uv3.x << std::endl;
+
+    std::cout << "\nXXXXXXXX      <<<\n";
+    std::cout << "Vec3<float> v3, sizeof(v3): " << sizeof(v3) << std::endl;
+    std::cout << "v3.toString(): " << v3.toString() << std::endl;
+    float float_vs4[4]{};
+    v3.toArray4(float_vs4, 0);
+    voxengine::math::Vec3<float> v3_01;
+    v3_01.fromArray4(float_vs4);
+    std::cout << "v3_01.toString(): " << v3_01.toString() << std::endl;
+    v3_01.negate();
+
+    
+    float float_vs3[3]{};
+    v3_01.toArray3(float_vs3);
+    v3.fromArray3(float_vs3);
+    std::cout << "v3.toString(): " << v3.toString() << std::endl;
+    v3_01.setXYZ(1.3f, 5.6f, 0.7f);
+    v3.crossBy(v3_01);
+    std::cout << "v3::crossBy(), v3.toString(): " << v3.toString() << std::endl;
+    v3.normalize();
+    std::cout << "v3::normalize(), v3.toString(): " << v3.toString() << std::endl;
+    v3_01.copyFrom(v3);
+    std::cout << "v3_01.toString(): " << v3_01.toString() << std::endl;
+    voxengine::math::Vec3<float> v3_02;
+    std::memcpy(&v3_02, &v3_01, sizeof(v3_01));
+    std::cout << "std::memcpy(&v3_02, &v3_01, sizeof(v3_01)), v3_02.toString(): " << v3_02.toString() << std::endl;
+
+    voxengine::math::Vec3<float> v3_03(v3_02);
+    std::cout << "v3_03.toString(): " << v3_03.toString() << std::endl;
+    v3_02.negate();
+    v3_03 = v3_02;
+    std::cout << "v3_03.toString(): " << v3_03.toString() << std::endl;
+    std::cout << "XXXXXXXX      >>>\n\n";
 
     
     voxengine::math::Vec2<float> v2;
@@ -94,6 +129,8 @@ int main()
     uv2.setXY(125, 8);
     std::cout << "v2.x: " << v2.x << std::endl;
     std::cout << "uv2.x: " << uv2.x << ", uv2.y: " << uv2.y << std::endl;
+    uv2.z = 319;
+    std::cout << "uv2.toString(): " << uv2.toString() << std::endl;
 
     voxengine::math::UVec2 uv2b;
     uv2b = uv2;
@@ -134,8 +171,8 @@ int main()
 
     std::cout << "\ntest engine module:\n";
     std::boolalpha(std::cout);
-    std::cout << "\nisZero(0.001f): " << isZero(0.001f) << std::endl;
-    std::cout << "isGreaterPositiveZero(0.001f): " << isGreaterPositiveZero(0.001f) << std::endl;
+    std::cout << "\nisZero(0.001f): " << voxengine::math::isZero(0.001f) << std::endl;
+    std::cout << "isGreaterPositiveZero(0.001f): " << voxengine::math::isGreaterPositiveZero(0.001f) << std::endl;
 
     //demo::voxengineDemo::math::testBase();
     //demo::voxengineDemo::math::testCamera();

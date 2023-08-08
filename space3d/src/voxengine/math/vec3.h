@@ -4,34 +4,69 @@ namespace voxengine
 {
 namespace math
 {
-template <typename NumberType>
+template <typename T>
 class Vec3
 {
 public:
-    explicit Vec3(NumberType px, NumberType py, NumberType pz, NumberType pw = static_cast<NumberType>(1)) noexcept;
-    Vec3() noexcept;
+    union
+    {
+        struct
+        {
+            T x;
+            T y;
+            T z;
+            T w;
+        };
+        T data[4];
+
+//#ifdef VOXENGINE_SIMD
+//        __m128 sd4;
+//#endif // VOXENGINE_SIMD
+
+    };
+
     ~Vec3() = default;
-    //virtual ~Vec3();
 
-    NumberType x;
-    NumberType y;
-    NumberType z;
-    NumberType w;
+    explicit Vec3(T x, T y, T z, T w = static_cast<T>(1)) noexcept:
+        x(x), y(y), z(z), w(w)
+    {}
+    Vec3() noexcept:
+        x(static_cast<T>(0)), y(static_cast<T>(0)), z(static_cast<T>(0)), w(static_cast<T>(1))
+    {}
+    Vec3(const Vec3& v) :
+        x(v.x), y(v.y), z(v.z), w(v.w)
+    {
+    }
+    Vec3(Vec3&& v) :
+        x(v.x), y(v.y), z(v.z), w(v.w)
+    {}
+    Vec3& operator=(const Vec3& v)
+    {
+        std::memcpy(data, v.data, sizeof(T) << 2);
+        return *this;
+    }
+    Vec3& operator=(Vec3&& v)
+    {
+        //data = std::move(other.data);
+        std::memcpy(data, v.data, sizeof(T) << 2);
+        return *this;
+    }
 
-    NumberType& operator[](unsigned int i);
-    void        set(NumberType px, NumberType py, NumberType pz, NumberType pw);
-    void        setXYZ(NumberType px, NumberType py, NumberType pz);
+    T&       operator[](unsigned int i);
+    T const& operator[](unsigned int i) const;
+    void     set(T px, T py, T pz, T pw);
+    void     setXYZ(T px, T py, T pz);
 
-    NumberType dot(const Vec3& v3) const;
-    NumberType getLength() const;
-    NumberType getLengthSquared() const;
+    T dot(const Vec3& v3) const;
+    T getLength() const;
+    T getLengthSquared() const;
 
     void copyFrom(const Vec3& v3);
     void multBy(const Vec3& v3);
     void normalize();
     void normalizeTo(Vec3& v3) const;
     void scaleVector(const Vec3& v3);
-    void scaleBy(NumberType s);
+    void scaleBy(T s);
     void negate();
     bool equalsXYZ(const Vec3& v3);
     bool equalsAll(const Vec3& v3);
@@ -41,7 +76,7 @@ public:
     void crossBy(const Vec3& v3);
     void reflectBy(const Vec3& nv);
 
-    void scaleVecTo(const Vec3& va, NumberType scale);
+    void scaleVecTo(const Vec3& va, T scale);
     void subVecsTo(const Vec3& va, const Vec3& vb);
 
     void addVecsTo(const Vec3& va, const Vec3& vb);
@@ -50,10 +85,10 @@ public:
     Vec3 crossProduct(const Vec3& v3) const;
     Vec3 clone() const;
 
-    void        toArray3(NumberType* arr, unsigned int offset = 0);
-    void        toArray4(NumberType* arr, unsigned int offset = 0);
-    Vec3*       fromArray3(NumberType* arr, unsigned int offset = 0);
-    Vec3*       fromArray4(NumberType* arr, unsigned int offset = 0);
+    Vec3&       toArray3(T* arr, unsigned int offset = 0);
+    Vec3&       toArray4(T* arr, unsigned int offset = 0);
+    Vec3&       fromArray3(T* arr, unsigned int offset = 0);
+    Vec3&       fromArray4(T* arr, unsigned int offset = 0);
     std::string toString() const;
 
 
@@ -62,11 +97,11 @@ public:
      */
     static void cross(const Vec3& a, const Vec3& b, Vec3& result);
     // (va1 - va0) ��� (vb1 - vb0), ���ַ���(Ϊ��)
-    static void       crossSubtract(const Vec3& va0, const Vec3& va1, const Vec3& vb0, const Vec3& vb1, Vec3& result);
-    static void       subtract(const Vec3& a, const Vec3& b, Vec3& result);
-    static NumberType distanceSquared(const Vec3& a, const Vec3& b);
-    static NumberType distanceXYZ(NumberType x0, NumberType y0, NumberType z0, NumberType x1, NumberType y1, NumberType z1);
-    static NumberType distance(const Vec3& v0, const Vec3& v1);
+    static void crossSubtract(const Vec3& va0, const Vec3& va1, const Vec3& vb0, const Vec3& vb1, Vec3& result);
+    static void subtract(const Vec3& a, const Vec3& b, Vec3& result);
+    static T    distanceSquared(const Vec3& a, const Vec3& b);
+    static T    distanceXYZ(T x0, T y0, T z0, T x1, T y1, T z1);
+    static T    distance(const Vec3& v0, const Vec3& v1);
 
     /**
      * get angle degree between two Vec3 objects
@@ -74,16 +109,16 @@ public:
      * @param v1 dst Vec3 object
      * @returns angle degree
      */
-    static NumberType angleBetween(const Vec3& v0, const Vec3& v1);
+    static T angleBetween(const Vec3& v0, const Vec3& v1);
     /**
      * get angle radian between two Vec3 objects
      * @param v0 src Vec3 object
      * @param v1 dst Vec3 object
      * @returns angle radian
      */
-    static NumberType radianBetween(const Vec3& v0, const Vec3& v1);
-    static NumberType radianBetween2(const Vec3& v0, const Vec3& v1);
-    static void       reflect(const Vec3& iv, const Vec3& nv, Vec3& rv);
+    static T    radianBetween(const Vec3& v0, const Vec3& v1);
+    static T    radianBetween2(const Vec3& v0, const Vec3& v1);
+    static void reflect(const Vec3& iv, const Vec3& nv, Vec3& rv);
 
     const static Vec3 X_AXIS;
     const static Vec3 Y_AXIS;
@@ -92,10 +127,10 @@ public:
     const static Vec3 ONE;
 
 private:
-    const static NumberType s_180OverPi;
-    const static NumberType s_minv;
-    static Vec3             s_v0;
-    static Vec3             s_v1;
+    const static T s_180OverPi;
+    const static T s_minv;
+    static Vec3    s_v0;
+    static Vec3    s_v1;
 };
 
 typedef Vec3<long> UVec3;

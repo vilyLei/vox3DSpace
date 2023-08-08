@@ -8,13 +8,13 @@ namespace voxengine
 namespace math
 {
 
-template <typename NumberType>
-NumberType OBB<NumberType>::AbsR[3][3]{0.0f};
-template <typename NumberType>
-NumberType OBB<NumberType>::R[3][3]{0.0f};
+template <typename T>
+T OBB<T>::AbsR[3][3]{0.0f};
+template <typename T>
+T OBB<T>::R[3][3]{0.0f};
 
-template <typename NumberType>
-OBB<NumberType>::OBB() noexcept
+template <typename T>
+OBB<T>::OBB() noexcept
     :
     version(-1),
     radius(0.0f),
@@ -23,8 +23,8 @@ OBB<NumberType>::OBB() noexcept
 {
 }
 
-template <typename NumberType>
-void OBB<NumberType>::update()
+template <typename T>
+void OBB<T>::update()
 {
     version++;
     for (auto i = 0; i < 3; ++i) axes[i].normalize();
@@ -33,8 +33,8 @@ void OBB<NumberType>::update()
     //et.toArray3(extents.data());
     et.toArray3(extents);
 }
-template <typename NumberType>
-bool OBB<NumberType>::containsV(const Vec3<NumberType>& pv) noexcept
+template <typename T>
+bool OBB<T>::containsV(const Vec3<T>& pv) noexcept
 {
     m_pv.subVecsTo(pv, center);
     auto v0 = m_pv;
@@ -44,8 +44,8 @@ bool OBB<NumberType>::containsV(const Vec3<NumberType>& pv) noexcept
     auto& et = extent;
     return abs(v0.dot(axes[0])) <= et.x && abs(v0.dot(axes[1])) <= et.y && abs(v0.dot(axes[2])) <= et.z;
 }
-template <typename NumberType>
-bool OBB<NumberType>::intersect(const OBB& obb, NumberType epsilon)
+template <typename T>
+bool OBB<T>::intersect(const OBB& obb, T epsilon)
 {
     auto& a = *this;
     auto& b = obb;
@@ -60,8 +60,8 @@ bool OBB<NumberType>::intersect(const OBB& obb, NumberType epsilon)
     {
         return false;
     }
-    auto Avs = OBB<NumberType>::AbsR;
-    auto Rvs = OBB<NumberType>::R;
+    auto Avs = OBB<T>::AbsR;
+    auto Rvs = OBB<T>::R;
 
     // ¼ÆËãÐý×ª¾ØÕóR
     for (auto i = 0; i < 3; ++i)
@@ -90,8 +90,8 @@ bool OBB<NumberType>::intersect(const OBB& obb, NumberType epsilon)
     auto& aets = a.extents;
     auto& bets = b.extents;
 
-    NumberType ra = 0.0f;
-    NumberType rb = 0.0f;
+    T ra = 0.0f;
+    T rb = 0.0f;
 
     // test axes(A0, A1, A2)
     for (auto i = 0; i < 3; ++i)
@@ -162,20 +162,5 @@ bool OBB<NumberType>::intersect(const OBB& obb, NumberType epsilon)
 }
 template class OBB<double>;
 template class OBB<float>;
-//template <typename NumberType>
-//void __$templateConstructOBB(NumberType value)
-//{
-//    OBB<NumberType> va{};
-//    OBB<NumberType> v{};
-//
-//    v.containsV(va.center);
-//    v.intersect(va);
-//    v.update();
-//}
-//void __$templateImplyOBB()
-//{
-//    __$templateConstructOBB(1.0);
-//    __$templateConstructOBB(1.0f);
-//}
 } // namespace math
 } // namespace voxengine

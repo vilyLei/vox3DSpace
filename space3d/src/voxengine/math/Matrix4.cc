@@ -8,45 +8,45 @@ namespace voxengine
 {
 namespace math
 {
-template <typename NumberType>
-const NumberType Matrix4<NumberType>::s_initData[16]{
+template <typename T>
+const T Matrix4<T>::s_initData[16]{
     1.0f, 0.0f, 0.0f, 0.0f,
     0.0f, 1.0f, 0.0f, 0.0f,
     0.0f, 0.0f, 1.0f, 0.0f,
     0.0f, 0.0f, 0.0f, 1.0f};
-template <typename NumberType>
-Vec3<NumberType> Matrix4<NumberType>::s_v3{};
-template <typename NumberType>
-Matrix4<NumberType> Matrix4<NumberType>::s_mat{};
-template <typename NumberType>
-const NumberType Matrix4<NumberType>::s_minv = getPositiveMinValue<NumberType>();
+template <typename T>
+Vec3<T> Matrix4<T>::s_v3{};
+template <typename T>
+Matrix4<T> Matrix4<T>::s_mat{};
+template <typename T>
+const T Matrix4<T>::s_minv = getPositiveMinValue<T>();
 
 
-template <typename NumberType>
-Matrix4<NumberType>::Matrix4(NumberType* pfs, unsigned int index) noexcept
+template <typename T>
+Matrix4<T>::Matrix4(T* pfs, unsigned int index) noexcept
     :
     m_fs(pfs),
     m_index(index),
     m_type(1),
-    m_localFSBytesTotal(sizeof(NumberType) << 4)
+    m_localFSBytesTotal(sizeof(T) << 4)
 {
     assert(pfs != nullptr);
     m_localFS = pfs + index;
 }
 
-template <typename NumberType>
-Matrix4<NumberType>::Matrix4() noexcept
+template <typename T>
+Matrix4<T>::Matrix4() noexcept
     :
     m_index(0),
     m_type(0),
-    m_localFSBytesTotal(sizeof(NumberType) << 4)
+    m_localFSBytesTotal(sizeof(T) << 4)
 {
-    m_fs                = new NumberType[16];
+    m_fs = new T[16]{};
     memcpy(m_fs, s_initData, m_localFSBytesTotal);
     m_localFS           = m_fs;
 }
-template <typename NumberType>
-Matrix4<NumberType>::~Matrix4()
+template <typename T>
+Matrix4<T>::~Matrix4()
 {
     if (m_type == 0 && m_fs != nullptr)
     {
@@ -57,26 +57,25 @@ Matrix4<NumberType>::~Matrix4()
     m_index   = 0;
     m_type    = 0;
 }
-template <typename NumberType>
-void Matrix4<NumberType>::identity()
+template <typename T>
+void Matrix4<T>::identity()
 {
     std::memcpy(m_localFS, &s_initData, m_localFSBytesTotal);
 }
 
-template <typename NumberType>
-NumberType* Matrix4<NumberType>::getLocalFS() const
+template <typename T>
+T* Matrix4<T>::getLocalFS() const
 {
     return m_localFS;
 }
-template <typename NumberType>
-void Matrix4<NumberType>::copyFrom(const Matrix4<NumberType>& mat)
+template <typename T>
+void Matrix4<T>::copyFrom(const Matrix4<T>& mat)
 {
-    //std::memcpy(m_localFS, reinterpret_cast<char*>( mat.getLocalFS()), m_localFSBytesTotal);
     std::memcpy(m_localFS, mat.getLocalFS(), m_localFSBytesTotal);
 }
 
-template <typename NumberType>
-void Matrix4<NumberType>::copyRowFrom(unsigned int row_index, const Vec3<NumberType>& v3)
+template <typename T>
+void Matrix4<T>::copyRowFrom(unsigned int row_index, const Vec3<T>& v3)
 {
     switch (row_index)
     {
@@ -117,8 +116,8 @@ void Matrix4<NumberType>::copyRowFrom(unsigned int row_index, const Vec3<NumberT
     }
 }
 
-template <typename NumberType>
-void Matrix4<NumberType>::copyColumnTo(unsigned int column_index, Vec3<NumberType>& outV3) const
+template <typename T>
+void Matrix4<T>::copyColumnTo(unsigned int column_index, Vec3<T>& outV3) const
 {
     column_index <<= 2;
     outV3.x = m_localFS[column_index];
@@ -127,23 +126,23 @@ void Matrix4<NumberType>::copyColumnTo(unsigned int column_index, Vec3<NumberTyp
     outV3.w = m_localFS[3 + column_index];
 }
 
-template <typename NumberType>
-void Matrix4<NumberType>::transformVector3Self(Vec3<NumberType>& v3)
+template <typename T>
+void Matrix4<T>::transformVector3Self(Vec3<T>& v3)
 {
-    NumberType x  = v3.x;
-    NumberType y  = v3.y;
-    NumberType z  = v3.z;
+    T x  = v3.x;
+    T y  = v3.y;
+    T z  = v3.z;
     auto       fs = m_localFS;
     v3.x          = x * fs[0] + y * fs[4] + z * fs[8] + fs[12];
     v3.y          = x * fs[1] + y * fs[5] + z * fs[9] + fs[13];
     v3.z          = x * fs[2] + y * fs[6] + z * fs[10] + fs[14];
 }
-template <typename NumberType>
-void Matrix4<NumberType>::transformVector4Self(Vec3<NumberType>& v3)
+template <typename T>
+void Matrix4<T>::transformVector4Self(Vec3<T>& v3)
 {
-    NumberType x  = v3.x;
-    NumberType y  = v3.y;
-    NumberType z  = v3.z;
+    T x  = v3.x;
+    T y  = v3.y;
+    T z  = v3.z;
     auto       fs = m_localFS;
     v3.set(
         x * fs[0] + y * fs[4] + z * fs[8] + fs[12],
@@ -153,8 +152,8 @@ void Matrix4<NumberType>::transformVector4Self(Vec3<NumberType>& v3)
 }
 
 
-template <typename NumberType>
-NumberType Matrix4<NumberType>::determinant()
+template <typename T>
+T Matrix4<T>::determinant()
 {
     auto lfs = m_localFS;
     return (lfs[0] * lfs[5] - lfs[4] * lfs[1]) *
@@ -171,13 +170,50 @@ NumberType Matrix4<NumberType>::determinant()
         (lfs[2] * lfs[7] - lfs[6] * lfs[3]);
 }
 
-template <typename NumberType>
-Matrix4<NumberType>* Matrix4<NumberType>::multiplyMatrices(Matrix4<NumberType>* a, Matrix4<NumberType>* b)
+template <typename T>
+void Matrix4<T>::multiplyMatEle(T* ae, T* be, T* te)
 {
-    auto ae = a->m_localFS;
-    auto be = b->m_localFS;
-    auto te = m_localFS;
+    auto a11 = ae[0], a12 = ae[4], a13 = ae[8], a14 = ae[12];
+    auto a21 = ae[1], a22 = ae[5], a23 = ae[9], a24 = ae[13];
+    auto a31 = ae[2], a32 = ae[6], a33 = ae[10], a34 = ae[14];
+    auto a41 = ae[3], a42 = ae[7], a43 = ae[11], a44 = ae[15];
 
+    auto b11 = be[0], b12 = be[4], b13 = be[8], b14 = be[12];
+    auto b21 = be[1], b22 = be[5], b23 = be[9], b24 = be[13];
+    auto b31 = be[2], b32 = be[6], b33 = be[10], b34 = be[14];
+    auto b41 = be[3], b42 = be[7], b43 = be[11], b44 = be[15];
+
+    te[0]  = a11 * b11 + a12 * b21 + a13 * b31 + a14 * b41;
+    te[4]  = a11 * b12 + a12 * b22 + a13 * b32 + a14 * b42;
+    te[8]  = a11 * b13 + a12 * b23 + a13 * b33 + a14 * b43;
+    te[12] = a11 * b14 + a12 * b24 + a13 * b34 + a14 * b44;
+
+    te[1]  = a21 * b11 + a22 * b21 + a23 * b31 + a24 * b41;
+    te[5]  = a21 * b12 + a22 * b22 + a23 * b32 + a24 * b42;
+    te[9]  = a21 * b13 + a22 * b23 + a23 * b33 + a24 * b43;
+    te[13] = a21 * b14 + a22 * b24 + a23 * b34 + a24 * b44;
+
+    te[2]  = a31 * b11 + a32 * b21 + a33 * b31 + a34 * b41;
+    te[6]  = a31 * b12 + a32 * b22 + a33 * b32 + a34 * b42;
+    te[10] = a31 * b13 + a32 * b23 + a33 * b33 + a34 * b43;
+    te[14] = a31 * b14 + a32 * b24 + a33 * b34 + a34 * b44;
+}
+template <typename T>
+Matrix4<T>& Matrix4<T>::multiplyMatrices(Matrix4<T>& a, Matrix4<T>& b)
+{
+    auto ae = a.m_localFS;
+    auto be = b.m_localFS;
+    auto te = m_localFS;
+    return *this;
+}
+    template <typename T>
+Matrix4<T>& Matrix4<T>::multiplyMatrices(Matrix4<T>&& a, Matrix4<T>&& b)
+{
+    auto ae = a.m_localFS;
+    auto be = b.m_localFS;
+    auto te = m_localFS;
+    multiplyMatEle(ae, be, te);
+    /*
     auto a11 = ae[0], a12 = ae[4], a13 = ae[8], a14 = ae[12];
     auto a21 = ae[1], a22 = ae[5], a23 = ae[9], a24 = ae[13];
     auto a31 = ae[2], a32 = ae[6], a33 = ae[10], a34 = ae[14];
@@ -207,35 +243,36 @@ Matrix4<NumberType>* Matrix4<NumberType>::multiplyMatrices(Matrix4<NumberType>* 
     te[7]  = a41 * b12 + a42 * b22 + a43 * b32 + a44 * b42;
     te[11] = a41 * b13 + a42 * b23 + a43 * b33 + a44 * b43;
     te[15] = a41 * b14 + a42 * b24 + a43 * b34 + a44 * b44;
-
-    return this;
+    */
+    return *this;
 }
-template <typename NumberType>
-Matrix4<NumberType>* Matrix4<NumberType>::multiply(Matrix4<NumberType>* ma, Matrix4<NumberType>* mb)
+template <typename T>
+Matrix4<T>& Matrix4<T>::multiply(Matrix4<T>&& ma, Matrix4<T>&& mb)
 {
-    if (ma != nullptr && mb != nullptr)
-    {
-        return multiplyMatrices(ma, mb);
-    }
-    else if (ma != nullptr)
-    {
-        return multiplyMatrices(this, ma);
-    }
-    return this;
+    return multiplyMatrices(ma, mb);
 }
-
-template <typename NumberType>
-Matrix4<NumberType>* Matrix4<NumberType>::premultiply(Matrix4<NumberType>* m)
+template <typename T>
+Matrix4<T>& Matrix4<T>::multiply(Matrix4<T>&& ma)
 {
-    if (m != this && m != nullptr)
+    if (&ma != this)
     {
-        return multiplyMatrices(m, this);
+        return multiplyMatrices(*this, ma);
     }
-    return this;
+    return *this;
 }
 
-template <typename NumberType>
-void Matrix4<NumberType>::append(const Matrix4& lhs)
+template <typename T>
+Matrix4<T>& Matrix4<T>::premultiply(Matrix4<T>&& m)
+{
+    if (&m != this)
+    {
+        return multiplyMatrices(m, *this);
+    }
+    return *this;
+}
+
+template <typename T>
+void Matrix4<T>::append(const Matrix4& lhs)
 {
     auto lfs = lhs.getLocalFS();
     auto sfs = m_localFS;
@@ -291,8 +328,8 @@ void Matrix4<NumberType>::append(const Matrix4& lhs)
     sfs[15] = m141 * m214 + m142 * m224 + m143 * m234 + m144 * m244;
 }
 
-template <typename NumberType>
-void Matrix4<NumberType>::append3x3(const Matrix4& lhs)
+template <typename T>
+void Matrix4<T>::append3x3(const Matrix4& lhs)
 {
     auto lfs = lhs.getLocalFS();
     auto sfs = m_localFS;
@@ -326,14 +363,14 @@ void Matrix4<NumberType>::append3x3(const Matrix4& lhs)
     sfs[10]   = m131 * m213 + m132 * m223 + m133 * m233;
 }
 
-template <typename NumberType>
-void Matrix4<NumberType>::appendRotationPivot(NumberType radian, const Vec3<NumberType>& axis, Vec3<NumberType>* pivotPoint)
+template <typename T>
+void Matrix4<T>::appendRotationPivot(T radian, const Vec3<T>& axis, Vec3<T>* pivotPoint)
 {
     s_mat.identity();
     s_mat.getAxisRotation(axis.x, axis.y, axis.z, radian);
     if (pivotPoint == nullptr)
     {
-        auto& pv = Vec3<NumberType>::Z_AXIS;
+        auto& pv = Vec3<T>::Z_AXIS;
         s_mat.appendTranslationXYZ(pv.x, pv.y, pv.z);
     }
     else
@@ -343,41 +380,41 @@ void Matrix4<NumberType>::appendRotationPivot(NumberType radian, const Vec3<Numb
     }
     append(s_mat);
 }
-template <typename NumberType>
-void Matrix4<NumberType>::appendRotation(NumberType radian, const Vec3<NumberType>& axis)
+template <typename T>
+void Matrix4<T>::appendRotation(T radian, const Vec3<T>& axis)
 {
     s_mat.identity();
     s_mat.getAxisRotation(axis.x, axis.y, axis.z, radian);
     append(s_mat);
 }
 
-template <typename NumberType>
-void Matrix4<NumberType>::appendRotationX(NumberType radian)
+template <typename T>
+void Matrix4<T>::appendRotationX(T radian)
 {
     s_mat.rotationX(radian);
     append3x3(s_mat);
 }
 
-template <typename NumberType>
-void Matrix4<NumberType>::appendRotationY(NumberType radian)
+template <typename T>
+void Matrix4<T>::appendRotationY(T radian)
 {
     s_mat.rotationY(radian);
     append3x3(s_mat);
 }
-template <typename NumberType>
-void Matrix4<NumberType>::appendRotationZ(NumberType radian)
+template <typename T>
+void Matrix4<T>::appendRotationZ(T radian)
 {
     s_mat.rotationZ(radian);
     append3x3(s_mat);
 }
-template <typename NumberType>
-Matrix4<NumberType>* Matrix4<NumberType>::setRotationFromEuler(const IEuler<NumberType>& euler)
+template <typename T>
+Matrix4<T>& Matrix4<T>::setRotationFromEuler(const IEuler<T>& euler)
 {
-    return nullptr;
+    return *this;
 }
 // 用欧拉角形式旋转(heading->pitch->bank) => (y->x->z)
-template <typename NumberType>
-void Matrix4<NumberType>::appendRotationEulerAngle(NumberType radianX, NumberType radianY, NumberType radianZ)
+template <typename T>
+void Matrix4<T>::appendRotationEulerAngle(T radianX, T radianY, T radianZ)
 {
     s_mat.rotationY(radianY);
     append3x3(s_mat);
@@ -387,18 +424,18 @@ void Matrix4<NumberType>::appendRotationEulerAngle(NumberType radianX, NumberTyp
     append3x3(s_mat);
 }
 
-template <typename NumberType>
-Matrix4<NumberType>* Matrix4<NumberType>::setScale(const Vec3<NumberType>& v3)
+template <typename T>
+Matrix4<T>& Matrix4<T>::setScale(const Vec3<T>& v3)
 {
     auto sfs = m_localFS;
     sfs[0]   = v3.x;
     sfs[5]   = v3.y;
     sfs[10]  = v3.z;
-    return this;
+    return *this;
 }
 
-template <typename NumberType>
-void Matrix4<NumberType>::setScaleXYZ(NumberType xScale, NumberType yScale, NumberType zScale)
+template <typename T>
+void Matrix4<T>::setScaleXYZ(T xScale, T yScale, T zScale)
 {
     auto sfs = m_localFS;
     sfs[0]   = xScale;
@@ -406,8 +443,8 @@ void Matrix4<NumberType>::setScaleXYZ(NumberType xScale, NumberType yScale, Numb
     sfs[10]  = zScale;
 }
 
-template <typename NumberType>
-void Matrix4<NumberType>::getScale(Vec3<NumberType>& outV3)
+template <typename T>
+void Matrix4<T>::getScale(Vec3<T>& outV3)
 {
     auto sfs = m_localFS;
     outV3.x  = sfs[0];
@@ -415,8 +452,8 @@ void Matrix4<NumberType>::getScale(Vec3<NumberType>& outV3)
     outV3.z  = sfs[10];
 }
 
-template <typename NumberType>
-void Matrix4<NumberType>::setRotationEulerAngle(NumberType radianX, NumberType radianY, NumberType radianZ)
+template <typename T>
+void Matrix4<T>::setRotationEulerAngle(T radianX, T radianY, T radianZ)
 {
     auto sfs = m_localFS;
 
@@ -446,8 +483,8 @@ void Matrix4<NumberType>::setRotationEulerAngle(NumberType radianX, NumberType r
     sfs[10] = cosY * cosXscaleZ;
 }
 
-template <typename NumberType>
-void Matrix4<NumberType>::setRotationEulerAngleWithTriFunc(NumberType cosX, NumberType sinX, NumberType cosY, NumberType sinY, NumberType cosZ, NumberType sinZ)
+template <typename T>
+void Matrix4<T>::setRotationEulerAngleWithTriFunc(T cosX, T sinX, T cosY, T sinY, T cosZ, T sinZ)
 {
     auto sfs = m_localFS;
 
@@ -470,8 +507,8 @@ void Matrix4<NumberType>::setRotationEulerAngleWithTriFunc(NumberType cosX, Numb
     sfs[10] = cosY * cosXscaleZ;
 }
 
-template <typename NumberType>
-void Matrix4<NumberType>::getAxisRotation(NumberType x, NumberType y, NumberType z, NumberType radian)
+template <typename T>
+void Matrix4<T>::getAxisRotation(T x, T y, T z, T radian)
 {
     radian    = -radian;
     auto sfs  = m_localFS;
@@ -495,8 +532,8 @@ void Matrix4<NumberType>::getAxisRotation(NumberType x, NumberType y, NumberType
     sfs[6]    = tmp1 - tmp2;
 }
 
-template <typename NumberType>
-void Matrix4<NumberType>::rotationX(NumberType radian)
+template <typename T>
+void Matrix4<T>::rotationX(T radian)
 {
     auto s = std::sin(radian);
     auto c = std::cos(radian);
@@ -511,8 +548,8 @@ void Matrix4<NumberType>::rotationX(NumberType radian)
     m_localFS[9]  = -s;
     m_localFS[10] = c;
 }
-template <typename NumberType>
-void Matrix4<NumberType>::rotationY(NumberType radian)
+template <typename T>
+void Matrix4<T>::rotationY(T radian)
 {
     auto s        = std::sin(radian);
     auto c        = std::cos(radian);
@@ -526,8 +563,8 @@ void Matrix4<NumberType>::rotationY(NumberType radian)
     m_localFS[9]  = 0.0f;
     m_localFS[10] = c;
 }
-template <typename NumberType>
-void Matrix4<NumberType>::rotationZ(NumberType radian)
+template <typename T>
+void Matrix4<T>::rotationZ(T radian)
 {
     auto s        = std::sin(radian);
     auto c        = std::cos(radian);
@@ -542,8 +579,8 @@ void Matrix4<NumberType>::rotationZ(NumberType radian)
     m_localFS[10] = 1.0f;
 }
 
-template <typename NumberType>
-Matrix4<NumberType>* Matrix4<NumberType>::extractRotation(const Matrix4& m)
+template <typename T>
+Matrix4<T>& Matrix4<T>::extractRotation(const Matrix4& m)
 {
 
     // this method does not support reflection matrices
@@ -578,11 +615,11 @@ Matrix4<NumberType>* Matrix4<NumberType>::extractRotation(const Matrix4& m)
     te[14] = 0.0f;
     te[15] = 1.0f;
 
-    return this;
+    return *this;
 }
 
-template <typename NumberType>
-Matrix4<NumberType>* Matrix4<NumberType>::copyTranslation(const Matrix4& m)
+template <typename T>
+Matrix4<T>& Matrix4<T>::copyTranslation(const Matrix4& m)
 {
     auto te = m_localFS;
     auto me = m.getLocalFS();
@@ -591,24 +628,24 @@ Matrix4<NumberType>* Matrix4<NumberType>::copyTranslation(const Matrix4& m)
     te[13] = me[13];
     te[14] = me[14];
 
-    return this;
+    return *this;
 }
-template <typename NumberType>
-void Matrix4<NumberType>::setTranslationXYZ(NumberType px, NumberType py, NumberType pz)
+template <typename T>
+void Matrix4<T>::setTranslationXYZ(T px, T py, T pz)
 {
     m_localFS[12] = px;
     m_localFS[13] = py;
     m_localFS[14] = pz;
 }
-template <typename NumberType>
-void Matrix4<NumberType>::setTranslation(const Vec3<NumberType>& v3)
+template <typename T>
+void Matrix4<T>::setTranslation(const Vec3<T>& v3)
 {
     m_localFS[12] = v3.x;
     m_localFS[13] = v3.y;
     m_localFS[14] = v3.z;
 }
-template <typename NumberType>
-void Matrix4<NumberType>::appendScaleXYZ(NumberType xScale, NumberType yScale, NumberType zScale)
+template <typename T>
+void Matrix4<T>::appendScaleXYZ(T xScale, T yScale, T zScale)
 {
     auto& sfs = m_localFS;
     sfs[0] *= xScale;
@@ -625,8 +662,8 @@ void Matrix4<NumberType>::appendScaleXYZ(NumberType xScale, NumberType yScale, N
     sfs[11] *= zScale;
 }
 
-template <typename NumberType>
-void Matrix4<NumberType>::appendScaleXY(NumberType xScale, NumberType yScale)
+template <typename T>
+void Matrix4<T>::appendScaleXY(T xScale, T yScale)
 {
     m_localFS[0] *= xScale;
     m_localFS[1] *= xScale;
@@ -638,16 +675,16 @@ void Matrix4<NumberType>::appendScaleXY(NumberType xScale, NumberType yScale)
     m_localFS[7] *= yScale;
 }
 
-template <typename NumberType>
-void Matrix4<NumberType>::appendTranslationXYZ(NumberType px, NumberType py, NumberType pz)
+template <typename T>
+void Matrix4<T>::appendTranslationXYZ(T px, T py, T pz)
 {
     m_localFS[12] += px;
     m_localFS[13] += py;
     m_localFS[14] += pz;
 }
 
-template <typename NumberType>
-void Matrix4<NumberType>::appendTranslation(const Vec3<NumberType>& v3)
+template <typename T>
+void Matrix4<T>::appendTranslation(const Vec3<T>& v3)
 {
     m_localFS[12] += v3.x;
     m_localFS[13] += v3.y;
@@ -655,8 +692,8 @@ void Matrix4<NumberType>::appendTranslation(const Vec3<NumberType>& v3)
 }
 
 
-template <typename NumberType>
-bool Matrix4<NumberType>::invert()
+template <typename T>
+bool Matrix4<T>::invert()
 {
     auto d = determinant();
     bool invertable = std::abs(d) > s_minv;
@@ -699,25 +736,25 @@ bool Matrix4<NumberType>::invert()
     };
     return invertable;
 }
-template <typename NumberType>
-Matrix4<NumberType>* Matrix4<NumberType>::invertThis()
+template <typename T>
+Matrix4<T>& Matrix4<T>::invertThis()
 {
     invert();
-    return this;
+    return *this;
 }
-template <typename NumberType>
-Matrix4<NumberType> Matrix4<NumberType>::clone()
+template <typename T>
+Matrix4<T> Matrix4<T>::clone()
 {
-    NumberType fs[16];
+    T fs[16];
     std::memcpy(fs, m_localFS, m_localFSBytesTotal);
     return Matrix4(fs);
 }
 
-template <typename NumberType>
-void Matrix4<NumberType>::perspectiveRH(NumberType fovy, NumberType aspect, NumberType zNear, NumberType zFar)
+template <typename T>
+void Matrix4<T>::perspectiveRH(T fovy, T aspect, T zNear, T zFar)
 {
     //assert(abs(aspect - std::numeric_limits<float>::epsilon()) > minFloatValue)
-    NumberType tanHalfFovy = std::tan(fovy * 0.5f);
+    T tanHalfFovy = std::tan(fovy * 0.5f);
     identity();
     m_localFS[0]  = 1.0f / (aspect * tanHalfFovy);
     m_localFS[5]  = 1.0f / tanHalfFovy;
@@ -725,12 +762,12 @@ void Matrix4<NumberType>::perspectiveRH(NumberType fovy, NumberType aspect, Numb
     m_localFS[11] = -1.0f;
     m_localFS[14] = -(2.0f * zFar * zNear) / (zFar - zNear);
 }
-template <typename NumberType>
-void Matrix4<NumberType>::perspectiveLH(NumberType fovy, NumberType aspect, NumberType zNear, NumberType zFar)
+template <typename T>
+void Matrix4<T>::perspectiveLH(T fovy, T aspect, T zNear, T zFar)
 {
     //assert(abs(aspect - std::numeric_limits<float>::epsilon()) > minFloatValue)
 
-    NumberType tanHalfFovy = std::tan(fovy * 0.5f);
+    T tanHalfFovy = std::tan(fovy * 0.5f);
     identity();
     m_localFS[0]  = 1.0f / (aspect * tanHalfFovy);
     m_localFS[5]  = 1.0f / tanHalfFovy;
@@ -739,8 +776,8 @@ void Matrix4<NumberType>::perspectiveLH(NumberType fovy, NumberType aspect, Numb
     m_localFS[14] = (2.0f * zFar * zNear) / (zFar - zNear);
 }
 
-template <typename NumberType>
-void Matrix4<NumberType>::orthoRH(NumberType b, NumberType t, NumberType l, NumberType r, NumberType zNear, NumberType zFar)
+template <typename T>
+void Matrix4<T>::orthoRH(T b, T t, T l, T r, T zNear, T zFar)
 {
     identity();
     m_localFS[0]  = 2.0f / (r - l);
@@ -753,8 +790,8 @@ void Matrix4<NumberType>::orthoRH(NumberType b, NumberType t, NumberType l, Numb
 }
 
 
-template <typename NumberType>
-void Matrix4<NumberType>::orthoLH(NumberType b, NumberType t, NumberType l, NumberType r, NumberType zNear, NumberType zFar)
+template <typename T>
+void Matrix4<T>::orthoLH(T b, T t, T l, T r, T zNear, T zFar)
 {
     identity();
     m_localFS[0]  = 2.0f / (r - l);
@@ -765,8 +802,8 @@ void Matrix4<NumberType>::orthoLH(NumberType b, NumberType t, NumberType l, Numb
     m_localFS[14] = -(zFar + zNear) / (zFar - zNear);
     m_localFS[15] = 1.0f;
 }
-template <typename NumberType>
-void Matrix4<NumberType>::lookAtRH(Vec3<NumberType>& eye, Vec3<NumberType>& center, Vec3<NumberType>& up)
+template <typename T>
+void Matrix4<T>::lookAtRH(Vec3<T>& eye, Vec3<T>& center, Vec3<T>& up)
 {
     identity();
     auto f = center.subtract(eye);
@@ -782,8 +819,8 @@ void Matrix4<NumberType>::lookAtRH(Vec3<NumberType>& eye, Vec3<NumberType>& cent
     copyRowFrom(1, u);
     copyRowFrom(2, f);
 }
-template <typename NumberType>
-void Matrix4<NumberType>::lookAtLH(Vec3<NumberType>& eye, Vec3<NumberType>& center, Vec3<NumberType>& up)
+template <typename T>
+void Matrix4<T>::lookAtLH(Vec3<T>& eye, Vec3<T>& center, Vec3<T>& up)
 {
     identity();
     auto f = center.subtract(eye);
@@ -800,8 +837,8 @@ void Matrix4<NumberType>::lookAtLH(Vec3<NumberType>& eye, Vec3<NumberType>& cent
 }
 
 
-template <typename NumberType>
-std::string Matrix4<NumberType>::toString()
+template <typename T>
+std::string Matrix4<T>::toString() const
 {
     std::string str = "\n";
     str += std::to_string(m_localFS[0]) + "," + std::to_string(m_localFS[1]) + "," + std::to_string(m_localFS[2]) + "," + std::to_string(m_localFS[3]) + "\n";
