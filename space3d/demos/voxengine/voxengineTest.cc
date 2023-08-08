@@ -120,9 +120,22 @@ int main()
     v3_02.negate();
     v3_03 = v3_02;
     std::cout << "v3_03.toString(): " << v3_03.toString() << std::endl;
+
+    constexpr voxengine::math::Vec3<float> v_1{1.0f, 1.0f, 1.0f, 1.0f};
+
+    auto v3_f_axis = voxengine::math::Vec3<float>::X_AXIS;
+    v3_f_axis.x    = 0.3f;
+    std::cout << "voxengine::math::Vec3<float>::X_AXIS.toString(): " << voxengine::math::Vec3<float>::X_AXIS.toString() << std::endl;
+    std::cout << "v3_f_axis.toString(): " << v3_f_axis.toString() << std::endl;
+    //union
+    //{
+    //    voxengine::math::Vec2<float>  vf2[2]{};
+    //    voxengine::math::Vec2<double> vd;
+    //    //int t[2];
+    //}union_01;
+
     std::cout << "XXXXXXXX      >>>\n\n";
 
-    
     voxengine::math::Vec2<float> v2;
     v2.setXY(33.17f, -15.1f);
     voxengine::math::UVec2 uv2;

@@ -24,20 +24,6 @@ Vec3<T> Vec3<T>::s_v0{};
 template <typename T>
 Vec3<T> Vec3<T>::s_v1{};
 
-
-//template <typename T>
-//Vec3<T>::Vec3(T px, T py, T pz, T pw) noexcept
-//    :
-//    x(px), y(py), z(pz), w(pw)
-//{
-//}
-//template <typename T>
-//Vec3<T>::Vec3() noexcept
-//    :
-//    x(static_cast<T>(0)), y(static_cast<T>(0)), z(static_cast<T>(0)), w(static_cast<T>(1))
-//{
-//}
-
 template <typename T>
 T& Vec3<T>::operator[](unsigned int i)
 {
@@ -153,14 +139,6 @@ template <typename T>
 bool Vec3<T>::equalsAll(const Vec3& v3)
 {
     return std::abs(x - v3.x) < s_minv && std::abs(y - v3.y) < s_minv && std::abs(z - v3.z) < s_minv && std::abs(w - v3.w) < s_minv;
-}
-template <typename T>
-void Vec3<T>::project()
-{
-    T t = static_cast<T>(1) / w;
-    x *= t;
-    y *= t;
-    z *= t;
 }
 template <typename T>
 void Vec3<T>::addBy(const Vec3& v3)

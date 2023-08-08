@@ -27,30 +27,32 @@ public:
 
     ~Vec3() = default;
 
-    explicit Vec3(T x, T y, T z, T w = static_cast<T>(1)) noexcept:
+    constexpr explicit Vec3(T x, T y, T z, T w = static_cast<T>(0)) noexcept :
         x(x), y(y), z(z), w(w)
     {}
-    Vec3() noexcept:
-        x(static_cast<T>(0)), y(static_cast<T>(0)), z(static_cast<T>(0)), w(static_cast<T>(1))
-    {}
-    Vec3(const Vec3& v) :
-        x(v.x), y(v.y), z(v.z), w(v.w)
-    {
-    }
-    Vec3(Vec3&& v) :
-        x(v.x), y(v.y), z(v.z), w(v.w)
-    {}
-    Vec3& operator=(const Vec3& v)
-    {
-        std::memcpy(data, v.data, sizeof(T) << 2);
-        return *this;
-    }
-    Vec3& operator=(Vec3&& v)
-    {
-        //data = std::move(other.data);
-        std::memcpy(data, v.data, sizeof(T) << 2);
-        return *this;
-    }
+    Vec3() = default;
+    //constexpr Vec3() noexcept :
+    //    x(static_cast<T>(0)), y(static_cast<T>(0)), z(static_cast<T>(0)), w(static_cast<T>(1))
+    //{}
+    Vec3(const Vec3& v) = default;
+    //Vec3(const Vec3& v) :
+    //    x(v.x), y(v.y), z(v.z), w(v.w)
+    //{
+    //}
+    Vec3(Vec3&& v) = default;
+    //Vec3(Vec3&& v) :
+    //    x(v.x), y(v.y), z(v.z), w(v.w)
+    //{}
+    Vec3& operator=(const Vec3& v) = default;
+    //{
+    //    std::memcpy(data, v.data, sizeof(T) << 2);
+    //    return *this;
+    //}
+    Vec3& operator=(Vec3&& v) = default;
+    //{
+    //    std::memcpy(data, v.data, sizeof(T) << 2);
+    //    return *this;
+    //}
 
     T&       operator[](unsigned int i);
     T const& operator[](unsigned int i) const;
@@ -70,7 +72,6 @@ public:
     void negate();
     bool equalsXYZ(const Vec3& v3);
     bool equalsAll(const Vec3& v3);
-    void project();
     void addBy(const Vec3& v3);
     void subtractBy(const Vec3& v3);
     void crossBy(const Vec3& v3);
