@@ -17,14 +17,6 @@
 #    include <intrin.h>
 #endif
 
-// void __cpuidSpec(int p0[4], int p1)
-// {
-//     __cpuid(p0, p1);
-// }
-// unsigned __int64 __cdecl _xgetbvSpec(unsigned int p)
-// {
-//     return _xgetbv(p);
-// }
 #ifdef __GNUC__
 void __cpuidSpec(int* cpuinfo, int info)
 {
@@ -53,6 +45,16 @@ unsigned long long _xgetbvSpec(unsigned int index)
 // cmd:
 // g++ -msse3 -O3 -Wall -lrt checkSSEAVXLinuxOK.cc -o checkLinuxOK.out -std=c++20
 // g++ checkSSEAVXLinuxOK.cc -o checkLinuxOK.out -std=c++20
+#else
+
+void __cpuidSpec(int p0[4], int p1)
+{
+    __cpuid(p0, p1);
+}
+unsigned __int64 __cdecl _xgetbvSpec(unsigned int p)
+{
+    return _xgetbv(p);
+}
 #endif
 
 
