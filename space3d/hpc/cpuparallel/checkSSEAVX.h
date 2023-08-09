@@ -276,14 +276,15 @@ int testMain()
 
     // ----------------------------------------------------------------------
 
-    std::cout << "SSE:" << (sseSupportted ? 1 : 0) << std::endl;
-    std::cout << "SSE2:" << (sse2Supportted ? 1 : 0) << std::endl;
-    std::cout << "SSE3:" << (sse3Supportted ? 1 : 0) << std::endl;
-    std::cout << "SSE4.1:" << (sse4_1Supportted ? 1 : 0) << std::endl;
-    std::cout << "SSE4.2:" << (sse4_2Supportted ? 1 : 0) << std::endl;
-    std::cout << "SSE4a:" << (sse4aSupportted ? 1 : 0) << std::endl;
-    std::cout << "SSE5:" << (sse5Supportted ? 1 : 0) << std::endl;
-    std::cout << "AVX:" << (avxSupportted ? 1 : 0) << std::endl;
+    std::boolalpha(std::cout);
+    std::cout << "   Support SSE:   " << sseSupportted << std::endl;
+    std::cout << "  Support SSE2:   " << sse2Supportted << std::endl;
+    std::cout << "  Support SSE3:   " << sse3Supportted << std::endl;
+    std::cout << "Support SSE4.1:   " << sse4_1Supportted << std::endl;
+    std::cout << "Support SSE4.2:   " << sse4_2Supportted << std::endl;
+    std::cout << " Support SSE4a:   " << sse4aSupportted << std::endl;
+    std::cout << "  Support SSE5:   " << sse5Supportted << std::endl;
+    std::cout << "   Support AVX:   " << avxSupportted << std::endl;
 
     testSIMD();
     return EXIT_SUCCESS;
