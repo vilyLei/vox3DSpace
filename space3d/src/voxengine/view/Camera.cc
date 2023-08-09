@@ -3,11 +3,10 @@
 #include "Camera.h"
 namespace voxengine
 {
-namespace math
+namespace view
 {
-
-template <typename NumberType>
-Camera<NumberType>::Camera() :
+template <typename T>
+Camera<T>::Camera() :
     m_unlock(true),
     m_lookRHEnabled(false),
     m_rightHandEnabled(false),
@@ -33,13 +32,13 @@ Camera<NumberType>::Camera() :
     m_nearPlaneHeight(0.2f)
 {
 }
-template <typename NumberType>
-Camera<NumberType>::~Camera()
+template <typename T>
+Camera<T>::~Camera()
 {
 }
 
-template <typename NumberType>
-void Camera<NumberType>::lookAtRH(Vec3<NumberType>& camPos, Vec3<NumberType>& lookAtPos, Vec3<NumberType>& up)
+template <typename T>
+void Camera<T>::lookAtRH(const Vec3<T>& camPos, const Vec3<T>& lookAtPos, const Vec3<T>& up)
 {
     if (m_unlock)
     {
@@ -51,16 +50,16 @@ void Camera<NumberType>::lookAtRH(Vec3<NumberType>& camPos, Vec3<NumberType>& lo
         m_lookRHEnabled = true;
         m_lookDirectNV.copyFrom(m_lookAtDirec);
         m_lookDirectNV.normalize();
-        Vec3<NumberType>::cross(m_lookAtDirec, up, m_initRV);
-        Vec3<NumberType>::cross(m_initRV, m_lookAtDirec, m_initUP);
+        Vec3<T>::cross(m_lookAtDirec, up, m_initRV);
+        Vec3<T>::cross(m_initRV, m_lookAtDirec, m_initUP);
         m_initUP.normalize();
         m_initRV.normalize();
         m_up.copyFrom(m_initUP);
         m_changed = true;
     }
 }
-template <typename NumberType>
-void Camera<NumberType>::lookAtLH(Vec3<NumberType>& camPos, Vec3<NumberType>& lookAtPos, Vec3<NumberType>& up)
+template <typename T>
+void Camera<T>::lookAtLH(const Vec3<T>& camPos, const Vec3<T>& lookAtPos, const Vec3<T>& up)
 {
     if (m_unlock)
     {
@@ -77,7 +76,7 @@ void Camera<NumberType>::lookAtLH(Vec3<NumberType>& camPos, Vec3<NumberType>& lo
         m_initUP.copyFrom(up);
         m_initUP.normalize();
 
-        Vec3<NumberType>::cross(m_lookAtDirec, m_up, m_initRV);
+        Vec3<T>::cross(m_lookAtDirec, m_up, m_initRV);
         m_initRV.normalize();
         m_changed = true;
     }
@@ -91,8 +90,8 @@ void Camera<NumberType>::lookAtLH(Vec3<NumberType>& camPos, Vec3<NumberType>& lo
  * @param zFar the camera far plane distance
  */
 
-template <typename NumberType>
-void Camera<NumberType>::perspectiveRH(NumberType fovRadian, NumberType aspect, NumberType zNear, NumberType zFar)
+template <typename T>
+void Camera<T>::perspectiveRH(T fovRadian, T aspect, T zNear, T zFar)
 {
     if (m_unlock)
     {
@@ -115,8 +114,8 @@ void Camera<NumberType>::perspectiveRH(NumberType fovRadian, NumberType aspect, 
  * @param zNear the camera near plane distance
  * @param zFar the camera far plane distance
  */
-template <typename NumberType>
-void Camera<NumberType>::perspectiveLH(NumberType fovRadian, NumberType aspect, NumberType zNear, NumberType zFar)
+template <typename T>
+void Camera<T>::perspectiveLH(T fovRadian, T aspect, T zNear, T zFar)
 {
     if (m_unlock)
     {
@@ -132,8 +131,8 @@ void Camera<NumberType>::perspectiveLH(NumberType fovRadian, NumberType aspect, 
     }
 }
 
-template <typename NumberType>
-void Camera<NumberType>::orthoRH(NumberType zNear, NumberType zFar, NumberType b, NumberType t, NumberType l, NumberType r)
+template <typename T>
+void Camera<T>::orthoRH(T zNear, T zFar, T b, T t, T l, T r)
 {
     if (m_unlock)
     {
@@ -149,8 +148,8 @@ void Camera<NumberType>::orthoRH(NumberType zNear, NumberType zFar, NumberType b
         m_changed            = true;
     }
 }
-template <typename NumberType>
-void Camera<NumberType>::orthoLH(NumberType zNear, NumberType zFar, NumberType b, NumberType t, NumberType l, NumberType r)
+template <typename T>
+void Camera<T>::orthoLH(T zNear, T zFar, T b, T t, T l, T r)
 {
     if (m_unlock)
     {
@@ -168,8 +167,8 @@ void Camera<NumberType>::orthoLH(NumberType zNear, NumberType zFar, NumberType b
 }
 
 
-template <typename NumberType>
-void Camera<NumberType>::setViewXY(NumberType px, NumberType py)
+template <typename T>
+void Camera<T>::setViewXY(T px, T py)
 {
     if (m_unlock)
     {
@@ -177,8 +176,8 @@ void Camera<NumberType>::setViewXY(NumberType px, NumberType py)
         m_viewY = py;
     }
 }
-template <typename NumberType>
-void Camera<NumberType>::setViewSize(NumberType pw, NumberType ph)
+template <typename T>
+void Camera<T>::setViewSize(T pw, T ph)
 {
     if (m_unlock)
     {
@@ -202,23 +201,23 @@ void Camera<NumberType>::setViewSize(NumberType pw, NumberType ph)
         }
     }
 }
-template <typename NumberType>
-NumberType Camera<NumberType>::getViewX() const
+template <typename T>
+T Camera<T>::getViewX() const
 {
     return m_viewX;
 }
-template <typename NumberType>
-NumberType Camera<NumberType>::getViewY() const
+template <typename T>
+T Camera<T>::getViewY() const
 {
     return m_viewY;
 }
-template <typename NumberType>
-NumberType Camera<NumberType>::getViewWidth() const
+template <typename T>
+T Camera<T>::getViewWidth() const
 {
     return m_viewW;
 }
-template <typename NumberType>
-NumberType Camera<NumberType>::getViewHeight() const
+template <typename T>
+T Camera<T>::getViewHeight() const
 {
     return m_viewH;
 }
@@ -227,8 +226,8 @@ NumberType Camera<NumberType>::getViewHeight() const
  * @param pv3 the 3d world space 3d position
  * @param scPV3 the normalization(-1.0 -> 1.0) screen space 2d position, it will store the 2d position
  */
-template <typename NumberType>
-void Camera<NumberType>::calcScreenNormalizeXYByWorldPos(Vec3<NumberType>& pv3, Vec3<NumberType>& scPV3)
+template <typename T>
+void Camera<T>::calcScreenNormalizeXYByWorldPos(const Vec3<T>& pv3, Vec3<T>& scPV3)
 {
     scPV3.copyFrom(pv3);
     m_vpMat.transformVector4Self(scPV3);
@@ -238,8 +237,8 @@ void Camera<NumberType>::calcScreenNormalizeXYByWorldPos(Vec3<NumberType>& pv3, 
 /**
  * @param pv it is the 3d world space 3d position, its x and y will store the screen space 2d position
  */
-template <typename NumberType>
-void Camera<NumberType>::worldPosToScreen(Vec3<NumberType>& pv)
+template <typename T>
+void Camera<T>::worldPosToScreen(Vec3<T>& pv)
 {
     m_viewMat.transformVector3Self(pv);
     m_projMat.transformVector4Self(pv);
@@ -251,8 +250,8 @@ void Camera<NumberType>::worldPosToScreen(Vec3<NumberType>& pv)
     pv.y += m_viewY;
 }
 
-template <typename NumberType>
-void Camera<NumberType>::update()
+template <typename T>
+void Camera<T>::update()
 {
     if (m_changed)
     {
@@ -275,11 +274,11 @@ void Camera<NumberType>::update()
 }
 
 
-template <typename NumberType>
-void __$templateConstructCamera(NumberType value)
+template <typename T>
+void __$templateConstructCamera(T value)
 {
-    Camera<NumberType> cam{};
-    Vec3<NumberType>       v0{};
+    Camera<T> cam{};
+    Vec3<T>       v0{};
     cam.lookAtRH(v0, v0, v0);
     cam.lookAtLH(v0, v0, v0);
     cam.perspectiveRH(value, value, value, value);

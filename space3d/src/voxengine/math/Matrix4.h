@@ -24,12 +24,17 @@ public:
     void        transformVector4Self(Vec3<T>& v3);
 
     T           determinant();
-    void        multiplyMatEle(T* ae, T* be, T* te);
-    Matrix4&    multiplyMatrices(Matrix4& a, Matrix4& b);
-    Matrix4&    multiplyMatrices(Matrix4&& a, Matrix4&& b);
-    Matrix4&    multiply(Matrix4&& ma, Matrix4&& mb);
-    Matrix4&    multiply(Matrix4&& ma);
-    Matrix4&    premultiply(Matrix4&& ma);
+    void        multiplyMatEle(T* ae, T* be, T* ce);    // ae = be * ce
+    Matrix4&    multiplyMatrices(const Matrix4& a, const Matrix4& b);
+    //Matrix4&    multiplyMatrices(Matrix4&& a, Matrix4&& b);
+    Matrix4& multiply(const Matrix4& ma, const Matrix4& mb);
+    //Matrix4&    multiply(Matrix4&& ma, Matrix4&& mb);
+    Matrix4& multiply(const Matrix4& ma);
+    //Matrix4&    multiply(Matrix4&& ma);
+    Matrix4& premultiply(const Matrix4& ma);
+    //Matrix4&    premultiply(Matrix4&& ma);
+    Matrix4&    operator*=(const Matrix4& ma);
+    //Matrix4&    operator*(const Matrix4& ma);
     void        append(const Matrix4& lhs);
     void        append3x3(const Matrix4& lhs);
 

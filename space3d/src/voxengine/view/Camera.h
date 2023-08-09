@@ -4,34 +4,35 @@
 
 namespace voxengine
 {
-namespace math
+namespace view
 {
-template <typename NumberType>
+    using namespace voxengine::math;
+template <typename T>
 class Camera
 {
 public:
     Camera();
     virtual ~Camera();
 
-    void lookAtRH(Vec3<NumberType>& camPos, Vec3<NumberType>& lookAtPos, Vec3<NumberType>& up);
-    void lookAtLH(Vec3<NumberType>& camPos, Vec3<NumberType>& lookAtPos, Vec3<NumberType>& up);
+    void lookAtRH(const Vec3<T>& camPos, const Vec3<T>& lookAtPos, const Vec3<T>& up);
+    void lookAtLH(const Vec3<T>& camPos, const Vec3<T>& lookAtPos, const Vec3<T>& up);
 
-    void perspectiveRH(NumberType fovRadian, NumberType aspect, NumberType zNear, NumberType zFar);
-    void perspectiveLH(NumberType fovRadian, NumberType aspect, NumberType zNear, NumberType zFar);
+    void perspectiveRH(T fovRadian, T aspect, T zNear, T zFar);
+    void perspectiveLH(T fovRadian, T aspect, T zNear, T zFar);
 
-    void orthoRH(NumberType zNear, NumberType zFar, NumberType b, NumberType t, NumberType l, NumberType r);
-    void orthoLH(NumberType zNear, NumberType zFar, NumberType b, NumberType t, NumberType l, NumberType r);
+    void orthoRH(T zNear, T zFar, T b, T t, T l, T r);
+    void orthoLH(T zNear, T zFar, T b, T t, T l, T r);
 
-    void setViewXY(NumberType px, NumberType py);
-    void setViewSize(NumberType pw, NumberType ph);
+    void setViewXY(T px, T py);
+    void setViewSize(T pw, T ph);
 
-    NumberType getViewX() const;
-    NumberType getViewY() const;
-    NumberType getViewWidth() const;
-    NumberType getViewHeight() const;
+    T getViewX() const;
+    T getViewY() const;
+    T getViewWidth() const;
+    T getViewHeight() const;
 
-    void calcScreenNormalizeXYByWorldPos(Vec3<NumberType>& pv3, Vec3<NumberType>& scPV3);
-    void worldPosToScreen(Vec3<NumberType>& pv);
+    void calcScreenNormalizeXYByWorldPos(const Vec3<T>& pv3, Vec3<T>& scPV3);
+    void worldPosToScreen(Vec3<T>& pv);
     void update();
 
 private:
@@ -43,39 +44,39 @@ private:
 
     unsigned int version;
 
-    NumberType m_viewFieldZoom;
-    NumberType m_aspect;
-    NumberType m_fovRadian;
-    NumberType m_zNear;
-    NumberType m_zFar;
+    T m_viewFieldZoom;
+    T m_aspect;
+    T m_fovRadian;
+    T m_zNear;
+    T m_zFar;
 
-    NumberType m_b;
-    NumberType m_t;
-    NumberType m_l;
-    NumberType m_r;
+    T m_b;
+    T m_t;
+    T m_l;
+    T m_r;
 
-    NumberType m_viewX;
-    NumberType m_viewY;
-    NumberType m_viewW;
-    NumberType m_viewH;
-    NumberType m_viewHalfW;
-    NumberType m_viewHalfH;
+    T m_viewX;
+    T m_viewY;
+    T m_viewW;
+    T m_viewH;
+    T m_viewHalfW;
+    T m_viewHalfH;
 
-    NumberType m_nearPlaneWidth;
-    NumberType m_nearPlaneHeight;
+    T m_nearPlaneWidth;
+    T m_nearPlaneHeight;
 
-    Vec3<NumberType> m_initRV;
-    Vec3<NumberType> m_initUP;
-    Vec3<NumberType> m_camPos;
-    Vec3<NumberType> m_lookAtPos;
-    Vec3<NumberType> m_up;
-    Vec3<NumberType> m_lookAtDirec;
-    Vec3<NumberType> m_lookDirectNV;
+    Vec3<T> m_initRV;
+    Vec3<T> m_initUP;
+    Vec3<T> m_camPos;
+    Vec3<T> m_lookAtPos;
+    Vec3<T> m_up;
+    Vec3<T> m_lookAtDirec;
+    Vec3<T> m_lookDirectNV;
 
-    Matrix4<NumberType> m_viewMat;
-    Matrix4<NumberType> m_projMat;
-    Matrix4<NumberType> m_vpMat;
+    Matrix4<T> m_viewMat;
+    Matrix4<T> m_projMat;
+    Matrix4<T> m_vpMat;
 };
 
-} // namespace math
+} // namespace view
 } // namespace voxengine

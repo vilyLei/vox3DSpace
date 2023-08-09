@@ -19,34 +19,67 @@ public:
         T data[3];
     };
 
-    //explicit Vec2(T px, T py, T pz = static_cast<T>(1)) noexcept;
-    //Vec2() noexcept;
     ~Vec2() = default;
 
-    explicit Vec2(T x, T y, T z = static_cast<T>(1)) noexcept :
+    constexpr Vec2(T x, T y, T z = static_cast<T>(0)) noexcept :
         x(x), y(y), z(z)
     {}
-    Vec2() noexcept :
-        x(static_cast<T>(0)), y(static_cast<T>(0)), z(static_cast<T>(0))
-    {}
+    Vec2() = default;
+    Vec2(const Vec2& v) = default;
+    Vec2(Vec2&& v) = default;
+    Vec2& operator=(const Vec2& v) = default;
+    Vec2& operator=(Vec2&& v) = default;
 
-    Vec2(const Vec2& v) :
-        x(v.x), y(v.y), z(v.z)
+    Vec2& operator+=(const Vec2& v)
     {
-    }
-    Vec2(Vec2&& v) :
-        x(v.x), y(v.y), z(v.z)
-    {}
-    Vec2& operator=(const Vec2& v)
-    {
-        std::memcpy(data, v.data, sizeof(T) * 3);
+        x += v.x;
+        y += v.y;
         return *this;
     }
-    Vec2& operator=(Vec2&& v)
+    Vec2& operator-=(const Vec2& v)
     {
-        std::memcpy(data, v.data, sizeof(T) * 3);
+        x -= v.x;
+        y -= v.y;
         return *this;
     }
+    Vec2& operator*=(const Vec2& v)
+    {
+        x *= v.x;
+        y *= v.y;
+        return *this;
+    }
+    Vec2& operator/=(const Vec2& v)
+    {
+        x /= v.x;
+        y /= v.y;
+        return *this;
+    }
+
+    Vec2 operator+(const Vec2& v)
+    {
+        return Vec2(
+            x + v.x,
+            y + v.y);
+    }
+    Vec2 operator-(const Vec2& v)
+    {
+        return Vec2(
+            x - v.x,
+            y - v.y);
+    }
+    Vec2 operator*(const Vec2& v)
+    {
+        return Vec2(
+            x * v.x,
+            y * v.y);
+    }
+    Vec2 operator/(const Vec2& v)
+    {
+        return Vec2(
+            x / v.x,
+            y / v.y);
+    }
+
     T&          operator[](unsigned int i);
     T const&    operator[](unsigned int i) const;
     void        set(T px, T py, T pz);
@@ -65,7 +98,6 @@ public:
     void       negate();
     bool       equalsXYZ(const Vec2& v2);
     bool       equalsAll(const Vec2& v2);
-    void       project();
     void       addBy(const Vec2& v2);
     void       subtractBy(const Vec2& v2);
     T crossBy(const Vec2& v2) const;

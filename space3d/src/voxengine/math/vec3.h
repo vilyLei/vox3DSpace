@@ -19,40 +19,79 @@ public:
         };
         T data[4];
 
-//#ifdef VOXENGINE_SIMD
-//        __m128 sd4;
-//#endif // VOXENGINE_SIMD
-
+        //#ifdef VOXENGINE_SIMD
+        //        __m128 sd4;
+        //#endif // VOXENGINE_SIMD
     };
 
     ~Vec3() = default;
 
-    constexpr explicit Vec3(T x, T y, T z, T w = static_cast<T>(0)) noexcept :
+    constexpr Vec3(T x, T y, T z, T w = static_cast<T>(0)) noexcept :
         x(x), y(y), z(z), w(w)
     {}
-    Vec3() = default;
-    //constexpr Vec3() noexcept :
-    //    x(static_cast<T>(0)), y(static_cast<T>(0)), z(static_cast<T>(0)), w(static_cast<T>(1))
-    //{}
-    Vec3(const Vec3& v) = default;
-    //Vec3(const Vec3& v) :
-    //    x(v.x), y(v.y), z(v.z), w(v.w)
-    //{
-    //}
-    Vec3(Vec3&& v) = default;
-    //Vec3(Vec3&& v) :
-    //    x(v.x), y(v.y), z(v.z), w(v.w)
-    //{}
+    Vec3()                         = default;
+    Vec3(const Vec3& v)            = default;
+    Vec3(Vec3&& v)                 = default;
     Vec3& operator=(const Vec3& v) = default;
-    //{
-    //    std::memcpy(data, v.data, sizeof(T) << 2);
-    //    return *this;
-    //}
-    Vec3& operator=(Vec3&& v) = default;
-    //{
-    //    std::memcpy(data, v.data, sizeof(T) << 2);
-    //    return *this;
-    //}
+    Vec3& operator=(Vec3&& v)      = default;
+
+    Vec3& operator+=(const Vec3& v)
+    {
+        x += v.x;
+        y += v.y;
+        z += v.z;
+        return *this;
+    }
+    Vec3& operator-=(const Vec3& v)
+    {
+        x -= v.x;
+        y -= v.y;
+        z -= v.z;
+        return *this;
+    }
+    Vec3& operator*=(const Vec3& v)
+    {
+        x *= v.x;
+        y *= v.y;
+        z *= v.z;
+        return *this;
+    }
+    Vec3& operator/=(const Vec3& v)
+    {
+        x /= v.x;
+        y /= v.y;
+        z /= v.z;
+        return *this;
+    }
+
+    Vec3 operator+(const Vec3& v)
+    {
+        return Vec3(
+            x + v.x,
+            y + v.y,
+            z + v.z);
+    }
+    Vec3 operator-(const Vec3& v)
+    {
+        return Vec3(
+            x - v.x,
+            y - v.y,
+            z - v.z);
+    }
+    Vec3 operator*(const Vec3& v)
+    {
+        return Vec3(
+            x * v.x,
+            y * v.y,
+            z * v.z);
+    }
+    Vec3 operator/(const Vec3& v)
+    {
+        return Vec3(
+            x / v.x,
+            y / v.y,
+            z / v.z);
+    }
 
     T&       operator[](unsigned int i);
     T const& operator[](unsigned int i) const;

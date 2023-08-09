@@ -183,6 +183,8 @@ int baseMain()
 
 int main()
 {
+    base::demoForward::testMain();
+    return EXIT_SUCCESS;
     thread::thrFuture::testMain();
     return EXIT_SUCCESS;
     demoTemplate::base::testMain();
@@ -216,7 +218,6 @@ int main()
     thread::mutex::testMain();
     return EXIT_SUCCESS;
 
-    //base::demoForward::testMain();
     base::typeInfo::testMain();
     std::cout << "\n";
     return EXIT_SUCCESS;

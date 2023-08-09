@@ -171,7 +171,7 @@ T Matrix4<T>::determinant()
 }
 
 template <typename T>
-void Matrix4<T>::multiplyMatEle(T* ae, T* be, T* te)
+void Matrix4<T>::multiplyMatEle(T* ae, T* be, T* ce)
 {
     auto a11 = ae[0], a12 = ae[4], a13 = ae[8], a14 = ae[12];
     auto a21 = ae[1], a22 = ae[5], a23 = ae[9], a24 = ae[13];
@@ -183,76 +183,45 @@ void Matrix4<T>::multiplyMatEle(T* ae, T* be, T* te)
     auto b31 = be[2], b32 = be[6], b33 = be[10], b34 = be[14];
     auto b41 = be[3], b42 = be[7], b43 = be[11], b44 = be[15];
 
-    te[0]  = a11 * b11 + a12 * b21 + a13 * b31 + a14 * b41;
-    te[4]  = a11 * b12 + a12 * b22 + a13 * b32 + a14 * b42;
-    te[8]  = a11 * b13 + a12 * b23 + a13 * b33 + a14 * b43;
-    te[12] = a11 * b14 + a12 * b24 + a13 * b34 + a14 * b44;
+    ce[0]  = a11 * b11 + a12 * b21 + a13 * b31 + a14 * b41;
+    ce[4]  = a11 * b12 + a12 * b22 + a13 * b32 + a14 * b42;
+    ce[8]  = a11 * b13 + a12 * b23 + a13 * b33 + a14 * b43;
+    ce[12] = a11 * b14 + a12 * b24 + a13 * b34 + a14 * b44;
 
-    te[1]  = a21 * b11 + a22 * b21 + a23 * b31 + a24 * b41;
-    te[5]  = a21 * b12 + a22 * b22 + a23 * b32 + a24 * b42;
-    te[9]  = a21 * b13 + a22 * b23 + a23 * b33 + a24 * b43;
-    te[13] = a21 * b14 + a22 * b24 + a23 * b34 + a24 * b44;
+    ce[1]  = a21 * b11 + a22 * b21 + a23 * b31 + a24 * b41;
+    ce[5]  = a21 * b12 + a22 * b22 + a23 * b32 + a24 * b42;
+    ce[9]  = a21 * b13 + a22 * b23 + a23 * b33 + a24 * b43;
+    ce[13] = a21 * b14 + a22 * b24 + a23 * b34 + a24 * b44;
 
-    te[2]  = a31 * b11 + a32 * b21 + a33 * b31 + a34 * b41;
-    te[6]  = a31 * b12 + a32 * b22 + a33 * b32 + a34 * b42;
-    te[10] = a31 * b13 + a32 * b23 + a33 * b33 + a34 * b43;
-    te[14] = a31 * b14 + a32 * b24 + a33 * b34 + a34 * b44;
+    ce[2]  = a31 * b11 + a32 * b21 + a33 * b31 + a34 * b41;
+    ce[6]  = a31 * b12 + a32 * b22 + a33 * b32 + a34 * b42;
+    ce[10] = a31 * b13 + a32 * b23 + a33 * b33 + a34 * b43;
+    ce[14] = a31 * b14 + a32 * b24 + a33 * b34 + a34 * b44;
 }
-template <typename T>
-Matrix4<T>& Matrix4<T>::multiplyMatrices(Matrix4<T>& a, Matrix4<T>& b)
-{
-    auto ae = a.m_localFS;
-    auto be = b.m_localFS;
-    auto te = m_localFS;
-    return *this;
-}
+//template <typename T>
+//Matrix4<T>& Matrix4<T>::multiplyMatrices(Matrix4<T>&& a, Matrix4<T>&& b)
+//{
+//    multiplyMatEle(a.m_localFS, b.m_localFS, m_localFS);
+//    return *this;
+//}
     template <typename T>
-Matrix4<T>& Matrix4<T>::multiplyMatrices(Matrix4<T>&& a, Matrix4<T>&& b)
+Matrix4<T>& Matrix4<T>::multiplyMatrices(const Matrix4<T>& a, const Matrix4<T>& b)
 {
-    auto ae = a.m_localFS;
-    auto be = b.m_localFS;
-    auto te = m_localFS;
-    multiplyMatEle(ae, be, te);
-    /*
-    auto a11 = ae[0], a12 = ae[4], a13 = ae[8], a14 = ae[12];
-    auto a21 = ae[1], a22 = ae[5], a23 = ae[9], a24 = ae[13];
-    auto a31 = ae[2], a32 = ae[6], a33 = ae[10], a34 = ae[14];
-    auto a41 = ae[3], a42 = ae[7], a43 = ae[11], a44 = ae[15];
-
-    auto b11 = be[0], b12 = be[4], b13 = be[8], b14 = be[12];
-    auto b21 = be[1], b22 = be[5], b23 = be[9], b24 = be[13];
-    auto b31 = be[2], b32 = be[6], b33 = be[10], b34 = be[14];
-    auto b41 = be[3], b42 = be[7], b43 = be[11], b44 = be[15];
-
-    te[0]  = a11 * b11 + a12 * b21 + a13 * b31 + a14 * b41;
-    te[4]  = a11 * b12 + a12 * b22 + a13 * b32 + a14 * b42;
-    te[8]  = a11 * b13 + a12 * b23 + a13 * b33 + a14 * b43;
-    te[12] = a11 * b14 + a12 * b24 + a13 * b34 + a14 * b44;
-
-    te[1]  = a21 * b11 + a22 * b21 + a23 * b31 + a24 * b41;
-    te[5]  = a21 * b12 + a22 * b22 + a23 * b32 + a24 * b42;
-    te[9]  = a21 * b13 + a22 * b23 + a23 * b33 + a24 * b43;
-    te[13] = a21 * b14 + a22 * b24 + a23 * b34 + a24 * b44;
-
-    te[2]  = a31 * b11 + a32 * b21 + a33 * b31 + a34 * b41;
-    te[6]  = a31 * b12 + a32 * b22 + a33 * b32 + a34 * b42;
-    te[10] = a31 * b13 + a32 * b23 + a33 * b33 + a34 * b43;
-    te[14] = a31 * b14 + a32 * b24 + a33 * b34 + a34 * b44;
-
-    te[3]  = a41 * b11 + a42 * b21 + a43 * b31 + a44 * b41;
-    te[7]  = a41 * b12 + a42 * b22 + a43 * b32 + a44 * b42;
-    te[11] = a41 * b13 + a42 * b23 + a43 * b33 + a44 * b43;
-    te[15] = a41 * b14 + a42 * b24 + a43 * b34 + a44 * b44;
-    */
+    multiplyMatEle(a.m_localFS, b.m_localFS, m_localFS);
     return *this;
 }
 template <typename T>
-Matrix4<T>& Matrix4<T>::multiply(Matrix4<T>&& ma, Matrix4<T>&& mb)
+Matrix4<T>& Matrix4<T>::multiply(const Matrix4<T>& ma, const Matrix4<T>& mb)
 {
     return multiplyMatrices(ma, mb);
 }
+//template <typename T>
+//Matrix4<T>& Matrix4<T>::multiply(Matrix4<T>&& ma, Matrix4<T>&& mb)
+//{
+//    return multiplyMatrices(ma, mb);
+//}
 template <typename T>
-Matrix4<T>& Matrix4<T>::multiply(Matrix4<T>&& ma)
+Matrix4<T>& Matrix4<T>::multiply(const Matrix4<T>& ma)
 {
     if (&ma != this)
     {
@@ -260,9 +229,18 @@ Matrix4<T>& Matrix4<T>::multiply(Matrix4<T>&& ma)
     }
     return *this;
 }
+//template <typename T>
+//Matrix4<T>& Matrix4<T>::multiply(Matrix4<T>&& ma)
+//{
+//    if (&ma != this)
+//    {
+//        return multiplyMatrices(*this, ma);
+//    }
+//    return *this;
+//}
 
 template <typename T>
-Matrix4<T>& Matrix4<T>::premultiply(Matrix4<T>&& m)
+Matrix4<T>& Matrix4<T>::premultiply(const Matrix4<T>& m)
 {
     if (&m != this)
     {
@@ -270,9 +248,28 @@ Matrix4<T>& Matrix4<T>::premultiply(Matrix4<T>&& m)
     }
     return *this;
 }
+//template <typename T>
+//Matrix4<T>& Matrix4<T>::premultiply(Matrix4<T>&& m)
+//{
+//    if (&m != this)
+//    {
+//        return multiplyMatrices(m, *this);
+//    }
+//    return *this;
+//}
 
 template <typename T>
-void Matrix4<T>::append(const Matrix4& lhs)
+Matrix4<T>& Matrix4<T>::operator*=(const Matrix4& m)
+{
+    return multiplyMatrices(*this, m);
+}
+//template <typename T>
+//Matrix4<T>& Matrix4<T>::operator*(const Matrix4& ma)
+//{
+//    return multiplyMatrices(*this, m);
+//}
+template <typename T>
+void Matrix4<T>::append(const Matrix4<T>& lhs)
 {
     auto lfs = lhs.getLocalFS();
     auto sfs = m_localFS;
@@ -329,7 +326,7 @@ void Matrix4<T>::append(const Matrix4& lhs)
 }
 
 template <typename T>
-void Matrix4<T>::append3x3(const Matrix4& lhs)
+void Matrix4<T>::append3x3(const Matrix4<T>& lhs)
 {
     auto lfs = lhs.getLocalFS();
     auto sfs = m_localFS;
@@ -580,7 +577,7 @@ void Matrix4<T>::rotationZ(T radian)
 }
 
 template <typename T>
-Matrix4<T>& Matrix4<T>::extractRotation(const Matrix4& m)
+Matrix4<T>& Matrix4<T>::extractRotation(const Matrix4<T>& m)
 {
 
     // this method does not support reflection matrices
@@ -619,7 +616,7 @@ Matrix4<T>& Matrix4<T>::extractRotation(const Matrix4& m)
 }
 
 template <typename T>
-Matrix4<T>& Matrix4<T>::copyTranslation(const Matrix4& m)
+Matrix4<T>& Matrix4<T>::copyTranslation(const Matrix4<T>& m)
 {
     auto te = m_localFS;
     auto me = m.getLocalFS();

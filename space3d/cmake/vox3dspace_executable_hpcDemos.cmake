@@ -35,5 +35,6 @@ macro(build_executable_hpcDemos)
   set(src_demoDir "${hpcDemo_dir}/${src_demoName}/")
   vox3dspace_add_hpcDemo_executableByName(${src_demoName}
   "${src_demoDir}/checkSSEAVX.h"
+  "${src_demoDir}/checkSSEAVXLinuxOK.cc"
   )
 endmacro()

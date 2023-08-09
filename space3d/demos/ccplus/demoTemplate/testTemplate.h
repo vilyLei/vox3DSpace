@@ -60,12 +60,16 @@ struct T2
               TEnable_if_t<std::is_integral<Integer>::value, bool> = true>
     T2(Integer) :
         type(int_t) {
+        std::cout << "T2 constructor() A.\n";
     }
 
     template <typename Floating,
               TEnable_if_t<std::is_floating_point<Floating>::value, bool> = true>
     T2(Floating) :
-        type(float_t) {} // OK
+        type(float_t)
+    {
+        std::cout << "T2 constructor() B.\n";
+    } // OK
 };
 
 template <typename T>

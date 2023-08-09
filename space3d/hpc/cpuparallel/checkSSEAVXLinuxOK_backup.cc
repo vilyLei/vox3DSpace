@@ -14,7 +14,48 @@
 #include <random>
 #include <chrono>
 #ifdef _MSC_VER
-#include <intrin.h>
+#    include <intrin.h>
+#endif
+
+// void __cpuidSpec(int p0[4], int p1)
+// {
+//     __cpuid(p0, p1);
+// }
+// unsigned __int64 __cdecl _xgetbvSpec(unsigned int p)
+// {
+//     return _xgetbv(p);
+// }
+#ifdef __GNUC__
+void __cpuidSpec(int* cpuinfo, int info)
+{
+    __asm__ __volatile__(
+        "xchg %%ebx, %%edi;"
+        "cpuid;"
+        "xchg %%ebx, %%edi;"
+        : "=a"(cpuinfo[0]), "=D"(cpuinfo[1]), "=c"(cpuinfo[2]), "=d"(cpuinfo[3])
+        : "0"(info));
+}
+
+unsigned long long _xgetbvSpec(unsigned int index)
+{
+    unsigned int eax, edx;
+    __asm__ __volatile__(
+        "xgetbv;"
+        : "=a"(eax), "=d"(edx)
+        : "c"(index));
+    return ((unsigned long long)edx << 32) | eax;
+}
+// SSE SIMD intrinsics
+// #include <xmmintrin.h>
+// AVX SIMD intrinsics, 下面这个头文件中包含了上述头文件
+#include <immintrin.h>
+// #include <avxintrin.h>
+// cmd:
+// g++ -msse3 -O3 -Wall -lrt checkSSEAVXLinuxOK.cc -o checkLinuxOK.out -std=c++20
+// g++ checkSSEAVXLinuxOK.cc -o checkLinuxOK.out -std=c++20
+#endif
+
+
 // function meaning: value = sqrt(a*a + b*b)
 void normal_sqrt(float data1[], float data2[], int len, float out[])
 {
@@ -48,20 +89,20 @@ void simd_sqrt(float* data1, float* data2, int len, float out[])
 void simd256_sqrt(float* data1, float* data2, int len, float out[])
 {
     assert(len % 8 == 0);
-    // AVX
+    // AVX, g++ -mavx checkSSEAVXLinuxOK.cc -o checkLinuxOK.out -std=c++20
+    // AVX, g++ -march=native checkSSEAVXLinuxOK.cc -o checkLinuxOK.out -std=c++20
+
     __m256 *a, *b, *res, t1, t2, t3; // = _mm256_set_ps(1, 1, 1, 1, 1, 1, 1, 1);
     int     i, tlen = len / 8;
-
     a   = (__m256*)data1;
     b   = (__m256*)data2;
     res = (__m256*)out;
     for (i = 0; i < tlen; i++)
     {
-
         t1   = _mm256_mul_ps(*a, *a);
         t2   = _mm256_mul_ps(*b, *b);
-        t3   = _mm256_add_ps(t1, t2);
-        *res = _mm256_sqrt_ps(t3);
+        // t3   = _mm256_add_ps(t1, t2);
+        // *res = _mm256_sqrt_ps(t3);
         a++;
         b++;
         res++;
@@ -72,10 +113,14 @@ void test_sqrt()
     std::random_device                    rd;
     std::mt19937                          gen(rd());
     std::uniform_real_distribution<float> distribute(100.5f, 20001.5f);
-    constexpr int data_size = 8192;
-    float           *data1 = new float[data_size]{};
-    float           *data2 = new float[data_size]{};
-    float           *data_out = new float[data_size]{};
+    __attribute__ ((aligned (32))) constexpr int data_size = 1024;
+    // __attribute__ ((aligned (32))) 解决 avx linux 运行时 Segmentation fault 错误
+    // __attribute__ ((aligned (32))) float           *data1 = new float[data_size]{};
+    // __attribute__ ((aligned (32))) float           *data2 = new float[data_size]{};
+    // __attribute__ ((aligned (32))) float           *data_out = new float[data_size]{};
+    __attribute__ ((aligned (32))) float data1[data_size]{};
+    __attribute__ ((aligned (32))) float data2[data_size]{};
+    __attribute__ ((aligned (32))) float data_out[data_size]{};
     std::cout << "data_size: " << data_size << std::endl;
     std::cout << "data: ";
     for (int i = 0; i < data_size; ++i)
@@ -94,10 +139,10 @@ void test_sqrt()
     }
 
     auto time_start = std::chrono::high_resolution_clock::now();
-    //normal_sqrt(data1, data2, data_size, data_out);// 146ms, data_size = 8192 << 12;
-    //simd_sqrt(data1, data2, data_size, data_out);// 38ms
+    // normal_sqrt(data1, data2, data_size, data_out);// 146ms, data_size = 8192 << 12;
+    // simd_sqrt(data1, data2, data_size, data_out);// 38ms
     simd256_sqrt(data1, data2, data_size, data_out); //24ms
-    // Ŀǰ�Ĵ���cpu cache miss�Ƚ϶࣬�Ż�һ�£�Ӧ��Ч�ʸ���
+    // 目前的代码cpu cache miss比较多，优化一下，应该效率更高
     auto time_end = std::chrono::high_resolution_clock::now();
     auto lossTime = std::chrono::duration_cast<std::chrono::milliseconds>(time_end - time_start).count();
     std::cout << "loss time: " << lossTime << "ms" << std::endl;
@@ -110,41 +155,6 @@ void test_sqrt()
     std::cout << std::endl;
 }
 
-void __cpuidSpec(int p0[4], int p1)
-{
-    __cpuid(p0, p1);
-}
-unsigned __int64 __cdecl _xgetbvSpec(unsigned int p)
-{
-    return _xgetbv(p);
-}
-
-//���Ϻ��� thanks: https://blog.csdn.net/z736248591/article/details/110225352
-#endif
-
-#ifdef __GNUC__
-#include <xmmintrin.h>
-void __cpuidSpec(int* cpuinfo, int info)
-{
-    __asm__ __volatile__(
-        "xchg %%ebx, %%edi;"
-        "cpuid;"
-        "xchg %%ebx, %%edi;"
-        : "=a"(cpuinfo[0]), "=D"(cpuinfo[1]), "=c"(cpuinfo[2]), "=d"(cpuinfo[3])
-        : "0"(info));
-}
-
-unsigned long long _xgetbvSpec(unsigned int index)
-{
-    unsigned int eax, edx;
-    __asm__ __volatile__(
-        "xgetbv;"
-        : "=a"(eax), "=d"(edx)
-        : "c"(index));
-    return ((unsigned long long)edx << 32) | eax;
-}
-
-#endif
 namespace checkcrs
 {
 template<typename T>
@@ -169,8 +179,35 @@ public:
 };
 void testSIMD()
 {
-    std::cout << "... testSIMD() ..."<< std::endl;
-    ///*
+    //g++ -msse3 -O3 -Wall -lrt checkSSEAVX2.cc -o check2.out -std=c++20
+    std::cout << "... testSIMD() begin ..."<< std::endl;
+    /*
+    #ifdef __GNUC__
+    const __m128 zero = _mm_setzero_ps();
+    const __m128 eq = _mm_cmpeq_ps( zero, zero );
+    const int mask = _mm_movemask_ps( eq );
+    printf( "testSIMD(),mask: %i\n", mask );
+    union
+    {
+        __m128 v;
+        //float  vs[4]{4.0f, 4.1f, 4.2f, 4.3f};
+        float  vs[4]{4.0f, 4.1f, 4.2f, 4.3f};
+        std::array<float,4> array;
+    } SIMD4Data{};
+    __m128 a4 = _mm_set_ps(4.0f, 4.1f, 4.2f, 4.3f);
+    __m128 b4 = _mm_set_ps(1.0f, 1.0f, 1.0f, 1.0f);
+    __m128 sum4 = _mm_add_ps(a4, b4);
+    auto f_vs = (float*)&sum4;
+    std::cout << "SSE sum4 A:" << f_vs[0] << "," << f_vs[1] << "," << f_vs[2] << "," << f_vs[2] << std::endl;
+    // std::cout << "SSE sum4.m128_f32 B:" << sum4.m128_f32[3] << "," << sum4.m128_f32[2] << "," << sum4.m128_f32[1] << "," << sum4.m128_f32[0] << std::endl;
+    // std::cout << "SSE sum4.m128_f32[0]:" << sum4.m128_f32[0] << std::endl;
+    SIMD4Data.v = _mm_add_ps(a4, b4);
+    std::cout << "SSE Sum SIMD4Data.vs:" << SIMD4Data.vs[0] << "," << SIMD4Data.vs[1] << "," << SIMD4Data.vs[2] << "," << SIMD4Data.vs[3] << std::endl;
+    float result_vs[4]{};
+    _mm_store_ps(result_vs, sum4);
+    std::cout << "SSE Sum result_vs:" << result_vs[0] << "," << result_vs[1] << "," << result_vs[2] << "," << result_vs[3] << std::endl;
+    std::cout << "\n";
+    #else
     V4<float> v4_0{};
     v4_0.x = 10.0f;
     v4_0.y = 8.5f;
@@ -199,9 +236,7 @@ void testSIMD()
     SIMD4Data.v = _mm_add_ps(a4, b4);
     std::cout << "SSE Sum SIMD4Data.vs:" << SIMD4Data.vs[0] << "," << SIMD4Data.vs[1] << "," << SIMD4Data.vs[2] << "," << SIMD4Data.vs[3] << std::endl;
     std::cout << "SSE Sum SIMD4Data.array:" << SIMD4Data.array[0] << "," << SIMD4Data.array[1] << "," << SIMD4Data.array[2] << "," << SIMD4Data.array[3] << std::endl;
-    float result_vs[4]{};
-    _mm_store_ps(result_vs, sum4);
-    std::cout << "SSE Sum result_vs:" << result_vs[0] << "," << result_vs[1] << "," << result_vs[2] << "," << result_vs[3] << std::endl;
+
     std::cout << "\n";
     union
     {
@@ -216,13 +251,14 @@ void testSIMD()
     std::cout << "SSE sum8.m256_f32:" << sum8.m256_f32[0] << "," << sum8.m256_f32[1] << "," << sum8.m256_f32[2] << std::endl;
     std::memcpy(SIMD8Data.vs, sum8.m256_f32, sizeof(float));
     std::cout << "SSE SIMD8Data.vs:" << SIMD8Data.vs[0] << "," << SIMD8Data.vs[1] << "," << SIMD8Data.vs[2] << std::endl;
-    std::cout << "\n---------------------------------- -- ----------------\n";
-    test_sqrt();
-    std::cout << "\n---------------------------------- -- ----------------\n";
+    #endif
     //*/
+    test_sqrt();
+    std::cout << "... testSIMD() end ..."<< std::endl;
 }
 int testMain()
 {
+    ///*
     bool sseSupportted    = false;
     bool sse2Supportted   = false;
     bool sse3Supportted   = false;
@@ -284,15 +320,18 @@ int testMain()
     std::cout << "SSE4a:" << (sse4aSupportted ? 1 : 0) << std::endl;
     std::cout << "SSE5:" << (sse5Supportted ? 1 : 0) << std::endl;
     std::cout << "AVX:" << (avxSupportted ? 1 : 0) << std::endl;
-
+    //*/
     testSIMD();
     return EXIT_SUCCESS;
 }
 } // namespace checkcrs
-//int main(int argc, char** argv)
-//{
-//    std::cout << "cpuparallel::main() begin.\n";
-//    checkcrs::testMain();
-//    std::cout << "cpuparallel::main() end.\n";
-//    return EXIT_SUCCESS;
-//}
+
+#ifdef __GNUC__
+int main(int argc, char** argv)
+{
+   std::cout << "cpuparallel::main() begin.\n";
+   checkcrs::testMain();
+   std::cout << "cpuparallel::main() end.\n";
+   return EXIT_SUCCESS;
+}
+#endif

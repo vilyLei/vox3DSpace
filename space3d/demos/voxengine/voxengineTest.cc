@@ -12,6 +12,7 @@
 #include "./src/voxengine/math/OBB.h"
 #include "./src/voxengine/math/vec2.h"
 #include "./src/voxengine/math/Matrix4.h"
+#include "./src/voxengine/view/Camera.h"
 #include "./src/voxengine/text/BaseText.h"
 
 #include <cstdlib>
@@ -48,10 +49,20 @@ int main()
     //stringArray[2] = "df";
     //std::cout << "stringArray[2]: " << stringArray[2] << std::endl;
     std::cout << "\n-------------------------  ------------------------  ------------------------------\n";
-    voxengine::math::Matrix4<double> mat4_01{};
+    using Camera = voxengine::view::Camera<double>;
+    Camera cam01{};
+    std::cout << "\n-------------------------  ------------------------  ------------------------------\n";
+    using Mat4 = voxengine::math::Matrix4<double>;
+    Mat4 mat4_01{};
     std::cout << "mat4_01: " << mat4_01.toString() << std::endl;
     mat4_01.setRotationEulerAngle(0.5, 0.0, 1.0);
     std::cout << "mat4_01: " << mat4_01.toString() << std::endl;
+    Mat4 mat4_02{};
+    Mat4 mat4_03{};
+    mat4_02.setRotationEulerAngle(30.0, 5.0, 0.0);
+    mat4_03.multiply(mat4_01, mat4_02);
+    mat4_03.multiply(Mat4{});
+    std::cout << "mat4_03: " << mat4_03.toString() << std::endl;
 
     voxengine::math::OBB<double> obbA{};
     auto&                        obb = obbA;
@@ -121,19 +132,80 @@ int main()
     v3_03 = v3_02;
     std::cout << "v3_03.toString(): " << v3_03.toString() << std::endl;
 
-    constexpr voxengine::math::Vec3<float> v_1{1.0f, 1.0f, 1.0f, 1.0f};
+    constexpr voxengine::math::Vec3<float> v3_ce_f_1{1.0f, 1.0f, 1.0f, 1.0f};
+    constexpr voxengine::math::Vec2<float> v2_ce_f_1{1.0f, 1.0f, 1.0f};
 
     auto v3_f_axis = voxengine::math::Vec3<float>::X_AXIS;
     v3_f_axis.x    = 0.3f;
     std::cout << "voxengine::math::Vec3<float>::X_AXIS.toString(): " << voxengine::math::Vec3<float>::X_AXIS.toString() << std::endl;
     std::cout << "v3_f_axis.toString(): " << v3_f_axis.toString() << std::endl;
-    //union
-    //{
-    //    voxengine::math::Vec2<float>  vf2[2]{};
-    //    voxengine::math::Vec2<double> vd;
-    //    //int t[2];
-    //}union_01;
 
+    std::cout << "\n";
+    union UnionVec2
+    {
+        voxengine::math::Vec2<float>  vf2[2]{};
+        voxengine::math::Vec2<double> vd;
+        ~UnionVec2() = default;
+    };
+    UnionVec2 u_v2_0 = {{{0.1, 0.2, 0.3}, {0.1, 0.2, 0.3}}};
+    UnionVec2 u_v2_1 = {{{0.1, 0.2}, {0.1, 0.2}}};
+    UnionVec2 u_v2_2 = {{{0.1, 0.2}, {0.1, 0.2}}};
+    UnionVec2 u_v2   = {{{0.1, 0.2, 0.3}}};
+    u_v2.vd          = {0.1, 0.2, 0.3};
+    std::cout << "UnionVec2, u_v2.vf2[0].toString(): " << u_v2.vf2[0].toString() << std::endl;
+    std::cout << "UnionVec2, u_v2.vd.toString(): " << u_v2.vd.toString() << std::endl;
+    union UnionVec3
+    {
+        voxengine::math::Vec3<float>  vf2[2]{};
+        voxengine::math::Vec3<double> vd;
+        ~UnionVec3() = default;
+    };
+    UnionVec3 u_v3_0 = {{{0.1, 0.2, 0.3}, {0.1, 0.2, 0.3}}};
+    UnionVec3 u_v3 = {{{0.1, 0.2, 0.3}}};
+    u_v3.vd          = {0.1, 0.2, 0.3};
+    std::cout << "UnionVec3, u_v3.vf2[0].toString(): " << u_v3.vf2[0].toString() << std::endl;
+    std::cout << "UnionVec3, u_v3.vd.toString(): " << u_v3.vd.toString() << std::endl;
+
+    std::cout << "\n";
+    v3_f_axis                          = {0.1f, 0.2f, 0.3f};
+    voxengine::math::Vec3<float> v3_05{};
+    v3_05                              = {2.1f, 2.2f, 2.3f};
+    std::cout << "v3_f_axis.toString(): " << v3_f_axis.toString() << std::endl;
+    std::cout << "v3_05.toString(): " << v3_05.toString() << std::endl;
+
+    
+    voxengine::math::Vec3<double> v3_d_0{};
+    v3_d_0 = {7.1f, 7.2f, 7.3f};
+
+    voxengine::math::Vec3<double>&& temp_d_v3_01{1.0f, 1.0f, 2.0f};
+    v3_d_0.normalize();
+    temp_d_v3_01.normalize();
+    auto value_v3_0 = v3_d_0.dot(temp_d_v3_01);
+    std::cout << "v3_d_0.dot(temp_d_v3_01): " << value_v3_0 << std::endl;
+    std::cout << "v3_d_0.dot(voxengine::math::Vec3<double>()): " << v3_d_0.dot(voxengine::math::Vec3<double>(0.5,0.7,0.8)) << std::endl;
+    v3_d_0.scaleVector(std::forward<voxengine::math::Vec3<double>>(temp_d_v3_01));
+    v3_d_0.scaleVector(std::move(temp_d_v3_01));
+    std::cout << "std::move(temp_d_v3_01), temp_d_v3_01.toString(): " << temp_d_v3_01.toString() << std::endl;
+    v3_d_0.scaleVector(voxengine::math::Vec3<double>(0.5, 0.7, 0.8));
+    std::cout << "\n-------------------------  ------------------------  ------------------------------\n";
+    v3_d_0.normalize();
+    temp_d_v3_01.normalize();
+    v3_d_0 += temp_d_v3_01;
+    v3_d_0 += voxengine::math::Vec3<double>(0.5, 0.7, 0.8);
+    std::cout << "v3_d_0: " << v3_d_0.toString() << std::endl;
+    v3_d_0 += v3_d_0;
+    std::cout << "v3_d_0: " << v3_d_0.toString() << std::endl;
+
+    std::cout << "\n-------------------------  ------------------------  ------------------------------\n";
+    voxengine::math::Vec3<double> v3a_01{1.0, 2.0, 3.0};
+    voxengine::math::Vec3<double> v3a_02{10.0, 20.0, 30.0};
+    voxengine::math::Vec3<double> v3_add_mul_01 = (v3a_01 + v3a_02) * voxengine::math::Vec3<double>{3.0,2.0,1.5};
+    std::cout << "v3_add_mul_01: " << v3_add_mul_01.toString() << std::endl;
+    auto buf_v3_d = new double[4]{16.1,17.1,18.1,0.9};
+    voxengine::math::Vec3<double>* ptr_v3   = (voxengine::math::Vec3<double>*)buf_v3_d;
+    std::cout << "ptr_v3: " << ptr_v3->toString() << std::endl;
+    v3a_01 += *ptr_v3;
+    std::cout << "v3a_01: " << v3a_01.toString() << std::endl;
     std::cout << "XXXXXXXX      >>>\n\n";
 
     voxengine::math::Vec2<float> v2;
@@ -157,7 +229,6 @@ int main()
     v2_short.setXY(65537, 12);
     std::cout << "v2_short.x: " << v2_short.x << ", v2_short.y: " << v2_short.y << std::endl;
 
-    
     voxengine::math::Vec2<int> v2_int;
     v2_int.setXY(65537, 12);
     std::cout << "v2_int.x: " << v2_int.x << ", v2_int.y: " << v2_int.y << std::endl;
@@ -172,9 +243,7 @@ int main()
     std::cout << "vec2 zero.toString(): " << axis.toString() << std::endl;
     axis = voxengine::math::Vec2<int>::ONE.clone();
     std::cout << "vec2 ONE.toString(): " << axis.toString() << std::endl;
-
-    
-    
+        
     auto v3_axis = voxengine::math::Vec3<int>::Y_AXIS;
     std::cout << "vec3 y_axis.toString(): " << v3_axis.toString() << std::endl;
 

@@ -23,20 +23,6 @@ Vec2<T> Vec2<T>::s_v0{};
 template <typename T>
 Vec2<T> Vec2<T>::s_v1{};
 
-
-//template <typename T>
-//Vec2<T>::Vec2(T px, T py, T pz) noexcept
-//    :
-//    x(px), y(py), z(pz)
-//{
-//}
-//template <typename T>
-//Vec2<T>::Vec2() noexcept
-//    :
-//    x(static_cast<T>(0)), y(static_cast<T>(0)), z(static_cast<T>(1))
-//{
-//}
-
 template <typename T>
 T& Vec2<T>::operator[](unsigned int i)
 {
@@ -143,13 +129,7 @@ bool Vec2<T>::equalsAll(const Vec2& v2)
 {
     return std::abs(x - v2.x) < s_minv && std::abs(y - v2.y) < s_minv && std::abs(z - v2.z) < s_minv;
 }
-template <typename T>
-void Vec2<T>::project()
-{
-    T t = static_cast<T>(1) / z;
-    x *= t;
-    y *= t;
-}
+
 template <typename T>
 void Vec2<T>::addBy(const Vec2& v2)
 {
