@@ -25,6 +25,7 @@ void normal_sqrt_calc(float data[], int len, float out[])
     int j{};
     for (i = 0; i < len; i+=2)
     {
+        //out[j++] = (data[i] * data[i] + data[i+1] * data[i+1]);
         out[j++] = sqrt(data[i] * data[i] + data[i+1] * data[i+1]);
     }
 }
