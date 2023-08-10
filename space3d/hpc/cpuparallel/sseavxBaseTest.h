@@ -170,7 +170,8 @@ void test_sqrt_calc()
         //simd256_sqrt_calc(data1, data2, data_size, data_out); //debug 24ms, release 23ms
         // 目前的代码中的buffer数据定义和使用，违背cpu cache的空间局部性原则，
         // 导致更多的cpu cache miss。如果改为SOA(struct-of-array), 效率更高。
-        // 如果是Release情况下，由于Release情况下编译器做过优化，所以这里的数据定义形式并不会对性能有太多影响，非simd程序反而速度会快。
+        // 如果是Release情况下，由于Release情况下编译器做过优化，所以这里的数据定义形式并不会对性能有太多影响，非simd程序
+        // 这里的定义形式反而速度会更快。
         // 目前的代码中的buffer数据定义和使用，看起来与cpu cache的空间局部性原则冲突，
         // 可能导致较多的cpu cache miss，Release情况下编译有优化则另当别论。
         // 有一点可以确定，由于不是SOA数据，所以对SIMD运算并不友好。
