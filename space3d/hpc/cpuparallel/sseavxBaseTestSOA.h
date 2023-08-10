@@ -19,7 +19,7 @@ namespace sseavx::testwithsoa
 namespace
 {
 // function meaning: value = sqrt(a*a + b*b)
-void normal_sqrt_calc_withSOA(float data[], int len, float out[])
+void normal_sqrt_calc(float data[], int len, float out[])
 {
     int i{};
     int j{};
@@ -114,7 +114,7 @@ void apply_align_malloc(size_t nBytes, void** ptrPtr)
 } // namespace
 void test_sqrt_calc()
 {
-    std::cout << "\n... test_sqrt_calc() begin ..." << std::endl;
+    std::cout << "\n... soa test_sqrt_calc() begin ..." << std::endl;
     std::random_device                    rd;
     std::mt19937                          gen(rd());
     std::uniform_real_distribution<float> distribute(100.5f, 20001.5f);
@@ -134,7 +134,7 @@ void test_sqrt_calc()
     float*                  data    = new float[data_size]{};
     float*                  data_out = new float[total]{};
 #endif
-    std::cout << "data_size: " << data_size << std::endl;
+    std::cout << "elements total: " << total << std::endl;
     std::cout << "data: ";
     for (int i = 0; i < data_size; ++i)
     {
@@ -146,13 +146,17 @@ void test_sqrt_calc()
     std::cout << std::endl;
 
     auto time_start = std::chrono::high_resolution_clock::now();
-    //normal_sqrt_calc(data, total, data_out);// debug 146ms, release 16, data_size = 8192 << 12, in Win10 MSVC;
-    //simd_sqrt_calc(data, total, data_out); // debug 37ms, release 19ms
-    simd256_sqrt_calc(data, total, data_out); //debug 24ms, release 16ms
-    // 目前的代码cpu cache miss比较多，优化一下，应该效率更高
+
+    for (auto i = 0; i < 1; ++i)
+    {
+        normal_sqrt_calc(data, total, data_out);// debug 146ms, release 16, data_size = 8192 << 12, in Win10 MSVC;
+        //simd_sqrt_calc(data, total, data_out); // debug 37ms, release 19ms
+        //simd256_sqrt_calc(data, total, data_out); //debug 24ms, release 16ms
+        // 目前的代码cpu cache miss比较少，效率更高
+    }
     auto time_end = std::chrono::high_resolution_clock::now();
     auto lossTime = std::chrono::duration_cast<std::chrono::milliseconds>(time_end - time_start).count();
-    std::cout << "loss time: " << lossTime << "ms" << std::endl;
+    std::cout << "soa loss time: " << lossTime << "ms" << std::endl;
 
     std::cout << "data_out: ";
     for (int i = 0; i < 8; ++i)
@@ -164,7 +168,7 @@ void test_sqrt_calc()
 }
 void test_matrix_calc()
 {
-    std::cout << "\n... test_matrix_calc() begin ...\n" << std::endl;
+    std::cout << "\n... soa test_matrix_calc() begin ...\n" << std::endl;
 #ifdef __GNUC__
 
     __attribute__((aligned(32))) float                   vec4_out[4]{};

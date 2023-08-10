@@ -2,7 +2,7 @@
 #include <iostream>
 #include "sseavxChecker.h"
 #include "sseavxBaseTest.h"
-#include "sseavxBaseTest2.h"
+#include "sseavxBaseTestSOA.h"
 
 int main(int argc, char** argv)
 {
@@ -13,8 +13,8 @@ int main(int argc, char** argv)
     //sseavx::config::sseavxCheck();
     //sseavx::test::testBase();
     //sseavx::test::testBase2();
-    //sseavx::test::test_sqrt_calc();
     //sseavx::test::test_matrix_calc();
+    sseavx::test::test_sqrt_calc();
     sseavx::testwithsoa::test_sqrt_calc();
     std::cout << "\ncpuparallel::main() end.\n";
     return EXIT_SUCCESS;

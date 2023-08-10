@@ -144,7 +144,7 @@ void test_sqrt_calc()
     float*                  data2    = new float[data_size]{};
     float*                  data_out = new float[data_size]{};
 #endif
-    std::cout << "data_size: " << data_size << std::endl;
+    std::cout << "elements total: " << data_size << std::endl;
     std::cout << "data: ";
     for (int i = 0; i < data_size; ++i)
     {
@@ -162,10 +162,18 @@ void test_sqrt_calc()
     }
 
     auto time_start = std::chrono::high_resolution_clock::now();
-    normal_sqrt_calc(data1, data2, data_size, data_out);// debug 146ms, release 22ms, data_size = 8192 << 12, in Win10 MSVC;
-    //simd_sqrt_calc(data1, data2, data_size, data_out);// debug 38ms, release 23ms
-    //simd256_sqrt_calc(data1, data2, data_size, data_out); //debug 24ms, release 23ms
-    // 目前的代码cpu cache miss比较多，优化一下，应该效率更高
+    for (auto i = 0; i < 1; ++i)
+    {
+        normal_sqrt_calc(data1, data2, data_size, data_out); // debug 146ms, release 22ms, data_size = 8192 << 12, in Win10 MSVC;
+        //simd_sqrt_calc(data1, data2, data_size, data_out);// debug 38ms, release 23ms
+        //simd256_sqrt_calc(data1, data2, data_size, data_out); //debug 24ms, release 23ms
+        // 目前的代码中的buffer数据定义和使用，违背cpu cache的空间局部性原则，
+        // 导致更多的cpu cache miss。如果改为SOA(struct-of-array), 效率更高，
+        // 当前的计算过程relase情况下耗时能减少1/3。
+        // 目前的代码中的buffer数据定义和使用，看起来与cpu cache的空间局部性原则冲突，
+        // 可能导致较多的cpu cache miss，但是鉴于这个用例每次读到的都是新数据，
+        // 则另当别论。
+    }
     auto time_end = std::chrono::high_resolution_clock::now();
     auto lossTime = std::chrono::duration_cast<std::chrono::milliseconds>(time_end - time_start).count();
     std::cout << "loss time: " << lossTime << "ms" << std::endl;

@@ -36,7 +36,7 @@ macro(build_executable_hpcDemos)
   list(APPEND hpsrc_demo_sources
       "${src_demoDir}/sseavxChecker.h"
       "${src_demoDir}/sseavxBaseTest.h"
-      "${src_demoDir}/sseavxBaseTest2.h"
+      "${src_demoDir}/sseavxBaseTestSOA.h"
       "${src_demoDir}/sseavxFileReader.h"
     )
   vox3dspace_add_hpcDemo_executableByName(${src_demoName} "${hpsrc_demo_sources}")
