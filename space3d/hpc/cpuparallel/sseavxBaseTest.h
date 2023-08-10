@@ -119,7 +119,8 @@ void test_sqrt_calc()
     std::random_device                    rd;
     std::mt19937                          gen(rd());
     std::uniform_real_distribution<float> distribute(100.5f, 20001.5f);
-    constexpr int                         data_size = 8192 << 12;
+    //constexpr int                         data_size = 8192 << 12;// data total size is 128M * 3 = 384M
+    constexpr int                         data_size = 8192 << 8;// data total size is 128M * 3 = 384M
     // 应用__attribute__ ((aligned (32))) 语法解决 avx linux 运行时内存对齐问题，
     // 如果没有强制对齐，则会出现运行时 Segmentation fault 错误
     // 在 MSVC环境 则用: __declspec(align(32))
@@ -145,15 +146,15 @@ void test_sqrt_calc()
     float*                  data_out = new float[data_size]{};
 #endif
     std::cout << "elements total: " << data_size << std::endl;
-    std::cout << "data: ";
+    //std::cout << "data: ";
     for (int i = 0; i < data_size; ++i)
     {
         auto v   = distribute(gen);
         data1[i] = v;
-        if (i < 8)
-            std::cout << distribute(gen) << " ";
+        //if (i < 8)
+        //    std::cout << distribute(gen) << " ";
     }
-    std::cout << std::endl;
+    //std::cout << std::endl;
 
     for (int i = 0; i < data_size; ++i)
     {
@@ -162,28 +163,28 @@ void test_sqrt_calc()
     }
 
     auto time_start = std::chrono::high_resolution_clock::now();
-    for (auto i = 0; i < 1; ++i)
+    for (auto i = 0; i < 50; ++i)
     {
         normal_sqrt_calc(data1, data2, data_size, data_out); // debug 146ms, release 22ms, data_size = 8192 << 12, in Win10 MSVC;
         //simd_sqrt_calc(data1, data2, data_size, data_out);// debug 38ms, release 23ms
         //simd256_sqrt_calc(data1, data2, data_size, data_out); //debug 24ms, release 23ms
         // 目前的代码中的buffer数据定义和使用，违背cpu cache的空间局部性原则，
-        // 导致更多的cpu cache miss。如果改为SOA(struct-of-array), 效率更高，
-        // 当前的计算过程relase情况下耗时能减少1/3。
+        // 导致更多的cpu cache miss。如果改为SOA(struct-of-array), 效率更高。
+        // 如果是Release情况下，由于Release情况下编译器做过优化，所以这里的数据定义形式并不会对性能有太多影响，非simd程序反而速度会快。
         // 目前的代码中的buffer数据定义和使用，看起来与cpu cache的空间局部性原则冲突，
-        // 可能导致较多的cpu cache miss，但是鉴于这个用例每次读到的都是新数据，
-        // 则另当别论。
+        // 可能导致较多的cpu cache miss，Release情况下编译有优化则另当别论。
+        // 有一点可以确定，由于不是SOA数据，所以对SIMD运算并不友好。
     }
     auto time_end = std::chrono::high_resolution_clock::now();
     auto lossTime = std::chrono::duration_cast<std::chrono::milliseconds>(time_end - time_start).count();
     std::cout << "loss time: " << lossTime << "ms" << std::endl;
 
-    std::cout << "data_out: ";
-    for (int i = 0; i < 8; ++i)
-    {
-        std::cout << data_out[i] << " ";
-    }
-    std::cout << std::endl;
+    //std::cout << "data_out: ";
+    //for (int i = 0; i < 8; ++i)
+    //{
+    //    std::cout << data_out[i] << " ";
+    //}
+    //std::cout << std::endl;
     std::cout << "... test_sqrt_calc() end ..." << std::endl;
 }
 void test_matrix_calc()

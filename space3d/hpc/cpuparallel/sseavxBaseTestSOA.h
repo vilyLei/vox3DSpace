@@ -118,9 +118,9 @@ void test_sqrt_calc()
     std::random_device                    rd;
     std::mt19937                          gen(rd());
     std::uniform_real_distribution<float> distribute(100.5f, 20001.5f);
-    //constexpr int                         data_size = 8192 << 12;
-    constexpr int total     = 8192 << 12;
-    constexpr int data_size = total << 1;
+    //constexpr int total     = 8192 << 12;
+    constexpr int total     = 8192 << 8;
+    constexpr int data_size = total << 1;// data total size is 128M * 3 = 384M
 
     // 应用__attribute__ ((aligned (32))) 语法解决 avx linux 运行时内存对齐问题，
     // 如果没有强制对齐，则会出现运行时 Segmentation fault 错误
@@ -135,19 +135,19 @@ void test_sqrt_calc()
     float*                  data_out = new float[total]{};
 #endif
     std::cout << "elements total: " << total << std::endl;
-    std::cout << "data: ";
+    //std::cout << "data: ";
     for (int i = 0; i < data_size; ++i)
     {
         auto v   = distribute(gen);
         data[i] = v;
-        if (i < 8)
-            std::cout << distribute(gen) << " ";
+        //if (i < 8)
+        //    std::cout << distribute(gen) << " ";
     }
     std::cout << std::endl;
 
     auto time_start = std::chrono::high_resolution_clock::now();
 
-    for (auto i = 0; i < 1; ++i)
+    for (auto i = 0; i < 50; ++i)
     {
         normal_sqrt_calc(data, total, data_out);// debug 146ms, release 16, data_size = 8192 << 12, in Win10 MSVC;
         //simd_sqrt_calc(data, total, data_out); // debug 37ms, release 19ms
@@ -158,12 +158,12 @@ void test_sqrt_calc()
     auto lossTime = std::chrono::duration_cast<std::chrono::milliseconds>(time_end - time_start).count();
     std::cout << "soa loss time: " << lossTime << "ms" << std::endl;
 
-    std::cout << "data_out: ";
-    for (int i = 0; i < 8; ++i)
-    {
-        std::cout << data_out[i] << " ";
-    }
-    std::cout << std::endl;
+    //std::cout << "data_out: ";
+    //for (int i = 0; i < 8; ++i)
+    //{
+    //    std::cout << data_out[i] << " ";
+    //}
+    //std::cout << std::endl;
     std::cout << "... test_sqrt_calc() end ..." << std::endl;
 }
 void test_matrix_calc()
