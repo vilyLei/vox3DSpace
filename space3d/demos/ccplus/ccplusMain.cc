@@ -16,6 +16,7 @@
 #include "base/testMemory.h"
 #include "msvcAsm/testInlineAsm.h"
 #include "parallel/testExecutionPar.h"
+#include "parallel/futureFastSort01.h"
 #include "demoTemplate/testTemplate.h"
 
 class ValueUnit
@@ -183,6 +184,8 @@ int baseMain()
 
 int main()
 {
+    parallel::futuresort::testMain();
+    return EXIT_SUCCESS;
     base::demoForward::testMain();
     return EXIT_SUCCESS;
     thread::thrFuture::testMain();

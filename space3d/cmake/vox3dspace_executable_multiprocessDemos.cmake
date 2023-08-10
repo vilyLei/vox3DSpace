@@ -33,7 +33,8 @@ macro(build_executable_multprocessDemos)
 
   set(src_demoName "sharedMemory")
   set(src_demoDir "${multprocessDemo_dir}/${src_demoName}/")
-  vox3dspace_add_multprocessDemo_executableByName(${src_demoName}
+  list(APPEND multprocesssrc_demo_sources
   "${src_demoDir}/proc/testCreateProcess.h"
-  )
+    )
+  vox3dspace_add_multprocessDemo_executableByName(${src_demoName} "${multprocesssrc_demo_sources}")
 endmacro()

@@ -87,6 +87,7 @@ void simd_sqrt(float* data1, float* data2, int len, float out[])
         res++;
     }
 }
+// avx
 void simd256_sqrt(float* data1, float* data2, int len, float out[])
 {
     assert(len % 8 == 0);

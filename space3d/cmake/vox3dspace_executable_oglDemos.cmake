@@ -38,5 +38,11 @@ macro(build_executable_oglDemos)
     
   endfunction()
 
-  vox3dspace_add_oglDemo_executableByName("textures" "")
+  set(src_demoName "textures")
+  set(src_demoDir "${oglDemo_dir}/${src_demoName}/")
+  list(APPEND oglsrc_demo_sources
+      ""
+      )
+  vox3dspace_add_oglDemo_executableByName(${src_demoName} "${oglsrc_demo_sources}")
+  # vox3dspace_add_oglDemo_executableByName("textures" "")
 endmacro()

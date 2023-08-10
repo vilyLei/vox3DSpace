@@ -1,25 +1,21 @@
 ﻿
-// #include "nmmintrin.h" // for SSE4.2
-// #include "immintrin.h" // for AVX 
-// #ifdef _WIN32
-// //  Windows
-// #define cpuid(info, x)    __cpuidex(info, x, 0)
-// #else
-// //  GCC Intrinsics
-// #include <cpuid.h>
-// void cpuid(int info[4], int InfoType) {
-//     __cpuid_count(InfoType, 0, info[0], info[1], info[2], info[3]);
-// }
-// //bool HW_AVX512F;
-// #endif
-
 #include <iostream>
-#include "checkSSEAVX.h"
+#include "sseavxChecker.h"
+#include "sseavxBaseTest.h"
+#include "sseavxBaseTest2.h"
 
 int main(int argc, char** argv)
 {
     std::cout << "cpuparallel::main() begin.\n";
-    checkcrs::testMain();
-    std::cout << "cpuparallel::main() end.\n";
+    std::cout << "__alignof(double): " << __alignof(double) << std::endl;
+    std::cout << "alignof(double): " << alignof(double) << std::endl;
+    std::cout << "alignof(std::max_align_t): " << alignof(std::max_align_t) << '\n';
+    //sseavx::config::sseavxCheck();
+    //sseavx::test::testBase();
+    //sseavx::test::testBase2();
+    //sseavx::test::test_sqrt_calc();
+    //sseavx::test::test_matrix_calc();
+    sseavx::testwithsoa::test_sqrt_calc();
+    std::cout << "\ncpuparallel::main() end.\n";
     return EXIT_SUCCESS;
 }

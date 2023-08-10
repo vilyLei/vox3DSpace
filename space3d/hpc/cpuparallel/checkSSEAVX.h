@@ -97,7 +97,7 @@ void test_sqrt()
     //normal_sqrt(data1, data2, data_size, data_out);// 146ms, data_size = 8192 << 12;
     //simd_sqrt(data1, data2, data_size, data_out);// 38ms
     simd256_sqrt(data1, data2, data_size, data_out); //24ms
-    // 目前的代码cpu cache miss比较多，优化一下，应该效率更高
+    // 目前锟侥达拷锟斤拷cpu cache miss锟饺较多，锟脚伙拷一锟铰ｏ拷应锟斤拷效锟绞革拷锟斤拷
     auto time_end = std::chrono::high_resolution_clock::now();
     auto lossTime = std::chrono::duration_cast<std::chrono::milliseconds>(time_end - time_start).count();
     std::cout << "loss time: " << lossTime << "ms" << std::endl;
@@ -119,7 +119,7 @@ unsigned __int64 __cdecl _xgetbvSpec(unsigned int p)
     return _xgetbv(p);
 }
 
-//以上函数 thanks: https://blog.csdn.net/z736248591/article/details/110225352
+//锟斤拷锟较猴拷锟斤拷 thanks: https://blog.csdn.net/z736248591/article/details/110225352
 #endif
 
 #ifdef __GNUC__

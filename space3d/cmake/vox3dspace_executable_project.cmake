@@ -29,6 +29,7 @@ macro(build_executable_projects)
                        "${ccplus_dir}/thread/testThrFuture.h"
                        "${ccplus_dir}/base/testConstexpr.h"
                        "${ccplus_dir}/parallel/testExecutionPar.h"
+                       "${ccplus_dir}/parallel/futureFastSort01.h"
                        "${ccplus_dir}/base/testForward.h"
                        "${ccplus_dir}/base/testTypeInfo.h"
                        "${ccplus_dir}/base/testString.h"

@@ -10,15 +10,15 @@ macro(build_executable_hpcDemos)
 
   function(vox3dspace_add_hpcDemo_executableByName DEMO_NAME DEMO_SOURCES)
 
-    # message(STATUS ">>> >>> DEMO_NAME: ${DEMO_NAME}")
-    # message(STATUS ">>> >>> DEMO_SOURCES: ${DEMO_SOURCES}")
+    # message(STATUS "hpc >>> >>> DEMO_NAME: ${DEMO_NAME}")
+    # message(STATUS "hpc >>> >>> DEMO_SOURCES: ${DEMO_SOURCES}")
 
     set(demoDir "${hpcDemo_dir}/${DEMO_NAME}/")
     vox3dspace_add_executable(NAME
       ${DEMO_NAME}
       SOURCES
-      "${demoDir}/${DEMO_NAME}.cc"
       ${DEMO_SOURCES}
+      "${demoDir}/${DEMO_NAME}.cc"
       FOLDER
       ${test_hpcDemos_folder_name}
       DEFINES
@@ -33,8 +33,12 @@ macro(build_executable_hpcDemos)
 
   set(src_demoName "cpuparallel")
   set(src_demoDir "${hpcDemo_dir}/${src_demoName}/")
-  vox3dspace_add_hpcDemo_executableByName(${src_demoName}
-  "${src_demoDir}/checkSSEAVX.h"
-  "${src_demoDir}/checkSSEAVXLinuxOK.cc"
-  )
+  list(APPEND hpsrc_demo_sources
+      "${src_demoDir}/sseavxChecker.h"
+      "${src_demoDir}/sseavxBaseTest.h"
+      "${src_demoDir}/sseavxBaseTest2.h"
+      "${src_demoDir}/sseavxFileReader.h"
+    )
+  vox3dspace_add_hpcDemo_executableByName(${src_demoName} "${hpsrc_demo_sources}")
+  
 endmacro()
