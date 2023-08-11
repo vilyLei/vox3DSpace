@@ -190,6 +190,13 @@ void test_sqrt_calc()
     //    std::cout << data_out[i] << " ";
     //}
     //std::cout << std::endl;
+    delete[] data1;
+    delete[] data2;
+    delete[] data_out;
+
+    data1 = nullptr;
+    data2 = nullptr;
+    data_out = nullptr;
     std::cout << "... test_sqrt_calc() end ..." << std::endl;
 }
 void test_matrix_calc()
@@ -416,7 +423,8 @@ void testBase3()
         auto t   = _mm_loadu_si128(count_src_strPtr + i);
         auto res = _mm_cmpeq_epi8(t, count_ch);
         auto mask = _mm_movemask_epi8(res);
-        std::cout << "mask: " << std::format("{:b}", mask)<<std::endl;
+        std::cout << "mask: " << std::bitset<16>(mask)<<std::endl;
+        //std::cout << "mask: " << std::format("{:b}", mask)<<std::endl;
         key_char_count += __builtin_popcount(mask);
         //key_char_count += popcount(mask);
     }

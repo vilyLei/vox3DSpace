@@ -175,6 +175,14 @@ void test_sqrt_calc()
         std::cout << data_out[i] << " ";
     }
     std::cout << std::endl;
+    
+    delete[] data1;
+    delete[] data2;
+    delete[] data_out;
+
+    data1 = nullptr;
+    data2 = nullptr;
+    data_out = nullptr;
     std::cout << "... test_sqrt_calc() end ..." << std::endl;
 }
 void test_matrix_calc()
