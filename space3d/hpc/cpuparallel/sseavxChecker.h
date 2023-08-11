@@ -1,3 +1,4 @@
+// thanks: https://gist.github.com/hi2p-perim/7855506
 #include <iostream>
 #ifdef _MSC_VER
 #    include <intrin.h>

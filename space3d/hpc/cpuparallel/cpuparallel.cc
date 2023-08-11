@@ -15,10 +15,11 @@ int main(int argc, char** argv)
     //sseavx::config::sseavxCheck();
     //sseavx::test::testBase();
     //sseavx::test::testBase2();
+    sseavx::test::testBase3();
     //sseavx::test::test_matrix_calc();
-    sseavx::test::test_sqrt_calc();
-    sseavx::testwithsoa::test_sqrt_calc();
+    //sseavx::test::test_sqrt_calc();
+    //sseavx::testwithsoa::test_sqrt_calc();
     std::cout << "\ncpuparallel::main() end.\n";
-    std::system("pause");
+    //std::system("pause");
     return EXIT_SUCCESS;
 }

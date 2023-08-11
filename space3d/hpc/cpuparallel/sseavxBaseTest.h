@@ -4,9 +4,12 @@
 #include <cassert>
 #include <random>
 #include <chrono>
+#include <cstdint>
+#include <bitset>
 
 #ifdef _MSC_VER
 #    include <intrin.h>
+#    define __builtin_popcount __popcnt
 #endif
 
 #ifdef __GNUC__
@@ -350,5 +353,75 @@ void testBase2()
     for (auto x : v0) { std::cout << x << ' '; }
     std::cout << std::endl;
     std::cout << "\n... testBase2() end ..." << std::endl;
+}
+unsigned popcount(unsigned int u)
+{
+    u = (u & 0x55555555) + ((u >> 1) & 0x55555555);
+    u = (u & 0x33333333) + ((u >> 2) & 0x33333333);
+    u = (u & 0x0F0F0F0F) + ((u >> 4) & 0x0F0F0F0F);
+    u = (u & 0x00FF00FF) + ((u >> 8) & 0x00FF00FF);
+    u = (u & 0x0000FFFF) + ((u >> 16) & 0x0000FFFF);
+    return u;
+}
+
+void testBase3()
+{
+#ifdef __GNUC__
+    float v0[4] __attribute__((aligned(16))) = {0.0f, 1.0f, 2.0f, 3.0f};
+    float v1[4] __attribute__((aligned(16))) = {4.0f, 5.0f, 6.0f, 7.0f};
+#else
+    float v0[4] = {0.0f, 1.0f, 2.0f, 3.0f};
+    float v1[4] = {4.0f, 5.0f, 6.0f, 7.0f};
+#endif
+    std::cout << "\n... testBase3() begin ...\n";
+    std::cout << "sizeof(__int8): " << sizeof(__int8) << std::endl;
+    std::cout << "sizeof(std::int8_t): " << sizeof(std::int8_t) << std::endl;
+    std::cout << "sizeof(int8_t): " << sizeof(int8_t) << std::endl;
+    std::cout << "sizeof(__int8): " << sizeof(std::int8_t) << std::endl;
+    std::cout << "sizeof(17i8): " << sizeof(17i8) << std::endl;
+    std::cout << "sizeof(17i16): " << sizeof(17i16) << std::endl;
+    std::cout << "sizeof(17i32): " << sizeof(17i32) << std::endl;
+    char ch01 = 15i8;
+    char ch02 = 10i8 + ch01;
+    std::cout << "sizeof(ch01): " << sizeof(ch01) << std::endl;
+    std::cout << "ch01: " << (int)ch01 << std::endl;
+    std::int8_t m128i_i8[16];
+    __m128i     ch = _mm_set1_epi8(ch01);
+    std::int8_t* ptr_ch = (std::int8_t*)&ch;
+    std::cout << "ptr_ch: ";
+    for (auto i = 0; i < 16; ++i)
+        std::cout << (int)ptr_ch[i] << ",";
+    std::cout << "\n";
+
+    using namespace std::literals;
+    auto str_cst_char = "abcdefghijklum012345667789abcdefghijklum012345667789sdfsabcdefghijklum012345667789";
+    auto src_str = "k3abcaadaefghijklum012345667789abcdefghijklum012345667789sdfsabcdefghijklum012345667789"sv;
+    auto findIndex    = src_str.find("def", 0);
+    std::cout << "findIndex: " << findIndex << std::endl;
+
+    short bin_value = 0b1101;
+    std::bitset<16> bit_bin_value(bin_value);
+    //std::cout << std::format("{:b}", bin_value);
+    std::cout << "bin_value: " << bin_value << std::endl;
+    std::cout << "bit_bin_value: " << bit_bin_value << std::endl;
+
+    auto    key_char = 'a';
+    int     key_char_count = 0;
+    __m128i count_ch       = _mm_set1_epi8(key_char);
+    std::cout << "src_str.size(): " << src_str.size() << std::endl;
+    std::cout << "src_str.max_size(): " << src_str.max_size() << std::endl;
+    auto count_src_strPtr = (__m128i*)(src_str.data());
+    for (auto i = 0; i < 1; ++i)
+    {
+        auto t   = _mm_loadu_si128(count_src_strPtr + i);
+        auto res = _mm_cmpeq_epi8(t, count_ch);
+        auto mask = _mm_movemask_epi8(res);
+        std::cout << "mask: " << std::format("{:b}", mask)<<std::endl;
+        key_char_count += __builtin_popcount(mask);
+        //key_char_count += popcount(mask);
+    }
+    std::cout << "key_char_count: " << key_char_count << std::endl;
+
+    std::cout << "\n... testBase3() end ..." << std::endl;
 }
 } // namespace sseavx::test

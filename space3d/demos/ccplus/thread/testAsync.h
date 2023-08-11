@@ -15,12 +15,6 @@ namespace asyncDemo
 {
 namespace atomic_wait
 {
-#include <atomic>
-#include <chrono>
-#include <future>
-#include <iostream>
-#include <thread>
-
 using namespace std::literals;
 
 int testMain()
