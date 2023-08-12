@@ -23,15 +23,33 @@ void useFixLengthArr(const T (&arr)[N])
 {
     std::cout << "useFixLengthArr N: " << N << std::endl;
 }
-int main()
+void testSharedPtr()
 {
+    /*
+    // error code:
+    voxengine::data::stream::BaseTypeArray<Float32> float32Array(6);
+    auto                                            fa_ptr_0 = float32Array.getSharedPtr();
+    */
+    using namespace std::literals;
+    std::shared_ptr<voxengine::data::stream::BaseTypeArray<Float32>> fa_ptr_0(new voxengine::data::stream::BaseTypeArray<Float32>(6));
+    std::shared_ptr<voxengine::data::stream::BaseTypeArray<Float32>> fa_ptr_1 = fa_ptr_0->getSharedPtr();
+    std::cout << "(fa_ptr_0.get() == fa_ptr_1.get()): " << (fa_ptr_0.get() == fa_ptr_1.get()) << std::endl;
+    std::cout << fa_ptr_0.use_count() << std::endl;
+    std::cout << fa_ptr_1.use_count() << std::endl;
+    std::cout << "\n-------------------------  ------------- testSharedPtr end -----------  ------------------------------\n";
+}
+int main()
+    {
     std::cout << "Hello VOX 3D Space!\n";
+
+    testSharedPtr();
+    return 1;
 
     std::cout << "\ntest common math:\n";
     baseMath::vec4<float> fv4A{0.0f};
     baseMath::mat2f       mat2fA{0.0f};
     baseMath::Box         boxA{0.0f};
-    baseMath::Sphere      sphA{baseMath::Float3(), 10.0f};
+    baseMath::Sphere      sphA{baseMath::Float3{}, 10.0f};
 
     std::cout << "\ntest engine base objects:\n";
 
@@ -43,6 +61,8 @@ int main()
     float32Array[2] = 0.5f;
     std::cout << "float32Array.getByteStride(): " << float32Array.getByteStride() << ", float32Array.getByteLength(): " << float32Array.getByteLength() << std::endl;
     std::cout << "float32Array[2]: " << float32Array[2] << std::endl;
+    auto fa_ptr_0 = float32Array.getSharedPtr();
+    //std::cout << "float32Array[2]: " << fa_ptr_0[2] << std::endl;
     // 
     //voxengine::data::stream::BaseTypeArray<UINT32*> stringArray(6);   // has some errors
     //voxengine::data::stream::BaseTypeArray<std::string> stringArray(6); // has some errors

@@ -2,6 +2,7 @@
 #include <algorithm>
 #include <string>
 #include <vector>
+#include <memory>
 #include <random>
 //#include <malloc.h>
 //#include <memory>
@@ -82,6 +83,169 @@ struct alignas(256) OverAligned256
 #endif
 namespace base::testMemory
 {
+
+template <class _Ty>
+class enable_shared_from_this_t
+{
+public:    
+    using _Esft_type = enable_shared_from_this_t;
+    std::shared_ptr<_Ty> shared_from_this()
+    {
+        std::cout << "enable_shared_from_this_t::shared_from_this()...\n";
+        auto ptr = _Wptr;
+        return std::shared_ptr<_Ty>(_Wptr);
+    }
+protected:
+    constexpr enable_shared_from_this_t() noexcept
+    {
+        std::cout << "enable_shared_from_this_t::constructor() A...\n";
+    }
+    ~enable_shared_from_this_t() = default;
+
+private:
+    template <class _Yty>
+    friend class std::shared_ptr;
+
+    mutable std::weak_ptr<_Ty> _Wptr;
+};
+
+namespace test_4
+{
+
+class NodeBase : public enable_shared_from_this_t<NodeBase>
+//class NodeBase : public std::enable_shared_from_this<NodeBase
+{
+public:
+    NodeBase()
+    {
+        std::cout << "NodeBase::constructor()...\n";
+    }
+    [[nodiscard]] std::shared_ptr<NodeBase>& getptr3()
+    {
+        auto sptr = std::shared_ptr<NodeBase>(this);
+        std::weak_ptr<NodeBase> pv;
+        pv = sptr;
+        
+        auto r = std::shared_ptr<NodeBase>(pv);
+        return r;
+    }
+    [[nodiscard]] std::shared_ptr<NodeBase> getptr2()
+    {
+        return std::shared_ptr<NodeBase>(this);
+    }
+    [[nodiscard]] std::shared_ptr<NodeBase> getptr()
+    {
+        return shared_from_this();
+    }
+    virtual ~NodeBase()
+    {
+        std::cout << "NodeBase::destructor()...\n";
+    }
+};
+
+class BigUnit
+{
+public:
+    using _Esft_type = BigUnit;
+    BigUnit()
+    {
+        std::cout << "BigUnit::constructor()...\n";
+    }
+    [[nodiscard]] std::shared_ptr<BigUnit> getSharedPtr()
+    {
+        return std::shared_ptr<BigUnit>(_Wptr);
+    }
+    [[nodiscard]] std::shared_ptr<const BigUnit> getSharedPtr() const
+    {
+        return std::shared_ptr<const BigUnit>(_Wptr);
+    }
+
+    virtual ~BigUnit()
+    {
+        std::cout << "BigUnit::destructor()...\n";
+    }
+
+private:
+    template <class _Yty>
+    friend class std::shared_ptr;
+
+    mutable std::weak_ptr<BigUnit> _Wptr;
+};
+void testMain()
+{
+    //std::shared_ptr<NodeBase> p0 = std::make_shared<NodeBase>();
+    //std::shared_ptr<NodeBase> q0 = p0->getptr();
+    //std::cout << "(p0 == q0): " << (p0.get() == q0.get()) << std::endl;
+    //std::cout << p0.use_count() << std::endl;
+    //std::cout << q0.use_count() << std::endl;
+    /*
+    // error code:
+    NodeBase node{};
+    auto     ptr = node.getptr();
+    */
+    /*
+    // error code:
+    std::shared_ptr<NodeBase> p(new NodeBase());
+    std::shared_ptr<NodeBase> q = p->getptr2();
+
+    std::cout << p.use_count() << std::endl;
+    std::cout << q.use_count() << std::endl;
+    */
+    {
+        // correct code:
+        std::shared_ptr<NodeBase> p0(new NodeBase());
+        std::shared_ptr<NodeBase> q0 = p0->getptr();
+        std::cout << "(p0 == q0): " << (p0.get() == q0.get()) << std::endl;
+        std::cout << p0.use_count() << std::endl;
+        std::cout << q0.use_count() << std::endl;
+    }
+    std::cout << "---------- -------A A------- ------------" << std::endl;
+    {
+        //std::weak_ptr<NodeBase>   gw;
+        //std::shared_ptr<NodeBase> p(new NodeBase());
+        //std::shared_ptr<NodeBase> q = p->getptr3();
+        //std::shared_ptr<NodeBase> q = std::make_shared<NodeBase>(std::move(*p));
+        //gw                          = p;
+
+        std::shared_ptr<NodeBase> p = std::make_shared<NodeBase>();
+        std::weak_ptr<NodeBase>   gw;
+        gw                             = p;
+        std::shared_ptr<NodeBase> q    = std::shared_ptr<NodeBase>(gw);
+        auto                      pg_0 = p.get();
+        auto                      pg_1 = q.get();
+        std::cout << "(pg_0 == pg_1): " << (pg_0 == pg_1) << std::endl;
+        std::cout << p.use_count() << std::endl;
+        std::cout << q.use_count() << std::endl;
+    }
+    //std::cout << "---------- -------B B------- ------------" << std::endl;
+    //{
+    //    // error
+    //    //std::weak_ptr<NodeBase>   gw;
+    //    //std::shared_ptr<NodeBase> p(new NodeBase());
+    //    //std::shared_ptr<NodeBase> q = p->getptr3();
+    //    //std::shared_ptr<NodeBase> q = std::make_shared<NodeBase>(std::move(*p));
+    //    //gw                          = p;
+
+    //    std::shared_ptr<NodeBase> p = std::make_shared<NodeBase>();
+    //    std::weak_ptr<NodeBase>   gw;
+    //    gw = p;
+    //    std::shared_ptr<NodeBase> q    = p->getptr3();
+    //    auto                      pg_0 = p.get();
+    //    auto                      pg_1 = q.get();
+    //    std::cout << "(pg_0 == pg_1): " << (pg_0 == pg_1) << std::endl;
+    //    std::cout << p.use_count() << std::endl;
+    //    std::cout << q.use_count() << std::endl;
+    //}
+    std::cout << "---------- -------C C------- ------------" << std::endl;
+    {
+        std::shared_ptr<BigUnit> p = std::make_shared<BigUnit>();
+        std::shared_ptr<BigUnit> q = p->getSharedPtr();
+        std::cout << "(p == q): " << (p.get() == q.get()) << std::endl;
+        std::cout << p.use_count() << std::endl;
+        std::cout << q.use_count() << std::endl;
+    }
+}
+}
 namespace test_3
 {
 class GoodUnit
@@ -99,7 +263,7 @@ public:
 class Good : public std::enable_shared_from_this<Good>
 {
 public:
-    std::shared_ptr<Good> getptr()
+    [[nodiscard]] std::shared_ptr<Good> getptr()
     {
         return shared_from_this();
     }
@@ -284,7 +448,8 @@ int testMain()
     std::cout << "base::testMemory::testMain() begin.\n";
     //test_1::testMain();
     //test_2::testMain();
-    test_3::testMain();
+    //test_3::testMain();
+    test_4::testMain();
     std::cout << "base::testMemory::testMain() end.\n";
     return EXIT_SUCCESS;
 }

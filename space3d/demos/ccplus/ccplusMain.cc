@@ -184,6 +184,8 @@ int baseMain()
 
 int main()
 {
+    base::testMemory::testMain();
+    return EXIT_SUCCESS;
     parallel::futuresort::testMain();
     return EXIT_SUCCESS;
     base::demoForward::testMain();
@@ -195,8 +197,6 @@ int main()
     thread::syncConcurrent::testMain();
     return EXIT_SUCCESS;
     base::demoClass::testMain();
-    return EXIT_SUCCESS;
-    base::testMemory::testMain();
     return EXIT_SUCCESS;
     base::testString::testMain();
     return EXIT_SUCCESS;

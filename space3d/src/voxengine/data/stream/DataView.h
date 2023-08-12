@@ -8,6 +8,7 @@ namespace data
 {
 namespace stream
 {
+//class DataView : public std::enable_shared_from_this<DataView>
 class DataView
 {
 public:
@@ -23,6 +24,10 @@ public:
     Int32 getByteOffset();
 
     std::shared_ptr<ArrayBuffer> getBuffer();
+    //std::shared_ptr<DataView>    getSharedPtr()
+    //{
+    //    return shared_from_this();
+    //}
 
 protected:
     virtual void buildData() = 0;
