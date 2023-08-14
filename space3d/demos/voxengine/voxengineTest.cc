@@ -25,17 +25,23 @@ void useFixLengthArr(const T (&arr)[N])
 }
 void testSharedPtr()
 {
-    /*
-    // error code:
-    voxengine::data::stream::BaseTypeArray<Float32> float32Array(6);
-    auto                                            fa_ptr_0 = float32Array.getSharedPtr();
-    */
-    using namespace std::literals;
-    std::shared_ptr<voxengine::data::stream::BaseTypeArray<Float32>> fa_ptr_0(new voxengine::data::stream::BaseTypeArray<Float32>(6));
-    std::shared_ptr<voxengine::data::stream::BaseTypeArray<Float32>> fa_ptr_1 = fa_ptr_0->getSharedPtr();
-    std::cout << "(fa_ptr_0.get() == fa_ptr_1.get()): " << (fa_ptr_0.get() == fa_ptr_1.get()) << std::endl;
-    std::cout << fa_ptr_0.use_count() << std::endl;
-    std::cout << fa_ptr_1.use_count() << std::endl;
+    //{
+    //    using namespace std::literals;
+    //    std::shared_ptr<voxengine::data::stream::BaseTypeArray<Float32>> fa_ptr_0(new voxengine::data::stream::BaseTypeArray<Float32>(6));
+    //    std::shared_ptr<voxengine::data::stream::BaseTypeArray<Float32>> fa_ptr_1 = fa_ptr_0->getSharedPtr();
+    //    std::cout << "(fa_ptr_0.get() == fa_ptr_1.get()): " << (fa_ptr_0.get() == fa_ptr_1.get()) << std::endl;
+    //    std::cout << fa_ptr_0.use_count() << std::endl;
+    //    std::cout << fa_ptr_1.use_count() << std::endl;
+    //}
+    std::cout << "\n-------------------------  ------------- ------- 01 ------ -----------  ------------------------------\n";
+    {
+        using namespace std::literals;
+        voxengine::data::stream::BaseTypeArray<Float32>                  fa_0(6);
+        std::shared_ptr<voxengine::data::stream::BaseTypeArray<Float32>> fa_ptr_1 = fa_0.getSharedPtr();
+        //std::cout << "(fa_ptr_0.get() == fa_ptr_1.get()): " << (fa_ptr_0.get() == fa_ptr_1.get()) << std::endl;
+        //std::cout << fa_ptr_0.use_count() << std::endl;
+        //std::cout << fa_ptr_1.use_count() << std::endl;
+    }
     std::cout << "\n-------------------------  ------------- testSharedPtr end -----------  ------------------------------\n";
 }
 int main()
@@ -61,8 +67,12 @@ int main()
     float32Array[2] = 0.5f;
     std::cout << "float32Array.getByteStride(): " << float32Array.getByteStride() << ", float32Array.getByteLength(): " << float32Array.getByteLength() << std::endl;
     std::cout << "float32Array[2]: " << float32Array[2] << std::endl;
+    // 不可以这么写(float32Array是普通对象), float32Array必须是shared_ptr指针对象,下面这句代码获得的shared_prt指针才有意义
     auto fa_ptr_0 = float32Array.getSharedPtr();
-    //std::cout << "float32Array[2]: " << fa_ptr_0[2] << std::endl;
+    if (fa_ptr_0)
+    {
+        std::cout << "XXXTTTT float32Array[2]: " << (*fa_ptr_0)[2] << std::endl;
+    }
     // 
     //voxengine::data::stream::BaseTypeArray<UINT32*> stringArray(6);   // has some errors
     //voxengine::data::stream::BaseTypeArray<std::string> stringArray(6); // has some errors

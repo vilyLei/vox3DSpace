@@ -39,7 +39,7 @@ Int8* DataView::getBytes()
 }
 std::shared_ptr<ArrayBuffer> DataView::getBuffer()
 {
-    return m_arrBuf;
+    return m_arrBuf->shared_from_this();
 }
 
 void DataView::buildBytesData(Int32 step)

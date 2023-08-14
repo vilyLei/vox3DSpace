@@ -1,4 +1,5 @@
 #include <iostream>
+#include <cstdlib>
 #include <filesystem>
 #include <algorithm>
 #include <thread>
@@ -12,6 +13,8 @@
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb/include/stb_image.h"
+#define STB_IMAGE_WRITE_IMPLEMENTATION
+#include <stb/include/stb_image_write.h>
 //
 #include "shader.h"
 
@@ -50,7 +53,15 @@ struct TexData
     int            height;
     int            nrChannels;
     bool           rgbaEnabled;
+    GLuint         texture;
     unsigned char* data;
+    void           destroy()
+    {
+        if (data)
+        {
+            stbi_image_free(data);
+        }
+    }
 };
 std::atomic<bool> asyncLoadFlag(false);
 
@@ -60,34 +71,6 @@ void              asyncLoadRes()
     {
         std::this_thread::sleep_for(std::chrono::milliseconds(200));
     }
-    asyncLoadFlag.store(true, std::memory_order_release);
-}
-void asyncLoadTexRes(TexData& texData)
-{
-    //for (auto i = 0; i < 1; ++i)
-    //{
-    //    std::this_thread::sleep_for(std::chrono::milliseconds(200));
-    //}
-
-    auto start_time = std::chrono::high_resolution_clock::now();
-
-    auto texPath = std::filesystem::path(CMAKE_CURRENT_SOURCE_DIR) / "assets/textures/letterA.png";
-    auto imgUrl  = texPath.string();
-    auto tempStr = toLowerCase(imgUrl);
-    auto rgbaFlag = false;
-    if (tempStr.find(".png") != std::string::npos)
-    {
-        rgbaFlag = true;
-    }
-    texData.rgbaEnabled = rgbaFlag;
-    auto resData             = stbi_load(imgUrl.c_str(), &texData.width, &texData.height, &texData.nrChannels, rgbaFlag ? STBI_rgb_alpha : STBI_rgb);
-    texData.data        = resData;
-    auto current_time   = std::chrono::high_resolution_clock::now();
-    auto elapsedTime    = current_time - start_time;
-
-    std::cout << "asyncLoadTexRes() loss time: " << std::chrono::duration_cast<std::chrono::microseconds>(elapsedTime).count() << "us\n";
-
-    std::cout << "asyncLoadTexRes(), resData != nullptr: " << (resData != nullptr) << std::endl;
     asyncLoadFlag.store(true, std::memory_order_release);
 }
 
@@ -108,13 +91,14 @@ GLuint buildTextures(int width = 128, int height = 128, int nrChannels = 3, unsi
         {
             rgbaEnabled = true;
         }
-        data = stbi_load(imgUrl.c_str(), &width, &height, &nrChannels, rgbaEnabled ? STBI_rgb_alpha : STBI_rgb);
+        //data = stbi_load(imgUrl.c_str(), &width, &height, &nrChannels, rgbaEnabled ? STBI_rgb_alpha : STBI_rgb);
     }
-    else {
+    else
+    {
         std::cout << "buildTextures(),build texture with erxernal binary data." << std::endl;
     }
 
-    GLuint         texture = GL_ZERO;
+    GLuint texture = GL_ZERO;
     if (data != nullptr)
     {
         std::boolalpha(std::cout);
@@ -151,8 +135,54 @@ GLuint buildTextures(int width = 128, int height = 128, int nrChannels = 3, unsi
     {
         std::cout << "Failed to load a texture." << std::endl;
     }
-    stbi_image_free(data);
+    //stbi_image_free(data);
     return texture;
+}
+void asyncLoadTexRes(TexData& texData)
+{
+    //for (auto i = 0; i < 1; ++i)
+    //{
+    //    std::this_thread::sleep_for(std::chrono::milliseconds(200));
+    //}
+
+    auto start_time = std::chrono::high_resolution_clock::now();
+
+    auto texPath = std::filesystem::path(CMAKE_CURRENT_SOURCE_DIR) / "assets/textures/letterA.png";
+    auto imgUrl  = texPath.string();
+    auto tempStr = toLowerCase(imgUrl);
+    auto rgbaFlag = false;
+    if (tempStr.find(".png") != std::string::npos)
+    {
+        rgbaFlag = true;
+    }
+    texData.rgbaEnabled = rgbaFlag;
+    auto resData             = stbi_load(imgUrl.c_str(), &texData.width, &texData.height, &texData.nrChannels, rgbaFlag ? STBI_rgb_alpha : STBI_rgb);
+    texData.data        = resData;
+    auto current_time   = std::chrono::high_resolution_clock::now();
+    auto elapsedTime    = current_time - start_time;
+
+    std::cout << "asyncLoadTexRes() loss time: " << std::chrono::duration_cast<std::chrono::microseconds>(elapsedTime).count() << "us\n";
+
+    std::cout << "asyncLoadTexRes(), resData != nullptr: " << (resData != nullptr) << std::endl;
+
+    //texData.texture = buildTextures(texData.width, texData.height, texData.nrChannels, texData.data, texData.rgbaEnabled);
+    //std::cout << "asyncLoadTexRes(), texture: " << texData.texture << std::endl;
+
+    asyncLoadFlag.store(true, std::memory_order_release);
+}
+void saveRenderingImage(int width, int height)
+{
+
+    void* buffer = std::calloc(4, width * height);
+    glReadPixels(0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
+
+    // Write image Y-flipped because OpenGL
+    stbi_write_png("image.png",
+                   width, height, 4,
+                   ((char*)buffer) + (width * 4 * (height - 1)),
+                   -width * 4);
+
+    free(buffer);
 }
 int main()
 {
@@ -165,8 +195,15 @@ int main()
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
 
+    auto offscreenRendering = false;
+    if (offscreenRendering)
+    {
+        glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
+    }
+    int winWidth = 900;
+    int winHeight = 650;
     // Create a GLFWwindow object that we can use for GLFW's functions
-    GLFWwindow* window = glfwCreateWindow(900, 650, "textures", nullptr, nullptr);
+    GLFWwindow* window = glfwCreateWindow(winWidth, winHeight, "textures", nullptr, nullptr);
     if (window == nullptr)
     {
         std::cout << "Failed to create GLFW window" << std::endl;
@@ -201,7 +238,7 @@ int main()
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     // Define the viewport dimensions
-    //glViewport(0, 0, 900, 650);
+    //glViewport(0, 0, winWidth, winHeight);
 
     // Clear the colorbuffer
     glClearColor(0.0f, 0.0f, 0.4f, 1.0f);
@@ -213,7 +250,6 @@ int main()
     auto   path_vertString = path_vert.string();
     auto   path_frag       = std::filesystem::path(CMAKE_CURRENT_SOURCE_DIR) / "testCases/openglDemos/textures/shader.frag";
     auto   path_fragString = path_frag.string();
-    GLuint programID       = LoadShaders(path_vertString, path_fragString);
 
 
     float vertices[] = {
@@ -251,12 +287,15 @@ int main()
     glEnableVertexAttribArray(2);
 
     TexData        texData{};
+    texData.texture = GL_ZERO;
 
     auto resFlag = false;
     //std::thread resLoadingThr(asyncLoadRes);
     // asyncLoadTexRes(int* width, int* height, int* nrChannels, unsigned char* resData, bool* rgbaEnabled)
     std::thread resLoadingThr(asyncLoadTexRes, std::ref(texData));
     resLoadingThr.detach();
+        
+    GLuint programID = LoadShaders(path_vertString, path_fragString);
 
     //auto texture = buildTextures();
     GLuint texture = GL_ZERO;
@@ -272,7 +311,10 @@ int main()
                 std::cout << "waiting res loaded ...\n";
                 std::cout << "loaded tex, width: " << texData.width << ", height: " << texData.height << ", rgbaEnabled: " << texData.rgbaEnabled
                           << "\n";
+                std::cout << "\t\ttexData.texture: " << texData.texture << "\n";
+                texture = texData.texture;
                 texture = buildTextures(texData.width, texData.height, texData.nrChannels, texData.data, texData.rgbaEnabled);
+                texData.destroy();
             }
             else
             {
@@ -290,6 +332,13 @@ int main()
 
             glBindVertexArray(VAO);
             glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
+            if (offscreenRendering)
+            {
+                saveRenderingImage(winWidth, winHeight);
+                glFinish();
+                break;
+            }
         }
 
         // Swap the screen buffers
@@ -306,6 +355,7 @@ int main()
     // Terminate GLFW, clearing any resources allocated by GLFW.
     glfwTerminate();
 
+    std::cout << "rendering proc end." << std::endl;
     //system("PAUSE");
     return EXIT_SUCCESS;
 }

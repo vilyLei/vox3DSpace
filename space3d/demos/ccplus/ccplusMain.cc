@@ -184,6 +184,8 @@ int baseMain()
 
 int main()
 {
+    if (const char* env_p = std::getenv("PATH"))
+        std::cout << "System PATH is: " << env_p << "\n\n";
     base::testMemory::testMain();
     return EXIT_SUCCESS;
     parallel::futuresort::testMain();

@@ -6,7 +6,7 @@ namespace data
 {
 namespace stream
 {
-class ArrayBuffer
+class ArrayBuffer : public std::enable_shared_from_this<ArrayBuffer>
 {
 public:
     ArrayBuffer(Int32 byteLength);

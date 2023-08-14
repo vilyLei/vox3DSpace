@@ -8,7 +8,7 @@ macro(build_executable_oglDemos)
   set(test_oglDemos_folder_name "OpenglDemos")
   set(oglDemo_dir "${vox3dspace_root}/testCases/openglDemos/")
 
-  function(vox3dspace_add_oglDemo_executableByName DEMO_NAME DEMO_SOURCES)
+  function(vox3dspace_add_oglDemo_executableByName DEMO_NAME DEMO_SOURCES DEMO_EXEC_SYS DEMO_LINK_FLAGS)
 
     # message(STATUS ">>> >>> DEMO_NAME: ${DEMO_NAME}")
     # message(STATUS ">>> >>> DEMO_SOURCES: ${DEMO_SOURCES}")
@@ -17,12 +17,14 @@ macro(build_executable_oglDemos)
     vox3dspace_add_executable(NAME
       ${DEMO_NAME}
       SOURCES
-      "${demoDir}/shader.cc"
-      "${demoDir}/shader.h"
-      "${demoDir}/${DEMO_NAME}.cc"
       ${DEMO_SOURCES}
+      "${demoDir}/${DEMO_NAME}.cc"
       FOLDER
       ${test_oglDemos_folder_name}
+      EXEC_SYS
+      "${DEMO_EXEC_SYS}"
+      LINK_FLAGS
+      "${DEMO_LINK_FLAGS}"
       DEFINES
       ${vox3dspace_defines}
       RPOJECT_FLAGS
@@ -40,9 +42,18 @@ macro(build_executable_oglDemos)
 
   set(src_demoName "textures")
   set(src_demoDir "${oglDemo_dir}/${src_demoName}/")
-  list(APPEND oglsrc_demo_sources
-      ""
+  set(oglsrc_demo_sources
+      "${src_demoDir}/shader.cc"
+      "${src_demoDir}/shader.h"
       )
-  vox3dspace_add_oglDemo_executableByName(${src_demoName} "${oglsrc_demo_sources}")
+  vox3dspace_add_oglDemo_executableByName(${src_demoName} "${oglsrc_demo_sources}" "" "")
+
+  set(src_demoName "wglapp")
+  set(src_demoDir "${oglDemo_dir}/${src_demoName}/")
+  set(oglsrc_demo_sources
+      "${src_demoDir}/sample/baseWglCtx.h"
+      "${src_demoDir}/sample/baseWglCtx02.h"
+      )
+  vox3dspace_add_oglDemo_executableByName(${src_demoName} "${oglsrc_demo_sources}" "WIN32" "-mwindows")
   # vox3dspace_add_oglDemo_executableByName("textures" "")
 endmacro()

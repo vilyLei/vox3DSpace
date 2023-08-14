@@ -34,7 +34,11 @@ namespace voxengine
                 }
                 [[nodiscard]] std::shared_ptr<BaseTypeArray> getSharedPtr()
                 {
-                    return std::shared_ptr<BaseTypeArray>(_Wptr);
+                    if (_Wptr.use_count() != 0)
+                    {
+                        return std::shared_ptr<BaseTypeArray>(_Wptr);
+                    }
+                    return nullptr;
                 }
 
 			protected:

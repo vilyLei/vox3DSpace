@@ -8,7 +8,6 @@ namespace data
 {
 namespace stream
 {
-//class DataView : public std::enable_shared_from_this<DataView>
 class DataView
 {
 public:

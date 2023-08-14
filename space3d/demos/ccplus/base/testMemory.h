@@ -4,9 +4,9 @@
 #include <vector>
 #include <memory>
 #include <random>
-//#include <malloc.h>
 //#include <memory>
 #include <new>
+#include <version>
 
 //#define NEW_POS_OK
 
@@ -19,7 +19,7 @@ void* operator new(std::size_t size)
     return ptr ? ptr : throw std::bad_alloc{};
 }
 
-#    if __cpp_aligned_new
+#if __cpp_aligned_new
 void operator delete(void* ptr, std::size_t size)
 {
     std::cout << "unaligned sized delete(" << ptr << ", " << size << ")\n";
@@ -83,7 +83,98 @@ struct alignas(256) OverAligned256
 #endif
 namespace base::testMemory
 {
+ namespace test_5
+ {
+//#if __cplusplus >= 202002L
+#if _HAS_CXX20
+ struct Tracer3
+ {
+     int value;
+     ~Tracer3() { std::cout << value << " destructed\n"; }
+ };
 
+ void main03()
+ {
+     alignas(Tracer3) unsigned char buffer[sizeof(Tracer3) * 8];
+
+     for (int i = 0; i < 8; ++i)
+         new (buffer + sizeof(Tracer3) * i) Tracer3{i}; //manually construct objects
+
+     auto ptr = std::launder(reinterpret_cast<Tracer3*>(buffer));
+
+     std::ranges::destroy_n(ptr, 8);
+ }
+#else
+ void main03()
+ {
+ }
+#endif
+ struct Tracer
+ {
+     int value;
+     ~Tracer() { std::cout << value << " destructed\n"; }
+ };
+
+ void main02()
+ {
+     alignas(Tracer) unsigned char buffer[sizeof(Tracer) * 8];
+
+     for (int i = 0; i < 8; ++i)
+         new (buffer + sizeof(Tracer) * i) Tracer{i}; //manually construct objects
+
+     auto ptr = std::launder(reinterpret_cast<Tracer*>(buffer));
+
+     std::destroy_n(ptr, 8);
+ }
+ struct S
+ {
+     int    x;
+     float  y;
+     double z;
+
+     S(int x, float y, double z) :
+         x{x}, y{y}, z{z} { std::cout << "S::S();\n"; }
+
+     ~S() { std::cout << "S::~S();\n"; }
+
+     void print() const
+     {
+         std::cout << "S { x=" << x << "; y=" << y << "; z=" << z << "; };\n";
+     }
+ };
+
+ void main01()
+ {
+     alignas(S) unsigned char storage[sizeof(S)];
+
+     S* ptr = std::construct_at(reinterpret_cast<S*>(storage), 42, 2.71828f, 3.1415);
+     ptr->print();
+
+     std::destroy_at(ptr);
+ }
+ void testMain()
+ {
+     main01();
+     main02();
+     main03();
+     constexpr std::size_t size = 4;
+     if (auto ptr = reinterpret_cast<std::string*>(std::malloc(size * sizeof(std::string))))
+     {
+         try
+         {
+             for (std::size_t i = 0; i < size; ++i)
+                 std::construct_at(ptr + i, 5, 'a' + i);
+             for (std::size_t i = 0; i < size; ++i)
+                 std::cout << "ptr[" << i << "] == " << ptr[i] << '\n';
+             std::destroy_n(ptr, size);
+         }
+         catch (...)
+         {}
+         std::free(ptr);
+     }
+ }
+ }
+using namespace std::literals;
 template <class _Ty>
 class enable_shared_from_this_t
 {
@@ -113,7 +204,6 @@ namespace test_4
 {
 
 class NodeBase : public enable_shared_from_this_t<NodeBase>
-//class NodeBase : public std::enable_shared_from_this<NodeBase
 {
 public:
     NodeBase()
@@ -140,6 +230,21 @@ public:
     virtual ~NodeBase()
     {
         std::cout << "NodeBase::destructor()...\n";
+    }
+};
+
+template<typename T>
+class BigUnitFT : public std::enable_shared_from_this<BigUnitFT<T>>
+{
+public:
+    T value;
+    BigUnitFT()
+    {
+        std::cout << "BigUnitFT::constructor()...\n";
+    }
+    virtual ~BigUnitFT()
+    {
+        std::cout << "BigUnitFT::destructor()...\n";
     }
 };
 
@@ -171,6 +276,67 @@ private:
 
     mutable std::weak_ptr<BigUnit> _Wptr;
 };
+
+class Foot : public std::enable_shared_from_this<Foot>
+{
+public:
+    std::string name;
+    int         total;
+    Foot() :
+        name("foot"s), total(2)
+    {
+        std::cout << "Foot::constructor()...\n";
+    }
+    virtual ~Foot()
+    {
+        std::cout << "Foot::destructor()...\n";
+    }
+    virtual void run() = 0;
+    std::string getTotal()
+    {
+        return name;
+    }
+};
+template<typename T>
+class AnimalFoot : public Foot
+{
+public:
+    T power;
+    AnimalFoot()
+    {
+        std::cout << "AnimalFoot::constructor()...\n";
+    }
+    virtual ~AnimalFoot()
+    {
+        std::cout << "AnimalFoot::destructor()...\n";
+    }
+    void run()
+    {
+        std::cout << "AnimalFoot::run()...\n";
+    }
+};
+
+class UnitClass
+{
+public:
+    std::string name;
+    int uid;
+    UnitClass() = default;
+    //UnitClass() :
+    //    name("aa"), uid(0)
+    //{
+    //    std::cout << "UnitClass::constructor() A...\n";
+    //}
+    UnitClass(std::string name, int uid):
+        name(name), uid(uid)
+    {
+        std::cout << "UnitClass::constructor() B...\n";
+    }
+    virtual ~UnitClass()
+    {
+        std::cout << "UnitClass::destructor()...\n";
+    }
+};
 void testMain()
 {
     //std::shared_ptr<NodeBase> p0 = std::make_shared<NodeBase>();
@@ -187,10 +353,64 @@ void testMain()
     // error code:
     std::shared_ptr<NodeBase> p(new NodeBase());
     std::shared_ptr<NodeBase> q = p->getptr2();
-
     std::cout << p.use_count() << std::endl;
     std::cout << q.use_count() << std::endl;
     */
+    /*
+    std::cout << " -------------- <<< A 1 ---------------" << std::endl;
+    {
+        //UnitClass uc0{};
+        //std::cout << "sizeof(uc0): " << sizeof(uc0) << std::endl;
+        std::vector<UnitClass> uv_vs;
+        //std::cout << "sizeof(uv_vs): " << sizeof(uv_vs) << std::endl;
+        uv_vs.push_back(UnitClass{});
+        //uv_vs.push_back("aa", 0);
+    }
+    std::cout << " -------------- >>> B 1 ---------------" << std::endl;
+
+    std::cout << " -------------- <<< A 2 ---------------" << std::endl;
+    {
+        //UnitClass uc0{};
+        //std::cout << "sizeof(uc0): " << sizeof(uc0) << std::endl;
+        std::vector<UnitClass> uv_vs;
+        //std::cout << "sizeof(uv_vs): " << sizeof(uv_vs) << std::endl;
+        uv_vs.emplace_back("aa", 0);
+    }
+    std::cout << " -------------- >>> B 2 ---------------" << std::endl;
+    return;
+    //*/
+    //{
+    //    AnimalFoot<double> p0;
+    //    // error
+    //    //std::shared_ptr<AnimalFoot<double>> sp0 = std::shared_ptr<AnimalFoot<double>>(&p0);
+    //    std::weak_ptr<AnimalFoot<double>> wp0 = std::shared_ptr<AnimalFoot<double>>(&p0);
+    //    //wp0 = std::shared_ptr<AnimalFoot<double>>(&p0);
+
+    //    // error
+    //    //auto                                q0 = p0.shared_from_this();
+    //    //q0->run();
+    //    //std::cout << "(p0 == q0): " << (p0.get() == q0.get()) << std::endl;
+    //    //std::cout << p0.use_count() << std::endl;
+    //    //std::cout << q0.use_count() << std::endl;
+    //}
+    //return;
+    {
+        std::shared_ptr<AnimalFoot<double>> p0(new AnimalFoot<double>());
+        auto                                q0 = p0->shared_from_this();
+        q0->run();
+        std::cout << "(p0 == q0): " << (p0.get() == q0.get()) << std::endl;
+        std::cout << p0.use_count() << std::endl;
+        std::cout << q0.use_count() << std::endl;
+    }
+    return;
+    {
+        std::shared_ptr<BigUnitFT<double>> p0(new BigUnitFT<double>());
+        std::shared_ptr<BigUnitFT<double>> q0 = p0->shared_from_this();
+        std::cout << "(p0 == q0): " << (p0.get() == q0.get()) << std::endl;
+        std::cout << p0.use_count() << std::endl;
+        std::cout << q0.use_count() << std::endl;
+    }
+    //return;
     {
         // correct code:
         std::shared_ptr<NodeBase> p0(new NodeBase());
@@ -450,6 +670,7 @@ int testMain()
     //test_2::testMain();
     //test_3::testMain();
     test_4::testMain();
+    test_5::testMain();
     std::cout << "base::testMemory::testMain() end.\n";
     return EXIT_SUCCESS;
 }
