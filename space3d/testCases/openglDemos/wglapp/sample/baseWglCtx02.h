@@ -8,8 +8,39 @@ namespace sample::baseWglCtx02
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 HWND             renderingHWnd;
+typedef void (*GLFWproc)(void);
+typedef PROC(WINAPI* PFN_wglGetProcAddress)(LPCSTR);
+
+typedef const char*(WINAPI* PFNWGLGETEXTENSIONSSTRINGARBPROC)(HDC);
+typedef BOOL(WINAPI* PFNWGLSWAPINTERVALEXTPROC)(int);
+
+void* platformLoadModule(const char* path)
+{
+    return LoadLibraryA(path);
+}
+PFN_wglGetProcAddress wglGetProcAddress = 0;
+PFNWGLSWAPINTERVALEXTPROC SwapIntervalEXT = 0;
+
+GLFWproc platformGetModuleSymbol(void* module, const char* name)
+{
+    return (GLFWproc)GetProcAddress((HMODULE)module, name);
+}
 int              WinMain(__in HINSTANCE hInstance, __in_opt HINSTANCE hPrevInstance, __in_opt LPSTR lpCmdLine, __in int nShowCmd)
 {
+    HINSTANCE instance;
+    instance = (HINSTANCE)platformLoadModule("opengl32.dll");
+    if (!instance)
+    {
+        assert(false, "platformLoadModule() error !!!");
+    }
+    wglGetProcAddress = (PFN_wglGetProcAddress)
+        platformGetModuleSymbol(instance, "wglGetProcAddress");
+
+    if (!wglGetProcAddress)
+    {
+        assert(false, "platformGetModuleSymbol() error !!!");
+    }
+
     std::string winClassName      = "oglversionchecksample";
     MSG      msg     = {0};
     WNDCLASS wc      = {0};
@@ -23,6 +54,8 @@ int              WinMain(__in HINSTANCE hInstance, __in_opt HINSTANCE hPrevInsta
 
     std::wstring winClassWName(winClassName.begin(), winClassName.end());
     renderingHWnd = CreateWindowW(winClassWName.c_str(), L"openglversioncheck", WS_OVERLAPPEDWINDOW | WS_VISIBLE, 0, 0, 640, 480, 0, 0, hInstance, 0);
+
+
 
     while (GetMessage(&msg, NULL, 0, 0) > 0)
         DispatchMessage(&msg);
@@ -74,9 +107,17 @@ void createWglCtx(HWND hWnd)
         wglDeleteContext(rc);
     }
 
-    //glClearColor(0.5f, 0.0f, 0.5f, 1.0f);
-    //glFinish();
-    //SwapBuffers(dc);
+    SwapIntervalEXT = (PFNWGLSWAPINTERVALEXTPROC)
+        wglGetProcAddress("wglSwapIntervalEXT");
+    if (!SwapIntervalEXT)
+    {
+        assert(false, "wglGetProcAddress('wglSwapIntervalEXT') error !!!");
+    }
+
+    SwapIntervalEXT(1);
+    glClearColor(0.5f, 0.0f, 0.5f, 1.0f);
+    glFinish();
+    SwapBuffers(dc);
     MessageBoxA(0, (char*)glGetString(GL_VERSION), "baseWglCtx02", 0);
     //wglGetCurrentDC
     //wglMakeCurrent(dc, NULL); Unnecessary; wglDeleteContext will make the context not current
