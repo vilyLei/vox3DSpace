@@ -1,6 +1,7 @@
 #include <iostream>
 #include <algorithm>
 #include <variant>
+#include <filesystem>
 
 #include "thread/testAtomic.h"
 #include "thread/testMutex.h"
@@ -184,8 +185,17 @@ int baseMain()
 
 int main()
 {
+    base::testString::testMain();
+    return EXIT_SUCCESS;
+    /*
+    auto path = std::filesystem::path("./");
+    path      = std::filesystem::current_path();
+    std::cout << "current_path: \n" << path << "\n\n";
+
     if (const char* env_p = std::getenv("PATH"))
         std::cout << "System PATH is: " << env_p << "\n\n";
+    //*/
+
     base::testMemory::testMain();
     return EXIT_SUCCESS;
     parallel::futuresort::testMain();
@@ -199,8 +209,6 @@ int main()
     thread::syncConcurrent::testMain();
     return EXIT_SUCCESS;
     base::demoClass::testMain();
-    return EXIT_SUCCESS;
-    base::testString::testMain();
     return EXIT_SUCCESS;
 
     //baseMain();

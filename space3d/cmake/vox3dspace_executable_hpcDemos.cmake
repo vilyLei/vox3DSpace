@@ -40,5 +40,19 @@ macro(build_executable_hpcDemos)
       "${src_demoDir}/sseavxFileReader.h"
     )
   vox3dspace_add_hpcDemo_executableByName(${src_demoName} "${hpsrc_demo_sources}")
+
+
+  set(src_demoName "gpucpuparallel")
+  set(src_demoDir "${hpcDemo_dir}/${src_demoName}/")
+  list(APPEND hpsrc_demo_sources
+      ""
+    )
+  vox3dspace_add_hpcDemo_executableByName(${src_demoName} "${hpsrc_demo_sources}")
+
+
+  set(src_demoName "calcpowernet")
+  set(src_demoDir "${hpcDemo_dir}/${src_demoName}/")
+  list(APPEND hpsrc_demo_sources "")
+  vox3dspace_add_hpcDemo_executableByName(${src_demoName} "${hpsrc_demo_sources}")
   
 endmacro()

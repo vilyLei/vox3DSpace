@@ -1,18 +1,241 @@
 #include <iostream>
 #include <algorithm>
 #include <string>
+#include <string_view>
 #include <vector>
 #include <random>
+#include <regex>
+//#include <cctype>
+//#include <locale>
 namespace base
 {
 namespace testString
 {
-namespace test_1
+namespace teststr_2
+{
+namespace str_utils
+{
+// trim from start (in place)
+static inline void ltrim(std::string& s)
+{
+    s.erase(s.begin(), std::find_if(s.begin(), s.end(), [](unsigned char ch) {
+                return !std::isspace(ch);
+            }));
+}
+
+// trim from end (in place)
+static inline void rtrim(std::string& s)
+{
+    s.erase(std::find_if(s.rbegin(), s.rend(), [](unsigned char ch) {
+                return !std::isspace(ch);
+            }).base(),
+            s.end());
+}
+
+// trim from both ends (in place)
+static inline void trim(std::string& s)
+{
+    rtrim(s);
+    ltrim(s);
+}
+
+// trim from start (copying)
+static inline std::string ltrim_copy(std::string s)
+{
+    ltrim(s);
+    return s;
+}
+
+// trim from end (copying)
+static inline std::string rtrim_copy(std::string s)
+{
+    rtrim(s);
+    return s;
+}
+
+// trim from both ends (copying)
+static inline std::string trim_copy(std::string s)
+{
+    trim(s);
+    return s;
+}
+std::vector<std::string> split(const std::string& str, const std::string& delims = " ")
+{
+    std::vector<std::string> output;
+    auto                     first = std::cbegin(str);
+
+    while (first != std::cend(str))
+    {
+        const auto second = std::find_first_of(first, std::cend(str),
+                                               std::cbegin(delims), std::cend(delims));
+
+        if (first != second)
+            output.emplace_back(first, second);
+
+        if (second == std::cend(str))
+            break;
+
+        first = std::next(second);
+    }
+
+    return output;
+}
+// thanks: https://www.cppstories.com/2018/07/string-view-perf-followup/
+std::vector<std::string_view> splitSV(std::string_view strv, std::string_view delims = " ")
+{
+    std::vector<std::string_view> output;
+    size_t                        first = 0;
+
+    while (first < strv.size())
+    {
+        const auto second = strv.find_first_of(delims, first);
+
+        if (first != second)
+            output.emplace_back(strv.substr(first, second - first));
+
+        if (second == std::string_view::npos)
+            break;
+
+        first = second + 1;
+    }
+
+    return output;
+}
+} // namespace strutils
+void main02()
+{
+    std::string                text = "aaa bbb ccc"s;
+    std::regex                 rgx("\\s+");
+    std::sregex_token_iterator iter(text.begin(),
+                                    text.end(),
+                                    rgx,
+                                    -1);
+    std::sregex_token_iterator end;
+    for (; iter != end; ++iter)
+        std::cout << "text segment: " << *iter << '\n';
+
+    std::cout << "------------- --------------------- ---------------\n";
+    std::string str_line{"String to split here, and here, and here yes,...,end"};
+    //std::regex                 regex{R"([\s,]+)"}; // split on space and comma
+    std::regex                 regex{R"([\,]+)"}; // split comma
+    std::sregex_token_iterator it{str_line.begin(), str_line.end(), regex, -1};
+    std::vector<std::string>   words{it, {}};
+
+    for (auto word : words)
+        std::cout << "A word: " << word << '\n';
+
+    auto words2 = str_utils::splitSV(str_line, ",");
+    for (auto word : words2)
+        std::cout << "B word: " << word << '\n';
+
+    std::cout << "------------- ----------- vv ---------- ---------------\n";
+    auto trimStr = "  abc "s;
+    auto strs    = str_utils::splitSV(trimStr, " ");
+    for (auto str : strs)
+        std::cout << "str: " << str << "\n";
+    trimStr = "  ab c "s;
+    str_utils::trim(trimStr);
+    std::cout << "trimStr: (" << trimStr << ")\n";
+}
+std::vector<std::string> parseParams(std::string text)
+{
+    auto temp_params = str_utils::splitSV(text, ",");
+    std::vector<std::string> params;
+    for (auto temp_param : temp_params)
+    {
+        std::cout << "temp_param: " << temp_param << "\n";
+        params.emplace_back(str_utils::trim_copy(std::string(temp_param)));
+    }
+    return params;
+}
+
+std::vector<std::vector<std::string>> parseParamText(const std::string& datastr)
+{
+    std::vector<std::vector<std::string>> blocks;
+    size_t                                index = 0;
+    for (auto t = 0; t < 100; ++t)
+    {
+        auto i = datastr.find("[", index);
+        if (std::string::npos == i)
+        {
+            break;
+        }
+        auto j = datastr.find("]", i + 1);
+        std::cout << ">> i: " << i << ", j: " << j << "\n";
+        if (j > 0 && j > index)
+        {
+            index = j + 1;
+            std::cout << "next pos index: " << index << "\n";
+            auto substr = datastr.substr(i + 1, j - i - 1);
+            std::cout << "substr: " << substr << "\n";
+            auto params = parseParams(substr);
+            //for (auto param : params)
+            //{
+            //	std::cout << ">>> param: " << param << "\n";
+            //}
+            blocks.emplace_back(params);
+        }
+        else
+        {
+            break;
+        }
+    }
+    return blocks;
+}
+
+void testParseStr02()
+{
+    const char* strdatasrc = "[module01, code/01/src, 101][module02, code/02/src, 201][module03, code/03/src, 301]";
+    //strdatasrc             = "[module01, code/01/src, 101]";
+    auto paramBlocks       = parseParamText(strdatasrc);
+    std::cout << "paramBlocks.size(): " << paramBlocks.size() << "\n";
+}
+    void testParseStr01()
+{
+    const char* strdatasrc = "[module01, code/01/src, 101][module02, code/02/src, 201][module03, code/03/src, 301]";
+    std::string datastr(strdatasrc);
+    size_t      index = 0;
+    for (auto t = 0; t < 100; ++t)
+    {
+        auto i = datastr.find("[", index);
+        if (std::string::npos == i)
+        {
+            break;
+        }
+        auto j = datastr.find("]", i + 1);
+        std::cout << ">> i: " << i << ", j: " << j << "\n";
+        if (j > 0 && j > index)
+        {
+            index = j + 1;
+            std::cout << "next pos index: " << index << "\n";
+            auto substr = datastr.substr(i + 1, j - i - 1);
+            std::cout << "substr: " << substr << "\n";
+        }
+        else
+        {
+            break;
+        }
+    }
+}
+void testMain()
+{
+    std::cout << "base::testString::teststr_2::testMain() begin.\n";
+
+    testParseStr02();
+    //testParseStr01();
+    //main02();
+    return;
+
+
+    std::cout << "base::testString::teststr_2::testMain() end.\n";
+}
+} // namespace teststr_2
+namespace teststr_1
 {
 void testDistributeRandom()
 {
-    std::random_device                 rd;
-    std::mt19937                  gen(rd());
+    std::random_device rd;
+    std::mt19937       gen(rd());
     //std::uniform_int_distribution<> distribute(1, 6);
     std::uniform_real_distribution<double> distribute(0.5, 1.5);
     std::cout << "distribute(gen): ";
@@ -103,13 +326,13 @@ void testMain()
     std::cout << "struct VPoint object: \n\t" << vo_str << std::endl;
 
     //struct SExampleA ex = {// start of initializer list for struct example
-    SExampleA ex0 = {       // start of initializer list for struct example
+    SExampleA ex0 = {// start of initializer list for struct example
                      {
-                            // start of initializer list for ex.addr
+                         // start of initializer list for ex.addr
                          80 // initialized struct's only member
                      },     // end of initializer list for ex.addr
                      {
-                            // start of initializer-list for ex.in_u
+                         // start of initializer-list for ex.in_u
                          {127, 0, 0, 1} // initializes first element of the union
                      }};
 
@@ -122,7 +345,7 @@ void testMain()
     std::cout << "struct SExampleA ex1: \n\t" << std::string(ex1) << std::endl;
 
 #pragma warning(disable : 4838)
-    SExampleA ex2 = {80, 257,0};
+    SExampleA ex2 = {80, 257, 0};
     std::cout << "struct SExampleA ex2: \n\t" << std::string(ex2) << std::endl;
     SExampleB ex3 = {80, 515, 769};
     std::cout << "struct SExampleB ex3: \n\t" << std::string(ex3) << std::endl;
@@ -131,14 +354,16 @@ void testMain()
     //SExampleA ex4 = {8101, (char)257, 0};
     SExampleA ex4 = {8101, 257, 0};
     std::cout << "struct SExampleA ex4: \n\t" << std::string(ex4) << std::endl;
-
 }
-} // namespace test_1
+} // namespace teststr_1
 
 int testMain()
 {
-    test_1::testMain();
-    test_1::testDistributeRandom();
+    std::cout << "base::testString::testMain() begin.\n";
+    //teststr_1::testMain();
+    //teststr_1::testDistributeRandom();
+    teststr_2::testMain();
+    std::cout << "base::testString::testMain() end.\n";
     return EXIT_SUCCESS;
 }
 } // namespace testString
