@@ -83,6 +83,63 @@ struct alignas(256) OverAligned256
 #endif
 namespace base::testMemory
 {
+namespace test_7
+{
+// https://zh.cppreference.com/w/cpp/atomic/kill_dependency
+struct foo
+{
+    int* a;
+    int* b;
+};
+std::atomic<struct foo*> foo_head[10];
+int                      foo_array[10][10];
+
+// 消费操作开始依赖链，它将脱离此函数
+[[carries_dependency]] struct foo* f(int i)
+{
+    return foo_head[i].load(std::memory_order_consume);
+}
+
+// 依赖链通过有参数进入此函数，而在函数前被杀掉（故不发生额外的获得操作）
+int g(int* x, int* y [[carries_dependency]])
+{
+    return std::kill_dependency(foo_array[*x][*y]);
+}
+}
+namespace test_6
+{
+int a() { return std::puts("a"); }
+int b() { return std::puts("b"); }
+int c() { return std::puts("c"); }
+
+void z(int, int, int) {}
+
+int main02()
+{
+    // https://zh.cppreference.com/w/cpp/language/eval_order
+    z(a(), b(), c());       // 允许全部 6 种输出排列
+    return a() + b() + c(); // 允许全部 6 种输出排列
+}
+void foo(int a, int b)
+{
+    std::cout << a << "," << b << std::endl;
+}
+int get_num()
+{
+    static int i = 0;
+    std::cout << "\t\ti: " << i+1 << std::endl;
+    return ++i;
+}
+void testMain()
+{
+    std::cout << " ---------------------- -- a -- -------------------" << std::endl;
+    foo(get_num(), get_num());
+    foo(get_num(), get_num());
+    std::cout << " ---------------------- -- b -- -------------------" << std::endl;
+    main02();
+    std::cout << " ---------------------- -- c -- -------------------" << std::endl;
+}
+}
  namespace test_5
  {
 //#if __cplusplus >= 202002L
@@ -669,8 +726,9 @@ int testMain()
     //test_1::testMain();
     //test_2::testMain();
     //test_3::testMain();
-    test_4::testMain();
-    test_5::testMain();
+    //test_4::testMain();
+    //test_5::testMain();
+    test_6::testMain();
     std::cout << "base::testMemory::testMain() end.\n";
     return EXIT_SUCCESS;
 }

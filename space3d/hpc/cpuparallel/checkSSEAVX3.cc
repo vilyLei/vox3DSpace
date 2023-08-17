@@ -1,12 +1,3 @@
-
-
-/*
-	Check SSE/AVX support.
-	This application can detect the instruction support of
-	SSE, SSE2, SSE3, SSSE3, SSE4.1, SSE4.2, SSE4a, SSE5, and AVX.
-*/
-// thanks: https://gist.github.com/hi2p-perim/7855506
-
 #include <iostream>
 #include <vector>
 #include <array>
@@ -62,13 +53,6 @@ int testMain()
     sse4_1Supportted = cpuinfo[2] & (1 << 19) || false;
     sse4_2Supportted = cpuinfo[2] & (1 << 20) || false;
 
-    // ----------------------------------------------------------------------
-
-    // Check AVX support
-    // References
-    // http://software.intel.com/en-us/blogs/2011/04/14/is-avx-enabled/
-    // http://insufficientlycomplicated.wordpress.com/2011/11/07/detecting-intel-advanced-vector-extensions-avx-in-visual-studio/
-
     avxSupportted         = cpuinfo[2] & (1 << 28) || false;
     bool osxsaveSupported = cpuinfo[2] & (1 << 27) || false;
     if (osxsaveSupported && avxSupportted)
@@ -77,8 +61,6 @@ int testMain()
         unsigned long long xcrFeatureMask = _xgetbv(0);
         avxSupportted                     = (xcrFeatureMask & 0x6) == 0x6;
     }
-
-    // ----------------------------------------------------------------------
 
     // Check SSE4a and SSE5 support
 
@@ -91,8 +73,6 @@ int testMain()
         sse4aSupportted = cpuinfo[2] & (1 << 6) || false;
         sse5Supportted  = cpuinfo[2] & (1 << 11) || false;
     }
-
-    // ----------------------------------------------------------------------
 
     std::cout << "SSE:" << (sseSupportted ? 1 : 0) << std::endl;
     std::cout << "SSE2:" << (sse2Supportted ? 1 : 0) << std::endl;

@@ -355,11 +355,29 @@ void testMain()
     SExampleA ex4 = {8101, 257, 0};
     std::cout << "struct SExampleA ex4: \n\t" << std::string(ex4) << std::endl;
 }
+
 } // namespace teststr_1
 
 int testMain()
 {
     std::cout << "base::testString::testMain() begin.\n";
+    std::string str    = "afasfasf*123+9"s;
+    auto        fa  = std::find(str.begin(), str.end(), '*');
+    auto        fb     = std::find(str.begin(), str.end(), '+');
+    auto        beginValue = std::stoul(std::string{fa+1, fb});
+    std::string subStr{fa+1, fb};
+    //std::cout << "beginValue: " << beginValue << "\n";
+    std::cout << "subStr: " << subStr << "\n";
+    int        value0 = 10;
+    int        value1 = 11;
+    const int* p = &value0;
+    int* const q(&value0);
+    // error ...
+    // *p = 11;
+    *q = 11;
+    p  = &value1;
+    // error ...
+    //q  = &value1;
     //teststr_1::testMain();
     //teststr_1::testDistributeRandom();
     teststr_2::testMain();

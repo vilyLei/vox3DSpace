@@ -5,6 +5,7 @@
 #include "./src/common/math/mat2.h"
 #include "./src/common/math/box.h"
 #include "./src/common/math/Sphere.h"
+#include "./src/common/math/mat4.h"
 
 #include "./src/voxengine/data/stream/streamDemo.h"
 #include "./src/voxengine/data/stream/BaseTypeArray.h"
@@ -48,14 +49,16 @@ int main()
     {
     std::cout << "Hello VOX 3D Space!\n";
 
-    testSharedPtr();
-    return 1;
+    //testSharedPtr();
+    //return 1;
 
     std::cout << "\ntest common math:\n";
     baseMath::vec4<float> fv4A{0.0f};
     baseMath::mat2f       mat2fA{0.0f};
     baseMath::Box         boxA{0.0f};
     baseMath::Sphere      sphA{baseMath::Float3{}, 10.0f};
+    baseMath::mat4f        mat4f_0{1.0f};
+    baseMath::mat4f        mat4f_1;
 
     std::cout << "\ntest engine base objects:\n";
 

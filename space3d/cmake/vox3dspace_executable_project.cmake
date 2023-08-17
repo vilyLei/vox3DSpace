@@ -22,6 +22,7 @@ macro(build_executable_projects)
                        demo_ccplus
                        SOURCES
                        "${ccplus_dir}/thread/testAtomic.h"
+                       "${ccplus_dir}/thread/testAtomic2.h"
                        "${ccplus_dir}/thread/testMutex.h"
                        "${ccplus_dir}/thread/testMemoryOrder.h"
                        "${ccplus_dir}/thread/testSyncConcurrent.h"

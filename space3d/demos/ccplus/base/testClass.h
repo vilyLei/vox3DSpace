@@ -5,6 +5,7 @@
 #include <chrono>
 #include <cassert>
 #include <list>
+#include <string>
 #include <mutex>
 #include <algorithm>
 
@@ -249,13 +250,43 @@ void testMain()
     delete tempCar;
 }
 } // namespace test_1
+namespace std_optional
+{
+// optional 可用作可能失败的工厂的返回类型
+std::optional<std::string> create(bool b)
+{
+    if (b)
+        return "Godzilla";
+    return {};
+}
+
+// 能用 std::nullopt 创建任何（空的） std::optional
+auto create2(bool b)
+{
+    return b ? std::optional<std::string>{"Godzilla"} : std::nullopt;
+}
+
+void testMain()
+{
+    std::cout << "create(false) 返回 "
+              << create(false).value_or("empty") << '\n';
+    std::cout << "create(true) 返回 "
+              << create(true).value() << '\n';
+
+    // 返回 optional 的工厂函数可用作 while 和 if 的条件
+    if (auto str = create2(true))
+        std::cout << "create2(true) 返回 " << *str << '\n';
+}
+
+}
 void testMain()
 {
     std::boolalpha(std::cout);
     std::cout << "base::demoClass::testMain() begin.\n";
     //std::cout << std::atomic<int>::is_always_lock_free << "\n";
     //test_1::testMain();
-    test_2::testMain();
+    //test_2::testMain();
+    std_optional::testMain();
     std::cout << "base::demoClass::testMain() end.\n";
 }
 } // namespace demoClass

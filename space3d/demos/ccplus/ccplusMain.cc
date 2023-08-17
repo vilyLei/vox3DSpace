@@ -4,10 +4,12 @@
 #include <filesystem>
 
 #include "thread/testAtomic.h"
+#include "thread/testAtomic2.h"
 #include "thread/testMutex.h"
 #include "thread/testSyncConcurrent.h"
 #include "thread/testAsync.h"
 #include "thread/testThrFuture.h"
+#include "thread/testMemoryOrder.h"
 #include "base/testConstexpr.h"
 #include "base/testForward.h"
 #include "base/testTypeInfo.h"
@@ -185,7 +187,15 @@ int baseMain()
 
 int main()
 {
+    thread::memoryOrder::testMain();
+    return EXIT_SUCCESS;
+    base::demoClass::testMain();
+    return EXIT_SUCCESS;
     base::testString::testMain();
+    return EXIT_SUCCESS;
+    thread::atomic2::testMain();
+    return EXIT_SUCCESS;
+    base::testMemory::testMain();
     return EXIT_SUCCESS;
     /*
     auto path = std::filesystem::path("./");
@@ -196,8 +206,6 @@ int main()
         std::cout << "System PATH is: " << env_p << "\n\n";
     //*/
 
-    base::testMemory::testMain();
-    return EXIT_SUCCESS;
     parallel::futuresort::testMain();
     return EXIT_SUCCESS;
     base::demoForward::testMain();
@@ -207,8 +215,6 @@ int main()
     demoTemplate::base::testMain();
     return EXIT_SUCCESS;
     thread::syncConcurrent::testMain();
-    return EXIT_SUCCESS;
-    base::demoClass::testMain();
     return EXIT_SUCCESS;
 
     //baseMain();

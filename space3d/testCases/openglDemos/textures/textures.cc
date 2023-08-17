@@ -46,7 +46,6 @@ std::string toLowerCase(const std::string& src)
     return dst;
 }
 
-
 struct TexData
 {
     int            width;
@@ -64,7 +63,7 @@ struct TexData
     }
 };
 std::atomic<bool> asyncLoadFlag(false);
-
+// for test
 void              asyncLoadRes()
 {
     for (auto i = 0; i < 5; ++i)
