@@ -10,11 +10,55 @@ namespace thread
 {
 namespace memoryOrder
 {
+namespace memoryOrder_t08
+{
+
+bool x = false; //	x现在是一个非原子变量
+
+std::atomic<bool> y;
+
+std::atomic<int> z;
+
+void write_x_then_y()
+
+{
+    x = true; //	1	在栅栏前存储x
+    std::atomic_thread_fence(std::memory_order_release);
+    y.store(true, std::memory_order_relaxed); //	2	在栅栏后存储y
+}
+
+void read_y_then_x()
+
+{
+    while (!y.load(std::memory_order_relaxed))
+        ; //	3	在#2写入前，持续 等待
+
+    std::atomic_thread_fence(std::memory_order_acquire);
+    if (x) //	4	这里读取到的值，是#1中写入
+        ++z;
+}
+
+void testMain()
+{
+    x = false;
+    y = false;
+    z = 0;
+    std::thread a(write_x_then_y);
+    std::thread b(read_y_then_x);
+    std::thread c(read_y_then_x);
+    a.join();
+    b.join();
+    c.join();
+
+    std::cout << "z: " << z << std::endl;
+    assert(z.load() != 0); //	5	断言将不会触发
+}
+} // namespace memoryOrder_t08
 namespace memoryOrder_t07
 {
 std::vector<int> queue_data;
 std::atomic<int> count;
-void populate_queue()
+void             populate_queue()
 {
     std::cout << "memoryOrder_t07::populate_queue() call ..."
               << "\n";
@@ -414,7 +458,8 @@ void testMain()
     //memoryOrder_t05::testMain();
     //memoryOrder_t06::testMain();
     //memoryOrder_t06b::testMain();
-    memoryOrder_t07::testMain();
+    //memoryOrder_t07::testMain();
+    memoryOrder_t08::testMain();
     std::cout << "thread::memoryOrder::testMain(), end() ...\n";
 }
 } // namespace memoryOrder

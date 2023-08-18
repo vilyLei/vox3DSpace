@@ -189,11 +189,11 @@ int baseMain()
 
 int main()
 {
+    thread::memoryOrder::testMain();
+    return EXIT_SUCCESS;
     coding::tcodecvr::testMain();
     return EXIT_SUCCESS;
     thread::memoryFence::testMain();
-    return EXIT_SUCCESS;
-    thread::memoryOrder::testMain();
     return EXIT_SUCCESS;
     base::demoClass::testMain();
     return EXIT_SUCCESS;
