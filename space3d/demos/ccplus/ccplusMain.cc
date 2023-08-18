@@ -10,6 +10,7 @@
 #include "thread/testAsync.h"
 #include "thread/testThrFuture.h"
 #include "thread/testMemoryOrder.h"
+#include "thread/testMemoryFence.h"
 #include "base/testConstexpr.h"
 #include "base/testForward.h"
 #include "base/testTypeInfo.h"
@@ -20,6 +21,7 @@
 #include "msvcAsm/testInlineAsm.h"
 #include "parallel/testExecutionPar.h"
 #include "parallel/futureFastSort01.h"
+#include "coding/testCodecvt.h"
 #include "demoTemplate/testTemplate.h"
 
 class ValueUnit
@@ -187,6 +189,10 @@ int baseMain()
 
 int main()
 {
+    coding::tcodecvr::testMain();
+    return EXIT_SUCCESS;
+    thread::memoryFence::testMain();
+    return EXIT_SUCCESS;
     thread::memoryOrder::testMain();
     return EXIT_SUCCESS;
     base::demoClass::testMain();

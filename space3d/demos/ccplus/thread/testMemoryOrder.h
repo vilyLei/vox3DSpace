@@ -10,6 +10,263 @@ namespace thread
 {
 namespace memoryOrder
 {
+namespace memoryOrder_t07
+{
+std::vector<int> queue_data;
+std::atomic<int> count;
+void populate_queue()
+{
+    std::cout << "memoryOrder_t07::populate_queue() call ..."
+              << "\n";
+    unsigned const number_of_items = 20;
+    queue_data.clear();
+    for (unsigned i = 0; i < number_of_items; ++i)
+    {
+        queue_data.push_back(i);
+    }
+    count.store(number_of_items, std::memory_order_release); // 1 初始化存储
+
+    //std::this_thread::sleep_for(2ms);
+    //for (unsigned i = 0; i < 10; ++i)
+    //{
+    //    queue_data.push_back(i + number_of_items);
+    //}
+    //count.store(10, std::memory_order_release); // 1 初始化存储
+    for (unsigned i = 0; i < 50; ++i)
+    {
+        std::this_thread::sleep_for(2ms);
+        if (count.load(std::memory_order_acquire) <= 0)
+        {
+            std::cout << "***...\n";
+            for (unsigned i = 0; i < 10; ++i)
+            {
+                queue_data[i] = (i + number_of_items);
+                count.store(10, std::memory_order_release);
+            }
+            break;
+        }
+        std::this_thread::yield();
+    }
+}
+void consume_queue_items()
+{
+    std::cout << "memoryOrder_t07::consume_queue_items() call ..."
+              << "\n";
+    std::vector<int> vs;
+    int              times = 50;
+    while (true)
+    {
+        std::this_thread::sleep_for(2ms);
+        int item_index;
+        if ((item_index = count.fetch_sub(1, std::memory_order_acquire)) <= 0) // 2 一个“读-改-写”操作
+        {
+            //wait_for_more_items(); // 3 等待更多元素
+            times--;
+            if (times < 0 && vs.size() > 0)
+            {
+                break;
+            }
+            continue;
+        }
+        //process(queue_data[item_index - 1]); // 4 安全读取queue_data
+        vs.emplace_back(queue_data[item_index - 1]);
+        std::this_thread::yield();
+    }
+    std::string str = "vs:";
+    for (auto v : vs)
+    {
+        str += std::to_string(v) + ",";
+    }
+    str += "\n";
+    std::cout << str;
+}
+void testMain()
+{
+    std::cout << "memoryOrder_t07::testMain() call begin ..."
+              << "\n";
+    std::thread a(populate_queue);
+    std::thread b(consume_queue_items); //    202 5.3 同步操作和强制排序
+    std::thread c(consume_queue_items);
+    a.join();
+    b.join();
+    c.join();
+    std::cout << "memoryOrder_t07::testMain() call end ..."
+              << "\n";
+}
+} // namespace memoryOrder_t07
+// Release-Acquire ordering
+namespace memoryOrder_t06b
+{
+std::atomic<int> data[5];
+std::atomic<int> sync(0);
+void             thread_1()
+{
+    data[0].store(42, std::memory_order_relaxed);
+    data[1].store(97, std::memory_order_relaxed);
+    data[2].store(17, std::memory_order_relaxed);
+    data[3].store(-141, std::memory_order_relaxed);
+    data[4].store(2003, std::memory_order_relaxed);
+    std::cout << "memoryOrder_t06b::thread_1() call end ..."
+              << "\n";
+    sync.store(true, std::memory_order_release); // 1.设置sync1
+}
+void thread_2()
+{
+    auto status = 1;
+    while (!sync.compare_exchange_strong(status, 2, std::memory_order_acq_rel))
+        ; // 2.直到 sync1 设置后，循环结束
+    status = 1;
+    std::cout << "memoryOrder_t06b::thread_2() call end ..."
+              << "\n";
+}
+void thread_3()
+{
+    while (sync.load(std::memory_order_acquire) < 2)
+        ; // 4.直到 sync1 设置后，循环结束
+    assert(data[0].load(std::memory_order_relaxed) == 42);
+    assert(data[1].load(std::memory_order_relaxed) == 97);
+    assert(data[2].load(std::memory_order_relaxed) == 17);
+    assert(data[3].load(std::memory_order_relaxed) == -141);
+    assert(data[4].load(std::memory_order_relaxed) == 2003);
+    std::cout << "memoryOrder_t06b::thread_3() call end ..."
+              << "\n";
+}
+void testMain()
+{
+    std::cout << "memoryOrder_t06b::testMain() call begin ..."
+              << "\n";
+    std::thread t3(thread_3);
+    std::thread t2(thread_2);
+    std::thread t1(thread_1);
+    t1.join();
+    t2.join();
+    t3.join();
+    std::cout << "memoryOrder_t06b::testMain() call end ..."
+              << "\n";
+}
+} // namespace memoryOrder_t06b
+// Release-Acquire ordering
+namespace memoryOrder_t06
+{
+std::atomic<int>  data[5];
+std::atomic<bool> sync1(false), sync2(false);
+void              thread_1()
+{
+    data[0].store(42, std::memory_order_relaxed);
+    data[1].store(97, std::memory_order_relaxed);
+    data[2].store(17, std::memory_order_relaxed);
+    data[3].store(-141, std::memory_order_relaxed);
+    data[4].store(2003, std::memory_order_relaxed);
+    std::cout << "memoryOrder_t06::thread_1() call end ..."
+              << "\n";
+    sync1.store(true, std::memory_order_release); // 1.设置sync1
+}
+void thread_2()
+{
+    while (!sync1.load(std::memory_order_acquire))
+        ; // 2.直到 sync1 设置后，循环结束
+    std::cout << "memoryOrder_t06::thread_2() call end ..."
+              << "\n";
+    sync2.store(true, std::memory_order_release); // 3.设置sync2
+}
+void thread_3()
+{
+    while (!sync2.load(std::memory_order_acquire))
+        ; // 4.直到 sync1 设置后，循环结束
+    assert(data[0].load(std::memory_order_relaxed) == 42);
+    assert(data[1].load(std::memory_order_relaxed) == 97);
+    assert(data[2].load(std::memory_order_relaxed) == 17);
+    assert(data[3].load(std::memory_order_relaxed) == -141);
+    assert(data[4].load(std::memory_order_relaxed) == 2003);
+    std::cout << "memoryOrder_t06::thread_3() call end ..."
+              << "\n";
+}
+void testMain()
+{
+    std::cout << "memoryOrder_t06::testMain() call begin ..."
+              << "\n";
+    std::thread t3(thread_3);
+    std::thread t2(thread_2);
+    std::thread t1(thread_1);
+    t1.join();
+    t2.join();
+    t3.join();
+    std::cout << "memoryOrder_t06::testMain() call end ..."
+              << "\n";
+}
+} // namespace memoryOrder_t06
+// Relaxed ordering
+namespace memoryOrder_t05
+{
+std::atomic<int>  x(0), y(0), z(0); // 1
+std::atomic<bool> go(false);        // 2
+unsigned const    loop_count = 10;
+struct read_values
+{
+    int x, y, z;
+};
+read_values values1[loop_count];
+read_values values2[loop_count];
+read_values values3[loop_count];
+read_values values4[loop_count];
+read_values values5[loop_count];
+void        increment(std::atomic<int>* var_to_inc, read_values* values)
+{
+    //std::this_thread::sleep_for(5ms);
+    while (!go)
+        std::this_thread::yield(); // 3 自旋，等待信号
+    for (unsigned i = 0; i < loop_count; ++i)
+    {
+        values[i].x = x.load(std::memory_order_relaxed);
+        values[i].y = y.load(std::memory_order_relaxed);
+        values[i].z = z.load(std::memory_order_relaxed);
+        var_to_inc->store(i + 1, std::memory_order_relaxed); // 4
+        std::this_thread::yield();
+    }
+}
+void read_vals(read_values* values)
+{
+    //std::this_thread::sleep_for(5ms);
+    while (!go)
+        std::this_thread::yield(); // 5 自旋，等待信号
+    for (unsigned i = 0; i < loop_count; ++i)
+    {
+        values[i].x = x.load(std::memory_order_relaxed);
+        values[i].y = y.load(std::memory_order_relaxed);
+        values[i].z = z.load(std::memory_order_relaxed);
+        std::this_thread::yield();
+    }
+}
+void print(read_values* v)
+{
+    for (unsigned i = 0; i < loop_count; ++i)
+    {
+        if (i)
+            std::cout << ",";
+        std::cout << "(" << v[i].x << "," << v[i].y << "," << v[i].z << ")";
+    }
+    std::cout << std::endl;
+}
+void testMain()
+{
+    std::thread t1(increment, &x, values1);
+    std::thread t2(increment, &y, values2);
+    std::thread t3(increment, &z, values3);
+    std::thread t4(read_vals, values4);
+    std::thread t5(read_vals, values5);
+    go = true; // 6 开始执行主循环的信号
+    t5.join();
+    t4.join();
+    t3.join();
+    t2.join();
+    t1.join();
+    print(values1); // 7 打印最终结果
+    print(values2);
+    print(values3);
+    print(values4);
+    print(values5);
+}
+} // namespace memoryOrder_t05
 // Release-Consume ordering
 namespace memoryOrder_t04
 {
@@ -153,7 +410,11 @@ void testMain()
     //memoryOrder_t01::testMain();
     //memoryOrder_t02::testMain();
     //memoryOrder_t03::testMain();
-    memoryOrder_t04::testMain();
+    //memoryOrder_t04::testMain();
+    //memoryOrder_t05::testMain();
+    //memoryOrder_t06::testMain();
+    //memoryOrder_t06b::testMain();
+    memoryOrder_t07::testMain();
     std::cout << "thread::memoryOrder::testMain(), end() ...\n";
 }
 } // namespace memoryOrder

@@ -52,6 +52,8 @@ int main()
     //testSharedPtr();
     //return 1;
 
+    float mat16Data[16]{0.540302, 0.841471, -0.000000, 0.000000, - 0.738460, 0.474160, 0.479426, 0.000000,0.403423, -0.259035, 0.877583, 0.000000, 0.0, 0.000000, 0.000000, 1.000000};
+
     std::cout << "\ntest common math:\n";
     baseMath::vec4<float> fv4A{0.0f};
     baseMath::mat2f       mat2fA{0.0f};
@@ -59,6 +61,9 @@ int main()
     baseMath::Sphere      sphA{baseMath::Float3{}, 10.0f};
     baseMath::mat4f        mat4f_0{1.0f};
     baseMath::mat4f        mat4f_1;
+    std::cout << "sizeof(mat4f_1): " << sizeof(mat4f_1) << std::endl;
+    std::cout << "sizeof(mat16Data): " << sizeof(mat16Data) << std::endl;
+    std::memcpy(&mat4f_1, mat16Data, sizeof(mat16Data));
 
     std::cout << "\ntest engine base objects:\n";
 
