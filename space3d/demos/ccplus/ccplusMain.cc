@@ -23,6 +23,7 @@
 #include "parallel/futureFastSort01.h"
 #include "coding/testCodecvt.h"
 #include "demoTemplate/testTemplate.h"
+#include "exception1/testExcptBase.h"
 
 class ValueUnit
 {
@@ -189,6 +190,8 @@ int baseMain()
 
 int main()
 {
+    exception1::excptBase::testMain();
+    return EXIT_SUCCESS;
     thread::memoryOrder::testMain();
     return EXIT_SUCCESS;
     coding::tcodecvr::testMain();

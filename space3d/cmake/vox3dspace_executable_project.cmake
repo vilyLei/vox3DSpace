@@ -39,6 +39,7 @@ macro(build_executable_projects)
                        "${ccplus_dir}/base/testMacro.h"
                        "${ccplus_dir}/base/testMemory.h"
                        "${ccplus_dir}/coding/testCodecvt.h"
+                       "${ccplus_dir}/exception1/testExcptBase.h"
                        "${ccplus_dir}/msvcAsm/testInlineAsm.h"
                        "${ccplus_dir}/demoTemplate/testTemplate.h"
                        "${ccplus_dir}/ccplusMain.cc"
