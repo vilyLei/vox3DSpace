@@ -19,7 +19,7 @@ void* operator new(std::size_t size)
     return ptr ? ptr : throw std::bad_alloc{};
 }
 
-#if __cpp_aligned_new
+#    if __cpp_aligned_new
 void operator delete(void* ptr, std::size_t size)
 {
     std::cout << "unaligned sized delete(" << ptr << ", " << size << ")\n";
@@ -83,6 +83,41 @@ struct alignas(256) OverAligned256
 #endif
 namespace base::testMemory
 {
+namespace test_8
+{
+template <class T>
+struct Ptr
+{
+    T* pad; // 增加填充以显示‘ this ’和‘ data ’的区别
+    T* data;
+    Ptr(T* arg) :
+        pad(nullptr), data(arg)
+    {
+        std::cout << "Ctor this = " << this << std::endl;
+    }
+
+    ~Ptr() { delete data; }
+    T** operator&() { return &data; }
+};
+
+template <class T>
+void f(Ptr<T>* p)
+{
+    std::cout << "Ptr   overload called with p = " << p << '\n';
+}
+
+void f(int** p)
+{
+    std::cout << "int** overload called with p = " << p << '\n';
+}
+
+void testMain()
+{
+    Ptr<int> p(new int(42));
+    f(&p);                // 调用 int** 重载
+    f(std::addressof(p)); // 调用 Ptr<int>* 重载，（ = this ）
+}
+} // namespace test_8
 namespace test_7
 {
 // https://zh.cppreference.com/w/cpp/atomic/kill_dependency
@@ -105,7 +140,10 @@ int g(int* x, int* y [[carries_dependency]])
 {
     return std::kill_dependency(foo_array[*x][*y]);
 }
+void testMain()
+{
 }
+} // namespace test_7
 namespace test_6
 {
 int a() { return std::puts("a"); }
@@ -127,7 +165,7 @@ void foo(int a, int b)
 int get_num()
 {
     static int i = 0;
-    std::cout << "\t\ti: " << i+1 << std::endl;
+    std::cout << "\t\ti: " << i + 1 << std::endl;
     return ++i;
 }
 void testMain()
@@ -139,103 +177,103 @@ void testMain()
     main02();
     std::cout << " ---------------------- -- c -- -------------------" << std::endl;
 }
-}
- namespace test_5
- {
+} // namespace test_6
+namespace test_5
+{
 //#if __cplusplus >= 202002L
 #if _HAS_CXX20
- struct Tracer3
- {
-     int value;
-     ~Tracer3() { std::cout << value << " destructed\n"; }
- };
+struct Tracer3
+{
+    int value;
+    ~Tracer3() { std::cout << value << " destructed\n"; }
+};
 
- void main03()
- {
-     alignas(Tracer3) unsigned char buffer[sizeof(Tracer3) * 8];
+void main03()
+{
+    alignas(Tracer3) unsigned char buffer[sizeof(Tracer3) * 8];
 
-     for (int i = 0; i < 8; ++i)
-         new (buffer + sizeof(Tracer3) * i) Tracer3{i}; //manually construct objects
+    for (int i = 0; i < 8; ++i)
+        new (buffer + sizeof(Tracer3) * i) Tracer3{i}; //manually construct objects
 
-     auto ptr = std::launder(reinterpret_cast<Tracer3*>(buffer));
+    auto ptr = std::launder(reinterpret_cast<Tracer3*>(buffer));
 
-     std::ranges::destroy_n(ptr, 8);
- }
+    std::ranges::destroy_n(ptr, 8);
+}
 #else
- void main03()
- {
- }
+void main03()
+{
+}
 #endif
- struct Tracer
- {
-     int value;
-     ~Tracer() { std::cout << value << " destructed\n"; }
- };
+struct Tracer
+{
+    int value;
+    ~Tracer() { std::cout << value << " destructed\n"; }
+};
 
- void main02()
- {
-     alignas(Tracer) unsigned char buffer[sizeof(Tracer) * 8];
+void main02()
+{
+    alignas(Tracer) unsigned char buffer[sizeof(Tracer) * 8];
 
-     for (int i = 0; i < 8; ++i)
-         new (buffer + sizeof(Tracer) * i) Tracer{i}; //manually construct objects
+    for (int i = 0; i < 8; ++i)
+        new (buffer + sizeof(Tracer) * i) Tracer{i}; //manually construct objects
 
-     auto ptr = std::launder(reinterpret_cast<Tracer*>(buffer));
+    auto ptr = std::launder(reinterpret_cast<Tracer*>(buffer));
 
-     std::destroy_n(ptr, 8);
- }
- struct S
- {
-     int    x;
-     float  y;
-     double z;
+    std::destroy_n(ptr, 8);
+}
+struct S
+{
+    int    x;
+    float  y;
+    double z;
 
-     S(int x, float y, double z) :
-         x{x}, y{y}, z{z} { std::cout << "S::S();\n"; }
+    S(int x, float y, double z) :
+        x{x}, y{y}, z{z} { std::cout << "S::S();\n"; }
 
-     ~S() { std::cout << "S::~S();\n"; }
+    ~S() { std::cout << "S::~S();\n"; }
 
-     void print() const
-     {
-         std::cout << "S { x=" << x << "; y=" << y << "; z=" << z << "; };\n";
-     }
- };
+    void print() const
+    {
+        std::cout << "S { x=" << x << "; y=" << y << "; z=" << z << "; };\n";
+    }
+};
 
- void main01()
- {
-     alignas(S) unsigned char storage[sizeof(S)];
+void main01()
+{
+    alignas(S) unsigned char storage[sizeof(S)];
 
-     S* ptr = std::construct_at(reinterpret_cast<S*>(storage), 42, 2.71828f, 3.1415);
-     ptr->print();
+    S* ptr = std::construct_at(reinterpret_cast<S*>(storage), 42, 2.71828f, 3.1415);
+    ptr->print();
 
-     std::destroy_at(ptr);
- }
- void testMain()
- {
-     main01();
-     main02();
-     main03();
-     constexpr std::size_t size = 4;
-     if (auto ptr = reinterpret_cast<std::string*>(std::malloc(size * sizeof(std::string))))
-     {
-         try
-         {
-             for (std::size_t i = 0; i < size; ++i)
-                 std::construct_at(ptr + i, 5, 'a' + i);
-             for (std::size_t i = 0; i < size; ++i)
-                 std::cout << "ptr[" << i << "] == " << ptr[i] << '\n';
-             std::destroy_n(ptr, size);
-         }
-         catch (...)
-         {}
-         std::free(ptr);
-     }
- }
- }
+    std::destroy_at(ptr);
+}
+void testMain()
+{
+    main01();
+    main02();
+    main03();
+    constexpr std::size_t size = 4;
+    if (auto ptr = reinterpret_cast<std::string*>(std::malloc(size * sizeof(std::string))))
+    {
+        try
+        {
+            for (std::size_t i = 0; i < size; ++i)
+                std::construct_at(ptr + i, 5, 'a' + i);
+            for (std::size_t i = 0; i < size; ++i)
+                std::cout << "ptr[" << i << "] == " << ptr[i] << '\n';
+            std::destroy_n(ptr, size);
+        }
+        catch (...)
+        {}
+        std::free(ptr);
+    }
+}
+} // namespace test_5
 using namespace std::literals;
 template <class _Ty>
 class enable_shared_from_this_t
 {
-public:    
+public:
     using _Esft_type = enable_shared_from_this_t;
     std::shared_ptr<_Ty> shared_from_this()
     {
@@ -243,6 +281,7 @@ public:
         auto ptr = _Wptr;
         return std::shared_ptr<_Ty>(_Wptr);
     }
+
 protected:
     constexpr enable_shared_from_this_t() noexcept
     {
@@ -269,10 +308,10 @@ public:
     }
     [[nodiscard]] std::shared_ptr<NodeBase>& getptr3()
     {
-        auto sptr = std::shared_ptr<NodeBase>(this);
+        auto                    sptr = std::shared_ptr<NodeBase>(this);
         std::weak_ptr<NodeBase> pv;
         pv = sptr;
-        
+
         auto r = std::shared_ptr<NodeBase>(pv);
         return r;
     }
@@ -290,7 +329,7 @@ public:
     }
 };
 
-template<typename T>
+template <typename T>
 class BigUnitFT : public std::enable_shared_from_this<BigUnitFT<T>>
 {
 public:
@@ -349,12 +388,12 @@ public:
         std::cout << "Foot::destructor()...\n";
     }
     virtual void run() = 0;
-    std::string getTotal()
+    std::string  getTotal()
     {
         return name;
     }
 };
-template<typename T>
+template <typename T>
 class AnimalFoot : public Foot
 {
 public:
@@ -377,14 +416,14 @@ class UnitClass
 {
 public:
     std::string name;
-    int uid;
+    int         uid;
     UnitClass() = default;
     //UnitClass() :
     //    name("aa"), uid(0)
     //{
     //    std::cout << "UnitClass::constructor() A...\n";
     //}
-    UnitClass(std::string name, int uid):
+    UnitClass(std::string name, int uid) :
         name(name), uid(uid)
     {
         std::cout << "UnitClass::constructor() B...\n";
@@ -522,7 +561,7 @@ void testMain()
         std::cout << q.use_count() << std::endl;
     }
 }
-}
+} // namespace test_4
 namespace test_3
 {
 class GoodUnit
@@ -644,7 +683,7 @@ void testMain()
     //testBest();
     //testBad();
 }
-}
+} // namespace test_3
 namespace test_2
 {
 std::weak_ptr<int> gw;
@@ -692,7 +731,7 @@ https://learn.microsoft.com/en-us/cpp/build/reference/zc-alignednew?view=msvc-17
     intptr_t* p = (intptr_t*)operator new[](sizeof(intptr_t) * 64, (std::align_val_t)(32));
     p[1]        = 12;
 
-#ifdef NEW_POS_OK
+#    ifdef NEW_POS_OK
     delete new int;
     delete new OverAligned256;
     delete new OverAligned32;
@@ -715,7 +754,7 @@ https://learn.microsoft.com/en-us/cpp/build/reference/zc-alignednew?view=msvc-17
 //int* plus_p2 = static_cast<int*>(std::aligned_malloc(1024, 1024));
 //std::printf("1024-byte aligned address: %p\n", static_cast<void*>(plus_p2));
 //std::free(plus_p2);
-#endif
+#    endif
 #endif
 }
 } // namespace test_1
@@ -729,6 +768,8 @@ int testMain()
     //test_4::testMain();
     //test_5::testMain();
     test_6::testMain();
+    test_7::testMain();
+    test_8::testMain();
     std::cout << "base::testMemory::testMain() end.\n";
     return EXIT_SUCCESS;
 }

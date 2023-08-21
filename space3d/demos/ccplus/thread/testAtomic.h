@@ -78,7 +78,7 @@ int testMain()
     return 0;
 }
 } // namespace memory_order_relaxed_1
-namespace compare_exchange_strong
+namespace compare_exchange_strong_01
 {
 std::atomic<int> ai;
 int              tst_val   = 4;
@@ -102,6 +102,9 @@ int testMain()
     valsout();
     // tst_val == ai   ==>  ai is modified
     exchanged = ai.compare_exchange_strong(tst_val, new_val);
+    valsout();
+    // tst_val == ai   ==>  ai is modified
+    exchanged = ai.compare_exchange_weak(tst_val, new_val);
     valsout();
     std::cout << "compare_exchange_strong::testMain() end ...\n";
     return EXIT_SUCCESS;
@@ -493,7 +496,7 @@ void testMain()
     //mem_order_acq_rel::testMain();
     //mem_order_acq_rel2::testMain();
     //mem_order_acq_rel3::testMain();
-    //compare_exchange_strong::testMain();
+    //compare_exchange_strong_01::testMain();
     memory_order_relaxed_1::testMain();
 }
 } // namespace atomic

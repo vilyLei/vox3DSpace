@@ -21,6 +21,8 @@
 #include "msvcAsm/testInlineAsm.h"
 #include "parallel/testExecutionPar.h"
 #include "parallel/futureFastSort01.h"
+#include "parallel/conditionAndLock.h"
+#include "parallel/baseNonLock.h"
 #include "coding/testCodecvt.h"
 #include "demoTemplate/testTemplate.h"
 #include "exception1/testExcptBase.h"
@@ -190,9 +192,13 @@ int baseMain()
 
 int main()
 {
-    exception1::excptBase::testMain();
+    parallel::baseNonLock::testMain();
+    return EXIT_SUCCESS;
+    parallel::conditionlock::testMain();
     return EXIT_SUCCESS;
     thread::memoryOrder::testMain();
+    return EXIT_SUCCESS;
+    exception1::excptBase::testMain();
     return EXIT_SUCCESS;
     coding::tcodecvr::testMain();
     return EXIT_SUCCESS;

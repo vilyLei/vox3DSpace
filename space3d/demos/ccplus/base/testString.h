@@ -373,11 +373,11 @@ int testMain()
     const int* p = &value0;
     int* const q(&value0);
     // error ...
-    // *p = 11;
+    // *p = 11;// p 变量不可修改值,可修改指针
     *q = 11;
     p  = &value1;
     // error ...
-    //q  = &value1;
+    //q  = &value1;// q 变量可修改值， 不可修改指针
     //teststr_1::testMain();
     //teststr_1::testDistributeRandom();
     teststr_2::testMain();

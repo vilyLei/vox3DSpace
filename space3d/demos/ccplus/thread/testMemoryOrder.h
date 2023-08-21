@@ -40,6 +40,8 @@ void read_y_then_x()
 
 void testMain()
 {
+    auto flag0 = std::memory_order_release;
+
     x = false;
     y = false;
     z = 0;
