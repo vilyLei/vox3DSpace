@@ -80,31 +80,31 @@ int testMain()
 } // namespace memory_order_relaxed_1
 namespace compare_exchange_strong_01
 {
-std::atomic<int> ai;
+std::atomic<int> atomic_0;
 int              tst_val   = 4;
 int              new_val   = 5;
 bool             exchanged = false;
 void             valsout()
 {
-    std::cout << "ai= " << ai
-              << "  tst_val= " << tst_val
-              << "  new_val= " << new_val
-              << "  exchanged= " << std::boolalpha << exchanged
+    std::cout << "atomic_0 = " << atomic_0
+              << ",  tst_val = " << tst_val
+              << ",  new_val = " << new_val
+              << ",  exchanged = " << std::boolalpha << exchanged
               << "\n";
 }
 int testMain()
 {
     std::cout << "compare_exchange_strong::testMain() begin ...\n";
-    ai = 3;
+    atomic_0 = 3;
     valsout();
-    // tst_val != ai   ==>  tst_val is modified
-    exchanged = ai.compare_exchange_strong(tst_val, new_val);
+    // tst_val != atomic_0   ==>  tst_val is modified
+    exchanged = atomic_0.compare_exchange_strong(tst_val, new_val);
     valsout();
-    // tst_val == ai   ==>  ai is modified
-    exchanged = ai.compare_exchange_strong(tst_val, new_val);
+    // tst_val == atomic_0   ==>  atomic_0 is modified
+    exchanged = atomic_0.compare_exchange_strong(tst_val, new_val);
     valsout();
-    // tst_val == ai   ==>  ai is modified
-    exchanged = ai.compare_exchange_weak(tst_val, new_val);
+    // tst_val == atomic_0   ==>  atomic_0 is modified
+    exchanged = atomic_0.compare_exchange_weak(tst_val, new_val);
     valsout();
     std::cout << "compare_exchange_strong::testMain() end ...\n";
     return EXIT_SUCCESS;
@@ -496,8 +496,8 @@ void testMain()
     //mem_order_acq_rel::testMain();
     //mem_order_acq_rel2::testMain();
     //mem_order_acq_rel3::testMain();
-    //compare_exchange_strong_01::testMain();
-    memory_order_relaxed_1::testMain();
+    compare_exchange_strong_01::testMain();
+    //memory_order_relaxed_1::testMain();
 }
 } // namespace atomic
 } // namespace thread

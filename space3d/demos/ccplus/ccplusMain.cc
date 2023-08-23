@@ -192,6 +192,8 @@ int baseMain()
 
 int main()
 {
+    thread::atomic::testMain();
+    return EXIT_SUCCESS;
     parallel::baseNonLock::testMain();
     return EXIT_SUCCESS;
     parallel::conditionlock::testMain();
@@ -242,7 +244,6 @@ int main()
     //return 1;
 
     //base::demoConstexpr::testMain();
-    //thread::atomic::testMain();
 
     msvcAsm::testInline::testMain();
     return EXIT_SUCCESS;
