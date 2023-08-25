@@ -23,6 +23,7 @@
 #include "parallel/futureFastSort01.h"
 #include "parallel/conditionAndLock.h"
 #include "parallel/baseNonLock.h"
+#include "parallel/baseNonLock2.h"
 #include "coding/testCodecvt.h"
 #include "demoTemplate/testTemplate.h"
 #include "exception1/testExcptBase.h"
@@ -192,9 +193,11 @@ int baseMain()
 
 int main()
 {
-    thread::atomic::testMain();
+    parallel::baseNonLock2::testMain();
     return EXIT_SUCCESS;
     parallel::baseNonLock::testMain();
+    return EXIT_SUCCESS;
+    thread::atomic::testMain();
     return EXIT_SUCCESS;
     parallel::conditionlock::testMain();
     return EXIT_SUCCESS;

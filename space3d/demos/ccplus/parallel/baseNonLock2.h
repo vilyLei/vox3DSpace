@@ -7,7 +7,7 @@
 #include <queue>
 #include <vector>
 
-namespace parallel::baseNonLock
+namespace parallel::baseNonLock2
 {
 namespace baseNonLock_02
 {
@@ -27,6 +27,54 @@ struct QInfo
     //    std::cout << " \tQInfo destruct() uuid: " << uuid << ".\n";
     //}
 };
+unsigned const max_hazard_pointers = 100;
+struct hazard_pointer
+{
+    std::atomic<std::thread::id> id;
+    std::atomic<void*>           pointer;
+};
+hazard_pointer hazard_pointers[max_hazard_pointers];
+class hp_owner
+{
+    hazard_pointer* hp;
+
+public:
+    hp_owner(hp_owner const&)           = delete;
+    hp_owner operator=(hp_owner const&) = delete;
+    hp_owner() :
+        hp(nullptr)
+    {
+        for (unsigned i = 0; i < max_hazard_pointers; ++i)
+        {
+            std::thread::id old_id;
+            if (hazard_pointers[i].id.compare_exchange_strong( // 6 å°è¯•å£°æ˜é£é™©æŒ‡é’ˆçš„æ‰€æœ‰æƒ
+                        old_id,
+                    std::this_thread::get_id()))
+            {
+                hp = &hazard_pointers[i];
+                break; // 7
+            }
+        }
+        if (!hp) // 1
+        {
+            throw std::runtime_error("No hazard pointers available");
+        }
+    }
+    std::atomic<void*>& get_pointer()
+    {
+        return hp->pointer;
+    }
+    ~hp_owner() // 2
+    {
+        hp->pointer.store(nullptr);      // 8
+        hp->id.store(std::thread::id()); // 9
+    }
+};
+std::atomic<void*>& get_hazard_pointer_for_current_thread() // 3
+{
+    thread_local static hp_owner hazard; // 4 æ¯ä¸ªçº¿ç¨‹éƒ½æœ‰è‡ªå·±çš„é£é™©æŒ‡é’ˆ
+    return hazard.get_pointer(); // 5
+}
 template <typename T>
 class LockFreeStack
 {
@@ -40,7 +88,7 @@ public:
             std::this_thread::yield();
         };
     }
-    std::shared_ptr<T> pop(int flag)
+    std::shared_ptr<T> pop1(int flag)
     {
         ++threadsTotalInPop;
 
@@ -64,6 +112,39 @@ public:
             res.swap(old_head->data);
         }
         try_reclaim(old_head, flag);
+        return res;
+    }
+    std::shared_ptr<T> pop(int flag)
+    {
+        std::atomic<void*>&
+              hp       = get_hazard_pointer_for_current_thread();
+        node* old_head = head.load();
+        do
+        {
+            node* temp;
+            do // 1 ç›´åˆ°å°†é£é™©æŒ‡é’ˆè®¾ä¸ºheadæŒ‡é’ˆ
+            {
+                temp = old_head;
+                hp.store(old_head);
+                old_head = head.load();
+            } while (old_head != temp);
+        } while (old_head &&
+                 !head.compare_exchange_strong(old_head, old_head->next));
+        hp.store(nullptr); // 2 å½“å£°æ˜å®Œæˆï¼Œæ¸…é™¤é£é™©æŒ‡é’ˆ
+        std::shared_ptr<T> res;
+        if (old_head)
+        {
+            res.swap(old_head->data);
+            //if (outstanding_hazard_pointers_for(old_head)) // 3 åœ¨åˆ é™¤ä¹‹å‰å¯¹é£é™©æŒ‡é’ˆå¼•ç”¨çš„èŠ‚ç‚¹è¿›è¡Œæ£€æŸ¥
+            //{
+            //    reclaim_later(old_head); // 4
+            //}
+            //else
+            //{
+            //    delete old_head; // 5
+            //}
+            //delete_nodes_with_no_hazards(); // 6
+        }
         return res;
     }
 
@@ -97,8 +178,8 @@ private:
     {
         if (threadsTotalInPop == 1) // 1
         {
-            node* nodes_to_delete = to_be_deleted.exchange(nullptr); // 2 ÉùÃ÷¡°¿ÉÉ¾³ı¡±ÁĞ±í
-            if (!--threadsTotalInPop)                                   // 3 ÊÇ·ñÖ»ÓĞÒ»¸öÏß³Ìµ÷ÓÃpop()£¿
+            node* nodes_to_delete = to_be_deleted.exchange(nullptr); // 2 ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½É¾ï¿½ï¿½ï¿½ï¿½ï¿½Ğ±ï¿½
+            if (!--threadsTotalInPop)                                   // 3 ï¿½Ç·ï¿½Ö»ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ß³Ìµï¿½ï¿½ï¿½pop()ï¿½ï¿½
             {
                 delete_nodes(nodes_to_delete, flag); // 4
             }
@@ -127,7 +208,7 @@ private:
     void chain_pending_nodes(node* nodes, int flag)
     {
         node* last = nodes;
-        while (node* const next = last->next) // 9 ÈÃnextÖ¸ÕëÖ¸ÏòÁ´±íµÄÄ©Î²
+        while (node* const next = last->next) // 9 ï¿½ï¿½nextÖ¸ï¿½ï¿½Ö¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä©Î²
         {
             last = next;
         }
@@ -136,7 +217,7 @@ private:
     void chain_pending_nodes(node* first, node* last, int flag)
     {
         last->next = to_be_deleted;                  // 10
-        while (!to_be_deleted.compare_exchange_weak( // 11 ÓÃÑ­»·À´±£Ö¤last->nextµÄÕıÈ·ĞÔ
+        while (!to_be_deleted.compare_exchange_weak( // 11 ï¿½ï¿½Ñ­ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö¤last->nextï¿½ï¿½ï¿½ï¿½È·ï¿½ï¿½
             last->next,
             first))
             ;
@@ -228,10 +309,10 @@ class LockFreeStack
 private:
     struct node
     {
-        std::shared_ptr<T> data; // 1 Ö¸Õë»ñÈ¡Êı¾İ
+        std::shared_ptr<T> data; // 1 Ö¸ï¿½ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½
         node*              next;
         node(T const& data_) :
-            data(std::make_shared<T>(data_)) // 2 ÈÃstd::shared_ptrÖ¸ÏòĞÂ·ÖÅä³öÀ´µÄT
+            data(std::make_shared<T>(data_)) // 2 ï¿½ï¿½std::shared_ptrÖ¸ï¿½ï¿½ï¿½Â·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½T
         {}
     };
     std::atomic<node*> head;
@@ -247,7 +328,7 @@ public:
     std::shared_ptr<T> pop()
     {
         node* old_head = head.load();
-        while (old_head && // 3 ÔÚ½âÒıÓÃÇ°¼ì²éold_headÊÇ·ñÎª¿ÕÖ¸Õë
+        while (old_head && // 3 ï¿½Ú½ï¿½ï¿½ï¿½ï¿½ï¿½Ç°ï¿½ï¿½ï¿½old_headï¿½Ç·ï¿½Îªï¿½ï¿½Ö¸ï¿½ï¿½
                !head.compare_exchange_weak(old_head, old_head->next))
             ;
         return old_head ? old_head->data : std::shared_ptr<T>(); // 4
@@ -259,9 +340,11 @@ void testMain()
 } // namespace baseNonLock_01
 void testMain()
 {
-    std::cout << "\nparallel::baseNonLock::testMain() begin.\n";
-    //parallel::baseNonLock::baseNonLock_01::testMain();
-    parallel::baseNonLock::baseNonLock_02::testMain();
-    std::cout << "parallel::baseNonLock::testMain() end.\n";
+    std::cout << "\nparallel::baseNonLock2::testMain() begin.\n";
+    std::thread::id thread_old_id;
+    std::cout << "thread_old_id: " << thread_old_id << "\n";
+    //parallel::baseNonLock2::baseNonLock_01::testMain();
+    parallel::baseNonLock2::baseNonLock_02::testMain();
+    std::cout << "parallel::baseNonLock2::testMain() end.\n";
 }
-} // namespace parallel::baseNonLock
+} // namespace parallel::baseNonLock2
