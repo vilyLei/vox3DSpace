@@ -34,6 +34,7 @@ macro(build_executable_projects)
                        "${ccplus_dir}/parallel/futureFastSort01.h"
                        "${ccplus_dir}/parallel/baseNonLock.h"
                        "${ccplus_dir}/parallel/baseNonLock2.h"
+                       "${ccplus_dir}/parallel/hazardPtr1.h"
                        "${ccplus_dir}/parallel/conditionAndLock.h"
                        "${ccplus_dir}/base/testForward.h"
                        "${ccplus_dir}/base/testTypeInfo.h"
