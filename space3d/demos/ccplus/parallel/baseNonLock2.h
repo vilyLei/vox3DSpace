@@ -88,32 +88,6 @@ public:
             std::this_thread::yield();
         };
     }
-    std::shared_ptr<T> pop1(int flag)
-    {
-        ++threadsTotalInPop;
-
-        node* old_head = head.load();
-        int         blockCycles = 0;
-        std::string info         = " \t *** pop(),threadsTotalInPop: " + std::to_string(threadsTotalInPop) + ", flag: " + std::to_string(flag) + ", old_head!=nullptr: " + std::to_string((old_head!=nullptr)) + " ...\n ";
-        std::cout << info;
-        while (old_head &&
-               !head.compare_exchange_weak(old_head, old_head->next))
-        {
-            ++blockCycles;
-            std::this_thread::yield();
-        };
-
-        std::string info1 = " \t *** pop(),call on, blockCycles: " + std::to_string(blockCycles) + ", flag: " + std::to_string(flag) + ", old_head!=nullptr: " + std::to_string((old_head != nullptr)) + " ...\n ";
-        std::cout << info1;
-
-        std::shared_ptr<T> res;
-        if (old_head)
-        {
-            res.swap(old_head->data);
-        }
-        try_reclaim(old_head, flag);
-        return res;
-    }
     std::shared_ptr<T> pop(int flag)
     {
         std::atomic<void*>&

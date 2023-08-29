@@ -10,6 +10,17 @@
 
 namespace demoTemplate::base
 {
+ namespace template_test_02
+ {
+ template <class T>
+ constexpr T pi = T(3.1415926535897932385L); // 变量模板
+
+ template <class T>
+ T circular_area(T r) // 函数模板
+ {
+     return pi<T> * r * r; // pi<T> 是变量模板实例化
+ }
+ }
 namespace buildEnableIf
 {
 template <bool _Test, class _Ty = void>

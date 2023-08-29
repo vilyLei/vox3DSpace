@@ -5,6 +5,7 @@
 #include <vector>
 #include <random>
 #include <regex>
+#include <compare>
 //#include <cctype>
 //#include <locale>
 namespace base
@@ -355,11 +356,36 @@ void testMain()
     SExampleA ex4 = {8101, 257, 0};
     std::cout << "struct SExampleA ex4: \n\t" << std::string(ex4) << std::endl;
 }
+struct Struct_S
+{
+    int         n = 7;
+    std::string s{'a', 'b', 'c'};
+    std::string s2{"astringtestdo"};
+    Struct_S() {} // default member initializer will copy-initialize n, list-initialize s
+};
+class MyClassA01
+{
+public:
+    MyClassA01()  = default;
+    ~MyClassA01() = default;
+    int         n = 7;
+    std::string s{'a', 'b', 'c'};
+    std::string s2{"astringtestdo"};
 
+
+private:
+};
+void print(std::weak_ordering value)
+{
+    value < 0 ? std::cout << "less\n" :
+    value > 0 ? std::cout << "greater\n" :
+                std::cout << "equal\n";
+}
 } // namespace teststr_1
 
 int testMain()
 {
+
     std::cout << "base::testString::testMain() begin.\n";
     std::string str    = "afasfasf*123+9"s;
     auto        fa  = std::find(str.begin(), str.end(), '*');
