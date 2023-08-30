@@ -12,6 +12,21 @@ namespace base
 {
 namespace testString
 {
+namespace teststr_3
+{
+void testMain()
+{
+    std::cout << "teststr_3::testMain() begin.\n";
+    char  input[100] = "A bird came down the walk";
+    char* token      = std::strtok(input, " ");
+    while (token != NULL)
+    {
+        std::cout << token << '\n';
+        token = std::strtok(NULL, " ");
+    }
+    std::cout << "teststr_3::testMain() end.\n";
+}
+} // namespace teststr_3
 namespace teststr_2
 {
 namespace str_utils
@@ -102,7 +117,7 @@ std::vector<std::string_view> splitSV(std::string_view strv, std::string_view de
 
     return output;
 }
-} // namespace strutils
+} // namespace str_utils
 void main02()
 {
     std::string                text = "aaa bbb ccc"s;
@@ -140,7 +155,7 @@ void main02()
 }
 std::vector<std::string> parseParams(std::string text)
 {
-    auto temp_params = str_utils::splitSV(text, ",");
+    auto                     temp_params = str_utils::splitSV(text, ",");
     std::vector<std::string> params;
     for (auto temp_param : temp_params)
     {
@@ -188,10 +203,10 @@ void testParseStr02()
 {
     const char* strdatasrc = "[module01, code/01/src, 101][module02, code/02/src, 201][module03, code/03/src, 301]";
     //strdatasrc             = "[module01, code/01/src, 101]";
-    auto paramBlocks       = parseParamText(strdatasrc);
+    auto paramBlocks = parseParamText(strdatasrc);
     std::cout << "paramBlocks.size(): " << paramBlocks.size() << "\n";
 }
-    void testParseStr01()
+void testParseStr01()
 {
     const char* strdatasrc = "[module01, code/01/src, 101][module02, code/02/src, 201][module03, code/03/src, 301]";
     std::string datastr(strdatasrc);
@@ -377,26 +392,27 @@ private:
 };
 void print(std::weak_ordering value)
 {
-    value < 0 ? std::cout << "less\n" :
-    value > 0 ? std::cout << "greater\n" :
-                std::cout << "equal\n";
+    value<0 ? std::cout << "less\n" :
+              value> 0 ?
+        std::cout << "greater\n" :
+        std::cout << "equal\n";
 }
 } // namespace teststr_1
 
 int testMain()
 {
 
-    std::cout << "base::testString::testMain() begin.\n";
-    std::string str    = "afasfasf*123+9"s;
-    auto        fa  = std::find(str.begin(), str.end(), '*');
-    auto        fb     = std::find(str.begin(), str.end(), '+');
-    auto        beginValue = std::stoul(std::string{fa+1, fb});
-    std::string subStr{fa+1, fb};
+    std::cout << "\nbase::testString::testMain() begin.\n";
+    std::string str        = "afasfasf*123+9"s;
+    auto        fa         = std::find(str.begin(), str.end(), '*');
+    auto        fb         = std::find(str.begin(), str.end(), '+');
+    auto        beginValue = std::stoul(std::string{fa + 1, fb});
+    std::string subStr{fa + 1, fb};
     //std::cout << "beginValue: " << beginValue << "\n";
     std::cout << "subStr: " << subStr << "\n";
     int        value0 = 10;
     int        value1 = 11;
-    const int* p = &value0;
+    const int* p      = &value0;
     int* const q(&value0);
     // error ...
     // *p = 11;// p 变量不可修改值,可修改指针
@@ -407,6 +423,7 @@ int testMain()
     //teststr_1::testMain();
     //teststr_1::testDistributeRandom();
     teststr_2::testMain();
+    teststr_3::testMain();
     std::cout << "base::testString::testMain() end.\n";
     return EXIT_SUCCESS;
 }

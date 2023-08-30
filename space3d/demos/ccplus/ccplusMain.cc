@@ -195,6 +195,8 @@ int main()
 {
     parallel::baseNonLock2::testMain();
     return EXIT_SUCCESS;
+    base::testString::testMain();
+    return EXIT_SUCCESS;
     parallel::baseNonLock::testMain();
     return EXIT_SUCCESS;
     thread::atomic::testMain();
@@ -210,8 +212,6 @@ int main()
     thread::memoryFence::testMain();
     return EXIT_SUCCESS;
     base::demoClass::testMain();
-    return EXIT_SUCCESS;
-    base::testString::testMain();
     return EXIT_SUCCESS;
     thread::atomic2::testMain();
     return EXIT_SUCCESS;

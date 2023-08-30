@@ -1,5 +1,7 @@
 #include <iostream>
-
+// int main(int argc, char *argv[])
+// int main(int argc, char* argv[], char* envp[]);
+// int wmain(int argc, wchar_t* argv[], wchar_t* envp[]);
 int main()
 {
     std::cout << "main exec begin ...\n";

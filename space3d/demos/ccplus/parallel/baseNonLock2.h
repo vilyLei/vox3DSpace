@@ -75,6 +75,17 @@ std::atomic<void*>& get_hazard_pointer_for_current_thread() // 3
     thread_local static hp_owner hazard; // 4 每个线程都有自己的风险指针
     return hazard.get_pointer(); // 5
 }
+bool outstanding_hazard_pointers_for(void* p)
+{
+    for (unsigned i = 0; i < max_hazard_pointers; ++i)
+    {
+        if (hazard_pointers[i].pointer.load() == p)
+        {
+            return true;
+        }
+    }
+    return false;
+}
 template <typename T>
 class LockFreeStack
 {
