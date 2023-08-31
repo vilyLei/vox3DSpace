@@ -6,9 +6,85 @@
 #include <future>
 #include <queue>
 #include <vector>
+#include <stdexcept>
+#include <functional>
 
 namespace parallel::baseNonLock2
 {
+namespace exceptTest_01
+{
+template <typename T, int N>
+requires(N > 0) /*...*/
+    class Stack
+{
+    int top_{-1};
+    T   data_[N];
+
+public:
+    [[nodiscard]] bool empty() const { return top_ == -1; }
+
+    void push(T x)
+    {
+        if (top_ == N - 1)
+            throw std::overflow_error("Stack overflow!");
+        data_[++top_] = std::move(x);
+    }
+
+    void pop()
+    {
+        if (empty())
+            throw std::overflow_error("Stack underflow!");
+        top_--;
+    }
+
+    T const& top() const
+    {
+        if (empty())
+            throw std::overflow_error("Stack is empty!");
+        return data_[top_];
+    }
+};
+
+void testMain()
+{
+    std::cout << "\nexceptTest_01::testMain() begin.\n";
+    //exceptTest_01
+    Stack<int, 4> st;
+
+    try
+    {
+        [[maybe_unused]] auto x = st.top();
+    }
+    catch (std::overflow_error const& ex)
+    {
+        std::cout << "1) Exception: " << ex.what() << '\n';
+    }
+
+    st.push(1337);
+    while (not st.empty())
+        st.pop();
+
+    try
+    {
+        st.pop();
+    }
+    catch (std::overflow_error const& ex)
+    {
+        std::cout << "2) Exception: " << ex.what() << '\n';
+    }
+
+    try
+    {
+        for (int i{}; i != 13; ++i)
+            st.push(i);
+    }
+    catch (std::overflow_error const& ex)
+    {
+        std::cout << "3) Exception: " << ex.what() << '\n';
+    }
+    std::cout << "exceptTest_01::testMain() end.\n";
+}
+}
 namespace baseNonLock_02
 {
 static int qi_uuid = 0;
@@ -86,6 +162,58 @@ bool outstanding_hazard_pointers_for(void* p)
     }
     return false;
 }
+
+template <typename T>
+void do_delete(void* p)
+{
+    delete static_cast<T*>(p);
+}
+struct data_to_reclaim
+{
+    void*                      data;
+    std::function<void(void*)> deleter;
+    data_to_reclaim*           next;
+    template <typename T>
+    data_to_reclaim(T* p) : // 1
+        data(p),
+        deleter(&do_delete<T>),
+        next(nullptr)
+    {}
+    ~data_to_reclaim()
+    {
+        deleter(data); // 2
+    }
+};
+std::atomic<data_to_reclaim*> nodes_to_reclaim = nullptr;
+void add_to_reclaim_list(data_to_reclaim* node) // 3
+{
+    node->next = nodes_to_reclaim.load();
+    while (!nodes_to_reclaim.compare_exchange_weak(node -> next,node))
+        ;
+}
+template <typename T>
+void reclaim_later(T* data) // 4
+{
+    add_to_reclaim_list(new data_to_reclaim(data)); // 5
+}
+void delete_nodes_with_no_hazards()
+{
+    data_to_reclaim* current = nodes_to_reclaim.exchange(nullptr); // 6
+    while (current)
+    {
+        data_to_reclaim* const next = current->next;
+        if (!outstanding_hazard_pointers_for(current->data)) // 7
+        {
+            delete current; // 8
+        }
+        else
+            {
+                add_to_reclaim_list(current); // 9
+            }
+        current = next;
+    }
+}
+
 template <typename T>
 class LockFreeStack
 {
@@ -120,15 +248,15 @@ public:
         if (old_head)
         {
             res.swap(old_head->data);
-            //if (outstanding_hazard_pointers_for(old_head)) // 3 在删除之前对风险指针引用的节点进行检查
-            //{
-            //    reclaim_later(old_head); // 4
-            //}
-            //else
-            //{
-            //    delete old_head; // 5
-            //}
-            //delete_nodes_with_no_hazards(); // 6
+            if (outstanding_hazard_pointers_for(old_head)) // 3 在删除之前对风险指针引用的节点进行检查
+            {
+                reclaim_later(old_head); // 4
+            }
+            else
+            {
+                delete old_head; // 5
+            }
+            delete_nodes_with_no_hazards(); // 6
         }
         return res;
     }
@@ -329,7 +457,8 @@ void testMain()
     std::thread::id thread_old_id;
     std::cout << "thread_old_id: " << thread_old_id << "\n";
     //parallel::baseNonLock2::baseNonLock_01::testMain();
-    parallel::baseNonLock2::baseNonLock_02::testMain();
+    baseNonLock_02::testMain();
+    exceptTest_01::testMain();
     std::cout << "parallel::baseNonLock2::testMain() end.\n";
 }
 } // namespace parallel::baseNonLock2

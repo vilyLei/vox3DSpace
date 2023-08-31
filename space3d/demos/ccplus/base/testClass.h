@@ -13,7 +13,46 @@ namespace base
 {
 namespace demoClass
 {
-namespace test_3
+namespace classTest_4
+{
+class ToolA
+{
+public:
+    std::string name = "ToolA";
+    friend std::ostream& operator<<(std::ostream& stream, const ToolA q)
+    {
+        return stream << "< " << q.name << " >";
+    }
+    friend inline void showInfo(const std::string& info)
+    {
+        std::cout << "ToolA::showInfo(), info: " << info << std::endl;
+    }
+    inline void showInfoString(const std::string& info)
+    {
+        std::cout << "ToolA::showInfoString(), info: " << info << std::endl;
+    }
+
+private:
+};
+
+class SubToolA
+{
+public:
+    void test() {
+        //showInfo("sd");
+    }
+};
+void testMain()
+{
+    //classTest_4::showInfo()
+    std::cout << "classTest_4::testMain() begin ..." << std::endl;
+    ToolA ta{};
+    std::cout << "classTest_4::testMain() 01 ..." << ta << std::endl;
+    ta.showInfoString("AAAA---000");
+    std::cout << "classTest_4::testMain() end ..." << std::endl;
+}
+} // namespace classTest_4
+namespace classTest_3
 {
 
 template <typename T>
@@ -38,7 +77,7 @@ public:
 };
 void testMain()
 {
-    std::cout << "base::demoClass::test_3::testMain() ..." << std::endl;
+    std::cout << "base::demoClass::classTest_3::testMain() ..." << std::endl;
 
     V4<float> v4_0{};
     v4_0.x = 10.0f;
@@ -51,8 +90,8 @@ void testMain()
     std::cout << " v4_0.vs[0]:" << v4_0.vs[0] << std::endl;
     std::cout << " v4_0.vs[1]:" << v4_0.vs[1] << std::endl;
 }
-}
-namespace test_2
+} // namespace classTest_3
+namespace classTest_2
 {
 class Door
 {
@@ -64,9 +103,7 @@ private:
 public:
     std::string name;
     Door() :
-        uuid(0)
-        , class_type("Door")
-        ,name("door") {}
+        uuid(0), class_type("Door"), name("door") {}
     int getColor()
     {
         return color;
@@ -79,7 +116,7 @@ public:
 
 protected:
     std::string class_type;
-    void setColor(unsigned int c)
+    void        setColor(unsigned int c)
     {
         color = c;
     }
@@ -93,6 +130,7 @@ class FlexDoor : private Door
 {
 protected:
     using Door::class_type;
+
 public:
     // 如下这样写了之后，FlexDoor的子类才能正常访问
     using Door::name;
@@ -104,7 +142,7 @@ public:
         Door()
     {
         class_type = "FlexDoor";
-        name = "flexDoor";
+        name       = "flexDoor";
     }
     void initFlexDoor()
     {
@@ -142,9 +180,9 @@ public:
 void testMain()
 {
     using std::string;
-    Door d01;
+    Door     d01;
     FlexDoor fd01;
-    CarDoor car_d01;
+    CarDoor  car_d01;
     //fd01.getColor();
     std::cout << string(d01) << std::endl;
     std::cout << string(fd01) << std::endl;
@@ -153,8 +191,8 @@ void testMain()
     std::cout << fd01 << std::endl;
     std::cout << car_d01 << std::endl;
 }
-} // namespace test_2
-namespace test_1
+} // namespace classTest_2
+namespace classTest_1
 {
 class Door
 {
@@ -249,7 +287,7 @@ void testMain()
     tempCar->run();
     delete tempCar;
 }
-} // namespace test_1
+} // namespace classTest_1
 namespace std_optional
 {
 // optional 可用作可能失败的工厂的返回类型
@@ -278,15 +316,16 @@ void testMain()
         std::cout << "create2(true) 返回 " << *str << '\n';
 }
 
-}
+} // namespace std_optional
 void testMain()
 {
     std::boolalpha(std::cout);
     std::cout << "base::demoClass::testMain() begin.\n";
     //std::cout << std::atomic<int>::is_always_lock_free << "\n";
-    //test_1::testMain();
-    //test_2::testMain();
-    std_optional::testMain();
+    //classTest_1::testMain();
+    //classTest_2::testMain();
+    //std_optional::testMain();
+    classTest_4::testMain();
     std::cout << "base::demoClass::testMain() end.\n";
 }
 } // namespace demoClass

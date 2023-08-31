@@ -46,28 +46,46 @@ void testSharedPtr()
     std::cout << "\n-------------------------  ------------- testSharedPtr end -----------  ------------------------------\n";
 }
 int main()
-    {
+{
     std::cout << "Hello VOX 3D Space!\n";
 
     //testSharedPtr();
     //return 1;
 
-    float mat16Data[16]{0.540302, 0.841471, -0.000000, 0.000000, - 0.738460, 0.474160, 0.479426, 0.000000,0.403423, -0.259035, 0.877583, 0.000000, 0.0, 0.000000, 0.000000, 1.000000};
+    float mat16Data[16]{0.540302, 0.841471, -0.000000, 0.000000, -0.738460, 0.474160, 0.479426, 0.000000, 0.403423, -0.259035, 0.877583, 0.000000, 0.0, 0.000000, 0.000000, 1.000000};
 
     std::cout << "\ntest common math:\n";
     baseMath::vec4<float> fv4A{0.0f};
     baseMath::mat2f       mat2fA{0.0f};
     baseMath::Box         boxA{0.0f};
     baseMath::Sphere      sphA{baseMath::Float3{}, 10.0f};
-    baseMath::mat4f        mat4f_0{1.0f};
-    baseMath::mat4f        mat4f_1;
+    baseMath::mat4f       mat4f_0{1.0f};
+    baseMath::mat4f       mat4f_1;
     std::cout << "sizeof(mat4f_1): " << sizeof(mat4f_1) << std::endl;
     std::cout << "sizeof(mat16Data): " << sizeof(mat16Data) << std::endl;
     std::memcpy(&mat4f_1, mat16Data, sizeof(mat16Data));
 
+    fv4A.xyz = {1.0, 2.0, 3.0};
+    auto new_mat1 = mat4f_0.rotation(0.7, fv4A.xyz);
+    fv4A.xyz     = {11.0, 12.0, 13.0};
+    auto new_mat  = new_mat1 * mat4f_0.translation(fv4A.xyz);
+    std::cout << "mat4f_0: " << mat4f_0 << std::endl;
+    std::cout << "new_mat: " << new_mat << std::endl;
+
+    fv4A.w = 0.0;
+    fv4A.xyz     = {3.0, 2.0, 1.0};
+    auto new_pv0 = new_mat * fv4A;
+    baseMath::vec3<float> fv3B{0.0f};
+    fv3B = {3.0, 2.0, 1.0};
+
+    new_mat.deltaTransformV3Self(fv3B);
+
+    std::cout << "new_pv0: " << new_pv0 << std::endl;
+    std::cout << "fv3B: " << fv3B << std::endl;
     std::cout << "\ntest engine base objects:\n";
 
     
+    return 1;
     std::cout << "\n-------------------------  ------------------------  ------------------------------\n";
     voxengine::data::stream::BaseTypeArray<UINT32> uint32Array(6);
     std::cout << "uint32Array.getByteStride(): " << uint32Array.getByteStride() << ", uint32Array.getByteLength(): " << uint32Array.getByteLength() << std::endl;
@@ -81,7 +99,7 @@ int main()
     {
         std::cout << "XXXTTTT float32Array[2]: " << (*fa_ptr_0)[2] << std::endl;
     }
-    // 
+    //
     //voxengine::data::stream::BaseTypeArray<UINT32*> stringArray(6);   // has some errors
     //voxengine::data::stream::BaseTypeArray<std::string> stringArray(6); // has some errors
     //stringArray[2] = "df";
@@ -134,7 +152,7 @@ int main()
     v3.data[0] = 15.7768f;
     v3.x += 15.0f;
     voxengine::math::UVec3 uv3;
-    uv3.setXYZ(325,3,5);
+    uv3.setXYZ(325, 3, 5);
     std::cout << "v3.x: " << v3.x << std::endl;
     std::cout << "uv3.x: " << uv3.x << std::endl;
 
@@ -148,7 +166,7 @@ int main()
     std::cout << "v3_01.toString(): " << v3_01.toString() << std::endl;
     v3_01.negate();
 
-    
+
     float float_vs3[3]{};
     v3_01.toArray3(float_vs3);
     v3.fromArray3(float_vs3);
@@ -199,19 +217,19 @@ int main()
         ~UnionVec3() = default;
     };
     UnionVec3 u_v3_0 = {{{0.1, 0.2, 0.3}, {0.1, 0.2, 0.3}}};
-    UnionVec3 u_v3 = {{{0.1, 0.2, 0.3}}};
+    UnionVec3 u_v3   = {{{0.1, 0.2, 0.3}}};
     u_v3.vd          = {0.1, 0.2, 0.3};
     std::cout << "UnionVec3, u_v3.vf2[0].toString(): " << u_v3.vf2[0].toString() << std::endl;
     std::cout << "UnionVec3, u_v3.vd.toString(): " << u_v3.vd.toString() << std::endl;
 
     std::cout << "\n";
-    v3_f_axis                          = {0.1f, 0.2f, 0.3f};
+    v3_f_axis = {0.1f, 0.2f, 0.3f};
     voxengine::math::Vec3<float> v3_05{};
-    v3_05                              = {2.1f, 2.2f, 2.3f};
+    v3_05 = {2.1f, 2.2f, 2.3f};
     std::cout << "v3_f_axis.toString(): " << v3_f_axis.toString() << std::endl;
     std::cout << "v3_05.toString(): " << v3_05.toString() << std::endl;
 
-    
+
     voxengine::math::Vec3<double> v3_d_0{};
     v3_d_0 = {7.1f, 7.2f, 7.3f};
 
@@ -220,7 +238,7 @@ int main()
     temp_d_v3_01.normalize();
     auto value_v3_0 = v3_d_0.dot(temp_d_v3_01);
     std::cout << "v3_d_0.dot(temp_d_v3_01): " << value_v3_0 << std::endl;
-    std::cout << "v3_d_0.dot(voxengine::math::Vec3<double>()): " << v3_d_0.dot(voxengine::math::Vec3<double>(0.5,0.7,0.8)) << std::endl;
+    std::cout << "v3_d_0.dot(voxengine::math::Vec3<double>()): " << v3_d_0.dot(voxengine::math::Vec3<double>(0.5, 0.7, 0.8)) << std::endl;
     v3_d_0.scaleVector(std::forward<voxengine::math::Vec3<double>>(temp_d_v3_01));
     v3_d_0.scaleVector(std::move(temp_d_v3_01));
     std::cout << "std::move(temp_d_v3_01), temp_d_v3_01.toString(): " << temp_d_v3_01.toString() << std::endl;
@@ -237,9 +255,9 @@ int main()
     std::cout << "\n-------------------------  ------------------------  ------------------------------\n";
     voxengine::math::Vec3<double> v3a_01{1.0, 2.0, 3.0};
     voxengine::math::Vec3<double> v3a_02{10.0, 20.0, 30.0};
-    voxengine::math::Vec3<double> v3_add_mul_01 = (v3a_01 + v3a_02) * voxengine::math::Vec3<double>{3.0,2.0,1.5};
+    voxengine::math::Vec3<double> v3_add_mul_01 = (v3a_01 + v3a_02) * voxengine::math::Vec3<double>{3.0, 2.0, 1.5};
     std::cout << "v3_add_mul_01: " << v3_add_mul_01.toString() << std::endl;
-    auto buf_v3_d = new double[4]{16.1,17.1,18.1,0.9};
+    auto                           buf_v3_d = new double[4]{16.1, 17.1, 18.1, 0.9};
     voxengine::math::Vec3<double>* ptr_v3   = (voxengine::math::Vec3<double>*)buf_v3_d;
     std::cout << "ptr_v3: " << ptr_v3->toString() << std::endl;
     v3a_01 += *ptr_v3;
@@ -281,7 +299,7 @@ int main()
     std::cout << "vec2 zero.toString(): " << axis.toString() << std::endl;
     axis = voxengine::math::Vec2<int>::ONE.clone();
     std::cout << "vec2 ONE.toString(): " << axis.toString() << std::endl;
-        
+
     auto v3_axis = voxengine::math::Vec3<int>::Y_AXIS;
     std::cout << "vec3 y_axis.toString(): " << v3_axis.toString() << std::endl;
 

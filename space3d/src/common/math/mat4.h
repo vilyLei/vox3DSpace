@@ -363,9 +363,9 @@ namespace baseMath {
 		{
 			TVec3<U> r;
 			const TMat44& m = *this;
-			r.x = m[0][0] * v.x + m[0][1] * v.y + m[0][2] * v.z;
-			r.y = m[1][0] * v.x + m[1][1] * v.y + m[1][2] * v.z;
-			r.z = m[2][0] * v.x + m[2][1] * v.y + m[2][2] * v.z;
+            r.x = m[0][0] * v.x + m[1][0] * v.y + m[2][0] * v.z;
+            r.y = m[0][1] * v.x + m[1][1] * v.y + m[2][1] * v.z;
+            r.z = m[0][2] * v.x + m[1][2] * v.y + m[2][2] * v.z;
 			return r;
 		}
 		template <typename U>
@@ -375,9 +375,9 @@ namespace baseMath {
 			T y = v.y;
 			T z = v.z;
 			const TMat44& m = *this;
-			v.x = m[0][0] * x + m[0][1] * y + m[0][2] * z;
-			v.y = m[1][0] * x + m[1][1] * y + m[1][2] * z;
-			v.z = m[2][0] * x + m[2][1] * y + m[2][2] * z;
+			v.x = m[0][0] * x + m[1][0] * y + m[2][0] * z;
+			v.y = m[0][1] * x + m[1][1] * y + m[2][1] * z;
+			v.z = m[0][2] * x + m[1][2] * y + m[2][2] * z;
 		}
 	};
 

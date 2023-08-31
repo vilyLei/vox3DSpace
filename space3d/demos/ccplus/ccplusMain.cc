@@ -193,6 +193,8 @@ int baseMain()
 
 int main()
 {
+    base::demoClass::testMain();
+    return EXIT_SUCCESS;
     parallel::baseNonLock2::testMain();
     return EXIT_SUCCESS;
     base::testString::testMain();
@@ -210,8 +212,6 @@ int main()
     coding::tcodecvr::testMain();
     return EXIT_SUCCESS;
     thread::memoryFence::testMain();
-    return EXIT_SUCCESS;
-    base::demoClass::testMain();
     return EXIT_SUCCESS;
     thread::atomic2::testMain();
     return EXIT_SUCCESS;
