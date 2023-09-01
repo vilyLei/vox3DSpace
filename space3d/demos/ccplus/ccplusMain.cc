@@ -24,6 +24,8 @@
 #include "parallel/conditionAndLock.h"
 #include "parallel/baseNonLock.h"
 #include "parallel/baseNonLock2.h"
+#include "parallel/threadPool.h"
+#include "parallel/hardware.h"
 #include "coding/testCodecvt.h"
 #include "demoTemplate/testTemplate.h"
 #include "exception1/testExcptBase.h"
@@ -191,8 +193,17 @@ int baseMain()
     return EXIT_SUCCESS;
 }
 
+int main01()
+{
+    std::cout << "run main01 function() ...\n";
+    return EXIT_SUCCESS;
+}
 int main()
 {
+    parallel::threadPool::testMain();
+    return EXIT_SUCCESS;
+    parallel::hardware::testMain();
+    return EXIT_SUCCESS;
     base::demoClass::testMain();
     return EXIT_SUCCESS;
     parallel::baseNonLock2::testMain();
