@@ -7,6 +7,7 @@
 #include <queue>
 #include <memory>
 #include <bitset>
+#include <type_traits>
 
 namespace parallel::conditionlock
 {
@@ -191,12 +192,12 @@ template <class _Integral, class _Ty>
 _NODISCARD _Integral _Atomic_reinterpret_as(const _Ty& _Source) noexcept
 {
     // interprets _Source as the supplied integral type
-    static_assert(is_integral_v<_Integral>, "Tried to reinterpret memory as non-integral");
-    if constexpr (is_integral_v<_Ty> && sizeof(_Integral) == sizeof(_Ty))
+    static_assert(std::is_integral_v<_Integral>, "Tried to reinterpret memory as non-integral");
+    if constexpr (std::is_integral_v<_Ty> && sizeof(_Integral) == sizeof(_Ty))
     {
         return static_cast<_Integral>(_Source);
     }
-    else if constexpr (is_pointer_v<_Ty> && sizeof(_Integral) == sizeof(_Ty))
+    else if constexpr (std::is_pointer_v<_Ty> && sizeof(_Integral) == sizeof(_Ty))
     {
         return reinterpret_cast<_Integral>(_Source);
     }

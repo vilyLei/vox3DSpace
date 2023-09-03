@@ -84,7 +84,10 @@ public:
         for (unsigned long i = 0; i < threads.size(); ++i)
         {
             if (threads[i].joinable())
+            {
+                std::cout << "\tjoin thread i: " << i << "\n";
                 threads[i].join();
+            }
         }
     }
 };
