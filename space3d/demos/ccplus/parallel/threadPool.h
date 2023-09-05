@@ -15,6 +15,20 @@ using namespace std::literals;
 
 namespace parallel::threadPool
 {
+
+uint64_t getThisThreadIdWithInt()
+{
+    std::stringstream ss;
+    ss << std::this_thread::get_id();
+    uint64_t id = std::stoull(ss.str());
+    return id;
+}
+std::string getThisThreadIdWithString()
+{
+    std::stringstream ss;
+    ss << std::this_thread::get_id();
+    return ss.str();
+}
 template <typename T>
 class thread_safe_queue
 {
@@ -133,7 +147,8 @@ public:
 class thread_pool
 {
     std::atomic_bool                    done;
-
+    std::vector<std::thread>            threads;
+    join_threads                        joiner;
     thread_safe_queue<function_wrapper>          work_queue; // 使用 function_wrapper，而非使用 std::function
     void worker_thread()
     {
@@ -161,7 +176,35 @@ class thread_pool
     }
 
 public:
+    thread_pool(int thread_total) :
+        done(false), joiner(threads)
+    {
+        unsigned const
+            thread_count = thread_total > std::thread::hardware_concurrency() ?
+            std::thread::hardware_concurrency() :
+            thread_total; // 8
+        std::cout << "thread_count: " << thread_count << "\n"
+                  << std::flush;
 
+        try
+        {
+            for (unsigned i = 0; i < thread_count; ++i)
+            {
+                threads.push_back(
+                    std::thread(&thread_pool::worker_thread, this)); // 9
+            }
+        }
+        catch (...)
+        {
+            done = true; // 10
+            throw;
+        }
+    }
+    ~thread_pool()
+    {
+        std::cout << "thread_pool::destructor()\n";
+        done = true; // 11
+    }
 #if __cplusplus >= 202002L
     template <typename FunctionType>
     std::future<typename std::invoke_result<FunctionType()>::type>
@@ -188,24 +231,37 @@ public:
 #endif
     // rest as before
 };
+
+void func1()
+{
+    std::string infoStr = "func1(), thread id: " + getThisThreadIdWithString() + "\n";
+    std::cout << infoStr;
+    std::this_thread::sleep_for(30ms);
+}
+void func2()
+{
+    std::string infoStr = "func2(), thread id: " + getThisThreadIdWithString() + "\n";
+    std::cout << infoStr;
+    std::this_thread::sleep_for(30ms);
+}
+
+void testMain()
+{
+    std::cout << "\nhreadPool_02::testMain() begin.\n";
+
+    thread_pool tp(2);
+    //tp.submit(func1);
+    //tp.submit(func2);
+
+
+    std::this_thread::sleep_for(600ms);
+    std::cout << "threadPool_02::testMain() end.\n";
+}
 }
 namespace threadPool_01
 {
 ///*
 
-uint64_t getThisThreadIdWithInt()
-{
-    std::stringstream ss;
-    ss << std::this_thread::get_id();
-    uint64_t id = std::stoull(ss.str());
-    return id;
-}
-std::string getThisThreadIdWithString()
-{
-    std::stringstream ss;
-    ss << std::this_thread::get_id();
-    return ss.str();
-}
 class thread_pool
 {
     std::atomic_bool                         done;

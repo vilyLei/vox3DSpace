@@ -14,6 +14,14 @@ int main(int argc, char** argv)
     return EXIT_SUCCESS;
 }
 //*/
+
+//#include <iostream>
+//int main(int argc, char** argv)
+//{
+//    std::cout << "hi ...\n";
+//    return 1;
+//}
+
 /*
 #include <iostream>
 #include <string>
