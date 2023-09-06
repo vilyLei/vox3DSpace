@@ -11,6 +11,7 @@
 #include <compare>
 #include <future>
 #include <type_traits>
+#include <forward_list>
 using namespace std::literals;
 
 namespace parallel::threadPool
@@ -222,6 +223,51 @@ public:
 #endif
     // rest as before
 };
+template <typename Iterator, typename T>
+struct accumulate_block
+{
+    Iterator first;
+    Iterator last;
+
+    T operator()()
+    {
+        return std::accumulate(first, last, 0);
+    }
+};
+template <typename Iterator, typename T>
+T parallel_accumulate(Iterator first, Iterator last, T init)
+{
+    unsigned long const length = std::distance(first, last);
+    if (!length)
+        return init;
+    unsigned long const block_size = 25;
+    unsigned long const num_blocks = (length + block_size - 1) / block_size; // 1
+    std::vector<std::future<T>> futures(num_blocks - 1);
+    thread_pool                 pool(3);
+    Iterator                    block_start = first;
+    for (unsigned long i = 0; i < (num_blocks - 1); ++i)
+    {
+        Iterator block_end = block_start;
+        std::advance(block_end, block_size);
+        accumulate_block<Iterator, T> ab{};
+        ab.first    = block_start;
+        ab.last     = block_end;
+        futures[i]  = pool.submit(ab); // 2
+        block_start = block_end;
+    }
+    //T last_result = accumulate_block<Iterator, T>()(block_start, last);
+    accumulate_block<Iterator, T> ab{};
+    ab.first      = block_start;
+    ab.last       = last;
+    T last_result = ab();
+    T result      = init;
+    for (unsigned long i = 0; i < (num_blocks - 1); ++i)
+    {
+        result += futures[i].get();
+    }
+    result += last_result;
+    return result;
+}
 
 int func1()
 {
@@ -289,6 +335,11 @@ void testMain()
     std::cout << infoStr2;
 
     std::this_thread::sleep_for(600ms);
+    std::forward_list<int> lint_int{1,2,3,4,5,6};
+    auto accValue = parallel_accumulate(lint_int.begin(), lint_int.end(), 0);
+    std::string infoStr3 = "XXXX accValue: " + std::to_string(accValue) + "\n";
+    std::cout << infoStr3;
+
     std::cout << "threadPool_02::testMain() end.\n";
 }
 }
