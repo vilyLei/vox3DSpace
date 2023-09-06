@@ -101,12 +101,24 @@ void task_thread()
 
     std::cout << "task_thread:\t" << result.get() << '\n';
 }
+int  flagFunc() { return 1; }
+void task_thread01()
+{
+    std::packaged_task<int()> task(flagFunc);
+    std::future<int>                  result = task.get_future();
+
+    std::thread task_td(std::move(task));
+    task_td.join();
+
+    std::cout << "task_thread01:\t" << result.get() << '\n';
+}
 
 void testMain()
 {
     task_lambda();
     task_bind();
     task_thread();
+    task_thread01();
 }
 } // namespace packTask
 namespace thrf01

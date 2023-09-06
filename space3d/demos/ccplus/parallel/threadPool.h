@@ -154,15 +154,6 @@ class thread_pool
     {
         while (!done)
         {
-            //function_wrapper task;
-            //if (work_queue.try_pop(task))
-            //{
-            //    task();
-            //}
-            //else
-            //{
-            //    std::this_thread::yield();
-            //}
             auto task = work_queue.try_pop();
             if (task) // 5
             {
@@ -207,10 +198,10 @@ public:
     }
 #if __cplusplus >= 202002L
     template <typename FunctionType>
-    std::future<typename std::invoke_result<FunctionType()>::type>
+    std::future<typename std::invoke_result<FunctionType>::type>
     submit(FunctionType f)
     {
-        typedef typename std::invoke_result<FunctionType()>::type result_type;
+        typedef typename std::invoke_result<FunctionType>::type result_type;
         std::packaged_task<result_type()> task(std::move(f));
         std::future<result_type>          res(task.get_future());
         work_queue.push(std::move(task));
@@ -232,27 +223,70 @@ public:
     // rest as before
 };
 
-void func1()
+int func1()
 {
-    std::string infoStr = "func1(), thread id: " + getThisThreadIdWithString() + "\n";
+    std::string infoStr = "xxx function_wrapper::func1(), thread id: " + getThisThreadIdWithString() + "\n";
     std::cout << infoStr;
     std::this_thread::sleep_for(30ms);
+    return 1;
 }
-void func2()
+int func2()
 {
-    std::string infoStr = "func2(), thread id: " + getThisThreadIdWithString() + "\n";
+    std::string infoStr = "xxx function_wrapper::func2(), thread id: " + getThisThreadIdWithString() + "\n";
     std::cout << infoStr;
     std::this_thread::sleep_for(30ms);
+    return 2;
 }
+void task_thread01()
+{
+    std::packaged_task<int()> task(func1);
+    std::future<int>          result = task.get_future();
 
+    std::thread task_td(std::move(task));
+    task_td.join();
+
+    std::cout << "XXXX task_thread01: " << result.get() << '\n\n';
+}
+int vFunc1()
+{
+    return 1;
+}
+int vFunc2(void)
+{
+    return 1;
+}
+template <typename FunctionType>
+std::future<typename std::invoke_result<FunctionType>::type>
+testSubmit(FunctionType f)
+{
+    typedef typename std::invoke_result<FunctionType>::type result_type;
+    std::packaged_task<result_type()>                         task(std::move(f));
+    std::future<result_type>                                  res(task.get_future());
+    return res;
+}
 void testMain()
 {
     std::cout << "\nhreadPool_02::testMain() begin.\n";
 
-    thread_pool tp(2);
-    //tp.submit(func1);
-    //tp.submit(func2);
+    //auto pvfunc1 = std::function<int()>(vFunc1);
+    //auto v_01    = vFunc1();
+    //std::cout << ">>> pfunc1(): " << vFunc1() << "\n";
+    //std::cout << ">>> v_01: " << v_01 << "\n";
+    //std::this_thread::sleep_for(50ms);
+    //testSubmit(vFunc2);
 
+    thread_pool tp(2);
+    auto fu01 = tp.submit(func1);
+    auto fu02   = tp.submit(func2);
+    //task_thread01();
+
+    auto fuv1 = fu01.get();
+    auto fuv2 = fu02.get();
+
+    std::string infoStr1 = "XXXX fu01.get(): " + std::to_string(fuv1) + "\n";
+    std::cout << infoStr1;
+    std::string infoStr2 = "XXXX fu02.get(): " + std::to_string(fuv2) + "\n";
+    std::cout << infoStr2;
 
     std::this_thread::sleep_for(600ms);
     std::cout << "threadPool_02::testMain() end.\n";
@@ -460,30 +494,31 @@ void testMain()
 {
     std::cout << "\nparallel::threadPool::testMain() begin.\n";
 
-    std::stringstream ss;
-    ss << 3;
-    auto str1 = ss.str();
-    auto str2 = ss.str();
-    ss.flush();
-    auto str3 = ss.str();
-    ss << "2"<<std::flush;
-    auto str4 = ss.str();
-    ss.clear();
-    auto str5 = ss.str();
-    ss.str("");
-    auto str6 = ss.str();
+    //std::stringstream ss;
+    //ss << 3;
+    //auto str1 = ss.str();
+    //auto str2 = ss.str();
+    //ss.flush();
+    //auto str3 = ss.str();
+    //ss << "2"<<std::flush;
+    //auto str4 = ss.str();
+    //ss.clear();
+    //auto str5 = ss.str();
+    //ss.str("");
+    //auto str6 = ss.str();
 
-    std::cout << "str1: " << str1 << "\n";
-    std::cout << "str2: " << str2 << "\n";
-    std::cout << "str3: " << str3 << "\n";
-    std::cout << "str4: " << str4 << "\n";
-    std::cout << "str5: " << str5 << "\n";
-    std::cout << "str6: " << str6 << "\n";
+    //std::cout << "str1: " << str1 << "\n";
+    //std::cout << "str2: " << str2 << "\n";
+    //std::cout << "str3: " << str3 << "\n";
+    //std::cout << "str4: " << str4 << "\n";
+    //std::cout << "str5: " << str5 << "\n";
+    //std::cout << "str6: " << str6 << "\n";
 
     //std::thread::id thread_old_id;
     //std::cout << "thread_old_id: " << thread_old_id << "\n";
     //threadPool_p01::testMain();
-    threadPool_01::testMain();
+    //threadPool_01::testMain();
+    threadPool_02::testMain();
     std::cout << "parallel::threadPool::testMain() end.\n";
 }
 } // namespace parallel::threadPool
