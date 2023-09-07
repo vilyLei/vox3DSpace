@@ -6,7 +6,7 @@
 #include <iterator>
 #include <vector>
 
-namespace parallel::futuresort
+namespace parallel::futureFastSort01
 {
 // 若干个不同数的全排列
 namespace permutation
@@ -99,6 +99,23 @@ void quicksortList3(TV t0, TV t1)
         });
         quicksortList3(t0, p0);
         quicksortList3(p1, t1);
+    }
+}
+
+template <typename IT>
+void qsort3(IT a, IT b)
+{
+    if (a != b)
+    {
+        auto value = *std::next(a, (b - a) / 2);
+        auto p0    = std::partition(a, b, [value](const auto& v) -> bool{
+            return value > v;
+        });
+        auto p1    = std::partition(p0, b, [value](const auto& v) -> bool {
+            return value >= v;
+        });
+        qsort3(a, p0);
+        qsort3(p1, b);
     }
 }
 
@@ -229,9 +246,18 @@ void testMain()
     std::cout << '\n';
     //quicksortList(std::begin(vector1), std::end(vector1));
     //quicksortList2(std::begin(vector1), std::end(vector1));
-    quicksortList3(std::begin(vector1), std::end(vector1));
-    std::cout << "\nEEE quicksort new vector1: ";
-    for (int fi : list1)
+    qsort3(std::begin(vector1), std::end(vector1));
+    std::cout << "\nEEE qsort3 new vector1: ";
+    for (int fi : vector1)
+        std::cout << fi << ' ';
+    std::cout << '\n';
+
+    std::vector<int> vector2{1, 30, -4, 3, 5, 8, -4, 1, 6, -8, 2, -5, 64, 1, 92};
+    auto tp0 = std::partition(vector2.begin(), vector2.end(), [](const auto& v) -> bool {
+        return 5 > v;
+    });
+    std::cout << "\nEEE partition sort new vector2: ";
+    for (int fi : vector2)
         std::cout << fi << ' ';
     std::cout << '\n';
 }
@@ -324,8 +350,8 @@ void testMain()
 void testMain()
 {
     std::cout << "parallel::futuresort::testMain() begin.\n\n";
-    //testpartition::testMain();
-    pallfastsort::testMain();
+    testpartition::testMain();
+    //pallfastsort::testMain();
     std::cout << "\nparallel::futuresort::testMain() begin.\n";
 }
 } // namespace parallel::futuresort

@@ -29,6 +29,7 @@
 #include "coding/testCodecvt.h"
 #include "demoTemplate/testTemplate.h"
 #include "exception1/testExcptBase.h"
+#include "algorithm/testsort.h"
 
 class ValueUnit
 {
@@ -200,6 +201,10 @@ int main01()
 }
 int main()
 {
+    algorithm::testsort::testMain();
+    return EXIT_SUCCESS;
+    parallel::futureFastSort01::testMain();
+    return EXIT_SUCCESS;
     parallel::threadPool::testMain();
     return EXIT_SUCCESS;
     parallel::hardware::testMain();
@@ -237,8 +242,6 @@ int main()
         std::cout << "System PATH is: " << env_p << "\n\n";
     //*/
 
-    parallel::futuresort::testMain();
-    return EXIT_SUCCESS;
     base::demoForward::testMain();
     return EXIT_SUCCESS;
     thread::thrFuture::testMain();
