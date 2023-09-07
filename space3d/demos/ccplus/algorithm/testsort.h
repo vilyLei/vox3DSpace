@@ -294,12 +294,55 @@ void testPerformence1(int total, int type = 0)
         std::cout << "\n";
     }
 }
+void partSortTest(int total)
+{
+    auto time_start = std::chrono::high_resolution_clock::now();
+    auto list       = createInvertVector(total);
+    auto a          = std::begin(list);
+    auto b          = std::end(list);
+    auto value      = *std::next(a, std::distance(a, b) / 2);
+    auto p0         = std::partition(a, b, [value](const auto& v) -> bool {
+        return v < value;
+    });
+    auto p1         = std::partition(p0, b, [value](const auto& v) -> bool {
+        return v <= value;
+    });
+    auto time_end   = std::chrono::high_resolution_clock::now();
+    auto lossTime   = std::chrono::duration_cast<std::chrono::milliseconds>(time_end - time_start).count();
+    std::cout << "std::partition() loss time: " << lossTime << "ms" << std::endl;
+
+    time_start = std::chrono::high_resolution_clock::now();
+    std::sort(a, p0);
+    time_end = std::chrono::high_resolution_clock::now();
+    lossTime = std::chrono::duration_cast<std::chrono::milliseconds>(time_end - time_start).count();
+    std::cout << "std::partition() AAA loss time: " << lossTime << "ms" << std::endl;
+    time_start = std::chrono::high_resolution_clock::now();
+    std::sort(p1, b);
+    lossTime = std::chrono::duration_cast<std::chrono::milliseconds>(time_end - time_start).count();
+    std::cout << "std::partition() BBB loss time: " << lossTime << "ms" << std::endl;
+    std::cout << "std::partition() BBB          (total / 2): " << (total / 2) << std::endl;
+    std::cout << "std::partition() BBB std::distance(a, p0): " << std::distance(a, p0) << std::endl;
+    std::cout << "std::partition() BBB std::distance(p1, b): " << std::distance(p1, b) << std::endl;
+    // release 3ms,4ms,0ms
+    // 多个线程再细分的时候，才会更有效。
+}
 void testMain()
 {
-    auto total = 65535;
-    testPerformence1(total, 0);
-    testPerformence1(total, 1);
-    //testPerformence1(total, 2);
+
+    auto total = 65536 << 4;
+
+    partSortTest(total);
+
+    //std::cout << "\nlist: ";
+    //for (auto v : list)
+    //{
+    //    std::cout << v << ",";
+    //}
+    //std::cout << "\n";
+
+    //testPerformence1(total, 0);
+    //testPerformence1(total, 1);
+    testPerformence1(total, 2);
     return;
     //auto list01 = createRandomList();
     //std::forward_list<int> list01{-5,3,19,6,-8,18,5,21,-7, 7,6};
