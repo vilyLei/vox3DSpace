@@ -14,6 +14,35 @@ namespace tsort01
 {
 int callTimes = 0;
 
+template <typename IT, typename FuncT>
+IT listPartition2(IT a, IT b, FuncT comp)
+{
+    // bad implements ...
+    auto it    = a;
+    auto maxIt = a;
+    auto rIT   = a;
+    for (auto it = a; it != b; ++it)
+    {
+        if (comp(*it))
+        {
+            rIT = it;
+            ++rIT;
+        }
+        else {
+            maxIt = it;
+            for (; ++maxIt != b;)
+            {
+                if (comp(*maxIt)) {
+                    std::iter_swap(it, maxIt);
+                    rIT = it;
+                    ++rIT;
+                    break;
+                }
+            }
+        }
+    }
+    return rIT;
+}
 
 template <typename IT, typename FuncT>
 IT listPartition(IT a, IT b, FuncT comp)
@@ -100,7 +129,22 @@ void qsort2(IT a, IT b)
         qsort2(p1, b);
     }
 }
-
+template <typename IT>
+void listQSort2(IT a, IT b)
+{
+    if (a != b)
+    {
+        auto value = *std::next(a, std::distance(a, b) / 2);
+        auto p0    = listPartition2(a, b, [value](const auto& v) -> bool {
+            return v < value;
+        });
+        auto p1    = listPartition2(p0, b, [value](const auto& v) -> bool {
+            return v <= value;
+        });
+        listQSort(a, p0);
+        listQSort(p1, b);
+    }
+}
 template <typename IT>
 void listQSort(IT a, IT b)
 {
@@ -252,10 +296,10 @@ void testPerformence1(int total, int type = 0)
 }
 void testMain()
 {
-    auto total = 65535 << 4;
+    auto total = 65535;
     testPerformence1(total, 0);
     testPerformence1(total, 1);
-    testPerformence1(total, 2);
+    //testPerformence1(total, 2);
     return;
     //auto list01 = createRandomList();
     //std::forward_list<int> list01{-5,3,19,6,-8,18,5,21,-7, 7,6};
