@@ -49,6 +49,7 @@ macro(build_executable_projects)
                        "${ccplus_dir}/exception1/testExcptBase.h"
                        "${ccplus_dir}/msvcAsm/testInlineAsm.h"
                        "${ccplus_dir}/demoTemplate/testTemplate.h"
+                       "${ccplus_dir}/demoTemplate/testTemplate02.h"
                        "${ccplus_dir}/ccplusMain.cc"
                        FOLDER
                        ${test_demo_folder_name}

@@ -12,7 +12,7 @@ namespace demoTemplate::base
 {
 namespace templateTemplateParameter
 {
-// Ë«ÖØÄ£°å²ÎÊı
+// Ë«ï¿½ï¿½Ä£ï¿½ï¿½ï¿½ï¿½ï¿½
 
 #if !defined(__PRETTY_FUNCTION__) && !defined(__GNUC__)
 #    define __PRETTY_FUNCTION__ __FUNCSIG__
@@ -20,7 +20,7 @@ namespace templateTemplateParameter
 template <typename T, template <class, class...> class C, class... Args>
 std::ostream& operator<<(std::ostream& os, const C<T, Args...>& objs)
 {
-    // ¿ÉÒÔ½«²ÎÊıÈ«²¿´òÓ¡³öÀ´
+    // ï¿½ï¿½ï¿½Ô½ï¿½ï¿½ï¿½ï¿½ï¿½È«ï¿½ï¿½ï¿½ï¿½Ó¡ï¿½ï¿½ï¿½ï¿½
     os << "FUNC DETAIL: " << __PRETTY_FUNCTION__ << '\n';
     for (auto const& obj : objs)
         os << obj << ' ';
@@ -88,10 +88,10 @@ void testMain()
         << func01(1, 2) << ' '                // true
         << func01(1.0, 1) << ' '              // false
         << func01(1, 2.0) << ' '              // true
-        << std::less<int>{}(5, 5.6) << ' '    // false £º 5 < 5 £¨¾¯¸æ£ºÒşÊ½×ª»»£©
-        << std::less<double>{}(5, 5.6) << ' ' // true  £º 5.0 < 5.6
-        << std::less<int>{}(5.6, 5.7) << ' '  // false £º 5 < 5 £¨¾¯¸æ£ºÒşÊ½×ª»»£©
-        << std::less{}(5, 5.6) << ' '         // true  £º less<void>: 5.0 < 5.6
+        << std::less<int>{}(5, 5.6) << ' '    // false ï¿½ï¿½ 5 < 5 ï¿½ï¿½ï¿½ï¿½ï¿½æ£ºï¿½ï¿½Ê½×ªï¿½ï¿½ï¿½ï¿½
+        << std::less<double>{}(5, 5.6) << ' ' // true  ï¿½ï¿½ 5.0 < 5.6
+        << std::less<int>{}(5.6, 5.7) << ' '  // false ï¿½ï¿½ 5 < 5 ï¿½ï¿½ï¿½ï¿½ï¿½æ£ºï¿½ï¿½Ê½×ªï¿½ï¿½ï¿½ï¿½
+        << std::less{}(5, 5.6) << ' '         // true  ï¿½ï¿½ less<void>: 5.0 < 5.6
         << '\n';
 }
 }
@@ -121,23 +121,23 @@ private:
 template <typename T>
 struct Node
 {
-    struct Node* Next;   // OK£º¶Ô Node µÄ²éÕÒÕÒµ½×¢ÈëµÄÀàÃû
-    struct Data* Data;   // OK£ºÓÚÈ«¾Ö×÷ÓÃÓòÉùÃ÷ÀàĞÍ Data
-                         // ²¢ÉùÃ÷Êı¾İ³ÉÔ± Data
-    //friend class ::List; // ´íÎó£º²»ÄÜÒıÈëÓĞÏŞ¶¨Ãû
-    enum Kind* kind;     // ´íÎó£º²»ÄÜÒıÈëÃ¶¾Ù
+    struct Node* Next;   // OKï¿½ï¿½ï¿½ï¿½ Node ï¿½Ä²ï¿½ï¿½ï¿½ï¿½Òµï¿½×¢ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+    struct Data* Data;   // OKï¿½ï¿½ï¿½ï¿½È«ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Data
+                         // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½İ³ï¿½Ô± Data
+    //friend class ::List; // ï¿½ï¿½ï¿½ó£º²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ş¶ï¿½ï¿½ï¿½
+    enum Kind* kind;     // ï¿½ï¿½ï¿½ó£º²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ã¶ï¿½ï¿½
 };
 
-Data* p; // OK£ºstruct Data ÒÑ±»ÉùÃ÷
+Data* p; // OKï¿½ï¿½struct Data ï¿½Ñ±ï¿½ï¿½ï¿½ï¿½ï¿½
 void main()
 {
     T           t0;
     int         T;
-    //T           t; // ´íÎó£ºÕÒµ½¾Ö²¿±äÁ¿ T
-    class T     t; // OK£ºÕÒµ½ ::T£¬ºöÂÔ¾Ö²¿±äÁ¿ T
+    //T           t; // ï¿½ï¿½ï¿½ï¿½ï¿½Òµï¿½ï¿½Ö²ï¿½ï¿½ï¿½ï¿½ï¿½ T
+    class T     t; // OKï¿½ï¿½ï¿½Òµï¿½ ::Tï¿½ï¿½ï¿½ï¿½ï¿½Ô¾Ö²ï¿½ï¿½ï¿½ï¿½ï¿½ T
     T::F*       f; // OK
-    //T::U*       u; // ´íÎó£ºT::U µÄ²éÕÒÕÒµ½Ë½ÓĞÊı¾İ³ÉÔ±
-    class T::U* u; // OK£ººöÂÔ¸ÃÊı¾İ³ÉÔ±
+    //T::U*       u; // ï¿½ï¿½ï¿½ï¿½T::U ï¿½Ä²ï¿½ï¿½ï¿½ï¿½Òµï¿½Ë½ï¿½ï¿½ï¿½ï¿½ï¿½İ³ï¿½Ô±
+    class T::U* u; // OKï¿½ï¿½ï¿½ï¿½ï¿½Ô¸ï¿½ï¿½ï¿½ï¿½İ³ï¿½Ô±
 }
 }
 namespace templateDefTest01
@@ -171,7 +171,7 @@ eval<E<int, float>> eE; // error: E does not match TT in partial specialization
 
 namespace template_test_03
 {
-// ·ÇÀàĞÍÀàÄ£°å²ÎÊı(Nontype Class Template Parameters)
+// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä£ï¿½ï¿½ï¿½ï¿½ï¿½(Nontype Class Template Parameters)
 template <class T>
 void f()
 {
@@ -194,12 +194,12 @@ void testMain()
  namespace template_test_02
  {
  template <class T>
- constexpr T pi = T(3.1415926535897932385L); // ±äÁ¿Ä£°å
+ constexpr T pi = T(3.1415926535897932385L); // ï¿½ï¿½ï¿½ï¿½Ä£ï¿½ï¿½
 
  template <class T>
- T circular_area(T r) // º¯ÊıÄ£°å
+ T circular_area(T r) // ï¿½ï¿½ï¿½ï¿½Ä£ï¿½ï¿½
  {
-     return pi<T> * r * r; // pi<T> ÊÇ±äÁ¿Ä£°åÊµÀı»¯
+     return pi<T> * r * r; // pi<T> ï¿½Ç±ï¿½ï¿½ï¿½Ä£ï¿½ï¿½Êµï¿½ï¿½ï¿½ï¿½
  }
  }
 namespace buildEnableIf
@@ -441,7 +441,7 @@ namespace test_2
 #include <iostream>
 #include <cstring>
 
-///  Ä£°æÌØ»¯
+///  Ä£ï¿½ï¿½ï¿½Ø»ï¿½
 template <class T>
 int compare(const T left, const T right)
 {
@@ -450,7 +450,7 @@ int compare(const T left, const T right)
 }
 
 
-//  Õâ¸öÊÇÒ»¸öÌØ»¯µÄº¯ÊıÄ£°æ
+//  ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½Ø»ï¿½ï¿½Äºï¿½ï¿½ï¿½Ä£ï¿½ï¿½
 template <>
 int compare<const char*>(const char* left, const char* right)
 {
@@ -458,7 +458,7 @@ int compare<const char*>(const char* left, const char* right)
 
     return strcmp(left, right);
 }
-//  ÌØ»¯µÄº¯ÊıÄ£°æ, Á½¸öÌØ»¯µÄÄ£°æ±¾ÖÊÏàÍ¬, Òò´Ë±àÒëÆ÷»á±¨´í
+//  ï¿½Ø»ï¿½ï¿½Äºï¿½ï¿½ï¿½Ä£ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½ï¿½Ø»ï¿½ï¿½ï¿½Ä£ï¿½æ±¾ï¿½ï¿½ï¿½ï¿½Í¬, ï¿½ï¿½Ë±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½á±¨ï¿½ï¿½
 // error: redefinition of 'int compare(T, T) [with T = const char*]'|
 //template < >
 //int compare(const char* left, const char* right)
@@ -467,7 +467,7 @@ int compare<const char*>(const char* left, const char* right)
 //
 //    return strcmp(left, right);
 //}
-//  Õâ¸öÆäÊµ±¾ÖÊÊÇº¯ÊıÖØÔØ
+//  ï¿½ï¿½ï¿½ï¿½ï¿½Êµï¿½ï¿½ï¿½ï¿½ï¿½Çºï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 int compare(char* left, char* right)
 {
     std::cout << "in char* overload function..." << std::endl;
@@ -480,14 +480,14 @@ int compare(const std::string& s0, const std::string& s1)
 
     return s0.compare(s1);
 }
-//º¯ÊıÄ£°å
+//ï¿½ï¿½ï¿½ï¿½Ä£ï¿½ï¿½
 template <class T>
 bool IsEqual(T t1, T t2)
 {
     return t1 == t2;
 }
 
-template <> //º¯ÊıÄ£°åÌØ»¯
+template <> //ï¿½ï¿½ï¿½ï¿½Ä£ï¿½ï¿½ï¿½Ø»ï¿½
 bool IsEqual(char* t1, char* t2)
 {
     return strcmp(t1, t2) == 0;
@@ -506,7 +506,7 @@ int testMain()
 
     char str1[] = "abc";
     char str2[] = "abc";
-    std::cout << std::showpos << "º¯ÊıÄ£°åºÍº¯ÊıÄ£°åÌØ»¯" << std::endl;
+    std::cout << std::showpos << "ï¿½ï¿½ï¿½ï¿½Ä£ï¿½ï¿½Íºï¿½ï¿½ï¿½Ä£ï¿½ï¿½ï¿½Ø»ï¿½" << std::endl;
     std::cout << std::showpos << "IsEqual(1, 1): " << IsEqual(1, 1) << std::endl;
     std::cout << std::noshowpos << "IsEqual(str1, str2): " << IsEqual(str1, str2) << std::endl;
     return 0;
@@ -561,8 +561,8 @@ int testMain()
     return 0;
 }
 
-//µÚÒ»¸öÄ£°åº¯Êıf£¬Èç¹ûTµÄÀàĞÍÊÇint£¬Ò²¾Íis_integral<T>::valueµÄ·µ»ØÖµÊÇtrueÊ±£¬»áµ¼ÖÂenable_ifµÄÊµÀı»¯ÖĞÓĞÒ»¸ötypeµÄ±ğÃû¡£Ò²¾ÍÊÇÈç¹ûTÊÇint£¬ÄÇÃ´»áÆôÓÃ¸ÃÄ£°åº¯Êı£»·ñÔò»á½ûÓÃ¸ÃÄ£°åº¯Êı¡£
-//µÚ¶ş¸öÄ£°åº¯ÊıµÄÊ¹ÄÜÊÇµ±is_integral<T>::valueÎªfalseÊ±£¬Ò²¾ÍÊÇT²»ÊÇintµÄÊ±ºò
+//ï¿½ï¿½Ò»ï¿½ï¿½Ä£ï¿½åº¯ï¿½ï¿½fï¿½ï¿½ï¿½ï¿½ï¿½Tï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½intï¿½ï¿½Ò²ï¿½ï¿½is_integral<T>::valueï¿½Ä·ï¿½ï¿½ï¿½Öµï¿½ï¿½trueÊ±ï¿½ï¿½ï¿½áµ¼ï¿½ï¿½enable_ifï¿½ï¿½Êµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½typeï¿½Ä±ï¿½ï¿½ï¿½ï¿½ï¿½Ò²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Tï¿½ï¿½intï¿½ï¿½ï¿½ï¿½Ã´ï¿½ï¿½ï¿½ï¿½ï¿½Ã¸ï¿½Ä£ï¿½åº¯ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ã¸ï¿½Ä£ï¿½åº¯ï¿½ï¿½ï¿½ï¿½
+//ï¿½Ú¶ï¿½ï¿½ï¿½Ä£ï¿½åº¯ï¿½ï¿½ï¿½ï¿½Ê¹ï¿½ï¿½ï¿½Çµï¿½is_integral<T>::valueÎªfalseÊ±ï¿½ï¿½Ò²ï¿½ï¿½ï¿½ï¿½Tï¿½ï¿½ï¿½ï¿½intï¿½ï¿½Ê±ï¿½ï¿½
 
 } // namespace test_1
 void testMain()

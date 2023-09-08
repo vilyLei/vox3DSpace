@@ -28,6 +28,7 @@
 #include "parallel/hardware.h"
 #include "coding/testCodecvt.h"
 #include "demoTemplate/testTemplate.h"
+#include "demoTemplate/testTemplate02.h"
 #include "exception1/testExcptBase.h"
 #include "algorithm/testsort.h"
 
@@ -201,6 +202,8 @@ int main01()
 }
 int main()
 {
+    demoTemplate::base02::testMain();
+    return EXIT_SUCCESS;
     demoTemplate::base::testMain();
     return EXIT_SUCCESS;
     algorithm::testsort::testMain();
