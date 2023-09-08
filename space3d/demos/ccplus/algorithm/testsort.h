@@ -177,6 +177,19 @@ void listQSort(IT a, IT b)
         listQSort(p1, b);
     }
 }
+template <typename IT>
+void listQSortFast(IT a, IT b)
+{
+    if (a != b)
+    {
+        auto value = *std::next(a, std::distance(a, b) / 2);
+        auto p0    = listPartition(a, b, [value](const auto& v) -> bool {
+            return v < value;
+        });
+        listQSort(a, p0);
+        listQSort(p0, b);
+    }
+}
 
 template <typename IT>
 void qsort1(IT a, IT b)
@@ -194,32 +207,49 @@ void qsort1(IT a, IT b)
         qsort1(p1, b);
     }
 }
-std::forward_list<int> createRandomList()
+std::forward_list<int> createRandomList(int data_size = 20)
 {
     std::random_device rd;
     std::mt19937       gen(rd());
     //std::uniform_real_distribution<double> distribute(0.0, 200.0);
     std::uniform_int_distribution<int> distribute(-100, 200);
 
-    const int data_size = 20;
     //int data[data_size]{1,2,3};
     //std::forward_list<int> ls(3,7);
     std::forward_list<int> ls{};
     //std::forward_list<int> ls(data_size);
 
-    std::cout << "A ls.max_size(): " << ls.max_size() << "\n";
+    //std::cout << "A ls.max_size(): " << ls.max_size() << "\n";
     for (int i = 0; i < data_size; ++i)
     {
         auto v = distribute(gen);
         ls.push_front(v);
     }
-    std::cout << "B ls.max_size(): " << ls.max_size() << "\n";
-    std::cout << "\nls: ";
-    for (auto v : ls)
+    //std::cout << "B ls.max_size(): " << ls.max_size() << "\n";
+    printListWithIterRange("\ncreateRandomList(), ls: ", ls.begin(), ls.end());
+    return ls;
+}
+
+std::vector<int> createRandomVector(int data_size = 20)
+{
+    std::random_device rd;
+    std::mt19937       gen(rd());
+    //std::uniform_real_distribution<double> distribute(0.0, 200.0);
+    std::uniform_int_distribution<int> distribute(-100, 200);
+
+    //int data[data_size]{1,2,3};
+    //std::forward_list<int> ls(3,7);
+    std::vector<int> ls(data_size);
+    //std::forward_list<int> ls(data_size);
+
+    //std::cout << "A ls.max_size(): " << ls.max_size() << "\n";
+    for (int i = 0; i < data_size; ++i)
     {
-        std::cout << v << ",";
+        ls[i] = distribute(gen);
+        //ls.emplace_back(v);
     }
-    std::cout << "\n";
+    //std::cout << "B ls.max_size(): " << ls.max_size() << "\n";
+    printListWithIterRange("\ncreateRandomVector(), ls: ", ls.begin(), ls.end());
     return ls;
 }
 
@@ -270,16 +300,11 @@ void testPerformence1(int total, int type = 0)
     auto list = createInvertVector(total);
     //auto list = createInvertList(total);
     //auto list = createRandomList();
-
-    if (total < 16)
+    //auto list = createRandomVector();
+    auto printList = total <= 16;
+    if (printList)
     {
-        std::cout << "\ninit list01: ";
-
-        for (auto v : list)
-        {
-            std::cout << v << ",";
-        }
-        std::cout << "\n";
+        printListWithIterRange("\ninit, list: ", list.begin(), list.end());
     }
 
     auto time_start = std::chrono::high_resolution_clock::now();
@@ -292,40 +317,55 @@ void testPerformence1(int total, int type = 0)
         listQSort(list.begin(), list.end());
         //qsort2(list.begin(), list.end());
     }
-    else {
+    else if (type == 2) {
         std::sort(list.begin(), list.end());
     }
+    else if (type == 3)
+    {
+        listQSortFast(list.begin(), list.end());
+    }
+    //listQSortFast
 
     auto time_end = std::chrono::high_resolution_clock::now();
     auto lossTime = std::chrono::duration_cast<std::chrono::milliseconds>(time_end - time_start).count();
     std::cout << "type: " << type << ", testPerformence1() loss time: " << lossTime << "ms" << std::endl;
 
-    if (total < 16)
+    if (printList)
     {
-        std::cout << "sorted list01: ";
-        for (auto v : list)
-        {
-            std::cout << v << ",";
-        }
-        std::cout << "\n";
+        printListWithIterRange("sort, list: ", list.begin(), list.end());
     }
 }
 void partSortTest(int total)
 {
-    auto time_start = std::chrono::high_resolution_clock::now();
     auto list       = createInvertVector(total);
     auto a          = std::begin(list);
     auto b          = std::end(list);
     auto value      = *std::next(a, std::distance(a, b) / 2);
+    auto printList  = total <= 16;
+    if (printList)
+        printListWithIterRange("\npartSortTest, a -> b: ", a, b);
+
+    auto time_start = std::chrono::high_resolution_clock::now();
     auto p0         = std::partition(a, b, [value](const auto& v) -> bool {
         return v < value;
     });
+    auto time_end = std::chrono::high_resolution_clock::now();
+    auto lossTime = std::chrono::duration_cast<std::chrono::milliseconds>(time_end - time_start).count();
+    std::cout << "std::partition() A loss time: " << lossTime << "ms" << std::endl;
     auto p1         = std::partition(p0, b, [value](const auto& v) -> bool {
         return v <= value;
     });
-    auto time_end   = std::chrono::high_resolution_clock::now();
-    auto lossTime   = std::chrono::duration_cast<std::chrono::milliseconds>(time_end - time_start).count();
-    std::cout << "std::partition() loss time: " << lossTime << "ms" << std::endl;
+
+    if (printList)
+    {
+
+        printListWithIterRange("partSortTest, a -> p0: ", a, p0);
+        printListWithIterRange("partSortTest, p1 -> b: ", p1, b);
+    }
+
+    time_end   = std::chrono::high_resolution_clock::now();
+    lossTime   = std::chrono::duration_cast<std::chrono::milliseconds>(time_end - time_start).count();
+    std::cout << "std::partition() B loss time: " << lossTime << "ms" << std::endl;
 
     time_start = std::chrono::high_resolution_clock::now();
     std::sort(a, p0);
@@ -348,22 +388,17 @@ void testMain()
     printListWithIterRange("\nls01: ", ls01.begin(), ls01.end());
     float float_arr01[7]{0.1f, 11.0f, -4.0f,3.0f,19.7f,-5.0f,13.3f};
     printListWithIterRange("\nfloat_arr01: ", &float_arr01[0], &float_arr01[6], "\n\n");
-    return;
+    //return;
 
     auto total = 65536 << 4;
+    //total      = 300;
 
     partSortTest(total);
 
-    //std::cout << "\nlist: ";
-    //for (auto v : list)
-    //{
-    //    std::cout << v << ",";
-    //}
-    //std::cout << "\n";
-
-    //testPerformence1(total, 0);
+    testPerformence1(total, 0);
     //testPerformence1(total, 1);
     testPerformence1(total, 2);
+    testPerformence1(total, 3);
     return;
     //auto list01 = createRandomList();
     //std::forward_list<int> list01{-5,3,19,6,-8,18,5,21,-7, 7,6};
