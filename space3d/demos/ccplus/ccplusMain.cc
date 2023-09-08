@@ -203,6 +203,8 @@ int main()
 {
     algorithm::testsort::testMain();
     return EXIT_SUCCESS;
+    demoTemplate::base::testMain();
+    return EXIT_SUCCESS;
     parallel::futureFastSort01::testMain();
     return EXIT_SUCCESS;
     parallel::threadPool::testMain();
@@ -245,8 +247,6 @@ int main()
     base::demoForward::testMain();
     return EXIT_SUCCESS;
     thread::thrFuture::testMain();
-    return EXIT_SUCCESS;
-    demoTemplate::base::testMain();
     return EXIT_SUCCESS;
     thread::syncConcurrent::testMain();
     return EXIT_SUCCESS;

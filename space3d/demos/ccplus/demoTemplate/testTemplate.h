@@ -10,6 +10,28 @@
 
 namespace demoTemplate::base
 {
+namespace template_test_03
+{
+// 非类型类模板参数(Nontype Class Template Parameters)
+template <class T>
+void f()
+{
+    std::cout << "# 1" << std::endl;
+} // #1
+
+template <int I>
+void f()
+{
+    std::cout << "# 2, I: " << I << std::endl;
+} // #2
+
+void testMain()
+{
+    f<int()>();
+    f<int>();
+    f<12>();
+}
+}
  namespace template_test_02
  {
  template <class T>
@@ -394,6 +416,7 @@ void testMain()
     //test_2::testMain();
     //test_3::testMain();
     //testDemo4::testMain();
+    template_test_03::testMain();
     std::cout << "demoTemplate::base::testMain() end.\n";
 }
 } // namespace demoTemplate::base
