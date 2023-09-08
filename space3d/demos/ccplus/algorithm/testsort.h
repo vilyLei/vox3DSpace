@@ -10,6 +10,22 @@
 
 namespace algorithm::testsort
 {
+template <typename Iter>
+void printListWithIterRange(std::string info, Iter a, Iter b, std::string endStr = "\n")
+{
+    std::cout << info;
+    auto it = a;
+    if (it != b)
+    {
+        std::cout << *it;
+        ++it;
+    }
+    for (; it != b; ++it)
+    {
+        std::cout << "," << *it;
+    }
+    std::cout << endStr;
+}
 namespace tsort01
 {
 int callTimes = 0;
@@ -328,6 +344,11 @@ void partSortTest(int total)
 }
 void testMain()
 {
+    std::forward_list<int> ls01{180, 74, 52, -18, 23, -43, 86, -59, 122, -29, 35, -23};
+    printListWithIterRange("\nls01: ", ls01.begin(), ls01.end());
+    float float_arr01[7]{0.1f, 11.0f, -4.0f,3.0f,19.7f,-5.0f,13.3f};
+    printListWithIterRange("\nfloat_arr01: ", &float_arr01[0], &float_arr01[6], "\n\n");
+    return;
 
     auto total = 65536 << 4;
 
