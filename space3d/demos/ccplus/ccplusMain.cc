@@ -201,9 +201,9 @@ int main01()
 }
 int main()
 {
-    algorithm::testsort::testMain();
-    return EXIT_SUCCESS;
     demoTemplate::base::testMain();
+    return EXIT_SUCCESS;
+    algorithm::testsort::testMain();
     return EXIT_SUCCESS;
     parallel::futureFastSort01::testMain();
     return EXIT_SUCCESS;

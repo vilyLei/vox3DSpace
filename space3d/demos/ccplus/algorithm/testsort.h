@@ -639,13 +639,8 @@ void partSortTest03(size_t total)
     {
         printListWithIterRange("std::partition() A elements, a -> p0: ", a, b);
     }
-    auto pb = b;
-    --pb;
-    std::cout << "std::partition() B elements: *a=" << *a << ",*p0=" << *p0 << ",*p1=" << *p1 << ",*pb=" << *pb << std::endl;
-    std::cout << "std::partition() B0 elements: *a=" << *a << ",*s1_p0=" << *s1_p0 << ",*s1_p1=" << *s1_p1 << ",*p0=" << *p0 << std::endl;
-    std::cout << "std::partition() B1 elements: *p1=" << *p1 << ",*s2_p0=" << *s2_p0 << ",*s2_p1=" << *s2_p1 << ",*pb=" << *pb << std::endl;
 
-    time_start = std::chrono::high_resolution_clock::now();
+    time_start  = std::chrono::high_resolution_clock::now();
     auto sort01 = [&]() -> void {
         std::sort(a, s1_p0);
     };
@@ -681,6 +676,11 @@ void partSortTest03(size_t total)
 }
 void testMain()
 {
+
+    std::cout << "sizeof(long long): " << sizeof(long long) << std::endl;
+    std::cout << "sizeof(size_t): " << sizeof(size_t) << std::endl;
+    std::cout << "sizeof(int): " << sizeof(int) << std::endl;
+
     std::forward_list<int> ls01{180, 74, 52, -18, 23, -43, 86, -59, 122, -29, 35, -23};
     printListWithIterRange("\nls01: ", ls01.begin(), ls01.end());
     float float_arr01[7]{0.1f, 11.0f, -4.0f, 3.0f, 19.7f, -5.0f, 13.3f};
@@ -688,8 +688,8 @@ void testMain()
     //return;
 
     //size_t total = 65536 << 16;// 大约3.9GB, 64bit的64G内存的win10系统无法创建出此数据
-    size_t total = 65536 << 15; // 此规模的数据同样的系统环境下python无法产生，直接崩溃。小数据的比较计算性能比c++常规排序机制低10%左右
-    total        = 65536 << 10;
+    auto total = 65536 << 15; // 此规模的数据同样的系统环境下python无法产生，直接崩溃。小数据的比较计算性能比c++常规排序机制低10%左右
+    total        = 65536 << 2;
     //total        = 16;
 
     auto printList = total <= 16;

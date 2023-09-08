@@ -10,6 +10,165 @@
 
 namespace demoTemplate::base
 {
+namespace templateTemplateParameter
+{
+// 双重模板参数
+
+#if !defined(__PRETTY_FUNCTION__) && !defined(__GNUC__)
+#    define __PRETTY_FUNCTION__ __FUNCSIG__
+#endif
+template <typename T, template <class, class...> class C, class... Args>
+std::ostream& operator<<(std::ostream& os, const C<T, Args...>& objs)
+{
+    // 可以将参数全部打印出来
+    os << "FUNC DETAIL: " << __PRETTY_FUNCTION__ << '\n';
+    for (auto const& obj : objs)
+        os << obj << ' ';
+    return os;
+}
+template <template <class> class H, class S>
+S calcListTotalValue(const H<S>& ls)
+{
+    auto a = std::begin(ls);
+    auto b = std::end(ls);
+    S    totalValue{};
+    for (auto i = a; i != b; ++i)
+    {
+        totalValue += *i;
+    }
+    return totalValue;
+}
+//template <template <class, class> class V, class T, class A>
+template <template <typename, typename> class V, typename T, typename A>
+T calcListTotalValue2(V<T, A>& ls)
+{
+    auto a = std::begin(ls);
+    auto b = std::end(ls);
+    T    totalValue{};
+    for (auto i = a; i != b; ++i)
+    {
+        totalValue += *i;
+    }
+    return totalValue;
+}
+void testMain()
+{
+    std::cout << "\ntemplateTemplateParameter::testMain() begin.\n";
+
+    std::list<int> list_01{10,3,5};
+    auto value1 = calcListTotalValue<std::list, int>(list_01);
+    value1 = calcListTotalValue<std::list>(list_01);
+    std::cout << "value1: " << value1 << "\n";
+    calcListTotalValue2<std::list, int>(list_01);
+    auto value2 = calcListTotalValue2(list_01);
+    std::cout << "value2: " << value2 << "\n";
+
+    std::cout << "list_01: " << list_01 << "\n";
+    std::cout << "templateTemplateParameter::testMain() end.\n";
+}
+} // namespace templateDefTest03
+namespace templateDefTest03
+{
+template <auto...>
+struct ClassA
+{};
+
+ClassA<'C', 0, 2L, nullptr> x; // OK
+
+template <typename A, typename B, typename C = std::less<>>
+bool func01(A a, B b, C cmp = C{})
+{
+    //std::cout << "call templateDefTest03::func01() ";
+    return cmp(a, b);
+}
+void testMain()
+{
+    std::cout
+        << std::boolalpha
+        << func01(1, 2) << ' '                // true
+        << func01(1.0, 1) << ' '              // false
+        << func01(1, 2.0) << ' '              // true
+        << std::less<int>{}(5, 5.6) << ' '    // false ： 5 < 5 （警告：隐式转换）
+        << std::less<double>{}(5, 5.6) << ' ' // true  ： 5.0 < 5.6
+        << std::less<int>{}(5.6, 5.7) << ' '  // false ： 5 < 5 （警告：隐式转换）
+        << std::less{}(5, 5.6) << ' '         // true  ： less<void>: 5.0 < 5.6
+        << '\n';
+}
+}
+namespace templateDefTest02
+{
+struct ListNode
+{
+    int a = 10;
+    int b = 10;
+};
+struct Data
+{
+    int a = 10;
+    int b = 10;
+
+};
+class T
+{
+public:
+    class U;
+    class F;
+
+private:
+    int U;
+};
+
+template <typename T>
+struct Node
+{
+    struct Node* Next;   // OK：对 Node 的查找找到注入的类名
+    struct Data* Data;   // OK：于全局作用域声明类型 Data
+                         // 并声明数据成员 Data
+    //friend class ::List; // 错误：不能引入有限定名
+    enum Kind* kind;     // 错误：不能引入枚举
+};
+
+Data* p; // OK：struct Data 已被声明
+void main()
+{
+    T           t0;
+    int         T;
+    //T           t; // 错误：找到局部变量 T
+    class T     t; // OK：找到 ::T，忽略局部变量 T
+    T::F*       f; // OK
+    //T::U*       u; // 错误：T::U 的查找找到私有数据成员
+    class T::U* u; // OK：忽略该数据成员
+}
+}
+namespace templateDefTest01
+{
+template <typename T>
+struct eval; // primary template
+
+template <template <typename, typename...> class TT, typename T1, typename... Rest>
+struct eval<TT<T1, Rest...>>
+{}; // partial specialization of eval
+
+template <typename T1> struct A;
+template <typename T1, typename T2> struct B;
+template <int N> struct C;
+template <typename T1, int N> struct D;
+template <typename T1, typename T2, int N = 17> struct E;
+
+eval<A<int>>        eA; // OK: matches partial specialization of eval
+eval<B<int, float>> eB; // OK: matches partial specialization of eval
+/*
+eval<C<17>>         eC; // error: C does not match TT in partial specialization
+// because TT's first parameter is a
+// type template parameter, while 17 does not name a type
+eval<D<int, 17>> eD; // error: D does not match TT in partial specialization
+// because TT's second parameter is a
+// type parameter pack, while 17 does not name a type
+eval<E<int, float>> eE; // error: E does not match TT in partial specialization
+//*/
+// because E's third (default) parameter is a non-type
+} // namespace templateDefTest
+
 namespace template_test_03
 {
 // 非类型类模板参数(Nontype Class Template Parameters)
@@ -417,6 +576,8 @@ void testMain()
     //test_3::testMain();
     //testDemo4::testMain();
     template_test_03::testMain();
+    templateDefTest03::testMain();
+    templateTemplateParameter::testMain();
     std::cout << "demoTemplate::base::testMain() end.\n";
 }
 } // namespace demoTemplate::base
