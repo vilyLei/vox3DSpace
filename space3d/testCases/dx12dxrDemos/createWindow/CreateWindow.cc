@@ -35,20 +35,19 @@
 //////////////////////////////////////////////////////////////////////////
 void Tutorial01::onLoad(HWND winHandle, uint32_t winWidth, uint32_t winHeight)
 {
-    OutputDebugStringW(L"Debug Output: onload() ...\n");
+    OutputDebugStdString("Debug Output: onload() ...\n");
 }
 
 void Tutorial01::onFrameRender()
 {
-
 }
 
 void Tutorial01::onShutdown()
 {
-
 }
 
 int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nShowCmd)
 {
-    Framework::run(Tutorial01(), "CreateWindow", 800u, 600u);
+    Tutorial01 t01{};
+    Framework::run(t01, "CreateWindow", 800u, 600u);
 }
