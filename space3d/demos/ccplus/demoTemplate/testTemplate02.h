@@ -12,6 +12,13 @@ namespace demoTemplate::base02
 {
 namespace templateDemo_b01
 {
+
+template <auto...>
+struct C
+{};
+
+C<'C', 0, 2L, nullptr> x; // OK
+
 void testMain()
 {
 }
