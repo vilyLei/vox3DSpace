@@ -31,6 +31,7 @@
 #include "demoTemplate/testTemplate02.h"
 #include "exception1/testExcptBase.h"
 #include "algorithm/testsort.h"
+#include "algorithm/testhash.h"
 
 class ValueUnit
 {
@@ -202,11 +203,13 @@ int main01()
 }
 int main()
 {
+    algorithm::testhash::testMain();
+    return EXIT_SUCCESS;
+    algorithm::testsort::testMain();
+    return EXIT_SUCCESS;
     demoTemplate::base02::testMain();
     return EXIT_SUCCESS;
     demoTemplate::base::testMain();
-    return EXIT_SUCCESS;
-    algorithm::testsort::testMain();
     return EXIT_SUCCESS;
     parallel::futureFastSort01::testMain();
     return EXIT_SUCCESS;

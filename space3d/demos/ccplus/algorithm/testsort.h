@@ -687,9 +687,9 @@ void testMain()
     printListWithIterRange("\nfloat_arr01: ", &float_arr01[0], &float_arr01[6], "\n\n");
     //return;
 
-    //size_t total = 65536 << 16;// 大约3.9GB, 64bit的64G内存的win10系统无法创建出此数据
-    auto total = 65536 << 15; // 此规模的数据同样的系统环境下python无法产生，直接崩溃。小数据的比较计算性能比c++常规排序机制低10%左右
-    total        = 65536 << 10;
+    //size_t total = 65536 << 16;// 大约4GB, 64bit的64G内存的win10系统无法创建出此数据
+    auto total = 65536 << 15; // 此规模的数据同样的系统环境下python无法产生，直接崩溃。小数据的比较计算性能比c++常规排序机制高30%左右
+    total        = 65536 << 6;
     //total        = 16;
 
     auto printList = total <= 16;
