@@ -21,9 +21,15 @@ namespace math
 #define MATH_1_OVER_SQRT2  0.70710678118654752440  // 1/sqrt(2)
 
 template <typename T>
-T getPositiveMinValue()
+constexpr T getPositiveMinValue()
 {
-    return sizeof(T) > 4 ? 1e-9 : 1e-7f;
+    if constexpr ((std::is_arithmetic<T>::value) && (std::is_floating_point<T>::value))
+    {
+        return sizeof(T) > 4 ? 1e-9 : 1e-7f;
+    }
+    else {
+        return 0;
+    }
 }
 template <typename T>
 T degreeToRadian(T degree)
