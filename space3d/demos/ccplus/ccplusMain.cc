@@ -203,13 +203,13 @@ int main01()
 }
 int main()
 {
+    algorithm::testsort::testMain();
+    return EXIT_SUCCESS;
     exception1::excptBase::testMain();
     return EXIT_SUCCESS;
     demoTemplate::base::testMain();
     return EXIT_SUCCESS;
     algorithm::testhash::testMain();
-    return EXIT_SUCCESS;
-    algorithm::testsort::testMain();
     return EXIT_SUCCESS;
     demoTemplate::base02::testMain();
     return EXIT_SUCCESS;

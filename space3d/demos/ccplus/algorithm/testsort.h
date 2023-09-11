@@ -9,6 +9,7 @@
 #include <random>
 #include <list>
 #include <thread>
+#include <execution>
 
 namespace algorithm::testsort
 {
@@ -390,7 +391,10 @@ void testPerformence1(size_t total, int type = 0)
     }
     else if (type == 2)
     {
-        std::sort(list.begin(), list.end());
+        //std::sort(std::execution::seq, list.begin(), list.end());   // 36ms
+        std::sort(std::execution::par, list.begin(), list.end()); // 最低7ms, 最高33ms
+        //std::sort(std::execution::par_unseq, list.begin(), list.end()); // 最低13ms, 最高33ms
+        //std::sort(std::execution::unseq, list.begin(), list.end());     // 最35ms
     }
     else if (type == 3)
     {
@@ -542,26 +546,26 @@ void partSortTest02(size_t total)
     std::cout << "std::partition() B1 elements: *p1=" << *p1 << ",*s2_p0=" << *s2_p0 << ",*s2_p1=" << *s2_p1 << ",*pb=" << *pb << std::endl;
 
     time_start = std::chrono::high_resolution_clock::now();
-    std::sort(a, s1_p0);
+    std::sort(std::execution::par_unseq, a, s1_p0);
     time_end = std::chrono::high_resolution_clock::now();
     lossTime = std::chrono::duration_cast<std::chrono::milliseconds>(time_end - time_start).count();
     total_lossTime += lossTime;
     std::cout << "std::partition() AAA_1 0 loss time: " << lossTime << "ms" << std::endl;
     time_start = std::chrono::high_resolution_clock::now();
-    std::sort(s1_p1, p0);
+    std::sort(std::execution::par_unseq, s1_p1, p0);
     time_end = std::chrono::high_resolution_clock::now();
     lossTime = std::chrono::duration_cast<std::chrono::milliseconds>(time_end - time_start).count();
     total_lossTime += lossTime;
     std::cout << "std::partition() AAA_1 1 loss time: " << lossTime << "ms" << std::endl;
 
     time_start = std::chrono::high_resolution_clock::now();
-    std::sort(p1, s2_p0);
+    std::sort(std::execution::par_unseq, p1, s2_p0);
     time_end = std::chrono::high_resolution_clock::now();
     lossTime = std::chrono::duration_cast<std::chrono::milliseconds>(time_end - time_start).count();
     total_lossTime += lossTime;
     std::cout << "std::partition() BBB_2 0 loss time: " << lossTime << "ms" << std::endl;
     time_start = std::chrono::high_resolution_clock::now();
-    std::sort(s2_p1, b);
+    std::sort(std::execution::par_unseq, s2_p1, b);
     time_end = std::chrono::high_resolution_clock::now();
     lossTime = std::chrono::duration_cast<std::chrono::milliseconds>(time_end - time_start).count();
     total_lossTime += lossTime;
@@ -642,16 +646,16 @@ void partSortTest03(size_t total)
 
     time_start  = std::chrono::high_resolution_clock::now();
     auto sort01 = [&]() -> void {
-        std::sort(a, s1_p0);
+        std::sort(std::execution::par, a, s1_p0);
     };
     auto sort02 = [&]() -> void {
-        std::sort(s1_p1, p0);
+        std::sort(std::execution::par, s1_p1, p0);
     };
     auto sort03 = [&]() -> void {
-        std::sort(p1, s2_p0);
+        std::sort(std::execution::par, p1, s2_p0);
     };
     auto sort04 = [&]() -> void {
-        std::sort(s2_p1, b);
+        std::sort(std::execution::par, s2_p1, b);
     };
 
     std::thread thr_sort01(sort01);
@@ -689,7 +693,8 @@ void testMain()
 
     //size_t total = 65536 << 16;// 大约4GB, 64bit的64G内存的win10系统无法创建出此数据
     auto total = 65536 << 15; // 此规模的数据同样的系统环境下python无法产生，直接崩溃。小数据的比较计算性能比c++常规排序机制高30%左右
-    total        = 65536 << 6;
+    // 关于python list sort原理的基本介绍: https://www.cnblogs.com/clement-jiao/p/9243066.html
+    total        = 65536 << 10;
     //total        = 16;
 
     auto printList = total <= 16;
