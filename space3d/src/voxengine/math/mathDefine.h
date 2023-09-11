@@ -20,13 +20,13 @@ namespace math
 #define MATH_SQRT2         1.41421356237309504880  // sqrt(2)
 #define MATH_1_OVER_SQRT2  0.70710678118654752440  // 1/sqrt(2)
 
-template <typename NumberType>
-NumberType getPositiveMinValue()
+template <typename T>
+T getPositiveMinValue()
 {
-    return sizeof(NumberType) > 4 ? 1e-9 : 1e-7f;
+    return sizeof(T) > 4 ? 1e-9 : 1e-7f;
 }
-template <typename NumberType>
-NumberType degreeToRadian(NumberType degree)
+template <typename T>
+T degreeToRadian(T degree)
 {
     return MATH_PI_OVER_180 * degree;
 }

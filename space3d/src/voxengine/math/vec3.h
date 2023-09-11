@@ -169,9 +169,9 @@ public:
 
 private:
     inline const static T s_180OverPi = static_cast<T>(MATH_180_OVER_PI);
-    const static T s_minv;
-    static Vec3    s_v0;
-    static Vec3    s_v1;
+    inline const static T s_minv      = getPositiveMinValue<T>();
+    static Vec3           s_v0;
+    static Vec3           s_v1;
 };
 
 typedef Vec3<long> UVec3;

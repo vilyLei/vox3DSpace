@@ -85,7 +85,7 @@ int main()
     std::cout << "\ntest engine base objects:\n";
 
     
-    return 1;
+    //return 1;
     std::cout << "\n-------------------------  ------------------------  ------------------------------\n";
     voxengine::data::stream::BaseTypeArray<UINT32> uint32Array(6);
     std::cout << "uint32Array.getByteStride(): " << uint32Array.getByteStride() << ", uint32Array.getByteLength(): " << uint32Array.getByteLength() << std::endl;

@@ -7,10 +7,10 @@ namespace voxengine
 namespace math
 {
 
-template <typename T>
-const T Vec2<T>::s_180OverPi = static_cast<T>(MATH_180_OVER_PI);
-template <typename T>
-const T Vec2<typename T>::s_minv = getPositiveMinValue<T>();
+//template <typename T>
+//const T Vec2<T>::s_180OverPi = static_cast<T>(MATH_180_OVER_PI);
+//template <typename T>
+//const T Vec2<typename T>::s_minv = getPositiveMinValue<T>();
 
 CREATE_SATATIC_VEC2_INS(T, X_AXIS, 1, 0, 0);
 CREATE_SATATIC_VEC2_INS(T, Y_AXIS, 0, 1, 0);

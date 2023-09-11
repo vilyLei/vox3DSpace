@@ -308,6 +308,8 @@ macro(vox3dspace_add_library)
     endif()
   endif()
 
+  target_compile_features(${lib_NAME} PRIVATE ${CXX_STD_VERSION})
+
   if(lib_DEFINES)
     target_compile_definitions(${lib_NAME} PRIVATE ${lib_DEFINES})
   endif()
