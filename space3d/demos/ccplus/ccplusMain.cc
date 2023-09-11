@@ -203,13 +203,15 @@ int main01()
 }
 int main()
 {
+    exception1::excptBase::testMain();
+    return EXIT_SUCCESS;
+    demoTemplate::base::testMain();
+    return EXIT_SUCCESS;
     algorithm::testhash::testMain();
     return EXIT_SUCCESS;
     algorithm::testsort::testMain();
     return EXIT_SUCCESS;
     demoTemplate::base02::testMain();
-    return EXIT_SUCCESS;
-    demoTemplate::base::testMain();
     return EXIT_SUCCESS;
     parallel::futureFastSort01::testMain();
     return EXIT_SUCCESS;
@@ -230,8 +232,6 @@ int main()
     parallel::conditionlock::testMain();
     return EXIT_SUCCESS;
     thread::memoryOrder::testMain();
-    return EXIT_SUCCESS;
-    exception1::excptBase::testMain();
     return EXIT_SUCCESS;
     coding::tcodecvr::testMain();
     return EXIT_SUCCESS;

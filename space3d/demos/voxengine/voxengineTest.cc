@@ -45,7 +45,23 @@ void testSharedPtr()
     }
     std::cout << "\n-------------------------  ------------- testSharedPtr end -----------  ------------------------------\n";
 }
-int main()
+bool testLessFunc(float k)
+{
+    return k < 0.5f;
+}
+constexpr int testLess(float k) {
+    return k < 0.5f ? 0 : 1;
+}
+template <typename T>
+std::string toAString(T t)
+{
+    if constexpr (std::is_same_v<T, std::string>)
+        return t;
+    else
+        return std::to_string(t);
+}
+
+int main(int argc, char *argv[])
 {
     std::cout << "Hello VOX 3D Space!\n";
 
@@ -87,6 +103,7 @@ int main()
     
     //return 1;
     std::cout << "\n-------------------------  ------------------------  ------------------------------\n";
+
     voxengine::data::stream::BaseTypeArray<UINT32> uint32Array(6);
     std::cout << "uint32Array.getByteStride(): " << uint32Array.getByteStride() << ", uint32Array.getByteLength(): " << uint32Array.getByteLength() << std::endl;
     voxengine::data::stream::BaseTypeArray<Float32> float32Array(6);
@@ -315,6 +332,36 @@ int main()
     //demo::voxengineDemo::math::testBase();
     //demo::voxengineDemo::math::testCamera();
     voxengine::data::stream::test();
+
+    std::cout << "\n-------------------------  ------------------------  ------------------------------\n";
+
+    constexpr voxengine::math::Vec3<float> vec3_X_AXIS = voxengine::math::vec3::X_AXIS<float>;
+    std::cout << "vec3_X_AXIS.toString(): " << vec3_X_AXIS.toString() << std::endl;
+    auto& vec3_Y_AXIS = voxengine::math::vec3::Y_AXIS<int>;
+    std::cout << "vec3_Y_AXIS.toString(): " << vec3_Y_AXIS.toString() << std::endl;
+    auto& vec3_Z_AXIS = voxengine::math::vec3::Z_AXIS<float>;
+    std::cout << "vec3_Z_AXIS.toString(): " << vec3_Z_AXIS.toString() << std::endl;
+    if (vec3_X_AXIS == vec3_Z_AXIS)
+    {
+        std::cout << "vec3_X_AXIS == vec3_Z_AXIS is true." << std::endl;
+    }
+    std::cout << "vec3_X_AXIS == vec3_Z_AXIS: " << (vec3_X_AXIS == vec3_Z_AXIS) << std::endl;
+
+    float argc_float = static_cast<float>(argc);
+    //if (constexpr(1 == testLess(0.5f)))           // eror: 错误的语法形式
+    //if constexpr (argc_float == testLess(0.5f))   // error: 表达式必须含有常量值
+    //if constexpr(1 == testLess(0.5f))             // OK
+    //if constexpr (testLessFunc(0.5f))             // error: 表达式必须含有常量值
+    if constexpr( testLess(0.5f) )                  // OK
+    //if constexpr (testLess(argc_float))           // error: 表达式必须含有常量值
+    //if constexpr (true)                           // OK
+    {
+        std::cout << "constexpr if syntax apply success." << std::endl;
+    }
+    else
+    {
+        std::cout << "constexpr if syntax apply failure." << std::endl;
+    }
 
     std::cout << "\n-------------------------  ------------------------  ------------------------------\n";
     useFixLengthArr("dfdfdf");

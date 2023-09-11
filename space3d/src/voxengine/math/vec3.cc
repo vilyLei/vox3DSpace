@@ -12,11 +12,11 @@ namespace math
 //template <typename T>
 //const T Vec3<typename T>::s_minv = getPositiveMinValue<T>();
 
-CREATE_SATATIC_VEC3_INS(T, X_AXIS, 1, 0, 0, 0);
-CREATE_SATATIC_VEC3_INS(T, Y_AXIS, 0, 1, 0, 0);
-CREATE_SATATIC_VEC3_INS(T, Z_AXIS, 0, 0, 1, 0);
-CREATE_SATATIC_VEC3_INS(T, ZERO, 0, 0, 0, 0);
-CREATE_SATATIC_VEC3_INS(T, ONE, 1, 1, 1, 1);
+CREATE_STATIC_VEC3_INS(T, X_AXIS, 1, 0, 0, 0);
+CREATE_STATIC_VEC3_INS(T, Y_AXIS, 0, 1, 0, 0);
+CREATE_STATIC_VEC3_INS(T, Z_AXIS, 0, 0, 1, 0);
+CREATE_STATIC_VEC3_INS(T, ZERO, 0, 0, 0, 0);
+CREATE_STATIC_VEC3_INS(T, ONE, 1, 1, 1, 1);
 
 template <typename T>
 Vec3<T> Vec3<T>::s_v0{};
@@ -94,7 +94,7 @@ void Vec3<T>::normalize()
 template <typename T>
 void Vec3<T>::normalizeTo(Vec3& v3) const
 {
-    auto d = static_cast<T>( std::sqrt(x * x + y * y + z * z) );
+    auto d = std::sqrt(x * x + y * y + z * z);
     if (d > s_minv)
     {
         v3.x = x / d;
@@ -135,7 +135,7 @@ bool Vec3<T>::equalsXYZ(const Vec3& v3)
     return std::abs(x - v3.x) < s_minv && std::abs(y - v3.y) < s_minv && std::abs(z - v3.z) < s_minv;
 }
 template <typename T>
-bool Vec3<T>::equalsAll(const Vec3& v3)
+bool Vec3<T>::equalsAll(const Vec3& v3) const
 {
     return std::abs(x - v3.x) < s_minv && std::abs(y - v3.y) < s_minv && std::abs(z - v3.z) < s_minv && std::abs(w - v3.w) < s_minv;
 }

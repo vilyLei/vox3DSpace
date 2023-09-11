@@ -36,6 +36,10 @@ public:
     Vec3& operator=(const Vec3& v) = default;
     Vec3& operator=(Vec3&& v)      = default;
 
+    bool operator==(const Vec3& v) const
+    {
+        return equalsAll(v);
+    }
     Vec3& operator+=(const Vec3& v)
     {
         x += v.x;
@@ -111,7 +115,7 @@ public:
     void scaleBy(T s);
     void negate();
     bool equalsXYZ(const Vec3& v3);
-    bool equalsAll(const Vec3& v3);
+    bool equalsAll(const Vec3& v3) const;
     void addBy(const Vec3& v3);
     void subtractBy(const Vec3& v3);
     void crossBy(const Vec3& v3);
@@ -176,8 +180,23 @@ private:
 
 typedef Vec3<long> UVec3;
 
-#define CREATE_SATATIC_VEC3_INS(T, NAME, v0, v1, v2, v3) \
+
+#define CREATE_STATIC_VEC3_INS(T, NAME, v0, v1, v2, v3) \
     template <typename T>                                \
     const Vec3<T> Vec3<T>::NAME{static_cast<T>(v0), static_cast<T>(v1), static_cast<T>(v2), static_cast<T>(v3)};
+
+namespace vec3
+{
+#define CREATE_S_VEC3_INS(T, NAME, v0, v1, v2, v3) \
+    template <typename T>                                \
+    constexpr Vec3<T> NAME{static_cast<T>(v0), static_cast<T>(v1), static_cast<T>(v2), static_cast<T>(v3)};
+
+using namespace voxengine::math;
+CREATE_S_VEC3_INS(T, X_AXIS, 1, 0, 0, 0);
+CREATE_S_VEC3_INS(T, Y_AXIS, 0, 1, 0, 0);
+CREATE_S_VEC3_INS(T, Z_AXIS, 0, 0, 1, 0);
+CREATE_S_VEC3_INS(T, ZERO, 0, 0, 0, 0);
+CREATE_S_VEC3_INS(T, ONE, 1, 1, 1, 1);
+} // namespace vec3
 } // namespace math
 } // namespace voxengine

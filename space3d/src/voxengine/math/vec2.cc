@@ -88,7 +88,7 @@ void Vec2<T>::normalize()
 template <typename T>
 void Vec2<T>::normalizeTo(Vec2& v2) const
 {
-    auto d = static_cast<T>( std::sqrt(x * x + y * y) );
+    auto d = std::sqrt(x * x + y * y);
     if (d > s_minv)
     {
         v2.x = x / d;
