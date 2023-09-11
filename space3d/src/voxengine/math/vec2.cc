@@ -1,6 +1,5 @@
 #include <iostream>
 #include <cmath>
-#include "mathDefine.h"
 #include "Vec2.h"
 
 namespace voxengine

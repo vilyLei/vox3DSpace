@@ -1,6 +1,5 @@
 #include <iostream>
 #include <cmath>
-#include "mathDefine.h"
 #include "Vec3.h"
 
 namespace voxengine
@@ -8,8 +7,8 @@ namespace voxengine
 namespace math
 {
 
-template <typename T>
-const T Vec3<T>::s_180OverPi = static_cast<T>(MATH_180_OVER_PI);
+//template <typename T>
+//const T Vec3<T>::s_180OverPi = static_cast<T>(MATH_180_OVER_PI);
 template <typename T>
 const T Vec3<typename T>::s_minv = getPositiveMinValue<T>();
 

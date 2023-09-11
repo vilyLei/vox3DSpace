@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include "mathDefine.h"
 namespace voxengine
 {
 namespace math
@@ -167,7 +168,7 @@ public:
     const static Vec3 ONE;
 
 private:
-    const static T s_180OverPi;
+    inline const static T s_180OverPi = static_cast<T>(MATH_180_OVER_PI);
     const static T s_minv;
     static Vec3    s_v0;
     static Vec3    s_v1;

@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include "mathDefine.h"
 namespace voxengine
 {
 namespace math
