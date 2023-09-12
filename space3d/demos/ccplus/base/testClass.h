@@ -317,6 +317,47 @@ void testMain()
 }
 
 } // namespace std_optional
+namespace optional01
+{
+std::optional<std::string> create(bool b)
+{
+    if (b)
+        return "Godzilla";
+    return {};
+}
+
+// std::nullopt can be used to create any (empty) std::optional
+auto create2(bool b)
+{
+    return b ? std::optional<std::string>{"Godzilla"} : std::nullopt;
+}
+struct QueueFamilyIndices
+{
+    std::optional<uint32_t> graphicsFamily;
+    std::optional<uint32_t> presentFamily;
+
+    bool isComplete()
+    {
+        return graphicsFamily.has_value() && presentFamily.has_value();
+    }
+};
+void testMain()
+{
+    std::cout << "\noptional01::testMain() begin.\n";
+    std::cout << "create(false) returned "
+              << create(false).value_or("empty") << '\n';
+
+    // optional-returning factory functions are usable as conditions of while and if
+    if (auto str = create2(true))
+        std::cout << "create2(true) returned " << *str << '\n';
+    //
+    QueueFamilyIndices qfi{};
+    std::cout << "A qfi.graphicsFamily.has_value(): " << qfi.graphicsFamily.has_value() << '\n';
+    qfi.graphicsFamily = 1;
+    std::cout << "B qfi.graphicsFamily.has_value(): " << qfi.graphicsFamily.has_value() << '\n';
+    std::cout << "optional01::testMain() end.\n";
+}
+}
 void testMain()
 {
     std::boolalpha(std::cout);
@@ -326,6 +367,7 @@ void testMain()
     //classTest_2::testMain();
     //std_optional::testMain();
     classTest_4::testMain();
+    optional01::testMain();
     std::cout << "base::demoClass::testMain() end.\n";
 }
 } // namespace demoClass

@@ -203,6 +203,8 @@ int main01()
 }
 int main()
 {
+    base::demoClass::testMain();
+    return EXIT_SUCCESS;
     algorithm::testsort::testMain();
     return EXIT_SUCCESS;
     exception1::excptBase::testMain();
@@ -218,8 +220,6 @@ int main()
     parallel::threadPool::testMain();
     return EXIT_SUCCESS;
     parallel::hardware::testMain();
-    return EXIT_SUCCESS;
-    base::demoClass::testMain();
     return EXIT_SUCCESS;
     parallel::baseNonLock2::testMain();
     return EXIT_SUCCESS;
