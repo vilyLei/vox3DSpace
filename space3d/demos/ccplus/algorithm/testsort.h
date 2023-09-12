@@ -35,7 +35,7 @@ namespace quicksort01
 int sorting(std::vector<int>& arr, int low, int high)
 {
     //标记位置为待排序数组段的low处也就时枢轴值
-    auto& rsn = arr[low];
+    auto rsn = arr[low];// auto这里不可以用auto&，因为引用的话对导致rsn所代表的内存的值会被更改，而不是开始就取得的值。
     while (low < high)
     {
         //  如果当前数字已经有序的位于我们的枢轴两端，我们就需要移动它的指针，是high或是low
@@ -65,7 +65,7 @@ void snsort(std::vector<int>& arr, int low, int high)
 }
 int quick_sort_partition(std::vector<int>& v, int low, int high)
 {
-    int pivot = v[low]; //记录第一个枢轴
+    auto pivot = v[low]; //记录第一个枢轴
     while (low < high)
     {
         while (low < high && v[high] >= pivot)
@@ -678,12 +678,39 @@ void partSortTest03(size_t total)
     }
     std::cout << "partSortTest03 DDD total_lossTime: " << total_lossTime << "ms" << std::endl;
 }
+void testQuickSort()
+{
+    auto total     = 16;
+    auto printList = total <= 16;
+
+    //int arr01[5]{0, 1, 2, 3, 4};
+    //auto& pval = arr01[2];
+    //arr01[2]   = 5;
+    //std::cout << "\ntestQuickSort(),pval : " << pval << std::endl;
+    //return;
+
+    auto quick_list = createInvertVector(total);
+    if (printList)
+        printListWithIterRange("\nquick_list init: ", quick_list.begin(), quick_list.end());
+    auto time_start = std::chrono::high_resolution_clock::now();
+    //quicksort01::quick_sort(quick_list, 0, total - 1);
+    quicksort01::snsort(quick_list, 0, total - 1);
+    auto time_end = std::chrono::high_resolution_clock::now();
+    auto lossTime = std::chrono::duration_cast<std::chrono::milliseconds>(time_end - time_start).count();
+    if (printList)
+        printListWithIterRange("quick_list sort: ", quick_list.begin(), quick_list.end());
+    std::cout << "\nquick_list sort loss time: " << lossTime << "ms" << std::endl;
+
+}
 void testMain()
 {
 
     std::cout << "sizeof(long long): " << sizeof(long long) << std::endl;
     std::cout << "sizeof(size_t): " << sizeof(size_t) << std::endl;
     std::cout << "sizeof(int): " << sizeof(int) << std::endl;
+
+    testQuickSort();
+    return;
 
     std::forward_list<int> ls01{180, 74, 52, -18, 23, -43, 86, -59, 122, -29, 35, -23};
     printListWithIterRange("\nls01: ", ls01.begin(), ls01.end());
@@ -712,18 +739,7 @@ void testMain()
     //testPerformence1(total, 3);
 
     std::cout << "\n";
-    auto quick_list = createInvertVector(total);
-    if (printList)
-        printListWithIterRange("\nquick_list init: ", quick_list.begin(), quick_list.end());
-    auto time_start = std::chrono::high_resolution_clock::now();
-    //quicksort01::quick_sort(quick_list, 0, total - 1);
-    //quicksort01::snsort(quick_list, 0, total - 1);
-    auto time_end = std::chrono::high_resolution_clock::now();
-    auto lossTime = std::chrono::duration_cast<std::chrono::milliseconds>(time_end - time_start).count();
-    if (printList)
-        printListWithIterRange("quick_list sort: ", quick_list.begin(), quick_list.end());
 
-    std::cout << "\nquick_list sort loss time: " << lossTime << "ms" << std::endl;
     std::cout << "\ndata list total: " << total << std::endl;
     return;
     //auto list01 = createRandomList();
