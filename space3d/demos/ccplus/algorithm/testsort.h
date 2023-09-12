@@ -10,6 +10,7 @@
 #include <list>
 #include <thread>
 #include <execution>
+#include <stack>
 
 namespace algorithm::testsort
 {
@@ -32,13 +33,146 @@ void printListWithIterRange(std::string info, Iter a, Iter b, std::string endStr
 namespace quicksort01
 {
 
-int sorting(std::vector<int>& arr, int low, int high)
+//int sorting01(std::vector<int>& arr, int low, int high)
+//{
+//    // 标记位置为待排序数组段的low处也就时枢轴值
+//    auto value = arr[low]; // auto这里不可以用auto&，因为引用的话对导致rsn所代表的内存的值会被更改，而不是开始就取得的值。
+//    while (low < high)
+//    {
+//        //  如果当前数字已经有序的位于我们的枢轴两端，我们就需要移动它的指针，是high或是low
+//        while (low < high && arr[high] >= value)
+//        {
+//            --high;
+//        }
+//        // 如果当前数字不满足我们的需求，我们就需要将当前数字移动到它应在的一侧
+//        arr[low] = arr[high];
+//        while (low < high && arr[low] <= value)
+//        {
+//            ++low;
+//        }
+//        arr[high] = arr[low];
+//    }
+//    arr[low] = value;
+//    return low;
+//}
+
+template <typename Iter>
+Iter sortingIter2(Iter low, Iter high)
 {
-    //标记位置为待排序数组段的low处也就时枢轴值
+    auto value = *low;
+    while (low < high)
+    {
+        while (low < high && (*high) >= value) {
+            --high;
+        }
+        *low = *high;
+
+        while (low < high && (*low) <= value)
+        {
+            ++low;
+        }
+        *high= *low;
+    }
+    *low = value;
+    return low;
+}
+template<typename Iter>
+void sortIter2(Iter low, Iter high)
+{
+    if (low != high) {
+
+        auto i = sortingIter2(low, high);
+        auto j = i;
+        if (i != low)
+        {
+            --i;
+        }
+        if (j != high)
+        {
+            ++j;
+        }
+        sortIter2(low, i);
+        sortIter2(j, high);
+    }
+}
+template <typename Iter>
+Iter sortingIter(Iter low, Iter high)
+{
+    auto value = *low;
+    while (low < high) {
+        while (low < high && (*high) >= value)
+        {
+            --high;
+        }
+        *low = *high;
+        while (low < high && (*low) <= value)
+        {
+            ++low;
+        }
+        *high = *low;
+    }
+    *low = value;
+    return low;
+}
+template<typename Iter>
+void sortIter(Iter low, Iter high)
+{
+    auto va = *low;
+    auto vb = *high;
+    if (low != high)
+    {
+        Iter i  = sortingIter(low, high);
+        Iter ib = i;
+        if (i != low)
+        {
+            --i;
+        }
+        if (ib != high)
+        {
+            ++ib;
+        }
+        if (low != i)
+        {
+            sortIter(low, i);
+        }
+        if (high != ib)
+        {
+            sortIter(ib, high);
+        }
+    }
+}
+//static uint64_t GetAvailableStackSpace()
+//{
+//    volatile uint8_t  var;
+//    volatile uint8_t* addr = &var;
+//    volatile uint8_t  sink;
+//
+//    auto filter = [](unsigned int code) -> int {
+//        return (code == EXCEPTION_STACK_OVERFLOW) ? EXCEPTION_EXECUTE_HANDLER : EXCEPTION_CONTINUE_SEARCH;
+//    };
+//
+//    __try
+//    {
+//        while (true)
+//        {
+//            addr = addr - 1024;
+//            sink = *addr;
+//        }
+//    }
+//    __except (filter(GetExceptionCode()))
+//    {
+//        return (&var - addr);
+//    }
+//
+//    return 0;
+//}
+int  sorting(std::vector<int>& arr, int low, int high)
+{
+    // 标记位置为待排序数组段的low处也就时枢轴值
     auto rsn = arr[low];// auto这里不可以用auto&，因为引用的话对导致rsn所代表的内存的值会被更改，而不是开始就取得的值。
     while (low < high)
     {
-        //  如果当前数字已经有序的位于我们的枢轴两端，我们就需要移动它的指针，是high或是low
+        // 如果当前数字已经有序的位于我们的枢轴两端，我们就需要移动它的指针，是high或是low
         while (low < high && arr[high] >= rsn)
         {
             --high;
@@ -342,6 +476,14 @@ std::vector<int> createInvertVector(int total)
         ls.emplace_back(i);
     }
     return ls;
+}
+
+void buildInvertArrValues(int *ls, int total)
+{
+    for (int i = 0; i < total; ++i)
+    {
+        ls[i] = total - i - 1;
+    }
 }
 template <typename Iter>
 bool isRandomIter(Iter it)
@@ -680,15 +822,73 @@ void partSortTest03(size_t total)
 }
 void testQuickSort()
 {
-    auto total     = 16;
-    auto printList = total <= 16;
-
-    //int arr01[5]{0, 1, 2, 3, 4};
+    const int total = 8192 << 3;
+    // 8192 << 3;
+    auto printList = total <= 32;
+    
+    std::cout << "total: " << total << std::endl;
+    //char dataT[1048576 << 4] = {'a', 'b','c'};
+    //int arr01[5]{10, 1, -2, 3, 4};
+    //return;
     //auto& pval = arr01[2];
     //arr01[2]   = 5;
     //std::cout << "\ntestQuickSort(),pval : " << pval << std::endl;
     //return;
+    auto primitiveTest = true;
+    if (primitiveTest)
+    {
+        int arr01[total]{};
+        buildInvertArrValues(arr01, total);
+        if (printList)
+        {
+            printListWithIterRange("sortIter(), quickList01, init: ", arr01, arr01 + (total - 1));
+        }
+        auto time_start0 = std::chrono::high_resolution_clock::now();
+        //quicksort01::sortIter(arr01, arr01 + (total - 1));
+        //quicksort01::sortIter2(arr01, arr01 + (total - 1));
+        //qsort1(arr01, arr01 + total);
+        //listQSort(arr01, arr01 + total);
+        listQSortFast(arr01, arr01 + total);
+        auto time_end0 = std::chrono::high_resolution_clock::now();
+        auto lossTime0 = std::chrono::duration_cast<std::chrono::milliseconds>(time_end0 - time_start0).count();
+        std::cout << "\nsortIter(), quickList01 sort loss time: " << lossTime0 << "ms" << std::endl;
+        if (printList)
+        {
+            printListWithIterRange("sortIter(), quickList01, sort: ", arr01, arr01 + (total));
+        }
+    }
+    else
+    {
+        auto quickList01 = createInvertVector(total);
+        if (printList)
+        {
+            printListWithIterRange("quickList01, init: ", quickList01.begin(), quickList01.end());
+        }
 
+        auto it_min = std::begin(quickList01);
+        auto it_end = std::end(quickList01);
+        auto it_max = std::next(it_end, -1);
+
+        std::cout << "*it_min: " << *it_min << std::endl;
+        //std::cout << "*it_end: " << *it_end << std::endl;
+        std::cout << "*it_max: " << *it_max << std::endl;
+
+        // quicksort01::sortIter(arr01, arr01 + 3);
+        // printListWithIterRange("sortIter(), sort: ", arr01, arr01 + 5);
+        auto time_start = std::chrono::high_resolution_clock::now();
+        quicksort01::sortIter(it_min, it_max);
+
+        //quicksort01::snsort(quickList01, 0, total - 1);
+        auto time_end = std::chrono::high_resolution_clock::now();
+        auto lossTime = std::chrono::duration_cast<std::chrono::milliseconds>(time_end - time_start).count();
+        std::cout << "\nquickList01 sort loss time: " << lossTime << "ms" << std::endl;
+        if (printList)
+        {
+            printListWithIterRange("quickList01, sort: ", quickList01.begin(), quickList01.end());
+        }
+    }
+
+    return;
     auto quick_list = createInvertVector(total);
     if (printList)
         printListWithIterRange("\nquick_list init: ", quick_list.begin(), quick_list.end());

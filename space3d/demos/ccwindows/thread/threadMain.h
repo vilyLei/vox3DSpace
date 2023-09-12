@@ -290,6 +290,11 @@ void testMain(void)
 } // namespace thr_demo_1
 void testMain()
 {
+    //PULONG_PTR LowLimit = 0;
+    //PULONG_PTR HighLimit = 0;
+    //GetCurrentThreadStackLimits(LowLimit, HighLimit);
+    
+
     //thr_demo_1::testMain();
     thr_demo_2::testMain();
 }
