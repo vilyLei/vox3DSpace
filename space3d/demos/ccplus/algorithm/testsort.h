@@ -62,7 +62,8 @@ Iter sortingIter2(Iter low, Iter high)
     auto value = *low;
     while (low < high)
     {
-        while (low < high && (*high) >= value) {
+        while (low < high && (*high) >= value)
+        {
             --high;
         }
         *low = *high;
@@ -71,15 +72,16 @@ Iter sortingIter2(Iter low, Iter high)
         {
             ++low;
         }
-        *high= *low;
+        *high = *low;
     }
     *low = value;
     return low;
 }
-template<typename Iter>
+template <typename Iter>
 void sortIter2(Iter low, Iter high)
 {
-    if (low != high) {
+    if (low != high)
+    {
 
         auto i = sortingIter2(low, high);
         auto j = i;
@@ -99,7 +101,8 @@ template <typename Iter>
 Iter sortingIter(Iter low, Iter high)
 {
     auto value = *low;
-    while (low < high) {
+    while (low < high)
+    {
         while (low < high && (*high) >= value)
         {
             --high;
@@ -114,7 +117,7 @@ Iter sortingIter(Iter low, Iter high)
     *low = value;
     return low;
 }
-template<typename Iter>
+template <typename Iter>
 void sortIter(Iter low, Iter high)
 {
     auto va = *low;
@@ -166,10 +169,10 @@ void sortIter(Iter low, Iter high)
 //
 //    return 0;
 //}
-int  sorting(std::vector<int>& arr, int low, int high)
+int sorting(std::vector<int>& arr, int low, int high)
 {
     // 标记位置为待排序数组段的low处也就时枢轴值
-    auto rsn = arr[low];// auto这里不可以用auto&，因为引用的话对导致rsn所代表的内存的值会被更改，而不是开始就取得的值。
+    auto rsn = arr[low]; // auto这里不可以用auto&，因为引用的话对导致rsn所代表的内存的值会被更改，而不是开始就取得的值。
     while (low < high)
     {
         // 如果当前数字已经有序的位于我们的枢轴两端，我们就需要移动它的指针，是high或是low
@@ -263,7 +266,57 @@ IT listPartition2(IT a, IT b, FuncT comp)
     }
     return rIT;
 }
+template <typename IT, typename FuncT>
+IT listPartitionFast(IT a, IT b, FuncT comp)
+{
 
+    int  total = 0;
+    auto it    = a;
+    auto i     = a;
+    for (; i != b; ++i)
+    {
+        if (comp(*i))
+        {
+            total++;
+        }
+        else
+        {
+            it = i;
+            break;
+        }
+    }
+
+    for (; i != b; ++i)
+    {
+        if (comp(*i))
+        {
+            total++;
+        }
+    }
+    auto maxIt = a + total;
+    auto rIt   = maxIt;
+    for (; it != maxIt;)
+    {
+        if (!comp(*it))
+        {
+            for (; maxIt != b;)
+            {
+                if (comp(*maxIt))
+                {
+                    std::iter_swap(it, maxIt);
+                    break;
+                }
+                ++maxIt;
+            }
+            if (maxIt == b)
+            {
+                return rIt;
+            }
+        }
+        ++it;
+    }
+    return rIt;
+}
 template <typename IT, typename FuncT>
 IT listPartition(IT a, IT b, FuncT comp)
 {
@@ -333,6 +386,7 @@ IT qpartition(IT a, IT b, FuncT comp)
     }
     return maxIT;
 }
+
 template <typename IT>
 void qsort2(IT a, IT b)
 {
@@ -365,6 +419,7 @@ void listQSort2(IT a, IT b)
         listQSort(p1, b);
     }
 }
+//listPartitionFast
 template <typename IT>
 void listQSort(IT a, IT b)
 {
@@ -387,11 +442,14 @@ void listQSortFast(IT a, IT b)
     if (a != b)
     {
         auto value = *std::next(a, std::distance(a, b) / 2);
-        auto p0    = listPartition(a, b, [value](const auto& v) -> bool {
+        auto p0    = listPartitionFast(a, b, [value](const auto& v) -> bool {
             return v < value;
         });
+        auto p1    = listPartitionFast(p0, b, [value](const auto& v) -> bool {
+            return v <= value;
+        });
         listQSort(a, p0);
-        listQSort(p0, b);
+        listQSort(p1, b);
     }
 }
 
@@ -439,7 +497,7 @@ std::vector<int> createRandomVector(int data_size = 20)
     std::random_device rd;
     std::mt19937       gen(rd());
     //std::uniform_real_distribution<double> distribute(0.0, 200.0);
-    std::uniform_int_distribution<int> distribute(-100, 200);
+    std::uniform_int_distribution<int> distribute(-100000, 100000);
 
     //int data[data_size]{1,2,3};
     //std::forward_list<int> ls(3,7);
@@ -453,7 +511,10 @@ std::vector<int> createRandomVector(int data_size = 20)
         //ls.emplace_back(v);
     }
     //std::cout << "B ls.max_size(): " << ls.max_size() << "\n";
-    printListWithIterRange("\ncreateRandomVector(), ls: ", ls.begin(), ls.end());
+    //if (data_size <= 16)
+    //{
+    //    printListWithIterRange("\ncreateRandomVector(), ls: ", ls.begin(), ls.end());
+    //}
     return ls;
 }
 
@@ -478,7 +539,7 @@ std::vector<int> createInvertVector(int total)
     return ls;
 }
 
-void buildInvertArrValues(int *ls, int total)
+void buildInvertArrValues(int* ls, int total)
 {
     for (int i = 0; i < total; ++i)
     {
@@ -511,10 +572,10 @@ void testPerformence1(size_t total, int type = 0)
 {
     // std::list<int> listA{};
 
-    auto list = createInvertVector(total);
+    //auto list = createInvertVector(total);
     //auto list = createInvertList(total);
     //auto list = createRandomList();
-    //auto list = createRandomVector();
+    auto list      = createRandomVector(total);
     auto printList = total <= 16;
     if (printList)
     {
@@ -534,7 +595,14 @@ void testPerformence1(size_t total, int type = 0)
     else if (type == 2)
     {
         //std::sort(std::execution::seq, list.begin(), list.end());   // 36ms
-        std::sort(std::execution::par, list.begin(), list.end()); // 最低7ms, 最高33ms
+        std::sort(std::execution::par, list.begin(), list.end(),
+            [](int a, int b) {
+            if (a < b)
+                return -1;
+            else if (a > b)
+                return 1;
+            return 0;
+        }); // 65536 << 6, 33ms
         //std::sort(std::execution::par_unseq, list.begin(), list.end()); // 最低13ms, 最高33ms
         //std::sort(std::execution::unseq, list.begin(), list.end());     // 最35ms
     }
@@ -542,7 +610,6 @@ void testPerformence1(size_t total, int type = 0)
     {
         listQSortFast(list.begin(), list.end());
     }
-    //listQSortFast
 
     auto time_end = std::chrono::high_resolution_clock::now();
     auto lossTime = std::chrono::duration_cast<std::chrono::milliseconds>(time_end - time_start).count();
@@ -723,9 +790,10 @@ void partSortTest02(size_t total)
 void partSortTest03(size_t total)
 {
     auto time_start = std::chrono::high_resolution_clock::now();
-    auto list       = createInvertVector(total);
-    auto time_end   = std::chrono::high_resolution_clock::now();
-    auto lossTime   = std::chrono::duration_cast<std::chrono::milliseconds>(time_end - time_start).count();
+    //auto list       = createInvertVector(total);
+    auto list     = createRandomVector(total);
+    auto time_end = std::chrono::high_resolution_clock::now();
+    auto lossTime = std::chrono::duration_cast<std::chrono::milliseconds>(time_end - time_start).count();
     std::cout << "std::partition() build data loss time: " << lossTime << "ms" << std::endl;
     auto total_lossTime = 0;
     auto a              = std::begin(list);
@@ -825,7 +893,7 @@ void testQuickSort()
     const int total = 8192 << 3;
     // 8192 << 3;
     auto printList = total <= 32;
-    
+
     std::cout << "total: " << total << std::endl;
     //char dataT[1048576 << 4] = {'a', 'b','c'};
     //int arr01[5]{10, 1, -2, 3, 4};
@@ -900,7 +968,6 @@ void testQuickSort()
     if (printList)
         printListWithIterRange("quick_list sort: ", quick_list.begin(), quick_list.end());
     std::cout << "\nquick_list sort loss time: " << lossTime << "ms" << std::endl;
-
 }
 void testMain()
 {
@@ -909,8 +976,8 @@ void testMain()
     std::cout << "sizeof(size_t): " << sizeof(size_t) << std::endl;
     std::cout << "sizeof(int): " << sizeof(int) << std::endl;
 
-    testQuickSort();
-    return;
+    //testQuickSort();
+    //return;
 
     std::forward_list<int> ls01{180, 74, 52, -18, 23, -43, 86, -59, 122, -29, 35, -23};
     printListWithIterRange("\nls01: ", ls01.begin(), ls01.end());
@@ -921,7 +988,7 @@ void testMain()
     //size_t total = 65536 << 16;// 大约4GB, 64bit的64G内存的win10系统无法创建出此数据
     auto total = 65536 << 15; // 此规模的数据同样的系统环境下python无法产生，直接崩溃。小数据的比较计算性能比c++常规排序机制高30%左右
     // 关于python list sort原理的基本介绍: https://www.cnblogs.com/clement-jiao/p/9243066.html
-    total        = 65536 << 10;
+    total = 65536 << 6;
     //total        = 16;
 
     auto printList = total <= 16;
@@ -933,10 +1000,10 @@ void testMain()
     partSortTest03(total);
     std::cout << "\n";
 
-    //testPerformence1(total, 0);
-    //testPerformence1(total, 1);
+    testPerformence1(total, 0);
+    testPerformence1(total, 1);
     testPerformence1(total, 2);
-    //testPerformence1(total, 3);
+    testPerformence1(total, 3);
 
     std::cout << "\n";
 

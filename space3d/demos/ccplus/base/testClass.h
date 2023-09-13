@@ -8,6 +8,8 @@
 #include <string>
 #include <mutex>
 #include <algorithm>
+#include <any>
+#include <variant>
 
 namespace base
 {
@@ -358,6 +360,68 @@ void testMain()
     std::cout << "optional01::testMain() end.\n";
 }
 }
+namespace any01
+{
+struct CA
+{
+    //CA() {}
+    CA(int i) {}
+};
+
+struct CB
+{
+    CB() {}
+    CB(int i) {}
+};
+void testMain()
+{
+    std::cout << "\nany01::testMain() begin.\n";
+
+    std::cout << std::boolalpha;
+    //std::variant<CA, int> varCA;// error, has not default constructor ...
+    std::variant<std::monostate, CA, int> varCA2; // ok
+    std::variant<CB, int> varCB;// ok
+
+    // any 类型
+    std::any a = 1;
+    std::cout << a.type().name() << ": " << std::any_cast<int>(a) << '\n';
+    a = 3.14;
+    std::cout << a.type().name() << ": " << std::any_cast<double>(a) << '\n';
+    a = true;
+    std::cout << a.type().name() << ": " << std::any_cast<bool>(a) << '\n';
+
+    // 有误的转型
+    try
+    {
+        a = 1;
+        std::cout << std::any_cast<float>(a) << '\n';
+    }
+    catch (const std::bad_any_cast& e)
+    {
+        std::cout << e.what() << '\n';
+    }
+
+    // 拥有值
+    a = 1;
+    if (a.has_value())
+    {
+        std::cout << a.type().name() << '\n';
+    }
+
+    // 重置
+    a.reset();
+    if (!a.has_value())
+    {
+        std::cout << "no value\n";
+    }
+
+    // 指向所含数据的指针
+    a      = 1;
+    int* i = std::any_cast<int>(&a);
+    std::cout << *i << "\n";
+    std::cout << "any01::testMain() end.\n\n";
+}
+}
 void testMain()
 {
     std::boolalpha(std::cout);
@@ -368,6 +432,7 @@ void testMain()
     //std_optional::testMain();
     classTest_4::testMain();
     optional01::testMain();
+    any01::testMain();
     std::cout << "base::demoClass::testMain() end.\n";
 }
 } // namespace demoClass
