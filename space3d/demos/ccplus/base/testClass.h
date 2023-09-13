@@ -17,6 +17,7 @@ namespace demoClass
 {
 namespace classTest_4
 {
+void showInfo(const std::string& info);
 class ToolA
 {
 public:
@@ -49,6 +50,7 @@ void testMain()
     //classTest_4::showInfo()
     std::cout << "classTest_4::testMain() begin ..." << std::endl;
     ToolA ta{};
+    showInfo("**************** >>>>>>>>>>>>>> dfd");
     std::cout << "classTest_4::testMain() 01 ..." << ta << std::endl;
     ta.showInfoString("AAAA---000");
     std::cout << "classTest_4::testMain() end ..." << std::endl;

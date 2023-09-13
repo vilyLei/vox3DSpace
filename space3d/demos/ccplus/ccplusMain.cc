@@ -204,11 +204,11 @@ int main01()
 int main()
 {
 
+    base::demoClass::testMain();
+    return EXIT_SUCCESS;
     algorithm::testsort::testMain();
     return EXIT_SUCCESS;
 
-    base::demoClass::testMain();
-    return EXIT_SUCCESS;
     exception1::excptBase::testMain();
     return EXIT_SUCCESS;
     demoTemplate::base::testMain();

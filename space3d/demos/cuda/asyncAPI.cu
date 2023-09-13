@@ -46,6 +46,92 @@
 #include <helper_cuda.h>
 #include <helper_functions.h> // helper utility functions
 
+// Device code
+__global__ void MyKernel(int* d, int* a, int* b)
+{
+    int idx = threadIdx.x + blockIdx.x * blockDim.x;
+    d[idx]  = a[idx] * b[idx];
+}
+
+// Host code
+int main(int argc, char* argv[])
+{
+    int numBlocks; // Occupancy in terms of active blocks
+    int blockSize = 32;
+
+    // These variables are used to convert occupancy to warps
+    int            device;
+    cudaDeviceProp prop;
+    int            activeWarps;
+    int            maxWarps;
+
+    cudaGetDevice(&device);
+    cudaGetDeviceProperties(&prop, device);
+
+    cudaOccupancyMaxActiveBlocksPerMultiprocessor(
+        &numBlocks,
+        MyKernel,
+        blockSize,
+        0);
+
+    activeWarps = numBlocks * blockSize / prop.warpSize;
+    maxWarps    = prop.maxThreadsPerMultiProcessor / prop.warpSize;
+
+    printf("Occupancy: %f\n",(double)activeWarps / maxWarps * 100);
+
+    return 0;
+}
+__global__ void loopTest()
+{
+    // 在Grid中遍历所有thread
+    int i = blockIdx.x * blockDim.x + threadIdx.x;
+    printf("cuda threa id: %d\n", i);
+}
+int main_04(int argc, char* argv[])
+{
+    /*
+     * 配置参数还可以试试其他的，例如：
+     * <<<5, 2>>>
+     * <<<10, 1>>>
+     */
+    loopTest<<<2, 5>>>();
+    cudaDeviceSynchronize();
+    return 1;
+}
+// kernel function
+__global__ void execCudaConfiguration()
+{
+    if (threadIdx.x == 5 && blockIdx.x == 2)
+    {
+        printf("execCudaConfiguration(), success!\n");
+        printf("execCudaConfiguration(), threadIdx.x: %d\n", threadIdx.x);
+        printf("execCudaConfiguration(), blockIdx.x: %d\n", blockIdx.x);
+    }
+}
+int main_03(int argc, char* argv[])
+{
+    // 配置该核函数由256个含有1024个线程的线程块中执行
+    execCudaConfiguration<<<3, 6>>>();
+    cudaDeviceSynchronize(); // 同步
+    return 1;
+}
+// running in the cpu
+void cpuFunction()
+{
+    printf("This function is defined to run on the CPU.\n\n");
+}
+// running in the gpu
+__global__ void gpuFunction()
+{
+    printf("This function is defined to run on the GPU.\n");
+}
+int main_02(int argc, char* argv[])
+{
+    cpuFunction();           // invoke cpu func
+    gpuFunction<<<2, 2>>>(); // invoke gpu func
+    cudaDeviceSynchronize(); // sync
+    return 1;
+}
 __global__ void increment_kernel(int* g_data, int inc_value)
 {
     int idx     = blockIdx.x * blockDim.x + threadIdx.x;
@@ -64,7 +150,7 @@ bool correct_output(int* data, const int n, const int x)
     return true;
 }
 
-int main(int argc, char* argv[])
+int main_01(int argc, char* argv[])
 {
     int            devID;
     cudaDeviceProp deviceProps;
