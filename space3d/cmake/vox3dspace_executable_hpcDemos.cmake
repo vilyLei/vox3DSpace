@@ -33,26 +33,34 @@ macro(build_executable_hpcDemos)
 
   set(src_demoName "cpuparallel")
   set(src_demoDir "${hpcDemo_dir}/${src_demoName}/")
-  list(APPEND hpsrc_demo_sources
+  list(APPEND cpuparallel_demo_sources
       "${src_demoDir}/sseavxChecker.h"
       "${src_demoDir}/sseavxBaseTest.h"
       "${src_demoDir}/sseavxBaseTestSOA.h"
       "${src_demoDir}/sseavxFileReader.h"
     )
-  vox3dspace_add_hpcDemo_executableByName(${src_demoName} "${hpsrc_demo_sources}")
+  vox3dspace_add_hpcDemo_executableByName(${src_demoName} "${cpuparallel_demo_sources}")
 
 
   set(src_demoName "gpucpuparallel")
   set(src_demoDir "${hpcDemo_dir}/${src_demoName}/")
-  list(APPEND hpsrc_demo_sources
+  list(APPEND gpucpuparallel_demo_sources
       ""
     )
-  vox3dspace_add_hpcDemo_executableByName(${src_demoName} "${hpsrc_demo_sources}")
+  vox3dspace_add_hpcDemo_executableByName(${src_demoName} "${gpucpuparallel_demo_sources}")
 
 
   set(src_demoName "calcpowernet")
   set(src_demoDir "${hpcDemo_dir}/${src_demoName}/")
-  list(APPEND hpsrc_demo_sources "")
-  vox3dspace_add_hpcDemo_executableByName(${src_demoName} "${hpsrc_demo_sources}")
+  list(APPEND calcpowernet_demo_sources "")
+  vox3dspace_add_hpcDemo_executableByName(${src_demoName} "${calcpowernet_demo_sources}")
+
+  
+  set(src_demoName "plthread")
+  set(src_demoDir "${hpcDemo_dir}/${src_demoName}/")
+  list(APPEND plthread_demo_sources
+    "${src_demoDir}/threadAffinity.h"
+    )
+  vox3dspace_add_hpcDemo_executableByName(${src_demoName} "${plthread_demo_sources}")
   
 endmacro()
