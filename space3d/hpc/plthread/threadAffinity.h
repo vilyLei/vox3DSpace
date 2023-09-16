@@ -95,4 +95,31 @@ void testMain()
     //
     std::cout << "threadAffinity::testMain() end ...\n";
 }
+void running(int seconds)
+{
+    Sleep(seconds * 1000);
+    std::cout << "sleep for " << seconds << "(s)" << std::endl;
+}
+
+void testMain2()
+{
+    std::cout << "\nthreadAffinity::testMain2() begin ...\n";
+    SetThreadAffinityMask(GetCurrentThread(), 1);
+    LARGE_INTEGER start, end;
+    LARGE_INTEGER freq;
+    //timeConsuming();
+    QueryPerformanceFrequency(&freq);
+    QueryPerformanceCounter(&start); //start
+
+
+    std::cout << "start.QuadPart = " << start.QuadPart << std::endl; //output start
+    running(10);                                                     //running 10 seconds
+    QueryPerformanceCounter(&end);                                   //end
+    std::cout << "end.QuadPart = " << end.QuadPart << std::endl;     //output end
+
+    std::cout << "consume value = end.QuadPart - start.QuadPart = " << (end.QuadPart - start.QuadPart) << std::endl;
+    std::cout << "(consume value/(double)freq.QuadPart) Time consumed = " << (end.QuadPart - start.QuadPart) / (double)freq.QuadPart << "(s)" << std::endl; //output consumed time
+
+    std::cout << "threadAffinity::testMain2() end ...\n";
+}
 }

@@ -17,6 +17,7 @@ int main()
     std::cout << "plthread main begin ...\n";
 
     threadAffinity::testMain();
+    threadAffinity::testMain2();
 
     //std::vector<std::thread> threads;
     //for (unsigned int i = 0; i < std::thread::hardware_concurrency(); ++i)
