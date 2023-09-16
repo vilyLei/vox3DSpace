@@ -4,6 +4,7 @@
 #    include <intrin.h>
 void __cpuidSpec(int p0[4], int p1)
 {
+    // thanks: https://learn.microsoft.com/zh-cn/cpp/intrinsics/cpuid-cpuidex?view=msvc-170
     __cpuid(p0, p1);
 }
 unsigned __int64 __cdecl _xgetbvSpec(unsigned int p)
