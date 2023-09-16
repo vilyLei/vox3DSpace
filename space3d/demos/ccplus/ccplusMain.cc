@@ -32,6 +32,7 @@
 #include "exception1/testExcptBase.h"
 #include "algorithm/testsort.h"
 #include "algorithm/testhash.h"
+#include "algorithm/baseMethod1.h"
 
 class ValueUnit
 {
@@ -204,6 +205,8 @@ int main01()
 int main()
 {
 
+    algorithm::baseMethod1::testMain();
+    return EXIT_SUCCESS;
     base::demoClass::testMain();
     return EXIT_SUCCESS;
     algorithm::testsort::testMain();
