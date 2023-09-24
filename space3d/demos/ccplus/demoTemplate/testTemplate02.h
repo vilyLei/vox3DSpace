@@ -12,6 +12,21 @@
 
 namespace demoTemplate::base02
 {
+namespace templateDemo_b02
+{
+    class my_default_random_engine
+    {
+        static constexpr uint32_t m = 0x7fffffffu;
+        uint32_t mState; // must be 0 < seed < 0x7fffffff
+    public:
+        inline constexpr explicit my_default_random_engine(uint32_t seed = 1u) noexcept
+            : mState(((seed% m) == 0u) ? 1u : seed % m) {
+        }
+        inline uint32_t operator()() noexcept {
+            return mState = uint32_t((uint64_t(mState) * 48271u) % m);
+        }
+    };
+}
 namespace templateDemo_b01
 {
 template <class T>

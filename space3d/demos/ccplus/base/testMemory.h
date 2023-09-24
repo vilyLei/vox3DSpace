@@ -762,7 +762,9 @@ https://learn.microsoft.com/en-us/cpp/build/reference/zc-alignednew?view=msvc-17
 int testMain()
 {
     std::cout << "base::testMemory::testMain() begin.\n";
-    //test_1::testMain();
+    std::cout << ">>> --- --- --- 01 --- --- --- >>>\n";
+    test_1::testMain();
+    std::cout << ">>> --- --- --- 02 --- --- --- >>>\n";
     //test_2::testMain();
     //test_3::testMain();
     //test_4::testMain();

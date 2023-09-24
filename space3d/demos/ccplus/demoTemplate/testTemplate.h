@@ -10,23 +10,60 @@
 
 namespace demoTemplate::base
 {
-namespace collapsing_expr
+ namespace collapsing_expr02
+ {
+     template<typename T>
+     auto sumValue(T t)
+     {
+         if constexpr (std::is_arithmetic_v<T>)
+         {
+             return t;
+         }
+         else
+         {
+             return std::string(t);
+         }
+     }
+     template <typename T, typename... Ts>
+     auto sumValue(T t, Ts... ts)
+     {
+         //if constexpr (std::is_same_v<T, std::string>)
+         if constexpr (std::is_arithmetic_v<T>)
+         {
+             return t + sumValue(ts...);
+         }
+         else {
+             return (t + ","s) + std::string(sumValue(ts...));
+         }
+     }
+     void testMain()
+     {
+         std::cout << "collapsing_expr02::testMain() begin.\n";
+
+         using namespace std::literals;
+         std::string str_va{ sumValue("a"s, "b"s, "c"s) };
+         std::cout << "sumValue(), str_va: " << str_va << "\n";
+         std::string str_va_0{ sumValue("a0", "b0", "c0") };
+         std::cout << "sumValue(), str_va_0: " << str_va_0 << "\n";
+
+         int int_va_0{ sumValue(1,2,3) };
+         std::cout << "sumValue(), int_va_0: " << int_va_0 << "\n";
+         auto number_va_0{ sumValue(1,2.5f,3)};
+         std::cout << "sumValue(), number_va_0: " << number_va_0 << "\n";
+         std::cout << "collapsing_expr02::testMain() end.\n";
+     }
+ }
+namespace collapsing_expr01
 {
 template <typename... Ts>
 auto sumValue(Ts... ts)
 {
-    //if constexpr (std::is_same_v<Ts, std::string>)
-    //{
-    //    return (ts + ...);
-    //}
-    //else {
-    //    return (ts + ...);
-    //}
     return (ts + ...);
 }
 int  int_va{sumValue(1, 2, 3, 4, 5)}; // 15
 void testMain()
 {
+    std::cout << "collapsing_expr01::testMain() begin.\n";
     using namespace std::literals;
     std::string str_va{sumValue("a"s, "b"s, "c"s)};
     //std::string str_va{sumValue(std::string("a"), std::string("b"), std::string("c"))};
@@ -37,6 +74,7 @@ void testMain()
     int               value = 0;
     const auto        res   = std::from_chars(str.data(), str.data() + 4, value);
     std::cout << "from_chars(), value: " << value << "\n";
+    std::cout << "collapsing_expr01::testMain() end.\n";
 }
 }
 namespace templateTemplateParameter
@@ -607,7 +645,8 @@ void testMain()
     template_test_03::testMain();
     templateDefTest03::testMain();
     templateTemplateParameter::testMain();
-    collapsing_expr::testMain();
+    collapsing_expr01::testMain();
+    collapsing_expr02::testMain();
     std::cout << "demoTemplate::base::testMain() end.\n";
 }
 } // namespace demoTemplate::base

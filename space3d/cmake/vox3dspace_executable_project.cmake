@@ -44,6 +44,8 @@ macro(build_executable_projects)
                        "${ccplus_dir}/base/testClass.h"
                        "${ccplus_dir}/base/testMacro.h"
                        "${ccplus_dir}/base/testMemory.h"
+                       "${ccplus_dir}/base/testUnit.cc"
+                       "${ccplus_dir}/base/testUnit.h"
                        "${ccplus_dir}/coding/testCodecvt.h"
                        "${ccplus_dir}/algorithm/testsort.h"
                        "${ccplus_dir}/algorithm/testhash.h"
@@ -52,6 +54,10 @@ macro(build_executable_projects)
                        "${ccplus_dir}/msvcAsm/testInlineAsm.h"
                        "${ccplus_dir}/demoTemplate/testTemplate.h"
                        "${ccplus_dir}/demoTemplate/testTemplate02.h"
+                       "${ccplus_dir}/demoTemplate/testTemplate03.h"
+                       "${ccplus_dir}/demoTemplate/testTemplate04.h"
+                       "${ccplus_dir}/demoTemplate/testTemplate05.h"
+                       "${ccplus_dir}/demoTemplate/testTemplate06.h"
                        "${ccplus_dir}/ccplusMain.cc"
                        FOLDER
                        ${test_demo_folder_name}
@@ -128,44 +134,48 @@ macro(build_executable_projects)
                        ${vox3dspace_json_dependency})
 
   # tbb demo
-  vox3dspace_add_executable(NAME
-                       demo_tbb
-                       SOURCES
-                       "${vox3dspace_root}/demos/tbb/testMain.cc"
-                       "${vox3dspace_root}/demos/tbb/tbbAtomic.h"
-                       "${vox3dspace_root}/demos/tbb/tbbAtomic2.h"
-                       "${vox3dspace_root}/demos/tbb/testMutex.h"
-                       "${vox3dspace_root}/demos/tbb/testTask.h"
-                       "${vox3dspace_root}/demos/tbb/testParallel.h"
-                       "${tbb_root_dir}/src/tbb/co_context.h"
-                       FOLDER
-                       ${test_demo_folder_name}
-                       DEFINES
-                       ${vox3dspace_defines}
-                       RPOJECT_FLAGS
-                       ${VOX3DSPACE_CXX_FLAGS}
-                       INCLUDES
-                       ${vox3dspace_tbb_libs_include_paths}
-                       LIB_INCLUDES
-                       ${vox3dspace_libs_paths})
+  if(DEFINED ENV{TBB_ROOT_DIR})
+    vox3dspace_add_executable(NAME
+                        demo_tbb
+                        SOURCES
+                        "${vox3dspace_root}/demos/tbb/testMain.cc"
+                        "${vox3dspace_root}/demos/tbb/tbbAtomic.h"
+                        "${vox3dspace_root}/demos/tbb/tbbAtomic2.h"
+                        "${vox3dspace_root}/demos/tbb/testMutex.h"
+                        "${vox3dspace_root}/demos/tbb/testTask.h"
+                        "${vox3dspace_root}/demos/tbb/testParallel.h"
+                        "${tbb_root_dir}/src/tbb/co_context.h"
+                        FOLDER
+                        ${test_demo_folder_name}
+                        DEFINES
+                        ${vox3dspace_defines}
+                        RPOJECT_FLAGS
+                        ${VOX3DSPACE_CXX_FLAGS}
+                        INCLUDES
+                        ${vox3dspace_tbb_libs_include_paths}
+                        LIB_INCLUDES
+                        ${vox3dspace_libs_paths})
+  endif()
   
 	file(COPY "${vox3dspace_root}/libs/tbb/lib/" DESTINATION "${PROJECT_BINARY_DIR}/${CMAKE_BUILD_TYPE}")
 	file(COPY "${vox3dspace_root}/libs/tbb/lib/" DESTINATION "${PROJECT_BINARY_DIR}/")
   # boost demo
-  vox3dspace_add_executable(NAME
-                      demo_boost
-                      SOURCES
-                      "${vox3dspace_root}/demos/boost/baseTest.cc"
-                      FOLDER
-                      ${test_demo_folder_name}
-                      DEFINES
-                      ${vox3dspace_defines}
-                      RPOJECT_FLAGS
-                      ${VOX3DSPACE_CXX_FLAGS}
-                      INCLUDES
-                      ${vox3dspace_boost_libs_include_paths}
-                      LIB_INCLUDES
-                      ${vox3dspace_boost_libs_paths})
+  if(DEFINED ENV{BOOST_ROOT_DIR})
+    vox3dspace_add_executable(NAME
+                        demo_boost
+                        SOURCES
+                        "${vox3dspace_root}/demos/boost/baseTest.cc"
+                        FOLDER
+                        ${test_demo_folder_name}
+                        DEFINES
+                        ${vox3dspace_defines}
+                        RPOJECT_FLAGS
+                        ${VOX3DSPACE_CXX_FLAGS}
+                        INCLUDES
+                        ${vox3dspace_boost_libs_include_paths}
+                        LIB_INCLUDES
+                        ${vox3dspace_boost_libs_paths})
+  endif()
   # tiny obj demo
   vox3dspace_add_executable(NAME
                        demo_tinyObj

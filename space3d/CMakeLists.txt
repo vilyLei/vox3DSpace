@@ -14,6 +14,8 @@ set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 # set(VOX3DSPACE_VERSION 1.0.1)
 
+message(STATUS "BOOST_ROOT_DIR: $ENV{BOOST_ROOT_DIR}")
+
 set(vox3dspace_root "${CMAKE_CURRENT_SOURCE_DIR}")
 set(vox3dspace_src_root "${vox3dspace_root}/src")
 set(vox3dspace_libs_root "${vox3dspace_root}/libs")
@@ -74,7 +76,6 @@ message(STATUS "CMAKE_BINARY_DIR: ${CMAKE_BINARY_DIR}")
 message(STATUS "PROJECT_BINARY_DIR: ${PROJECT_BINARY_DIR}")
 message(STATUS "Vulkan_ROOT_DIR: ${Vulkan_ROOT_DIR}")
 # set( ENV{PATH} /engine/core )
-message(STATUS "BOOST_ROOT_DIR: $ENV{BOOST_ROOT_DIR}")
 message(STATUS "CMAKE_CUDA_ARCHITECTURES: ${CMAKE_CUDA_ARCHITECTURES}")
 # set(CMAKE_CUDA_ARCHITECTURES 50-virtual)
 set(CMAKE_CUDA_ARCHITECTURES 50 52 60 61)

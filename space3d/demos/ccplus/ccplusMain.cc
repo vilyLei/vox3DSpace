@@ -18,6 +18,7 @@
 #include "base/testClass.h"
 #include "base/testMacro.h"
 #include "base/testMemory.h"
+#include "base/testUnit.h"
 #include "msvcAsm/testInlineAsm.h"
 #include "parallel/testExecutionPar.h"
 #include "parallel/futureFastSort01.h"
@@ -29,10 +30,29 @@
 #include "coding/testCodecvt.h"
 #include "demoTemplate/testTemplate.h"
 #include "demoTemplate/testTemplate02.h"
+#include "demoTemplate/testTemplate03.h"
+#include "demoTemplate/testTemplate04.h"
+#include "demoTemplate/testTemplate05.h"
+#include "demoTemplate/testTemplate06.h"
 #include "exception1/testExcptBase.h"
 #include "algorithm/testsort.h"
 #include "algorithm/testhash.h"
 #include "algorithm/baseMethod1.h"
+
+// 测试内部链接和外部链接(注意: cpp文件才是编译单元)
+namespace cplus_vvv3_test
+{
+    int foo();                              // 函数声明，内部连接
+    static int i = 0;                       // 名字空间静态变量定义，内部连接, 如果将 const 关键字去掉，则会报错: 已经在testUnit.obj中定义的错误
+    static int foo() { return 0; }          // 名字空间静态函数定义，内部连接
+}
+static int vvv3_test_i = 0;                 // 全局静态变量定义，内部连接, 如果将 const 关键字去掉，则会报错: 已经在testUnit.obj中定义的错误
+static int vvv3_test_foo() { return 1; }    // 全局静态函数定义，内部连接
+const int vvv3_test_k = 0;                  // 全局const常量定义，内部连接, 如果将 const 关键字去掉，则会报错: 已经在testUnit.obj中定义的错误
+
+//int vvpoo = 1;
+//int vv_bar0 = 0xE+vvpoo;   // 错误：非法的预处理数字 0xE+foo
+//int vv_baz1 = 0xE + vvpoo; // OK
 
 class ValueUnit
 {
@@ -204,6 +224,18 @@ int main01()
 }
 int main()
 {
+    demoTemplate::base06::testMain();
+    return EXIT_SUCCESS;
+    demoTemplate::base05::testMain();
+    return EXIT_SUCCESS;
+    demoTemplate::base04::testMain();
+    return EXIT_SUCCESS;
+    demoTemplate::base::testMain();
+    return EXIT_SUCCESS;
+    demoTemplate::base03::testMain();
+    return EXIT_SUCCESS;
+    base::testMemory::testMain();
+    return EXIT_SUCCESS;
 
     algorithm::baseMethod1::testMain();
     return EXIT_SUCCESS;
@@ -213,8 +245,6 @@ int main()
     return EXIT_SUCCESS;
 
     exception1::excptBase::testMain();
-    return EXIT_SUCCESS;
-    demoTemplate::base::testMain();
     return EXIT_SUCCESS;
     algorithm::testhash::testMain();
     return EXIT_SUCCESS;
@@ -243,8 +273,6 @@ int main()
     thread::memoryFence::testMain();
     return EXIT_SUCCESS;
     thread::atomic2::testMain();
-    return EXIT_SUCCESS;
-    base::testMemory::testMain();
     return EXIT_SUCCESS;
     /*
     auto path = std::filesystem::path("./");

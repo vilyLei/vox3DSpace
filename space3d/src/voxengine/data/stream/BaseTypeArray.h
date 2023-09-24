@@ -9,7 +9,8 @@ namespace voxengine
 		namespace stream
 		{
 			//template <typename T, typename = std::enable_if<std::is_arithmetic<T>::value>::type>	// correct format def
-			template <typename T, typename = std::enable_if_t<std::is_arithmetic<T>::value>>
+			//template <typename T, typename = std::enable_if_t<std::is_arithmetic<T>::value>>      // correct format def
+			template <typename T, std::enable_if_t<std::is_arithmetic<T>::value, bool> = true>
             class BaseTypeArray : public DataView
 			{
 			public:

@@ -120,38 +120,48 @@ macro(vox3dspace_set_build_definitions)
   ####################################################################################
   # bost libs info define
   
-  # set(boost_root_dir $ENV{BOOST_ROOT_DIR})
-  
-  set(boost_root_dir $ENV{BOOST_ROOT_DIR})
-  file(TO_CMAKE_PATH ${boost_root_dir} boost_root_dir)
-  message(STATUS "boost_root_dir: ${boost_root_dir}")
+  # if(DEFINED ENV{BOOST_ROOT_DIR_T})
+  #   message("--- VVV VVV BOOST_ROOT_DIR is not empty ...")
+  # else()
+  #   message("--- VVV VVV BOOST_ROOT_DIR is empty ...")
+  # endif()
+  if(DEFINED ENV{BOOST_ROOT_DIR})
+    set(boost_root_dir $ENV{BOOST_ROOT_DIR})
+    file(TO_CMAKE_PATH ${boost_root_dir} boost_root_dir)
+    message(STATUS "boost_root_dir: ${boost_root_dir}")
 
-  set(boost_lib_dir $ENV{BOOST_LIB_DIR})
-  file(TO_CMAKE_PATH ${boost_lib_dir} boost_lib_dir)
-  message(STATUS "boost_lib_dir: ${boost_lib_dir}")
+    set(boost_lib_dir $ENV{BOOST_LIB_DIR})
+    file(TO_CMAKE_PATH ${boost_lib_dir} boost_lib_dir)
+    message(STATUS "boost_lib_dir: ${boost_lib_dir}")
+  endif()
 
   set(vulkan_sdk_dir $ENV{VULKAN_SDK})
   file(TO_CMAKE_PATH ${vulkan_sdk_dir} vulkan_sdk_dir)
   message(STATUS "vulkan_sdk_dir: ${vulkan_sdk_dir}")
 
-  set(tbb_root_dir $ENV{TBB_ROOT_DIR})
-  file(TO_CMAKE_PATH ${tbb_root_dir} tbb_root_dir)
-  message(STATUS "tbb_root_dir: ${tbb_root_dir}")
+  if(DEFINED ENV{TBB_ROOT_DIR})
+    set(tbb_root_dir $ENV{TBB_ROOT_DIR})
+    file(TO_CMAKE_PATH ${tbb_root_dir} tbb_root_dir)
+    message(STATUS "tbb_root_dir: ${tbb_root_dir}")
+  endif()
 
   # externals\glm
   set(glm_root_dir "${vox3dspace_root}/externals/glm")
   message(STATUS "glm_root_dir: ${glm_root_dir}")
-
   
   # ccplus demo libs info define
   list(APPEND vox3dspace_ccplus_libs_include_paths "${vox3dspace_root}/demos/ccplus")
   # ccwindows demo libs info define
   list(APPEND vox3dspace_ccwindows_libs_include_paths "${vox3dspace_root}/demos/ccwindows")
   # tbb demo libs info define
-  list(APPEND vox3dspace_tbb_libs_include_paths "${tbb_root_dir}/include")
+  if(DEFINED ENV{TBB_ROOT_DIR})
+    list(APPEND vox3dspace_tbb_libs_include_paths "${tbb_root_dir}/include")
+  endif()
   # boost demo libs info define
-  list(APPEND vox3dspace_boost_libs_include_paths "${boost_root_dir}")
-  list(APPEND vox3dspace_boost_libs_paths "${boost_lib_dir}")
+  if(DEFINED ENV{BOOST_ROOT_DIR})
+    list(APPEND vox3dspace_boost_libs_include_paths "${boost_root_dir}")
+    list(APPEND vox3dspace_boost_libs_paths "${boost_lib_dir}")
+  endif()
   # opengl libs info define
   list(APPEND vox3dspace_opengl_libs_include_paths "${vox3dspace_root}/openglLibs/libx64")
   list(APPEND vox3dspace_opengl_libs_paths "${vox3dspace_root}/openglLibs/libx64/lib")
