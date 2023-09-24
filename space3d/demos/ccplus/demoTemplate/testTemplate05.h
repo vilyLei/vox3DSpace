@@ -185,6 +185,30 @@ namespace demoTemplate::base05
 	}
 	namespace templateDemo_b02
 	{
+		template <typename T, typename = void>
+		class NumCalcingUnit;
+
+		template <typename T>
+		class NumCalcingUnit<T, typename std::enable_if_t<std::is_integral<T>::value>>
+		{
+		public:
+			T value;
+			T addOne() {
+				value += 1;
+				return value;
+			}
+		};
+		template <typename T>
+		class NumCalcingUnit<T, typename std::enable_if_t<std::is_floating_point<T>::value>>
+		{
+		public:
+			T value;
+			T addOne() {
+				value += 1.01f;
+				return value;
+			}
+		};
+
 		//template <typename T, std::enable_if_t<std::is_integral<T>::value, bool> = true>
 		template <typename T>
 		class NumCalcUnit
@@ -205,7 +229,7 @@ namespace demoTemplate::base05
 			float value;
 			float addOne() {
 				std::cout << "call NumCalcUnit<float>::addOne().\n";
-				value += 1.0f;
+				value += 1.01f;
 				return value;
 			}
 		};
@@ -334,6 +358,18 @@ namespace demoTemplate::base05
 			std::cout << "intCU.value: " << intCU.value << "\n";
 			std::cout << "floatCU.value: " << floatCU.value << "\n";
 
+			std::cout << "--- --- NumCalcingUnit --- ---\n";
+
+			NumCalcingUnit<int> intCUIng{ 1 };
+			NumCalcingUnit<float> floatCUIng{ 1 };
+
+			intCUIng.value = 1.5f;
+			floatCUIng.value = 1.5f;
+			intCUIng.addOne();
+			floatCUIng.addOne();
+
+			std::cout << "intCUIng.value: " << intCUIng.value << "\n";
+			std::cout << "floatCUIng.value: " << floatCUIng.value << "\n";
 
 			std::cout << "templateDemo_b02::testMain() end.\n";
 		}

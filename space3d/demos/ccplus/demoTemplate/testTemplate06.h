@@ -1,10 +1,20 @@
 #include <iostream>
 #include <thread>
+#include <cstdlib>
+#include <initializer_list>
+#include <cstdarg>
 
 namespace demoTemplate::base06
 {
 	namespace templateDemo_b03
 	{
+
+#define LOGCodeInfo(...) { \
+	fprintf(stderr, "%s: Line %d:\t", __FILE__, __LINE__); \
+	fprintf(stderr, __VA_ARGS__); \
+	fprintf(stderr, "\n"); \
+}
+
 		template<typename... Args>
 		void FormatPrint(Args... args)
 		{
@@ -13,8 +23,18 @@ namespace demoTemplate::base06
 
 		void testMain(void)
 		{
+			std::cout << "templateDemo_b03::testMain() begin.\n";
+			(std::cout << (std::cout << "[" << 10, "]")) << std::endl;
+			std::cout << (std::cout << "[" << 10, ">", ">>") << std::endl;
+			std::cout << "--- --- --- A --- --- ---.\n";
 			FormatPrint(1, 2, 3, 4);
 			FormatPrint("good", 2, "hello", 4, 110);
+
+			std::cout << "--- --- --- B --- --- ---.\n";
+			int value{ 5 };
+			LOGCodeInfo("value = %d", value);
+			LOGCodeInfo("value = %d", 6);
+			std::cout << "\ntemplateDemo_b03::testMain() end.\n";
 		}
 	}
 	namespace templateDemo_b02
@@ -82,6 +102,7 @@ namespace demoTemplate::base06
 		std::boolalpha(std::cout);
 		std::cout << "demoTemplate::base06::testMain() begin.\n";
 		templateDemo_b01::testMain();
+		templateDemo_b03::testMain();
 		std::cout << "demoTemplate::base06::testMain() end.\n";
 	}
 }
