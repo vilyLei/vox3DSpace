@@ -12,12 +12,12 @@
 
 namespace threadAffinity
 {
-void setThreadAffinityById(size_t id) noexcept {
+void setThreadAffinityWithId(size_t id) noexcept {
 #if defined(__linux__)
-        cpu_set_t set;
-        CPU_ZERO(&set);
-        CPU_SET(id, &set);
-        sched_setaffinity(gettid(), sizeof(set), &set);
+    cpu_set_t set;
+    CPU_ZERO(&set);
+    CPU_SET(id, &set);
+    sched_setaffinity(gettid(), sizeof(set), &set);
 #endif
 }
 std::string getProcessorVendorSerialnumber()

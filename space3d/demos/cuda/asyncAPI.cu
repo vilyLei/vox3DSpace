@@ -54,7 +54,7 @@ __global__ void MyKernel(int* d, int* a, int* b)
 }
 
 // Host code
-int main(int argc, char* argv[])
+int main_05(int argc, char* argv[])
 {
     int numBlocks; // Occupancy in terms of active blocks
     int blockSize = 32;
@@ -150,7 +150,7 @@ bool correct_output(int* data, const int n, const int x)
     return true;
 }
 
-int main_01(int argc, char* argv[])
+int main(int argc, char* argv[])
 {
     int            devID;
     cudaDeviceProp deviceProps;

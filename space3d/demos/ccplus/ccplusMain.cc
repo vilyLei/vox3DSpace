@@ -38,6 +38,7 @@
 #include "algorithm/testsort.h"
 #include "algorithm/testhash.h"
 #include "algorithm/baseMethod1.h"
+#include "algorithm/LRUTest.h"
 
 // 测试内部链接和外部链接(注意: cpp文件才是编译单元)
 namespace cplus_vvv3_test
@@ -224,6 +225,9 @@ int main01()
 }
 int main()
 {
+    algorithm::lruTest::testMain();
+    return EXIT_SUCCESS;
+
     demoTemplate::base06::testMain();
     return EXIT_SUCCESS;
     demoTemplate::base05::testMain();

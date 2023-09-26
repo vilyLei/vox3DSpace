@@ -50,6 +50,7 @@ macro(build_executable_projects)
                        "${ccplus_dir}/algorithm/testsort.h"
                        "${ccplus_dir}/algorithm/testhash.h"
                        "${ccplus_dir}/algorithm/baseMethod1.h"
+                       "${ccplus_dir}/algorithm/LRUTest.h"
                        "${ccplus_dir}/exception1/testExcptBase.h"
                        "${ccplus_dir}/msvcAsm/testInlineAsm.h"
                        "${ccplus_dir}/demoTemplate/testTemplate.h"
