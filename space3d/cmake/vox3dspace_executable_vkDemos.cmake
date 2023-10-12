@@ -34,6 +34,8 @@ macro(build_executable_vkDemos)
 
   endfunction()
 
+  set(test_vkDemo_name "windowSurface")
+
   vox3dspace_add_vkDemo_executableByName("windowSurface" "")
   vox3dspace_add_vkDemo_executableByName("swapChain" "")
   vox3dspace_add_vkDemo_executableByName("imageViews" "")
@@ -49,5 +51,12 @@ macro(build_executable_vkDemos)
   vox3dspace_add_vkDemo_executableByName("indexBuffer" "")
 
   vox3dspace_add_vkDemo_executableByName("descLayoutAndBuffer" "")
-  vox3dspace_add_vkDemo_executableByName("descPoolAndSets" "")
+  
+  set(test_vkDemo_name "descPoolAndSets")
+  set(test_vkDemo_path "${test_vkDemos_path_root}/${test_vkDemo_name}")
+  set(test_vkDemo_SRCS 
+    "${test_vkDemo_path}/shader.vert"
+    "${test_vkDemo_path}/shader.frag"
+  )
+  vox3dspace_add_vkDemo_executableByName(${test_vkDemo_name} "${test_vkDemo_SRCS}")
 endmacro()
