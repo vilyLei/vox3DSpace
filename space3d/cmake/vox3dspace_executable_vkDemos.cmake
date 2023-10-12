@@ -45,6 +45,7 @@ macro(build_executable_vkDemos)
   vox3dspace_add_vkDemo_executableByName("framesInFlight" "")
   vox3dspace_add_vkDemo_executableByName("swapChainRecreation" "")
   vox3dspace_add_vkDemo_executableByName("indexBuffer" "")
-  
+
   vox3dspace_add_vkDemo_executableByName("descLayoutAndBuffer" "")
+  vox3dspace_add_vkDemo_executableByName("descPoolAndSets" "")
 endmacro()
