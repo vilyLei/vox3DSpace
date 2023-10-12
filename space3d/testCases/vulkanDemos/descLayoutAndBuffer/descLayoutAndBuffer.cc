@@ -1,5 +1,6 @@
 ﻿#define GLFW_INCLUDE_VULKAN
-#include <glfw3.h>
+#include <include/glfw3.h>
+#include <filesystem>
 
 #define GLM_FORCE_RADIANS
 #include <glm/glm.hpp>
@@ -557,8 +558,14 @@ private:
     }
 
     void createGraphicsPipeline() {
-        auto vertShaderCode = readFile("vert.spv");
-        auto fragShaderCode = readFile("frag.spv");
+   /*     auto vertShaderCode = readFile("vert.spv");
+        auto fragShaderCode = readFile("frag.spv");*/
+
+        std::string rootDir        = std::filesystem::path(CMAKE_CURRENT_SOURCE_DIR).string() + "/testCases/vulkanDemos/descLayoutAndBuffer/";
+        auto        path_vert      = rootDir + "shader.vert.spv";
+        auto        path_frag      = rootDir + "shader.frag.spv";
+        auto        vertShaderCode = readFile(path_vert.c_str());
+        auto        fragShaderCode = readFile(path_frag.c_str());
 
         VkShaderModule vertShaderModule = createShaderModule(vertShaderCode);
         VkShaderModule fragShaderModule = createShaderModule(fragShaderCode);
