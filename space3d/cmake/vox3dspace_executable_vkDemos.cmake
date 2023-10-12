@@ -73,16 +73,15 @@ macro(build_executable_vkDemos)
   )
   build_vkDemo_innerPaths("${test_vkDemo_inner_srcs}" test_vkDemo_inner_paths ${test_vkDemo_name} test_vkDemo_path)
   vox3dspace_add_vkDemo_executableByName(${test_vkDemo_name} "${test_vkDemo_inner_paths}")
-  # vox3dspace_add_vkDemo_executableByName("descLayoutAndBuffer" "")
   
   set(test_vkDemo_name "descPoolAndSets")
   set(test_vkDemo_inner_srcs
     "shader.vert"
     "shader.frag"
   )
-  build_vkDemo_innerPaths("${test_vkDemo_inner_srcs}" test_vkDemo_inner_paths ${test_vkDemo_name} test_vkDemo_path)
-  # message(">>> >>> >>> A test_vkDemo_inner_paths: ${test_vkDemo_inner_paths}")
-  # message(">>> >>> >>> A test_vkDemo_path: ${test_vkDemo_path}")
+  build_vkDemo_innerPaths("${test_vkDemo_inner_srcs}" test_vkDemo_inner_paths ${test_vkDemo_name} ${test_vkDemo_path})
+  message(">>> >>> >>> A test_vkDemo_inner_paths: ${test_vkDemo_inner_paths}")
+  message(">>> >>> >>> A test_vkDemo_path: ${test_vkDemo_path}")
 
   vox3dspace_add_vkDemo_executableByName(${test_vkDemo_name} "${test_vkDemo_inner_paths}")
 endmacro()
