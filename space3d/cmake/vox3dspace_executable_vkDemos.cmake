@@ -6,6 +6,7 @@ set(VOX3DSPACE_CMAKE_BUILD_EXECUTEABLE_VK_DEMOS_ 1)
 macro(build_executable_vkDemos)  
 
   set(test_vkDemos_folder_name "VulkanDemos")
+  set(test_vkDemos_path_root "${vox3dspace_root}/testCases/vulkanDemos")
 
   function(vox3dspace_add_vkDemo_executableByName DEMO_NAME DEMO_SOURCES)
 
@@ -15,7 +16,8 @@ macro(build_executable_vkDemos)
     vox3dspace_add_executable(NAME
       ${DEMO_NAME}
       SOURCES
-      "${vox3dspace_root}/testCases/vulkanDemos/${DEMO_NAME}/${DEMO_NAME}.cc"
+      # "${vox3dspace_root}/testCases/vulkanDemos/${DEMO_NAME}/${DEMO_NAME}.cc"
+      "${test_vkDemos_path_root}/${DEMO_NAME}/${DEMO_NAME}.cc"
       ${DEMO_SOURCES}
       FOLDER
       ${test_vkDemos_folder_name}
