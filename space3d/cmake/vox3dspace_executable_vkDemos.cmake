@@ -34,11 +34,10 @@ macro(build_executable_vkDemos)
 
   endfunction()
 
-  set(test_vkDemo_name "windowSurface")
-  set(test_vkDemo_inner_paths "")
+  # set(test_vkDemo_name "windowSurface")
+  # set(test_vkDemo_inner_paths "")
   
-
-  function(build_vkDemo_innerPaths src_files out_path demo_name out_demo_path)
+  function(build_vkDemo_innerPaths src_files out_path demo_name)
     # message(">>> >>> >>> src_files: ${src_files}")
     
     set(temp_demo_path "${test_vkDemos_path_root}/${demo_name}")
@@ -48,40 +47,52 @@ macro(build_executable_vkDemos)
       list(APPEND temp_path "${temp_demo_path}/${k}")
     endforeach()
     set(${out_path} "${temp_path}" PARENT_SCOPE)
-    set(${out_demo_path} "${temp_demo_path}" PARENT_SCOPE)
+    # set(${out_demo_path} "${temp_demo_path}" PARENT_SCOPE)
+  endfunction()
+  
+  function(add_vkDemo_executableByNameFunc inner_srcs demo_name)
+    
+    set(inner_paths "")
+    build_vkDemo_innerPaths("${inner_srcs}" inner_paths ${demo_name})
+    # message(">>> >>> >>> add_vkDemo_executableByNameFunc() inner_paths: ${inner_paths}")
+    vox3dspace_add_vkDemo_executableByName(${demo_name} "${inner_paths}")
   endfunction()
 
-  vox3dspace_add_vkDemo_executableByName("windowSurface" "")
-  vox3dspace_add_vkDemo_executableByName("swapChain" "")
-  vox3dspace_add_vkDemo_executableByName("imageViews" "")
-  vox3dspace_add_vkDemo_executableByName("shaderModules" "")
-  vox3dspace_add_vkDemo_executableByName("fixedFunctions" "")
-  vox3dspace_add_vkDemo_executableByName("renderPass" "")
-
-  vox3dspace_add_vkDemo_executableByName("framebuffers" "")
-  vox3dspace_add_vkDemo_executableByName("commandBuffers" "")
-  vox3dspace_add_vkDemo_executableByName("renderingAndPresentation" "")
-  vox3dspace_add_vkDemo_executableByName("framesInFlight" "")
-  vox3dspace_add_vkDemo_executableByName("swapChainRecreation" "")
-  vox3dspace_add_vkDemo_executableByName("indexBuffer" "")
-
-  
-  set(test_vkDemo_name "descLayoutAndBuffer")
   set(test_vkDemo_inner_srcs
     "shader.vert"
     "shader.frag"
+    "shader.bat"
   )
-  build_vkDemo_innerPaths("${test_vkDemo_inner_srcs}" test_vkDemo_inner_paths ${test_vkDemo_name} test_vkDemo_path)
-  vox3dspace_add_vkDemo_executableByName(${test_vkDemo_name} "${test_vkDemo_inner_paths}")
-  
-  set(test_vkDemo_name "descPoolAndSets")
-  set(test_vkDemo_inner_srcs
-    "shader.vert"
-    "shader.frag"
-  )
-  build_vkDemo_innerPaths("${test_vkDemo_inner_srcs}" test_vkDemo_inner_paths ${test_vkDemo_name} ${test_vkDemo_path})
-  message(">>> >>> >>> A test_vkDemo_inner_paths: ${test_vkDemo_inner_paths}")
-  message(">>> >>> >>> A test_vkDemo_path: ${test_vkDemo_path}")
+  # vox3dspace_add_vkDemo_executableByName("windowSurface" "")
+  # vox3dspace_add_vkDemo_executableByName("swapChain" "")
+  # vox3dspace_add_vkDemo_executableByName("imageViews" "")
+  # vox3dspace_add_vkDemo_executableByName("shaderModules" "")
+  # vox3dspace_add_vkDemo_executableByName("fixedFunctions" "")
+  # vox3dspace_add_vkDemo_executableByName("renderPass" "")
 
-  vox3dspace_add_vkDemo_executableByName(${test_vkDemo_name} "${test_vkDemo_inner_paths}")
+  # vox3dspace_add_vkDemo_executableByName("framebuffers" "")
+  # vox3dspace_add_vkDemo_executableByName("commandBuffers" "")
+  # vox3dspace_add_vkDemo_executableByName("renderingAndPresentation" "")
+  # vox3dspace_add_vkDemo_executableByName("framesInFlight" "")
+  # vox3dspace_add_vkDemo_executableByName("swapChainRecreation" "")
+  # vox3dspace_add_vkDemo_executableByName("indexBuffer" "")
+
+
+  add_vkDemo_executableByNameFunc("" "windowSurface")
+  add_vkDemo_executableByNameFunc("" "swapChain")
+  add_vkDemo_executableByNameFunc("" "imageViews")
+  add_vkDemo_executableByNameFunc("${test_vkDemo_inner_srcs}" "shaderModules")
+  add_vkDemo_executableByNameFunc("${test_vkDemo_inner_srcs}" "fixedFunctions")
+  add_vkDemo_executableByNameFunc("${test_vkDemo_inner_srcs}" "renderPass")
+  
+  add_vkDemo_executableByNameFunc("${test_vkDemo_inner_srcs}" "framebuffers")
+  add_vkDemo_executableByNameFunc("${test_vkDemo_inner_srcs}" "commandBuffers")
+  add_vkDemo_executableByNameFunc("${test_vkDemo_inner_srcs}" "renderingAndPresentation")
+  add_vkDemo_executableByNameFunc("${test_vkDemo_inner_srcs}" "framesInFlight")
+  add_vkDemo_executableByNameFunc("${test_vkDemo_inner_srcs}" "swapChainRecreation")
+  add_vkDemo_executableByNameFunc("${test_vkDemo_inner_srcs}" "indexBuffer")
+
+  add_vkDemo_executableByNameFunc("${test_vkDemo_inner_srcs}" "descLayoutAndBuffer")
+  add_vkDemo_executableByNameFunc("${test_vkDemo_inner_srcs}" "descPoolAndSets")
+
 endmacro()
