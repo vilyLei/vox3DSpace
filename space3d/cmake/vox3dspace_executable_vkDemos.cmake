@@ -63,21 +63,7 @@ macro(build_executable_vkDemos)
     "shader.frag"
     "shader.bat"
   )
-  # vox3dspace_add_vkDemo_executableByName("windowSurface" "")
-  # vox3dspace_add_vkDemo_executableByName("swapChain" "")
-  # vox3dspace_add_vkDemo_executableByName("imageViews" "")
-  # vox3dspace_add_vkDemo_executableByName("shaderModules" "")
-  # vox3dspace_add_vkDemo_executableByName("fixedFunctions" "")
-  # vox3dspace_add_vkDemo_executableByName("renderPass" "")
-
-  # vox3dspace_add_vkDemo_executableByName("framebuffers" "")
-  # vox3dspace_add_vkDemo_executableByName("commandBuffers" "")
-  # vox3dspace_add_vkDemo_executableByName("renderingAndPresentation" "")
-  # vox3dspace_add_vkDemo_executableByName("framesInFlight" "")
-  # vox3dspace_add_vkDemo_executableByName("swapChainRecreation" "")
-  # vox3dspace_add_vkDemo_executableByName("indexBuffer" "")
-
-
+  
   add_vkDemo_executableByNameFunc("" "windowSurface")
   add_vkDemo_executableByNameFunc("" "swapChain")
   add_vkDemo_executableByNameFunc("" "imageViews")
