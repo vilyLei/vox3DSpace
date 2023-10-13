@@ -565,7 +565,11 @@ private:
     }
 
     void createGraphicsPipeline() {
-
+        // ("source file \"%s\",line %d, in function %s\n", __FILE__, __LINE__, __FUNCTION__);
+        auto path = std::filesystem::path("./");
+        path      = std::filesystem::current_path();
+        std::cout << "file current_path: \n"
+                  << path << "\n\n";
         std::string rootDir        = std::filesystem::path(CMAKE_CURRENT_SOURCE_DIR).string() + "/testCases/vulkanDemos/descLayoutAndBuffer/";
         auto        path_vert      = rootDir + "shader.vert.spv";
         auto        path_frag      = rootDir + "shader.frag.spv";
