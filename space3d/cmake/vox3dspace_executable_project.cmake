@@ -460,9 +460,10 @@ macro(build_executable_projects)
   message(STATUS "CMAKE_BUILD_TYPE: ${CMAKE_BUILD_TYPE}")
   message(STATUS "CMAKE_INTDIR: ${CMAKE_INTDIR}")
 	# file(COPY "${vox3dspace_root}/demos/directx12/shaders.hshd" DESTINATION "${PROJECT_BINARY_DIR}/Debug")
-
+  
+  if(DEFINED CUDA_TOOLKIT_ROOT_DIR)
   # cuda demo
-  # enable_language(CUDA)  
+  # enable_language(CUDA)
   vox3dspace_add_executable(NAME
 											demo_cuda
 											SOURCES
@@ -482,5 +483,6 @@ macro(build_executable_projects)
                       ${vox3dspace_cuda_libs_paths}
                       LIB_DEPS
                       ${vox3dspace_cuda_dependency})
+  endif()
 	endif()
 endmacro()

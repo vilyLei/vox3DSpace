@@ -7,6 +7,10 @@ set(VOX3DSPACE_CMAKE_VOX3DSPACE_BUILD_DEFINITIONS_CMAKE_ 1)
 # shared builds, and when an optional target requires a shared library build.
 macro(set_vox3dspace_target)
   message("--- set_vox3dspace_target(), MSVC: ${MSVC}")
+  
+  # set(vulkan_sdk_dir $ENV{VULKAN_SDK})
+  # file(REAL_PATH "${vulkan_sdk_dir}/Lib/vulkan-1.lib" temp_path)  
+  # set(Vulkan_LIBRARY_PATH ${temp_path})
   if(MSVC)
     set(vox3dspace_dependency vox3dspace)
     set(vox3dspace_json_dependency jsoncpp_static)
