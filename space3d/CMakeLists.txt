@@ -1,5 +1,13 @@
 cmake_minimum_required(VERSION 3.21 FATAL_ERROR)
-project(vox3dspace C CXX CUDA)
+
+include(CheckLanguage)
+check_language(CUDA)
+if(NOT DEFINED CMAKE_CUDA_STANDARD)
+  project(vox3dspace C CXX)
+else()
+  project(vox3dspace C CXX CUDA)
+endif()
+
 
 # thanks: https://learn.microsoft.com/en-us/cpp/build/reference/zc-cplusplus?view=msvc-170
 # thanks: https://cmake.org/cmake/help/latest/prop_gbl/CMAKE_CXX_KNOWN_FEATURES.html#prop_gbl:CMAKE_CXX_KNOWN_FEATURES
@@ -32,7 +40,9 @@ endif()
 # find vulkan sdk
 find_package(Vulkan)
 # find cuda sdk
+if(DEFINED CUDA_TOOLKIT_ROOT_DIR)
 find_package(CUDA)
+endif()
 # find_package(CUDAToolkit REQUIRED)
 
 # if(WIN32)
