@@ -8,9 +8,11 @@ set(VOX3DSPACE_CMAKE_VOX3DSPACE_BUILD_DEFINITIONS_CMAKE_ 1)
 macro(set_vox3dspace_target)
   message("--- set_vox3dspace_target(), MSVC: ${MSVC}")
   
-  # set(vulkan_sdk_dir $ENV{VULKAN_SDK})
-  # file(REAL_PATH "${vulkan_sdk_dir}/Lib/vulkan-1.lib" temp_path)  
-  # set(Vulkan_LIBRARY_PATH ${temp_path})
+  set(vulkan_sdk_dir $ENV{VULKAN_SDK})
+  # file(TO_CMAKE_PATH ${vulkan_sdk_dir} vulkan_sdk_dir)
+  file(REAL_PATH "${vulkan_sdk_dir}/Lib/vulkan-1.lib" temp_path)  
+  set(Vulkan_LIBRARY_PATH ${temp_path})
+  message(STATUS "vulkan_sdk_dir: ${vulkan_sdk_dir}")
   if(MSVC)
     set(vox3dspace_dependency vox3dspace)
     set(vox3dspace_json_dependency jsoncpp_static)
@@ -35,7 +37,8 @@ macro(set_vox3dspace_target)
     # vulkan libs info define
     list(APPEND vox3dspace_vulkan_libs_deps
       "glfw3"
-      ${Vulkan_LIBRARY}
+      # ${Vulkan_LIBRARY}
+      ${Vulkan_LIBRARY_PATH}
       )
     set(vox3dspace_vulkan_dependency ${vox3dspace_vulkan_libs_deps})
 
@@ -139,9 +142,9 @@ macro(vox3dspace_set_build_definitions)
     message(STATUS "boost_lib_dir: ${boost_lib_dir}")
   endif()
 
-  set(vulkan_sdk_dir $ENV{VULKAN_SDK})
-  file(TO_CMAKE_PATH ${vulkan_sdk_dir} vulkan_sdk_dir)
-  message(STATUS "vulkan_sdk_dir: ${vulkan_sdk_dir}")
+  # set(vulkan_sdk_dir $ENV{VULKAN_SDK})
+  # file(TO_CMAKE_PATH ${vulkan_sdk_dir} vulkan_sdk_dir)
+  # message(STATUS "vulkan_sdk_dir: ${vulkan_sdk_dir}")
 
   if(DEFINED ENV{TBB_ROOT_DIR})
     set(tbb_root_dir $ENV{TBB_ROOT_DIR})
