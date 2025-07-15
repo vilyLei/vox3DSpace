@@ -19,18 +19,18 @@
 #include "Voxol/Base/SlabArena.h"
 #include "Voxol/Base/BaseComponentStorage.h"
 #include "Voxol/Base/ComponentFactory.h"
-#include "Voxol/Component.h"
-#include "Voxol/ComponentStorage.h"
-#include "Voxol/Entity.h"
+#include "Voxol/Base/EntityIDFactory.h"
+#include "Voxol/TestComponent.h"
+#include "Voxol/TestComponentStorage.h"
 #include "Voxol/IntersectionSystem.h"
 #include "Voxol/Renderer.h"
 
 
 Renderer renderer{};
 
-EntityManager            em;
-ComponentStorage<Rect>   rects;
-ComponentStorage<Circle> circles;
+Voxol::Base::EntityIDFactory            em;
+TestComponentStorage<Rect>   rects;
+TestComponentStorage<Circle> circles;
 
 uint8_t data[256];
 
@@ -97,17 +97,17 @@ extern "C"
 {
 
     EMSCRIPTEN_KEEPALIVE
-    Entity create_rect(float x, float y, float w, float h)
+    VoxolEntity create_rect(float x, float y, float w, float h)
     {
-        Entity e = em.create();
+        VoxolEntity e = em.create();
         rects.add(e, Rect{x, y, w, h});
         return e;
     }
 
     EMSCRIPTEN_KEEPALIVE
-    Entity create_circle(float cx, float cy, float r)
+    VoxolEntity create_circle(float cx, float cy, float r)
     {
-        Entity e = em.create();
+        VoxolEntity e = em.create();
         circles.add(e, Circle{cx, cy, r});
         return e;
     }

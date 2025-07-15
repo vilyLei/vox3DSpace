@@ -16,8 +16,8 @@ bool IntersectionSystem::rect_circle_intersect(const Rect &r, const Circle &c) {
 
 // 检测所有 Rect + Circle 的组合
 int IntersectionSystem::count_intersections(
-    const ComponentStorage<Rect> &rects,
-    const ComponentStorage<Circle> &circles) {
+    const TestComponentStorage<Rect> &rects,
+    const TestComponentStorage<Circle> &circles) {
   int count = 0;
   for (const auto &[re, r] : rects.all()) {
     for (const auto &[ce, c] : circles.all()) {
