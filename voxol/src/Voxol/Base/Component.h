@@ -30,7 +30,7 @@ struct BlurComp
 };
 
 /// Entity Tree Relationship
-struct LayerHierarchyComp
+struct EntityHierarchyComp
 {
     VoxolEntity         parent = 0;
     std::vector<VoxolEntity> children;

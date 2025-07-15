@@ -21,6 +21,8 @@
 #include "Voxol/Base/ComponentFactory.h"
 #include "Voxol/Base/EntityIDFactory.h"
 #include "Voxol/Base/Component.h"
+#include "Voxol/Base/EntityObjectFactory.h"
+
 #include "Voxol/TestComponent.h"
 #include "Voxol/TestComponentStorage.h"
 #include "Voxol/IntersectionSystem.h"
@@ -29,7 +31,7 @@
 
 Renderer renderer{};
 
-Voxol::Base::EntityIDFactory            em;
+Voxol::Base::EntityIDFactory em;
 TestComponentStorage<Rect>   rects;
 TestComponentStorage<Circle> circles;
 
@@ -80,16 +82,24 @@ void testSimd()
 }
 void testMemoryManage()
 {
-    printf("testMemoryManage() beegin ...\n");
+    // printf("testMemoryManage() begin 01...\n");
+    // {
+    //     using namespace Voxol::Base;
+    //     SlabArena arena{};
+    //     using TestCompStorage = BaseComponentStorage<Rect, SlabPool<Rect>>;
+    //     SlabPool<Rect>  slabPool(arena);
+    //     TestCompStorage rectCompStore(std::move(slabPool));
+    //     rectCompStore.add(1, {0, 20, 100, 70});
+    // }
+    // printf("testMemoryManage() end 01...\n");
+    printf("testMemoryManage() begin 02...\n");
     {
-        using namespace Voxol::Base;
-        SlabArena arena{};
-        using TestCompStorage = BaseComponentStorage<Rect, SlabPool<Rect>>;
-
-        SlabPool<Rect> slabPool(arena);
-        TestCompStorage     rectCompStore(std::move(slabPool));
-        rectCompStore.add(1, {0, 20, 100, 70});
+      using namespace Voxol::Base;
+      auto worldPtr = EntityObjectFactory::make();
+      VoxolEntity rootEntity = VoxolEntity_None;
+      rootEntity = worldPtr->createLayer("root");
     }
+    printf("testMemoryManage() end 02...\n");
 
     printf("testMemoryManage() end ...\n");
 }
