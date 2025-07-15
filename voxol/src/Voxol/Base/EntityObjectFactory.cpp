@@ -34,19 +34,20 @@ VoxolEntity EntityObjectFactory::createEntity(const std::string& name, VoxolEnti
     return e;
 }
 
-VoxolEntity EntityObjectFactory::createRectFillEntity(const std::string& name, const TransformComp& transComp, const RectFillComp& rectFillComp, VoxolEntity parent)
+VoxolEntity EntityObjectFactory::createRectFillEntity(const std::string& name, const TransformComp& trans, const RectShapeComp& rectShape, const SolidColorComp& color, VoxolEntity parent)
 {
     VoxolEntity e = createEntity(name, parent);
-    compFactory.addComponent<TransformComp>(e, transComp);
-    compFactory.addComponent<RectFillComp>(e, rectFillComp);
+    compFactory.addComponent<TransformComp>(e, trans);
+    compFactory.addComponent<RectShapeComp>(e, rectShape);
+    compFactory.addComponent<SolidColorComp>(e, color);
     return e;
 }
-VoxolEntity EntityObjectFactory::createRectFillGradientBlurEntity(const std::string& name, const TransformComp& transComp, const RectFillComp& rectFillComp, const GradientComp& gradientComp, const BlurComp& blurComp, VoxolEntity parent)
+VoxolEntity EntityObjectFactory::createRectFillGradientBlurEntity(const std::string& name, const TransformComp& trans, const RectShapeComp& rectShape, const GradientColorComp& gradientColor, const BlurComp& blurComp, VoxolEntity parent)
 {
     VoxolEntity e = createEntity(name, parent);
-    compFactory.addComponent<TransformComp>(e, transComp);
-    compFactory.addComponent<RectFillComp>(e, rectFillComp);
-    compFactory.addComponent<GradientComp>(e, gradientComp);
+    compFactory.addComponent<TransformComp>(e, trans);
+    compFactory.addComponent<RectShapeComp>(e, rectShape);
+    compFactory.addComponent<GradientColorComp>(e, gradientColor);
     compFactory.addComponent<BlurComp>(e, blurComp);
     return e;
 }

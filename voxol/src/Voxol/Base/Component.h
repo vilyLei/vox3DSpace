@@ -12,13 +12,15 @@ struct TransformComp
     float x = 0, y = 0;
 };
 
-struct RectFillComp
+struct RectShapeComp
 {
-    float    x = 0, y = 0, width = 100, height = 100;
-    uint32_t color = 0xFFFFFFFF;
+    float x = 0, y = 0, width = 100, height = 100;
 };
-
-struct GradientComp
+struct SolidColorComp
+{
+    uint32_t color    = 0xFFFFFFFF;
+};
+struct GradientColorComp
 {
     uint32_t startColor = 0xFFFFFFFF;
     uint32_t endColor   = 0xFF0000FF;
@@ -32,7 +34,7 @@ struct BlurComp
 /// Entity Tree Relationship
 struct EntityHierarchyComp
 {
-    VoxolEntity         parent = 0;
+    VoxolEntity              parent = 0;
     std::vector<VoxolEntity> children;
 };
 } // namespace Voxol::Base

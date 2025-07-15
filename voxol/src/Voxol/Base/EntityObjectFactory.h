@@ -22,9 +22,8 @@ public:
     ComponentFactory compFactory;
 
     VoxolEntity createEntity(const std::string& name, VoxolEntity parent = VoxolEntity_None);
-    VoxolEntity createRectFillEntity(const std::string& name, const TransformComp& transComp, const RectFillComp& rectFillComp, VoxolEntity parent = VoxolEntity_None);
-    VoxolEntity createRectFillGradientBlurEntity(const std::string& name, const TransformComp& transComp, const RectFillComp& rectFillComp, const GradientComp& gradientComp, const BlurComp& blurComp, VoxolEntity parent = VoxolEntity_None);
-
+    VoxolEntity createRectFillEntity(const std::string& name, const TransformComp& trans, const RectShapeComp& rectShape, const SolidColorComp& color = {}, VoxolEntity parent = VoxolEntity_None);
+    VoxolEntity createRectFillGradientBlurEntity(const std::string& name, const TransformComp& trans, const RectShapeComp& rectShape, const GradientColorComp& gradientColor, const BlurComp& blurComp, VoxolEntity parent = VoxolEntity_None);
 
     void removeEntity(VoxolEntity entity);
     void reset();
