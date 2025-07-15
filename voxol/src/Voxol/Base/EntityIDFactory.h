@@ -22,7 +22,7 @@ public:
 
     VoxolEntity getByName(const std::string& name) const;
 
-    void destroy(VoxolEntity id);
+    void remove(VoxolEntity id);
 
     bool isAlive(VoxolEntity id) const;
 

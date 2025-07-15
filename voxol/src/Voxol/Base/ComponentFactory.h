@@ -109,6 +109,8 @@ public:
     // 删除指定实体的所有组件
     void removeAllComponents(VoxolEntity e)
     {
+        printf("ComponentFactory::removeAllComponents() begin e: %d\n", e);
+
         for (auto& [_, wrapper] : storages)
         {
             if (wrapper.iface)
@@ -116,16 +118,23 @@ public:
                 wrapper.iface->removeEntity(e);
             }
         }
+
+        printf("ComponentFactory::removeAllComponents() end e: %d\n", e);
     }
 
     // 清空所有组件
     void clearAllComponents()
     {
-        for (auto& [_, wrapper] : storages)
-        {
-            wrapper.reset();
-        }
+        printf("ComponentFactory::clearAllComponents() begin ...\n");
+        
+        // 下面的代码多此一举
+        // for (auto& [_, wrapper] : storages)
+        // {
+        //     wrapper.reset();
+        // }
         storages.clear();
+        
+        printf("ComponentFactory::clearAllComponents() end ...\n");
     }
 
     // 工厂构造

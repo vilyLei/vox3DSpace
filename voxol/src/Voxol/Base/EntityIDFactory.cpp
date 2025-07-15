@@ -27,7 +27,7 @@ VoxolEntity EntityIDFactory::getByName(const std::string& name) const
     return it != nameToEntity.end() ? it->second : 0;
 }
 
-void EntityIDFactory::destroy(VoxolEntity id)
+void EntityIDFactory::remove(VoxolEntity id)
 {
     activeEntities.erase(id);
     auto it = entityNames.find(id);
