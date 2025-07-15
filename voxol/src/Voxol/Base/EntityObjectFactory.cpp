@@ -15,8 +15,13 @@ EntityObjectFactory::EntityObjectFactory() noexcept
     :
     compFactory(arena)
 {
+    printf("EntityObjectFactory::EntityObjectFactory() ...\n");
 }
 
+EntityObjectFactory::~EntityObjectFactory() {
+    printf("EntityObjectFactory::~EntityObjectFactory() ...\n");
+    compFactory.clearAllComponents();
+}
 VoxolEntity EntityObjectFactory::createLayer(const std::string& name, VoxolEntity parent)
 {
     auto e = eidFactory.create(name);

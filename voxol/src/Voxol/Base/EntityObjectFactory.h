@@ -16,7 +16,7 @@ public:
 
 public:
     explicit EntityObjectFactory() noexcept;
-    ~EntityObjectFactory() = default;
+    ~EntityObjectFactory();
 
 public:
     ComponentFactory compFactory;

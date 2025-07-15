@@ -6,6 +6,7 @@
 // emcmake "C:/Program Files/CMake/bin/cmake.exe" -B build -G Ninja
 // cmake --build build
 //
+// http-server -p 666 --cors
 
 #include <cstdint>
 #include <emscripten/bind.h>
