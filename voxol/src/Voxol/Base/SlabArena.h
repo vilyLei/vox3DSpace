@@ -58,9 +58,9 @@ public:
   }
 
   void deallocate(T *obj) {
-    if constexpr (!std::is_trivially_destructible_v<T>) {
-      obj->~T();
-    }
+    // if constexpr (!std::is_trivially_destructible_v<T>) {
+    //   obj->~T();
+    // }
     freeList.push_back(obj);
   }
 

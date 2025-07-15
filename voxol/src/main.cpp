@@ -17,7 +17,7 @@
 
 
 #include "Voxol/Base/SlabArena.h"
-#include "Voxol/Base/SlabComponentStorage.h"
+#include "Voxol/Base/BaseComponentStorage.h"
 #include "Voxol/Component.h"
 #include "Voxol/ComponentStorage.h"
 #include "Voxol/Entity.h"
@@ -27,120 +27,136 @@
 
 Renderer renderer{};
 
-EntityManager em;
-ComponentStorage<Rect> rects;
+EntityManager            em;
+ComponentStorage<Rect>   rects;
 ComponentStorage<Circle> circles;
 
 uint8_t data[256];
 
 // 加法：result = a + b
-void add_f32x4(const float *a, const float *b, float *result) {
-  v128_t va = wasm_v128_load(a);
-  v128_t vb = wasm_v128_load(b);
-  v128_t vsum = wasm_f32x4_add(va, vb);
-  wasm_v128_store(result, vsum);
+void add_f32x4(const float* a, const float* b, float* result)
+{
+    v128_t va   = wasm_v128_load(a);
+    v128_t vb   = wasm_v128_load(b);
+    v128_t vsum = wasm_f32x4_add(va, vb);
+    wasm_v128_store(result, vsum);
 }
 
 // 乘法：result = a * b
-void mul_f32x4(const float *a, const float *b, float *result) {
-  v128_t va = wasm_v128_load(a);
-  v128_t vb = wasm_v128_load(b);
-  v128_t vmul = wasm_f32x4_mul(va, vb);
-  wasm_v128_store(result, vmul);
+void mul_f32x4(const float* a, const float* b, float* result)
+{
+    v128_t va   = wasm_v128_load(a);
+    v128_t vb   = wasm_v128_load(b);
+    v128_t vmul = wasm_f32x4_mul(va, vb);
+    wasm_v128_store(result, vmul);
 }
 
 // 打印4个 float
-void print_f32x4(const float *vec, const char *label) {
-  printf("%s: [%.2f, %.2f, %.2f, %.2f]\n", label, vec[0], vec[1], vec[2],
-         vec[3]);
+void print_f32x4(const float* vec, const char* label)
+{
+    printf("%s: [%.2f, %.2f, %.2f, %.2f]\n", label, vec[0], vec[1], vec[2],
+           vec[3]);
 }
 
 // 示例主函数（仅供本地调试或测试）
-void testSimd() {
+void testSimd()
+{
 
-  printf("testSimd() begin ...\n");
+    printf("testSimd() begin ...\n");
 
-  alignas(16) float a[4] = {1.0f, 2.0f, 3.0f, 4.0f};
-  alignas(16) float b[4] = {5.0f, 6.0f, 7.0f, 8.0f};
-  alignas(16) float r[4];
+    alignas(16) float a[4] = {1.0f, 2.0f, 3.0f, 4.0f};
+    alignas(16) float b[4] = {5.0f, 6.0f, 7.0f, 8.0f};
+    alignas(16) float r[4];
 
-  add_f32x4(a, b, r);
-  print_f32x4(r, "add");
+    add_f32x4(a, b, r);
+    print_f32x4(r, "add");
 
-  mul_f32x4(a, b, r);
-  print_f32x4(r, "mul");
+    mul_f32x4(a, b, r);
+    print_f32x4(r, "mul");
 
-  printf("testSimd() end ...\n");
+    printf("testSimd() end ...\n");
 }
-void testMemoryManage() {
-  printf("testMemoryManage() beegin ...\n");
-  {
-    using namespace Voxol::Base;
-    SlabArena slabArena{};
-    SlabComponentStorage<Rect> rectCompStore(slabArena);
-    rectCompStore.add(1, {0,20, 100, 70});
-  }
+void testMemoryManage()
+{
+    printf("testMemoryManage() beegin ...\n");
+    {
+        using namespace Voxol::Base;
+        SlabArena arena{};
+        using TestCompStorage = BaseComponentStorage<Rect, SlabPool<Rect>>;
 
-  printf("testMemoryManage() end ...\n");
-}
+        SlabPool<Rect> slabPool(arena);
+        TestCompStorage     rectCompStore(std::move(slabPool));
+        rectCompStore.add(1, {0, 20, 100, 70});
+    }
 
-extern "C" {
-
-EMSCRIPTEN_KEEPALIVE
-Entity create_rect(float x, float y, float w, float h) {
-  Entity e = em.create();
-  rects.add(e, Rect{x, y, w, h});
-  return e;
+    printf("testMemoryManage() end ...\n");
 }
 
-EMSCRIPTEN_KEEPALIVE
-Entity create_circle(float cx, float cy, float r) {
-  Entity e = em.create();
-  circles.add(e, Circle{cx, cy, r});
-  return e;
-}
+extern "C"
+{
 
-EMSCRIPTEN_KEEPALIVE
-int run_intersection() {
-  return IntersectionSystem::count_intersections(rects, circles);
-}
+    EMSCRIPTEN_KEEPALIVE
+    Entity create_rect(float x, float y, float w, float h)
+    {
+        Entity e = em.create();
+        rects.add(e, Rect{x, y, w, h});
+        return e;
+    }
 
-// 获取当前堆内存大小（以字节为单位）
-// EMSCRIPTEN_KEEPALIVE
-// int get_heap_size_bytes() {
-//     // 从 emscripten 的 JS 环境中调用 HEAP8.byteLength
-//     return emscripten::val::global("HEAP8")["byteLength"].as<int>();
-// }
+    EMSCRIPTEN_KEEPALIVE
+    Entity create_circle(float cx, float cy, float r)
+    {
+        Entity e = em.create();
+        circles.add(e, Circle{cx, cy, r});
+        return e;
+    }
 
-EMSCRIPTEN_KEEPALIVE
-int get_heap_size_bytes() {
-  return emscripten_get_heap_size(); // 更轻量、无 Embind 依赖
-}
+    EMSCRIPTEN_KEEPALIVE
+    int run_intersection()
+    {
+        return IntersectionSystem::count_intersections(rects, circles);
+    }
 
-// 获取数据的起始地址
-EMSCRIPTEN_KEEPALIVE
-uint8_t *get_buffer_ptr() { return data; }
+    // 获取当前堆内存大小（以字节为单位）
+    // EMSCRIPTEN_KEEPALIVE
+    // int get_heap_size_bytes() {
+    //     // 从 emscripten 的 JS 环境中调用 HEAP8.byteLength
+    //     return emscripten::val::global("HEAP8")["byteLength"].as<int>();
+    // }
 
-// 写入数据
-EMSCRIPTEN_KEEPALIVE
-void set_buffer_value(int index, uint8_t value) {
-  if (index >= 0 && index < 256)
-    data[index] = value;
-}
-EMSCRIPTEN_KEEPALIVE
-void startup() {
-  printf("voxol main startup() ...\n");
-  testSimd();
-  testMemoryManage();
-  renderer.startup();
-}
+    EMSCRIPTEN_KEEPALIVE
+    int get_heap_size_bytes()
+    {
+        return emscripten_get_heap_size(); // 更轻量、无 Embind 依赖
+    }
 
-EMSCRIPTEN_KEEPALIVE
-void setGPUCtxSize(int w, int h) {
+    // 获取数据的起始地址
+    EMSCRIPTEN_KEEPALIVE
+    uint8_t* get_buffer_ptr() { return data; }
 
-  printf("voxol main setGPUCtxSize size(w=%d, h=%d)\n", w, h);
+    // 写入数据
+    EMSCRIPTEN_KEEPALIVE
+    void set_buffer_value(int index, uint8_t value)
+    {
+        if (index >= 0 && index < 256)
+            data[index] = value;
+    }
+    EMSCRIPTEN_KEEPALIVE
+    void startup()
+    {
+        printf("voxol main startup() ...\n");
+        testSimd();
+        testMemoryManage();
+        renderer.startup();
+    }
 
-  renderer.setGPUCtxSize(w, h);
-  renderer.render();
-}
+    EMSCRIPTEN_KEEPALIVE
+    void setGPUCtxSize(int w, int h)
+    {
+
+        printf("voxol main setGPUCtxSize size(w=%d, h=%d)\n", w, h);
+
+        renderer.setGPUCtxSize(w, h);
+        renderer.render();
+    }
 }
