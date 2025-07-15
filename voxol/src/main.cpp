@@ -20,6 +20,7 @@
 #include "Voxol/Base/BaseComponentStorage.h"
 #include "Voxol/Base/ComponentFactory.h"
 #include "Voxol/Base/EntityIDFactory.h"
+#include "Voxol/Base/Component.h"
 #include "Voxol/TestComponent.h"
 #include "Voxol/TestComponentStorage.h"
 #include "Voxol/IntersectionSystem.h"
