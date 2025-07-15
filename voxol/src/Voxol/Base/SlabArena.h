@@ -58,6 +58,7 @@ public:
   }
 
   void deallocate(T *obj) {
+    // 内存块管理中不能有主动的析构操作
     // if constexpr (!std::is_trivially_destructible_v<T>) {
     //   obj->~T();
     // }

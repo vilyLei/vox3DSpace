@@ -1,42 +1,58 @@
-#include "SlabArena.h"
+#include "Voxol/Base/SlabArena.h"
 #include <unordered_map>
 #include <type_traits>
 
-namespace Voxol::Base {
+namespace Voxol::Base
+{
 
 template <typename T>
-class DefaultAllocPolicy {
+class DefaultAllocPolicy
+{
 public:
     explicit DefaultAllocPolicy() = default;
-    template<typename... Args>
-    T* allocate(Args&&...) {
+    template <typename... Args>
+    T* allocate(Args&&...)
+    {
         return static_cast<T*>(operator new(sizeof(T)));
     }
-    void deallocate(T* ptr) {
+    void deallocate(T* ptr)
+    {
         operator delete(ptr);
     }
 };
 
 // 组件存储基类模板，使用 AllocPolicy 管理内存
 template <typename T, typename AllocPolicy = DefaultAllocPolicy<T>>
-class BaseComponentStorage {
+class BaseComponentStorage
+{
 public:
     explicit BaseComponentStorage(AllocPolicy alloc = AllocPolicy()) noexcept
-        : allocator(std::move(alloc)) {}
+        :
+        allocator(std::move(alloc))
+    {
+        printf("BaseComponentStorage::BaseComponentStorage() ...\n");
+    }
 
-    ~BaseComponentStorage() {
+    ~BaseComponentStorage()
+    {
+        printf("BaseComponentStorage::~BaseComponentStorage() ...\n");
         clear();
     }
 
     // 拷贝构造添加组件
-    T* add(VoxolEntity e, const T& value) {
+    T* add(VoxolEntity e, const T& value)
+    {
+        // 下面这一句性能更好
         auto [it, inserted] = components.emplace(e, nullptr);
         if (!inserted) return it->second; // 已存在直接返回指针
 
         T* ptr = allocator.allocate();
-        try {
+        try
+        {
             std::construct_at(ptr, value);
-        } catch (...) {
+        }
+        catch (...)
+        {
             allocator.deallocate(ptr);
             components.erase(it);
             throw;
@@ -47,14 +63,19 @@ public:
 
     // 完美转发原地构造添加组件
     template <typename... Args>
-    T* add(VoxolEntity e, Args&&... args) {
+    T* add(VoxolEntity e, Args&&... args)
+    {
         auto [it, inserted] = components.emplace(e, nullptr);
         if (!inserted) return it->second;
 
         T* ptr = allocator.allocate(std::forward<Args>(args)...);
-        try {
+        try
+        {
+            // ::new (static_cast<void*>(ptr)) T(std::forward<Args>(args)...);
             std::construct_at(ptr, std::forward<Args>(args)...);
-        } catch (...) {
+        }
+        catch (...)
+        {
             allocator.deallocate(ptr);
             components.erase(it);
             throw;
@@ -63,35 +84,43 @@ public:
         return ptr;
     }
 
-    void remove(VoxolEntity e) {
+    void remove(VoxolEntity e)
+    {
         auto it = components.find(e);
-        if (it != components.end()) {
+        if (it != components.end())
+        {
             std::destroy_at(it->second);
             allocator.deallocate(it->second);
             components.erase(it);
         }
     }
 
-    T* get(VoxolEntity e) {
+    T* get(VoxolEntity e)
+    {
         auto it = components.find(e);
         return it != components.end() ? it->second : nullptr;
     }
 
-    const T* get(VoxolEntity e) const {
+    const T* get(VoxolEntity e) const
+    {
         auto it = components.find(e);
         return it != components.end() ? it->second : nullptr;
     }
 
-    bool has(VoxolEntity e) const {
+    bool has(VoxolEntity e) const
+    {
         return components.find(e) != components.end();
     }
 
-    const std::unordered_map<VoxolEntity, T*>& raw() const {
+    const std::unordered_map<VoxolEntity, T*>& raw() const
+    {
         return components;
     }
 
-    void clear() {
-        for (auto& [_, ptr] : components) {
+    void clear()
+    {
+        for (auto& [_, ptr] : components)
+        {
             std::destroy_at(ptr);
             allocator.deallocate(ptr);
         }
@@ -100,7 +129,7 @@ public:
 
 private:
     std::unordered_map<VoxolEntity, T*> components;
-    AllocPolicy allocator;
+    AllocPolicy                         allocator;
 };
 
 /*
@@ -152,4 +181,4 @@ private:
     SlabPool<T> pool;
 };
 //*/
-} // namespace Vox
+} // namespace Voxol::Base
