@@ -18,7 +18,8 @@ EntityObjectFactory::EntityObjectFactory() noexcept
     printf("EntityObjectFactory::EntityObjectFactory() ...\n");
 }
 
-EntityObjectFactory::~EntityObjectFactory() {
+EntityObjectFactory::~EntityObjectFactory()
+{
     printf("EntityObjectFactory::~EntityObjectFactory() ...\n");
     compFactory.clearAllComponents();
 }
@@ -26,13 +27,27 @@ VoxolEntity EntityObjectFactory::createLayer(const std::string& name, VoxolEntit
 {
     auto e = eidFactory.create(name);
     compFactory.addComponent<EntityHierarchyComp>(e, {});
-    // hierarchies.add(e, {parent, {}});
-    // if (parent && hierarchies.has(parent)) {
     if (parent && compFactory.hasComponent<EntityHierarchyComp>(parent))
     {
-        // hierarchies.get(parent)->children.push_back(e);
         compFactory.getComponent<EntityHierarchyComp>(parent)->children.push_back(e);
     }
+    return e;
+}
+
+VoxolEntity EntityObjectFactory::createRectFillEntity(const std::string& name, const TransformComp& transComp, const RectFillComp& rectFillComp, VoxolEntity parent)
+{
+    VoxolEntity e = createLayer(name, parent);
+    compFactory.addComponent<TransformComp>(e, transComp);
+    compFactory.addComponent<RectFillComp>(e, rectFillComp);
+    return e;
+}
+VoxolEntity EntityObjectFactory::createRectFillGradientBlurEntity(const std::string& name, const TransformComp& transComp, const RectFillComp& rectFillComp, const GradientComp& gradientComp, const BlurComp& blurComp, VoxolEntity parent)
+{
+    VoxolEntity e = createLayer(name, parent);
+    compFactory.addComponent<TransformComp>(e, transComp);
+    compFactory.addComponent<RectFillComp>(e, rectFillComp);
+    compFactory.addComponent<GradientComp>(e, gradientComp);
+    compFactory.addComponent<BlurComp>(e, blurComp);
     return e;
 }
 

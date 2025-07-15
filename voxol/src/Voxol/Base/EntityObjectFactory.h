@@ -21,6 +21,8 @@ public:
 public:
     ComponentFactory compFactory;
     VoxolEntity      createLayer(const std::string& name, VoxolEntity parent = VoxolEntity_None);
+    VoxolEntity      createRectFillEntity(const std::string& name, const TransformComp& transComp, const RectFillComp& rectFillComp, VoxolEntity parent = VoxolEntity_None);
+    VoxolEntity createRectFillGradientBlurEntity(const std::string& name, const TransformComp& transComp, const RectFillComp& rectFillComp, const GradientComp& gradientComp, const BlurComp& blurComp, VoxolEntity parent = VoxolEntity_None);
 
 private:
     EntityIDFactory eidFactory{};
