@@ -18,6 +18,7 @@
 
 #include "Voxol/Base/SlabArena.h"
 #include "Voxol/Base/BaseComponentStorage.h"
+#include "Voxol/Base/ComponentFactory.h"
 #include "Voxol/Component.h"
 #include "Voxol/ComponentStorage.h"
 #include "Voxol/Entity.h"

@@ -1,10 +1,18 @@
-#include "Voxol/Base/SlabArena.h"
+#ifndef VOXOL_BASE_COMPONENT_STORAGE_H
+#define VOXOL_BASE_COMPONENT_STORAGE_H
+
+#include "SlabArena.h"
 #include <unordered_map>
 #include <type_traits>
 
 namespace Voxol::Base
 {
 
+struct RemovableStorage
+{
+    virtual void removeEntity(VoxolEntity e) = 0;
+    virtual ~RemovableStorage()              = default;
+};
 template <typename T>
 class DefaultAllocPolicy
 {
@@ -23,7 +31,7 @@ public:
 
 // 组件存储基类模板，使用 AllocPolicy 管理内存
 template <typename T, typename AllocPolicy = DefaultAllocPolicy<T>>
-class BaseComponentStorage
+class BaseComponentStorage : public RemovableStorage
 {
 public:
     explicit BaseComponentStorage(AllocPolicy alloc = AllocPolicy()) noexcept
@@ -39,6 +47,10 @@ public:
         clear();
     }
 
+    void removeEntity(VoxolEntity e) override
+    {
+        remove(e);
+    }
     // 拷贝构造添加组件
     T* add(VoxolEntity e, const T& value)
     {
@@ -89,6 +101,7 @@ public:
         auto it = components.find(e);
         if (it != components.end())
         {
+            printf("BaseComponentStorage::remove() e: %d\n", e);
             std::destroy_at(it->second);
             allocator.deallocate(it->second);
             components.erase(it);
@@ -182,3 +195,4 @@ private:
 };
 //*/
 } // namespace Voxol::Base
+#endif  // VOXOL_BASE_COMPONENT_STORAGE_H
