@@ -23,6 +23,7 @@
 #include "Voxol/Base/EntityIDFactory.h"
 #include "Voxol/Base/Component.h"
 #include "Voxol/Base/EntityObjectFactory.h"
+#include "Voxol/System/RenderSystem.h"
 
 #include "Voxol/TestComponent.h"
 #include "Voxol/TestComponentStorage.h"
@@ -101,6 +102,11 @@ void testMemoryManage()
         rootEntity             = worldPtr->createEntity("root");
         auto e01               = worldPtr->createRectFillEntity("rect_01", {15, 25}, {0, 0, 100, 130}, {0xff00aa00}, rootEntity);
         auto e02               = worldPtr->createRectFillGradientBlurEntity("rect_01", {15, 25}, {0, 0, 100, 130}, {0xff0000aa, 0xffaa0000}, {15}, rootEntity);
+
+
+        Voxol::System::RenderSystem Renderer;
+        Renderer(*worldPtr);
+
         worldPtr->removeEntity(e01);
     }
     printf("testMemoryManage() end 02...\n");

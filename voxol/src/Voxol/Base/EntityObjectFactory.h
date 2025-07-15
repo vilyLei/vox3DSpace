@@ -20,6 +20,9 @@ public:
 
 public:
     ComponentFactory compFactory;
+    EntityIDFactory eidFactory{};
+    
+public:
 
     VoxolEntity createEntity(const std::string& name, VoxolEntity parent = VoxolEntity_None);
     VoxolEntity createRectFillEntity(const std::string& name, const TransformComp& trans, const RectShapeComp& rectShape, const SolidColorComp& color = {}, VoxolEntity parent = VoxolEntity_None);
@@ -29,7 +32,6 @@ public:
     void reset();
 
 private:
-    EntityIDFactory eidFactory{};
     SlabArena       arena{};
 };
 
