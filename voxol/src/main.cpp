@@ -191,6 +191,16 @@ extern "C"
         renderer.setGPUCtxSize(w, h);
         renderer.render();
     }
+    
+    EMSCRIPTEN_KEEPALIVE
+    void setMouseParams(float x, float y, int type, int flag)
+    {
+
+        printf("voxol main setMouseParams mouseParam(x=%f, y=%f, type=%d, flag=:%d)\n", x, y, type, flag);
+
+        renderer.setMouseXY(x, y);
+        renderer.render();
+    }
 }
 #else
 int main()

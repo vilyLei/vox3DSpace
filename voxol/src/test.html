@@ -47,8 +47,11 @@
             return [pw, ph];
         }
 
+        var mouseFunc = function(px, py, type, flag){
+            console.log('mouseFunc mosuePos(x=' + x + ', y=' + y + ')');
+        }
         canvas.addEventListener('click', function (event) {
-            console.log("canvas click vvvvv ....");
+            
             // 获取鼠标点击相对于浏览器窗口的坐标
             const clientX = event.clientX;
             const clientY = event.clientY;
@@ -61,13 +64,14 @@
             // 计算鼠标点击在canvas内的坐标
             let x = clientX - canvasX;
             let y = clientY - canvasY;
-            console.log('鼠标点击 html 坐标：(' + x + ', ' + y + ')');
+            console.log('mouse click canvas html mousePos(' + x + ', ' + y + ')');
 
             const dpr = window.devicePixelRatio || 1;
 
             x *= dpr;
             y *= dpr;
-            console.log('鼠标点击 canvas ctx 坐标：(' + x + ', ' + y + ')');
+            console.log('mouse click canvas ctx mousePos(' + x + ', ' + y + ')');
+            mouseFunc(x, y, 0, 0);
         });
 
         async function isWasmSimdSupported() {
@@ -105,19 +109,20 @@
             //const add = Module.cwrap('add', 'number', ['number', 'number']);
             //console.log('>>>>> add(1, 2) =', add(1, 2));
 
-            const createRect = Module.cwrap("create_rect", "number", ["number", "number", "number", "number"]);
-            const createCircle = Module.cwrap("create_circle", "number", ["number", "number", "number"]);
-            const runIntersection = Module.cwrap("run_intersection", "number", []);
-
-            createRect(3, 3, 4, 4);
-            createCircle(5, 5, 3);
-            createCircle(0, 0, 1);
-
-            console.log("相交个数:", runIntersection()); // 应为 1
+            // const createRect = Module.cwrap("create_rect", "number", ["number", "number", "number", "number"]);
+            // const createCircle = Module.cwrap("create_circle", "number", ["number", "number", "number"]);
+            // const runIntersection = Module.cwrap("run_intersection", "number", []);
+            // createRect(3, 3, 4, 4);
+            // createCircle(5, 5, 3);
+            // createCircle(0, 0, 1);
+            // console.log("相交个数:", runIntersection()); // 应为 1
 
             const getHeapSize = Module.cwrap("get_heap_size_bytes", "number", []);
             const startup = Module.cwrap("startup");
             const setGPUCtxSize = Module.cwrap("setGPUCtxSize", null, ["number", "number"]);
+            const setMouseParams = Module.cwrap("setMouseParams", null, ["number", "number", "number", "number"]);
+
+            mouseFunc = setMouseParams;
 
             let preHeapSize = 0;
             setInterval(() => {
@@ -154,7 +159,7 @@
 
                 console.log("window.devicePixelRatio: ", window.devicePixelRatio);
                 const dpr = window.devicePixelRatio || 1;
-                
+
                 // canvas.width = window.innerWidth * dpr;
                 // canvas.height = window.innerHeight * dpr;
                 // canvas.style.width = window.innerWidth + 'px';

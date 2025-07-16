@@ -108,7 +108,7 @@ if(EMSCRIPTEN)
             -s ALLOW_MEMORY_GROWTH=1 \
             -s USE_WEBGL2=1 \
             -s MODULARIZE=1 \
-            -s EXPORTED_FUNCTIONS=['_create_rect','_create_circle','_run_intersection','_get_heap_size_bytes','_get_buffer_ptr','_set_buffer_value','_startup'] \
+            -s EXPORTED_FUNCTIONS=['_create_rect','_create_circle','_run_intersection','_get_heap_size_bytes','_get_buffer_ptr','_set_buffer_value','_startup','_setMouseParams'] \
             -s EXPORT_NAME='VoxModule' \
             -s EXPORTED_RUNTIME_METHODS=['cwrap','HEAPU8']"
     )

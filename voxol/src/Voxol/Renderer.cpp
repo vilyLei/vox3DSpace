@@ -3,7 +3,7 @@
 
 #ifdef __EMSCRIPTEN__
 
-const char *vertShaderSource = R"(#version 300 es
+const char* vertShaderSource = R"(#version 300 es
 precision highp float;
 
 layout(location = 0) in vec2 a_position;
@@ -15,7 +15,7 @@ void main() {
     gl_Position = vec4(pos.xy, 0.0, 1.0);
 })";
 
-const char *fragShaderSource = R"(#version 300 es
+const char* fragShaderSource = R"(#version 300 es
 precision mediump float;
 uniform vec4 u_color;
 out vec4 outColor;
@@ -24,7 +24,7 @@ void main() {
     outColor = u_color;
 })";
 
-GLuint Renderer::compileShader(GLenum type, const char *source)
+GLuint Renderer::compileShader(GLenum type, const char* source)
 {
     GLuint shader = glCreateShader(type);
     glShaderSource(shader, 1, &source, nullptr);
@@ -38,16 +38,22 @@ void Renderer::startup()
     render();
     // emscripten_set_main_loop(render, 0, 1);
 }
+
+void Renderer::setMouseXY(float x, float y)
+{
+    mousePos.x = x;
+    mousePos.y = y;
+    mousePos.flag = true;
+}
 void Renderer::setGPUCtxSize(int w, int h)
 {
-        vpDesc.width = w;
-        vpDesc.height = h;
+    vpDesc.width  = w;
+    vpDesc.height = h;
 
-        canvasDesc.width = w;
-        canvasDesc.height = h;
-        
-        render();
+    canvasDesc.width  = w;
+    canvasDesc.height = h;
 
+    render();
 }
 void Renderer::render()
 {
@@ -64,7 +70,7 @@ void Renderer::render()
     auto scale = 0.5f;
     // scale = (std::cos(angle * 3) * 0.5f + 0.5f) * 0.5f + 0.5f;
 
-    auto &&projM = Mat33::ortho(canvasDesc.width, canvasDesc.height);
+    auto&& projM = Mat33::ortho(canvasDesc.width, canvasDesc.height);
 
     {
         Mat33 objM(100, 200, 200, 100);
@@ -77,7 +83,13 @@ void Renderer::render()
         glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
     }
     {
-        Mat33 objM(150, 250, 200, 150);
+        auto px = 150;
+        auto py = 250;
+        if(mousePos.flag) {
+            px = mousePos.x;
+            py = mousePos.y;
+        }
+        Mat33 objM(px, py, 200, 150);
 
         // Mat33 mvp = projM * objM;
         Mat33 mvp = objM;
@@ -98,7 +110,7 @@ void Renderer::init()
 
     EmscriptenWebGLContextAttributes attr;
     emscripten_webgl_init_context_attributes(&attr);
-    attr.majorVersion = 2;
+    attr.majorVersion              = 2;
     attr.enableExtensionsByDefault = true;
 
 
@@ -108,13 +120,13 @@ void Renderer::init()
     // 创建 shader program
     GLuint vs = compileShader(GL_VERTEX_SHADER, vertShaderSource);
     GLuint fs = compileShader(GL_FRAGMENT_SHADER, fragShaderSource);
-    program = glCreateProgram();
+    program   = glCreateProgram();
     glAttachShader(program, vs);
     glAttachShader(program, fs);
     glLinkProgram(program);
 
     matrixLoc = glGetUniformLocation(program, "u_matrix");
-    colorLoc = glGetUniformLocation(program, "u_color");
+    colorLoc  = glGetUniformLocation(program, "u_color");
 
     float x = 0, y = 0, w = 1, h = 1;
 
