@@ -9,12 +9,16 @@
 // http-server -p 666 --cors
 
 #include <cstdint>
-#include <emscripten/bind.h>
-#include <emscripten/emscripten.h>
-#include <emscripten/heap.h>
-#include <emscripten/val.h>
-#include <stdio.h>
-#include <wasm_simd128.h>
+#include <cstdio>
+#include <chrono>
+
+#ifdef __EMSCRIPTEN__
+#    include <emscripten/bind.h>
+#    include <emscripten/emscripten.h>
+#    include <emscripten/heap.h>
+#    include <emscripten/val.h>
+#    include <wasm_simd128.h>
+#endif
 
 
 #include "Voxol/Base/SlabArena.h"
@@ -30,6 +34,43 @@
 #include "Voxol/IntersectionSystem.h"
 #include "Voxol/Renderer.h"
 
+
+
+void testMemoryManage()
+{
+    // printf("testMemoryManage() begin 01...\n");
+    // {
+    //     using namespace Voxol::Base;
+    //     SlabArena arena{};
+    //     using TestCompStorage = BaseComponentStorage<Rect, SlabPool<Rect>>;
+    //     SlabPool<Rect>  slabPool(arena);
+    //     TestCompStorage rectCompStore(std::move(slabPool));
+    //     rectCompStore.add(1, {0, 20, 100, 70});
+    // }
+    // printf("testMemoryManage() end 01...\n");
+    printf("testMemoryManage() begin 02...\n");
+    {
+        using namespace Voxol::Base;
+        auto        worldPtr   = EntityObjectBuilder::make();
+        VoxolEntity rootEntity = VoxolEntity_None;
+        rootEntity             = worldPtr->createEntity("root");
+        printf("testMemoryManage() end 02 rootEntity: %d\n", rootEntity);
+        auto e01 = worldPtr->createRectFillEntity("rect_01", {15, 25}, {0, 0, 100, 130}, {0xff00aa00}, rootEntity);
+        auto e02 = worldPtr->createRectFillGradientBlurEntity("rect_gradient_02", {15, 25}, {0, 0, 100, 130}, {0xff0000aa, 0xffaa0000}, {15}, rootEntity);
+
+
+        Voxol::System::RenderSystem Renderer;
+        Renderer(*worldPtr);
+
+        worldPtr->removeEntity(e01);
+    }
+    printf("testMemoryManage() end 02...\n");
+
+    printf("testMemoryManage() end ...\n");
+}
+
+
+#ifdef __EMSCRIPTEN__
 
 Renderer renderer{};
 
@@ -81,38 +122,6 @@ void testSimd()
     print_f32x4(r, "mul");
 
     printf("testSimd() end ...\n");
-}
-void testMemoryManage()
-{
-    // printf("testMemoryManage() begin 01...\n");
-    // {
-    //     using namespace Voxol::Base;
-    //     SlabArena arena{};
-    //     using TestCompStorage = BaseComponentStorage<Rect, SlabPool<Rect>>;
-    //     SlabPool<Rect>  slabPool(arena);
-    //     TestCompStorage rectCompStore(std::move(slabPool));
-    //     rectCompStore.add(1, {0, 20, 100, 70});
-    // }
-    // printf("testMemoryManage() end 01...\n");
-    printf("testMemoryManage() begin 02...\n");
-    {
-        using namespace Voxol::Base;
-        auto        worldPtr   = EntityObjectBuilder::make();
-        VoxolEntity rootEntity = VoxolEntity_None;
-        rootEntity             = worldPtr->createEntity("root");
-        printf("testMemoryManage() end 02 rootEntity: %d\n", rootEntity);
-        auto e01               = worldPtr->createRectFillEntity("rect_01", {15, 25}, {0, 0, 100, 130}, {0xff00aa00}, rootEntity);
-        auto e02               = worldPtr->createRectFillGradientBlurEntity("rect_gradient_02", {15, 25}, {0, 0, 100, 130}, {0xff0000aa, 0xffaa0000}, {15}, rootEntity);
-
-
-        Voxol::System::RenderSystem Renderer;
-        Renderer(*worldPtr);
-
-        worldPtr->removeEntity(e01);
-    }
-    printf("testMemoryManage() end 02...\n");
-
-    printf("testMemoryManage() end ...\n");
 }
 
 extern "C"
@@ -183,3 +192,10 @@ extern "C"
         renderer.render();
     }
 }
+#else
+int main()
+{
+    testMemoryManage();
+    return 1;
+}
+#endif

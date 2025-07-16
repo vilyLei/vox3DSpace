@@ -3,6 +3,7 @@
 
 #include "Mat33.h"
 
+#ifdef __EMSCRIPTEN__
 #include <emscripten/emscripten.h>
 #include <emscripten/html5_webgl.h>
 
@@ -47,3 +48,4 @@ private:
 };
 
 #endif  // VOXOL_RENDERER_H
+#endif

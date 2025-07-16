@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include "Renderer.h"
 
+#ifdef __EMSCRIPTEN__
+
 const char *vertShaderSource = R"(#version 300 es
 precision highp float;
 
@@ -132,3 +134,4 @@ void Renderer::init()
     glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
     glEnableVertexAttribArray(0);
 }
+#endif
