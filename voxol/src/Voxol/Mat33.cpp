@@ -73,7 +73,7 @@ Mat33 Mat33::rotate(float radians) {
 }
 
 Mat33 Mat33::operator*(const Mat33& rhs) const {
-#ifdef __EMSCRIPTEN__
+#ifdef APPLY_WASM_SIMD
     return multiplySimd(rhs);
 #else
     Mat33 result;

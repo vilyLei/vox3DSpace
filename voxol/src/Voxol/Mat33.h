@@ -6,6 +6,7 @@
 #include <initializer_list>
 #include <cmath>
 #ifdef __EMSCRIPTEN__
+// #define APPLY_WASM_SIMD 1
 #include <wasm_simd128.h>
 #endif
 
