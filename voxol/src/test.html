@@ -37,6 +37,39 @@
         // import VoxModule from './build/voxModule.js';
 
         const canvas = document.getElementById('canvas');
+        function normlizeViewSize() {
+
+            let pw = window.innerWidth;
+            let ph = window.innerHeight;
+            const dpr = window.devicePixelRatio || 1;
+            pw = Math.round(pw * dpr);
+            ph = Math.round(ph * dpr);
+            return [pw, ph];
+        }
+
+        canvas.addEventListener('click', function (event) {
+            console.log("canvas click vvvvv ....");
+            // 获取鼠标点击相对于浏览器窗口的坐标
+            const clientX = event.clientX;
+            const clientY = event.clientY;
+
+            // 获取canvas元素相对于浏览器窗口的位置
+            const rect = canvas.getBoundingClientRect();
+            const canvasX = rect.left;
+            const canvasY = rect.top;
+
+            // 计算鼠标点击在canvas内的坐标
+            let x = clientX - canvasX;
+            let y = clientY - canvasY;
+            console.log('鼠标点击 html 坐标：(' + x + ', ' + y + ')');
+
+            const dpr = window.devicePixelRatio || 1;
+
+            x *= dpr;
+            y *= dpr;
+            console.log('鼠标点击 canvas ctx 坐标：(' + x + ', ' + y + ')');
+        });
+
         async function isWasmSimdSupported() {
             const simdModule = new Uint8Array([
                 0, 97, 115, 109, 1, 0, 0, 0,
@@ -118,15 +151,24 @@
             console.log("u8Arr[1]: ", u8Arr[1]); // 31
 
             function resizeCanvas() {
-                
+
                 console.log("window.devicePixelRatio: ", window.devicePixelRatio);
                 const dpr = window.devicePixelRatio || 1;
-                canvas.width = window.innerWidth * dpr;
-                canvas.height = window.innerHeight * dpr;
-                canvas.style.width = window.innerWidth + 'px';
-                canvas.style.height = window.innerHeight + 'px';
+                
+                // canvas.width = window.innerWidth * dpr;
+                // canvas.height = window.innerHeight * dpr;
+                // canvas.style.width = window.innerWidth + 'px';
+                // canvas.style.height = window.innerHeight + 'px';
+                // setGPUCtxSize(canvas.width, canvas.height);
 
-                setGPUCtxSize(canvas.width, canvas.height);
+                const [w, h] = normlizeViewSize();
+
+                canvas.width = w;
+                canvas.height = h;
+
+                canvas.style.width = `${w / dpr}px`;
+                canvas.style.height = `${h / dpr}px`;
+                setGPUCtxSize(w, h);
             }
 
             window.addEventListener('resize', () => {
