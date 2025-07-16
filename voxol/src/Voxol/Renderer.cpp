@@ -76,7 +76,9 @@ void Renderer::render()
     }
     {
         Mat33 objM(150, 250, 200, 150);
-        Mat33 mvp = projM * objM;
+        // Mat33 mvp = projM * objM;
+        Mat33 mvp = objM;
+        mvp.prepend(projM);
 
         glUniformMatrix3fv(matrixLoc, 1, GL_FALSE, mvp.ptr());
         std::array<float, 4> color = {0.0f, 0.6f, 0.8f, 1.0f};

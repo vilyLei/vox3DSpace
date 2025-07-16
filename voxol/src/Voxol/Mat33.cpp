@@ -1,5 +1,5 @@
-// Mat33.cpp - Mat33 实现文件
-#include <stdio.h>
+#include <algorithm>
+#include <cstdio>
 #include "Mat33.h"
 
 Mat33::Mat33() {
@@ -71,7 +71,52 @@ Mat33 Mat33::rotate(float radians) {
         0,  0, 1
     };
 }
+void Mat33::transpose() {
+    std::swap(data[1], data[3]);
+    std::swap(data[2], data[6]);
+    std::swap(data[5], data[7]);
+}
+void Mat33::append(Mat33& rhs)
+{
+    // 错误的实现
+    /*
+    const float* rfs = rhs.data.data();
+    float* sfs = data.data();
 
+    float bv[3];
+
+    memcpy(bv, sfs + 0, sizeof(bv));
+    sfs[0] = (rfs[0] * bv[0]) + (rfs[1] * bv[1]) + (rfs[2] * bv[2]);
+    sfs[1] = (rfs[3] * bv[0]) + (rfs[4] * bv[1]) + (rfs[5] * bv[2]);
+    sfs[2] = (rfs[6] * bv[0]) + (rfs[7] * bv[1]) + (rfs[8] * bv[2]);
+
+    memcpy(bv, sfs + 3, sizeof(bv));
+    sfs[3] = (rfs[0] * bv[0]) + (rfs[1] * bv[1]) + (rfs[2] * bv[2]);
+    sfs[4] = (rfs[3] * bv[0]) + (rfs[4] * bv[1]) + (rfs[5] * bv[2]);
+    sfs[5] = (rfs[6] * bv[0]) + (rfs[7] * bv[1]) + (rfs[8] * bv[2]);
+
+    memcpy(bv, sfs + 6, sizeof(bv));
+    sfs[6] = (rfs[0] * bv[0]) + (rfs[1] * bv[1]) + (rfs[2] * bv[2]);
+    sfs[7] = (rfs[3] * bv[0]) + (rfs[4] * bv[1]) + (rfs[5] * bv[2]);
+    sfs[8] = (rfs[6] * bv[0]) + (rfs[7] * bv[1]) + (rfs[8] * bv[2]);
+    //*/
+}
+void Mat33::prepend(Mat33& lhs)
+{
+    float* sfs = data.data();     // this matrix
+    const float* lfs = lhs.data.data(); // right-hand matrix (lhs for append)
+
+    float row[3];
+
+    for (int i = 0; i < 3; ++i)
+    {
+        std::memcpy(row, sfs + i * 3, sizeof(row));
+
+        sfs[i * 3 + 0] = row[0] * lfs[0] + row[1] * lfs[3] + row[2] * lfs[6];
+        sfs[i * 3 + 1] = row[0] * lfs[1] + row[1] * lfs[4] + row[2] * lfs[7];
+        sfs[i * 3 + 2] = row[0] * lfs[2] + row[1] * lfs[5] + row[2] * lfs[8];
+    }
+}
 Mat33 Mat33::operator*(const Mat33& rhs) const {
 #ifdef APPLY_WASM_SIMD
     return multiplySimd(rhs);

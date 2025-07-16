@@ -7,10 +7,11 @@
 #include <cmath>
 #ifdef __EMSCRIPTEN__
 // #define APPLY_WASM_SIMD 1
-#include <wasm_simd128.h>
+#    include <wasm_simd128.h>
 #endif
 
-class Mat33 {
+class Mat33
+{
 public:
     std::array<float, 9> data;
 
@@ -24,8 +25,10 @@ public:
     static Mat33 translate(float tx, float ty);
     static Mat33 scale(float sx = 1.0f, float sy = 1.0f);
     static Mat33 rotate(float radians = 0.0f);
-
-    Mat33 operator*(const Mat33& rhs) const;
+    void         transpose();
+    void         prepend(Mat33& rhs);
+    void         append(Mat33& lhs);
+    Mat33        operator*(const Mat33& rhs) const;
 
 #ifdef __EMSCRIPTEN__
     Mat33 multiplySimd(const Mat33& rhs) const;
