@@ -10,10 +10,10 @@ void RenderSystem::renderEntity(const EntityObjectFactory& factory, VoxolEntity 
     if (!factory.eidFactory.isAlive(e)) return;
 
     auto& compFactory = factory.compFactory;
-    
+
     const std::string& name  = factory.eidFactory.getName(e);
-    const auto   tf    = compFactory.getComponent<TransformComp>(e);
-    const auto   shape = compFactory.getComponent<RectShapeComp>(e);
+    const auto         tf    = compFactory.getComponent<TransformComp>(e);
+    const auto         shape = compFactory.getComponent<RectShapeComp>(e);
     // const auto   shape = compFactory.getComponent<RectShapeComp>(e);
 
     for (int i = 0; i < indent; ++i) printf("  ");
@@ -66,6 +66,8 @@ void RenderSystem::operator()(EntityObjectFactory& factory) const
     factory.compFactory.each<EntityHierarchyComp>([&, this](VoxolEntity entity, EntityHierarchyComp& h) {
         if (h.parent != 0)
             return;
+        // const std::string& name = factory.eidFactory.getName(entity);
+        // printf("Root VoxolEntity %u (%s)\n", entity, name.c_str());
         renderEntity(factory, entity);
     });
     // for (const auto& [entity, h] : const_cast<EntityObjectFactory&>(world).hierarchies.all()) {

@@ -100,8 +100,9 @@ void testMemoryManage()
         auto        worldPtr   = EntityObjectFactory::make();
         VoxolEntity rootEntity = VoxolEntity_None;
         rootEntity             = worldPtr->createEntity("root");
+        printf("testMemoryManage() end 02 rootEntity: %d\n", rootEntity);
         auto e01               = worldPtr->createRectFillEntity("rect_01", {15, 25}, {0, 0, 100, 130}, {0xff00aa00}, rootEntity);
-        auto e02               = worldPtr->createRectFillGradientBlurEntity("rect_01", {15, 25}, {0, 0, 100, 130}, {0xff0000aa, 0xffaa0000}, {15}, rootEntity);
+        auto e02               = worldPtr->createRectFillGradientBlurEntity("rect_gradient_02", {15, 25}, {0, 0, 100, 130}, {0xff0000aa, 0xffaa0000}, {15}, rootEntity);
 
 
         Voxol::System::RenderSystem Renderer;
