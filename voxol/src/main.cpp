@@ -19,10 +19,10 @@
 
 #include "Voxol/Base/SlabArena.h"
 #include "Voxol/Base/BaseComponentStorage.h"
-#include "Voxol/Base/ComponentFactory.h"
+#include "Voxol/Base/ComponentWorld.h"
 #include "Voxol/Base/EntityIDFactory.h"
 #include "Voxol/Base/Component.h"
-#include "Voxol/Base/EntityObjectFactory.h"
+#include "Voxol/Base/EntityObjectBuilder.h"
 #include "Voxol/System/RenderSystem.h"
 
 #include "Voxol/TestComponent.h"
@@ -97,7 +97,7 @@ void testMemoryManage()
     printf("testMemoryManage() begin 02...\n");
     {
         using namespace Voxol::Base;
-        auto        worldPtr   = EntityObjectFactory::make();
+        auto        worldPtr   = EntityObjectBuilder::make();
         VoxolEntity rootEntity = VoxolEntity_None;
         rootEntity             = worldPtr->createEntity("root");
         printf("testMemoryManage() end 02 rootEntity: %d\n", rootEntity);

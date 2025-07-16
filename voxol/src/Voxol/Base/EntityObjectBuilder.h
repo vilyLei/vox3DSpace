@@ -1,27 +1,27 @@
-#ifndef VOXOL_ENTITY_OBJECT_FACTORY_H
-#define VOXOL_ENTITY_OBJECT_FACTORY_H
+#ifndef VOXOL_ENTITY_OBJECT_BUILDER_H
+#define VOXOL_ENTITY_OBJECT_BUILDER_H
 
 #include "EntityIDFactory.h"
-#include "ComponentFactory.h"
+#include "ComponentWorld.h"
 #include "Component.h"
 
 namespace Voxol::Base
 {
-class EntityObjectFactory
+class EntityObjectBuilder
 {
 public:
-    using SP = std::shared_ptr<EntityObjectFactory>;
-    using WP = std::weak_ptr<EntityObjectFactory>;
-    static EntityObjectFactory::SP make();
+    using SP = std::shared_ptr<EntityObjectBuilder>;
+    using WP = std::weak_ptr<EntityObjectBuilder>;
+    static EntityObjectBuilder::SP make();
 
 public:
-    explicit EntityObjectFactory() noexcept;
-    ~EntityObjectFactory();
+    explicit EntityObjectBuilder() noexcept;
+    ~EntityObjectBuilder();
 
 public:
-    ComponentFactory compFactory;
+    ComponentWorld compFactory;
     EntityIDFactory eidFactory{};
-    
+
 public:
 
     VoxolEntity createEntity(const std::string& name, VoxolEntity parent = VoxolEntity_None);

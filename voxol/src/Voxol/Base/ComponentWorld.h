@@ -1,5 +1,5 @@
-#ifndef VOXOL_COMPONENT_FACTORY_H
-#define VOXOL_COMPONENT_FACTORY_H
+#ifndef VOXOL_COMPONENT_WORLD_H
+#define VOXOL_COMPONENT_WORLD_H
 
 #include <unordered_map>
 #include <typeindex>
@@ -13,17 +13,17 @@
 namespace Voxol::Base
 {
 
-class ComponentFactory : public std::enable_shared_from_this<ComponentFactory>
+class ComponentWorld : public std::enable_shared_from_this<ComponentWorld>
 {
 public:
-    explicit ComponentFactory(SlabArena& arena) :
+    explicit ComponentWorld(SlabArena& arena) :
         arena(arena)
     {
-        printf("ComponentFactory::ComponentFactory() ..\n");
+        printf("ComponentWorld::ComponentWorld() ..\n");
     }
-    ~ComponentFactory()
+    ~ComponentWorld()
     {
-        printf("ComponentFactory::~ComponentFactory() ..\n");
+        printf("ComponentWorld::~ComponentWorld() ..\n");
     }
     // 添加组件（完美转发构造）
     template <typename T, typename... Args>
@@ -109,7 +109,7 @@ public:
     // 删除指定实体的所有组件
     void removeAllComponents(VoxolEntity e)
     {
-        printf("ComponentFactory::removeAllComponents() begin e: %d\n", e);
+        printf("ComponentWorld::removeAllComponents() begin e: %d\n", e);
 
         for (auto& [_, wrapper] : storages)
         {
@@ -119,13 +119,13 @@ public:
             }
         }
 
-        printf("ComponentFactory::removeAllComponents() end e: %d\n", e);
+        printf("ComponentWorld::removeAllComponents() end e: %d\n", e);
     }
 
     // 清空所有组件
     void clearAllComponents()
     {
-        printf("ComponentFactory::clearAllComponents() begin ...\n");
+        printf("ComponentWorld::clearAllComponents() begin ...\n");
         
         // 下面的代码多此一举
         // for (auto& [_, wrapper] : storages)
@@ -134,11 +134,11 @@ public:
         // }
         storages.clear();
         
-        printf("ComponentFactory::clearAllComponents() end ...\n");
+        printf("ComponentWorld::clearAllComponents() end ...\n");
     }
 
     // 工厂构造
-    template <typename T = ComponentFactory>
+    template <typename T = ComponentWorld>
     static std::shared_ptr<T> make(SlabArena& arena)
     {
         return std::shared_ptr<T>(new T(arena));

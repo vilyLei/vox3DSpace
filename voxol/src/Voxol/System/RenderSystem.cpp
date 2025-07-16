@@ -3,7 +3,7 @@
 
 namespace Voxol::System
 {
-void RenderSystem::renderEntity(const EntityObjectFactory& factory, VoxolEntity e, int indent) const
+void RenderSystem::renderEntity(const EntityObjectBuilder& factory, VoxolEntity e, int indent) const
 {
     ///*
 
@@ -60,7 +60,7 @@ void RenderSystem::renderEntity(const EntityObjectFactory& factory, VoxolEntity 
     //*/
 }
 
-void RenderSystem::operator()(EntityObjectFactory& factory) const
+void RenderSystem::operator()(EntityObjectBuilder& factory) const
 {
     printf("[RenderSystem] Rendering Layer Tree:\n");
     factory.compFactory.each<EntityHierarchyComp>([&, this](VoxolEntity entity, EntityHierarchyComp& h) {
@@ -70,7 +70,7 @@ void RenderSystem::operator()(EntityObjectFactory& factory) const
         // printf("Root VoxolEntity %u (%s)\n", entity, name.c_str());
         renderEntity(factory, entity);
     });
-    // for (const auto& [entity, h] : const_cast<EntityObjectFactory&>(world).hierarchies.all()) {
+    // for (const auto& [entity, h] : const_cast<EntityObjectBuilder&>(world).hierarchies.all()) {
     //     if (h->parent == 0) {
     //         renderEntity(world, entity);
     //     }

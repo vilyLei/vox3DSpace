@@ -1,7 +1,7 @@
 #ifndef VOXOL_RENDER_SYSTEM_H
 #define VOXOL_RENDER_SYSTEM_H
 
-#include "../Base/EntityObjectFactory.h"
+#include "../Base/EntityObjectBuilder.h"
 
 namespace Voxol::System
 {
@@ -11,10 +11,10 @@ class RenderSystem
 {
 
 public:
-    void operator()(EntityObjectFactory& factory) const;
+    void operator()(EntityObjectBuilder& factory) const;
 
 private:
-    void renderEntity(const EntityObjectFactory& factory, VoxolEntity e, int indent = 0) const;
+    void renderEntity(const EntityObjectBuilder& factory, VoxolEntity e, int indent = 0) const;
 };
 
 } // namespace Voxol::System
