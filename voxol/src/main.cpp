@@ -69,7 +69,33 @@ void testMemoryManage()
     printf("testMemoryManage() end ...\n");
 }
 
+void calcProfileTest()
+{
+    auto tot = 10000 * 100;
+    printf("calcProfileTest() tot: %d\n", tot);
+#ifdef __EMSCRIPTEN__
+    double start = emscripten_get_now();
+#else
+    auto start = std::chrono::high_resolution_clock::now();
+#endif
 
+    Mat33 mat0(10, 20, 33.5f, -8.2f, 0.3f);
+    Mat33 mat1(180, -120, 313.5f, 8.2f, 0.77f);
+    for (auto i = 0; i < tot; i++)
+    {
+        mat0.prepend(mat1);
+    }
+
+#ifdef __EMSCRIPTEN__
+    double end      = emscripten_get_now();
+    auto   lossTime = end - start;
+    printf("calcProfileTest() elapsed time: %fms\n", lossTime);
+#else
+    auto end      = std::chrono::high_resolution_clock::now();
+    auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+    printf("calcProfileTest() elapsed time: %llums\n", duration.count());
+#endif
+}
 #ifdef __EMSCRIPTEN__
 
 Renderer renderer{};
@@ -177,8 +203,8 @@ extern "C"
     void startup()
     {
         printf("voxol main startup() ...\n");
-        testSimd();
-        testMemoryManage();
+        // testSimd();
+        // testMemoryManage();
         renderer.startup();
     }
 
@@ -187,11 +213,12 @@ extern "C"
     {
 
         printf("voxol main setGPUCtxSize size(w=%d, h=%d)\n", w, h);
+        calcProfileTest();
 
         renderer.setGPUCtxSize(w, h);
         renderer.render();
     }
-    
+
     EMSCRIPTEN_KEEPALIVE
     void setMouseParams(float x, float y, int type, int flag)
     {
@@ -206,6 +233,7 @@ extern "C"
 int main()
 {
     testMemoryManage();
+    calcProfileTest();
     return 1;
 }
 #endif

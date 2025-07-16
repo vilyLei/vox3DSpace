@@ -104,7 +104,7 @@ if(EMSCRIPTEN)
 
     set_target_properties(voxolModule PROPERTIES
         COMPILE_FLAGS "-msimd128"
-        LINK_FLAGS "-msimd128 --bind -s WASM=1 \
+        LINK_FLAGS "-O3 -msimd128 --bind -s WASM=1 \
             -s ALLOW_MEMORY_GROWTH=1 \
             -s USE_WEBGL2=1 \
             -s MODULARIZE=1 \
