@@ -34,7 +34,7 @@ struct BlurComp
 /// Entity Tree Relationship
 struct EntityHierarchyComp
 {
-    VoxolEntity              parent = 0;
+    VoxolEntity              parent = VoxolEntity_None;
     std::vector<VoxolEntity> children;
 };
 } // namespace Voxol::Base

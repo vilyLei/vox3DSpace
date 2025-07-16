@@ -64,7 +64,7 @@ void RenderSystem::operator()(EntityObjectFactory& factory) const
 {
     printf("[RenderSystem] Rendering Layer Tree:\n");
     factory.compFactory.each<EntityHierarchyComp>([&, this](VoxolEntity entity, EntityHierarchyComp& h) {
-        if (h.parent != 0)
+        if (h.parent != VoxolEntity_None)
             return;
         // const std::string& name = factory.eidFactory.getName(entity);
         // printf("Root VoxolEntity %u (%s)\n", entity, name.c_str());

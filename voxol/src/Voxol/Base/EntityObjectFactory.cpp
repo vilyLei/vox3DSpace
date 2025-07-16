@@ -27,7 +27,7 @@ VoxolEntity EntityObjectFactory::createEntity(const std::string& name, VoxolEnti
 {
     auto e = eidFactory.create(name);
     compFactory.addComponent<EntityHierarchyComp>(e, {});
-    if (parent && compFactory.hasComponent<EntityHierarchyComp>(parent))
+    if (parent != VoxolEntity_None && compFactory.hasComponent<EntityHierarchyComp>(parent))
     {
         compFactory.getComponent<EntityHierarchyComp>(parent)->children.push_back(e);
     }
