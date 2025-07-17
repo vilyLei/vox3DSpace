@@ -20,6 +20,9 @@ void RenderCmdWorld::initialize()
     transforms.resize(2);
     objTransforms.resize(2);
 
+    commands[0] = 3;
+    commands[1] = 5;
+
     objTransforms[0] = Mat33(500, 200, 150, 150);
     objTransforms[1] = Mat33(600, 300, 200, 50);
     mInit = false;
@@ -38,10 +41,11 @@ void RenderCmdWorld::run()
         return;
     dirty = false;
 
-    printf("RenderCmdWorld::run() ...objTransforms.size(): %zu\n", objTransforms.size());
 
     initialize();
 
+    printf("RenderCmdWorld::run() ...objTransforms.size(): %zu\n", objTransforms.size());
+    
     auto total = objTransforms.size();
 
     for(auto i = 0; i < total; i++) {

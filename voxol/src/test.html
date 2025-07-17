@@ -127,7 +127,7 @@
             // const setVal = Module.cwrap("set_buffer_value", null, ["number", "number"]);
             // const ptr = getPtr(); // 获取 WASM 内存中 buffer 的起始地址
             // console.log("ptr: ", ptr);
-            // const heap = Module.HEAPU8; // JS 端的视图
+            const heap = Module.HEAPU8; // JS 端的视图
             // let u8Arr = new Uint8Array(4);
             // u8Arr = heap.subarray(ptr);
             // console.log("(typeof(heap): ", typeof (heap));
@@ -165,6 +165,31 @@
             });
             resizeCanvas();
             // startup();
+
+            
+            const runExec = Module.cwrap("run");
+            const getCmdsTotalExec = Module.cwrap("getCmdsTotal", "number");
+            const getCmdsExec = Module.cwrap("getCmds", "number");
+            const getRenderCmdBufferExec = Module.cwrap("getRenderCmdBuffer", "number");
+
+            runExec();
+
+            let cmdU8Ptr = getCmdsExec();
+            let cmdBufU8Ptr = getRenderCmdBufferExec();
+            let cmdU32Arr = new Uint32Array(heap.buffer);
+            console.log("cmdU8Ptr: ", cmdU8Ptr);
+            console.log("cmdBufU8Ptr: ", cmdBufU8Ptr);
+            cmdU32Arr = cmdU32Arr.subarray(cmdU8Ptr/4);
+            console.log("cmdU32Arr[0]: ", cmdU32Arr[0], ", cmdU32Arr[1]: ",cmdU32Arr[1]);
+            let cmdBufF32Arr = new Float32Array(heap.buffer);
+            cmdBufF32Arr = cmdBufF32Arr.subarray(cmdBufU8Ptr/4);
+            let f32Str = "";
+            for(let i = 0; i < 9; i++) {
+                f32Str += (i > 0 ? "," : "") + cmdBufF32Arr[i];
+            }
+            console.log("f32Str: ", f32Str);
+            let cmdsTotal = getCmdsTotalExec();
+            console.log("cmdsTotal: ", cmdsTotal);
         };
 
         VoxModule().then(Module => {
