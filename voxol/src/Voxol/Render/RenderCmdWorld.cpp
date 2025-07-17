@@ -44,7 +44,8 @@ void RenderCmdWorld::run()
 
     initialize();
 
-    printf("RenderCmdWorld::run() ...objTransforms.size(): %zu\n", objTransforms.size());
+    printf("RenderCmdWorld::run() sizeof(projMat): %zu\n", sizeof(projMat));
+    printf("RenderCmdWorld::run() objTransforms.size(): %zu\n", objTransforms.size());
     
     auto total = objTransforms.size();
 
