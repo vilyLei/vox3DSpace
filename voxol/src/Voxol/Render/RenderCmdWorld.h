@@ -26,6 +26,8 @@ namespace Voxol::Render
     public:
         void initialize();
         void run();
+        void setGPUCtxSize(int w, int h);
+        void setMouseXY(float x, float y);
 
     };
     

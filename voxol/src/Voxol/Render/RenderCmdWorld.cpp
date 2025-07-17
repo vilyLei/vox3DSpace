@@ -1,4 +1,5 @@
 #include "RenderCmdWorld.h"
+#include <cstdio>
 namespace Voxol::Render
 {
 RenderCmdWorld::RenderCmdWorld(/* args */)
@@ -23,11 +24,21 @@ void RenderCmdWorld::initialize()
     objTransforms[1] = Mat33(600, 300, 200, 50);
     mInit = false;
 }
+
+void RenderCmdWorld::setGPUCtxSize(int w, int h) {
+    projMat.ortho(w, h);
+}
+
+void RenderCmdWorld::setMouseXY(float x, float y)
+{
+}
 void RenderCmdWorld::run()
 {
     if(!dirty)
         return;
     dirty = false;
+
+    printf("RenderCmdWorld::run() ...objTransforms.size(): %zu\n", objTransforms.size());
 
     initialize();
 

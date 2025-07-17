@@ -185,6 +185,7 @@ extern "C"
         printf("voxol main setGPUCtxSize size(w=%d, h=%d)\n", w, h);
         calcProfileTest();
 
+        rcmdWorld.setGPUCtxSize(w, h);
         renderer.setGPUCtxSize(w, h);
         renderer.render();
     }
@@ -194,7 +195,8 @@ extern "C"
     {
 
         printf("voxol main setMouseParams mouseParam(x=%f, y=%f, type=%d, flag=:%d)\n", x, y, type, flag);
-
+        
+        rcmdWorld.setMouseXY(x, y);
         renderer.setMouseXY(x, y);
         renderer.render();
     }
