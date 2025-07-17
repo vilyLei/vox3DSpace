@@ -1,15 +1,16 @@
 #ifndef VOXOL_RENDERER_H
 #define VOXOL_RENDERER_H
 
-#include "Math/Mat33.h"
+#include "../Math/Mat33.h"
 
-using namespace Voxol::Math;
 #ifdef __EMSCRIPTEN__
 #    include <emscripten/emscripten.h>
 #    include <emscripten/html5_webgl.h>
-
 #    include <GLES3/gl3.h>
 
+namespace Voxol::Test
+{
+using namespace Voxol::Math;
 struct ViewportDesc
 {
     GLint x      = 0;
@@ -30,22 +31,22 @@ struct CanvasMousePos
 
     bool flag = false;
 };
-class Renderer
+class TestRenderer
 {
 public:
-    Renderer()  = default;
-    ~Renderer() = default;
+    TestRenderer()  = default;
+    ~TestRenderer() = default;
 
 public:
     CanvasMousePos mousePos{};
 
-    static GLuint  compileShader(GLenum type, const char* source);
+    static GLuint compileShader(GLenum type, const char* source);
 
-    
-    void           setMouseXY(float x, float y);
-    void           startup();
-    void           setGPUCtxSize(int w, int h);
-    void           render();
+
+    void setMouseXY(float x, float y);
+    void startup();
+    void setGPUCtxSize(int w, int h);
+    void render();
 
 private:
     void init();
@@ -59,6 +60,6 @@ private:
     ViewportDesc                    vpDesc{};
     CanvasDesc                      canvasDesc{};
 };
-
+}
 #endif // VOXOL_RENDERER_H
 #endif

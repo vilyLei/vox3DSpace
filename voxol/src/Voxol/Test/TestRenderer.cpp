@@ -1,8 +1,9 @@
 #include <stdio.h>
-#include "Renderer.h"
+#include "TestRenderer.h"
 
 #ifdef __EMSCRIPTEN__
-
+namespace Voxol::Test
+{
 const char* vertShaderSource = R"(#version 300 es
 precision highp float;
 
@@ -24,7 +25,7 @@ void main() {
     outColor = u_color;
 })";
 
-GLuint Renderer::compileShader(GLenum type, const char* source)
+GLuint TestRenderer::compileShader(GLenum type, const char* source)
 {
     GLuint shader = glCreateShader(type);
     glShaderSource(shader, 1, &source, nullptr);
@@ -32,20 +33,20 @@ GLuint Renderer::compileShader(GLenum type, const char* source)
     return shader;
 }
 
-void Renderer::startup()
+void TestRenderer::startup()
 {
     init();
     render();
     // emscripten_set_main_loop(render, 0, 1);
 }
 
-void Renderer::setMouseXY(float x, float y)
+void TestRenderer::setMouseXY(float x, float y)
 {
-    mousePos.x = x;
-    mousePos.y = y;
+    mousePos.x    = x;
+    mousePos.y    = y;
     mousePos.flag = true;
 }
-void Renderer::setGPUCtxSize(int w, int h)
+void TestRenderer::setGPUCtxSize(int w, int h)
 {
     vpDesc.width  = w;
     vpDesc.height = h;
@@ -55,7 +56,7 @@ void Renderer::setGPUCtxSize(int w, int h)
 
     render();
 }
-void Renderer::render()
+void TestRenderer::render()
 {
     if (!ctx)
         return;
@@ -74,7 +75,7 @@ void Renderer::render()
 
     {
         Mat33 objM(100, 200, 200, 100);
-        // Mat33 mvp = projM * objM;    
+        // Mat33 mvp = projM * objM;
         Mat33 mvp = projM;
         mvp.append(objM);
 
@@ -87,7 +88,8 @@ void Renderer::render()
     {
         auto px = 150;
         auto py = 250;
-        if(mousePos.flag) {
+        if (mousePos.flag)
+        {
             px = mousePos.x;
             py = mousePos.y;
         }
@@ -95,7 +97,8 @@ void Renderer::render()
 
         // Mat33 mvp = projM * objM;
         Mat33 mvp = objM;
-        mvp.prepend(projM);;
+        mvp.prepend(projM);
+        ;
 
         glUniformMatrix3fv(matrixLoc, 1, GL_FALSE, mvp.ptr());
         std::array<float, 4> color = {0.0f, 0.6f, 0.8f, 1.0f};
@@ -104,7 +107,7 @@ void Renderer::render()
         glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
     }
 }
-void Renderer::init()
+void TestRenderer::init()
 {
 
     EmscriptenWebGLContextAttributes attr;
@@ -145,4 +148,5 @@ void Renderer::init()
     glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
     glEnableVertexAttribArray(0);
 }
+} // namespace Voxol::Test
 #endif

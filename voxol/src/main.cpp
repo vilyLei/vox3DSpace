@@ -29,10 +29,7 @@
 #include "Voxol/Base/EntityObjectBuilder.h"
 #include "Voxol/System/RenderSystem.h"
 
-#include "Voxol/TestComponent.h"
-#include "Voxol/TestComponentStorage.h"
-#include "Voxol/IntersectionSystem.h"
-#include "Voxol/Renderer.h"
+#include "Voxol/Test/TestRenderer.h"
 
 
 
@@ -103,12 +100,7 @@ void calcProfileTest()
 }
 #ifdef __EMSCRIPTEN__
 
-Renderer renderer{};
-
-Voxol::Base::EntityIDFactory em;
-TestComponentStorage<Rect>   rects;
-TestComponentStorage<Circle> circles;
-
+Voxol::Test::TestRenderer renderer{};
 uint8_t data[256];
 
 // 加法：result = a + b
@@ -157,35 +149,6 @@ void testSimd()
 
 extern "C"
 {
-
-    EMSCRIPTEN_KEEPALIVE
-    VoxolEntity create_rect(float x, float y, float w, float h)
-    {
-        VoxolEntity e = em.create();
-        rects.add(e, Rect{x, y, w, h});
-        return e;
-    }
-
-    EMSCRIPTEN_KEEPALIVE
-    VoxolEntity create_circle(float cx, float cy, float r)
-    {
-        VoxolEntity e = em.create();
-        circles.add(e, Circle{cx, cy, r});
-        return e;
-    }
-
-    EMSCRIPTEN_KEEPALIVE
-    int run_intersection()
-    {
-        return IntersectionSystem::count_intersections(rects, circles);
-    }
-
-    // 获取当前堆内存大小（以字节为单位）
-    // EMSCRIPTEN_KEEPALIVE
-    // int get_heap_size_bytes() {
-    //     // 从 emscripten 的 JS 环境中调用 HEAP8.byteLength
-    //     return emscripten::val::global("HEAP8")["byteLength"].as<int>();
-    // }
 
     EMSCRIPTEN_KEEPALIVE
     int get_heap_size_bytes()

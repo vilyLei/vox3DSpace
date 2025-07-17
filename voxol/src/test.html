@@ -96,10 +96,10 @@
         isWasmSimdSupported().then((supported) => {
             if (supported) {
                 console.log("WebAssembly SIMD 支持 !!!");
-                import('./simd.js').then(Module => Module());
+                // import('./simd.js').then(Module => Module());
             } else {
                 console.warn("SIMD 不支持，加载 fallback");
-                import('./nosimd.js').then(Module => Module());
+                // import('./nosimd.js').then(Module => Module());
             }
         });
 
