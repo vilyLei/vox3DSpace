@@ -106,17 +106,6 @@
         function execMoculeProcess(Module) {
 
 
-            //const add = Module.cwrap('add', 'number', ['number', 'number']);
-            //console.log('>>>>> add(1, 2) =', add(1, 2));
-
-            // const createRect = Module.cwrap("create_rect", "number", ["number", "number", "number", "number"]);
-            // const createCircle = Module.cwrap("create_circle", "number", ["number", "number", "number"]);
-            // const runIntersection = Module.cwrap("run_intersection", "number", []);
-            // createRect(3, 3, 4, 4);
-            // createCircle(5, 5, 3);
-            // createCircle(0, 0, 1);
-            // console.log("相交个数:", runIntersection()); // 应为 1
-
             const getHeapSize = Module.cwrap("get_heap_size_bytes", "number", []);
             const startup = Module.cwrap("startup");
             const setGPUCtxSize = Module.cwrap("setGPUCtxSize", null, ["number", "number"]);

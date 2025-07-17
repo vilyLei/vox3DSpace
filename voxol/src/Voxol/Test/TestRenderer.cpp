@@ -71,7 +71,8 @@ void TestRenderer::render()
     auto scale = 0.5f;
     // scale = (std::cos(angle * 3) * 0.5f + 0.5f) * 0.5f + 0.5f;
 
-    auto&& projM = Mat33::ortho(canvasDesc.width, canvasDesc.height);
+    Mat33 projM;
+    projM.ortho(canvasDesc.width, canvasDesc.height);
 
     {
         Mat33 objM(100, 200, 200, 100);

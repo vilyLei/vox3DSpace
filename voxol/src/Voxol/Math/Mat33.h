@@ -25,14 +25,16 @@ public:
 
     void identity();
 
-    static Mat33 ortho(float width, float height);
     static Mat33 translate(float tx, float ty);
     static Mat33 scale(float sx = 1.0f, float sy = 1.0f);
     static Mat33 rotate(float radians = 0.0f);
-    void         transpose();
-    void         prepend(const Mat33& rhs);
-    void         append(const Mat33& lhs);
-    Mat33        operator*(const Mat33& rhs) const;
+
+    void ortho(float width, float height);
+
+    void  transpose();
+    void  prepend(const Mat33& rhs);
+    void  append(const Mat33& lhs);
+    Mat33 operator*(const Mat33& rhs) const;
 
 #ifdef __EMSCRIPTEN__
     Mat33 multiplySimd(const Mat33& rhs) const;

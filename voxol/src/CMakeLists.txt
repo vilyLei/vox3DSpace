@@ -108,7 +108,7 @@ if(EMSCRIPTEN)
             -s ALLOW_MEMORY_GROWTH=1 \
             -s USE_WEBGL2=1 \
             -s MODULARIZE=1 \
-            -s EXPORTED_FUNCTIONS=['_get_heap_size_bytes','_get_buffer_ptr','_set_buffer_value','_startup','_setMouseParams'] \
+            -s EXPORTED_FUNCTIONS=['_getCmds','_getCmdsTotal','_get_heap_size_bytes','_get_buffer_ptr','_set_buffer_value','_startup','_setMouseParams'] \
             -s EXPORT_NAME='VoxModule' \
             -s EXPORTED_RUNTIME_METHODS=['cwrap','HEAPU8']"
     )

@@ -44,9 +44,9 @@ void Mat33::identity()
         0, 0, 1};
 }
 
-Mat33 Mat33::ortho(float width, float height)
+void Mat33::ortho(float width, float height)
 {
-    return {
+    data = {
         2.0f / width, 0.0f, 0.0f,
         0.0f, -2.0f / height, 0.0f,
         -1.0f, 1.0f, 1.0f};

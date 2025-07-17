@@ -29,11 +29,13 @@
 #include "Voxol/Base/EntityObjectBuilder.h"
 #include "Voxol/System/RenderSystem.h"
 
+#include "Voxol/Render/RenderCmdWorld.h"
+
 #include "Voxol/Test/TestRenderer.h"
 
 
-
-void testMemoryManage()
+Voxol::Render::RenderCmdWorld rcmdWorld{};
+void                          testMemoryManage()
 {
     // printf("testMemoryManage() begin 01...\n");
     // {
@@ -101,7 +103,7 @@ void calcProfileTest()
 #ifdef __EMSCRIPTEN__
 
 Voxol::Test::TestRenderer renderer{};
-uint8_t data[256];
+uint8_t                   data[256];
 
 // 加法：result = a + b
 void add_f32x4(const float* a, const float* b, float* result)
@@ -196,6 +198,21 @@ extern "C"
         renderer.setMouseXY(x, y);
         renderer.render();
     }
+
+
+
+    EMSCRIPTEN_KEEPALIVE
+    void run()
+    {
+        rcmdWorld.run();
+    }
+
+    EMSCRIPTEN_KEEPALIVE
+    uint8_t* getCmds() { return (uint8_t*)rcmdWorld.commands.data(); }
+    EMSCRIPTEN_KEEPALIVE
+    size_t getCmdsTotal() { return rcmdWorld.commands.size(); }
+    EMSCRIPTEN_KEEPALIVE
+    uint8_t* getRenderCmdBuffer() { return (uint8_t*)rcmdWorld.transforms.data(); }
 }
 #else
 int main()

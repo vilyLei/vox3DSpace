@@ -1,6 +1,7 @@
 #ifndef VOXOL_RENDERER_H
 #define VOXOL_RENDERER_H
 
+#include "../Base/BaseDefine.h"
 #include "../Math/Mat33.h"
 
 #ifdef __EMSCRIPTEN__
