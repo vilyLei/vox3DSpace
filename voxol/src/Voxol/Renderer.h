@@ -1,8 +1,9 @@
 #ifndef VOXOL_RENDERER_H
 #define VOXOL_RENDERER_H
 
-#include "Mat33.h"
+#include "Math/Mat33.h"
 
+using namespace Voxol::Math;
 #ifdef __EMSCRIPTEN__
 #    include <emscripten/emscripten.h>
 #    include <emscripten/html5_webgl.h>
@@ -26,7 +27,7 @@ struct CanvasMousePos
 {
     float x = 0;
     float y = 0;
-    
+
     bool flag = false;
 };
 class Renderer

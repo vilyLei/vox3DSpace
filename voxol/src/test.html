@@ -134,26 +134,21 @@
             }, 1000);
 
 
-            const getPtr = Module.cwrap("get_buffer_ptr", "number", []);
-            const setVal = Module.cwrap("set_buffer_value", null, ["number", "number"]);
-            const ptr = getPtr(); // 获取 WASM 内存中 buffer 的起始地址
-            console.log("ptr: ", ptr);
-            const heap = Module.HEAPU8; // JS 端的视图
-
-            let u8Arr = new Uint8Array(4);
-            u8Arr = heap.subarray(ptr);
-
-            console.log("(typeof(heap): ", typeof (heap));
-
-            heap[ptr + 0] = 42;    // 写入 WASM 内存
-            heap[ptr + 1] = 255;
-
-            u8Arr[1] = 31;
-
-            setVal(10, 77);        // C++ 也可写入
-            console.log("heap[ptr + 10]: ", heap[ptr + 10]); // 77
-            console.log("heap[ptr + 1]: ", heap[ptr + 1]); // 31
-            console.log("u8Arr[1]: ", u8Arr[1]); // 31
+            // const getPtr = Module.cwrap("get_buffer_ptr", "number", []);
+            // const setVal = Module.cwrap("set_buffer_value", null, ["number", "number"]);
+            // const ptr = getPtr(); // 获取 WASM 内存中 buffer 的起始地址
+            // console.log("ptr: ", ptr);
+            // const heap = Module.HEAPU8; // JS 端的视图
+            // let u8Arr = new Uint8Array(4);
+            // u8Arr = heap.subarray(ptr);
+            // console.log("(typeof(heap): ", typeof (heap));
+            // heap[ptr + 0] = 42;    // 写入 WASM 内存
+            // heap[ptr + 1] = 255;
+            // u8Arr[1] = 31;
+            // setVal(10, 77);        // C++ 也可写入
+            // console.log("heap[ptr + 10]: ", heap[ptr + 10]); // 77
+            // console.log("heap[ptr + 1]: ", heap[ptr + 1]); // 31
+            // console.log("u8Arr[1]: ", u8Arr[1]); // 31
 
             function resizeCanvas() {
 

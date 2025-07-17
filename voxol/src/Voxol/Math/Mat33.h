@@ -1,4 +1,4 @@
-// Mat33.h - 2D矩阵类声明，支持SIMD优化、列主序、WebGL友好
+
 #ifndef VOXOL_MAT3_H
 #define VOXOL_MAT3_H
 
@@ -10,6 +10,10 @@
 #    include <wasm_simd128.h>
 #endif
 
+namespace Voxol::Math
+{
+
+/// 2D矩阵类声明，支持SIMD优化、列主序、WebGL/GLES友好
 class Mat33
 {
 public:
@@ -26,8 +30,8 @@ public:
     static Mat33 scale(float sx = 1.0f, float sy = 1.0f);
     static Mat33 rotate(float radians = 0.0f);
     void         transpose();
-    void         prepend(Mat33& rhs);
-    void         append(Mat33& lhs);
+    void         prepend(const Mat33& rhs);
+    void         append(const Mat33& lhs);
     Mat33        operator*(const Mat33& rhs) const;
 
 #ifdef __EMSCRIPTEN__
@@ -36,5 +40,6 @@ public:
 
     const float* ptr() const;
 };
+} // namespace Voxol::Math
 
 #endif // VOXOL_MAT3_H

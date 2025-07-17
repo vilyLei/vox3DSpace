@@ -79,11 +79,16 @@ void calcProfileTest()
     auto start = std::chrono::high_resolution_clock::now();
 #endif
 
+    using namespace Voxol::Math;
+
     Mat33 mat0(10, 20, 33.5f, -8.2f, 0.3f);
     Mat33 mat1(180, -120, 313.5f, 8.2f, 0.77f);
+    Mat33 mat2(90, -120, 313.5f, 8.2f, 10.77f);
     for (auto i = 0; i < tot; i++)
     {
         mat0.prepend(mat1);
+        // mat0.append(mat1);
+        //mat2 = mat0 * mat1;
     }
 
 #ifdef __EMSCRIPTEN__
