@@ -24,7 +24,7 @@ void RenderCmdWorld::initialize()
     commands[1] = 5;
 
     objTransforms[0] = Mat33(500, 200, 150, 150);
-    objTransforms[1] = Mat33(600, 300, 200, 50);
+    objTransforms[1] = Mat33(600, 300, 200, 270);
     mInit = false;
 }
 

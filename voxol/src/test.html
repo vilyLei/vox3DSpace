@@ -46,6 +46,7 @@ uniform mat3 u_matrix;
 void main() {
     vec3 pos = u_matrix * vec3(a_position, 1.0);
     gl_Position = vec4(pos.xy, 0.0, 1.0);
+    // gl_Position = vec4(a_position, 0.0, 1.0);
 }
 `;
 
@@ -96,6 +97,15 @@ void main() {
         }
 
         function getVerts01() {
+            // const rectVertices = new Float32Array([
+            //     -0.5, -0.5,
+            //     0.5, -0.5,
+            //     -0.5, 0.5,
+            //     -0.5, 0.5,
+            //     0.5, -0.5,
+            //     0.5, 0.5,
+            // ]);
+            // return rectVertices;
             let x = 0, y = 0, w = 1, h = 1;
             let verts = new Float32Array([
                 x, y,
@@ -117,11 +127,16 @@ void main() {
             gl.bindBuffer(gl.ARRAY_BUFFER, vbo);
             gl.bufferData(gl.ARRAY_BUFFER, verts, gl.STATIC_DRAW);
 
-            const a_position = gl.getAttribLocation(program, "a_position");
-            // const a_texcoord = gl.getAttribLocation(program, "a_texcoord");
-            gl.enableVertexAttribArray(a_position);
-            gl.vertexAttribPointer(a_position, 2, gl.FLOAT, false, 8, 0);
-            return { program: program, vao: vao, locs: [a_position] };
+            // const posLoc = gl.getAttribLocation(program, "a_position");
+            // // const a_texcoord = gl.getAttribLocation(program, "a_texcoord");
+            // gl.enableVertexAttribArray(posLoc);
+            // gl.vertexAttribPointer(posLoc, 2, gl.FLOAT, false, 0, 0);
+
+            const posLoc = gl.getAttribLocation(program, "a_position");
+            gl.enableVertexAttribArray(posLoc);
+            gl.vertexAttribPointer(posLoc, 2, gl.FLOAT, false, 0, 0);
+
+            return { program: program, vao: vao, locs: [posLoc] };
         }
         function useVAO(gl, vao) {
             gl.bindVertexArray(vao);
@@ -137,8 +152,7 @@ void main() {
         var prog_0 = null;
         var vao_0 = null;
 
-        function initRender(gl) {
-            //vertShaderSource
+        function initRender(gl) {            
             var program = createShaderProgram(gl, vertShaderSource, fragShaderSource);
             let matrixLoc = gl.getUniformLocation(program, "u_matrix");
             let colorLoc = gl.getUniformLocation(program, "u_color");
@@ -149,10 +163,13 @@ void main() {
 
             glRenderBegin(gl, vw, vh);
 
+            // console.log("vw, vh: ", vw, vh);
+            // console.log("vao_0.program: ", vao_0.program);
+            // console.log("vao_0.vao: ", vao_0.vao);
             gl.useProgram(prog_0.program);
             gl.bindVertexArray(vao_0.vao);
 
-            let matvs = new Float32Array(8);
+            let matvs = new Float32Array([1, 0, 0, 0, 1, 0, 0, 0, 1]);
             matvs = dataF32.subarray(0, 9);
 
             // let f32Str = "";
@@ -163,11 +180,16 @@ void main() {
             // console.log("f32Str: ", f32Str);
 
             let color = new Float32Array([0.0, 0.6, 0.0, 1.0]);
-            gl.uniform4fv(prog_0.colorLoc, color);
+            gl.uniform4fv(prog_0.colorLoc, color);            
             gl.uniformMatrix3fv(prog_0.matrixLoc, false, matvs, 0, 9);
+            gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
 
-            // gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
-            gl.drawArrays(gl.TRIANGLES, 0, 3);
+            matvs = dataF32.subarray(9, 18);
+            color = new Float32Array([0.0, 0.6, 0.6, 1.0]);
+            gl.uniform4fv(prog_0.colorLoc, color);            
+            gl.uniformMatrix3fv(prog_0.matrixLoc, false, matvs, 0, 9);
+            gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+            // gl.drawArrays(gl.TRIANGLES, 0, 6);
 
         }
 
@@ -322,18 +344,20 @@ void main() {
             console.log("cmdU32Arr[0]: ", cmdU32Arr[0], ", cmdU32Arr[1]: ", cmdU32Arr[1]);
             let cmdBufF32Arr = new Float32Array(heap.buffer);
             cmdBufF32Arr = cmdBufF32Arr.subarray(cmdBufU8Ptr / 4);
-            let f32Str = "";
-            for (let i = 0; i < 9; i++) {
-                f32Str += (i > 0 ? "," : "") + cmdBufF32Arr[i];
-            }
-            console.log("f32Str: ", f32Str);
+
+            // let f32Str = "";
+            // for (let i = 0; i < 9; i++) {
+            //     f32Str += (i > 0 ? "," : "") + cmdBufF32Arr[i];
+            // }
+            // console.log("f32Str: ", f32Str);
+
             let cmdsTotal = getCmdsTotalExec();
             console.log("cmdsTotal: ", cmdsTotal);
 
             //glRenderBegin(gl, canvas.width, canvas.heght);
 
             initRender(gl);
-            render(gl, canvas.width, canvas.heght, cmdBufF32Arr);
+            render(gl, canvas.width, canvas.height, cmdBufF32Arr);
         };
 
         VoxModule().then(Module => {
