@@ -34,6 +34,9 @@ void RenderCmdWorld::setGPUCtxSize(int w, int h) {
 
 void RenderCmdWorld::setMouseXY(float x, float y)
 {
+    using namespace Voxol::Math;
+    objTransforms[0] = Mat33(x, y, 150, 150);
+    dirty = true;
 }
 void RenderCmdWorld::run()
 {

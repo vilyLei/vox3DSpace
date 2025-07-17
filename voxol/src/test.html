@@ -372,8 +372,6 @@ void main() {
             const setGPUCtxSize = Module.cwrap("setGPUCtxSize", null, ["number", "number"]);
             const setMouseParams = Module.cwrap("setMouseParams", null, ["number", "number", "number", "number"]);
 
-            mouseFunc = setMouseParams;
-
             let preHeapSize = 0;
             setInterval(() => {
                 const size = getHeapSize();
@@ -464,6 +462,16 @@ void main() {
                 textures.push(tex);
                 render(gl, canvas.width, canvas.height, cmdBufF32Arr);
             });
+
+            // mouseFunc = funsetMouseParams;
+            mouseFunc = function (px, py, type, flag) {
+                setMouseParams(px, py, type, flag);
+                // console.log('mouseFunc mosuePos(x=' + x + ', y=' + y + ')');
+
+                runExec();
+                render(gl, canvas.width, canvas.height, cmdBufF32Arr);
+            }
+
         };
 
         VoxModule().then(Module => {
