@@ -20,6 +20,15 @@ void RenderCmdWorld::initialize()
     auto total = rn * cn;
     auto rsize = 32;
 
+    size_t bufIndex = 0;
+    buffer.resize(total * 2 * sizeof(Mat33));
+    // build head data
+    uint32_t headData[2]{0xffffffff,0xffffffff};
+    auto bytesTotal = sizeof(headData);
+    std::memcpy(buffer.data(), headData, bytesTotal);
+    bufIndex = bytesTotal;
+
+
     commands.resize(total);
     transforms.resize(total);
     objTransforms.resize(total);

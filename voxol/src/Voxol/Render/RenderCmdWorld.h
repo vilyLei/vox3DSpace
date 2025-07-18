@@ -17,6 +17,9 @@ namespace Voxol::Render
         std::vector<Voxol::Math::Mat33> objTransforms{};
         std::vector<Voxol::Math::Mat33> transforms{};
         Voxol::Math::Mat33 projMat{};
+
+        std::vector<uint8_t> buffer{};
+
         bool dirty = true;
 
     public:

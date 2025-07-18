@@ -195,7 +195,7 @@ extern "C"
     {
 
         printf("voxol main setMouseParams mouseParam(x=%f, y=%f, type=%d, flag=:%d)\n", x, y, type, flag);
-        
+
         rcmdWorld.setMouseXY(x, y);
         renderer.setMouseXY(x, y);
         renderer.render();

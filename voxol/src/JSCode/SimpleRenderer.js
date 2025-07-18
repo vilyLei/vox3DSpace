@@ -337,13 +337,11 @@ export class SimpleRenderer {
 
         let rcmsTotal = this.rcmsTotal;
 
-        if (rcmsTotal < 1) {
+        if (rcmsTotal < 1 || this.glCtx == null) {
             return;
         }
 
         let gl = this.glCtx;
-        let vw = this.ctxWidth;
-        let vh = this.ctxHeight;
         this.runBegin();
 
         dataF32 = dataF32 != null ? dataF32 : this.dataF32;
