@@ -130,6 +130,8 @@
                 canvas.style.height = `${h / dpr}px`;
 
                 setGPUCtxSize(w, h);
+                renderer.setCtxSize(canvas.width, canvas.height);
+                renderer.run(null);
             }
 
             window.addEventListener('resize', () => {
@@ -166,8 +168,6 @@
             renderer.rcmsTotal = cmdsTotal;
             console.log("cmdsTotal: ", cmdsTotal);
 
-            // initRender(gl);
-            // render(gl, canvas.width, canvas.height, cmdBufF32Arr);
             renderer.initialize(gl, canvas.width, canvas.height);
             renderer.run(cmdBufF32Arr);
 

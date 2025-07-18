@@ -1,10 +1,83 @@
 function testDo() {
     console.log("testDo() ...\n");
 }
+const vertSource = `#version 300 es
+precision highp float;
+
+layout(location = 0) in vec2 a_pos;
+
+uniform mat3 u_matrix;
+
+void main() {
+    vec3 pos = u_matrix * vec3(a_pos, 1.0);
+    gl_Position = vec4(pos.xy, 0.0, 1.0);
+}
+`;
+
+        const fragSource = `#version 300 es
+precision mediump float;
+uniform vec4 u_color;
+out vec4 outColor;
+void main() {
+    //outColor = vec4(1.0, 0.8, 0.8, 1.0);
+    outColor = u_color;
+}
+`;
+
+const vertTexSource = `#version 300 es
+precision highp float;
+
+layout(location = 0) in vec2 a_pos;
+layout(location = 1) in vec2 a_uv;
+
+uniform mat3 u_matrix;
+out vec2 v_uv;
+void main() {
+    v_uv = a_uv;
+    vec3 pos = u_matrix * vec3(a_pos, 1.0);
+    gl_Position = vec4(pos.xy, 0.0, 1.0);
+}
+`;
+
+const fragTexSource = `#version 300 es
+precision mediump float;
+uniform vec4 u_color;
+in vec2 v_uv;
+uniform sampler2D u_tex;
+out vec4 fragColor;
+void main() {
+    fragColor = texture(u_tex, v_uv) * u_color;
+}
+`;
+
+
+function getVerts() {
+    let x = 0, y = 0, w = 1, h = 1;
+    let verts = new Float32Array([
+        x, y,
+        x + w, y,
+        x, y + h,
+        x + w, y + h]
+    );
+    return verts;
+}
+
+function getVertsWithUV() {
+    let x = 0, y = 0, w = 1, h = 1;
+    let verts = new Float32Array([
+        x, y, 0, 0,
+        x + w, y, 1, 0,
+        x, y + h, 0, 1,
+        x + w, y + h, 1, 1
+    ]
+    );
+    return verts;
+}
 export class SimpleRenderer {
 
     constructor(canvas) {
 
+        this.dataF32 = null;
         this.glCtx = null;
         this.ctxWidth = 512;
         this.ctxHeight = 512;
@@ -26,72 +99,24 @@ export class SimpleRenderer {
 
         console.log("SimpleRenderer::initialize() ...\n");
 
-        this.vertSource = `#version 300 es
-precision highp float;
-
-layout(location = 0) in vec2 a_pos;
-
-uniform mat3 u_matrix;
-
-void main() {
-    vec3 pos = u_matrix * vec3(a_pos, 1.0);
-    gl_Position = vec4(pos.xy, 0.0, 1.0);
-}
-`;
-
-        this.fragSource = `#version 300 es
-precision mediump float;
-uniform vec4 u_color;
-out vec4 outColor;
-void main() {
-    //outColor = vec4(1.0, 0.8, 0.8, 1.0);
-    outColor = u_color;
-}
-`;
-
-        this.vertTexSource = `#version 300 es
-precision highp float;
-
-layout(location = 0) in vec2 a_pos;
-layout(location = 1) in vec2 a_uv;
-
-uniform mat3 u_matrix;
-out vec2 v_uv;
-void main() {
-    v_uv = a_uv;
-    vec3 pos = u_matrix * vec3(a_pos, 1.0);
-    gl_Position = vec4(pos.xy, 0.0, 1.0);
-}
-`;
-
-        this.fragTexSource = `#version 300 es
-precision mediump float;
-uniform vec4 u_color;
-in vec2 v_uv;
-uniform sampler2D u_tex;
-out vec4 fragColor;
-void main() {
-    fragColor = texture(u_tex, v_uv) * u_color;
-}
-`;
         this.initRender(gl);
     }
 
 
     initRender(gl) {
 
-        var program = this.createShaderProgram(gl, this.vertSource, this.fragSource);
+        var program = this.createShaderProgram(gl, vertSource, fragSource);
         let matrixLoc = gl.getUniformLocation(program, "u_matrix");
         let colorLoc = gl.getUniformLocation(program, "u_color");
         this.prog_0 = { program: program, matrixLoc: matrixLoc, colorLoc: colorLoc };
-        this.vao_0 = this.createVAO(gl, program, this.getVerts());
+        this.vao_0 = this.createVAO(gl, program, getVerts());
 
-        program = this.createShaderProgram(gl, this.vertTexSource, this.fragTexSource);
+        program = this.createShaderProgram(gl, vertTexSource, fragTexSource);
         matrixLoc = gl.getUniformLocation(program, "u_matrix");
         colorLoc = gl.getUniformLocation(program, "u_color");
         let texLoc = gl.getUniformLocation(program, "u_tex");
         this.prog_tex = { program: program, matrixLoc: matrixLoc, colorLoc: colorLoc, texLoc: texLoc };
-        this.vao_tex = this.createTexVAO(gl, program, this.getVertsWithUV());
+        this.vao_tex = this.createTexVAO(gl, program, getVertsWithUV());
     }
 
     createShader(gl, type, source) {
@@ -125,29 +150,6 @@ void main() {
         const program = this.createProgram(gl, vs, fs);
 
         return program;
-    }
-
-    getVerts() {
-        let x = 0, y = 0, w = 1, h = 1;
-        let verts = new Float32Array([
-            x, y,
-            x + w, y,
-            x, y + h,
-            x + w, y + h]
-        );
-        return verts;
-    }
-
-    getVertsWithUV() {
-        let x = 0, y = 0, w = 1, h = 1;
-        let verts = new Float32Array([
-            x, y, 0, 0,
-            x + w, y, 1, 0,
-            x, y + h, 0, 1,
-            x + w, y + h, 1, 1
-        ]
-        );
-        return verts;
     }
 
     createVAO(gl, program, verts) {
@@ -249,6 +251,9 @@ void main() {
         let vw = this.ctxWidth;
         let vh = this.ctxHeight;
         this.runBegin(gl, vw, vh);
+
+        dataF32 = dataF32 != null ? dataF32 : this.dataF32;
+        this.dataF32 = dataF32;
 
         // console.log("vw, vh: ", vw, vh);
         // console.log("vao_0.program: ", vao_0.program);
