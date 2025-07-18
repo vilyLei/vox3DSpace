@@ -18,22 +18,17 @@
         }
     </style>
 
-    <!-- <script src="./build/my_app.js"></script> -->
     <script src="./build/voxolModule.js"></script>
 
-    <!-- <script type="module">
-        import AppModule from './build/app.js'; -->
     <script>
 
     </script>
 </head>
 
 <body>
-    <!-- voxol -->
 
     <canvas id="canvas"></canvas>
 
-    <!-- <script type="module"> -->
     <script type="module">
         import { SimpleRenderer } from './JSCode/SimpleRenderer.js';
         
@@ -43,118 +38,8 @@
 
         let renderer = new SimpleRenderer();
         renderer.initialize(gl);
-        /*
-        const vertSource = `#version 300 es
-precision highp float;
-
-layout(location = 0) in vec2 a_pos;
-
-uniform mat3 u_matrix;
-
-void main() {
-    vec3 pos = u_matrix * vec3(a_pos, 1.0);
-    gl_Position = vec4(pos.xy, 0.0, 1.0);
-}
-`;
-
-        const fragSource = `#version 300 es
-precision mediump float;
-uniform vec4 u_color;
-out vec4 outColor;
-void main() {
-    //outColor = vec4(1.0, 0.8, 0.8, 1.0);
-    outColor = u_color;
-}
-`;
-
-        const vertTexSource = `#version 300 es
-precision highp float;
-
-layout(location = 0) in vec2 a_pos;
-layout(location = 1) in vec2 a_uv;
-
-uniform mat3 u_matrix;
-out vec2 v_uv;
-void main() {
-    v_uv = a_uv;
-    vec3 pos = u_matrix * vec3(a_pos, 1.0);
-    gl_Position = vec4(pos.xy, 0.0, 1.0);
-}
-`;
-
-        const fragTexSource = `#version 300 es
-precision mediump float;
-uniform vec4 u_color;
-in vec2 v_uv;
-uniform sampler2D u_tex;
-out vec4 fragColor;
-void main() {
-    fragColor = texture(u_tex, v_uv) * 0.5 + vec4(v_uv, 1.0, 1.0) * u_color * 0.5;
-}
-`;
-
-        // function glRenderBegin(gl, vw, vh) {
-        //     gl.clearColor(0.95, 0.95, 0.95, 1);
-        //     gl.clear(gl.COLOR_BUFFER_BIT);
-        //     gl.viewport(0, 0, vw, vh);
-        // }
 
 
-        var prog_0 = null;
-        var vao_0 = null;
-        var prog_tex = null;
-        var vao_tex = null;
-        var textures = [];
-        let rcmsTotal = 0;
-
-        function initRender(gl) {
-
-            var program = renderer.createShaderProgram(gl, vertSource, fragSource);
-            let matrixLoc = gl.getUniformLocation(program, "u_matrix");
-            let colorLoc = gl.getUniformLocation(program, "u_color");
-            prog_0 = { program: program, matrixLoc: matrixLoc, colorLoc: colorLoc };
-            vao_0 = renderer.createVAO(gl, program, renderer.getVerts());
-
-
-            program = renderer.createShaderProgram(gl, vertTexSource, fragTexSource);
-            matrixLoc = gl.getUniformLocation(program, "u_matrix");
-            colorLoc = gl.getUniformLocation(program, "u_color");
-            let texLoc = gl.getUniformLocation(program, "u_tex");
-            prog_tex = { program: program, matrixLoc: matrixLoc, colorLoc: colorLoc, texLoc: texLoc };
-            vao_tex = renderer.createTexVAO(gl, program, renderer.getVertsWithUV());
-        }
-
-        function render(gl, vw, vh, dataF32) {
-
-            if (rcmsTotal < 1) {
-                return;
-            }
-            renderer.runBegin(gl, vw, vh);
-
-            // console.log("vw, vh: ", vw, vh);
-            // console.log("vao_0.program: ", vao_0.program);
-            // console.log("vao_0.vao: ", vao_0.vao);
-            gl.useProgram(prog_0.program);
-            gl.bindVertexArray(vao_0.vao);
-
-            let matvs = new Float32Array([1, 0, 0, 0, 1, 0, 0, 0, 1]);
-            matvs = dataF32.subarray(0, 9);
-
-            // let f32Str = "";
-            // for (let i = 0; i < matvs.length; i++) {
-            //     f32Str += (i > 0 ? "," : "") + matvs[i];
-            // }
-            // console.log("matvs.length: ", matvs.length);
-            // console.log("f32Str: ", f32Str);
-
-
-            for (let i = 2; i < rcmsTotal; ++i) {
-                matvs = dataF32.subarray(i * 9, (i + 1) * 9);
-                gl.uniformMatrix3fv(prog_0.matrixLoc, false, matvs, 0, 9);
-                gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
-            }
-
-        }
         //*///
 
         var mouseFunc = function (px, py, type, flag) {
