@@ -38,8 +38,8 @@ void RenderCmdWorld::initialize()
         auto py = 50 + (i * (rsize + 1));
         for (auto j = 0; j < cn; ++j)
         {
-            auto px = 50 + (j * (rsize + 1));
-            commands[index] = 1;
+            auto px              = 50 + (j * (rsize + 1));
+            commands[index]      = 1;
             objTransforms[index] = Mat33(px, py, rsize, rsize);
 
             index++;
@@ -51,7 +51,7 @@ void RenderCmdWorld::initialize()
     // objTransforms[0] = Mat33(500, 200, 150, 150);
     // objTransforms[1] = Mat33(600, 300, 200, 270);
 
-    mInit            = false;
+    mInit = false;
 }
 
 void RenderCmdWorld::setGPUCtxSize(int w, int h)
@@ -80,14 +80,21 @@ void RenderCmdWorld::run()
 
     auto total = objTransforms.size();
 
-    uint32_t default_cmd = 0x33;    
-    auto bufIndex = sizeof(mHeadData);
+    uint32_t default_cmd = 0x33;
+    auto     bufIndex    = sizeof(mHeadData);
 
     for (auto i = 0; i < total; i++)
     {
         transforms[i] = objTransforms[i];
         transforms[i].prepend(projMat);
     }
+}
+
+
+const uint8_t* RenderCmdWorld::cmdBuffer() const
+{
+    return transforms.data();
+    //buffer.data()
 }
 
 } // namespace Voxol::Render

@@ -1,0 +1,22 @@
+{
+    "configurations": [
+        {
+            "name": "Wasm",
+            "includePath": [
+                "${workspaceFolder}/**"
+            ],
+            "defines": [
+                "_DEBUG",
+                "UNICODE",
+                "_UNICODE",
+                "__EMSCRIPTEN__"
+            ],
+            "windowsSdkVersion": "10.0.20348.0",
+            "compilerPath": "cl.exe",
+            "cStandard": "c20",
+            "cppStandard": "c++20",
+            "intelliSenseMode": "windows-msvc-x64"
+        }
+    ],
+    "version": 4
+}

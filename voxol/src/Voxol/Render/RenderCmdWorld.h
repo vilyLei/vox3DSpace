@@ -34,6 +34,7 @@ public:
     void run();
     void setGPUCtxSize(int w, int h);
     void setMouseXY(float x, float y);
+    const uint8_t* cmdBuffer() const;
 };
 
 } // namespace Voxol::Render

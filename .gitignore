@@ -47,4 +47,5 @@ space3d-vs/
 space3d/libs/spdlog/lib/
 voxol/src/build/
 voxol/src-vs/
+voxol/src-vs/
 *.code-workspace

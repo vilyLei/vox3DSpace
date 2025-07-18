@@ -3,9 +3,6 @@
 
 #include <cstdint>
 
-// for debug
-#define __EMSCRIPTEN__ 1
-
 constexpr size_t DEFAULT_SLAB_BLOCK_SIZE = 64 * 1024;
 
 using VoxolEntity = uint32_t;
