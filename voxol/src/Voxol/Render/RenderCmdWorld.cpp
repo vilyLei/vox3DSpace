@@ -49,6 +49,7 @@ void RenderCmdWorld::initialize()
 void RenderCmdWorld::setGPUCtxSize(int w, int h)
 {
     projMat.ortho(w, h);
+    dirty = true;
 }
 
 void RenderCmdWorld::setMouseXY(float x, float y)

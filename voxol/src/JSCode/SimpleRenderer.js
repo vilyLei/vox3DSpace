@@ -230,7 +230,7 @@ export class SimpleRenderer {
 
     setCtxSize(vw, vh) {
         this.ctxWidth = vw;
-        this.ctxHeight = vw;
+        this.ctxHeight = vh;
     }
     runBegin(gl, vw, vh) {
 

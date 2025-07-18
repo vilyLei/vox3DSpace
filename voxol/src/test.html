@@ -31,7 +31,7 @@
 
     <script type="module">
         import { SimpleRenderer } from './JSCode/SimpleRenderer.js';
-        
+
         const canvas = document.getElementById('canvas');
         const gl = canvas.getContext("webgl2");
 
@@ -106,6 +106,13 @@
             const setGPUCtxSize = Module.cwrap("setGPUCtxSize", null, ["number", "number"]);
             const setMouseParams = Module.cwrap("setMouseParams", null, ["number", "number", "number", "number"]);
 
+
+            const runExec = Module.cwrap("run");
+            const getCmdsTotalExec = Module.cwrap("getCmdsTotal", "number");
+            const getCmdsExec = Module.cwrap("getCmds", "number");
+            const getRenderCmdBufferExec = Module.cwrap("getRenderCmdBuffer", "number");
+
+
             let preHeapSize = 0;
             setInterval(() => {
                 const size = getHeapSize();
@@ -115,7 +122,10 @@
                 }
             }, 1000);
 
+
             const heap = Module.HEAPU8; // JS 端的视图
+
+            let cmdU32Arr = new Uint32Array(heap.buffer);
             function resizeCanvas() {
 
                 console.log("window.devicePixelRatio: ", window.devicePixelRatio);
@@ -130,7 +140,10 @@
                 canvas.style.height = `${h / dpr}px`;
 
                 setGPUCtxSize(w, h);
-                renderer.setCtxSize(canvas.width, canvas.height);
+                renderer.setCtxSize(w, h);
+
+                runExec();
+
                 renderer.run(null);
             }
 
@@ -140,17 +153,11 @@
             resizeCanvas();
             // startup();
 
-
-            const runExec = Module.cwrap("run");
-            const getCmdsTotalExec = Module.cwrap("getCmdsTotal", "number");
-            const getCmdsExec = Module.cwrap("getCmds", "number");
-            const getRenderCmdBufferExec = Module.cwrap("getRenderCmdBuffer", "number");
-
             runExec();
 
             let cmdU8Ptr = getCmdsExec();
             let cmdBufU8Ptr = getRenderCmdBufferExec();
-            let cmdU32Arr = new Uint32Array(heap.buffer);
+            cmdU32Arr = new Uint32Array(heap.buffer);
             console.log("cmdU8Ptr: ", cmdU8Ptr);
             console.log("cmdBufU8Ptr: ", cmdBufU8Ptr);
             cmdU32Arr = cmdU32Arr.subarray(cmdU8Ptr / 4);
