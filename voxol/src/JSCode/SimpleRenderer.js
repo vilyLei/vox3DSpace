@@ -4,6 +4,8 @@ function testDo() {
 export class SimpleRenderer {
     constructor(canvas) {
         this.gl = null;
+        this.ctxWidth = 512;
+        this.ctxHeight = 512;
     }
     initialize(glCtx) {
 
@@ -186,5 +188,30 @@ void main() {
             callback(tex);
         };
         img.src = url;
+    }
+    
+    normlizeViewSize() {
+
+        let pw = window.innerWidth;
+        let ph = window.innerHeight;
+        const dpr = window.devicePixelRatio || 1;
+        pw = Math.round(pw * dpr);
+        ph = Math.round(ph * dpr);
+        return [pw, ph];
+    }
+
+    runBegin(gl, vw, vh) {
+
+        this.ctxWidth = vw;
+        this.ctxHeight = vw;
+        gl.clearColor(0.95, 0.95, 0.95, 1);
+        gl.clear(gl.COLOR_BUFFER_BIT);
+        gl.viewport(0, 0, vw, vh);
+    }
+    run(gl) {
+
+    }
+    runEnd(gl) {
+
     }
 }

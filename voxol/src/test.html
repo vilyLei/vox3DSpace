@@ -92,144 +92,18 @@ void main() {
     fragColor = texture(u_tex, v_uv) * 0.5 + vec4(v_uv, 1.0, 1.0) * u_color * 0.5;
 }
 `;
-/*
-        function createShader(gl, type, source) {
-            const shader = gl.createShader(type);
-            gl.shaderSource(shader, source);
-            gl.compileShader(shader);
-            if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-                console.error(gl.getShaderInfoLog(shader));
-                gl.deleteShader(shader);
-                return null;
-            }
-            return shader;
-        }
 
-        function createProgram(gl, vs, fs) {
-            const program = gl.createProgram();
-            gl.attachShader(program, vs);
-            gl.attachShader(program, fs);
-            gl.linkProgram(program);
-            if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
-                console.error(gl.getProgramInfoLog(program));
-                return null;
-            }
-            return program;
-        }
-
-
-        function createShaderProgram(gl, vsSource, fsSource) {
-
-            const vs = createShader(gl, gl.VERTEX_SHADER, vsSource);
-            const fs = createShader(gl, gl.FRAGMENT_SHADER, fsSource);
-            const program = createProgram(gl, vs, fs);
-
-            return program;
-        }
-        //*/
-        /*
-        function getVerts() {
-            let x = 0, y = 0, w = 1, h = 1;
-            let verts = new Float32Array([
-                x, y,
-                x + w, y,
-                x, y + h,
-                x + w, y + h]
-            );
-            return verts;
-        }
-
-        function getVertsWithUV() {
-            let x = 0, y = 0, w = 1, h = 1;
-            let verts = new Float32Array([
-                x, y, 0, 0,
-                x + w, y, 1, 0,
-                x, y + h, 0, 1,
-                x + w, y + h, 1, 1
-            ]
-            );
-            return verts;
-        }
-
-        function createVAO(gl, program, verts) {
-
-            //vertexAttribIPointer(index, size, type, stride, offset)
-
-            const vao = gl.createVertexArray();
-            gl.bindVertexArray(vao);
-
-            const vbo = gl.createBuffer();
-            gl.bindBuffer(gl.ARRAY_BUFFER, vbo);
-            gl.bufferData(gl.ARRAY_BUFFER, verts, gl.STATIC_DRAW);
-
-            const posLoc = gl.getAttribLocation(program, "a_pos");
-            gl.enableVertexAttribArray(posLoc);
-            gl.vertexAttribPointer(posLoc, 2, gl.FLOAT, false, 8, 0);
-
-            return { program: program, vao: vao, locs: [posLoc] };
-        }
-
-        function createTexVAO(gl, program, verts) {
-
-            //vertexAttribIPointer(index, size, type, stride, offset)
-
-            const vao = gl.createVertexArray();
-            gl.bindVertexArray(vao);
-
-            const vbo = gl.createBuffer();
-            gl.bindBuffer(gl.ARRAY_BUFFER, vbo);
-            gl.bufferData(gl.ARRAY_BUFFER, verts, gl.STATIC_DRAW);
-
-            const posLoc = gl.getAttribLocation(program, "a_pos");
-            const uvLoc = gl.getAttribLocation(program, "a_uv");
-            gl.enableVertexAttribArray(posLoc);
-            gl.vertexAttribPointer(posLoc, 2, gl.FLOAT, false, 16, 0);
-            gl.enableVertexAttribArray(uvLoc);
-            gl.vertexAttribPointer(uvLoc, 2, gl.FLOAT, false, 16, 8);
-
-            return { program: program, vao: vao, locs: [posLoc, uvLoc] };
-        }
-        
-        function createTextureFromImage(gl, image) {
-            const tex = gl.createTexture();
-            gl.bindTexture(gl.TEXTURE_2D, tex);
-
-            gl.texImage2D(
-                gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA,
-                gl.UNSIGNED_BYTE, image
-            );
-
-            // 设置贴图参数
-            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-            gl.generateMipmap(gl.TEXTURE_2D);
-
-            return tex;
-        }
-
-        function loadImageAndCreateTexture(gl, url, callback) {
-            const img = new Image();
-            img.onload = () => {
-                const tex = createTextureFromImage(gl, img);
-                callback(tex);
-            };
-            img.src = url;
-        }
-        //*/
-        function glRenderBegin(gl, vw, vh) {
-            gl.clearColor(0.95, 0.95, 0.95, 1);
-            gl.clear(gl.COLOR_BUFFER_BIT);
-            gl.viewport(0, 0, vw, vh);
-        }
+        // function glRenderBegin(gl, vw, vh) {
+        //     gl.clearColor(0.95, 0.95, 0.95, 1);
+        //     gl.clear(gl.COLOR_BUFFER_BIT);
+        //     gl.viewport(0, 0, vw, vh);
+        // }
 
 
         var prog_0 = null;
         var vao_0 = null;
-
         var prog_tex = null;
         var vao_tex = null;
-
         var textures = [];
 
         function initRender(gl) {
@@ -256,7 +130,7 @@ void main() {
             if (rcmsTotal < 1) {
                 return;
             }
-            glRenderBegin(gl, vw, vh);
+            renderer.runBegin(gl, vw, vh);
 
             // console.log("vw, vh: ", vw, vh);
             // console.log("vao_0.program: ", vao_0.program);
@@ -317,15 +191,6 @@ void main() {
 
         // import VoxModule from './build/voxModule.js';
 
-        function normlizeViewSize() {
-
-            let pw = window.innerWidth;
-            let ph = window.innerHeight;
-            const dpr = window.devicePixelRatio || 1;
-            pw = Math.round(pw * dpr);
-            ph = Math.round(ph * dpr);
-            return [pw, ph];
-        }
 
         var mouseFunc = function (px, py, type, flag) {
             console.log('mouseFunc mosuePos(x=' + x + ', y=' + y + ')');
@@ -400,41 +265,20 @@ void main() {
                 }
             }, 1000);
 
-
-            // const getPtr = Module.cwrap("get_buffer_ptr", "number", []);
-            // const setVal = Module.cwrap("set_buffer_value", null, ["number", "number"]);
-            // const ptr = getPtr(); // 获取 WASM 内存中 buffer 的起始地址
-            // console.log("ptr: ", ptr);
             const heap = Module.HEAPU8; // JS 端的视图
-            // let u8Arr = new Uint8Array(4);
-            // u8Arr = heap.subarray(ptr);
-            // console.log("(typeof(heap): ", typeof (heap));
-            // heap[ptr + 0] = 42;    // 写入 WASM 内存
-            // heap[ptr + 1] = 255;
-            // u8Arr[1] = 31;
-            // setVal(10, 77);        // C++ 也可写入
-            // console.log("heap[ptr + 10]: ", heap[ptr + 10]); // 77
-            // console.log("heap[ptr + 1]: ", heap[ptr + 1]); // 31
-            // console.log("u8Arr[1]: ", u8Arr[1]); // 31
-
             function resizeCanvas() {
 
                 console.log("window.devicePixelRatio: ", window.devicePixelRatio);
                 const dpr = window.devicePixelRatio || 1;
 
-                // canvas.width = window.innerWidth * dpr;
-                // canvas.height = window.innerHeight * dpr;
-                // canvas.style.width = window.innerWidth + 'px';
-                // canvas.style.height = window.innerHeight + 'px';
-                // setGPUCtxSize(canvas.width, canvas.height);
-
-                const [w, h] = normlizeViewSize();
+                const [w, h] = renderer.normlizeViewSize();
 
                 canvas.width = w;
                 canvas.height = h;
 
                 canvas.style.width = `${w / dpr}px`;
                 canvas.style.height = `${h / dpr}px`;
+
                 setGPUCtxSize(w, h);
             }
 
@@ -483,7 +327,6 @@ void main() {
                 render(gl, canvas.width, canvas.height, cmdBufF32Arr);
             });
 
-            // mouseFunc = funsetMouseParams;
             mouseFunc = function (px, py, type, flag) {
                 setMouseParams(px, py, type, flag);
                 // console.log('mouseFunc mosuePos(x=' + x + ', y=' + y + ')');
