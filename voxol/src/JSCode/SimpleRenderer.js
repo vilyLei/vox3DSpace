@@ -14,7 +14,7 @@ void main() {
 }
 `;
 
-        const fragSource = `#version 300 es
+const fragSource = `#version 300 es
 precision mediump float;
 uniform vec4 u_color;
 out vec4 outColor;
@@ -85,21 +85,78 @@ class BaseFBOIns {
         gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, width, height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-    
+
         this.fbo = gl.createFramebuffer();
         gl.bindFramebuffer(gl.FRAMEBUFFER, this.fbo);
         gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, this.fboTex, 0);
-        gl.bindFramebuffer(gl.FRAMEBUFFER, null);    
+        gl.bindFramebuffer(gl.FRAMEBUFFER, null);
     }
-    
+
     bindFBO(gl, width, height) {
         gl.bindFramebuffer(gl.FRAMEBUFFER, this.fbo);
         gl.viewport(0, 0, width, height);
     }
-    
-    unbindFBO(gl, screenWidth, screenHeight) {
+
+    unbindFBO(gl, width, height) {
         gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-        gl.viewport(0, 0, screenWidth, screenHeight);
+        gl.viewport(0, 0, width, height);
+    }
+}
+
+class MSAAFBOIns {
+    constructor() {
+        this.msaaFBO = null;
+        this.fbo = null;
+        this.fboTex = null;
+    }
+    initFBO(gl, width, height, samples = 2) {
+
+        // 创建多重采样颜色缓冲区（renderbuffer）
+        const colorRenderbuffer = gl.createRenderbuffer();
+        gl.bindRenderbuffer(gl.RENDERBUFFER, colorRenderbuffer);
+        gl.renderbufferStorageMultisample(gl.RENDERBUFFER, samples, gl.RGBA8, width, height);
+
+        // 创建多重采样的 framebuffer
+        this.msaaFBO = gl.createFramebuffer();
+        gl.bindFramebuffer(gl.FRAMEBUFFER, this.msaaFBO);
+        gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.RENDERBUFFER, colorRenderbuffer);
+
+        // 创建目标纹理（非多重采样）
+        this.fboTex = gl.createTexture();
+        gl.bindTexture(gl.TEXTURE_2D, this.fboTex);
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, width, height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+
+        // 创建一个用于 resolve 的普通 FBO
+        this.fbo = gl.createFramebuffer();
+        gl.bindFramebuffer(gl.FRAMEBUFFER, this.fbo);
+        gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, this.fboTex, 0);
+
+        // 清理绑定
+        gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+        gl.bindRenderbuffer(gl.RENDERBUFFER, null);
+    }
+
+    bindFBO(gl, width, height) {
+        gl.bindFramebuffer(gl.FRAMEBUFFER, this.msaaFBO);
+        gl.viewport(0, 0, width, height);
+    }
+
+    unbindFBO(gl, width, height) {
+
+        gl.bindFramebuffer(gl.READ_FRAMEBUFFER, this.msaaFBO);
+        gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, this.resolveFBO);
+        gl.blitFramebuffer(
+            0, 0, width, height,
+            0, 0, width, height,
+            gl.COLOR_BUFFER_BIT,
+            gl.NEAREST
+        );
+
+        // 恢复默认帧缓冲
+        gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+        gl.viewport(0, 0, width, height);
     }
 }
 export class SimpleRenderer {
@@ -275,7 +332,7 @@ export class SimpleRenderer {
         gl.clear(gl.COLOR_BUFFER_BIT);
         gl.viewport(0, 0, vw, vh);
     }
-    
+
     run(dataF32) {
 
         let rcmsTotal = this.rcmsTotal;
@@ -320,7 +377,7 @@ export class SimpleRenderer {
         // gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
 
         if (this.textures.length > 0) {
-            
+
             let tex = this.textures[0];
             // console.log("xxxxxxxxx tex: ", tex);
             gl.useProgram(this.prog_tex.program);
