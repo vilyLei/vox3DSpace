@@ -23,9 +23,8 @@ void RenderCmdWorld::initialize()
     size_t bufIndex = 0;
     buffer.resize(total * 2 * sizeof(Mat33));
     // build head data
-    uint32_t headData[2]{0xffffffff,0xffffffff};
-    auto bytesTotal = sizeof(headData);
-    std::memcpy(buffer.data(), headData, bytesTotal);
+    auto bytesTotal = sizeof(mHeadData);
+    std::memcpy(buffer.data(), mHeadData, bytesTotal);
     bufIndex = bytesTotal;
 
 
@@ -80,6 +79,9 @@ void RenderCmdWorld::run()
     printf("RenderCmdWorld::run() objTransforms.size(): %zu\n", objTransforms.size());
 
     auto total = objTransforms.size();
+
+    uint32_t default_cmd = 0x33;    
+    auto bufIndex = sizeof(mHeadData);
 
     for (auto i = 0; i < total; i++)
     {
