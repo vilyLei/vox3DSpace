@@ -271,6 +271,7 @@ void main() {
         // gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
 
         if (this.textures.length > 0) {
+            
             let tex = this.textures[0];
             // console.log("xxxxxxxxx tex: ", tex);
             gl.useProgram(this.prog_tex.program);

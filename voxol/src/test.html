@@ -147,38 +147,6 @@ void main() {
             // console.log("matvs.length: ", matvs.length);
             // console.log("f32Str: ", f32Str);
 
-            let color = new Float32Array([0.0, 0.6, 0.0, 1.0]);
-            gl.uniform4fv(prog_0.colorLoc, color);
-            gl.uniformMatrix3fv(prog_0.matrixLoc, false, matvs, 0, 9);
-            gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
-
-            // matvs = dataF32.subarray(9, 18);
-            // color = new Float32Array([0.0, 0.6, 0.6, 1.0]);
-            // gl.uniform4fv(prog_0.colorLoc, color);
-            // gl.uniformMatrix3fv(prog_0.matrixLoc, false, matvs, 0, 9);
-            // gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
-
-            if (textures.length > 0) {
-                let tex = textures[0];
-                // console.log("xxxxxxxxx tex: ", tex);
-                gl.useProgram(prog_tex.program);
-                gl.bindVertexArray(vao_tex.vao);
-
-                matvs = dataF32.subarray(9, 18);
-                gl.uniformMatrix3fv(prog_tex.matrixLoc, false, matvs, 0, 9);
-
-                color = new Float32Array([0.6, 0.0, 0.6, 1.0]);
-                gl.uniform4fv(prog_tex.colorLoc, color);
-                gl.activeTexture(gl.TEXTURE0);
-                gl.bindTexture(gl.TEXTURE_2D, tex);
-                gl.uniform1i(prog_tex.texLoc, 0);
-                gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
-            }
-
-            gl.useProgram(prog_0.program);
-            gl.bindVertexArray(vao_0.vao);
-            color = new Float32Array([0.0, 0.6, 0.6, 1.0]);
-            gl.uniform4fv(prog_0.colorLoc, color);
 
             for (let i = 2; i < rcmsTotal; ++i) {
                 matvs = dataF32.subarray(i * 9, (i + 1) * 9);
