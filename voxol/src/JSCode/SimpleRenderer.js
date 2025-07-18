@@ -73,12 +73,44 @@ function getVertsWithUV() {
     );
     return verts;
 }
+class BaseFBOIns {
+    constructor() {
+        this.fbo = null;
+        this.fboTex = null;
+    }
+
+    initFBO(gl, width, height) {
+        this.fboTex = gl.createTexture();
+        gl.bindTexture(gl.TEXTURE_2D, this.fboTex);
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, width, height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+    
+        this.fbo = gl.createFramebuffer();
+        gl.bindFramebuffer(gl.FRAMEBUFFER, this.fbo);
+        gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, this.fboTex, 0);
+        gl.bindFramebuffer(gl.FRAMEBUFFER, null);    
+    }
+    
+    bindFBO(gl, width, height) {
+        gl.bindFramebuffer(gl.FRAMEBUFFER, this.fbo);
+        gl.viewport(0, 0, width, height);
+    }
+    
+    unbindFBO(gl, screenWidth, screenHeight) {
+        gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+        gl.viewport(0, 0, screenWidth, screenHeight);
+    }
+}
 export class SimpleRenderer {
 
-    constructor(canvas) {
+    constructor() {
 
         this.dataF32 = null;
         this.glCtx = null;
+
+        this.fboIns = new BaseFBOIns();
+
         this.ctxWidth = 512;
         this.ctxHeight = 512;
 
@@ -117,6 +149,8 @@ export class SimpleRenderer {
         let texLoc = gl.getUniformLocation(program, "u_tex");
         this.prog_tex = { program: program, matrixLoc: matrixLoc, colorLoc: colorLoc, texLoc: texLoc };
         this.vao_tex = this.createTexVAO(gl, program, getVertsWithUV());
+
+        this.fboIns.initFBO(gl, 512, 512);
     }
 
     createShader(gl, type, source) {
@@ -232,8 +266,11 @@ export class SimpleRenderer {
         this.ctxWidth = vw;
         this.ctxHeight = vh;
     }
-    runBegin(gl, vw, vh) {
+    runBegin() {
 
+        let gl = this.glCtx;
+        let vw = this.ctxWidth;
+        let vh = this.ctxHeight;
         gl.clearColor(0.95, 0.95, 0.95, 1);
         gl.clear(gl.COLOR_BUFFER_BIT);
         gl.viewport(0, 0, vw, vh);
@@ -250,7 +287,7 @@ export class SimpleRenderer {
         let gl = this.glCtx;
         let vw = this.ctxWidth;
         let vh = this.ctxHeight;
-        this.runBegin(gl, vw, vh);
+        this.runBegin();
 
         dataF32 = dataF32 != null ? dataF32 : this.dataF32;
         this.dataF32 = dataF32;
@@ -312,7 +349,6 @@ export class SimpleRenderer {
         }
 
     }
-    runEnd(gl) {
-
+    runEnd() {
     }
 }

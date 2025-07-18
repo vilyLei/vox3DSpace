@@ -140,10 +140,8 @@
                 canvas.style.height = `${h / dpr}px`;
 
                 setGPUCtxSize(w, h);
-                renderer.setCtxSize(w, h);
-
                 runExec();
-
+                renderer.setCtxSize(w, h);
                 renderer.run(null);
             }
 
