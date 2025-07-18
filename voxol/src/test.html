@@ -243,8 +243,14 @@ void main() {
             prog_tex = { program: program, matrixLoc: matrixLoc, colorLoc: colorLoc, texLoc: texLoc };
             vao_tex = createTexVAO(gl, program, getVertsWithUV());
         }
+
+        let rcmsTotal = 0;
+
         function render(gl, vw, vh, dataF32) {
 
+            if (rcmsTotal < 1) {
+                return;
+            }
             glRenderBegin(gl, vw, vh);
 
             // console.log("vw, vh: ", vw, vh);
@@ -288,6 +294,17 @@ void main() {
                 gl.activeTexture(gl.TEXTURE0);
                 gl.bindTexture(gl.TEXTURE_2D, tex);
                 gl.uniform1i(prog_tex.texLoc, 0);
+                gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+            }
+
+            gl.useProgram(prog_0.program);
+            gl.bindVertexArray(vao_0.vao);
+            color = new Float32Array([0.0, 0.6, 0.6, 1.0]);
+            gl.uniform4fv(prog_0.colorLoc, color);
+
+            for (let i = 2; i < rcmsTotal; ++i) {
+                matvs = dataF32.subarray(i * 9, (i + 1) * 9);
+                gl.uniformMatrix3fv(prog_0.matrixLoc, false, matvs, 0, 9);
                 gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
             }
 
@@ -450,6 +467,7 @@ void main() {
             // console.log("f32Str: ", f32Str);
 
             let cmdsTotal = getCmdsTotalExec();
+            rcmsTotal = cmdsTotal;
             console.log("cmdsTotal: ", cmdsTotal);
 
             //glRenderBegin(gl, canvas.width, canvas.heght);
