@@ -98,4 +98,93 @@ void main() {
 
         return program;
     }
+    
+    getVerts() {
+        let x = 0, y = 0, w = 1, h = 1;
+        let verts = new Float32Array([
+            x, y,
+            x + w, y,
+            x, y + h,
+            x + w, y + h]
+        );
+        return verts;
+    }
+
+    getVertsWithUV() {
+        let x = 0, y = 0, w = 1, h = 1;
+        let verts = new Float32Array([
+            x, y, 0, 0,
+            x + w, y, 1, 0,
+            x, y + h, 0, 1,
+            x + w, y + h, 1, 1
+        ]
+        );
+        return verts;
+    }
+
+    createVAO(gl, program, verts) {
+
+        //vertexAttribIPointer(index, size, type, stride, offset)
+
+        const vao = gl.createVertexArray();
+        gl.bindVertexArray(vao);
+
+        const vbo = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, vbo);
+        gl.bufferData(gl.ARRAY_BUFFER, verts, gl.STATIC_DRAW);
+
+        const posLoc = gl.getAttribLocation(program, "a_pos");
+        gl.enableVertexAttribArray(posLoc);
+        gl.vertexAttribPointer(posLoc, 2, gl.FLOAT, false, 8, 0);
+
+        return { program: program, vao: vao, locs: [posLoc] };
+    }
+
+    createTexVAO(gl, program, verts) {
+
+        //vertexAttribIPointer(index, size, type, stride, offset)
+
+        const vao = gl.createVertexArray();
+        gl.bindVertexArray(vao);
+
+        const vbo = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, vbo);
+        gl.bufferData(gl.ARRAY_BUFFER, verts, gl.STATIC_DRAW);
+
+        const posLoc = gl.getAttribLocation(program, "a_pos");
+        const uvLoc = gl.getAttribLocation(program, "a_uv");
+        gl.enableVertexAttribArray(posLoc);
+        gl.vertexAttribPointer(posLoc, 2, gl.FLOAT, false, 16, 0);
+        gl.enableVertexAttribArray(uvLoc);
+        gl.vertexAttribPointer(uvLoc, 2, gl.FLOAT, false, 16, 8);
+
+        return { program: program, vao: vao, locs: [posLoc, uvLoc] };
+    }
+    
+    createTextureFromImage(gl, image) {
+        const tex = gl.createTexture();
+        gl.bindTexture(gl.TEXTURE_2D, tex);
+
+        gl.texImage2D(
+            gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA,
+            gl.UNSIGNED_BYTE, image
+        );
+
+        // 设置贴图参数
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+        gl.generateMipmap(gl.TEXTURE_2D);
+
+        return tex;
+    }
+
+    loadImageAndCreateTexture(gl, url, callback) {
+        const img = new Image();
+        img.onload = () => {
+            const tex = this.createTextureFromImage(gl, img);
+            callback(tex);
+        };
+        img.src = url;
+    }
 }

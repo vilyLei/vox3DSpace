@@ -127,6 +127,7 @@ void main() {
             return program;
         }
         //*/
+        /*
         function getVerts() {
             let x = 0, y = 0, w = 1, h = 1;
             let verts = new Float32Array([
@@ -188,7 +189,7 @@ void main() {
 
             return { program: program, vao: vao, locs: [posLoc, uvLoc] };
         }
-
+        
         function createTextureFromImage(gl, image) {
             const tex = gl.createTexture();
             gl.bindTexture(gl.TEXTURE_2D, tex);
@@ -215,7 +216,7 @@ void main() {
             };
             img.src = url;
         }
-
+        //*/
         function glRenderBegin(gl, vw, vh) {
             gl.clearColor(0.95, 0.95, 0.95, 1);
             gl.clear(gl.COLOR_BUFFER_BIT);
@@ -232,11 +233,12 @@ void main() {
         var textures = [];
 
         function initRender(gl) {
+
             var program = renderer.createShaderProgram(gl, vertSource, fragSource);
             let matrixLoc = gl.getUniformLocation(program, "u_matrix");
             let colorLoc = gl.getUniformLocation(program, "u_color");
             prog_0 = { program: program, matrixLoc: matrixLoc, colorLoc: colorLoc };
-            vao_0 = createVAO(gl, program, getVerts());
+            vao_0 = renderer.createVAO(gl, program, renderer.getVerts());
 
 
             program = renderer.createShaderProgram(gl, vertTexSource, fragTexSource);
@@ -244,7 +246,7 @@ void main() {
             colorLoc = gl.getUniformLocation(program, "u_color");
             let texLoc = gl.getUniformLocation(program, "u_tex");
             prog_tex = { program: program, matrixLoc: matrixLoc, colorLoc: colorLoc, texLoc: texLoc };
-            vao_tex = createTexVAO(gl, program, getVertsWithUV());
+            vao_tex = renderer.createTexVAO(gl, program, renderer.getVertsWithUV());
         }
 
         let rcmsTotal = 0;
@@ -475,7 +477,7 @@ void main() {
             initRender(gl);
             render(gl, canvas.width, canvas.height, cmdBufF32Arr);
 
-            loadImageAndCreateTexture(gl, './assets/box.jpg', (tex) => {
+            renderer.loadImageAndCreateTexture(gl, './assets/box.jpg', (tex) => {
                 console.log("loaded a img tex ...");
                 textures.push(tex);
                 render(gl, canvas.width, canvas.height, cmdBufF32Arr);

@@ -15,10 +15,10 @@ void RenderCmdWorld::initialize()
         return;
     using namespace Voxol::Math;
 
-    auto rn    = 20;
-    auto cn    = 20;
+    auto rn    = 10;
+    auto cn    = 10;
     auto total = rn * cn;
-    auto rsize = 16;
+    auto rsize = 32;
 
     commands.resize(total);
     transforms.resize(total);
@@ -27,10 +27,10 @@ void RenderCmdWorld::initialize()
     auto index = 0;
     for (auto i = 0; i < rn; ++i)
     {
-        auto py = 5 + (i * (rsize + 1));
+        auto py = 50 + (i * (rsize + 1));
         for (auto j = 0; j < cn; ++j)
         {
-            auto px = 5 + (j * (rsize + 1));
+            auto px = 50 + (j * (rsize + 1));
             commands[index] = 1;
             objTransforms[index] = Mat33(px, py, rsize, rsize);
 
