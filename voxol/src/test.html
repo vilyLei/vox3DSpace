@@ -37,7 +37,7 @@
 
 
         let renderer = new SimpleRenderer();
-        renderer.initialize(gl);
+        // renderer.initialize(gl);
 
 
         //*///
@@ -168,13 +168,13 @@
 
             // initRender(gl);
             // render(gl, canvas.width, canvas.height, cmdBufF32Arr);
-            renderer.initialize(gl);
-            renderer.run(gl, canvas.width, canvas.height, cmdBufF32Arr);
+            renderer.initialize(gl, canvas.width, canvas.height);
+            renderer.run(cmdBufF32Arr);
 
             renderer.loadImageAndCreateTexture(gl, './assets/box.jpg', (tex) => {
                 console.log("loaded a img tex ...");
                 renderer.textures.push(tex);
-                renderer.run(gl, canvas.width, canvas.height, cmdBufF32Arr);
+                renderer.run(cmdBufF32Arr);
             });
 
             mouseFunc = function (px, py, type, flag) {
@@ -182,7 +182,7 @@
                 // console.log('mouseFunc mosuePos(x=' + x + ', y=' + y + ')');
 
                 runExec();
-                renderer.run(gl, canvas.width, canvas.height, cmdBufF32Arr);
+                renderer.run(cmdBufF32Arr);
             }
 
         };

@@ -16,9 +16,11 @@ export class SimpleRenderer {
         this.textures = [];
         this.rcmsTotal = 0;
     }
-    initialize(gl) {
+    initialize(gl, vw, vh) {
 
         this.glCtx = gl;
+        this.ctxWidth = vw;
+        this.ctxHeight = vh;
 
         testDo();
 
@@ -224,16 +226,18 @@ void main() {
         return [pw, ph];
     }
 
-    runBegin(gl, vw, vh) {
-
+    setCtxSize(vw, vh) {
         this.ctxWidth = vw;
         this.ctxHeight = vw;
+    }
+    runBegin(gl, vw, vh) {
+
         gl.clearColor(0.95, 0.95, 0.95, 1);
         gl.clear(gl.COLOR_BUFFER_BIT);
         gl.viewport(0, 0, vw, vh);
     }
     
-    run(gl, vw, vh, dataF32) {
+    run(dataF32) {
 
         let rcmsTotal = this.rcmsTotal;
 
@@ -241,6 +245,9 @@ void main() {
             return;
         }
 
+        let gl = this.glCtx;
+        let vw = this.ctxWidth;
+        let vh = this.ctxHeight;
         this.runBegin(gl, vw, vh);
 
         // console.log("vw, vh: ", vw, vh);
