@@ -43,7 +43,7 @@
 
         let renderer = new SimpleRenderer();
         renderer.initialize(gl);
-
+        /*
         const vertSource = `#version 300 es
 precision highp float;
 
@@ -105,6 +105,7 @@ void main() {
         var prog_tex = null;
         var vao_tex = null;
         var textures = [];
+        let rcmsTotal = 0;
 
         function initRender(gl) {
 
@@ -122,8 +123,6 @@ void main() {
             prog_tex = { program: program, matrixLoc: matrixLoc, colorLoc: colorLoc, texLoc: texLoc };
             vao_tex = renderer.createTexVAO(gl, program, renderer.getVertsWithUV());
         }
-
-        let rcmsTotal = 0;
 
         function render(gl, vw, vh, dataF32) {
 
@@ -188,9 +187,7 @@ void main() {
             }
 
         }
-
-        // import VoxModule from './build/voxModule.js';
-
+        //*///
 
         var mouseFunc = function (px, py, type, flag) {
             console.log('mouseFunc mosuePos(x=' + x + ', y=' + y + ')');
@@ -313,18 +310,18 @@ void main() {
             // console.log("f32Str: ", f32Str);
 
             let cmdsTotal = getCmdsTotalExec();
-            rcmsTotal = cmdsTotal;
+            renderer.rcmsTotal = cmdsTotal;
             console.log("cmdsTotal: ", cmdsTotal);
 
-            //glRenderBegin(gl, canvas.width, canvas.heght);
-
-            initRender(gl);
-            render(gl, canvas.width, canvas.height, cmdBufF32Arr);
+            // initRender(gl);
+            // render(gl, canvas.width, canvas.height, cmdBufF32Arr);
+            renderer.initialize(gl);
+            renderer.run(gl, canvas.width, canvas.height, cmdBufF32Arr);
 
             renderer.loadImageAndCreateTexture(gl, './assets/box.jpg', (tex) => {
                 console.log("loaded a img tex ...");
-                textures.push(tex);
-                render(gl, canvas.width, canvas.height, cmdBufF32Arr);
+                renderer.textures.push(tex);
+                renderer.run(gl, canvas.width, canvas.height, cmdBufF32Arr);
             });
 
             mouseFunc = function (px, py, type, flag) {
@@ -332,7 +329,7 @@ void main() {
                 // console.log('mouseFunc mosuePos(x=' + x + ', y=' + y + ')');
 
                 runExec();
-                render(gl, canvas.width, canvas.height, cmdBufF32Arr);
+                renderer.run(gl, canvas.width, canvas.height, cmdBufF32Arr);
             }
 
         };

@@ -2,20 +2,29 @@ function testDo() {
     console.log("testDo() ...\n");
 }
 export class SimpleRenderer {
+
     constructor(canvas) {
-        this.gl = null;
+
+        this.glCtx = null;
         this.ctxWidth = 512;
         this.ctxHeight = 512;
-    }
-    initialize(glCtx) {
 
-        this.gl = glCtx;
+        this.prog_0 = null;
+        this.vao_0 = null;
+        this.prog_tex = null;
+        this.vao_tex = null;
+        this.textures = [];
+        this.rcmsTotal = 0;
+    }
+    initialize(gl) {
+
+        this.glCtx = gl;
 
         testDo();
 
         console.log("SimpleRenderer::initialize() ...\n");
 
-        const vertSource = `#version 300 es
+        this.vertSource = `#version 300 es
 precision highp float;
 
 layout(location = 0) in vec2 a_pos;
@@ -28,7 +37,7 @@ void main() {
 }
 `;
 
-        const fragSource = `#version 300 es
+        this.fragSource = `#version 300 es
 precision mediump float;
 uniform vec4 u_color;
 out vec4 outColor;
@@ -38,7 +47,7 @@ void main() {
 }
 `;
 
-        const vertTexSource = `#version 300 es
+        this.vertTexSource = `#version 300 es
 precision highp float;
 
 layout(location = 0) in vec2 a_pos;
@@ -53,19 +62,34 @@ void main() {
 }
 `;
 
-        const fragTexSource = `#version 300 es
+        this.fragTexSource = `#version 300 es
 precision mediump float;
 uniform vec4 u_color;
 in vec2 v_uv;
 uniform sampler2D u_tex;
 out vec4 fragColor;
 void main() {
-    //outColor = vec4(1.0, 0.8, 0.8, 1.0);
-    // outColor = u_color;
-    fragColor = texture(u_tex, v_uv) * 0.5 + vec4(v_uv, 1.0, 1.0) * u_color * 0.5;
-    // fragColor = texture(u_tex, vec2(0.5,0.5));
+    fragColor = texture(u_tex, v_uv) * u_color;
 }
 `;
+        this.initRender(gl);
+    }
+
+
+    initRender(gl) {
+
+        var program = this.createShaderProgram(gl, this.vertSource, this.fragSource);
+        let matrixLoc = gl.getUniformLocation(program, "u_matrix");
+        let colorLoc = gl.getUniformLocation(program, "u_color");
+        this.prog_0 = { program: program, matrixLoc: matrixLoc, colorLoc: colorLoc };
+        this.vao_0 = this.createVAO(gl, program, this.getVerts());
+
+        program = this.createShaderProgram(gl, this.vertTexSource, this.fragTexSource);
+        matrixLoc = gl.getUniformLocation(program, "u_matrix");
+        colorLoc = gl.getUniformLocation(program, "u_color");
+        let texLoc = gl.getUniformLocation(program, "u_tex");
+        this.prog_tex = { program: program, matrixLoc: matrixLoc, colorLoc: colorLoc, texLoc: texLoc };
+        this.vao_tex = this.createTexVAO(gl, program, this.getVertsWithUV());
     }
 
     createShader(gl, type, source) {
@@ -100,7 +124,7 @@ void main() {
 
         return program;
     }
-    
+
     getVerts() {
         let x = 0, y = 0, w = 1, h = 1;
         let verts = new Float32Array([
@@ -162,7 +186,7 @@ void main() {
 
         return { program: program, vao: vao, locs: [posLoc, uvLoc] };
     }
-    
+
     createTextureFromImage(gl, image) {
         const tex = gl.createTexture();
         gl.bindTexture(gl.TEXTURE_2D, tex);
@@ -189,7 +213,7 @@ void main() {
         };
         img.src = url;
     }
-    
+
     normlizeViewSize() {
 
         let pw = window.innerWidth;
@@ -208,7 +232,71 @@ void main() {
         gl.clear(gl.COLOR_BUFFER_BIT);
         gl.viewport(0, 0, vw, vh);
     }
-    run(gl) {
+    
+    run(gl, vw, vh, dataF32) {
+
+        let rcmsTotal = this.rcmsTotal;
+
+        if (rcmsTotal < 1) {
+            return;
+        }
+
+        this.runBegin(gl, vw, vh);
+
+        // console.log("vw, vh: ", vw, vh);
+        // console.log("vao_0.program: ", vao_0.program);
+        // console.log("vao_0.vao: ", vao_0.vao);
+        gl.useProgram(this.prog_0.program);
+        gl.bindVertexArray(this.vao_0.vao);
+
+        let matvs = new Float32Array([1, 0, 0, 0, 1, 0, 0, 0, 1]);
+        matvs = dataF32.subarray(0, 9);
+
+        // let f32Str = "";
+        // for (let i = 0; i < matvs.length; i++) {
+        //     f32Str += (i > 0 ? "," : "") + matvs[i];
+        // }
+        // console.log("matvs.length: ", matvs.length);
+        // console.log("f32Str: ", f32Str);
+
+        let color = new Float32Array([0.0, 0.6, 0.0, 1.0]);
+        gl.uniform4fv(this.prog_0.colorLoc, color);
+        gl.uniformMatrix3fv(this.prog_0.matrixLoc, false, matvs, 0, 9);
+        gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+
+        // matvs = dataF32.subarray(9, 18);
+        // color = new Float32Array([0.0, 0.6, 0.6, 1.0]);
+        // gl.uniform4fv(prog_0.colorLoc, color);
+        // gl.uniformMatrix3fv(prog_0.matrixLoc, false, matvs, 0, 9);
+        // gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+
+        if (this.textures.length > 0) {
+            let tex = this.textures[0];
+            // console.log("xxxxxxxxx tex: ", tex);
+            gl.useProgram(this.prog_tex.program);
+            gl.bindVertexArray(this.vao_tex.vao);
+
+            matvs = dataF32.subarray(9, 18);
+            gl.uniformMatrix3fv(this.prog_tex.matrixLoc, false, matvs, 0, 9);
+
+            color = new Float32Array([0.6, 0.0, 0.6, 1.0]);
+            gl.uniform4fv(this.prog_tex.colorLoc, color);
+            gl.activeTexture(gl.TEXTURE0);
+            gl.bindTexture(gl.TEXTURE_2D, tex);
+            gl.uniform1i(this.prog_tex.texLoc, 0);
+            gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+        }
+
+        gl.useProgram(this.prog_0.program);
+        gl.bindVertexArray(this.vao_0.vao);
+        color = new Float32Array([0.0, 0.6, 0.6, 1.0]);
+        gl.uniform4fv(this.prog_0.colorLoc, color);
+
+        for (let i = 2; i < this.rcmsTotal; ++i) {
+            matvs = dataF32.subarray(i * 9, (i + 1) * 9);
+            gl.uniformMatrix3fv(this.prog_0.matrixLoc, false, matvs, 0, 9);
+            gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+        }
 
     }
     runEnd(gl) {
