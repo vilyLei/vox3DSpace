@@ -34,7 +34,15 @@
     <canvas id="canvas"></canvas>
 
     <!-- <script type="module"> -->
-    <script>
+    <script type="module">
+        import { SimpleRenderer } from './JSCode/SimpleRenderer.js';
+        
+        const canvas = document.getElementById('canvas');
+        const gl = canvas.getContext("webgl2");
+
+
+        let renderer = new SimpleRenderer();
+        renderer.initialize(gl);
 
         const vertSource = `#version 300 es
 precision highp float;
@@ -81,12 +89,10 @@ in vec2 v_uv;
 uniform sampler2D u_tex;
 out vec4 fragColor;
 void main() {
-    //outColor = vec4(1.0, 0.8, 0.8, 1.0);
-    // outColor = u_color;
     fragColor = texture(u_tex, v_uv) * 0.5 + vec4(v_uv, 1.0, 1.0) * u_color * 0.5;
-    // fragColor = texture(u_tex, vec2(0.5,0.5));
 }
 `;
+/*
         function createShader(gl, type, source) {
             const shader = gl.createShader(type);
             gl.shaderSource(shader, source);
@@ -118,12 +124,9 @@ void main() {
             const fs = createShader(gl, gl.FRAGMENT_SHADER, fsSource);
             const program = createProgram(gl, vs, fs);
 
-            // let matrixLoc = glGetUniformLocation(program, "u_matrix");
-            // let colorLoc = glGetUniformLocation(program, "u_color");
-            // return { program: program, matrixLoc: matrixLoc, colorLoc: colorLoc };
             return program;
         }
-
+        //*/
         function getVerts() {
             let x = 0, y = 0, w = 1, h = 1;
             let verts = new Float32Array([
@@ -229,14 +232,14 @@ void main() {
         var textures = [];
 
         function initRender(gl) {
-            var program = createShaderProgram(gl, vertSource, fragSource);
+            var program = renderer.createShaderProgram(gl, vertSource, fragSource);
             let matrixLoc = gl.getUniformLocation(program, "u_matrix");
             let colorLoc = gl.getUniformLocation(program, "u_color");
             prog_0 = { program: program, matrixLoc: matrixLoc, colorLoc: colorLoc };
             vao_0 = createVAO(gl, program, getVerts());
 
 
-            program = createShaderProgram(gl, vertTexSource, fragTexSource);
+            program = renderer.createShaderProgram(gl, vertTexSource, fragTexSource);
             matrixLoc = gl.getUniformLocation(program, "u_matrix");
             colorLoc = gl.getUniformLocation(program, "u_color");
             let texLoc = gl.getUniformLocation(program, "u_tex");
@@ -311,9 +314,6 @@ void main() {
         }
 
         // import VoxModule from './build/voxModule.js';
-
-        const canvas = document.getElementById('canvas');
-        const gl = canvas.getContext("webgl2");
 
         function normlizeViewSize() {
 
