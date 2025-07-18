@@ -146,7 +146,7 @@ class MSAAFBOIns {
     unbindFBO(gl, width, height) {
 
         gl.bindFramebuffer(gl.READ_FRAMEBUFFER, this.msaaFBO);
-        gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, this.resolveFBO);
+        gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, this.fbo);
         gl.blitFramebuffer(
             0, 0, width, height,
             0, 0, width, height,
