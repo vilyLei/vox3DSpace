@@ -93,7 +93,7 @@ void RenderCmdWorld::run()
 
 const uint8_t* RenderCmdWorld::cmdBuffer() const
 {
-    return transforms.data();
+    return (uint8_t*)transforms.data();
     //buffer.data()
 }
 

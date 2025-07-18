@@ -214,7 +214,7 @@ extern "C"
     EMSCRIPTEN_KEEPALIVE
     size_t getCmdsTotal() { return rcmdWorld.commands.size(); }
     EMSCRIPTEN_KEEPALIVE
-    uint8_t* getRenderCmdBuffer() { return (uint8_t*)rcmdWorld.transforms.data(); }
+    uint8_t* getRenderCmdBuffer() { return (uint8_t*)rcmdWorld.cmdBuffer(); }
 }
 #else
 int main()
