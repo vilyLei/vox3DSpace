@@ -48,6 +48,7 @@ void RenderCmdWorld::initialize()
             node.scaleX           = rsize;
             node.scaleY           = rsize;
             node.moveingNode.rect = {node.x, node.y, rsize * 1.0f, rsize * 1.0f};
+            node.init();
 
             index++;
         }
@@ -74,10 +75,10 @@ void RenderCmdWorld::setGPUCtxSize(int w, int h)
 void RenderCmdWorld::setMouseXY(float x, float y)
 {
     using namespace Voxol::Math;
-    // objTransforms[0] = Mat33(x, y, 150, 150);
+    
     auto& node = cmdNodes[0];
     node.x     = x;
-    node.y     = x;
+    node.y     = y;
     dirty      = true;
 }
 void RenderCmdWorld::run()
@@ -118,12 +119,6 @@ void RenderCmdWorld::run()
     std::memcpy(bufPtr + bufIndex, &cmdsTotal, descSize);
     bufIndex += descSize;
 
-    // for (auto i = 0; i < total; i++)
-    // {
-    //     transforms[i] = objTransforms[i];
-    //     transforms[i].prepend(projMat);
-    // }
-    //cmdNodes
 
     RectTarget::Rect boundary = {0, 0, ctxWidth * 1.0f, ctxHeight * 1.0f};
     for (auto i = 0; i < cmdsTotal; i++)
@@ -131,22 +126,22 @@ void RenderCmdWorld::run()
         auto& node = cmdNodes[i];
         node.moveingNode.update(1, boundary);
     }
-    for (size_t i = 0; i < cmdsTotal; ++i)
-    {
-        auto& node0 = cmdNodes[i];
-        for (size_t j = i + 1; j < cmdsTotal; ++j)
-        {
-            auto& node1 = cmdNodes[j];
-            RectTarget::handleCollision(node0.moveingNode, node1.moveingNode);
-        }
-    }
-    for (auto i = 0; i < cmdsTotal; i++)
-    {
-        auto& node = cmdNodes[i];
-        auto& r = node.moveingNode.rect;
-        node.x = r.pos.x;
-        node.y = r.pos.y;
-    }
+    // for (size_t i = 0; i < cmdsTotal; ++i)
+    // {
+    //     auto& node0 = cmdNodes[i];
+    //     for (size_t j = i + 1; j < cmdsTotal; ++j)
+    //     {
+    //         auto& node1 = cmdNodes[j];
+    //         RectTarget::handleCollision(node0.moveingNode, node1.moveingNode);
+    //     }
+    // }
+    // for (auto i = 0; i < cmdsTotal; i++)
+    // {
+    //     auto& node = cmdNodes[i];
+    //     auto& r = node.moveingNode.rect;
+    //     node.x = r.pos.x;
+    //     node.y = r.pos.y;
+    // }
 
 
     RectDrawCmdDesc rectDesc{};

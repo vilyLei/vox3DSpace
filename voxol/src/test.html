@@ -140,9 +140,6 @@
                 canvas.style.height = `${h / dpr}px`;
 
                 setGPUCtxSize(w, h);
-                // runExec();
-                // renderer.setCtxSize(w, h);
-                // renderer.run(null);
             }
 
             window.addEventListener('resize', () => {
@@ -209,17 +206,15 @@
                 setMouseParams(px, py, type, flag);
                 // console.log('mouseFunc mosuePos(x=' + x + ', y=' + y + ')');
 
-                runExec();
-                renderer.run(cmdBufF32Arr);
             }
-            // function loopRun() {
-            //     setGPUCtxSize(canvas.width, canvas.height);
-            //     runExec();
-            //     renderer.runBegin();
-            //     renderer.draw(4, cmdBufU32Arr, cmdBufF32Arr);
-            //     requestAnimationFrame(loopRun);
-            // }
-            // loopRun();
+            function loopRun() {
+                // setGPUCtxSize(canvas.width, canvas.height);
+                // runExec();
+                renderer.runBegin();
+                renderer.draw(4, cmdBufU32Arr, cmdBufF32Arr);
+                requestAnimationFrame(loopRun);
+            }
+            loopRun();
 
         };
 

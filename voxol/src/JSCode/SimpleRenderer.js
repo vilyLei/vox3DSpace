@@ -418,7 +418,7 @@ export class SimpleRenderer {
         for (;;) {
             let cmd = dataU32[cmdIndex];
             if (cmd == 0) {
-                console.log("drawing cmd exec end !!!");
+                // console.log("drawing cmd exec end !!!");
                 break;
             }
             let descSize = dataU32[cmdIndex + 1];
@@ -426,6 +426,7 @@ export class SimpleRenderer {
             switch (cmd) {
                 case 0x33:
                     {
+                        // console.log("drawing a rect ...");
                         let f32Index = cmdIndex + 3;
                         let matvs = dataF32.subarray(f32Index, f32Index + 9);
                         let colorU32 = dataU32[cmdIndex + 2];
