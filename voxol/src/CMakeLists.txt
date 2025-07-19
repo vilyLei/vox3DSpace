@@ -78,8 +78,27 @@ foreach(dir ${PROJECT_DIRS})
     source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR}/${dir} PREFIX "${dir}" FILES ${${dir}_SRC} ${${dir}_HDR})
 endforeach()
 
+
+message(STATUS "CMAKE_SYSTEM_NAME = ${CMAKE_SYSTEM_NAME}")
+
+if(WASM_TARGET STREQUAL "ON")
+  message(STATUS "WASM_TARGET is ON")
+  # 执行 ON 状态下的操作
+else()
+  message(STATUS "WASM_TARGET is not ON")
+  # 执行非 ON 状态下的操作
+endif()
+
+
 # main.cpp 单独添加
+if(CMAKE_SYSTEM_NAME STREQUAL "Emscripten")
+set(MAIN_FILE ${CMAKE_CURRENT_SOURCE_DIR}/main_wasm.cpp)
+message(STATUS "apply wasm main")
+else()
+message(STATUS "apply default main")
 set(MAIN_FILE ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp)
+endif()
+
 list(APPEND ALL_GROUPED_FILES ${MAIN_FILE})
 source_group("" FILES ${MAIN_FILE})
 

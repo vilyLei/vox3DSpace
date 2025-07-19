@@ -102,7 +102,7 @@
 
 
             const getHeapSize = Module.cwrap("get_heap_size_bytes", "number", []);
-            //const startup = Module.cwrap("startup");
+            const startup = Module.cwrap("startup");
             const setGPUCtxSize = Module.cwrap("setGPUCtxSize", null, ["number", "number"]);
             const setMouseParams = Module.cwrap("setMouseParams", null, ["number", "number", "number", "number"]);
 
@@ -148,7 +148,7 @@
                 renderer.setCtxSize(canvas.width, canvas.height);
             });
             resizeCanvas();
-            // startup();
+            startup();
 
             runExec();
 
