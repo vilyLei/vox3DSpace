@@ -166,7 +166,7 @@
             let cmdBufU32Arr = new Uint32Array(heap.buffer);
             cmdBufU32Arr = cmdBufU32Arr.subarray(cmdBufU8Ptr / 4);
 
-            function toStringWith9Number(numArr, index) {
+            function printWith9Number(numArr, index) {
                 let f32Str = "";
                 for (let i = 0; i < 9; i++) {
                     f32Str += (i > 0 ? "," : "") + numArr[index + i];
@@ -183,13 +183,20 @@
             console.log("cmdBufU32Arr[3]: ", cmdBufU32Arr[3]);
 
             // cmd
-            console.log("cmdBufU32Arr[4]: ", cmdBufU32Arr[4]);
-            console.log("cmdBufU32Arr[5]: ", cmdBufU32Arr[5].toString(16));
+            console.log("cmd cmdBufU32Arr[4]: ", cmdBufU32Arr[4]);
+            // descSize
+            console.log("descSize cmdBufU32Arr[5]: ", cmdBufU32Arr[5]);
+            // color
+            console.log("cmdBufU32Arr[6]: ", cmdBufU32Arr[6].toString(16));
             //
-            toStringWith9Number(cmdBufF32Arr, 5);
+            printWith9Number(cmdBufF32Arr, 6);
+
+            
+            renderer.initialize(gl, canvas.width, canvas.height);
+            renderer.runBegin();
+            renderer.draw(4, cmdBufU32Arr, cmdBufF32Arr);
 
             return;
-            renderer.initialize(gl, canvas.width, canvas.height);
             renderer.run(cmdBufF32Arr, cmdBufU32Arr);
 
             renderer.loadImageAndCreateTexture(gl, './assets/box.jpg', (tex) => {

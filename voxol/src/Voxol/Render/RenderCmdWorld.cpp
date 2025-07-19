@@ -39,6 +39,7 @@ void RenderCmdWorld::initialize()
             commands[index]      = 1;
             // objTransforms[index] = Mat33(px, py, rsize, rsize);
             auto& node = cmdNodes[index];
+            node.color = 0xff0000aa | (index << 8);
             node.x = px;
             node.y = py;
             node.scaleX = rsize;
