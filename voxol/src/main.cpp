@@ -29,12 +29,13 @@
 #include "Voxol/Base/EntityObjectBuilder.h"
 #include "Voxol/System/RenderSystem.h"
 
-#include "Voxol/Render/RenderCmdWorld.h"
+// #include "Voxol/Render/RenderCmdWorld.h"
+#include "Voxol/Motion/RenderCmdWorld.h"
 
 #include "Voxol/Test/TestRenderer.h"
 
 
-Voxol::Render::RenderCmdWorld rcmdWorld{};
+Voxol::Motion::RenderCmdWorld rcmdWorld{};
 void                          testMemoryManage()
 {
     // printf("testMemoryManage() begin 01...\n");
