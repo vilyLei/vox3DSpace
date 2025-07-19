@@ -32,6 +32,7 @@ struct DrawCmdTestNode
 
     bool dirty = true;
 
+    void init();
     void updateToMat33(Mat33& mat);
 };
 
