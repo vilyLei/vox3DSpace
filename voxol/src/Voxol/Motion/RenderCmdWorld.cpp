@@ -70,6 +70,7 @@ void RenderCmdWorld::setGPUCtxSize(int w, int h)
     ctxHeight = h;
 
     dirty = true;
+    printf("RenderCmdWorld::setGPUCtxSize() ...\n");
 }
 
 void RenderCmdWorld::setMouseXY(float x, float y)
