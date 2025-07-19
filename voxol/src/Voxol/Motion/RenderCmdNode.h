@@ -6,14 +6,49 @@
 
 namespace Voxol::Motion
 {
-    
+
 using namespace Voxol::Math;
 
+namespace RectTarget
+{
+
+struct Vec2
+{
+    float x, y;
+
+    Vec2 operator+(const Vec2& other) const;
+    Vec2 operator-(const Vec2& other) const;
+    Vec2 operator*(float s) const;
+};
+
+struct Rect
+{
+    Vec2  pos;
+    float width;
+    float height;
+
+    bool intersects(const Rect& other) const;
+};
+
+struct MovingRect
+{
+
+    Rect rect;
+    Vec2 velocity;
+    MovingRect() = default;
+    MovingRect(Rect r, Vec2 v);
+
+    void update(float dt, const Rect& boundary);
+};
+
+void handleCollision(MovingRect& a, MovingRect& b);
+
+} // namespace RectTarget
 struct RectDrawCmdDesc
 {
-    uint32_t rcmd  = 0x33;
-    uint32_t descSize   = 0x32;
-    uint32_t color = 0xff00aa00;
+    uint32_t rcmd     = 0x33;
+    uint32_t descSize = 0x32;
+    uint32_t color    = 0xff00aa00;
     Mat33    transform{};
 
     void updateToBuffer(uint8_t* buffer);
@@ -45,5 +80,5 @@ public:
     ~RenderCmdNode() = default;
 };
 
-} // namespace Voxol::Render
+} // namespace Voxol::Motion
 #endif
