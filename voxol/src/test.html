@@ -191,18 +191,18 @@
             //
             printWith9Number(cmdBufF32Arr, 6);
 
-            
+
             renderer.initialize(gl, canvas.width, canvas.height);
             renderer.runBegin();
             renderer.draw(4, cmdBufU32Arr, cmdBufF32Arr);
 
-            return;
-            renderer.run(cmdBufF32Arr, cmdBufU32Arr);
+            // return;
+            // renderer.run(cmdBufF32Arr, cmdBufU32Arr);
 
             renderer.loadImageAndCreateTexture(gl, './assets/box.jpg', (tex) => {
                 console.log("loaded a img tex ...");
                 renderer.textures.push(tex);
-                renderer.run(cmdBufF32Arr);
+                // renderer.run(cmdBufF32Arr);
             });
 
             mouseFunc = function (px, py, type, flag) {
@@ -212,6 +212,14 @@
                 runExec();
                 renderer.run(cmdBufF32Arr);
             }
+            // function loopRun() {
+            //     setGPUCtxSize(canvas.width, canvas.height);
+            //     runExec();
+            //     renderer.runBegin();
+            //     renderer.draw(4, cmdBufU32Arr, cmdBufF32Arr);
+            //     requestAnimationFrame(loopRun);
+            // }
+            // loopRun();
 
         };
 

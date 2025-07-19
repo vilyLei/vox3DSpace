@@ -32,7 +32,6 @@ struct Rect
 
 struct MovingRect
 {
-
     Rect rect;
     Vec2 velocity;
     MovingRect() = default;
@@ -66,6 +65,8 @@ struct DrawCmdTestNode
     float rotation = 0;
 
     bool dirty = true;
+
+    RectTarget::MovingRect moveingNode{};
 
     void init();
     void updateToMat33(Mat33& mat);

@@ -62,6 +62,9 @@ void RectDrawCmdDesc::updateToBuffer(uint8_t* buffer)
 
 void DrawCmdTestNode::init()
 {
+    auto vx = (randomFloatValue() * 0.5f - 0.5f) * 2;
+    auto vy = (randomFloatValue() * 0.5f - 0.5f) * 2;
+    moveingNode.velocity = {vx, vy};
 }
 void DrawCmdTestNode::updateToMat33(Mat33& mat)
 {

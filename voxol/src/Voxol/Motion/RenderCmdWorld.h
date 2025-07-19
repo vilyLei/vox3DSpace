@@ -15,13 +15,14 @@ class RenderCmdWorld
 public:
     std::vector<uint32_t>        commands{};
     std::vector<DrawCmdTestNode> cmdNodes{};
-    // std::vector<Voxol::Math::Mat33> objTransforms{};
-    // std::vector<Voxol::Math::Mat33> transforms{};
     Voxol::Math::Mat33 projMat{};
 
     std::vector<uint8_t> buffer{};
 
     bool dirty = true;
+
+    int ctxWidth = 512;
+    int ctxHeight = 512;
 
 public:
     RenderCmdWorld(/* args */);
