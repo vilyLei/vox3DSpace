@@ -144,6 +144,7 @@
 
             window.addEventListener('resize', () => {
                 resizeCanvas();
+                console.log("canvas.width, canvas.height: ", canvas.width, canvas.height);
                 renderer.setCtxSize(canvas.width, canvas.height);
             });
             resizeCanvas();
@@ -209,8 +210,8 @@
 
             }
             function loopRun() {
-                // setGPUCtxSize(canvas.width, canvas.height);
-                // runExec();
+                setGPUCtxSize(canvas.width, canvas.height);
+                runExec();
                 renderer.runBegin();
                 renderer.draw(4, cmdBufU32Arr, cmdBufF32Arr);
                 requestAnimationFrame(loopRun);

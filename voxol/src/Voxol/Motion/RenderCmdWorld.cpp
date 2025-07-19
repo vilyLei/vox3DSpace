@@ -29,15 +29,15 @@ void RenderCmdWorld::initialize()
 
     commands.resize(total);
     cmdNodes.resize(total);
-    // objTransforms.resize(total);
 
     auto index = 0;
+    auto dis = 5;
     for (auto i = 0; i < rn; ++i)
     {
-        auto py = 50 + (i * (rsize + 1));
+        auto py = 50 + (i * (rsize + dis));
         for (auto j = 0; j < cn; ++j)
         {
-            auto px         = 50 + (j * (rsize + 1));
+            auto px         = 50 + (j * (rsize + dis));
             commands[index] = 1;
             // objTransforms[index] = Mat33(px, py, rsize, rsize);
             auto& node = cmdNodes[index];
@@ -54,11 +54,6 @@ void RenderCmdWorld::initialize()
         }
     }
 
-    // commands[0] = 3;
-    // commands[1] = 5;
-    // objTransforms[0] = Mat33(500, 200, 150, 150);
-    // objTransforms[1] = Mat33(600, 300, 200, 270);
-
     mInit = false;
 }
 
@@ -70,7 +65,7 @@ void RenderCmdWorld::setGPUCtxSize(int w, int h)
     ctxHeight = h;
 
     dirty = true;
-    printf("RenderCmdWorld::setGPUCtxSize() ...\n");
+    // printf("RenderCmdWorld::setGPUCtxSize() ...\n");
 }
 
 void RenderCmdWorld::setMouseXY(float x, float y)
@@ -91,12 +86,10 @@ void RenderCmdWorld::run()
 
     initialize();
 
-
-    // auto total = objTransforms.size();
     auto cmdsTotal = cmdNodes.size();
 
-    printf("RenderCmdWorld::run() sizeof(projMat): %zu\n", sizeof(projMat));
-    printf("RenderCmdWorld::run() cmdsTotal: %zu\n", cmdsTotal);
+    // printf("RenderCmdWorld::run() sizeof(projMat): %zu\n", sizeof(projMat));
+    // printf("RenderCmdWorld::run() cmdsTotal: %zu\n", cmdsTotal);
 
     uint32_t default_cmd = 0x33;
     uint32_t end_cmd     = 0x0;
@@ -111,7 +104,7 @@ void RenderCmdWorld::run()
     bufIndex += descSize;
     uint32_t version = 1;
 
-    printf("version: %d\n", version);
+    // printf("version: %d\n", version);
 
     descSize = sizeof(version);
     std::memcpy(bufPtr + bufIndex, &version, descSize);
@@ -122,11 +115,12 @@ void RenderCmdWorld::run()
 
 
     RectTarget::Rect boundary = {0, 0, ctxWidth * 1.0f, ctxHeight * 1.0f};
-    for (auto i = 0; i < cmdsTotal; i++)
-    {
-        auto& node = cmdNodes[i];
-        // node.moveingNode.update(1, boundary);
-    }
+
+    // for (auto i = 0; i < cmdsTotal; i++)
+    // {
+    //     auto& node = cmdNodes[i];
+    //     node.moveingNode.update(1, boundary);
+    // }
     // for (size_t i = 0; i < cmdsTotal; ++i)
     // {
     //     auto& node0 = cmdNodes[i];
