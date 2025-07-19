@@ -116,27 +116,27 @@ void RenderCmdWorld::run()
 
     RectTarget::Rect boundary = {0, 0, ctxWidth * 1.0f, ctxHeight * 1.0f};
 
-    // for (auto i = 0; i < cmdsTotal; i++)
-    // {
-    //     auto& node = cmdNodes[i];
-    //     node.moveingNode.update(1, boundary);
-    // }
-    // for (size_t i = 0; i < cmdsTotal; ++i)
-    // {
-    //     auto& node0 = cmdNodes[i];
-    //     for (size_t j = i + 1; j < cmdsTotal; ++j)
-    //     {
-    //         auto& node1 = cmdNodes[j];
-    //         RectTarget::handleCollision(node0.moveingNode, node1.moveingNode);
-    //     }
-    // }
-    // for (auto i = 0; i < cmdsTotal; i++)
-    // {
-    //     auto& node = cmdNodes[i];
-    //     auto& r = node.moveingNode.rect;
-    //     node.x = r.pos.x;
-    //     node.y = r.pos.y;
-    // }
+    for (auto i = 0; i < cmdsTotal; i++)
+    {
+        auto& node = cmdNodes[i];
+        node.moveingNode.update(1, boundary);
+    }
+    for (size_t i = 0; i < cmdsTotal; ++i)
+    {
+        auto& node0 = cmdNodes[i];
+        for (size_t j = i + 1; j < cmdsTotal; ++j)
+        {
+            auto& node1 = cmdNodes[j];
+            RectTarget::handleCollision(node0.moveingNode, node1.moveingNode);
+        }
+    }
+    for (auto i = 0; i < cmdsTotal; i++)
+    {
+        auto& node = cmdNodes[i];
+        auto& r = node.moveingNode.rect;
+        node.x = r.pos.x;
+        node.y = r.pos.y;
+    }
 
 
     RectDrawCmdDesc rectDesc{};
