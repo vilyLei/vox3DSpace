@@ -124,7 +124,7 @@ void RenderCmdWorld::run()
     for (auto i = 0; i < cmdsTotal; i++)
     {
         auto& node = cmdNodes[i];
-        node.moveingNode.update(1, boundary);
+        // node.moveingNode.update(1, boundary);
     }
     // for (size_t i = 0; i < cmdsTotal; ++i)
     // {
@@ -152,8 +152,8 @@ void RenderCmdWorld::run()
         if ((bufIndex + descSize) > bufBytesLength)
             break;
         auto& node = cmdNodes[i];
-        node.x =
-            rectDesc.rcmd = node.rcmd;
+        
+        rectDesc.rcmd = node.rcmd;
         rectDesc.color    = node.color;
         node.updateToMat33(rectDesc.transform);
 

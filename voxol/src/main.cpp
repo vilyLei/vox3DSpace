@@ -184,11 +184,11 @@ extern "C"
     {
 
         printf("voxol main setGPUCtxSize size(w=%d, h=%d)\n", w, h);
-        calcProfileTest();
+        //calcProfileTest();
 
         rcmdWorld.setGPUCtxSize(w, h);
-        renderer.setGPUCtxSize(w, h);
-        renderer.render();
+        // renderer.setGPUCtxSize(w, h);
+        // renderer.render();
     }
 
     EMSCRIPTEN_KEEPALIVE
