@@ -15,8 +15,8 @@ void RenderCmdWorld::initialize()
         return;
     using namespace Voxol::Math;
 
-    auto rn    = 1;
-    auto cn    = 1;
+    auto rn    = 10;
+    auto cn    = 10;
     auto total = rn * cn;
     auto rsize = 32;
 
@@ -39,7 +39,8 @@ void RenderCmdWorld::initialize()
             commands[index]      = 1;
             // objTransforms[index] = Mat33(px, py, rsize, rsize);
             auto& node = cmdNodes[index];
-            node.color = 0xff0000aa | (index << 8);
+            node.color = 0xff0000aa | ((index) << 8);
+            // printf("node.color: %X\n", node.color);
             node.x = px;
             node.y = py;
             node.scaleX = rsize;
@@ -128,11 +129,11 @@ void RenderCmdWorld::run()
         rectDesc.color = node.color;
         node.updateToMat33(rectDesc.transform);
 
-        rectDesc.transform.print();
-        printf(">    >     >\n");
+        // rectDesc.transform.print();
+        // printf(">    >     >\n");
         rectDesc.transform.prepend(projMat);
-        rectDesc.transform.print();
-        printf(">    >     >\n");
+        // rectDesc.transform.print();
+        // printf(">    >     >\n");
 
         rectDesc.updateToBuffer(bufPtr + bufIndex);
 

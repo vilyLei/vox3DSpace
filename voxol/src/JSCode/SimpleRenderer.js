@@ -429,11 +429,16 @@ export class SimpleRenderer {
                         let f32Index = cmdIndex + 3;
                         let matvs = dataF32.subarray(f32Index, f32Index + 9);
                         let colorU32 = dataU32[cmdIndex + 2];
-                        // console.log("colorU32: ", colorU32.toString(16), ", b: ", (colorU32 & 0xff));
+                        // console.log("colorU32: ", colorU32.toString(16), ", b: ", (colorU32 & 0xff), (colorU32 & (0xff << 8)).toString(16));
                         gl.useProgram(this.prog_0.program);
                         gl.bindVertexArray(this.vao_0.vao);
 
-                        let color = new Float32Array([(colorU32 & (0xff << 16)) / 255.0, (colorU32 & (0xff << 8)) / 255.0, (colorU32 & 0xff) / 255.0, (colorU32 & (0xff << 24)) / 255.0]);
+                        let r = ((colorU32 >> 16) & 0xff) / 255.0;
+                        let g = ((colorU32 >> 8) & 0xff) / 255.0;
+                        let b = (colorU32 & 0xff) / 255.0;
+                        let a = ((colorU32 >> 24) & 0xff) / 255.0;
+
+                        let color = new Float32Array([r, g, b, a]);
                         gl.uniform4fv(this.prog_0.colorLoc, color);
                         gl.uniformMatrix3fv(this.prog_0.matrixLoc, false, matvs, 0, 9);
                         gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
