@@ -17,10 +17,10 @@ void RenderCmdWorld::initialize()
 
     printf("Voxol::Motion::RenderCmdWorld::initialize() ...\n");
 
-    auto rn    = 5;
-    auto cn    = 5;
+    auto rn    = 10;
+    auto cn    = 10;
     auto total = rn * cn;
-    auto rsize = 32;
+    auto rsize = 32.0f;
 
     buffer.resize(total * 2 * sizeof(Mat33) + 32);
     // build head data
@@ -119,7 +119,7 @@ void RenderCmdWorld::run()
     for (auto i = 0; i < cmdsTotal; i++)
     {
         auto& node = cmdNodes[i];
-        node.moveingNode.update(1, boundary);
+        node.moveingNode.update(2, boundary);
     }
     for (size_t i = 0; i < cmdsTotal; ++i)
     {
