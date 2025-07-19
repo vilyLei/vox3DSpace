@@ -10,6 +10,7 @@
                 "UNICODE",
                 "_UNICODE",
                 "__EMSCRIPTEN__"
+                "__NO_WASM_ENV"
             ],
             "windowsSdkVersion": "10.0.20348.0",
             "compilerPath": "cl.exe",

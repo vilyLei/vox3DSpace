@@ -20,20 +20,21 @@ Mat33::Mat33(std::initializer_list<float> list)
 
 Mat33::Mat33(float tx, float ty, float sx, float sy, float radians)
 {
-    float c = cosf(radians);
-    float s = sinf(radians);
+    // float c = cosf(radians);
+    // float s = sinf(radians);
 
-    data[0] = c * sx;
-    data[1] = s * sx;
-    data[2] = 0.0f;
+    // data[0] = c * sx;
+    // data[1] = s * sx;
+    // data[2] = 0.0f;
 
-    data[3] = -s * sy;
-    data[4] = c * sy;
-    data[5] = 0.0f;
+    // data[3] = -s * sy;
+    // data[4] = c * sy;
+    // data[5] = 0.0f;
 
-    data[6] = tx;
-    data[7] = ty;
-    data[8] = 1.0f;
+    // data[6] = tx;
+    // data[7] = ty;
+    // data[8] = 1.0f;
+    setTo(tx, ty, sx, sy, radians);
 }
 
 void Mat33::identity()
@@ -42,14 +43,6 @@ void Mat33::identity()
         1, 0, 0,
         0, 1, 0,
         0, 0, 1};
-}
-
-void Mat33::ortho(float width, float height)
-{
-    data = {
-        2.0f / width, 0.0f, 0.0f,
-        0.0f, -2.0f / height, 0.0f,
-        -1.0f, 1.0f, 1.0f};
 }
 
 Mat33 Mat33::translate(float tx, float ty)
@@ -68,15 +61,37 @@ Mat33 Mat33::scale(float sx, float sy)
         0, 0, 1};
 }
 
-Mat33 Mat33::rotate(float radians)
+Mat33 Mat33::rotate(float rotRadians)
 {
-    float c = cosf(radians);
-    float s = sinf(radians);
+    float c = cosf(rotRadians);
+    float s = sinf(rotRadians);
     return {
         c, s, 0,
         -s, c, 0,
         0, 0, 1};
 }
+
+
+void Mat33::setTo(float tx, float ty, float sx, float sy, float rotRadians)
+{
+    float c = cosf(rotRadians);
+    float s = sinf(rotRadians);
+
+    data = {
+        c * sx, s * sx, 0,
+        -s * sy, c * sy, 0,
+        tx, ty, 1};
+}
+
+void Mat33::ortho(float width, float height)
+{
+    data = {
+        2.0f / width, 0.0f, 0.0f,
+        0.0f, -2.0f / height, 0.0f,
+        -1.0f, 1.0f, 1.0f};
+}
+
+
 void Mat33::transpose()
 {
     std::swap(data[1], data[3]);
@@ -184,5 +199,17 @@ Mat33 Mat33::multiplySimd(const Mat33& rhs) const
 const float* Mat33::ptr() const
 {
     return data.data();
+}
+void Mat33::print() const
+{
+    printf("{\n");
+    for (int i = 0; i < 3; ++i)
+    {
+        printf("%.4f  %.4f  %.4f\n",
+               data[i * 3 + 0],
+               data[i * 3 + 1],
+               data[i * 3 + 2]);
+    }
+    printf("}\n");
 }
 } // namespace Voxol::Math

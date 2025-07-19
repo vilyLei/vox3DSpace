@@ -21,7 +21,7 @@ public:
 
     Mat33();
     Mat33(std::initializer_list<float> list);
-    Mat33(float tx, float ty, float sx = 1.0f, float sy = 1.0f, float radians = 0.0f);
+    Mat33(float tx, float ty, float sx = 1.0f, float sy = 1.0f, float rotRadians = 0.0f);
 
     void identity();
 
@@ -30,6 +30,8 @@ public:
     static Mat33 rotate(float radians = 0.0f);
 
     void ortho(float width, float height);
+    
+    void setTo(float tx, float ty, float sx = 1.0f, float sy = 1.0f, float rotRadians = 0.0f);
 
     void  transpose();
     void  prepend(const Mat33& rhs);
@@ -41,6 +43,7 @@ public:
 #endif
 
     const float* ptr() const;
+    void print() const;
 };
 } // namespace Voxol::Math
 

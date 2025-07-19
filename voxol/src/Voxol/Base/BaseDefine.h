@@ -1,6 +1,7 @@
 #ifndef VOXOL_BASE_DEFINE_H
 #define VOXOL_BASE_DEFINE_H
 
+#include <memory>
 #include <cstdint>
 
 constexpr size_t DEFAULT_SLAB_BLOCK_SIZE = 64 * 1024;
