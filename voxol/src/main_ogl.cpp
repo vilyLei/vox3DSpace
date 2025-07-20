@@ -7,7 +7,14 @@
 // cmake --build build
 //
 // http-server -p 666 --cors
-
+/*
+glew32d.lib
+glfw3.lib
+opengl32.lib
+kernel32.lib
+user32.lib
+gdi32.lib
+ */
 #include <cstdint>
 #include <cstdio>
 #include <chrono>
