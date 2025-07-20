@@ -49,5 +49,5 @@ test_backup/
 space3d/libs/spdlog/lib/
 voxol/src/build/
 voxol/src-vs/
-voxol/src-vs/
+voxol/build/
 *.code-workspace

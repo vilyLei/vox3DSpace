@@ -1,3 +1,0 @@
-D:/dev/webdev/vox3DSpace/voxol/build/CMakeFiles/voxolModule.dir
-D:/dev/webdev/vox3DSpace/voxol/build/CMakeFiles/edit_cache.dir
-D:/dev/webdev/vox3DSpace/voxol/build/CMakeFiles/rebuild_cache.dir
