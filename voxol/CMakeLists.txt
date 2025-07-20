@@ -34,7 +34,7 @@ set(PHYSICS_DIR "${VOX_DIR}/Physics")
 set(UTIL_DIR "${VOX_DIR}/Util")
 set(TEST_DIR "${VOX_DIR}/Test")
 set(THIRDPARTY_INCLUDE "${SRC_DIR}/thirdPart/opengl/libx64/include")
-set(THIRDPARTY_LIB "${SRC_DIR}/thirdPart/opengl//libx64lib")
+set(THIRDPARTY_LIB "${SRC_DIR}/thirdPart/opengl/libx64/lib")
 
 # ================== 包含头文件 ==================
 include_directories(
@@ -86,11 +86,11 @@ source_group("Test" FILES ${TEST_SRC})
 
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Emscripten")
-set(MAIN_FILE ${SRC_DIR}/main_wasm.cpp)
-message(STATUS "apply wasm main")
+  set(MAIN_FILE ${SRC_DIR}/main_wasm.cpp)
+  message(STATUS "apply wasm main")
 else()
-message(STATUS "apply opengl main")
-set(MAIN_FILE ${SRC_DIR}/main_ogl.cpp)
+  message(STATUS "apply opengl main")
+  set(MAIN_FILE ${SRC_DIR}/main_ogl.cpp)
 endif()
 
 list(APPEND ALL_SOURCES ${MAIN_FILE})
@@ -130,9 +130,11 @@ else()
   message(STATUS "Target: Native (OpenGL)")
 
   add_executable(voxolModule ${ALL_SOURCES})
-
   target_link_directories(voxolModule PRIVATE ${THIRDPARTY_LIB})
-  target_link_libraries(voxolModule PRIVATE opengl32)
-
+  target_link_libraries(voxolModule PRIVATE
+    opengl32
+    glew32d
+    glfw3
+  )
   target_compile_definitions(voxolModule PRIVATE GLEW_STATIC)
 endif()
