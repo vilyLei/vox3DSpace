@@ -94,13 +94,12 @@ int OglRenderer::initCtx()
     int NumberOfExtensions = 0;
 
 
-    glGetIntegerv(GL_NUM_EXTENSIONS, &NumberOfExtensions);
-    for (int i = 0; i < NumberOfExtensions; i++)
-    {
-        const GLubyte* info = glGetStringi(GL_EXTENSIONS, i);
-        //Now, do something with ccc
-        std::cout << "extends info:" << info << std::endl;
-    }
+    //glGetIntegerv(GL_NUM_EXTENSIONS, &NumberOfExtensions);
+    //for (int i = 0; i < NumberOfExtensions; i++)
+    //{
+    //    const GLubyte* info = glGetStringi(GL_EXTENSIONS, i);
+    //    std::cout << "extends info:" << info << std::endl;
+    //}
     // Define the viewport dimensions
     glViewport(0, 0, ctxWidth, ctxHeight);
 
@@ -241,8 +240,14 @@ void OglRenderer::draw()
     if (!program)
         return;
 
+    if (onDraw) {
+        onDraw(ctxWidth, ctxHeight);
+    }
+    if (cmdBuf.empty())
+        return;
+
     size_t cmdStride = 4;
-    size_t cmdIndex = 4;
+    size_t cmdIndex = 3;
     size_t   cmdByteIndex = cmdIndex * cmdStride;
     uint32_t cmdsTotal    = 0;
 
@@ -250,11 +255,10 @@ void OglRenderer::draw()
     const auto ptr   = cmdBuf.data();
     std::memcpy(&cmdsTotal, ptr + cmdByteIndex, sizeof(cmdsTotal));
 
-    cmdIndex ++;
+    cmdIndex += 2;
 
     for (;;)
     {
-
         uint32_t cmd = 0;
         cmdByteIndex = cmdIndex * cmdStride;
         std::memcpy(&cmd, ptr + cmdByteIndex, sizeof(cmd));
@@ -262,8 +266,7 @@ void OglRenderer::draw()
             //printf("cmd to end !!!\n");
             break;
         }
-        cmdIndex++;
-        cmdByteIndex      = cmdIndex * cmdStride;
+        cmdByteIndex      = (cmdIndex +1) * cmdStride;
         //
         uint32_t descSize = 0;
         std::memcpy(&descSize, ptr + cmdByteIndex, sizeof(cmd));
@@ -274,7 +277,7 @@ void OglRenderer::draw()
                 glUseProgram(program);
                 glBindVertexArray(vao);
 
-                cmdByteIndex      = (cmdIndex + 1) * cmdStride;
+                cmdByteIndex      = (cmdIndex + 2) * cmdStride;
                 uint32_t colorU32 = 0;
                 std::memcpy(&colorU32, ptr + cmdByteIndex, sizeof(colorU32));
 
@@ -283,7 +286,7 @@ void OglRenderer::draw()
                 auto g = ((colorU32 >> 8) & 0xff) / 255.0f;
                 auto b = (colorU32 & 0xff) / 255.0f;
 
-                cmdByteIndex  = (cmdIndex + 2) * cmdStride;
+                cmdByteIndex  = (cmdIndex + 3) * cmdStride;
                 float matvs[9];
                 std::memcpy(&matvs, ptr + cmdByteIndex, sizeof(matvs));
 
@@ -294,10 +297,16 @@ void OglRenderer::draw()
                 glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 
             }
+            break;
             default:
+            {
+                descSize = 0;
+            }
                 break;
         }
-        
+        if (descSize < 1) {
+            break;
+        }
         cmdIndex += descSize;
 
     }

@@ -7,6 +7,7 @@
 #include <iostream>
 #include <cmath>
 #include <vector>
+#include <functional>
 
 #include <GL/glew.h>
 #include <glfw3.h>
@@ -30,6 +31,7 @@ public:
     GLuint         ctxWidth = 800;
     GLuint         ctxHeight = 600;
     std::vector<uint8_t> cmdBuf{};
+    std::function<void(GLuint, GLuint)> onDraw;
 
 private:
 

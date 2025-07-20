@@ -109,11 +109,15 @@ int main()
 
     Voxol::Motion::RenderCmdWorld rcmdWorld{};
     Voxol::Test::OglRenderer      renderer{};
-    rcmdWorld.setGPUCtxSize(renderer.ctxWidth, renderer.ctxHeight);
 
+    rcmdWorld.setGPUCtxSize(renderer.ctxWidth, renderer.ctxHeight);
     rcmdWorld.run();
 
-    renderer.cmdBuf                   = rcmdWorld.buffer;
+    renderer.onDraw = [&](GLuint, GLuint) {
+        rcmdWorld.setGPUCtxSize(renderer.ctxWidth, renderer.ctxHeight);
+        rcmdWorld.run();
+        renderer.cmdBuf = rcmdWorld.buffer;
+    };
     renderer.init();
     return 1;
 }
