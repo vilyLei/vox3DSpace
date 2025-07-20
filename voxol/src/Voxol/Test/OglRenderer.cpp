@@ -34,12 +34,39 @@ GLuint compileShader(GLenum type, const char* source)
 }
 } // namespace OglTest
 
-void         key_callback(GLFWwindow* window, int key, int scancode, int action, int mode);
-void         mousePos_callback(GLFWwindow* window, double posX, double posY);
-void         mouseButton_callback(GLFWwindow* window, int sign, int flag, int type);
-void         mouseEnter_callback(GLFWwindow* window, int flag);
-void         scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 
+
+GLuint ctxCurrWidth  = 800;
+GLuint ctxCurrHeight = 600;
+// Is called whenever a key is pressed/released via GLFW
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode)
+{
+    std::cout << "key code: " << key << std::endl;
+    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
+        glfwSetWindowShouldClose(window, GL_TRUE);
+}
+void mousePos_callback(GLFWwindow* window, double posX, double posY)
+{
+    std::cout << "mouse pos(" << posX << ", " << posY << ")" << std::endl;
+}
+void mouseButton_callback(GLFWwindow* window, int sign, int flag, int type)
+{
+    std::cout << "mouse button( sign=" << sign << ", flag=" << flag << ",type=" << type << ")" << std::endl;
+}
+void mouseEnter_callback(GLFWwindow* window, int flag)
+{
+
+    std::cout << "mouse enter( flag=" << flag << ")" << std::endl;
+}
+void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
+{
+    std::cout << "mouse button( xoffset=" << xoffset << ", yoffset=" << yoffset << ")" << std::endl;
+}
+void framebuffer_size_callback(GLFWwindow* window, int width, int height)
+{
+    ctxCurrWidth  = width;
+    ctxCurrHeight = height;
+}
 
 OglRenderer::~OglRenderer()
 {
@@ -55,10 +82,11 @@ int OglRenderer::initCtx()
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, ver_major);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, ver_minor);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
+    //glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
+    glfwWindowHint(GLFW_RESIZABLE, GL_TRUE);
 
     // Create a GLFWwindow object that we can use for GLFW's functions
-    GLFWwindow* window = glfwCreateWindow(ctxWidth, ctxHeight, "LearnOpenGL", nullptr, nullptr);
+    GLFWwindow* window = glfwCreateWindow(ctxWidth, ctxHeight, "VoxolModule", nullptr, nullptr);
     if (window == nullptr)
     {
         std::cout << "Failed to create GLFW window" << std::endl;
@@ -72,6 +100,7 @@ int OglRenderer::initCtx()
     glfwSetMouseButtonCallback(window, mouseButton_callback);
     glfwSetCursorEnterCallback(window, mouseEnter_callback);
     glfwSetScrollCallback(window, scroll_callback);
+    glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
     // Set this to true so GLEW knows to use a modern approach to retrieving function pointers and extensions
     glewExperimental = GL_TRUE;
@@ -110,6 +139,10 @@ int OglRenderer::initCtx()
         // Check if any events have been activiated (key pressed, mouse moved etc.) and call corresponding response functions
         glfwPollEvents();
 
+        ctxWidth = ctxCurrWidth;
+        ctxHeight = ctxCurrHeight;
+
+        glViewport(0, 0, ctxWidth, ctxHeight);
         // Render
         // Clear the colorbuffer
         glClearColor(0.95f, 0.95f, 0.95f, 1.0f);
@@ -127,30 +160,6 @@ int OglRenderer::initCtx()
     return 0;
 }
 
-// Is called whenever a key is pressed/released via GLFW
-void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode)
-{
-    std::cout << "key code: " << key << std::endl;
-    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
-        glfwSetWindowShouldClose(window, GL_TRUE);
-}
-void mousePos_callback(GLFWwindow* window, double posX, double posY)
-{
-    std::cout << "mouse pos(" << posX << ", " << posY << ")" << std::endl;
-}
-void mouseButton_callback(GLFWwindow* window, int sign, int flag, int type)
-{
-    std::cout << "mouse button( sign=" << sign << ", flag=" << flag << ",type=" << type << ")" << std::endl;
-}
-void mouseEnter_callback(GLFWwindow* window, int flag)
-{
-
-    std::cout << "mouse enter( flag=" << flag << ")" << std::endl;
-}
-void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
-{
-    std::cout << "mouse button( xoffset=" << xoffset << ", yoffset=" << yoffset << ")" << std::endl;
-}
 
 
 void OglRenderer::initRender()
