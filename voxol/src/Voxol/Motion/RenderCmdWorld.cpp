@@ -87,7 +87,7 @@ void RenderCmdWorld::run()
 
     initialize();
 
-    auto cmdsTotal = cmdNodes.size();
+    auto cmdsTotal = static_cast<uint32_t>(cmdNodes.size());
 
     // printf("RenderCmdWorld::run() sizeof(projMat): %zu\n", sizeof(projMat));
     // printf("RenderCmdWorld::run() cmdsTotal: %zu\n", cmdsTotal);
@@ -140,7 +140,6 @@ void RenderCmdWorld::run()
         //printf("node (x=%f, y=%f)\n", node.x, node.y);
     }
 
-
     RectDrawCmdDesc rectDesc{};
     for (auto i = 0; i < cmdsTotal; i++)
     {
@@ -172,7 +171,6 @@ void RenderCmdWorld::run()
 
 const uint8_t* RenderCmdWorld::cmdBuffer() const
 {
-    // return (uint8_t*)transforms.data();
     return buffer.data();
 }
 

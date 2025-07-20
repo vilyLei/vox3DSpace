@@ -255,7 +255,7 @@ void OglRenderer::draw()
     const auto ptr   = cmdBuf.data();
     std::memcpy(&cmdsTotal, ptr + cmdByteIndex, sizeof(cmdsTotal));
 
-    cmdIndex += 2;
+    cmdIndex++;
 
     for (;;)
     {
@@ -267,7 +267,7 @@ void OglRenderer::draw()
             break;
         }
         cmdByteIndex      = (cmdIndex +1) * cmdStride;
-        //
+
         uint32_t descSize = 0;
         std::memcpy(&descSize, ptr + cmdByteIndex, sizeof(cmd));
         switch (cmd)
