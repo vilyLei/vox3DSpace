@@ -434,10 +434,10 @@ export class SimpleRenderer {
                         gl.useProgram(this.prog_0.program);
                         gl.bindVertexArray(this.vao_0.vao);
 
+                        let a = ((colorU32 >> 24) & 0xff) / 255.0;
                         let r = ((colorU32 >> 16) & 0xff) / 255.0;
                         let g = ((colorU32 >> 8) & 0xff) / 255.0;
                         let b = (colorU32 & 0xff) / 255.0;
-                        let a = ((colorU32 >> 24) & 0xff) / 255.0;
 
                         let color = new Float32Array([r, g, b, a]);
                         gl.uniform4fv(this.prog_0.colorLoc, color);

@@ -39,7 +39,6 @@ void         mousePos_callback(GLFWwindow* window, double posX, double posY);
 void         mouseButton_callback(GLFWwindow* window, int sign, int flag, int type);
 void         mouseEnter_callback(GLFWwindow* window, int flag);
 void         scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
-const GLuint WIDTH = 800, HEIGHT = 600;
 
 
 OglRenderer::~OglRenderer()
@@ -59,7 +58,7 @@ int OglRenderer::initCtx()
     glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
 
     // Create a GLFWwindow object that we can use for GLFW's functions
-    GLFWwindow* window = glfwCreateWindow(WIDTH, HEIGHT, "LearnOpenGL", nullptr, nullptr);
+    GLFWwindow* window = glfwCreateWindow(ctxWidth, ctxHeight, "LearnOpenGL", nullptr, nullptr);
     if (window == nullptr)
     {
         std::cout << "Failed to create GLFW window" << std::endl;
@@ -103,7 +102,7 @@ int OglRenderer::initCtx()
         std::cout << "extends info:" << info << std::endl;
     }
     // Define the viewport dimensions
-    glViewport(0, 0, WIDTH, HEIGHT);
+    glViewport(0, 0, ctxWidth, ctxHeight);
 
     initRender();
     // Game loop
@@ -203,7 +202,7 @@ void OglRenderer::render()
     // scale = (std::cos(angle * 3) * 0.5f + 0.5f) * 0.5f + 0.5f;
 
     Mat33 projM;
-    projM.ortho(WIDTH, HEIGHT);
+    projM.ortho(ctxWidth, ctxHeight);
 
     {
         Mat33 objM(100, 200, 200, 100);
@@ -241,8 +240,6 @@ void OglRenderer::draw()
 
     if (!program)
         return;
-    glUseProgram(program);
-    glBindVertexArray(vao);
 
     size_t cmdStride = 4;
     size_t cmdIndex = 4;
@@ -270,7 +267,36 @@ void OglRenderer::draw()
         //
         uint32_t descSize = 0;
         std::memcpy(&descSize, ptr + cmdByteIndex, sizeof(cmd));
+        switch (cmd)
+        {
+            case 0x33:
+            {
+                glUseProgram(program);
+                glBindVertexArray(vao);
 
+                cmdByteIndex      = (cmdIndex + 1) * cmdStride;
+                uint32_t colorU32 = 0;
+                std::memcpy(&colorU32, ptr + cmdByteIndex, sizeof(colorU32));
+
+                auto a = ((colorU32 >> 24) & 0xff) / 255.0f;
+                auto r = ((colorU32 >> 16) & 0xff) / 255.0f;
+                auto g = ((colorU32 >> 8) & 0xff) / 255.0f;
+                auto b = (colorU32 & 0xff) / 255.0f;
+
+                cmdByteIndex  = (cmdIndex + 2) * cmdStride;
+                float matvs[9];
+                std::memcpy(&matvs, ptr + cmdByteIndex, sizeof(matvs));
+
+                glUniformMatrix3fv(matrixLoc, 1, GL_FALSE, matvs);
+                float colorvs[4] = {r,g,b,a};
+                glUniform4fv(colorLoc, 1, colorvs);
+
+                glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+
+            }
+            default:
+                break;
+        }
         
         cmdIndex += descSize;
 

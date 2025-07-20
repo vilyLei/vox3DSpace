@@ -109,6 +109,7 @@ int main()
 
     Voxol::Motion::RenderCmdWorld rcmdWorld{};
     Voxol::Test::OglRenderer      renderer{};
+    rcmdWorld.setGPUCtxSize(renderer.ctxWidth, renderer.ctxHeight);
 
     rcmdWorld.run();
 

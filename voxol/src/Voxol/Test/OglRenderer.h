@@ -27,6 +27,8 @@ public:
     void init();
 
 public:
+    GLuint         ctxWidth = 800;
+    GLuint         ctxHeight = 600;
     std::vector<uint8_t> cmdBuf{};
 
 private:
