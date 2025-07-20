@@ -38,9 +38,10 @@ gdi32.lib
 
 // #include "Voxol/Render/RenderCmdWorld.h"
 #include "Voxol/Motion/RenderCmdWorld.h"
-
 #include "Voxol/Test/TestRenderer.h"
 
+#define GLEW_STATIC    
+#include <GL/glew.h>
 
 Voxol::Motion::RenderCmdWorld rcmdWorld{};
 void                          testMemoryManage()
@@ -108,127 +109,9 @@ void calcProfileTest()
     printf("calcProfileTest() elapsed time: %llums\n", duration.count());
 #endif
 }
-#ifdef __EMSCRIPTEN__
-
-Voxol::Test::TestRenderer renderer{};
-uint8_t                   data[256];
-
-// 加法：result = a + b
-void add_f32x4(const float* a, const float* b, float* result)
-{
-    v128_t va   = wasm_v128_load(a);
-    v128_t vb   = wasm_v128_load(b);
-    v128_t vsum = wasm_f32x4_add(va, vb);
-    wasm_v128_store(result, vsum);
-}
-
-// 乘法：result = a * b
-void mul_f32x4(const float* a, const float* b, float* result)
-{
-    v128_t va   = wasm_v128_load(a);
-    v128_t vb   = wasm_v128_load(b);
-    v128_t vmul = wasm_f32x4_mul(va, vb);
-    wasm_v128_store(result, vmul);
-}
-
-// 打印4个 float
-void print_f32x4(const float* vec, const char* label)
-{
-    printf("%s: [%.2f, %.2f, %.2f, %.2f]\n", label, vec[0], vec[1], vec[2],
-           vec[3]);
-}
-
-// 示例主函数（仅供本地调试或测试）
-void testSimd()
-{
-
-    printf("testSimd() begin ...\n");
-
-    alignas(16) float a[4] = {1.0f, 2.0f, 3.0f, 4.0f};
-    alignas(16) float b[4] = {5.0f, 6.0f, 7.0f, 8.0f};
-    alignas(16) float r[4];
-
-    add_f32x4(a, b, r);
-    print_f32x4(r, "add");
-
-    mul_f32x4(a, b, r);
-    print_f32x4(r, "mul");
-
-    printf("testSimd() end ...\n");
-}
-
-extern "C"
-{
-
-    EMSCRIPTEN_KEEPALIVE
-    int get_heap_size_bytes()
-    {
-        return emscripten_get_heap_size(); // 更轻量、无 Embind 依赖
-    }
-
-    // 获取数据的起始地址
-    EMSCRIPTEN_KEEPALIVE
-    uint8_t* get_buffer_ptr() { return data; }
-
-    // 写入数据
-    EMSCRIPTEN_KEEPALIVE
-    void set_buffer_value(int index, uint8_t value)
-    {
-        if (index >= 0 && index < 256)
-            data[index] = value;
-    }
-    EMSCRIPTEN_KEEPALIVE
-    void startup()
-    {
-        printf("voxol main startup() ...\n");
-        // testSimd();
-        // testMemoryManage();
-        renderer.startup();
-    }
-
-    EMSCRIPTEN_KEEPALIVE
-    void setGPUCtxSize(int w, int h)
-    {
-
-        // printf("voxol main setGPUCtxSize size(w=%d, h=%d)\n", w, h);
-        //calcProfileTest();
-
-        rcmdWorld.setGPUCtxSize(w, h);
-        // renderer.setGPUCtxSize(w, h);
-        // renderer.render();
-    }
-
-    EMSCRIPTEN_KEEPALIVE
-    void setMouseParams(float x, float y, int type, int flag)
-    {
-
-        printf("voxol main setMouseParams mouseParam(x=%f, y=%f, type=%d, flag=:%d)\n", x, y, type, flag);
-
-        rcmdWorld.setMouseXY(x, y);
-        // renderer.setMouseXY(x, y);
-        // renderer.render();
-    }
-
-
-
-    EMSCRIPTEN_KEEPALIVE
-    void run()
-    {
-        rcmdWorld.run();
-    }
-
-    EMSCRIPTEN_KEEPALIVE
-    uint8_t* getCmds() { return (uint8_t*)rcmdWorld.commands.data(); }
-    EMSCRIPTEN_KEEPALIVE
-    size_t getCmdsTotal() { return rcmdWorld.commands.size(); }
-    EMSCRIPTEN_KEEPALIVE
-    uint8_t* getRenderCmdBuffer() { return (uint8_t*)rcmdWorld.cmdBuffer(); }
-}
-#else
 int main()
 {
     testMemoryManage();
     calcProfileTest();
     return 1;
 }
-#endif

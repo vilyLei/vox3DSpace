@@ -134,5 +134,5 @@ else()
   target_link_directories(voxolModule PRIVATE ${THIRDPARTY_LIB})
   target_link_libraries(voxolModule PRIVATE opengl32)
 
-  target_compile_definitions(vox_native PRIVATE GLEW_STATIC)
+  target_compile_definitions(voxolModule PRIVATE GLEW_STATIC)
 endif()

@@ -44,6 +44,7 @@ jsonTest/
 rendererTest/
 space3d_vs/
 space3d-vs/
+voxol-vs/
 test_backup/
 space3d/libs/spdlog/lib/
 voxol/src/build/
