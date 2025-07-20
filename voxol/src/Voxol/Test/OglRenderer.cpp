@@ -41,6 +41,10 @@ void         mouseEnter_callback(GLFWwindow* window, int flag);
 void         scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 const GLuint WIDTH = 800, HEIGHT = 600;
 
+
+OglRenderer::~OglRenderer()
+{
+}
 int OglRenderer::initCtx()
 {
     int ver_major = 3;
@@ -79,12 +83,14 @@ int OglRenderer::initCtx()
         return -1;
     }
 
+    bool isSupport = glewIsSupported("GL_EXT_framebuffer_object");
+
     const char* vendorName = reinterpret_cast<const char*>(glGetString(GL_VENDOR));
     const char* version    = reinterpret_cast<const char*>(glGetString(GL_VERSION));
 
-    std::cout << "vendorName " << vendorName << std::endl;
-    std::cout << "version " << version << std::endl;
-    bool isSupport = glewIsSupported("GL_EXT_framebuffer_object");
+    std::cout << "vendorName: " << vendorName << std::endl;
+    std::cout << "version: " << version << std::endl;
+    std::cout << "isSupport: " << isSupport << std::endl;
 
     int NumberOfExtensions = 0;
 
@@ -111,7 +117,8 @@ int OglRenderer::initCtx()
         glClearColor(0.95f, 0.95f, 0.95f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        render();
+        //render();
+        draw();
 
         // Swap the screen buffers
         glfwSwapBuffers(window);
@@ -225,6 +232,48 @@ void OglRenderer::render()
         glUniform4fv(colorLoc, 1, color.data());
 
         glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+    }
+}
+
+void OglRenderer::draw()
+{
+    using namespace Voxol::Math;
+
+    if (!program)
+        return;
+    glUseProgram(program);
+    glBindVertexArray(vao);
+
+    size_t cmdStride = 4;
+    size_t cmdIndex = 4;
+    size_t   cmdByteIndex = cmdIndex * cmdStride;
+    uint32_t cmdsTotal    = 0;
+
+    auto       total = cmdBuf.size();
+    const auto ptr   = cmdBuf.data();
+    std::memcpy(&cmdsTotal, ptr + cmdByteIndex, sizeof(cmdsTotal));
+
+    cmdIndex ++;
+
+    for (;;)
+    {
+
+        uint32_t cmd = 0;
+        cmdByteIndex = cmdIndex * cmdStride;
+        std::memcpy(&cmd, ptr + cmdByteIndex, sizeof(cmd));
+        if (cmd == 0) {
+            //printf("cmd to end !!!\n");
+            break;
+        }
+        cmdIndex++;
+        cmdByteIndex      = cmdIndex * cmdStride;
+        //
+        uint32_t descSize = 0;
+        std::memcpy(&descSize, ptr + cmdByteIndex, sizeof(cmd));
+
+        
+        cmdIndex += descSize;
+
     }
 }
 void OglRenderer::init()

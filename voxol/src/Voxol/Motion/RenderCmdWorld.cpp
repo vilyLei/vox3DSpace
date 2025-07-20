@@ -17,8 +17,8 @@ void RenderCmdWorld::initialize()
 
     printf("Voxol::Motion::RenderCmdWorld::initialize() ...\n");
 
-    auto rn    = 10;
-    auto cn    = 10;
+    auto rn    = 1;
+    auto cn    = 1;
     auto total = rn * cn;
     auto rsize = 32.0f;
 
