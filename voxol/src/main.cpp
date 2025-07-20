@@ -2,7 +2,7 @@
 // emcmake cmake ..
 // cmake --build .
 
-// ..\..\..\..\..\dev\webwasm\emsdk\emsdk_env.bat
+// ..\..\..\..\dev\webwasm\emsdk\emsdk_env.bat
 // emcmake "C:/Program Files/CMake/bin/cmake.exe" -B build -G Ninja
 // cmake --build build
 //
