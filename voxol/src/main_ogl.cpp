@@ -35,6 +35,7 @@ gdi32.lib
 // #include "Voxol/Render/RenderCmdWorld.h"
 #include "Voxol/Motion/RenderCmdWorld.h"
 #include "Voxol/Test/OglRenderer.h"
+#include "Voxol/Test/TestConcurrent.h"
 
 void testMemoryManage()
 {
@@ -102,7 +103,7 @@ void calcProfileTest()
 #endif
 }
 
-int main()
+void runRendering()
 {
     // testMemoryManage();
     // calcProfileTest();
@@ -119,5 +120,20 @@ int main()
         renderer.cmdBuf = rcmdWorld.buffer;
     };
     renderer.init();
+}
+void runConcurrent()
+{
+    Voxol::Test::TestConcurrent      conCurrent{};
+    conCurrent.init();
+}
+
+int main()
+{
+    // testMemoryManage();
+    // calcProfileTest();
+
+    // runRendering();
+    runConcurrent();
+
     return 1;
 }
