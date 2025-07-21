@@ -1,5 +1,5 @@
-#ifndef VOXOL_RENDER_CMD_WORLD_H
-#define VOXOL_RENDER_CMD_WORLD_H
+#ifndef VOXOL_BASE_MOTION_CMD_WORLD_H
+#define VOXOL_BASE_MOTION_CMD_WORLD_H
 
 
 #include <vector>
@@ -13,15 +13,15 @@ namespace Voxol::Motion
 class BaseMotionCmdWorld
 {
 public:
-    std::vector<uint32_t>        commands{};
+    std::vector<uint32_t>                commands{};
     std::vector<Detail::DrawCmdTestNode> cmdNodes{};
-    Voxol::Math::Mat33 projMat{};
+    Voxol::Math::Mat33                   projMat{};
 
     std::vector<uint8_t> buffer{};
 
     bool dirty = true;
 
-    int ctxWidth = 512;
+    int ctxWidth  = 512;
     int ctxHeight = 512;
 
 public:
@@ -41,5 +41,5 @@ private:
     uint32_t mTailData[2]{0x0, 0x0};
 };
 
-} // namespace Voxol::Render
+} // namespace Voxol::Motion
 #endif
