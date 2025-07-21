@@ -132,7 +132,7 @@ int main()
     // testMemoryManage();
     // calcProfileTest();
 
-    // runRendering();
+    //runRendering();
     runConcurrent();
 
     return 1;

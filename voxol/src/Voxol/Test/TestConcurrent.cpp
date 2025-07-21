@@ -9,6 +9,8 @@
 #include <atomic>
 #include <chrono>
 #include <shared_mutex>
+#include <optional>
+#include <random>
 
 namespace Voxol::Test
 {
@@ -355,6 +357,154 @@ int main()
 }
 
 }
+
+namespace Demo05
+{
+using TimePoint           = std::chrono::steady_clock::time_point;
+constexpr int BUFFER_SIZE = 4;
+
+struct MatrixSlot
+{
+    std::optional<Matrix> data;
+    TimePoint             timestamp = TimePoint::min();
+};
+
+class MatrixRingBuffer
+{
+public:
+    MatrixRingBuffer(size_t rows, size_t cols)
+    {
+        for (int i = 0; i < BUFFER_SIZE; ++i)
+        {
+            buffers[i].data = Matrix(rows, std::vector<float>(cols, 0));
+        }
+    }
+
+    void write(const Matrix& m)
+    {
+        int index = writeIndex.fetch_add(1, std::memory_order_relaxed) & (BUFFER_SIZE - 1);
+        {
+            std::unique_lock lock(bufferLocks[index]);
+            buffers[index].data      = m;
+            buffers[index].timestamp = std::chrono::steady_clock::now();
+        }
+        latestIndex.store(index, std::memory_order_release);
+    }
+
+    std::optional<Matrix> readIfUpdated(TimePoint& lastSeen) const
+    {
+        int              index = latestIndex.load(std::memory_order_acquire);
+        std::shared_lock lock(bufferLocks[index]);
+        if (buffers[index].timestamp > lastSeen && buffers[index].data.has_value())
+        {
+            lastSeen = buffers[index].timestamp;
+            return buffers[index].data;
+        }
+        return std::nullopt;
+    }
+
+    void cleanupOldData(std::chrono::milliseconds maxAge)
+    {
+        TimePoint now = std::chrono::steady_clock::now();
+        for (int i = 0; i < BUFFER_SIZE; ++i)
+        {
+            std::unique_lock lock(bufferLocks[i]);
+            if (buffers[i].data.has_value() && (now - buffers[i].timestamp > maxAge))
+            {
+                buffers[i].data.reset();
+            }
+        }
+    }
+
+private:
+    MatrixSlot                buffers[BUFFER_SIZE];
+    mutable std::shared_mutex bufferLocks[BUFFER_SIZE];
+    std::atomic<int>          writeIndex{0};
+    std::atomic<int>          latestIndex{0};
+};
+
+Matrix generateRandomMatrix(size_t rows, size_t cols)
+{
+    Matrix                                m(rows, std::vector<float>(cols));
+    static std::mt19937                   gen(std::random_device{}());
+    std::uniform_real_distribution<float> dist(0.0f, 1.0f);
+    for (auto& row : m)
+        for (auto& v : row)
+            v = dist(gen);
+    return m;
+}
+
+void render(const Matrix& m, int readerId)
+{
+    std::cout << "[Reader " << readerId << "] Matrix updated:\n";
+    for (const auto& row : m)
+    {
+        for (float v : row)
+            std::cout << v << " ";
+        std::cout << "\n";
+    }
+    std::cout << "---\n";
+}
+
+void renderBlank(int readerId)
+{
+    std::cout << "[Reader " << readerId << "] No update, rendering blank frame.\n---\n";
+}
+
+int main()
+{
+    MatrixRingBuffer buffer(2, 2);
+
+    // Producer thread: generates new matrix every 10ms
+    std::thread producer([&]() {
+        while (true)
+        {
+            Matrix m = generateRandomMatrix(2, 2);
+            buffer.write(m);
+            std::this_thread::sleep_for(std::chrono::milliseconds(10));
+        }
+    });
+
+    // Reader threads
+    auto readerFunc = [&](int id) {
+        TimePoint lastSeen = TimePoint::min();
+        while (true)
+        {
+            auto now    = std::chrono::steady_clock::now();
+            auto result = buffer.readIfUpdated(lastSeen);
+            if (result)
+            {
+                render(*result, id);
+            }
+            else if (now - lastSeen > std::chrono::milliseconds(800))
+            {
+                renderBlank(id);
+            }
+            std::this_thread::sleep_for(std::chrono::milliseconds(500));
+        }
+    };
+
+    std::thread reader1(readerFunc, 1);
+    std::thread reader2(readerFunc, 2);
+
+    // Cleanup thread: clears old buffers every 1 second
+    std::thread cleaner([&]() {
+        while (true)
+        {
+            buffer.cleanupOldData(std::chrono::seconds(2));
+            std::this_thread::sleep_for(std::chrono::seconds(1));
+        }
+    });
+
+    producer.join();
+    reader1.join();
+    reader2.join();
+    cleaner.join();
+
+    return 0;
+}
+}
+
 } // namespace Thread
 
 void TestConcurrent::init()
@@ -362,6 +512,7 @@ void TestConcurrent::init()
     //Thread::Demo01::main();
     //Thread::Demo02::main();
     //Thread::Demo03::main();
-    Thread::Demo04::main();
+    //Thread::Demo04::main();
+    Thread::Demo05::main();
 }
 } // namespace Voxol::Test
