@@ -33,7 +33,8 @@ gdi32.lib
 #include "Voxol/System/RenderSystem.h"
 
 // #include "Voxol/Render/RenderCmdWorld.h"
-#include "Voxol/Motion/RenderCmdWorld.h"
+// #include "Voxol/Motion/RenderCmdWorld.h"
+#include "Voxol/Motion/BaseMotionCmdWorld.h"
 #include "Voxol/Test/OglRenderer.h"
 #include "Voxol/Test/TestConcurrent.h"
 
@@ -108,7 +109,7 @@ void runRendering()
     // testMemoryManage();
     // calcProfileTest();
 
-    Voxol::Motion::RenderCmdWorld rcmdWorld{};
+    Voxol::Motion::BaseMotionCmdWorld rcmdWorld{};
     Voxol::Test::OglRenderer      renderer{};
 
     rcmdWorld.setGPUCtxSize(renderer.ctxWidth, renderer.ctxHeight);
@@ -132,8 +133,8 @@ int main()
     // testMemoryManage();
     // calcProfileTest();
 
-    //runRendering();
-    runConcurrent();
+    runRendering();
+    //runConcurrent();
 
     return 1;
 }
