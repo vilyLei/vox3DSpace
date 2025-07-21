@@ -25,9 +25,13 @@ void DrawCmdTestNode::setRGB(uint8_t red, uint8_t green, uint8_t blue)
 }
 void DrawCmdTestNode::init(uint32_t index)
 {
+    vx = makeRandomFloat() * 2;
+    vy = makeRandomFloat() * 2;
 }
 void DrawCmdTestNode::update(uint32_t index, float width, float height)
 {
+    x += vx;
+    y += vy;
 }
 void DrawCmdTestNode::updateToMat33(Mat33& mat)
 {

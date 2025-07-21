@@ -25,6 +25,9 @@ struct DrawCmdTestNode
 {
     uint32_t rcmd   = 0x33;
     uint32_t color  = 0xff00aa00;
+    // velocity
+    float    vx      = 0;
+    float    vy      = 0;
     float    x      = 0;
     float    y      = 0;
     float    scaleX = 1;
@@ -39,12 +42,14 @@ struct DrawCmdTestNode
     void update(uint32_t index, float width, float height);
     void updateToMat33(Mat33& mat);
 };
-} // namespace Unit
+} // namespace Detail
 class BaseMotionCmdNode
 {
 public:
     BaseMotionCmdNode()  = default;
     ~BaseMotionCmdNode() = default;
+
+public:
 };
 
 } // namespace Voxol::Motion
