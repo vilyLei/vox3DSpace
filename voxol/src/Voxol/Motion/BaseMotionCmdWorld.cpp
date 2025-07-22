@@ -46,8 +46,8 @@ void BaseMotionCmdWorld::initialize()
             // printf("node.color: %X\n", node.color);
             node.x                = px;
             node.y                = py;
-            node.scaleX           = rsize;
-            node.scaleY           = rsize;
+            node.width            = rsize;
+            node.height           = rsize;
             node.init(index);
 
             index++;

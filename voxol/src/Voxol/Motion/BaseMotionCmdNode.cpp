@@ -28,14 +28,39 @@ void DrawCmdTestNode::init(uint32_t index)
     vx = makeRandomFloat() * 2;
     vy = makeRandomFloat() * 2;
 }
-void DrawCmdTestNode::update(uint32_t index, float width, float height)
+void DrawCmdTestNode::update(uint32_t index, float boundaryWidth, float boundaryHeight)
 {
+
+    auto tx = x + vx;
+    auto ty = y + vy;
+    auto minX = 0;
+    auto minY = 0;
+    auto maxX = boundaryWidth;
+    auto maxY = boundaryHeight;
+    if (vx < 0 && tx < minX)
+    {
+        vx *= -1;
+    }
+    else if (vx > 0 && (tx + width) > maxX)
+    {
+        vx *= -1;
+    }
+
+    if (vy < 0 && ty < minY)
+    {
+        vy *= -1;
+    }
+    else if (vy > 0 && (ty + height) > maxY)
+    {
+        vy *= -1;
+    }
+
     x += vx;
     y += vy;
 }
 void DrawCmdTestNode::updateToMat33(Mat33& mat)
 {
-    mat.setTo(x, y, scaleX, scaleY, rotation);
+    mat.setTo(x, y, width, height, rotation);
 }
 } // namespace Detail
 } // namespace Voxol::Motion

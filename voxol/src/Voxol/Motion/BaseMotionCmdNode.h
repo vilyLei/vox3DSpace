@@ -30,8 +30,8 @@ struct DrawCmdTestNode
     float    vy      = 0;
     float    x      = 0;
     float    y      = 0;
-    float    scaleX = 1;
-    float    scaleY = 1;
+    float    width = 1;
+    float    height = 1;
     /// @brief radian value
     float rotation = 0;
 
@@ -39,7 +39,7 @@ struct DrawCmdTestNode
 
     void setRGB(uint8_t red, uint8_t green, uint8_t blue);
     void init(uint32_t index);
-    void update(uint32_t index, float width, float height);
+    void update(uint32_t index, float boundaryWidth, float boundaryHeight);
     void updateToMat33(Mat33& mat);
 };
 } // namespace Detail
