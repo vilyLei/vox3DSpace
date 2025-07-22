@@ -270,7 +270,6 @@ public:
         }
     }
 
-    // 写线程写入一个新版本
     void write(const Matrix& m)
     {
         int index = writeIndex.fetch_add(1, std::memory_order_relaxed) % BUFFER_SIZE;
@@ -503,6 +502,70 @@ int main()
 
     return 0;
 }
+class SynchronizedCounter
+{
+    std::atomic<int> count{0};
+
+public:
+    void increment()
+    {
+        count.fetch_add(1, std::memory_order_release);
+    }
+
+    // 用于需要同步场景，如在某个阈值时执行某些操作
+    int get() const
+    {
+        return count.load(std::memory_order_acquire);
+    }
+};
+struct SimpleRingBuffer
+{
+    std::atomic<size_t> head = 0;
+    std::atomic<size_t> tail = 0;
+    int                 data[1024];
+
+    void push(int v)
+    {
+        size_t h       = head.load(std::memory_order_relaxed);
+        data[h % 1024] = v;
+        head.store(h + 1, std::memory_order_release);
+    }
+
+    std::optional<int> pop()
+    {
+        size_t t = tail.load(std::memory_order_relaxed);
+        size_t h = head.load(std::memory_order_acquire);
+        if (t < h)
+        {
+            int v = data[t % 1024];
+            tail.store(t + 1, std::memory_order_relaxed);
+            return v;
+        }
+        return std::nullopt;
+    }
+};
+} // namespace Demo05
+namespace Demo06
+{
+std::atomic<bool> ready_flag(false);
+
+void worker_thread()
+{
+    while (!ready_flag.load())
+    {
+        std::this_thread::yield(); // 让出CPU时间片
+    }
+    std::cout << "Worker thread running" << std::endl;
+}
+
+int main()
+{
+    std::thread worker(worker_thread);
+    std::this_thread::sleep_for(std::chrono::seconds(1)); // 确保worker线程有机会先执行
+    ready_flag.store(true);
+    worker.join();
+    return 0;
+}
 }
 
 } // namespace Thread
@@ -513,6 +576,7 @@ void TestConcurrent::init()
     //Thread::Demo02::main();
     //Thread::Demo03::main();
     //Thread::Demo04::main();
-    Thread::Demo05::main();
+    //Thread::Demo05::main();
+    Thread::Demo06::main();
 }
 } // namespace Voxol::Test

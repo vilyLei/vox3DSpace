@@ -51,16 +51,16 @@ void mousePos_callback(GLFWwindow* window, double posX, double posY)
 }
 void mouseButton_callback(GLFWwindow* window, int sign, int flag, int type)
 {
-    std::cout << "mouse button( sign=" << sign << ", flag=" << flag << ",type=" << type << ")" << std::endl;
+    std::cout << "mouse button(sign=" << sign << ", flag=" << flag << ",type=" << type << ")" << std::endl;
 }
 void mouseEnter_callback(GLFWwindow* window, int flag)
 {
 
-    std::cout << "mouse enter( flag=" << flag << ")" << std::endl;
+    std::cout << "mouse enter(flag=" << flag << ")" << std::endl;
 }
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 {
-    std::cout << "mouse button( xoffset=" << xoffset << ", yoffset=" << yoffset << ")" << std::endl;
+    std::cout << "mouse button(xoffset=" << xoffset << ", yoffset=" << yoffset << ")" << std::endl;
 }
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {

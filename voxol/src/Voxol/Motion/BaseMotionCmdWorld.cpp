@@ -18,7 +18,7 @@ void BaseMotionCmdWorld::initialize()
     printf("Voxol::Motion::BaseMotionCmdWorld::initialize() ...\n");
 
     auto rn    = 1;
-    auto cn    = 1;
+    auto cn    = 2;
     auto total = rn * cn;
     auto rsize = 32.0f;
 
@@ -31,7 +31,7 @@ void BaseMotionCmdWorld::initialize()
     cmdNodes.resize(total);
 
     auto index = 0;
-    auto dis = 5;
+    auto dis = 0;
     for (auto i = 0; i < rn; ++i)
     {
         auto py = 50 + (i * (rsize + dis));
