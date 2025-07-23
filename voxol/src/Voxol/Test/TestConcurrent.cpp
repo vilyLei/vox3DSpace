@@ -617,8 +617,8 @@ void TestConcurrent::init()
     //Thread::Demo03::main();
     //Thread::Demo04::main();
     //Thread::Demo05::main();
-    Thread::Demo06::main();
+    //Thread::Demo06::main();
 
-    //LockFree::main();
+    LockFree::main();
 }
 } // namespace Voxol::Test
