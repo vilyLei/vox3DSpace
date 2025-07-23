@@ -75,9 +75,9 @@ void DrawCmdTestNode::update(uint32_t index, float boundaryWidth, float boundary
     else
     {
         auto r = 80 * std::abs(std::cos(vx * 1)) + 20.0f;
-        r      = 160;
-        x      = r * std::cos(vx * 1.5) + 300;
-        y      = r * std::sin(vx * 1.5) + 300;
+        r      = 260;
+        x      = r * (std::cos(vx) + std::cos(vx * 3) / 3) + 300;
+        y      = r * (std::sin(vx) + std::sin(vx * 3) / 3) + 300;
     }
     //x += 10 * std::abs(std::cos(vx * 0.1));
     //y += vy;

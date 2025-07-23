@@ -2,6 +2,7 @@
 #define VOXOL_TEST_CONCURRENT_H
 
 #include <iostream>
+#include "TestLockFree.h"
 
 namespace Voxol::Test
 {
