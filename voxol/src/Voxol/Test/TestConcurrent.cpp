@@ -11,6 +11,7 @@
 #include <shared_mutex>
 #include <optional>
 #include <random>
+#include <latch>
 
 namespace Voxol::Test
 {
@@ -558,12 +559,51 @@ void worker_thread()
     std::cout << "Worker thread running" << std::endl;
 }
 
+std::latch task_done{6};
+
+void latchCountDown()
+{
+    for (auto i = 0; i < 6; ++i)
+    {
+        printf("latchCountDown() i: %d \n", i);
+        std::this_thread::sleep_for(std::chrono::milliseconds(10));
+
+        task_done.count_down();
+    }
+}
+
+void latchWaitForZero()
+{
+    printf("latchWaitForZero() begin ...\n");
+    for (auto i = 0; i < 3; ++i)
+    {
+        std::this_thread::sleep_for(std::chrono::milliseconds(10));
+        printf("latchWaitForZero() i: %d \n", i);
+        if (i == 1)
+        {
+            printf("latchWaitForZero() wait begin, i: %d \n", i);
+            task_done.wait();
+            printf("latchWaitForZero() wait end, i: %d \n", i);
+        }
+    }
+    printf("latchWaitForZero() end ...\n");
+}
+
 int main()
 {
-    std::thread worker(worker_thread);
-    std::this_thread::sleep_for(std::chrono::seconds(1)); // 确保worker线程有机会先执行
-    ready_flag.store(true);
-    worker.join();
+    printf("Demo06::main() begin ...\n");
+
+    //std::thread worker(worker_thread);
+    //std::this_thread::sleep_for(std::chrono::seconds(1));
+    //ready_flag.store(true);
+    //worker.join();
+
+    std::thread worker01(latchCountDown);
+    std::thread worker02(latchWaitForZero);
+    worker01.join();
+    worker02.join();
+
+    printf("Demo06::main() end ...\n");
     return 0;
 }
 }
