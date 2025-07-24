@@ -11,3 +11,7 @@ lock-free 栈、队列；
 加上等待机制（如条件变量 + busy-loop fallback）
 如何用原子 spin 等待计数器归零
 支持可变大小（带 GC）
+
+高性能任务队列
+多线程日志队列
+lock-free 信号通道（跨 CPU 核心）

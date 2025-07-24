@@ -87,6 +87,12 @@ public:
         std::unique_lock<std::mutex> lock(mtx);
         cv.wait(lock, [&] { return counter.load(std::memory_order_acquire) == 0; });
     }
+    
+    void wait_until_zero() const {
+        while (counter.load(std::memory_order_acquire) != 0) {
+            std::this_thread::yield();  // 避免过度自旋占用 CPU
+        }
+    }
 
 private:
     std::atomic<int>        counter{0};
