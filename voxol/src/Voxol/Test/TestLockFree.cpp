@@ -68,12 +68,12 @@ private:
 class WaitForZero
 {
 public:
-    void inc()
+    void increment()
     {
         counter.fetch_add(1, std::memory_order_relaxed);
     }
 
-    void dec()
+    void decrement()
     {
         if (counter.fetch_sub(1, std::memory_order_acq_rel) == 1)
         {
@@ -87,7 +87,7 @@ public:
         std::unique_lock<std::mutex> lock(mtx);
         cv.wait(lock, [&] { return counter.load(std::memory_order_acquire) == 0; });
     }
-    
+    // 可能会导致ABA问题?不会
     void wait_until_zero() const {
         while (counter.load(std::memory_order_acquire) != 0) {
             std::this_thread::yield();  // 避免过度自旋占用 CPU
@@ -198,7 +198,7 @@ int mpscTestMain() {
     return 0;
 }
 } // namespace Demo1
-namespace DemoMPSC
+namespace DemoMPMC
 {
     
 template <typename T, size_t Size>
@@ -235,11 +235,11 @@ private:
     //     char                padding[64 - sizeof(std::atomic<size_t>) - sizeof(T)];
     // };
     // alignas(64) Slot buffer[Size];
-    // union alignas(64) align_tail
+    // struct alignas(64) align_tail
     // {
     //     std::atomic<size_t> tail;
     // };
-    // union alignas(64) align_head
+    // struct alignas(64) align_head
     // {
     //     std::atomic<size_t> head;
     // };
@@ -324,6 +324,7 @@ std::atomic<int> produced_count{0};
 std::atomic<int> consumed_count{0};
 
 void producer(int id) {
+    
     for (int i = 0; i < ITEMS_PER_PRODUCER; ++i) {
         int value = id * ITEMS_PER_PRODUCER + i;
         while (!queue.enqueue(value)) {
@@ -352,6 +353,9 @@ void consumer(int id) {
 }
 
 int main() {
+
+    printf("DemoMPMC::main() begin ...\n");
+
     std::vector<std::thread> producers;
     std::vector<std::thread> consumers;
 
@@ -370,12 +374,15 @@ int main() {
     std::cout << "Consumed: " << consumed_count.load() << "\n";
     assert(produced_count.load() == consumed_count.load());
 
+    printf("DemoMPMC::main() end ...\n");
+
     return 0;
 }
 }
 void main()
 {
     printf("Voxol::Test::LockFree::main() begin ...\n");
+    DemoMPMC::main();
     printf("Voxol::Test::LockFree::main() end ...\n");
 }
 } // namespace Voxol::Test::LockFree
