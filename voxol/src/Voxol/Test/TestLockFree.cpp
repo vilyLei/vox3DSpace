@@ -3,6 +3,9 @@
 #include <atomic>
 #include <thread>
 #include <mutex>
+#include <vector>
+#include <iostream>
+#include <cassert>
 
 namespace Voxol::Test::LockFree
 {
@@ -91,6 +94,107 @@ private:
     std::condition_variable cv;
 };
 
+// Single Producer Single Consumer
+template <typename T, size_t N>
+class SPSCQueue
+{
+    T      buffer[N];
+    size_t head = 0;
+    size_t tail = 0;
+
+public:
+    bool enqueue(const T& val)
+    {
+        size_t next = (tail + 1) % N;
+        if (next == head) return false; // full
+        buffer[tail] = val;
+        tail         = next;
+        return true;
+    }
+
+    bool dequeue(T& val)
+    {
+        if (head == tail) return false; // empty
+        val  = buffer[head];
+        head = (head + 1) % N;
+        return true;
+    }
+};
+
+// MPSC（Multi-Producer Single-Consumer）
+template <typename T>
+class MPSCQueue {
+private:
+    struct Node {
+        std::unique_ptr<Node> next;
+        T value;
+        Node(const T& val) : value(val) {}
+    };
+
+    std::atomic<Node*> tail;    // 多生产者写入
+    Node* head;                 // 单消费者读取
+
+public:
+    MPSCQueue() {
+        Node* dummy = new Node(T{});  // dummy 节点
+        head = dummy;
+        tail.store(dummy, std::memory_order_relaxed);
+    }
+
+    ~MPSCQueue() {
+        while (dequeue());  // 清理所有元素
+        delete head;        // 删除 dummy 节点
+    }
+
+    void enqueue(const T& value) {
+        Node* newNode = new Node(value);
+        newNode->next = nullptr;
+
+        Node* prev = tail.exchange(newNode, std::memory_order_acq_rel);
+        prev->next.reset(newNode);  // 由单线程消费者读取，不用原子
+    }
+
+    // 单线程调用
+    bool dequeue(T* out = nullptr) {
+        std::unique_ptr<Node> next = std::move(head->next);
+        if (!next) return false;
+
+        if (out) *out = next->value;
+
+        Node* old = head;
+        head = next.release();
+        delete old;  // 删除旧 head
+
+        return true;
+    }
+};
+int mpscTestMain() {
+    MPSCQueue<int> queue;
+
+    // 多个生产者线程
+    std::vector<std::thread> producers;
+    for (int i = 0; i < 4; ++i) {
+        producers.emplace_back([&queue, i]() {
+            for (int j = 0; j < 5; ++j) {
+                queue.enqueue(i * 10 + j);
+            }
+        });
+    }
+
+    for (auto& p : producers) p.join();
+
+    // 单个消费者线程
+    int val;
+    while (queue.dequeue(&val)) {
+        std::cout << "Got: " << val << std::endl;
+    }
+
+    return 0;
+}
+} // namespace Demo1
+namespace DemoMPSC
+{
+    
 template <typename T, size_t Size>
 class MPMCQueue
 {
@@ -111,13 +215,28 @@ public:
 private:
     struct Slot
     {
-        std::atomic<size_t> seq;
-        T                   data;
+       std::atomic<size_t> seq;
+       T                   data;
     };
-
     alignas(64) Slot buffer[Size];
     alignas(64) std::atomic<size_t> head;
     alignas(64) std::atomic<size_t> tail;
+
+    // struct alignas(64) Slot
+    // {
+    //     std::atomic<size_t> seq;
+    //     T                   data;
+    //     char                padding[64 - sizeof(std::atomic<size_t>) - sizeof(T)];
+    // };
+    // alignas(64) Slot buffer[Size];
+    // union alignas(64) align_tail
+    // {
+    //     std::atomic<size_t> tail;
+    // };
+    // union alignas(64) align_head
+    // {
+    //     std::atomic<size_t> head;
+    // };
 };
 template <typename T, size_t Size>
 bool MPMCQueue<T, Size>::enqueue(const T& item)
@@ -189,8 +308,65 @@ bool MPMCQueue<T, Size>::dequeue(T& item)
         }
     }
 }
+constexpr int NUM_PRODUCERS = 4;
+constexpr int NUM_CONSUMERS = 2;
+constexpr int ITEMS_PER_PRODUCER = 100000;
 
-} // namespace Demo1
+MPMCQueue<int, 1024> queue; // 环形队列大小，必须是2的幂，内部处理 wrap-around
+
+std::atomic<int> produced_count{0};
+std::atomic<int> consumed_count{0};
+
+void producer(int id) {
+    for (int i = 0; i < ITEMS_PER_PRODUCER; ++i) {
+        int value = id * ITEMS_PER_PRODUCER + i;
+        while (!queue.enqueue(value)) {
+            // 队列满，稍作等待
+            std::this_thread::yield();
+        }
+        produced_count.fetch_add(1, std::memory_order_relaxed);
+    }
+}
+
+void consumer(int id) {
+    int local_count = 0;
+    while (true) {
+        int value;
+        if (queue.dequeue(value)) {
+            ++local_count;
+            consumed_count.fetch_add(1, std::memory_order_relaxed);
+        } else {
+            if (produced_count.load(std::memory_order_relaxed) >= NUM_PRODUCERS * ITEMS_PER_PRODUCER) {
+                break;
+            }
+            std::this_thread::yield();
+        }
+    }
+    std::cout << "[Consumer " << id << "] consumed " << local_count << " items\n";
+}
+
+int main() {
+    std::vector<std::thread> producers;
+    std::vector<std::thread> consumers;
+
+    for (int i = 0; i < NUM_CONSUMERS; ++i) {
+        consumers.emplace_back(consumer, i);
+    }
+
+    for (int i = 0; i < NUM_PRODUCERS; ++i) {
+        producers.emplace_back(producer, i);
+    }
+
+    for (auto& p : producers) p.join();
+    for (auto& c : consumers) c.join();
+
+    std::cout << "Produced: " << produced_count.load() << "\n";
+    std::cout << "Consumed: " << consumed_count.load() << "\n";
+    assert(produced_count.load() == consumed_count.load());
+
+    return 0;
+}
+}
 void main()
 {
     printf("Voxol::Test::LockFree::main() begin ...\n");
