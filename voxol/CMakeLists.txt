@@ -33,6 +33,7 @@ set(MOTION_DIR "${VOX_DIR}/Motion")
 set(PHYSICS_DIR "${VOX_DIR}/Physics")
 set(UTIL_DIR "${VOX_DIR}/Util")
 set(TEST_DIR "${VOX_DIR}/Test")
+set(TASK_DIR "${VOX_DIR}/Task")
 set(THIRDPARTY_INCLUDE "${SRC_DIR}/thirdPart/opengl/libx64/include")
 set(THIRDPARTY_LIB "${SRC_DIR}/thirdPart/opengl/libx64/lib")
 
@@ -48,6 +49,7 @@ include_directories(
   ${PHYSICS_DIR}
   ${UTIL_DIR}
   ${TEST_DIR}
+  ${TASK_DIR}
   ${THIRDPARTY_INCLUDE}
 )
 
@@ -61,6 +63,7 @@ file(GLOB MOTION_SRC "${MOTION_DIR}/*.cpp" "${MOTION_DIR}/*.h")
 file(GLOB PHYSICS_SRC "${PHYSICS_DIR}/*.cpp" "${PHYSICS_DIR}/*.h")
 file(GLOB UTIL_SRC "${UTIL_DIR}/*.cpp" "${UTIL_DIR}/*.h")
 file(GLOB TEST_SRC "${TEST_DIR}/*.cpp" "${TEST_DIR}/*.h")
+file(GLOB TASK_SRC "${TASK_SRC}/*.cpp" "${TASK_SRC}/*.h")
 
 set(ALL_SOURCES
   ${RENDER_SRC}
@@ -72,6 +75,7 @@ set(ALL_SOURCES
   ${PHYSICS_SRC}
   ${UTIL_SRC}
   ${TEST_SRC}
+  ${TASK_SRC}
 )
 
 source_group("Render" FILES ${RENDER_SRC})
@@ -83,6 +87,7 @@ source_group("Motion" FILES ${MOTION_SRC})
 source_group("Physics" FILES ${PHYSICS_SRC})
 source_group("Util" FILES ${UTIL_SRC})
 source_group("Test" FILES ${TEST_SRC})
+source_group("Task" FILES ${TASK_SRC})
 
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Emscripten")

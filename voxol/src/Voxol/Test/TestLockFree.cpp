@@ -100,6 +100,22 @@ private:
     std::condition_variable cv;
 };
 
+class LockFreeCounter {
+    std::atomic<int> counter{0};
+
+public:
+    // maybe have ABA problem
+    void increment() {
+        int old;
+        do {
+            old = counter.load(std::memory_order_relaxed);
+        } while (!counter.compare_exchange_weak(old, old + 1,
+                                                std::memory_order_acq_rel));
+    }
+    int get() const {
+        return counter.load(std::memory_order_acquire);
+    }
+};
 // Single Producer Single Consumer
 template <typename T, size_t N>
 class SPSCQueue
@@ -201,18 +217,21 @@ int mpscTestMain() {
 namespace DemoMPMC
 {
     
-template <typename T, size_t Size>
+template <typename T, size_t Capacity = 1024>
 class MPMCQueue
 {
 public:
     MPMCQueue()
     {
-        for (size_t i = 0; i < Size; ++i)
+        for (size_t i = 0; i < Capacity; ++i)
         {
             buffer[i].seq.store(i, std::memory_order_relaxed);
         }
-        head.store(0, std::memory_order_relaxed);
-        tail.store(0, std::memory_order_relaxed);
+        //head.store(0, std::memory_order_relaxed);
+        //tail.store(0, std::memory_order_relaxed);
+
+        printf("MPMCQueue::MPMCQueue(), sizeof(buffer): %zu\n", sizeof(buffer));
+        printf("MPMCQueue::MPMCQueue(), sizeof(head): %zu\n", sizeof(head));
     }
 
     bool enqueue(const T& item);
@@ -224,9 +243,9 @@ private:
        std::atomic<size_t> seq;
        T                   data;
     };
-    alignas(64) Slot buffer[Size];
-    alignas(64) std::atomic<size_t> head;
-    alignas(64) std::atomic<size_t> tail;
+    alignas(64) Slot buffer[Capacity];
+    alignas(64) std::atomic<size_t> head{0};
+    alignas(64) std::atomic<size_t> tail{0};
 
     // struct alignas(64) Slot
     // {
@@ -244,14 +263,14 @@ private:
     //     std::atomic<size_t> head;
     // };
 };
-template <typename T, size_t Size>
-bool MPMCQueue<T, Size>::enqueue(const T& item)
+template <typename T, size_t Capacity>
+bool MPMCQueue<T, Capacity>::enqueue(const T& item)
 {
     size_t pos = tail.load(std::memory_order_relaxed);
 
     for (;;)
     {
-        Slot&    slot = buffer[pos % Size];
+        Slot&    slot = buffer[pos % Capacity];
         size_t   seq  = slot.seq.load(std::memory_order_acquire);
         intptr_t dif  = (intptr_t)seq - (intptr_t)pos;
 
@@ -280,14 +299,14 @@ bool MPMCQueue<T, Size>::enqueue(const T& item)
         }
     }
 }
-template <typename T, size_t Size>
-bool MPMCQueue<T, Size>::dequeue(T& item)
+template <typename T, size_t Capacity>
+bool MPMCQueue<T, Capacity>::dequeue(T& item)
 {
     size_t pos = head.load(std::memory_order_relaxed);
 
     for (;;)
     {
-        Slot&    slot = buffer[pos % Size];
+        Slot&    slot = buffer[pos % Capacity];
         size_t   seq  = slot.seq.load(std::memory_order_acquire);
         intptr_t dif  = (intptr_t)seq - (intptr_t)(pos + 1);
 
@@ -299,7 +318,7 @@ bool MPMCQueue<T, Size>::dequeue(T& item)
                 // 读取数据
                 item = slot.data;
                 // 标记槽位可写
-                slot.seq.store(pos + Size, std::memory_order_release);
+                slot.seq.store(pos + Capacity, std::memory_order_release);
                 return true;
             }
         }
@@ -318,13 +337,14 @@ constexpr int NUM_PRODUCERS = 4;
 constexpr int NUM_CONSUMERS = 2;
 constexpr int ITEMS_PER_PRODUCER = 100000;
 
-MPMCQueue<int, 1024> queue; // 环形队列大小，必须是2的幂，内部处理 wrap-around
+// MPMCQueue<int, 1024> queue; // 环形队列大小，必须是2的幂，内部处理 wrap-around
+MPMCQueue<int> queue; // Capacity default value is 1024
 
 std::atomic<int> produced_count{0};
 std::atomic<int> consumed_count{0};
 
 void producer(int id) {
-    
+
     for (int i = 0; i < ITEMS_PER_PRODUCER; ++i) {
         int value = id * ITEMS_PER_PRODUCER + i;
         while (!queue.enqueue(value)) {
