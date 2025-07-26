@@ -36,7 +36,8 @@ gdi32.lib
 // #include "Voxol/Motion/RenderCmdWorld.h"
 #include "Voxol/Motion/BaseMotionCmdWorld.h"
 #include "Voxol/Test/OglRenderer.h"
-#include "Voxol/Test/TestConcurrent.h"
+// #include "Voxol/Test/TestConcurrent.h"
+#include "Voxol/Task/MPMCQueue.h"
 
 void testMemoryManage()
 {
@@ -124,8 +125,10 @@ void runRendering()
 }
 void runConcurrent()
 {
-    Voxol::Test::TestConcurrent      conCurrent{};
-    conCurrent.init();
+    // Voxol::Test::TestConcurrent      conCurrent{};
+    // conCurrent.init();
+
+    Voxol::Task::Cocurrent::testMain();
 }
 
 int main()

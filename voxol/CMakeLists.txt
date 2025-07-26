@@ -63,7 +63,7 @@ file(GLOB MOTION_SRC "${MOTION_DIR}/*.cpp" "${MOTION_DIR}/*.h")
 file(GLOB PHYSICS_SRC "${PHYSICS_DIR}/*.cpp" "${PHYSICS_DIR}/*.h")
 file(GLOB UTIL_SRC "${UTIL_DIR}/*.cpp" "${UTIL_DIR}/*.h")
 file(GLOB TEST_SRC "${TEST_DIR}/*.cpp" "${TEST_DIR}/*.h")
-file(GLOB TASK_SRC "${TASK_SRC}/*.cpp" "${TASK_SRC}/*.h")
+file(GLOB TASK_SRC "${TASK_DIR}/*.cpp" "${TASK_DIR}/*.h")
 
 set(ALL_SOURCES
   ${RENDER_SRC}
