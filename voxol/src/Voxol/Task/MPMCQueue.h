@@ -596,6 +596,6 @@ private:
 };
 } // namespace Voxol::Task::Cocurrent
 //*/
-void testMain();
+void init();
 } // namespace Voxol::Task::Cocurrent
 #endif  // VOXOL_TASK_MPMC_QUEUE_H

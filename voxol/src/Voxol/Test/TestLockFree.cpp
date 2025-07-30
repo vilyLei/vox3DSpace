@@ -9,6 +9,7 @@
 
 namespace Voxol::Test::LockFree
 {
+/*
 namespace Demo1
 {
 class SeqCstCounter
@@ -399,10 +400,11 @@ int main() {
     return 0;
 }
 }
+//*/
 void main()
 {
     printf("Voxol::Test::LockFree::main() begin ...\n");
-    DemoMPMC::main();
+    // DemoMPMC::main();
     printf("Voxol::Test::LockFree::main() end ...\n");
 }
 } // namespace Voxol::Test::LockFree

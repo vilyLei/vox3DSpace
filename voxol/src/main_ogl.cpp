@@ -128,7 +128,7 @@ void runConcurrent()
     // Voxol::Test::TestConcurrent      conCurrent{};
     // conCurrent.init();
 
-    Voxol::Task::Cocurrent::testMain();
+    Voxol::Task::Cocurrent::init();
 }
 
 int main()

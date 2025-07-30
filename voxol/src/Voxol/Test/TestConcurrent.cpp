@@ -15,7 +15,7 @@
 
 namespace Voxol::Test
 {
-
+///*
 namespace Thread
 {
 using Matrix = std::vector<std::vector<float>>;
@@ -609,7 +609,7 @@ int main()
 }
 
 } // namespace Thread
-
+//*/
 void TestConcurrent::init()
 {
     //Thread::Demo01::main();
