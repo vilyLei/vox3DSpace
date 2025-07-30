@@ -91,8 +91,10 @@ public:
 
     ~Slot()
     {
-        if (!storage)
+        if (!storage) {
+            printf("Slot::~Slot() storage == nullptr ...\n");
             return;
+        }
 
         std::destroy_at(static_cast<T*>(storage));
         aligned_free(storage);

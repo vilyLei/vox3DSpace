@@ -64,16 +64,19 @@ std::atomic<bool>                    done = false;
 
 void producerThread(int id)
 {
+    printf("\nVoxol::Task::Cocurrent::MultiTask::producerThread() begin ...\n");
     while (!done)
     {
         Matrix4x4 mat = Matrix4x4::random();
         inputQueue.try_enqueue(mat); // 若 MPMCQueue 支持非阻塞，替换为 try_enqueue + sleep
         std::this_thread::sleep_for(std::chrono::milliseconds(16));
     }
+    printf("\nVoxol::Task::Cocurrent::MultiTask::producerThread() end ...\n");
 }
 
 void workerThread(int id)
 {
+    printf("\nVoxol::Task::Cocurrent::MultiTask::workerThread() begin ...\n");
     while (!done)
     {
         Matrix4x4 a, b;
@@ -88,10 +91,12 @@ void workerThread(int id)
             std::this_thread::yield();
         }
     }
+    printf("\nVoxol::Task::Cocurrent::MultiTask::workerThread() end ...\n");
 }
 
 void mainLoop()
 {
+    printf("\nVoxol::Task::Cocurrent::MultiTask::mainLoop() begin ...\n");
     while (!done)
     {
         auto result = outputQueue.try_dequeue();
@@ -102,6 +107,7 @@ void mainLoop()
         }
         std::this_thread::sleep_for(std::chrono::milliseconds(16));
     }
+    printf("\nVoxol::Task::Cocurrent::MultiTask::mainLoop() end ...\n");
 }
 
 int main()
@@ -116,7 +122,7 @@ int main()
 
     std::thread mainT(mainLoop);
 
-    std::this_thread::sleep_for(std::chrono::milliseconds(50));
+    std::this_thread::sleep_for(std::chrono::milliseconds(80));
     // std::this_thread::sleep_for(std::chrono::seconds(5));
     done = true;
 
