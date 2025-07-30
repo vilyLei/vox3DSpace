@@ -17,6 +17,29 @@
 
 namespace Voxol::Task::Cocurrent
 {
+
+inline void* aligned_malloc(std::size_t size, std::size_t alignment)
+{
+#ifdef _WIN32
+    void* ptr = _aligned_malloc(size, alignment);
+    if (!ptr) throw std::bad_alloc();
+    return ptr;
+#else
+    void* ptr = std::aligned_alloc(alignment, size);
+    if (!ptr) throw std::bad_alloc();
+    return ptr;
+#endif
+}
+
+inline void aligned_free(void* ptr)
+{
+#ifdef _WIN32
+    _aligned_free(ptr);
+#else
+    std::free(ptr);
+#endif
+}
+
 #ifdef __cpp_lib_hardware_interference_size
 using std::hardware_constructive_interference_size;
 using std::hardware_destructive_interference_size;
@@ -66,24 +89,26 @@ public:
             return;
 
         std::destroy_at(static_cast<T*>(storage));
-#ifdef _WIN32
-        _aligned_free(storage);
-#else
-        std::free(storage);
-#endif
+        aligned_free(storage);
+        storage = nullptr;
+//#ifdef _WIN32
+//        _aligned_free(storage);
+//#else
+//        std::free(storage);
+//#endif
     }
     void buildStorage()
     {
 
         if (storage)
             return;
-
-#ifdef _WIN32
-        storage = _aligned_malloc(sizeof(T), alignof(T));
-#else
-        storage = static_cast<void*>(std::aligned_alloc(alignof(T), storageSize));
-#endif
-        if (!storage) throw std::bad_alloc();
+        storage = aligned_malloc(alignof(T), sizeof(T));
+        //#ifdef _WIN32
+//        storage = _aligned_malloc(sizeof(T), alignof(T));
+//#else
+//        storage = static_cast<void*>(std::aligned_alloc(alignof(T), storageSize));
+//#endif
+//        if (!storage) throw std::bad_alloc();
     }
     T* get()
     {
