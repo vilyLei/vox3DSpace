@@ -8,7 +8,7 @@ namespace MultiTask
 {
 
 constexpr int MATRIX_SIZE    = 4;
-constexpr int QUEUE_CAPACITY = 32;
+constexpr int QUEUE_CAPACITY = 8;
 
 struct Matrix4x4
 {
@@ -116,7 +116,8 @@ int main()
 
     std::thread mainT(mainLoop);
 
-    std::this_thread::sleep_for(std::chrono::seconds(5));
+    std::this_thread::sleep_for(std::chrono::milliseconds(50));
+    // std::this_thread::sleep_for(std::chrono::seconds(5));
     done = true;
 
     for (auto& t : threads) t.join();
