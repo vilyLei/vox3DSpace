@@ -416,7 +416,7 @@ export class SimpleRenderer {
 
 
         let gl = this.glCtx;
-        for (;;) {
+        for (; ;) {
             let cmd = dataU32[cmdIndex];
             if (cmd == 0) {
                 // console.log("drawing cmd exec end !!!");
@@ -459,7 +459,7 @@ export class SimpleRenderer {
         let matTot = this.batchTotal;
         let drawIndex = 0;
         let drewTot = 0;
-    
+
         let transData = new Float32Array(matTot * 9);
         let colorData = new Float32Array(matTot * 4);
         for (; ;) {
@@ -480,7 +480,7 @@ export class SimpleRenderer {
                         let matvs = dataF32.subarray(f32Index, f32Index + 9);
                         transData.set(matvs, drawIndex * 9);
                         let colorU32 = dataU32[cmdIndex + 2];
-    
+
                         let a = ((colorU32 >> 24) & 0xff) / 255.0;
                         let r = ((colorU32 >> 16) & 0xff) / 255.0;
                         let g = ((colorU32 >> 8) & 0xff) / 255.0;
@@ -492,7 +492,7 @@ export class SimpleRenderer {
                     break;
             }
             cmdIndex += descSize;
-    
+
             drawIndex++;
             if (drawIndex >= matTot) {
                 drewTot += matTot;
@@ -500,13 +500,13 @@ export class SimpleRenderer {
                 gl.bindVertexArray(this.vao_0.vao);
                 gl.uniform4fv(this.prog_0.colorLoc, colorData, 0, matTot * 4);
                 gl.uniformMatrix3fv(this.prog_0.matrixLoc, false, transData, 0, matTot * 9);
-    
+
                 gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.veo_0);
                 gl.drawElements(gl.TRIANGLES, this.indices_0.length, gl.UNSIGNED_SHORT, 0);
                 drawIndex = 0;
             }
         }
-    
+
         if (drewTot != this.drewTotal) {
             this.drewTotal = drewTot;
             console.log("drewTotal: ", this.drewTotal);

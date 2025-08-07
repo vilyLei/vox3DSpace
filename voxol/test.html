@@ -33,7 +33,10 @@
         import { SimpleRenderer } from './src/JSCode/SimpleRenderer.js';
 
         const canvas = document.getElementById('canvas');
-        const gl = canvas.getContext("webgl2");
+        const gl = canvas.getContext("webgl2", {
+            antialias: true,
+            depth: false,
+        });
 
 
         let renderer = new SimpleRenderer();
