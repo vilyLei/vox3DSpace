@@ -177,6 +177,7 @@ export class SimpleRenderer {
         this.vao_tex = null;
         this.textures = [];
         this.rcmsTotal = 0;
+        this.batchTotal = 4;
     }
     initialize(gl, vw, vh) {
 
@@ -451,6 +452,65 @@ export class SimpleRenderer {
             cmdIndex += descSize;
         }
 
+    }
+    drawBatch(cmdIndex, dataU32, dataF32) {
+
+        let gl = this.glCtx;
+        let matTot = this.batchTotal;
+        let drawIndex = 0;
+        let drewTot = 0;
+    
+        let transData = new Float32Array(matTot * 9);
+        let colorData = new Float32Array(matTot * 4);
+        for (; ;) {
+            // if(drewTot >= 180000) {
+            //     break;
+            // }
+            let cmd = dataU32[cmdIndex];
+            if (cmd == 0) {
+                // console.log("drawing cmd exec end !!!");
+                break;
+            }
+            let descSize = dataU32[cmdIndex + 1];
+            //descSize
+            switch (cmd) {
+                case 0x33:
+                    {
+                        let f32Index = cmdIndex + 3;
+                        let matvs = dataF32.subarray(f32Index, f32Index + 9);
+                        transData.set(matvs, drawIndex * 9);
+                        let colorU32 = dataU32[cmdIndex + 2];
+    
+                        let a = ((colorU32 >> 24) & 0xff) / 255.0;
+                        let r = ((colorU32 >> 16) & 0xff) / 255.0;
+                        let g = ((colorU32 >> 8) & 0xff) / 255.0;
+                        let b = (colorU32 & 0xff) / 255.0;
+                        colorData.set([r, g, b, a], drawIndex * 4);
+                    }
+                    break;
+                default:
+                    break;
+            }
+            cmdIndex += descSize;
+    
+            drawIndex++;
+            if (drawIndex >= matTot) {
+                drewTot += matTot;
+                gl.useProgram(this.prog_0.program);
+                gl.bindVertexArray(this.vao_0.vao);
+                gl.uniform4fv(this.prog_0.colorLoc, colorData, 0, matTot * 4);
+                gl.uniformMatrix3fv(this.prog_0.matrixLoc, false, transData, 0, matTot * 9);
+    
+                gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.veo_0);
+                gl.drawElements(gl.TRIANGLES, this.indices_0.length, gl.UNSIGNED_SHORT, 0);
+                drawIndex = 0;
+            }
+        }
+    
+        if (drewTot != this.drewTotal) {
+            this.drewTotal = drewTot;
+            console.log("drewTotal: ", this.drewTotal);
+        }
     }
     runEnd() {
     }
