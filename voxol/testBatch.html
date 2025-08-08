@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>test page</title>
+    <style>
+        html,
+        body {
+            margin: 0;
+            overflow: hidden;
+        }
+
+        canvas {
+            display: block;
+            background: #222;
+        }
+    </style>
+
+    <script src="./build/voxolModule.js"></script>
+
+    <script>
+
+    </script>
+</head>
+
+<body>
+
+    <canvas id="canvas"></canvas>
+
+    <script type="module">
+
+        import { BatchDrawer, printWith9Number } from './src/JSCode/SimpleBatchRenderer.js';
+
+        const canvas = document.getElementById('canvas');
+        const gl = canvas.getContext("webgl2", { antialias: true, depth: false });
+
+
+        let renderer = new BatchDrawer();
+        
+        var mouseFunc = function (px, py, type, flag) {
+            console.log('mouseFunc mosuePos(x=' + x + ', y=' + y + ')');
+        }
+        canvas.addEventListener('click', function (event) {
+
+            const clientX = event.clientX;
+            const clientY = event.clientY;
+
+            const rect = canvas.getBoundingClientRect();
+            const canvasX = rect.left;
+            const canvasY = rect.top;
+
+            let x = clientX - canvasX;
+            let y = clientY - canvasY;
+            console.log('mouse click canvas html mousePos(' + x + ', ' + y + ')');
+
+            const dpr = window.devicePixelRatio || 1;
+
+            x *= dpr;
+            y *= dpr;
+            console.log('mouse click canvas ctx mousePos(' + x + ', ' + y + ')');
+            mouseFunc(x, y, 0, 0);
+        });
+
+        function execMoculeProcess(Module) {
+
+
+            const getHeapSize = Module.cwrap("get_heap_size_bytes", "number", []);
+            const startup = Module.cwrap("startup");
+            const setGPUCtxSize = Module.cwrap("setGPUCtxSize", null, ["number", "number"]);
+            const setMouseParams = Module.cwrap("setMouseParams", null, ["number", "number", "number", "number"]);
+
+
+            const runExec = Module.cwrap("run");
+            const getCmdsTotalExec = Module.cwrap("getCmdsTotal", "number");
+            const getCmdsExec = Module.cwrap("getCmds", "number");
+            const getRenderCmdBufferExec = Module.cwrap("getRenderCmdBuffer", "number");
+
+
+            let preHeapSize = 0;
+            setInterval(() => {
+                const size = getHeapSize();
+                if (preHeapSize != size) {
+                    preHeapSize = size;
+                    console.log("WASM 堆内存大小:", (size / 1024 / 1024).toFixed(2), "MB");
+                }
+            }, 1000);
+
+
+            function resizeCanvas() {
+
+                console.log("window.devicePixelRatio: ", window.devicePixelRatio);
+                const dpr = window.devicePixelRatio || 1;
+
+                const [w, h] = renderer.normlizeViewSize();
+
+                canvas.width = w;
+                canvas.height = h;
+
+                canvas.style.width = `${w / dpr}px`;
+                canvas.style.height = `${h / dpr}px`;
+
+                setGPUCtxSize(w, h);
+            }
+
+            window.addEventListener('resize', () => {
+                resizeCanvas();
+                console.log("canvas.width, canvas.height: ", canvas.width, canvas.height);
+                renderer.setCtxSize(canvas.width, canvas.height);
+            });
+            resizeCanvas();
+            startup();
+
+            runExec();
+
+            const heap = Module.HEAPU8;
+            let cmdU32Arr = new Uint32Array(heap.buffer);
+            let cmdU8Ptr = getCmdsExec();
+            let cmdBufU8Ptr = getRenderCmdBufferExec();
+
+            cmdU32Arr = new Uint32Array(heap.buffer);
+            cmdU32Arr = cmdU32Arr.subarray(cmdU8Ptr / 4);
+            let cmdBufF32Arr = new Float32Array(heap.buffer);
+            cmdBufF32Arr = cmdBufF32Arr.subarray(cmdBufU8Ptr / 4);
+
+            let cmdBufU32Arr = new Uint32Array(heap.buffer);
+            cmdBufU32Arr = cmdBufU32Arr.subarray(cmdBufU8Ptr / 4);
+
+            let cmdsTotal = getCmdsTotalExec();
+            renderer.rcmsTotal = cmdsTotal;
+
+            printWith9Number(cmdBufF32Arr, 6);
+
+
+            renderer.initialize(gl, canvas.width, canvas.height);
+            renderer.runBegin();
+            //*/
+
+            mouseFunc = function (px, py, type, flag) {
+                setMouseParams(px, py, type, flag);
+                // console.log('mouseFunc mosuePos(x=' + x + ', y=' + y + ')');
+
+            }
+            function loopRun() {
+                setGPUCtxSize(canvas.width, canvas.height);
+                runExec();
+                renderer.runBegin();
+                renderer.draw(4, cmdBufU32Arr, cmdBufF32Arr);
+                requestAnimationFrame(loopRun);
+            }
+            loopRun();
+
+        };
+
+        VoxModule().then(Module => {
+            console.log("wasm Module loaded.");
+            execMoculeProcess(Module);
+        });
+    </script>
+</body>
+
+</html>
