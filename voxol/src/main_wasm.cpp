@@ -195,9 +195,9 @@ extern "C"
     void setMouseParams(float x, float y, int type, int flag)
     {
 
-        printf("voxol wasm main setMouseParams mouseParam(x=%f, y=%f, type=%d, flag=:%d)\n", x, y, type, flag);
+        // printf("voxol wasm main setMouseParams mouseParam(x=%f, y=%f, type=%d, flag=%d)\n", x, y, type, flag);
 
-        rcmdWorld.setMouseXY(x, y);
+        rcmdWorld.setMouseParams(x, y, type, flag);
         // renderer.setMouseXY(x, y);
         // renderer.render();
     }
