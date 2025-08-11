@@ -16,6 +16,10 @@
             display: block;
             background: #222;
         }
+
+        .rotate-cursor {
+            cursor: url('assets/ui/arrow01.png') 16 16, auto;
+        }
     </style>
 
     <script src="./build/voxolModule.js"></script>
@@ -40,7 +44,7 @@
         let renderer = new BatchDrawer();
 
         var mouseFunc = function (px, py, type, flag) {
-            console.log('mouseFunc mosuePos(x=' + x + ', y=' + y + ')');
+            console.log('mouseFunc mosuePos(x=' + px + ', y=' + py + ')');
         }
         function calcMouseXY(event) {
 
@@ -95,6 +99,9 @@
             console.log("mouse click, event.button: ", event.button);
             mouseFunc(pos.x, pos.y, event.button * 10 + 5, 0);
         });
+        // canvas.style.cursor = 'move';
+        canvas.classList.add('rotate-cursor');
+        // canvas.style.cursor = 'pointer';
 
         function execMoculeProcess(Module) {
 
