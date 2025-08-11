@@ -30,6 +30,7 @@ bool ViewComponent::viewZoomWithFixPos(const Point2DDesc& fixPos, float dstScale
     auto py  = -pos.y / scale;
     auto wx0 = (fixPos.x / scale) + px;
     auto wy0 = (fixPos.y / scale) + py;
+
     // 将当前的鼠标坐标转换到world坐标
     // 已知 position( wx0,  wy0 ) 数据
     // 计算出在窗口坐标空间下的对应的坐标, 假定world space和window space坐标原点对齐
@@ -202,7 +203,7 @@ void RenderCmdWorld::setMouseXY(float x, float y)
     // printf("RenderCmdWorld::setMouseXY(%f, %f)\n", x, y);
 }
 
-void RenderCmdWorld::setMouseParams(float x, float y, int type, int flag)
+void RenderCmdWorld::setMouseParams(float x, float y, int type, float value)
 {
     setMouseXY(x, y);
 
@@ -229,7 +230,8 @@ void RenderCmdWorld::setMouseParams(float x, float y, int type, int flag)
         break;
         case 4:
         {
-            viewDirty = view.updateViewZoom(mousePos, flag / -100.0f, 1.2f);
+            auto dv = std::abs(value) > 1 ? value * 0.01f : value;
+            viewDirty = view.updateViewZoom(mousePos, -dv, 1.2f);
         }
         break;
 

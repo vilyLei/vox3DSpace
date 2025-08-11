@@ -192,12 +192,12 @@ extern "C"
     }
 
     EMSCRIPTEN_KEEPALIVE
-    void setMouseParams(float x, float y, int type, int flag)
+    void setMouseParams(float x, float y, int type, float value)
     {
 
-        // printf("voxol wasm main setMouseParams mouseParam(x=%f, y=%f, type=%d, flag=%d)\n", x, y, type, flag);
+        printf("voxol wasm main setMouseParams mouseParam(x=%f, y=%f, type=%d, value=%f)\n", x, y, type, value);
 
-        rcmdWorld.setMouseParams(x, y, type, flag);
+        rcmdWorld.setMouseParams(x, y, type, value);
         // renderer.setMouseXY(x, y);
         // renderer.render();
     }

@@ -79,7 +79,7 @@ public:
     void           run();
     void           setGPUCtxSize(int w, int h);
     void           setMouseXY(float x, float y);
-    void           setMouseParams(float x, float y, int type, int flag);
+    void           setMouseParams(float x, float y, int type, float value);
     const uint8_t* cmdBuffer() const;
 
 private:
