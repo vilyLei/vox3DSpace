@@ -17,6 +17,7 @@ bool SizeDesc::isEqual(const SizeDesc& desc) const
 bool ViewComponent::viewZoomWithFixPos(const Point2DDesc& fixPos, float dstScale)
 {
 
+    printf("ViewComponent::viewZoomWithFixPos(), fixPos(%f, %f)\n", fixPos.x, fixPos.y);
     // 基本约定: 在scale为1.0的时候，窗口坐标和世界坐标一致(假定没有相对平移)
     auto scale = desc.zoom;
     auto pos   = desc.position;
@@ -75,7 +76,7 @@ bool ViewComponent::move(const Point2DDesc& pos)
     auto px = fixViewPos.x + disX;
     auto py = fixViewPos.y + disY;
 
-    desc.position = {px, py};
+    desc.position = {std::roundf(px), std::roundf(py)};
 
     return true;
 }
@@ -222,6 +223,7 @@ void RenderCmdWorld::setMouseParams(float x, float y, int type, int flag)
         break;
         case 3:
         {
+
             viewDirty = view.move(mousePos);
         }
         break;
