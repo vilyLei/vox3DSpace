@@ -70,6 +70,7 @@ struct DrawCmdTestNode
 
     void init();
     void updateToMat33(Mat33& mat);
+    bool contains(float px, float py) const;
 };
 
 class RenderCmdNode

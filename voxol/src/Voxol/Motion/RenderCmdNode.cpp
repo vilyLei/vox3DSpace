@@ -70,4 +70,14 @@ void DrawCmdTestNode::updateToMat33(Mat33& mat)
 {
     mat.setTo(x, y, scaleX, scaleY, rotation);
 }
+
+bool DrawCmdTestNode::contains(float px, float py) const {
+    if(px < 0.0f || py < 0.0f)
+        return false;
+    if(px > 1.0f || py > 1.0f)
+        return false;
+    return true;
+}
+
+
 } // namespace Voxol::Motion

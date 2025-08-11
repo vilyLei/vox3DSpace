@@ -255,6 +255,8 @@ void RenderCmdWorld::setMouseParams(float x, float y, int type, float value)
             auto&& v0 = mat.mapPoint({0.0f, 0.0f});
             printf("RenderCmdWorld::setMouseParams(), click, v0(%f, %f)\n", v0.x, v0.y);
             auto&& v1 = invMat.mapPoint({mousePos.x, mousePos.y});
+            auto hit = node.contains(v1.x, v1.y);
+            printf("RenderCmdWorld::setMouseParams(), click, node.contains() hit: %d\n", hit);
             v1.x *= node.scaleX;
             v1.y *= node.scaleY;
             printf("RenderCmdWorld::setMouseParams(), click, v1(%f, %f)\n", v1.x, v1.y);
