@@ -57,14 +57,14 @@
             x *= dpr;
             y *= dpr;
             // console.log('calcMouseXY B mousePos(' + x + ', ' + y + ')');
-            return {x:x, y:y};
+            return { x: x, y: y };
         }
 
         canvas.addEventListener('mousedown', function (event) {
             let pos = calcMouseXY(event);
             // console.log('mousedown(' + pos.x + ', ' + pos.y + ')');
             // console.log("event.button: ", event.button);
-            
+
             mouseFunc(pos.x, pos.y, event.button * 10 + 1, 0);
         });
         canvas.addEventListener('mouseup', function (event) {
@@ -97,7 +97,7 @@
             const setGPUCtxSize = Module.cwrap("setGPUCtxSize", null, ["number", "number"]);
             const setMouseParams = Module.cwrap("setMouseParams", null, ["number", "number", "number", "number"]);
 
-            const runExec = Module.cwrap("run");
+            const runExec = Module.cwrap("run", "number");
             const getCmdsTotalExec = Module.cwrap("getCmdsTotal", "number");
             const getCmdsExec = Module.cwrap("getCmds", "number");
             const getRenderCmdBufferExec = Module.cwrap("getRenderCmdBuffer", "number");
@@ -185,9 +185,15 @@
             function loopRun() {
                 if (drawTimes % 1 == 0) {
                     setctxViewParam();
-                    runExec();
-                    renderer.runBegin();
-                    renderer.draw(4, cmdBufU32Arr, cmdBufF32Arr);
+                    let dirtyFlag = runExec();
+                    if (dirtyFlag > 0) {
+                        renderer.runBegin();
+                        renderer.draw(4, cmdBufU32Arr, cmdBufF32Arr);
+                        console.log("drawing true ...\n");
+                    }
+                    // else {
+                    //     console.log("drawing false ...\n");
+                    // }
                 }
                 drawTimes++;
                 requestAnimationFrame(loopRun);

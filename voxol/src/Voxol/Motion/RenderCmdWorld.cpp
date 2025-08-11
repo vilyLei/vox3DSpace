@@ -17,7 +17,7 @@ bool SizeDesc::isEqual(const SizeDesc& desc) const
 bool ViewComponent::viewZoomWithFixPos(const Point2DDesc& fixPos, float dstScale)
 {
 
-    printf("ViewComponent::viewZoomWithFixPos(), fixPos(%f, %f)\n", fixPos.x, fixPos.y);
+    // printf("ViewComponent::viewZoomWithFixPos(), fixPos(%f, %f)\n", fixPos.x, fixPos.y);
     // 基本约定: 在scale为1.0的时候，窗口坐标和世界坐标一致(假定没有相对平移)
     auto scale = desc.zoom;
     auto pos   = desc.position;
