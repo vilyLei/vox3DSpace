@@ -20,20 +20,6 @@ Mat33::Mat33(std::initializer_list<float> list)
 
 Mat33::Mat33(float tx, float ty, float sx, float sy, float radians)
 {
-    // float c = cosf(radians);
-    // float s = sinf(radians);
-
-    // data[0] = c * sx;
-    // data[1] = s * sx;
-    // data[2] = 0.0f;
-
-    // data[3] = -s * sy;
-    // data[4] = c * sy;
-    // data[5] = 0.0f;
-
-    // data[6] = tx;
-    // data[7] = ty;
-    // data[8] = 1.0f;
     setTo(tx, ty, sx, sy, radians);
 }
 
@@ -195,6 +181,46 @@ Mat33 Mat33::multiplySimd(const Mat33& rhs) const
     return out;
 }
 #endif
+
+
+Vec2 Mat33::mapPoint(const Vec2& point) const
+{
+    float px = data[0] * point.x + data[3] * point.y + data[6];
+    float py = data[1] * point.x + data[4] * point.y + data[7];
+    return {px, py};
+}
+
+bool Mat33::inverseTo(Mat33& lhs) const
+{
+    auto& a = data;
+    float det =
+        data[0] * (data[4] * data[8] - data[5] * data[7]) -
+        data[3] * (data[1] * data[8] - data[2] * data[7]) +
+        data[6] * (data[1] * data[5] - data[2] * data[4]);
+
+    if (std::fabs(det) < 1e-8f)
+    {
+        return false;
+    }
+
+    float invDet = 1.0f / det;
+
+    auto& invData = lhs.data;
+    invData[0]    = (data[4] * data[8] - data[5] * data[7]) * invDet;
+    invData[1]    = -(data[1] * data[8] - data[2] * data[7]) * invDet;
+    invData[2]    = (data[1] * data[5] - data[2] * data[4]) * invDet;
+
+    invData[3] = -(data[3] * data[8] - data[5] * data[6]) * invDet;
+    invData[4] = (data[0] * data[8] - data[2] * data[6]) * invDet;
+    invData[5] = -(data[0] * data[5] - data[2] * data[3]) * invDet;
+
+    invData[6] = (data[3] * data[7] - data[4] * data[6]) * invDet;
+    invData[7] = -(data[0] * data[7] - data[1] * data[6]) * invDet;
+    invData[8] = (data[0] * data[4] - data[1] * data[3]) * invDet;
+
+    return true;
+}
+
 
 const float* Mat33::ptr() const
 {

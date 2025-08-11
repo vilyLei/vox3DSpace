@@ -12,6 +12,12 @@
 
 namespace Voxol::Math
 {
+struct Vec2
+{
+    float x{};
+    float y{};
+};
+
 
 /// 2D矩阵类声明，支持SIMD优化、列主序、WebGL/GLES友好
 class Mat33
@@ -30,7 +36,7 @@ public:
     static Mat33 rotate(float radians = 0.0f);
 
     void ortho(float width, float height);
-    
+
     void setTo(float tx, float ty, float sx = 1.0f, float sy = 1.0f, float rotRadians = 0.0f);
 
     void  transpose();
@@ -43,6 +49,10 @@ public:
 #endif
 
     const float* ptr() const;
+    Vec2         mapPoint(const Vec2& point) const;
+
+    bool inverseTo(Mat33& lhs) const;
+
     void print() const;
 };
 } // namespace Voxol::Math

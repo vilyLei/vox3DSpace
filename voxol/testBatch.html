@@ -89,6 +89,12 @@
             // console.log("mousewheel, event.deltaY: ", event.deltaY);
             mouseFunc(pos.x, pos.y, event.button * 10 + 4, event.deltaY);
         });
+        canvas.addEventListener('click', function (event) {
+            let pos = calcMouseXY(event);
+            console.log('mouse click(' + pos.x + ', ' + pos.y + ')');
+            console.log("mouse click, event.button: ", event.button);
+            mouseFunc(pos.x, pos.y, event.button * 10 + 5, 0);
+        });
 
         function execMoculeProcess(Module) {
 

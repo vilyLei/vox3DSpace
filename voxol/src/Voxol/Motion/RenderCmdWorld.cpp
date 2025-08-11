@@ -121,7 +121,7 @@ void RenderCmdWorld::initialize()
     commands.resize(total);
     cmdNodes.resize(total);
 
-    auto index = 0;
+    auto  index = 0;
     float dis   = 2;
     for (auto i = 0; i < rn; ++i)
     {
@@ -230,10 +230,35 @@ void RenderCmdWorld::setMouseParams(float x, float y, int type, float value)
         break;
         case 4:
         {
-            auto dv = std::abs(value) > 1 ? value * 0.01f : value;
+            auto dv   = std::abs(value) > 1 ? value * 0.01f : value;
             viewDirty = view.updateViewZoom(mousePos, -dv, 1.2f);
         }
         break;
+        case 5:
+        {
+
+            printf("RenderCmdWorld::setMouseParams(), click, type: %d, value: %f\n", type, value);
+            printf("RenderCmdWorld::setMouseParams(), click, mousePos(%f, %f)\n", mousePos.x, mousePos.y);
+            auto  i    = 0;
+            auto  pos  = mousePos;
+            auto& node = cmdNodes[i];
+            printf("RenderCmdWorld::setMouseParams(), click, node(x=%f, y=%f), scale(sx=%f, sy=%f)\n", node.x, node.y, node.scaleX, node.scaleY);
+            Mat33 mat{};
+            node.updateToMat33(mat);
+            printf("mat:\n");
+            mat.print();
+            Mat33 invMat{};
+            mat.inverseTo(invMat);
+            printf("invMat:\n");
+            invMat.print();
+
+            auto&& v0 = mat.mapPoint({0.0f, 0.0f});
+            printf("RenderCmdWorld::setMouseParams(), click, v0(%f, %f)\n", v0.x, v0.y);
+            auto&& v1 = invMat.mapPoint({mousePos.x, mousePos.y});
+            v1.x *= node.scaleX;
+            v1.y *= node.scaleY;
+            printf("RenderCmdWorld::setMouseParams(), click, v1(%f, %f)\n", v1.x, v1.y);
+        }
 
         default:
             break;
