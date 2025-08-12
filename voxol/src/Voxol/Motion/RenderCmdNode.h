@@ -47,6 +47,7 @@ struct RectDrawCmdDesc
 {
     uint32_t rcmd     = 0x33;
     uint32_t descSize = 0x32;
+    RectTarget::Rect bounds{};
     uint32_t color    = 0xff00aa00;
     Mat33    transform{};
 

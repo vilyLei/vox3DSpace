@@ -149,13 +149,9 @@ export class CacheDrawer {
         let transData = new Float32Array(matTot * 9);
         let colorData = new Float32Array(matTot * 4);
 
-        let vertex = this.roUnit.vertex;
         let shader = this.roUnit.shader;
 
         this.roUnit.bind(gl);
-        // gl.useProgram(shader.program);
-        // gl.bindVertexArray(vertex.vao);
-        // gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, vertex.veo);
 
         for (; ;) {
             if(drewTot >= 180000) {
@@ -170,15 +166,19 @@ export class CacheDrawer {
             switch (cmd) {
                 case 0x33:
                     {
-                        let f32Index = cmdIndex + 3;
-                        let matvs = dataF32.subarray(f32Index, f32Index + 9);
-                        transData.set(matvs, drawIndex * 9);
-                        let colorU32 = dataU32[cmdIndex + 2];
+                        let f32BoundsIndex = cmdIndex + 2;
+                        let boundsvs = dataF32.subarray(f32BoundsIndex, f32BoundsIndex + 4);
+
+                        let colorU32 = dataU32[cmdIndex + 4 + 2];
                         let a = ((colorU32 >> 24) & 0xff) / 255.0;
                         let r = ((colorU32 >> 16) & 0xff) / 255.0;
                         let g = ((colorU32 >> 8) & 0xff) / 255.0;
                         let b = (colorU32 & 0xff) / 255.0;
                         colorData.set([r, g, b, a], drawIndex * 4);
+
+                        let f32Index = cmdIndex + 4 + 3;
+                        let matvs = dataF32.subarray(f32Index, f32Index + 9);
+                        transData.set(matvs, drawIndex * 9);
                     }
                     break;
                 default:

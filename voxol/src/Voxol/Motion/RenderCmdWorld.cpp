@@ -306,7 +306,8 @@ void RenderCmdWorld::run()
     auto bufPtr         = (uint8_t*)buffer.data();
     std::memcpy(bufPtr + bufIndex, mHeadData, descSize);
     bufIndex += descSize;
-    uint32_t version = 1;
+
+    uint32_t version = 2;
 
     // printf("version: %d\n", version);
 
@@ -356,8 +357,14 @@ void RenderCmdWorld::run()
         rectDesc.rcmd  = node.rcmd;
         rectDesc.color = node.color;
         node.update();
+        auto& bounds = rectDesc.bounds;
+        bounds.pos.x = node.x;
+        bounds.pos.y = node.y;
+        bounds.width = node.scaleX;
+        bounds.height = node.scaleY;
         // node.updateToMat33(rectDesc.transform);
         rectDesc.transform = projMat;
+        // view mat and proj mat maybe become to a camera function 
         rectDesc.transform.append(viewMat);
         rectDesc.transform.append(node.transform);
         // rectDesc.transform.print();
