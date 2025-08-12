@@ -54,9 +54,11 @@ void handleCollision(MovingRect& a, MovingRect& b)
 
 void RectDrawCmdDesc::updateToBuffer(uint8_t* buffer)
 {
-    descSize = static_cast<uint32_t>(sizeof(RectDrawCmdDesc)) / 4;
+    constexpr auto descBytesSize = sizeof(RectDrawCmdDesc);
+    constexpr auto stride = static_cast<uint32_t>(descBytesSize) / 4;
+    descSize = stride;
     //printf("descSize: %d\n", descSize);
-    std::memcpy(buffer, this, sizeof(RectDrawCmdDesc));
+    std::memcpy(buffer, this, descBytesSize);
 }
 
 
