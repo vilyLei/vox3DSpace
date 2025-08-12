@@ -338,6 +338,7 @@ void RenderCmdWorld::run()
     // {
     //     auto& node = cmdNodes[i];
     //     auto& r = node.moveingNode.rect;
+    //     node.dirty = true;
     //     node.x = r.pos.x;
     //     node.y = r.pos.y;
     //     //printf("node (x=%f, y=%f)\n", node.x, node.y);
@@ -354,12 +355,15 @@ void RenderCmdWorld::run()
 
         rectDesc.rcmd  = node.rcmd;
         rectDesc.color = node.color;
-        node.updateToMat33(rectDesc.transform);
-
+        node.update();
+        // node.updateToMat33(rectDesc.transform);
+        rectDesc.transform = projMat;
+        rectDesc.transform.append(viewMat);
+        rectDesc.transform.append(node.transform);
         // rectDesc.transform.print();
         // printf(">    >     >\n");
-        rectDesc.transform.prepend(viewMat);
-        rectDesc.transform.prepend(projMat);
+        // rectDesc.transform.prepend(viewMat);
+        // rectDesc.transform.prepend(projMat);
         // rectDesc.transform.print();
         // printf(">    >     >\n");
 

@@ -63,7 +63,8 @@ struct DrawCmdTestNode
     float    scaleY = 1;
     /// @brief radian value
     float rotation = 0;
-
+    
+    Mat33    transform{};
     bool dirty = true;
 
     RectTarget::MovingRect moveingNode{};
@@ -71,6 +72,7 @@ struct DrawCmdTestNode
     void init();
     void updateToMat33(Mat33& mat);
     bool contains(float px, float py) const;
+    void update();
 };
 
 class RenderCmdNode

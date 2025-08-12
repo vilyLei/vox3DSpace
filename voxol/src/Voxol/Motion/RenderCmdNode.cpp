@@ -78,6 +78,12 @@ bool DrawCmdTestNode::contains(float px, float py) const {
         return false;
     return true;
 }
+void DrawCmdTestNode::update() {
+    if(dirty) {
+        dirty = true;
+        transform.setTo(x, y, scaleX, scaleY, rotation);
+    }
+}
 
 
 } // namespace Voxol::Motion
