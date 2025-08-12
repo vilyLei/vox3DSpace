@@ -139,7 +139,7 @@ export class CacheDrawer {
         gl.viewport(0, 0, vw, vh);
     }
 
-    draw(cmdIndex, dataU32, dataF32) {
+    draw(cmdIndex, dataU32, dataF32, version) {
 
         let gl = this.glCtx;
         let matTot = this.batchTotal;

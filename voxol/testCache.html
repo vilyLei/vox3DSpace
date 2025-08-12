@@ -179,6 +179,9 @@
             let cmdBufU32Arr = new Uint32Array(heap.buffer);
             cmdBufU32Arr = cmdBufU32Arr.subarray(cmdBufU8Ptr / 4);
 
+            let version = cmdBufU32Arr[2];
+            console.log("version: ", version);
+
             let cmdsTotal = getCmdsTotalExec();
             renderer.rcmsTotal = cmdsTotal;
 
@@ -201,7 +204,7 @@
                     let dirtyFlag = runExec();
                     if (dirtyFlag > 0) {
                         renderer.runBegin();
-                        renderer.draw(4, cmdBufU32Arr, cmdBufF32Arr);
+                        renderer.draw(4, cmdBufU32Arr, cmdBufF32Arr, version);
                         console.log("drawing true ...\n");
                     }
                     // else {
