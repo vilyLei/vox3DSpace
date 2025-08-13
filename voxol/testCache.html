@@ -43,7 +43,7 @@
 
         function initMoculeProcess(Module) {
             moduleWrapper.initialize(Module, canvas, gl);
-            renderer.initialize(gl, canvas.width, canvas.height);
+            renderer.initialize(moduleWrapper.ins, gl, canvas.width, canvas.height);
         };
 
         VoxModule().then(Module => {

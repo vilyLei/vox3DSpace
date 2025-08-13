@@ -122,6 +122,7 @@ export class SimpleCacheDrawer {
 
     constructor() {
 
+        this.moduleIns = null;
         this.glCtx = null;
         this.ctxWidth = 512;
         this.ctxHeight = 512;
@@ -137,8 +138,10 @@ export class SimpleCacheDrawer {
         this.screenColorUnit.initialize();
     }
 
-    initialize(gl, vw, vh) {
+    initialize(moduleIns, gl, vw, vh) {
 
+
+        this.moduleIns = moduleIns;
         this.glCtx = gl;
         this.ctxWidth = vw;
         this.ctxHeight = vh;
