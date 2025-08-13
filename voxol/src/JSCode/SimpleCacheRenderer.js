@@ -2,7 +2,41 @@
 
 import { ShaderBuilder } from './ShaderModule.js';
 import { VertexBuilder } from './VertexModule.js';
-import { BatchROUnit } from './ROModule.js';
+import { BatchROUnit, ROUnit } from './ROUnitModule.js';
+
+const vertSourceScreenV3 = `#version 300 es
+precision highp float;
+
+layout(location = 0) in vec2 a_pos;
+uniform mat3 u_objMat;
+void main() {
+    vec3 pos = u_objMat * vec3(a_pos.xy, 1.0);
+    gl_Position = vec4(pos.xy, 0.0, 1.0);
+}
+`;
+const vertSourceV3 = `#version 300 es
+precision highp float;
+
+layout(location = 0) in vec2 a_pos;
+uniform mat3 u_objMat;
+uniform mat3 u_viewMat;
+uniform mat3 u_projMat;
+void main() {
+    mat3 trans = u_projMat * u_viewMat * u_objMat;
+    vec3 pos = trans * vec3(a_pos.xy, 1.0);
+    gl_Position = vec4(pos.xy, 0.0, 1.0);
+}
+`;
+
+const fragSource = `#version 300 es
+precision mediump float;
+uniform vec4 u_color;
+out vec4 outColor;
+void main() {
+    outColor = u_color;
+    outColor = vec4(1.0,0.0,1.0,1.0);
+}
+`;
 
 function getVertSourceV3SegN(n) {
 
@@ -22,6 +56,7 @@ void main() {
 `;
     return vertSourceV3SegN;
 }
+
 function getFragSourceSegN(n) {
     const fragSourceSegN = `#version 300 es
 precision mediump float;
@@ -50,17 +85,26 @@ function getVertsWithVEOSegN(n) {
 
     let x = 0, y = 0, w = 1, h = 1;
 
-    let verts = new Float32Array(n * 12);
-    for (let i = 0; i < n; ++i) {
-        // transI 用于指定transform矩阵的序号
-        let transI = i;
-        verts.set([
-            x, y, transI,
-            x + w, y, transI,
-            x + w, y + h, transI,
-            x, y + h, transI], i * 12);
+    if (n > 1) {
+        let verts = new Float32Array(n * 12);
+        for (let i = 0; i < n; ++i) {
+            // transI 用于指定transform矩阵的序号
+            let transI = i;
+            verts.set([
+                x, y, transI,
+                x + w, y, transI,
+                x + w, y + h, transI,
+                x, y + h, transI], i * 12);
+        }
+        return verts;
+    } else {
+        let verts = new Float32Array([
+            x, y,
+            x + w, y,
+            x + w, y + h,
+            x, y + h]);
+        return verts;
     }
-    return verts;
 }
 function getIndicesWithSegN(n) {
 
@@ -75,21 +119,23 @@ function getIndicesWithSegN(n) {
     return indices;
 }
 
-export class CacheDrawer {
+export class BatchDrawer {
 
     constructor() {
 
-        this.dataF32 = null;
         this.glCtx = null;
         this.ctxWidth = 512;
         this.ctxHeight = 512;
 
-        this.rcmsTotal = 0;
         this.batchTotal = 4;
-        
+
         this.drewTotal = 0;
 
-        this.roUnit = new BatchROUnit();
+        this.batchUnit = new BatchROUnit(this.batchTotal);
+        this.batchUnit.initialize();
+
+        this.colorUnit = new ROUnit();
+        this.colorUnit.initialize();
     }
 
     initialize(gl, vw, vh) {
@@ -98,7 +144,7 @@ export class CacheDrawer {
         this.ctxWidth = vw;
         this.ctxHeight = vh;
 
-        console.log("CacheDrawer::initialize() ...\n");
+        // console.log("BatchDrawer::initialize() ...\n");
 
         this.initRender(gl);
     }
@@ -107,12 +153,22 @@ export class CacheDrawer {
     initRender(gl) {
 
         let segN = this.batchTotal;
-        let shaderDescArr = [{name:'u_transforms[0]', type:'mat4[]'},{name:'u_colors[0]', type:'vec4[]'}];
-        ShaderBuilder.createShaderUnit(this.roUnit.shader, gl, getVertSourceV3SegN(segN), getFragSourceSegN(segN), shaderDescArr);
 
-        let program = this.roUnit.shader.program;
-        VertexBuilder.createVAO(this.roUnit.vertex, gl, program, getVertsWithVEOSegN(segN), [3], [3 * 4],['a_pos']);
-        VertexBuilder.createVEO(this.roUnit.vertex, gl, getIndicesWithSegN(segN));
+        let shaderDescArr = null;
+        let program = null;
+
+        shaderDescArr = [{ name: 'u_transforms[0]', type: 'mat3[]' }, { name: 'u_colors[0]', type: 'vec4[]' }];
+        ShaderBuilder.createShaderUnit(this.batchUnit.shader, gl, getVertSourceV3SegN(segN), getFragSourceSegN(segN), shaderDescArr);
+        program = this.batchUnit.shader.program;
+        VertexBuilder.createVAO(this.batchUnit.vertex, gl, program, getVertsWithVEOSegN(segN), [3], [3 * 4], ['a_pos']);
+        VertexBuilder.createVEO(this.batchUnit.vertex, gl, getIndicesWithSegN(segN));
+
+        shaderDescArr = [{ name: 'u_objMat', type: 'mat3' }, { name: 'u_color', type: 'vec4' }];
+        ShaderBuilder.createShaderUnit(this.colorUnit.shader, gl, vertSourceScreenV3, fragSource, shaderDescArr);
+
+        program = this.colorUnit.shader.program;
+        VertexBuilder.createVAO(this.colorUnit.vertex, gl, program, getVertsWithVEOSegN(1), [2], [2 * 4], ['a_pos']);
+        VertexBuilder.createVEO(this.colorUnit.vertex, gl, getIndicesWithSegN(1));
 
     }
 
@@ -127,34 +183,36 @@ export class CacheDrawer {
     }
 
     setCtxSize(vw, vh) {
+
         this.ctxWidth = vw;
         this.ctxHeight = vh;
+
     }
     runBegin() {
+
         let gl = this.glCtx;
         let vw = this.ctxWidth;
         let vh = this.ctxHeight;
         gl.clearColor(0.95, 0.95, 0.95, 1);
         gl.clear(gl.COLOR_BUFFER_BIT);
         gl.viewport(0, 0, vw, vh);
+
     }
 
-    draw(cmdIndex, dataU32, dataF32, version) {
+    draw(cmdIndex, dataU32, dataF32) {
 
         let gl = this.glCtx;
         let matTot = this.batchTotal;
         let drawIndex = 0;
         let drewTot = 0;
 
-        let transData = new Float32Array(matTot * 9);
-        let colorData = new Float32Array(matTot * 4);
+        this.colorUnit.bind(gl);
+        this.colorUnit.draw(gl);
 
-        let shader = this.roUnit.shader;
-
-        this.roUnit.bind(gl);
-
+        this.batchUnit.bind(gl);
+        
         for (; ;) {
-            if(drewTot >= 180000) {
+            if (drewTot >= 180000) {
                 break;
             }
             let cmd = dataU32[cmdIndex];
@@ -165,21 +223,7 @@ export class CacheDrawer {
             let descSize = dataU32[cmdIndex + 1];
             switch (cmd) {
                 case 0x33:
-                    {
-                        let f32BoundsIndex = cmdIndex + 2;
-                        let boundsvs = dataF32.subarray(f32BoundsIndex, f32BoundsIndex + 4);
-
-                        let colorU32 = dataU32[cmdIndex + 4 + 2];
-                        let a = ((colorU32 >> 24) & 0xff) / 255.0;
-                        let r = ((colorU32 >> 16) & 0xff) / 255.0;
-                        let g = ((colorU32 >> 8) & 0xff) / 255.0;
-                        let b = (colorU32 & 0xff) / 255.0;
-                        colorData.set([r, g, b, a], drawIndex * 4);
-
-                        let f32Index = cmdIndex + 4 + 3;
-                        let matvs = dataF32.subarray(f32Index, f32Index + 9);
-                        transData.set(matvs, drawIndex * 9);
-                    }
+                    this.batchUnit.parse(drawIndex, cmdIndex, dataU32, dataF32);
                     break;
                 default:
                     break;
@@ -189,16 +233,12 @@ export class CacheDrawer {
             drawIndex++;
             if (drawIndex >= matTot) {
                 drewTot += matTot;
-                gl.uniformMatrix3fv(shader.uniforms[0].location, false, transData, 0, matTot * 9);
-                gl.uniform4fv(shader.uniforms[1].location, colorData, 0, matTot * 4);
-                // gl.drawElements(gl.TRIANGLES, vertex.indices.length, gl.UNSIGNED_SHORT, 0);
-                
-                this.roUnit.draw(gl);
+                this.batchUnit.draw(gl);
                 drawIndex = 0;
             }
         }
 
-        if(drewTot != this.drewTotal) {
+        if (drewTot != this.drewTotal) {
             this.drewTotal = drewTot;
             console.log("drewTotal: ", this.drewTotal);
         }
