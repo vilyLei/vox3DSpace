@@ -4,10 +4,12 @@ import { VtxUnit, VertexBuilder } from './VertexModule.js';
 
 export class ROUnit {
     constructor() {
-        this.shader = new ShaderUnit();
-        this.vertex = new VtxUnit();
+        this.shader = null
+        this.vertex = null
     }
     initialize() {
+        this.shader = new ShaderUnit();
+        this.vertex = new VtxUnit();
         this.transData = new Float32Array([1, 0, 0,
             0, 1, 0,
             0, 0, 1]);
@@ -27,12 +29,39 @@ export class ROUnit {
     destroy() { }
 }
 
+export class MVPROUnit extends ROUnit{
+    constructor() {
+        // this.shader = new ShaderUnit();
+        // this.vertex = new VtxUnit();
+    }
+    initialize() {
+        this.transData = new Float32Array([1, 0, 0,
+            0, 1, 0,
+            0, 0, 1]);
+        this.colorData = new Float32Array([0.5, 0, 0, 1]);
+    }
+    bind(gl) {
+        gl.useProgram(this.shader.program);
+        // gl.bindVertexArray(this.vertex.vao);
+        // gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.vertex.veo);
+    }
+    draw(gl) {
+        // let uniforms = this.shader.uniforms;
+        // gl.uniformMatrix3fv(uniforms[0].location, false, this.transData, 0, 9);
+        // gl.uniform4fv(uniforms[1].location, this.colorData, 0, 4);
+        // gl.drawElements(gl.TRIANGLES, this.vertex.indices.length, gl.UNSIGNED_SHORT, 0);
+    }
+    destroy() { }
+}
+
 export class BatchROUnit extends ROUnit {
     constructor(tot) {
         super();
         this.matTotal = tot;
     }
     initialize() {
+        this.shader = new ShaderUnit();
+        this.vertex = new VtxUnit();
         let tot = this.matTotal;
         this.transData = new Float32Array(tot * 9);
         this.colorData = new Float32Array(tot * 4);
