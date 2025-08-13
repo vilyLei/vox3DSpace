@@ -3,12 +3,16 @@
 // 列主序3x3矩阵
 export class Mat33 {
 
-    constructor() {
-        this.data = new Float32Array(
-            [1, 0, 0,
-                0, 1, 0,
-                0, 0, 1]
-        );
+    constructor(fs32Arr9) {
+        if (fs32Arr9 == undefined || fs32Arr9.length == undefined || fs32Arr9.length != 9) {
+            this.data = new Float32Array(
+                [1, 0, 0,
+                    0, 1, 0,
+                    0, 0, 1]
+            );
+        } else {
+            this.data = new Float32Array(fs32Arr9);
+        }
     }
 
     setTo(tx, ty, sx = 1, sy = 1, rotRadians = 0) {
@@ -59,5 +63,17 @@ export class Mat33 {
             result[i * 3 + 2] = sfs[2] * rc0 + sfs[5] * rc1 + sfs[8] * rc2;
         }
         sfs.set(result);
+    }
+
+    print() {
+        let data = this.data;
+        console.log("{\n");
+        for (let i = 0; i < 3; ++i) {
+            console.log(
+                data[i * 3 + 0].toFixed(5),
+                data[i * 3 + 1].toFixed(5),
+                data[i * 3 + 2].toFixed(5));
+        }
+        console.log("}\n");
     }
 }
