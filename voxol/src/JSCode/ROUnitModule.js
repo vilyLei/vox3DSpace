@@ -13,7 +13,7 @@ export class ROUnit {
         this.transData = new Float32Array([1, 0, 0,
             0, 1, 0,
             0, 0, 1]);
-        this.colorData = new Float32Array([0.5, 0, 0, 1]);
+        this.colorData = new Float32Array([0.8, 0.8, 0.8, 1]);
     }
     bind(gl) {
         gl.useProgram(this.shader.program);
@@ -29,27 +29,36 @@ export class ROUnit {
     destroy() { }
 }
 
-export class MVPROUnit extends ROUnit{
+export class MVPROUnit extends ROUnit {
     constructor() {
-        // this.shader = new ShaderUnit();
-        // this.vertex = new VtxUnit();
     }
     initialize() {
-        this.transData = new Float32Array([1, 0, 0,
+        this.shader = new ShaderUnit();
+        this.vertex = new VtxUnit();
+        this.objMatData = new Float32Array([1, 0, 0,
             0, 1, 0,
             0, 0, 1]);
-        this.colorData = new Float32Array([0.5, 0, 0, 1]);
+        this.viewMatData = null;
+        this.projMatData = null;
+        this.colorData = new Float32Array([0.8, 0.8, 0.8, 1]);
     }
+
     bind(gl) {
         gl.useProgram(this.shader.program);
-        // gl.bindVertexArray(this.vertex.vao);
-        // gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.vertex.veo);
+        gl.bindVertexArray(this.vertex.vao);
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.vertex.veo);
     }
+
     draw(gl) {
-        // let uniforms = this.shader.uniforms;
-        // gl.uniformMatrix3fv(uniforms[0].location, false, this.transData, 0, 9);
-        // gl.uniform4fv(uniforms[1].location, this.colorData, 0, 4);
-        // gl.drawElements(gl.TRIANGLES, this.vertex.indices.length, gl.UNSIGNED_SHORT, 0);
+
+        let uniforms = this.shader.uniforms;
+
+        gl.uniformMatrix3fv(uniforms[0].location, false, this.objMatData, 0, 9);
+        gl.uniformMatrix3fv(uniforms[1].location, false, this.viewMatData, 0, 9);
+        gl.uniformMatrix3fv(uniforms[2].location, false, this.projMatData, 0, 9);
+
+        gl.uniform4fv(uniforms[3].location, this.colorData, 0, 4);
+        gl.drawElements(gl.TRIANGLES, this.vertex.indices.length, gl.UNSIGNED_SHORT, 0);
     }
     destroy() { }
 }

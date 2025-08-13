@@ -34,7 +34,6 @@ uniform vec4 u_color;
 out vec4 outColor;
 void main() {
     outColor = u_color;
-    outColor = vec4(1.0,0.0,1.0,1.0);
 }
 `;
 
@@ -134,8 +133,8 @@ export class SimpleCacheDrawer {
         this.batchUnit = new BatchROUnit(this.batchTotal);
         this.batchUnit.initialize();
 
-        this.colorUnit = new ROUnit();
-        this.colorUnit.initialize();
+        this.screenColorUnit = new ROUnit();
+        this.screenColorUnit.initialize();
     }
 
     initialize(gl, vw, vh) {
@@ -164,11 +163,11 @@ export class SimpleCacheDrawer {
         VertexBuilder.createVEO(this.batchUnit.vertex, gl, getIndicesWithSegN(segN));
 
         shaderDescArr = [{ name: 'u_objMat', type: 'mat3' }, { name: 'u_color', type: 'vec4' }];
-        ShaderBuilder.createShaderUnit(this.colorUnit.shader, gl, vertSourceScreenV3, fragSource, shaderDescArr);
+        ShaderBuilder.createShaderUnit(this.screenColorUnit.shader, gl, vertSourceScreenV3, fragSource, shaderDescArr);
 
-        program = this.colorUnit.shader.program;
-        VertexBuilder.createVAO(this.colorUnit.vertex, gl, program, getVertsWithVEOSegN(1), [2], [2 * 4], ['a_pos']);
-        VertexBuilder.createVEO(this.colorUnit.vertex, gl, getIndicesWithSegN(1));
+        program = this.screenColorUnit.shader.program;
+        VertexBuilder.createVAO(this.screenColorUnit.vertex, gl, program, getVertsWithVEOSegN(1), [2], [2 * 4], ['a_pos']);
+        VertexBuilder.createVEO(this.screenColorUnit.vertex, gl, getIndicesWithSegN(1));
 
     }
 
@@ -206,8 +205,8 @@ export class SimpleCacheDrawer {
         let drawIndex = 0;
         let drewTot = 0;
 
-        this.colorUnit.bind(gl);
-        this.colorUnit.draw(gl);
+        this.screenColorUnit.bind(gl);
+        this.screenColorUnit.draw(gl);
 
         this.batchUnit.bind(gl);
         
