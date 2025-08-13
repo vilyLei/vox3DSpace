@@ -295,32 +295,7 @@ void RenderCmdWorld::run()
     // printf("RenderCmdWorld::run() sizeof(projMat): %zu\n", sizeof(projMat));
     // printf("RenderCmdWorld::run() cmdsTotal: %zu\n", cmdsTotal);
 
-    /*
-
-    uint32_t default_cmd = 0x33;
-    uint32_t end_cmd     = 0x0;
-    /// 8bytes head
-    /// 4bytes version
-    /// 4bytes cmds total
-    auto bufBytesLength = buffer.size() - 8;
-    auto bufIndex       = 0;
-    auto descSize       = sizeof(mHeadData);
-    auto bufPtr         = (uint8_t*)buffer.data();
-    std::memcpy(bufPtr + bufIndex, mHeadData, descSize);
-    bufIndex += descSize;
-
-    uint32_t version = 2;
-
-    // printf("version: %d\n", version);
-
-    descSize = sizeof(version);
-    std::memcpy(bufPtr + bufIndex, &version, descSize);
-    bufIndex += descSize;
-    descSize = sizeof(cmdsTotal);
-    std::memcpy(bufPtr + bufIndex, &cmdsTotal, descSize);
-    bufIndex += descSize;
-    //*/
-    uint32_t default_cmd = 0x33;
+    uint32_t default_cmd = 0x32;
     uint32_t end_cmd     = 0x0;
     /// 8bytes head
     /// 4bytes version
@@ -346,6 +321,7 @@ void RenderCmdWorld::run()
 
     // printf("projMat:\n");
     // projMat.print();
+
     CameraCmdDesc camDesc{};
     camDesc.projMat = projMat;
     camDesc.viewMat = viewMat;
@@ -357,9 +333,6 @@ void RenderCmdWorld::run()
     std::memcpy(bufPtr + bufBytesIndex, &trunkCmd, descBytesSize);
     bufBytesIndex += descBytesSize;
 
-    // descBytesSize = sizeof(cmdsTotal);
-    // std::memcpy(bufPtr + bufBytesIndex, &cmdsTotal, descBytesSize);
-    // bufBytesIndex += descBytesSize;
     BatchElementCmdDesc batchDesc{};
     batchDesc.descSize = cmdsTotal;
     batchDesc.updateToBuffer(bufPtr + bufBytesIndex, bufBytesIndex, bufBytesLength);
@@ -395,9 +368,6 @@ void RenderCmdWorld::run()
     for (auto i = 0; i < cmdsTotal; i++)
     {
 
-        // auto descSize = sizeof(RectDrawCmdDesc);
-        // if ((bufIndex + descSize) > bufBytesLength)
-        //     break;
         auto& node = cmdNodes[i];
 
         rectDesc.rcmd  = node.rcmd;
@@ -408,11 +378,12 @@ void RenderCmdWorld::run()
         bounds.pos.y = node.y;
         bounds.width = node.scaleX;
         bounds.height = node.scaleY;
-        // node.updateToMat33(rectDesc.transform);
         rectDesc.transform = projMat;
         // view mat and proj mat maybe become to a camera function 
         rectDesc.transform.append(viewMat);
         rectDesc.transform.append(node.transform);
+        
+        // node.updateToMat33(rectDesc.transform);
         // rectDesc.transform.print();
         // printf(">    >     >\n");
         // rectDesc.transform.prepend(viewMat);
