@@ -14,9 +14,6 @@ export class ModuleInstance {
         this.batchEleDesc = new BatchElementDesc();
 
         this.version = 0;
-        // this.viewTransIndex = 0;
-        // this.heapDataIndex = 0;
-        // this.rcmsTotal = 0;
     }
 
     initialize(module) {
@@ -93,15 +90,10 @@ export class ModuleInstance {
             
             this.batchEleDesc.parse(bufIndex);
             bufIndex += this.batchEleDesc.bufSize;
-            //batchEleDesc
-            // let cmdsTotal = cmdBufU32Arr[bufIndex];
-            // console.log("A cmdsTotal: ", cmdsTotal);
-            // trunkCmd = cmdBufU32Arr[bufIndex];
-            // bufIndex++;
         }
 
-        let cmdsTotal = this.getCmdsTotalExec();
-        this.rcmsTotal = cmdsTotal;
+        // let cmdsTotal = this.getCmdsTotalExec();
+        // this.rcmsTotal = cmdsTotal;
         // console.log("B cmdsTotal: ", cmdsTotal);
         // console.log("bufIndex: ", bufIndex);
         // this.heapDataIndex = bufIndex;
