@@ -52,14 +52,44 @@ void handleCollision(MovingRect& a, MovingRect& b)
 
 
 
-void RectDrawCmdDesc::updateToBuffer(uint8_t* buffer)
+
+bool CameraCmdDesc::updateToBuffer(uint8_t* buffer, size_t bufBytesIndex, size_t bufBytesLength)
 {
-    constexpr auto descBytesSize = sizeof(RectDrawCmdDesc);
-    constexpr auto stride = static_cast<uint32_t>(descBytesSize) / 4;
-    descSize = stride;
-    //printf("descSize: %d\n", descSize);
-    std::memcpy(buffer, this, descBytesSize);
+    constexpr auto bytesSize = sizeof(CameraCmdDesc);
+    if ((bufBytesIndex + bytesSize) > bufBytesLength)
+    {
+        return false;
+    }
+    descSize = static_cast<uint32_t>(bytesSize) / 4;
+    // printf("CameraCmdDesc::updateToBuffer(), descSize: %d, bytesSize: %lu\n", descSize, bytesSize);
+    std::memcpy(buffer, this, bytesSize);
+    return true;
 }
+
+bool RectDrawCmdDesc::updateToBuffer(uint8_t* buffer, size_t bufBytesIndex, size_t bufBytesLength)
+{
+    constexpr auto bytesSize = sizeof(RectDrawCmdDesc);
+
+    if ((bufBytesIndex + bytesSize) > bufBytesLength)
+    {
+        // printf("RectDrawCmdDesc::updateToBuffer() AAA ...\n");
+        return false;
+    }
+    descSize = static_cast<uint32_t>(bytesSize) / 4;
+    // printf("descSize: %d, bytesSize: %d\n", descSize, bytesSize);
+    std::memcpy(buffer, this, bytesSize);
+    // printf("RectDrawCmdDesc::updateToBuffer() BBB ...\n");
+    return true;
+}
+
+// void RectDrawCmdDesc::updateToBuffer(uint8_t* buffer)
+// {
+//     constexpr auto descBytesSize = sizeof(RectDrawCmdDesc);
+//     constexpr auto stride = static_cast<uint32_t>(descBytesSize) / 4;
+//     descSize = stride;
+//     //printf("descSize: %d\n", descSize);
+//     std::memcpy(buffer, this, descBytesSize);
+// }
 
 
 void DrawCmdTestNode::init()

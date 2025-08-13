@@ -43,15 +43,26 @@ struct MovingRect
 void handleCollision(MovingRect& a, MovingRect& b);
 
 } // namespace RectTarget
+
+struct CameraCmdDesc
+{
+    uint32_t         rcmd     = 0x32;
+    uint32_t         descSize = 0x14;
+    Mat33            projMat{};
+    Mat33            viewMat{};
+
+    bool updateToBuffer(uint8_t* buffer, size_t bufBytesIndex, size_t bufBytesLength);
+};
+
 struct RectDrawCmdDesc
 {
-    uint32_t rcmd     = 0x33;
-    uint32_t descSize = 0x32;
+    uint32_t         rcmd     = 0x33;
+    uint32_t         descSize = 0x32;
     RectTarget::Rect bounds{};
-    uint32_t color    = 0xff00aa00;
-    Mat33    transform{};
+    uint32_t         color = 0xff00aa00;
+    Mat33            transform{};
 
-    void updateToBuffer(uint8_t* buffer);
+    bool updateToBuffer(uint8_t* buffer, size_t bufBytesIndex, size_t bufBytesLength);
 };
 
 struct DrawCmdTestNode
@@ -64,9 +75,9 @@ struct DrawCmdTestNode
     float    scaleY = 1;
     /// @brief radian value
     float rotation = 0;
-    
-    Mat33    transform{};
-    bool dirty = true;
+
+    Mat33 transform{};
+    bool  dirty = true;
 
     RectTarget::MovingRect moveingNode{};
 
