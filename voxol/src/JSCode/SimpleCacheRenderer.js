@@ -219,19 +219,24 @@ export class SimpleCacheDrawer {
 
     }
 
-    draw(cmdIndex, dataU32, dataF32) {
+    draw() {
+        let gl = this.glCtx;
+        this.screenColorUnit.bind(gl);
+        this.screenColorUnit.draw(gl);
+        this.mvpUnit.bind(gl);
+        this.mvpUnit.draw(gl);
+    }
+    drawBatch(batchEle) {
 
         let gl = this.glCtx;
         let matTot = this.batchTotal;
         let drawIndex = 0;
         let drewTot = 0;
 
-        this.screenColorUnit.bind(gl);
-        this.screenColorUnit.draw(gl);
+        let cmdIndex = batchEle.getElementDataIndex();
+        let dataU32 = batchEle.heapU32;
+        let dataF32 = batchEle.heapF32;
 
-        
-        this.mvpUnit.bind(gl);
-        this.mvpUnit.draw(gl);
 
         this.batchUnit.bind(gl);
 

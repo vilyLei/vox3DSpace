@@ -55,12 +55,6 @@ export class ModuleWrapper {
     isEnabled() {
         return this.enabled;
     }
-    // getHeapDataIndex() {
-    //     return this.ins.heapDataIndex;
-    // }
-    // getRcmsTotal() {
-    //     return this.ins.batchEleDesc.rcmsTotal;
-    // }
     initialize(module, canvas, gl) {
 
         // console.log("ModuleWrapper::initialize() ...");

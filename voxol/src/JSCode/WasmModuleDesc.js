@@ -57,9 +57,6 @@ export class BatchElementDesc {
         this.bufSize = 0;
         this.heapU32 = null;
         this.heapF32 = null;
-
-        this.projF32 = null;
-        this.viewF32 = null;
     }
     getElementDataIndex() {
         return this.elementDataIndex;
