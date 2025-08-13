@@ -55,12 +55,12 @@ export class ModuleWrapper {
     isEnabled() {
         return this.enabled;
     }
-    getHeapDataIndex() {
-        return this.ins.heapDataIndex;
-    }
-    getRcmsTotal() {
-        return this.ins.rcmsTotal;
-    }
+    // getHeapDataIndex() {
+    //     return this.ins.heapDataIndex;
+    // }
+    // getRcmsTotal() {
+    //     return this.ins.batchEleDesc.rcmsTotal;
+    // }
     initialize(module, canvas, gl) {
 
         // console.log("ModuleWrapper::initialize() ...");
@@ -88,7 +88,8 @@ export class ModuleWrapper {
         this.startup();
         ins.initHeapParse();
         this.initEvent();
-        this.enabled = this.getHeapDataIndex() > 1;
+        let batchEleDesc = this.ins.batchEleDesc;
+        this.enabled = batchEleDesc.getElementDataIndex() > 1;
     }
     initEvent() {
         let canvas = this.canvas;

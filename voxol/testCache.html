@@ -75,8 +75,9 @@
             viewTransDesc.update();
             renderer.runBegin();
             let ins = moduleWrapper.ins;
-            let dataIndex = moduleWrapper.getHeapDataIndex();
-            renderer.draw(dataIndex, ins.heapU32, ins.heapF32);
+            let eleDesc = ins.batchEleDesc;
+            let dataIndex = eleDesc.getElementDataIndex();
+            renderer.draw(dataIndex, eleDesc.heapU32, eleDesc.heapF32);
         }
 
         function loopRun() {

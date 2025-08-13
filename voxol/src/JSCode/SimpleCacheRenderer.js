@@ -228,7 +228,6 @@ export class SimpleCacheDrawer {
 
         this.screenColorUnit.bind(gl);
         this.screenColorUnit.draw(gl);
-        //this.mvpUnit
 
         
         this.mvpUnit.bind(gl);
@@ -247,7 +246,7 @@ export class SimpleCacheDrawer {
             }
             let descSize = dataU32[cmdIndex + 1];
             switch (cmd) {
-                case 0x33:
+                case 0x32:
                     this.batchUnit.parse(drawIndex, cmdIndex, dataU32, dataF32);
                     break;
                 default:

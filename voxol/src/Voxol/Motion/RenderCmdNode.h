@@ -46,18 +46,23 @@ void handleCollision(MovingRect& a, MovingRect& b);
 
 struct CameraCmdDesc
 {
-    uint32_t         rcmd     = 0x32;
-    uint32_t         descSize = 0x14;
+    uint32_t         rcmd     = 0x30;
+    uint32_t         descSize = 0x20;
     Mat33            projMat{};
     Mat33            viewMat{};
 
     bool updateToBuffer(uint8_t* buffer, size_t bufBytesIndex, size_t bufBytesLength);
 };
-
+struct BatchElementCmdDesc
+{
+    uint32_t         rcmd     = 0x31;
+    uint32_t         descSize = 0x20;
+    bool updateToBuffer(uint8_t* buffer, size_t bufBytesIndex, size_t bufBytesLength);
+};
 struct RectDrawCmdDesc
 {
-    uint32_t         rcmd     = 0x33;
-    uint32_t         descSize = 0x32;
+    uint32_t         rcmd     = 0x32;
+    uint32_t         descSize = 0x20;
     RectTarget::Rect bounds{};
     uint32_t         color = 0xff00aa00;
     Mat33            transform{};

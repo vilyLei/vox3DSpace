@@ -1,45 +1,5 @@
 
-
-export class ViewTransDesc {
-
-    constructor() {
-        this.dataIndex = 0;
-        this.cmd = 0;
-        this.bufSize = 0;
-        this.heapU32 = null;
-        this.heapF32 = null;
-
-        this.projF32 = null;
-        this.viewF32 = null;
-    }
-    parse(bufIndex) {
-
-        if(bufIndex == undefined || bufIndex < 0) {
-            bufIndex = this.dataIndex;
-        }else {
-            this.dataIndex = bufIndex;
-        }
-        let heapU32 = this.heapU32;
-        let heapF32 = this.heapF32;
-
-        this.cmd = heapU32[bufIndex];
-        this.bufSize = heapU32[bufIndex + 1];
-        // console.log("ViewTransDesc::parse() cmd: ", this.cmd.toString(16), ", bufSize: ", this.bufSize);
-        let projIndex = bufIndex + 2;
-        let projmatvs = heapF32.subarray(projIndex, projIndex + 9);
-        let viewIndex = bufIndex + 2 + 9;
-        let viewmatvs = heapF32.subarray(viewIndex, viewIndex + 9);
-        // console.log("ViewTransDesc::parse() projmatvs: ");
-        // console.log(projmatvs);
-        // console.log("ViewTransDesc::parse() viewmatvs: ");
-        // console.log(viewmatvs);
-        this.projF32 = projmatvs;
-        this.viewF32 = viewmatvs;
-    }
-    update() {
-        this.parse(-1);
-    }
-}
+import { BatchElementDesc, ViewTransDesc } from './WasmModuleDesc.js';
 
 export class ModuleInstance {
 
@@ -51,11 +11,12 @@ export class ModuleInstance {
         this.heapF32 = null;
 
         this.viewTransDesc = new ViewTransDesc();
+        this.batchEleDesc = new BatchElementDesc();
 
         this.version = 0;
-        this.viewTransIndex = 0;
-        this.heapDataIndex = 0;
-        this.rcmsTotal = 0;
+        // this.viewTransIndex = 0;
+        // this.heapDataIndex = 0;
+        // this.rcmsTotal = 0;
     }
 
     initialize(module) {
@@ -95,6 +56,8 @@ export class ModuleInstance {
 
         this.viewTransDesc.heapU32 = this.heapU32;
         this.viewTransDesc.heapF32 = this.heapF32;
+        this.batchEleDesc.heapU32 = this.heapU32;
+        this.batchEleDesc.heapF32 = this.heapF32;
     }
 
     initHeapParse() {
@@ -127,15 +90,20 @@ export class ModuleInstance {
         }
 
         if (trunkCmd == 22) {
-            let cmdsTotal = cmdBufU32Arr[bufIndex];
+            
+            this.batchEleDesc.parse(bufIndex);
+            bufIndex += this.batchEleDesc.bufSize;
+            //batchEleDesc
+            // let cmdsTotal = cmdBufU32Arr[bufIndex];
             // console.log("A cmdsTotal: ", cmdsTotal);
+            // trunkCmd = cmdBufU32Arr[bufIndex];
+            // bufIndex++;
         }
-        bufIndex++;
 
         let cmdsTotal = this.getCmdsTotalExec();
         this.rcmsTotal = cmdsTotal;
         // console.log("B cmdsTotal: ", cmdsTotal);
         // console.log("bufIndex: ", bufIndex);
-        this.heapDataIndex = bufIndex;
+        // this.heapDataIndex = bufIndex;
     }
 }

@@ -65,6 +65,21 @@ bool CameraCmdDesc::updateToBuffer(uint8_t* buffer, size_t bufBytesIndex, size_t
     std::memcpy(buffer, this, bytesSize);
     return true;
 }
+bool BatchElementCmdDesc::updateToBuffer(uint8_t* buffer, size_t bufBytesIndex, size_t bufBytesLength)
+{
+    constexpr auto bytesSize = sizeof(BatchElementCmdDesc);
+
+    if ((bufBytesIndex + bytesSize) > bufBytesLength)
+    {
+        // printf("BatchElementCmdDesc::updateToBuffer() AAA ...\n");
+        return false;
+    }
+    descSize = static_cast<uint32_t>(bytesSize) / 4;
+    // printf("descSize: %d, bytesSize: %d\n", descSize, bytesSize);
+    std::memcpy(buffer, this, bytesSize);
+    // printf("BatchElementCmdDesc::updateToBuffer() BBB ...\n");
+    return true;
+}
 
 bool RectDrawCmdDesc::updateToBuffer(uint8_t* buffer, size_t bufBytesIndex, size_t bufBytesLength)
 {

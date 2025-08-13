@@ -357,10 +357,13 @@ void RenderCmdWorld::run()
     std::memcpy(bufPtr + bufBytesIndex, &trunkCmd, descBytesSize);
     bufBytesIndex += descBytesSize;
 
-    descBytesSize = sizeof(cmdsTotal);
-    std::memcpy(bufPtr + bufBytesIndex, &cmdsTotal, descBytesSize);
-    bufBytesIndex += descBytesSize;
-
+    // descBytesSize = sizeof(cmdsTotal);
+    // std::memcpy(bufPtr + bufBytesIndex, &cmdsTotal, descBytesSize);
+    // bufBytesIndex += descBytesSize;
+    BatchElementCmdDesc batchDesc{};
+    batchDesc.descSize = cmdsTotal;
+    batchDesc.updateToBuffer(bufPtr + bufBytesIndex, bufBytesIndex, bufBytesLength);
+    bufBytesIndex += batchDesc.descSize * 4;
 
     // RectTarget::Rect boundary = {0, 0, canvas.size.width * 1.0f, canvas.size.height * 1.0f};
 
