@@ -31,8 +31,8 @@
 
     <script type="module">
 
-        import { BatchDrawer, printWith9Number } from './src/JSCode/BatchDrawer.js';
-        import { ModuleWrapper } from './src/JSCode/ModuleParser.js';
+        import { BatchDrawer, printWith9Number } from './src/JSCode/SimpleBatchRenderer.js';
+        import { ModuleWrapper } from './src/JSCode/WasmModule.js';
 
         const canvas = document.getElementById('canvas');
         const gl = canvas.getContext("webgl2", { antialias: true, depth: false });
