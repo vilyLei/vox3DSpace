@@ -16,10 +16,6 @@
             display: block;
             background: #222;
         }
-
-        .rotate-cursor {
-            cursor: url('assets/ui/arrow01.png') 16 16, auto;
-        }
     </style>
 
     <script src="./build/voxolModule.js"></script>
@@ -35,193 +31,59 @@
 
     <script type="module">
 
-        import { CacheDrawer, printWith9Number } from './src/JSCode/SimpleCacheRenderer.js';
+        import { BatchDrawer, printWith9Number } from './src/JSCode/BatchDrawer.js';
+        import { ModuleWrapper } from './src/JSCode/ModuleParser.js';
 
         const canvas = document.getElementById('canvas');
         const gl = canvas.getContext("webgl2", { antialias: true, depth: false });
 
+        let moduleWrapper = new ModuleWrapper();
+        let viewTransDesc = moduleWrapper.ins.viewTransDesc;
+        let renderer = new BatchDrawer();
 
-        let renderer = new CacheDrawer();
-
-        var mouseFunc = function (px, py, type, flag) {
-            console.log('mouseFunc mosuePos(x=' + px + ', y=' + py + ')');
-        }
-        function calcMouseXY(event) {
-
-            const clientX = event.clientX;
-            const clientY = event.clientY;
-            const rect = canvas.getBoundingClientRect();
-            const canvasX = rect.left;
-            const canvasY = rect.top;
-
-            let x = clientX - canvasX;
-            let y = clientY - canvasY;
-            // console.log('calcMouseXY A mousePos(' + x + ', ' + y + ')');
-            const dpr = window.devicePixelRatio || 1;
-            x *= dpr;
-            y *= dpr;
-            // console.log('calcMouseXY B mousePos(' + x + ', ' + y + ')');
-            return { x: x, y: y };
-        }
-
-        canvas.addEventListener('mousedown', function (event) {
-            let pos = calcMouseXY(event);
-            // console.log('mousedown(' + pos.x + ', ' + pos.y + ')');
-            // console.log("event.button: ", event.button);
-
-            mouseFunc(pos.x, pos.y, event.button * 10 + 1, 0);
-        });
-        canvas.addEventListener('mouseup', function (event) {
-            let pos = calcMouseXY(event);
-            // console.log('mouseup(' + pos.x + ', ' + pos.y + ')');
-            mouseFunc(pos.x, pos.y, event.button * 10 + 2, 0);
-        });
-        window.addEventListener('mouseup', function (event) {
-            let pos = calcMouseXY(event);
-            // console.log('mouseup(' + pos.x + ', ' + pos.y + ')');
-            mouseFunc(pos.x, pos.y, event.button * 10 + 2, 0);
-        });
-        canvas.addEventListener('mousemove', function (event) {
-            let pos = calcMouseXY(event);
-            // console.log('mousemove(' + pos.x + ', ' + pos.y + ')');
-            // console.log("mousemove, event.button: ", event.button);
-            mouseFunc(pos.x, pos.y, event.button * 10 + 3, 0);
-        });
-        canvas.addEventListener('mousewheel', function (event) {
-            let pos = calcMouseXY(event);
-            // console.log('mousewheel(' + pos.x + ', ' + pos.y + ')');
-            // console.log("mousewheel, event.deltaY: ", event.deltaY);
-            mouseFunc(pos.x, pos.y, event.button * 10 + 4, event.deltaY);
-        });
-        canvas.addEventListener('click', function (event) {
-            let pos = calcMouseXY(event);
-            console.log('mouse click(' + pos.x + ', ' + pos.y + ')');
-            console.log("mouse click, event.button: ", event.button);
-            mouseFunc(pos.x, pos.y, event.button * 10 + 5, 0);
-        });
-        // canvas.style.cursor = 'move';
-        // canvas.classList.add('rotate-cursor');
-        // canvas.style.cursor = 'pointer';
-
-        function execMoculeProcess(Module) {
-
-            const getHeapSize = Module.cwrap("get_heap_size_bytes", "number", []);
-            const startup = Module.cwrap("startup");
-            const setGPUCtxSize = Module.cwrap("setGPUCtxSize", null, ["number", "number"]);
-            const setMouseParams = Module.cwrap("setMouseParams", null, ["number", "number", "number", "number"]);
-
-            const runExec = Module.cwrap("run", "number");
-            const getCmdsTotalExec = Module.cwrap("getCmdsTotal", "number");
-            const getCmdsExec = Module.cwrap("getCmds", "number");
-            const getRenderCmdBufferExec = Module.cwrap("getRenderCmdBuffer", "number");
-
-
-            let preHeapSize = 0;
-            setInterval(() => {
-                const size = getHeapSize();
-                if (preHeapSize != size) {
-                    preHeapSize = size;
-                    console.log("WASM 堆内存大小:", (size / 1024 / 1024).toFixed(2), "MB");
-                }
-            }, 1000);
-
-
-            let ctxViewParam = { width: 1, height: 1, dpr: 1, originWidth: 1, originHeight: 1, originDpr: 1 };
-            function resizeCanvas() {
-
-                console.log("window.devicePixelRatio: ", window.devicePixelRatio);
-                const dpr = window.devicePixelRatio || 1;
-
-                const [w, h] = renderer.normlizeViewSize();
-                console.log(`resizeCanvas, w=${w}, h=${h}`);
-                ctxViewParam.width = w;
-                ctxViewParam.height = h;
-                ctxViewParam.dpr = dpr;
-            }
-
-            window.addEventListener('resize', () => {
-                resizeCanvas();
-            });
-            function setctxViewParam() {
-                let pw = ctxViewParam.width;
-                let ph = ctxViewParam.height;
-                let dpr = ctxViewParam.dpr;
-                if (ctxViewParam.originWidth != pw || ctxViewParam.originHeight != ph || ctxViewParam.originDpr != dpr) {
-                    console.log(`setctxViewParam(w=${pw},h=${ph},dpr=${dpr}`);
-                    ctxViewParam.originWidth = pw;
-                    ctxViewParam.originHeight = ph;
-                    ctxViewParam.originDpr = dpr;
-
-                    renderer.setCtxSize(pw, ph);
-
-                    canvas.width = pw;
-                    canvas.height = ph;
-                    canvas.style.width = `${pw / dpr}px`;
-                    canvas.style.height = `${ph / dpr}px`;
-                    setGPUCtxSize(pw, ph);
-                }
-            }
-            resizeCanvas();
-            startup();
-
-            runExec();
-
-            const heap = Module.HEAPU8;
-            let cmdU32Arr = new Uint32Array(heap.buffer);
-            let cmdU8Ptr = getCmdsExec();
-            let cmdBufU8Ptr = getRenderCmdBufferExec();
-
-            cmdU32Arr = new Uint32Array(heap.buffer);
-            cmdU32Arr = cmdU32Arr.subarray(cmdU8Ptr / 4);
-            let cmdBufF32Arr = new Float32Array(heap.buffer);
-            cmdBufF32Arr = cmdBufF32Arr.subarray(cmdBufU8Ptr / 4);
-
-            let cmdBufU32Arr = new Uint32Array(heap.buffer);
-            cmdBufU32Arr = cmdBufU32Arr.subarray(cmdBufU8Ptr / 4);
-
-            let version = cmdBufU32Arr[2];
-            console.log("version: ", version);
-
-            let cmdsTotal = getCmdsTotalExec();
-            renderer.rcmsTotal = cmdsTotal;
-
-            printWith9Number(cmdBufF32Arr, 6);
-
-
+        function initMoculeProcess(Module) {
+            moduleWrapper.initialize(Module, canvas, gl);
             renderer.initialize(gl, canvas.width, canvas.height);
-            renderer.runBegin();
-            //*/
-
-            mouseFunc = function (px, py, type, flag) {
-                setMouseParams(px, py, type, flag);
-                // console.log('mouseFunc mosuePos(x=' + x + ', y=' + y + ')');
-
-            }
-            let drawTimes = 0;
-            function loopRun() {
-                if (drawTimes % 1 == 0) {
-                    setctxViewParam();
-                    let dirtyFlag = runExec();
-                    if (dirtyFlag > 0) {
-                        renderer.runBegin();
-                        renderer.draw(4, cmdBufU32Arr, cmdBufF32Arr, version);
-                        console.log("drawing true ...\n");
-                    }
-                    // else {
-                    //     console.log("drawing false ...\n");
-                    // }
-                }
-                drawTimes++;
-                requestAnimationFrame(loopRun);
-            }
-            loopRun();
-
         };
 
         VoxModule().then(Module => {
-            console.log("wasm Module loaded.");
-            execMoculeProcess(Module);
+            console.log("Voxol Wasm Module loaded.");
+            initMoculeProcess(Module);
         });
+
+        let drawTimes = -1;
+        let countTimes = 0;
+
+        function render() {
+
+            if (!moduleWrapper.isEnabled())
+                return;
+
+            drawTimes++;
+            if (drawTimes % 1 != 0)
+                return;
+
+            countTimes++;
+            moduleWrapper.updateCtxViewParam((w, h) => {
+                renderer.setCtxSize(w, h);
+            });
+
+            let dirty = moduleWrapper.run();
+            if (!dirty)
+                return;
+
+            viewTransDesc.update();
+            renderer.runBegin();
+            let ins = moduleWrapper.ins;
+            let dataIndex = moduleWrapper.getHeapDataIndex();
+            renderer.draw(dataIndex, ins.heapU32, ins.heapF32);
+        }
+
+        function loopRun() {
+            render();
+            requestAnimationFrame(loopRun);
+        }
+        loopRun();
     </script>
 </body>
 
