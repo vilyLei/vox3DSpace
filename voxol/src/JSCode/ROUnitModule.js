@@ -31,16 +31,18 @@ export class ROUnit {
 
 export class MVPROUnit extends ROUnit {
     constructor() {
+        super();
     }
     initialize() {
         this.shader = new ShaderUnit();
         this.vertex = new VtxUnit();
-        this.objMatData = new Float32Array([1, 0, 0,
-            0, 1, 0,
-            0, 0, 1]);
+        this.objMatData = new Float32Array(
+            [50, 0, 0,
+                0, 50, 0,
+                0, 0, 1]);
         this.viewMatData = null;
         this.projMatData = null;
-        this.colorData = new Float32Array([0.8, 0.8, 0.8, 1]);
+        this.colorData = new Float32Array([0, 0.8, 0.0, 1]);
     }
 
     bind(gl) {

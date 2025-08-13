@@ -2,7 +2,7 @@
 
 import { ShaderBuilder } from './ShaderModule.js';
 import { VertexBuilder } from './VertexModule.js';
-import { BatchROUnit, ROUnit } from './ROUnitModule.js';
+import { BatchROUnit, MVPROUnit, ROUnit } from './ROUnitModule.js';
 
 const vertSourceScreenV3 = `#version 300 es
 precision highp float;
@@ -14,7 +14,7 @@ void main() {
     gl_Position = vec4(pos.xy, 0.0, 1.0);
 }
 `;
-const vertSourceV3 = `#version 300 es
+const vertSourceMVPV3 = `#version 300 es
 precision highp float;
 
 layout(location = 0) in vec2 a_pos;
@@ -136,6 +136,9 @@ export class SimpleCacheDrawer {
 
         this.screenColorUnit = new ROUnit();
         this.screenColorUnit.initialize();
+
+        this.mvpUnit = new MVPROUnit();
+        this.mvpUnit.initialize();
     }
 
     initialize(moduleIns, gl, vw, vh) {
@@ -167,10 +170,25 @@ export class SimpleCacheDrawer {
 
         shaderDescArr = [{ name: 'u_objMat', type: 'mat3' }, { name: 'u_color', type: 'vec4' }];
         ShaderBuilder.createShaderUnit(this.screenColorUnit.shader, gl, vertSourceScreenV3, fragSource, shaderDescArr);
-
         program = this.screenColorUnit.shader.program;
         VertexBuilder.createVAO(this.screenColorUnit.vertex, gl, program, getVertsWithVEOSegN(1), [2], [2 * 4], ['a_pos']);
         VertexBuilder.createVEO(this.screenColorUnit.vertex, gl, getIndicesWithSegN(1));
+
+        shaderDescArr = [
+            { name: 'u_objMat', type: 'mat3' },
+            { name: 'u_viewMat', type: 'mat3' },
+            { name: 'u_projMat', type: 'mat3' },
+            { name: 'u_color', type: 'vec4' }
+        ];
+        ShaderBuilder.createShaderUnit(this.mvpUnit.shader, gl, vertSourceMVPV3, fragSource, shaderDescArr);
+        program = this.mvpUnit.shader.program;
+        VertexBuilder.createVAO(this.mvpUnit.vertex, gl, program, getVertsWithVEOSegN(1), [2], [2 * 4], ['a_pos']);
+        VertexBuilder.createVEO(this.mvpUnit.vertex, gl, getIndicesWithSegN(1));
+
+        let viewTransDesc = this.moduleIns.viewTransDesc;
+        this.mvpUnit.viewMatData = viewTransDesc.viewF32;
+        this.mvpUnit.projMatData = viewTransDesc.projF32;
+        // mvpUnit
 
     }
 
@@ -210,9 +228,14 @@ export class SimpleCacheDrawer {
 
         this.screenColorUnit.bind(gl);
         this.screenColorUnit.draw(gl);
+        //this.mvpUnit
+
+        
+        this.mvpUnit.bind(gl);
+        this.mvpUnit.draw(gl);
 
         this.batchUnit.bind(gl);
-        
+
         for (; ;) {
             if (drewTot >= 180000) {
                 break;
