@@ -31,15 +31,15 @@
 
     <script type="module">
 
-        import { BatchDrawer, printWith9Number } from './src/JSCode/SimpleBatchRenderer.js';
+        import { SimpleCacheDrawer, printWith9Number } from './src/JSCode/SimpleCacheRenderer.js';
         import { ModuleWrapper } from './src/JSCode/WasmModule.js';
-
+        
         const canvas = document.getElementById('canvas');
         const gl = canvas.getContext("webgl2", { antialias: true, depth: false });
 
         let moduleWrapper = new ModuleWrapper();
         let viewTransDesc = moduleWrapper.ins.viewTransDesc;
-        let renderer = new BatchDrawer();
+        let renderer = new SimpleCacheDrawer();
 
         function initMoculeProcess(Module) {
             moduleWrapper.initialize(Module, canvas, gl);

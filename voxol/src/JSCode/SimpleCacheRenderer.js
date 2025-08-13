@@ -119,7 +119,7 @@ function getIndicesWithSegN(n) {
     return indices;
 }
 
-export class BatchDrawer {
+export class SimpleCacheDrawer {
 
     constructor() {
 
@@ -144,7 +144,7 @@ export class BatchDrawer {
         this.ctxWidth = vw;
         this.ctxHeight = vh;
 
-        // console.log("BatchDrawer::initialize() ...\n");
+        console.log("SimpleCacheDrawer::initialize() ...\n");
 
         this.initRender(gl);
     }
