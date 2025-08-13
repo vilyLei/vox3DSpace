@@ -295,6 +295,8 @@ void RenderCmdWorld::run()
     // printf("RenderCmdWorld::run() sizeof(projMat): %zu\n", sizeof(projMat));
     // printf("RenderCmdWorld::run() cmdsTotal: %zu\n", cmdsTotal);
 
+    /*
+
     uint32_t default_cmd = 0x33;
     uint32_t end_cmd     = 0x0;
     /// 8bytes head
@@ -317,6 +319,47 @@ void RenderCmdWorld::run()
     descSize = sizeof(cmdsTotal);
     std::memcpy(bufPtr + bufIndex, &cmdsTotal, descSize);
     bufIndex += descSize;
+    //*/
+    uint32_t default_cmd = 0x33;
+    uint32_t end_cmd     = 0x0;
+    /// 8bytes head
+    /// 4bytes version
+    /// 4bytes cmds total
+    auto bufBytesLength = buffer.size() - 8;
+    auto bufBytesIndex       = 0;
+    auto descBytesSize       = sizeof(mHeadData);
+    auto bufPtr         = (uint8_t*)buffer.data();
+    std::memcpy(bufPtr + bufBytesIndex, mHeadData, descBytesSize);
+    bufBytesIndex += descBytesSize;
+    uint32_t version = 3;
+
+    // printf("version: %d\n", version);
+
+    descBytesSize = sizeof(version);
+    std::memcpy(bufPtr + bufBytesIndex, &version, descBytesSize);
+    bufBytesIndex += descBytesSize;
+        
+    uint32_t trunkCmd = 20;
+    descBytesSize = sizeof(trunkCmd);
+    std::memcpy(bufPtr + bufBytesIndex, &trunkCmd, descBytesSize);
+    bufBytesIndex += descBytesSize;
+
+    // printf("projMat:\n");
+    // projMat.print();
+    CameraCmdDesc camDesc{};
+    camDesc.projMat = projMat;
+    camDesc.viewMat = viewMat;
+    camDesc.updateToBuffer(bufPtr + bufBytesIndex, bufBytesIndex, bufBytesLength);
+    bufBytesIndex += camDesc.descSize * 4;
+
+    trunkCmd = 22;
+    descBytesSize = sizeof(trunkCmd);
+    std::memcpy(bufPtr + bufBytesIndex, &trunkCmd, descBytesSize);
+    bufBytesIndex += descBytesSize;
+
+    descBytesSize = sizeof(cmdsTotal);
+    std::memcpy(bufPtr + bufBytesIndex, &cmdsTotal, descBytesSize);
+    bufBytesIndex += descBytesSize;
 
 
     // RectTarget::Rect boundary = {0, 0, canvas.size.width * 1.0f, canvas.size.height * 1.0f};
@@ -349,9 +392,9 @@ void RenderCmdWorld::run()
     for (auto i = 0; i < cmdsTotal; i++)
     {
 
-        auto descSize = sizeof(RectDrawCmdDesc);
-        if ((bufIndex + descSize) > bufBytesLength)
-            break;
+        // auto descSize = sizeof(RectDrawCmdDesc);
+        // if ((bufIndex + descSize) > bufBytesLength)
+        //     break;
         auto& node = cmdNodes[i];
 
         rectDesc.rcmd  = node.rcmd;
@@ -374,13 +417,13 @@ void RenderCmdWorld::run()
         // rectDesc.transform.print();
         // printf(">    >     >\n");
 
-        rectDesc.updateToBuffer(bufPtr + bufIndex);
+        rectDesc.updateToBuffer(bufPtr + bufBytesIndex, bufBytesIndex, bufBytesLength);
 
-        bufIndex += descSize;
+        bufBytesIndex += rectDesc.descSize * 4;
     }
 
     auto bytesTotal = sizeof(mTailData);
-    std::memcpy(bufPtr + bufIndex, mTailData, bytesTotal);
+    std::memcpy(bufPtr + bufBytesIndex, mTailData, bytesTotal);
     // printf("RenderCmdWorld::run() B cmdsTotal: %zu\n", cmdsTotal);
 }
 
