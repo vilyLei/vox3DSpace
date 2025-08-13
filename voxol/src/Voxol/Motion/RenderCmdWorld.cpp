@@ -363,7 +363,7 @@ void RenderCmdWorld::run()
     BatchElementCmdDesc batchDesc{};
     batchDesc.descSize = cmdsTotal;
     batchDesc.updateToBuffer(bufPtr + bufBytesIndex, bufBytesIndex, bufBytesLength);
-    bufBytesIndex += batchDesc.descSize * 4;
+    bufBytesIndex += 2 * 4;
 
     // RectTarget::Rect boundary = {0, 0, canvas.size.width * 1.0f, canvas.size.height * 1.0f};
 

@@ -74,7 +74,7 @@ bool BatchElementCmdDesc::updateToBuffer(uint8_t* buffer, size_t bufBytesIndex, 
         // printf("BatchElementCmdDesc::updateToBuffer() AAA ...\n");
         return false;
     }
-    descSize = static_cast<uint32_t>(bytesSize) / 4;
+    // descSize = static_cast<uint32_t>(bytesSize) / 4;
     // printf("descSize: %d, bytesSize: %d\n", descSize, bytesSize);
     std::memcpy(buffer, this, bytesSize);
     // printf("BatchElementCmdDesc::updateToBuffer() BBB ...\n");

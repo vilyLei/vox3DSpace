@@ -72,7 +72,7 @@ struct RectDrawCmdDesc
 
 struct DrawCmdTestNode
 {
-    uint32_t rcmd   = 0x33;
+    uint32_t rcmd   = 0x32;
     uint32_t color  = 0xff00aa00;
     float    x      = 0;
     float    y      = 0;
