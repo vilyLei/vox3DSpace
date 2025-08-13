@@ -22,11 +22,9 @@ function calcMouseXY(event) {
 
     let x = clientX - canvasX;
     let y = clientY - canvasY;
-    // console.log('calcMouseXY A mousePos(' + x + ', ' + y + ')');
     const dpr = window.devicePixelRatio || 1;
     x *= dpr;
     y *= dpr;
-    // console.log('calcMouseXY B mousePos(' + x + ', ' + y + ')');
     return { x: x, y: y };
 }
 
@@ -160,7 +158,7 @@ export class ModuleWrapper {
         let dpr = ctxViewParam.dpr;
 
         if (ctxViewParam.originWidth != pw || ctxViewParam.originHeight != ph || ctxViewParam.originDpr != dpr) {
-            // console.log(`updateCtxViewParam(w=${pw},h=${ph},dpr=${dpr})`);
+            console.log(`ModuleWrapper::updateCtxViewParam(w=${pw},h=${ph},dpr=${dpr})`);
             ctxViewParam.originWidth = pw;
             ctxViewParam.originHeight = ph;
             ctxViewParam.originDpr = dpr;
