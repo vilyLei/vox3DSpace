@@ -9,7 +9,7 @@ export class ROUnit {
         this.vertex = null;
         this.enabled = false;
     }
-    initialize() {
+    initialize(params) {
         this.enabled = true;
         this.shader = new ShaderUnit();
         this.vertex = new VtxUnit();
@@ -36,17 +36,78 @@ export class MVPROUnit extends ROUnit {
     constructor() {
         super();
     }
-    initialize() {
+    initialize(params) {
+        let sx = 1;
+        let sy = 1;
+        let px = 0;
+        let py = 0;
+        if(params !== undefined) {
+            sx = params.scaleX !== undefined ? params.scaleX : 1;
+            sy = params.scaleY !== undefined ? params.scaleY : 1;            
+            px = params.x !== undefined ? params.x : 0;
+            py = params.y !== undefined ? params.y : 0;
+        }
         this.enabled = true;
         this.shader = new ShaderUnit();
         this.vertex = new VtxUnit();
         this.objMatData = new Float32Array(
-            [50, 0, 0,
-                0, 50, 0,
-                0, 0, 1]);
+            [sx, 0, 0,
+                0, sy, 0,
+                px, py, 1]);
         this.viewMatData = null;
         this.projMatData = null;
         this.colorData = new Float32Array([0, 0.8, 0.0, 1]);
+    }
+
+    bind(gl) {
+        gl.useProgram(this.shader.program);
+        gl.bindVertexArray(this.vertex.vao);
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.vertex.veo);
+    }
+
+    draw(gl) {
+
+        let uniforms = this.shader.uniforms;
+
+        gl.uniformMatrix3fv(uniforms[0].location, false, this.objMatData, 0, 9);
+        gl.uniformMatrix3fv(uniforms[1].location, false, this.viewMatData, 0, 9);
+        gl.uniformMatrix3fv(uniforms[2].location, false, this.projMatData, 0, 9);
+
+        gl.uniform4fv(uniforms[3].location, this.colorData, 0, 4);
+        gl.drawElements(gl.TRIANGLES, this.vertex.indices.length, gl.UNSIGNED_SHORT, 0);
+    }
+    destroy() { }
+}
+
+
+export class MVPTexROUnit extends ROUnit {
+    constructor() {
+        super();
+        this.textures = null;
+    }
+    initialize(params) {
+        
+        let sx = 1;
+        let sy = 1;
+        let px = 0;
+        let py = 0;
+        if(params !== undefined) {
+            sx = params.scaleX !== undefined ? params.scaleX : 1;
+            sy = params.scaleY !== undefined ? params.scaleY : 1;            
+            px = params.x !== undefined ? params.x : 0;
+            py = params.y !== undefined ? params.y : 0;
+        }
+        this.enabled = true;
+        this.shader = new ShaderUnit();
+        this.vertex = new VtxUnit();
+        this.objMatData = new Float32Array(
+            [sx, 0, 0,
+                0, sy, 0,
+                px, py, 1]);
+        this.viewMatData = null;
+        this.projMatData = null;
+        this.colorData = new Float32Array([0, 0.8, 0.0, 1]);
+
     }
 
     bind(gl) {
@@ -74,7 +135,7 @@ export class BatchROUnit extends ROUnit {
         super();
         this.matTotal = tot;
     }
-    initialize() {
+    initialize(params) {
         this.enabled = true;
         this.shader = new ShaderUnit();
         this.vertex = new VtxUnit();

@@ -75,7 +75,7 @@ export class SimpleCacheDrawer {
         this.screenColorUnit.initialize();
 
         this.mvpUnit = new MVPROUnit();
-        this.mvpUnit.initialize();
+        this.mvpUnit.initialize({scaleX:100, scaleY:100});
     }
 
     initialize(moduleIns, gl, vw, vh) {
