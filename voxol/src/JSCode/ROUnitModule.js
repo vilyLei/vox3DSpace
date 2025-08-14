@@ -5,10 +5,12 @@ import { VtxUnit, VertexBuilder } from './VertexModule.js';
 
 export class ROUnit {
     constructor() {
-        this.shader = null
-        this.vertex = null
+        this.shader = null;
+        this.vertex = null;
+        this.enabled = false;
     }
     initialize() {
+        this.enabled = true;
         this.shader = new ShaderUnit();
         this.vertex = new VtxUnit();
         this.transData = new Float32Array([1, 0, 0,
@@ -35,6 +37,7 @@ export class MVPROUnit extends ROUnit {
         super();
     }
     initialize() {
+        this.enabled = true;
         this.shader = new ShaderUnit();
         this.vertex = new VtxUnit();
         this.objMatData = new Float32Array(
@@ -72,6 +75,7 @@ export class BatchROUnit extends ROUnit {
         this.matTotal = tot;
     }
     initialize() {
+        this.enabled = true;
         this.shader = new ShaderUnit();
         this.vertex = new VtxUnit();
         let tot = this.matTotal;

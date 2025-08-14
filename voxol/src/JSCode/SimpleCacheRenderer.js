@@ -156,11 +156,19 @@ export class SimpleCacheDrawer {
     }
 
     draw() {
+
         let gl = this.glCtx;
-        this.screenColorUnit.bind(gl);
-        this.screenColorUnit.draw(gl);
-        this.mvpUnit.bind(gl);
-        this.mvpUnit.draw(gl);
+        
+        let unit = this.screenColorUnit;
+        if(unit.enabled) {
+            unit.bind(gl);
+            unit.draw(gl);
+        }
+        unit = this.mvpUnit;
+        if(unit.enabled) {
+            unit.bind(gl);
+            unit.draw(gl);
+        }
     }
     drawBatch(batchEle) {
 
@@ -173,7 +181,10 @@ export class SimpleCacheDrawer {
         let dataU32 = batchEle.heapU32;
         let dataF32 = batchEle.heapF32;
 
-        this.batchUnit.bind(gl);
+        let unit = this.batchUnit;
+
+
+        unit.bind(gl);
 
         for (; ;) {
             if (drewTot >= 180000) {
@@ -187,7 +198,7 @@ export class SimpleCacheDrawer {
             let descSize = dataU32[cmdIndex + 1];
             switch (cmd) {
                 case 0x32:
-                    this.batchUnit.parse(drawIndex, cmdIndex, dataU32, dataF32);
+                    unit.parse(drawIndex, cmdIndex, dataU32, dataF32);
                     break;
                 default:
                     break;
@@ -197,7 +208,7 @@ export class SimpleCacheDrawer {
             drawIndex++;
             if (drawIndex >= matTot) {
                 drewTot += matTot;
-                this.batchUnit.draw(gl);
+                unit.draw(gl);
                 drawIndex = 0;
             }
         }
