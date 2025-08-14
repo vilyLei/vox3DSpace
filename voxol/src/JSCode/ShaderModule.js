@@ -59,7 +59,7 @@ export class ShaderBuilder {
 
         return program;
     }
-    static createShaderUnit(shaderUnit, gl, vsSource, fsSource, shaderUniformDescs) {
+    static createShaderUnit(shaderUnit, gl, vsSource, fsSource, shaderUniformDescs, texUniformDescs) {
 
         let unit = shaderUnit ? shaderUnit : new ShaderUnit();
         unit.program = ShaderBuilder.createShaderProgram(gl, vsSource, fsSource);
@@ -73,6 +73,15 @@ export class ShaderBuilder {
             unit.uniforms[i] = new ShaderUniform();
             unit.uniforms[i].location = gl.getUniformLocation(unit.program, shaderUniformDescs[i].name);
             unit.uniforms[i].desc = shaderUniformDescs[i];
+        }
+        if(texUniformDescs !== undefined) {
+            tot = texUniformDescs.length;            
+            unit.texUniforms = new Array(tot);
+            for (let i = 0; i < tot; ++i) {
+                unit.texUniforms[i] = new ShaderUniform();
+                unit.texUniforms[i].location = gl.getUniformLocation(unit.program, texUniformDescs[i].name);
+                unit.texUniforms[i].desc = texUniformDescs[i];
+            }
         }
         return unit;
     }
