@@ -33,6 +33,36 @@ void main() {
 }
 `;
 
+export const vertTexSource = `#version 300 es
+precision highp float;
+
+layout(location = 0) in vec2 a_pos;
+layout(location = 1) in vec2 a_uv;
+
+uniform mat3 u_objMat;
+uniform mat3 u_viewMat;
+uniform mat3 u_projMat;
+
+out vec2 v_uv;
+
+void main() {
+    mat3 trans = u_projMat * u_viewMat * u_objMat;
+    vec3 pos = trans * vec3(a_pos, 1.0);
+    gl_Position = vec4(pos.xy, 0.0, 1.0);
+    v_uv = a_uv;
+}
+`;
+export const fragTexSource = `#version 300 es
+precision mediump float;
+uniform vec4 u_color;
+in vec2 v_uv;
+uniform sampler2D u_tex0;
+out vec4 fragColor;
+void main() {
+    fragColor = texture(u_tex, v_uv) * u_color;
+}
+`;
+
 export function getVertSourceV3SegN(n) {
 
     const vertSourceV3SegN = `#version 300 es

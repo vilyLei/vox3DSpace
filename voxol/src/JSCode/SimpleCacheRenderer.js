@@ -2,7 +2,7 @@
 
 import { ShaderBuilder } from './ShaderModule.js';
 import { VertexBuilder } from './VertexModule.js';
-import { BatchROUnit, MVPROUnit, ROUnit } from './ROUnitModule.js';
+import { MVPTexROUnit, BatchROUnit, MVPROUnit, ROUnit } from './ROUnitModule.js';
 import { vertSourceMVPV3, vertSourceScreenV3, fragSource, getVertSourceV3SegN, getFragSourceSegN} from './ShaderCodes.js';
 
 
@@ -76,6 +76,9 @@ export class SimpleCacheDrawer {
 
         this.mvpUnit = new MVPROUnit();
         this.mvpUnit.initialize({scaleX:100, scaleY:100});
+        
+        this.mvpTexUnit = new MVPTexROUnit();
+        this.mvpTexUnit.initialize({scaleX:100, scaleY:100});
     }
 
     initialize(moduleIns, gl, vw, vh) {
