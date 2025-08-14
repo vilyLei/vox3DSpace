@@ -21,6 +21,7 @@ export class ShaderUnit {
     constructor() {
         this.program = null;
         this.uniforms = null;
+        this.texUniforms = null;
     }
 
 }

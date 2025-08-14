@@ -125,6 +125,17 @@ export class MVPTexROUnit extends ROUnit {
         gl.uniformMatrix3fv(uniforms[2].location, false, this.projMatData, 0, 9);
 
         gl.uniform4fv(uniforms[3].location, this.colorData, 0, 4);
+
+        let textures = this.textures;
+        if(textures != null && textures.length > 0) {
+            let tus = this.shader.texUniforms;
+            for(let i = 0; i < textures.length; ++i) {
+                gl.activeTexture(gl.TEXTURE0 + i);
+                gl.bindTexture(gl.TEXTURE_2D, textures[i]);
+                gl.uniform1i(tus[i].location, i);
+            }
+        }
+
         gl.drawElements(gl.TRIANGLES, this.vertex.indices.length, gl.UNSIGNED_SHORT, 0);
     }
     destroy() { }
