@@ -19,11 +19,11 @@ export class TextureBuilder {
         return tex;
     }
     
-    static loadImageAndCreateTexture(gl, url, callback) {
+    static loadImageAndCreateTexture(gl, url, id, callback) {
         const img = new Image();
         img.onload = () => {
             const tex = TextureBuilder.createTextureFromImage(gl, img);
-            callback(tex);
+            callback(tex, id);
         };
         img.src = url;
     }
