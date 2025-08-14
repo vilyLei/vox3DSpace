@@ -1,3 +1,4 @@
+"use strict";
 
 import { ShaderUnit, ShaderBuilder } from './ShaderModule.js';
 import { VtxUnit, VertexBuilder } from './VertexModule.js';

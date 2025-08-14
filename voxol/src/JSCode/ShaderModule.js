@@ -1,3 +1,4 @@
+"use strict";
 export class ShaderUniformDesc {
     // name: uProjMat
     // type: mat4

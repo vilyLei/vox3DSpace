@@ -1,3 +1,5 @@
+"use strict";
+
 function testDo() {
     console.log("testDo() ...\n");
 }

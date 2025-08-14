@@ -1,3 +1,4 @@
+"use strict";
 
 import { BatchElementDesc, ViewTransDesc } from './WasmModuleDesc.js';
 
