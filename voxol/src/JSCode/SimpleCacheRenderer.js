@@ -4,7 +4,7 @@ import { ShaderBuilder } from './ShaderModule.js';
 import { VertexBuilder } from './VertexModule.js';
 import { TextureBuilder } from './TextureModule.js';
 import { MVPTexROUnit, BatchROUnit, MVPROUnit, ROUnit } from './ROUnitModule.js';
-import { fragPreMultAlphaTexSource, vertTexMVPSource, vertSourceMVPV3, vertSourceScreenV3, fragSource, getVertSourceV3SegN, getFragSourceSegN} from './ShaderCodes.js';
+import { fragPreMultAlphaTexSource, vertTexMVPSource, vertSourceMVPV3, vertSourceScreenV3, fragTexSource, fragSource, getVertSourceV3SegN, getFragSourceSegN } from './ShaderCodes.js';
 
 
 export function printWith9Number(numArr, index) {
@@ -53,10 +53,10 @@ function getVertsWithUV() {
 
     let x = 0, y = 0, w = 1, h = 1;
     let verts = new Float32Array([
-        x, y, 0,0,
-        x + w, y, 1,0,
-        x + w, y + h, 1,1,
-        x, y + h, 0,1]);
+        x, y, 0, 0,
+        x + w, y, 1, 0,
+        x + w, y + h, 1, 1,
+        x, y + h, 0, 1]);
     return verts;
 }
 function getIndicesWithSegN(n) {
@@ -93,11 +93,11 @@ export class SimpleCacheDrawer {
         this.screenColorUnit.initialize();
 
         this.mvpUnit = new MVPROUnit();
-        this.mvpUnit.initialize({scaleX:100, scaleY:100});
+        this.mvpUnit.initialize({ scaleX: 100, scaleY: 100 });
         this.mvpUnit0 = this.mvpUnit.clone();
         // this.mvpUnit0.setXY(10, 10);
         this.mvpUnit0.colorData.set([1, 0.5, 0.5, 1]);
-        
+
     }
 
     initialize(moduleIns, gl, vw, vh) {
@@ -115,15 +115,15 @@ export class SimpleCacheDrawer {
         // let texUrls = ['./assets/box.jpg'];
         let texUrls = ['./assets/letterA.png'];
         this.mvpTexUnit = new MVPTexROUnit();
-        this.mvpTexUnit.initialize({scaleX:200, scaleY:200, texturesNumber: texUrls.length});
+        this.mvpTexUnit.initialize({ scaleX: 200, scaleY: 200, texturesNumber: texUrls.length });
         this.mvpTexUnit.setXY(360, 200);
 
         this.initRender(gl);
 
-        for(let i = 0; i < texUrls.length; ++i) {
+        for (let i = 0; i < texUrls.length; ++i) {
             TextureBuilder.loadImageAndCreateTexture(gl, texUrls[i], i, (tex, index) => {
                 thisRef.mvpTexUnit.setTextureAt(tex, index);
-                if(thisRef.mvpTexUnit.enabled) {
+                if (thisRef.mvpTexUnit.enabled) {
                     thisRef.dirty = true;
                 }
                 console.log(`build a tex(${i}), url: `, texUrls[i]);
@@ -131,7 +131,7 @@ export class SimpleCacheDrawer {
                 console.log(`thisRef.dirty: `, thisRef.dirty);
             })
         }
-        
+
 
     }
 
@@ -167,7 +167,7 @@ export class SimpleCacheDrawer {
         VertexBuilder.createVAO(this.mvpUnit.vertex, gl, program, getVertsWithVEOSegN(1), [2], [2 * 4], ['a_pos']);
         VertexBuilder.createVEO(this.mvpUnit.vertex, gl, getIndicesWithSegN(1));
 
-        
+
         shaderDescArr = [
             { name: 'u_objMat', type: 'mat3' },
             { name: 'u_viewMat', type: 'mat3' },
@@ -177,7 +177,8 @@ export class SimpleCacheDrawer {
         textureDescArr = [
             { name: 'u_tex0', type: 'texture2D' }
         ];
-        ShaderBuilder.createShaderUnit(this.mvpTexUnit.shader, gl, vertTexMVPSource, fragPreMultAlphaTexSource, shaderDescArr, textureDescArr);
+        // ShaderBuilder.createShaderUnit(this.mvpTexUnit.shader, gl, vertTexMVPSource, fragPreMultAlphaTexSource, shaderDescArr, textureDescArr);
+        ShaderBuilder.createShaderUnit(this.mvpTexUnit.shader, gl, vertTexMVPSource, fragTexSource, shaderDescArr, textureDescArr);
         program = this.mvpTexUnit.shader.program;
         VertexBuilder.createVAO(this.mvpTexUnit.vertex, gl, program, getVertsWithUV(), [4], [4 * 4], ['a_pos']);
         VertexBuilder.createVEO(this.mvpTexUnit.vertex, gl, getIndicesWithSegN(1));
@@ -219,9 +220,9 @@ export class SimpleCacheDrawer {
 
         let gl = this.glCtx;
         let ctx = this.moduleIns.viewTransDesc;;
-        
+
         let unit = this.screenColorUnit;
-        if(unit.enabled) {
+        if (unit.enabled) {
             unit.bind(gl, ctx);
             unit.draw(gl, ctx);
         }
@@ -275,20 +276,20 @@ export class SimpleCacheDrawer {
             this.drewTotal = drewTot;
             console.log("drewTotal: ", this.drewTotal);
         }
-        
+
         unit = this.mvpUnit;
-        if(unit && unit.enabled) {
+        if (unit && unit.enabled) {
             unit.bind(gl, ctx);
             unit.draw(gl, ctx);
         }
         unit = this.mvpUnit0;
-        if(unit && unit.enabled) {
+        if (unit && unit.enabled) {
             unit.bind(gl, ctx);
             unit.draw(gl, ctx);
         }
-        
+
         unit = this.mvpTexUnit;
-        if(unit && unit.enabled) {
+        if (unit && unit.enabled) {
             unit.bind(gl, ctx);
             unit.draw(gl, ctx);
         }
