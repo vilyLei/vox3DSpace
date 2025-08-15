@@ -2,6 +2,7 @@
 
 import { ShaderUnit, ShaderBuilder } from './ShaderModule.js';
 import { VtxUnit, VertexBuilder } from './VertexModule.js';
+import { TextureBuilder } from './TextureModule.js';
 
 export class ROUnit {
     constructor() {
@@ -163,6 +164,24 @@ export class MVPTexROUnit extends ROUnit {
             return;
         this.textures[index] = tex;
         this.checkTextures();
+    }
+
+    setTexturesWithUrls(urls, ctx) {
+
+        if(urls == undefined || urls.length == undefined)
+            return;
+        let thisRef = this;
+        for (let i = 0; i < urls.length; ++i) {
+            TextureBuilder.loadImageAndCreateTexture(ctx.glCtx, urls[i], i, (tex, index) => {
+                thisRef.setTextureAt(tex, index);
+                if (thisRef.enabled && ctx != undefined) {
+                    ctx.dirty = true;
+                    console.log(`setTexturesWithUrls() ctx.dirty: `, ctx.dirty);
+                }
+                console.log(`setTexturesWithUrls() build a tex(${i}), url: `, urls[i]);
+                console.log(`setTexturesWithUrls() thisRef.enabled: `, thisRef.enabled);
+            });
+        }
     }
     setTextures(textures) {
 

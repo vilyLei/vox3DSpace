@@ -113,22 +113,8 @@ export class SimpleCacheDrawer {
         this.mvpTexUnit.initialize({ scaleX: 200, scaleY: 200, texturesNumber: texUrls.length });
         this.mvpTexUnit.setXY(360, 200);
         this.mvpTexUnit.colorData.set([1,1,1, 0.5]);
-
+        this.mvpTexUnit.setTexturesWithUrls(texUrls, this);
         this.initRender(gl);
-
-        for (let i = 0; i < texUrls.length; ++i) {
-            TextureBuilder.loadImageAndCreateTexture(gl, texUrls[i], i, (tex, index) => {
-                thisRef.mvpTexUnit.setTextureAt(tex, index);
-                if (thisRef.mvpTexUnit.enabled) {
-                    thisRef.dirty = true;
-                }
-                console.log(`build a tex(${i}), url: `, texUrls[i]);
-                console.log(`this.mvpTexUnit.enabled: `, thisRef.mvpTexUnit.enabled);
-                console.log(`thisRef.dirty: `, thisRef.dirty);
-            })
-        }
-
-
     }
 
 
