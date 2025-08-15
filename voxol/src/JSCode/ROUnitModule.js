@@ -53,9 +53,9 @@ export class MVPROUnit extends ROUnit {
         let sy = 1;
         let px = 0;
         let py = 0;
-        if(params !== undefined) {
+        if (params !== undefined) {
             sx = params.scaleX !== undefined ? params.scaleX : 1;
-            sy = params.scaleY !== undefined ? params.scaleY : 1;            
+            sy = params.scaleY !== undefined ? params.scaleY : 1;
             px = params.x !== undefined ? params.x : 0;
             py = params.y !== undefined ? params.y : 0;
         }
@@ -105,15 +105,15 @@ export class MVPTexROUnit extends ROUnit {
         this.textures = null;
     }
     initialize(params) {
-        
+
         let sx = 1;
         let sy = 1;
         let px = 0;
         let py = 0;
         let texNum = 0;
-        if(params !== undefined) {
+        if (params !== undefined) {
             sx = params.scaleX !== undefined ? params.scaleX : 1;
-            sy = params.scaleY !== undefined ? params.scaleY : 1;            
+            sy = params.scaleY !== undefined ? params.scaleY : 1;
             px = params.x !== undefined ? params.x : 0;
             py = params.y !== undefined ? params.y : 0;
             texNum = params.texturesNumber !== undefined ? params.texturesNumber : 0;
@@ -128,7 +128,7 @@ export class MVPTexROUnit extends ROUnit {
                 px, py, 1]);
         this.colorData = new Float32Array([0, 0.8, 0.0, 1]);
 
-        if(texNum > 0) {
+        if (texNum > 0) {
             this.textures = new Array(texNum).fill(null);
         }
     }
@@ -141,10 +141,35 @@ export class MVPTexROUnit extends ROUnit {
         unit.vertex = new VtxUnit();
         unit.objMatData = this.objMatData.slice();
         unit.colorData = this.colorData.slice();
-        if(this.textures != null) {
+        if (this.textures != null) {
             this.textures = this.textures.slice();
         }
         return unit;
+    }
+    checkTextures() {
+
+        if (this.textures == null)
+            return;
+
+        this.enabled = false;
+        for (let i = 0; i < this.textures.length; ++i) {
+            if (this.textures[i] == null)
+                return;
+        }
+        this.enabled = true;
+    }
+    setTextureAt(tex, index) {
+        if (tex == undefined || this.textures == null || index < 0 || index >= this.textures.length)
+            return;
+        this.textures[index] = tex;
+        this.checkTextures();
+    }
+    setTextures(textures) {
+
+        if (textures == undefined)
+            return;
+        this.textures = textures;
+        this.checkTextures();
     }
 
     bind(gl, ctx) {
@@ -164,9 +189,9 @@ export class MVPTexROUnit extends ROUnit {
         gl.uniform4fv(uniforms[3].location, this.colorData, 0, 4);
 
         let textures = this.textures;
-        if(textures != null && textures.length > 0) {
+        if (textures != null && textures.length > 0) {
             let tus = this.shader.texUniforms;
-            for(let i = 0; i < textures.length; ++i) {
+            for (let i = 0; i < textures.length; ++i) {
                 gl.activeTexture(gl.TEXTURE0 + i);
                 gl.bindTexture(gl.TEXTURE_2D, textures[i]);
                 gl.uniform1i(tus[i].location, i);

@@ -33,11 +33,10 @@ void main() {
 }
 `;
 
-export const vertTexSource = `#version 300 es
+export const vertTexMVPSource = `#version 300 es
 precision highp float;
 
-layout(location = 0) in vec2 a_pos;
-layout(location = 1) in vec2 a_uv;
+layout(location = 0) in vec4 a_pos;
 
 uniform mat3 u_objMat;
 uniform mat3 u_viewMat;
@@ -46,10 +45,10 @@ uniform mat3 u_projMat;
 out vec2 v_uv;
 
 void main() {
+    v_uv = a_pos.zw;
     mat3 trans = u_projMat * u_viewMat * u_objMat;
-    vec3 pos = trans * vec3(a_pos, 1.0);
+    vec3 pos = trans * vec3(a_pos.xy, 1.0);
     gl_Position = vec4(pos.xy, 0.0, 1.0);
-    v_uv = a_uv;
 }
 `;
 export const fragTexSource = `#version 300 es
@@ -59,7 +58,18 @@ in vec2 v_uv;
 uniform sampler2D u_tex0;
 out vec4 fragColor;
 void main() {
-    fragColor = texture(u_tex, v_uv) * u_color;
+    fragColor = texture(u_tex0, v_uv) * u_color;
+}
+`;
+
+export const fragPreMultAlphaTexSource = `#version 300 es
+precision mediump float;
+uniform vec4 u_color;
+in vec2 v_uv;
+uniform sampler2D u_tex0;
+out vec4 fragColor;
+void main() {
+    fragColor = texture(u_tex0, v_uv) * u_color;
 }
 `;
 
