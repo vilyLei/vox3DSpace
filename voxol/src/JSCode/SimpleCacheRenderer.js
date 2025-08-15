@@ -125,9 +125,9 @@ export class SimpleCacheDrawer {
         VertexBuilder.createVAO(this.mvpUnit.vertex, gl, program, getVertsWithVEOSegN(1), [2], [2 * 4], ['a_pos']);
         VertexBuilder.createVEO(this.mvpUnit.vertex, gl, getIndicesWithSegN(1));
 
-        let viewTransDesc = this.moduleIns.viewTransDesc;
-        this.mvpUnit.viewMatData = viewTransDesc.viewF32;
-        this.mvpUnit.projMatData = viewTransDesc.projF32;
+        // let viewTransDesc = this.moduleIns.viewTransDesc;
+        // this.mvpUnit.viewMatData = viewTransDesc.viewF32;
+        // this.mvpUnit.projMatData = viewTransDesc.projF32;
 
     }
 
@@ -161,21 +161,24 @@ export class SimpleCacheDrawer {
     draw() {
 
         let gl = this.glCtx;
+        let ctx = this.moduleIns.viewTransDesc;;
         
         let unit = this.screenColorUnit;
         if(unit.enabled) {
-            unit.bind(gl);
-            unit.draw(gl);
+            unit.bind(gl, ctx);
+            unit.draw(gl, ctx);
         }
         unit = this.mvpUnit;
         if(unit.enabled) {
-            unit.bind(gl);
-            unit.draw(gl);
+            unit.bind(gl, ctx);
+            unit.draw(gl, ctx);
         }
     }
     drawBatch(batchEle) {
 
         let gl = this.glCtx;
+        let ctx = this.moduleIns.viewTransDesc;;
+        
         let matTot = this.batchTotal;
         let drawIndex = 0;
         let drewTot = 0;
@@ -187,7 +190,7 @@ export class SimpleCacheDrawer {
         let unit = this.batchUnit;
 
 
-        unit.bind(gl);
+        unit.bind(gl, ctx);
 
         for (; ;) {
             if (drewTot >= 180000) {
@@ -211,7 +214,7 @@ export class SimpleCacheDrawer {
             drawIndex++;
             if (drawIndex >= matTot) {
                 drewTot += matTot;
-                unit.draw(gl);
+                unit.draw(gl, ctx);
                 drawIndex = 0;
             }
         }

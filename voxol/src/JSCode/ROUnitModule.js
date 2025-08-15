@@ -18,12 +18,12 @@ export class ROUnit {
             0, 0, 1]);
         this.colorData = new Float32Array([0.8, 0.8, 0.8, 1]);
     }
-    bind(gl) {
+    bind(gl, ctx) {
         gl.useProgram(this.shader.program);
         gl.bindVertexArray(this.vertex.vao);
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.vertex.veo);
     }
-    draw(gl) {
+    draw(gl, ctx) {
         let uniforms = this.shader.uniforms;
         gl.uniformMatrix3fv(uniforms[0].location, false, this.transData, 0, 9);
         gl.uniform4fv(uniforms[1].location, this.colorData, 0, 4);
@@ -59,19 +59,19 @@ export class MVPROUnit extends ROUnit {
         this.colorData = new Float32Array([0, 0.8, 0.0, 1]);
     }
 
-    bind(gl) {
+    bind(gl, ctx) {
         gl.useProgram(this.shader.program);
         gl.bindVertexArray(this.vertex.vao);
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.vertex.veo);
     }
 
-    draw(gl) {
+    draw(gl, ctx) {
 
         let uniforms = this.shader.uniforms;
 
         gl.uniformMatrix3fv(uniforms[0].location, false, this.objMatData, 0, 9);
-        gl.uniformMatrix3fv(uniforms[1].location, false, this.viewMatData, 0, 9);
-        gl.uniformMatrix3fv(uniforms[2].location, false, this.projMatData, 0, 9);
+        gl.uniformMatrix3fv(uniforms[1].location, false, ctx.viewF32, 0, 9);
+        gl.uniformMatrix3fv(uniforms[2].location, false, ctx.projF32, 0, 9);
 
         gl.uniform4fv(uniforms[3].location, this.colorData, 0, 4);
         gl.drawElements(gl.TRIANGLES, this.vertex.indices.length, gl.UNSIGNED_SHORT, 0);
@@ -110,19 +110,19 @@ export class MVPTexROUnit extends ROUnit {
 
     }
 
-    bind(gl) {
+    bind(gl, ctx) {
         gl.useProgram(this.shader.program);
         gl.bindVertexArray(this.vertex.vao);
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.vertex.veo);
     }
 
-    draw(gl) {
+    draw(gl, ctx) {
 
         let uniforms = this.shader.uniforms;
 
         gl.uniformMatrix3fv(uniforms[0].location, false, this.objMatData, 0, 9);
-        gl.uniformMatrix3fv(uniforms[1].location, false, this.viewMatData, 0, 9);
-        gl.uniformMatrix3fv(uniforms[2].location, false, this.projMatData, 0, 9);
+        gl.uniformMatrix3fv(uniforms[1].location, false, ctx.viewF32, 0, 9);
+        gl.uniformMatrix3fv(uniforms[2].location, false, ctx.projF32, 0, 9);
 
         gl.uniform4fv(uniforms[3].location, this.colorData, 0, 4);
 
@@ -154,12 +154,12 @@ export class BatchROUnit extends ROUnit {
         this.transData = new Float32Array(tot * 9);
         this.colorData = new Float32Array(tot * 4);
     }
-    bind(gl) {
+    bind(gl, ctx) {
         gl.useProgram(this.shader.program);
         gl.bindVertexArray(this.vertex.vao);
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.vertex.veo);
     }
-    draw(gl) {
+    draw(gl, ctx) {
         let tot = this.matTotal;
         let uniforms = this.shader.uniforms;
         gl.uniformMatrix3fv(uniforms[0].location, false, this.transData, 0, tot * 9);
