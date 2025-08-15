@@ -2,6 +2,7 @@
 
 import { ShaderBuilder } from './ShaderModule.js';
 import { VertexBuilder } from './VertexModule.js';
+import { TextureBuilder } from './TextureModule.js';
 import { MVPTexROUnit, BatchROUnit, MVPROUnit, ROUnit } from './ROUnitModule.js';
 import { fragPreMultAlphaTexSource, vertTexMVPSource, vertSourceMVPV3, vertSourceScreenV3, fragSource, getVertSourceV3SegN, getFragSourceSegN} from './ShaderCodes.js';
 
@@ -108,11 +109,20 @@ export class SimpleCacheDrawer {
 
         console.log("SimpleCacheDrawer::initialize() ...\n");
 
-        
+        let texUrls = ['./assets/box.jpg'];
         this.mvpTexUnit = new MVPTexROUnit();
-        this.mvpTexUnit.initialize({scaleX:200, scaleY:200, texturesNumber: 1});
+        this.mvpTexUnit.initialize({scaleX:200, scaleY:200, texturesNumber: texUrls.length});
 
         this.initRender(gl);
+
+        for(let i = 0; i < texUrls.length; ++i) {
+            TextureBuilder.loadImageAndCreateTexture(gl, texUrls[i], i, (tex, index) => {
+                this.mvpTexUnit.setTextureAt(tex, index);
+                console.log(`build a tex(${i}), url: `, texUrls[i]);
+            })
+        }
+        
+
     }
 
 
