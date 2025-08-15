@@ -69,7 +69,9 @@ in vec2 v_uv;
 uniform sampler2D u_tex0;
 out vec4 fragColor;
 void main() {
-    fragColor = texture(u_tex0, v_uv) * u_color;
+    fragColor = texture(u_tex0, v_uv);
+    fragColor.rgb /= vec3(min(fragColor.a + 0.0001, 1.0));
+    fragColor *= u_color;
 }
 `;
 

@@ -112,10 +112,11 @@ export class SimpleCacheDrawer {
 
         console.log("SimpleCacheDrawer::initialize() ...\n");
 
-        let texUrls = ['./assets/box.jpg'];
+        // let texUrls = ['./assets/box.jpg'];
+        let texUrls = ['./assets/letterA.png'];
         this.mvpTexUnit = new MVPTexROUnit();
         this.mvpTexUnit.initialize({scaleX:200, scaleY:200, texturesNumber: texUrls.length});
-        this.mvpTexUnit.setXY(160, 200);
+        this.mvpTexUnit.setXY(360, 200);
 
         this.initRender(gl);
 
