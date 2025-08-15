@@ -194,16 +194,17 @@ export class MVPTexROUnit extends ROUnit {
             gl.enable(gl.BLEND);
 
             //gl.blendFunc(gl.DST_COLOR, gl.ONE_MINUS_SRC_ALPHA);
-            //gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
-            //gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
+            // gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+            // gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
+            // gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
 
-            // gl.blendFuncSeparate(
-            //     gl.SRC_ALPHA,
-            //     gl.ONE_MINUS_SRC_ALPHA,
-            //     gl.ONE,
-            //     gl.ONE_MINUS_SRC_ALPHA
-            // );
-            gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
+            gl.blendFuncSeparate(
+                gl.SRC_ALPHA,
+                gl.ONE_MINUS_SRC_ALPHA,
+                gl.ONE,
+                gl.ONE_MINUS_SRC_ALPHA
+            );
+            // gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
 
             let tus = this.shader.texUniforms;
             for (let i = 0; i < textures.length; ++i) {

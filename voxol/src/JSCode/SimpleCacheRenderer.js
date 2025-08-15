@@ -43,12 +43,7 @@ function getVertsWithVEOSegN(n) {
         return verts;
     }
 }
-/*
-        x, y, 0, 0,
-        x + w, y, 1, 0,
-        x, y + h, 0, 1,
-        x + w, y + h, 1, 1
-*/
+
 function getVertsWithUV() {
 
     let x = 0, y = 0, w = 1, h = 1;
@@ -96,7 +91,7 @@ export class SimpleCacheDrawer {
         this.mvpUnit.initialize({ scaleX: 100, scaleY: 100 });
         this.mvpUnit0 = this.mvpUnit.clone();
         // this.mvpUnit0.setXY(10, 10);
-        this.mvpUnit0.colorData.set([1, 0.5, 0.5, 1]);
+        // this.mvpUnit0.colorData.set([1, 0.5, 0.5, 0.7]);
 
     }
 
@@ -112,11 +107,12 @@ export class SimpleCacheDrawer {
 
         console.log("SimpleCacheDrawer::initialize() ...\n");
 
-        // let texUrls = ['./assets/box.jpg'];
-        let texUrls = ['./assets/letterA.png'];
+        let texUrls = ['./assets/box.jpg'];
+        // let texUrls = ['./assets/letterA.png'];
         this.mvpTexUnit = new MVPTexROUnit();
         this.mvpTexUnit.initialize({ scaleX: 200, scaleY: 200, texturesNumber: texUrls.length });
         this.mvpTexUnit.setXY(360, 200);
+        this.mvpTexUnit.colorData.set([1,1,1, 0.5]);
 
         this.initRender(gl);
 
@@ -177,8 +173,8 @@ export class SimpleCacheDrawer {
         textureDescArr = [
             { name: 'u_tex0', type: 'texture2D' }
         ];
-        // ShaderBuilder.createShaderUnit(this.mvpTexUnit.shader, gl, vertTexMVPSource, fragPreMultAlphaTexSource, shaderDescArr, textureDescArr);
-        ShaderBuilder.createShaderUnit(this.mvpTexUnit.shader, gl, vertTexMVPSource, fragTexSource, shaderDescArr, textureDescArr);
+        ShaderBuilder.createShaderUnit(this.mvpTexUnit.shader, gl, vertTexMVPSource, fragPreMultAlphaTexSource, shaderDescArr, textureDescArr);
+        // ShaderBuilder.createShaderUnit(this.mvpTexUnit.shader, gl, vertTexMVPSource, fragTexSource, shaderDescArr, textureDescArr);
         program = this.mvpTexUnit.shader.program;
         VertexBuilder.createVAO(this.mvpTexUnit.vertex, gl, program, getVertsWithUV(), [4], [4 * 4], ['a_pos']);
         VertexBuilder.createVEO(this.mvpTexUnit.vertex, gl, getIndicesWithSegN(1));
