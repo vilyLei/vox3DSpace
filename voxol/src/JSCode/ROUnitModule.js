@@ -66,7 +66,7 @@ export class MVPROUnit extends ROUnit {
             [sx, 0, 0,
                 0, sy, 0,
                 px, py, 1]);
-        this.colorData = new Float32Array([0, 0.8, 0.0, 1]);
+        this.colorData = new Float32Array([1,1,1, 1]);
     }
     clone() {
 
@@ -119,7 +119,6 @@ export class MVPTexROUnit extends ROUnit {
             texNum = params.texturesNumber !== undefined ? params.texturesNumber : 0;
         }
 
-        this.enabled = true;
         this.shader = new ShaderUnit();
         this.vertex = new VtxUnit();
         this.objMatData = new Float32Array(
@@ -131,6 +130,7 @@ export class MVPTexROUnit extends ROUnit {
         if (texNum > 0) {
             this.textures = new Array(texNum).fill(null);
         }
+        this.enabled = texNum <= 0;
     }
 
     clone() {

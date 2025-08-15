@@ -81,6 +81,7 @@ export class SimpleCacheDrawer {
         this.ctxWidth = 512;
         this.ctxHeight = 512;
 
+        this.dirty = true;
         this.batchTotal = 4;
 
         this.drewTotal = 0;
@@ -102,6 +103,8 @@ export class SimpleCacheDrawer {
     initialize(moduleIns, gl, vw, vh) {
 
 
+        let thisRef = this;
+
         this.moduleIns = moduleIns;
         this.glCtx = gl;
         this.ctxWidth = vw;
@@ -112,13 +115,19 @@ export class SimpleCacheDrawer {
         let texUrls = ['./assets/box.jpg'];
         this.mvpTexUnit = new MVPTexROUnit();
         this.mvpTexUnit.initialize({scaleX:200, scaleY:200, texturesNumber: texUrls.length});
+        this.mvpTexUnit.setXY(160, 200);
 
         this.initRender(gl);
 
         for(let i = 0; i < texUrls.length; ++i) {
             TextureBuilder.loadImageAndCreateTexture(gl, texUrls[i], i, (tex, index) => {
-                this.mvpTexUnit.setTextureAt(tex, index);
+                thisRef.mvpTexUnit.setTextureAt(tex, index);
+                if(thisRef.mvpTexUnit.enabled) {
+                    thisRef.dirty = true;
+                }
                 console.log(`build a tex(${i}), url: `, texUrls[i]);
+                console.log(`this.mvpTexUnit.enabled: `, thisRef.mvpTexUnit.enabled);
+                console.log(`thisRef.dirty: `, thisRef.dirty);
             })
         }
         
@@ -272,6 +281,12 @@ export class SimpleCacheDrawer {
             unit.draw(gl, ctx);
         }
         unit = this.mvpUnit0;
+        if(unit && unit.enabled) {
+            unit.bind(gl, ctx);
+            unit.draw(gl, ctx);
+        }
+        
+        unit = this.mvpTexUnit;
         if(unit && unit.enabled) {
             unit.bind(gl, ctx);
             unit.draw(gl, ctx);
