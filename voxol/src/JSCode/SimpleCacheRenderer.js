@@ -76,6 +76,9 @@ export class SimpleCacheDrawer {
 
         this.mvpUnit = new MVPROUnit();
         this.mvpUnit.initialize({scaleX:100, scaleY:100});
+        this.mvpUnit0 = this.mvpUnit.clone();
+        // this.mvpUnit0.setXY(10, 10);
+        this.mvpUnit0.colorData.set([1, 0.5, 0.5, 1]);
         
         this.mvpTexUnit = new MVPTexROUnit();
         this.mvpTexUnit.initialize({scaleX:100, scaleY:100});
@@ -168,17 +171,12 @@ export class SimpleCacheDrawer {
             unit.bind(gl, ctx);
             unit.draw(gl, ctx);
         }
-        unit = this.mvpUnit;
-        if(unit.enabled) {
-            unit.bind(gl, ctx);
-            unit.draw(gl, ctx);
-        }
     }
     drawBatch(batchEle) {
 
         let gl = this.glCtx;
         let ctx = this.moduleIns.viewTransDesc;;
-        
+
         let matTot = this.batchTotal;
         let drawIndex = 0;
         let drewTot = 0;
@@ -222,6 +220,17 @@ export class SimpleCacheDrawer {
         if (drewTot != this.drewTotal) {
             this.drewTotal = drewTot;
             console.log("drewTotal: ", this.drewTotal);
+        }
+        
+        unit = this.mvpUnit;
+        if(unit && unit.enabled) {
+            unit.bind(gl, ctx);
+            unit.draw(gl, ctx);
+        }
+        unit = this.mvpUnit0;
+        if(unit && unit.enabled) {
+            unit.bind(gl, ctx);
+            unit.draw(gl, ctx);
         }
     }
     runEnd() {

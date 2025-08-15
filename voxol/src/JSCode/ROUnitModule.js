@@ -18,6 +18,18 @@ export class ROUnit {
             0, 0, 1]);
         this.colorData = new Float32Array([0.8, 0.8, 0.8, 1]);
     }
+    setXY(x, y) {
+        x = x != undefined ? x : 0;
+        y = y != undefined ? y : 0;
+        this.objMatData[6] = x;
+        this.objMatData[7] = y;
+    }
+    setScaleXY(sx, sy) {
+        sx = sx != undefined ? sx : 0;
+        sy = sy != undefined ? sy : 0;
+        this.objMatData[0] = sx;
+        this.objMatData[4] = sy;
+    }
     bind(gl, ctx) {
         gl.useProgram(this.shader.program);
         gl.bindVertexArray(this.vertex.vao);
@@ -54,11 +66,18 @@ export class MVPROUnit extends ROUnit {
             [sx, 0, 0,
                 0, sy, 0,
                 px, py, 1]);
-        this.viewMatData = null;
-        this.projMatData = null;
         this.colorData = new Float32Array([0, 0.8, 0.0, 1]);
     }
+    clone() {
 
+        let unit = new MVPROUnit();
+        unit.enabled = this.enabled;
+        unit.shader = this.shader;
+        unit.vertex = this.vertex;
+        unit.objMatData = this.objMatData.slice();
+        unit.colorData = this.colorData.slice();
+        return unit;
+    }
     bind(gl, ctx) {
         gl.useProgram(this.shader.program);
         gl.bindVertexArray(this.vertex.vao);
@@ -91,12 +110,15 @@ export class MVPTexROUnit extends ROUnit {
         let sy = 1;
         let px = 0;
         let py = 0;
+        let texNum = 0;
         if(params !== undefined) {
             sx = params.scaleX !== undefined ? params.scaleX : 1;
             sy = params.scaleY !== undefined ? params.scaleY : 1;            
             px = params.x !== undefined ? params.x : 0;
             py = params.y !== undefined ? params.y : 0;
+            texNum = params.texturesNumber !== undefined ? params.texturesNumber : 0;
         }
+
         this.enabled = true;
         this.shader = new ShaderUnit();
         this.vertex = new VtxUnit();
@@ -104,10 +126,25 @@ export class MVPTexROUnit extends ROUnit {
             [sx, 0, 0,
                 0, sy, 0,
                 px, py, 1]);
-        this.viewMatData = null;
-        this.projMatData = null;
         this.colorData = new Float32Array([0, 0.8, 0.0, 1]);
 
+        if(texNum > 0) {
+            this.textures = new Array(texNum).fill(null);
+        }
+    }
+
+    clone() {
+
+        let unit = new MVPROUnit();
+        unit.enabled = this.enabled;
+        unit.shader = this.shader;
+        unit.vertex = new VtxUnit();
+        unit.objMatData = this.objMatData.slice();
+        unit.colorData = this.colorData.slice();
+        if(this.textures != null) {
+            this.textures = this.textures.slice();
+        }
+        return unit;
     }
 
     bind(gl, ctx) {
