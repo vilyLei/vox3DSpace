@@ -23,17 +23,13 @@ export class TextureBuilder {
 
         fetch(url)
             .then(res => res.blob())
-            .then(blob => createImageBitmap(blob))
+            .then(blob => createImageBitmap(blob, {
+                premultiplyAlpha: "none",  // core
+                colorSpaceConversion: "none"
+            }))
             .then(bitmap => {
                 const tex = TextureBuilder.createTextureFromImage(gl, bitmap);
                 callback(tex, id);
             });
-
-        // const img = new Image();
-        // img.onload = () => {
-        //     const tex = TextureBuilder.createTextureFromImage(gl, img);
-        //     callback(tex, id);
-        // };
-        // img.src = url;
     }
 }
