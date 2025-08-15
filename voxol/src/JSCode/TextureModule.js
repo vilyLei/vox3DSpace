@@ -1,6 +1,6 @@
 "use strict";
 export class TextureBuilder {
-    
+
     static createTextureFromImage(gl, image) {
         const tex = gl.createTexture();
         gl.bindTexture(gl.TEXTURE_2D, tex);
@@ -18,13 +18,22 @@ export class TextureBuilder {
 
         return tex;
     }
-    
+
     static loadImageAndCreateTexture(gl, url, id, callback) {
-        const img = new Image();
-        img.onload = () => {
-            const tex = TextureBuilder.createTextureFromImage(gl, img);
-            callback(tex, id);
-        };
-        img.src = url;
+
+        fetch(url)
+            .then(res => res.blob())
+            .then(blob => createImageBitmap(blob))
+            .then(bitmap => {
+                const tex = TextureBuilder.createTextureFromImage(gl, bitmap);
+                callback(tex, id);
+            });
+
+        // const img = new Image();
+        // img.onload = () => {
+        //     const tex = TextureBuilder.createTextureFromImage(gl, img);
+        //     callback(tex, id);
+        // };
+        // img.src = url;
     }
 }
