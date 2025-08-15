@@ -66,7 +66,7 @@ export class MVPROUnit extends ROUnit {
             [sx, 0, 0,
                 0, sy, 0,
                 px, py, 1]);
-        this.colorData = new Float32Array([1,1,1, 1]);
+        this.colorData = new Float32Array([0, 0.8, 0.0, 1]);
     }
     clone() {
 
@@ -125,7 +125,7 @@ export class MVPTexROUnit extends ROUnit {
             [sx, 0, 0,
                 0, sy, 0,
                 px, py, 1]);
-        this.colorData = new Float32Array([0, 0.8, 0.0, 1]);
+        this.colorData = new Float32Array([1,1,1, 1]);
 
         if (texNum > 0) {
             this.textures = new Array(texNum).fill(null);
