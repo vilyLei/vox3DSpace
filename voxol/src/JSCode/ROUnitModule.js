@@ -19,6 +19,11 @@ export class ROUnit {
             0, 0, 1]);
         this.colorData = new Float32Array([0.3, 0.3, 0.3, 1]);
     }
+    setRGBAWithNumberArr(arr) {
+        if (arr == undefined || arr.length == undefined)
+            return;
+        this.colorData.set(arr);
+    }
     setXY(x, y) {
         x = x != undefined ? x : 0;
         y = y != undefined ? y : 0;
@@ -168,7 +173,7 @@ export class MVPTexROUnit extends ROUnit {
 
     setTexturesWithUrls(urls, ctx) {
 
-        if(urls == undefined || urls.length == undefined)
+        if (urls == undefined || urls.length == undefined)
             return;
         let thisRef = this;
         for (let i = 0; i < urls.length; ++i) {

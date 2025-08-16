@@ -90,8 +90,7 @@ export class SimpleCacheDrawer {
         this.mvpUnit = new MVPROUnit();
         this.mvpUnit.initialize({ scaleX: 100, scaleY: 100 });
         this.mvpUnit0 = this.mvpUnit.clone();
-        // this.mvpUnit0.setXY(10, 10);
-        // this.mvpUnit0.colorData.set([1, 0.5, 0.5, 0.7]);
+        this.mvpUnit0.setRGBAWithNumberArr([1, 0.5, 0.5]);
 
     }
 
@@ -112,7 +111,7 @@ export class SimpleCacheDrawer {
         this.mvpTexUnit = new MVPTexROUnit();
         this.mvpTexUnit.initialize({ scaleX: 200, scaleY: 200, texturesNumber: texUrls.length });
         this.mvpTexUnit.setXY(360, 200);
-        this.mvpTexUnit.colorData.set([1,1,1, 0.5]);
+        this.mvpTexUnit.setRGBAWithNumberArr([1,1,1, 0.5]);
         this.mvpTexUnit.setTexturesWithUrls(texUrls, this);
         this.initRender(gl);
     }
@@ -164,10 +163,6 @@ export class SimpleCacheDrawer {
         program = this.mvpTexUnit.shader.program;
         VertexBuilder.createVAO(this.mvpTexUnit.vertex, gl, program, getVertsWithUV(), [4], [4 * 4], ['a_pos']);
         VertexBuilder.createVEO(this.mvpTexUnit.vertex, gl, getIndicesWithSegN(1));
-
-        // let viewTransDesc = this.moduleIns.viewTransDesc;
-        // this.mvpUnit.viewMatData = viewTransDesc.viewF32;
-        // this.mvpUnit.projMatData = viewTransDesc.projF32;
 
     }
 
