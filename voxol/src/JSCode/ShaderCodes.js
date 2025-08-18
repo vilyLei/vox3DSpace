@@ -75,6 +75,20 @@ void main() {
 }
 `;
 
+
+export const fragPreMultAlphaFlipYTexSource = `#version 300 es
+precision mediump float;
+uniform vec4 u_color;
+in vec2 v_uv;
+uniform sampler2D u_tex0;
+out vec4 fragColor;
+void main() {
+    fragColor = texture(u_tex0, vec2(v_uv.x, 1.0 - v_uv.y));
+    fragColor.rgb /= vec3(min(fragColor.a + 0.0001, 1.0));
+    fragColor *= u_color;
+}
+`;
+
 export function getVertSourceV3SegN(n) {
 
     const vertSourceV3SegN = `#version 300 es
