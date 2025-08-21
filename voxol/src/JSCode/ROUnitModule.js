@@ -257,15 +257,20 @@ export class BatchROUnit extends ROUnit {
         this.colorData = new Float32Array(tot * 4);
     }
     bind(gl, ctx) {
+        
         gl.useProgram(this.shader.program);
         gl.bindVertexArray(this.vertex.vao);
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.vertex.veo);
+
+        let uniforms = this.shader.uniforms;
+        gl.uniformMatrix3fv(uniforms[1].location, false, ctx.viewF32, 0, 9);
+        gl.uniformMatrix3fv(uniforms[2].location, false, ctx.projF32, 0, 9);
     }
     draw(gl, ctx) {
         let tot = this.matTotal;
         let uniforms = this.shader.uniforms;
         gl.uniformMatrix3fv(uniforms[0].location, false, this.transData, 0, tot * 9);
-        gl.uniform4fv(uniforms[1].location, this.colorData, 0, tot * 4);
+        gl.uniform4fv(uniforms[3].location, this.colorData, 0, tot * 4);
         gl.drawElements(gl.TRIANGLES, this.vertex.indices.length, gl.UNSIGNED_SHORT, 0);
     }
     parse(drawIndex, cmdIndex, dataU32, dataF32) {

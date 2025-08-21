@@ -5,7 +5,17 @@ import { VertexBuilder } from './VertexModule.js';
 import { TextureBuilder } from './TextureModule.js';
 import { getIndicesWithSegN, getVertsWithVEOSegN, getVertsWithUV} from './GeomUtils.js';
 import { MVPTexROUnit, BatchROUnit, MVPROUnit, ROUnit } from './ROUnitModule.js';
-import { fragPreMultAlphaTexSource, vertTexMVPSource, vertSourceMVPV3, vertSourceScreenV3, fragTexSource, fragSource, getVertSourceV3SegN, getFragSourceSegN } from './ShaderCodes.js';
+import {
+    fragPreMultAlphaTexSource,
+    vertTexMVPSource,
+    vertSourceMVPV3,
+    vertSourceScreenV3,
+    fragTexSource,
+    fragSource,
+    getVertSourceMVPV3SegN,
+    getVertSourceV3SegN,
+    getFragSourceSegN
+} from './ShaderCodes.js';
 
 
 export function printWith9Number(numArr, index) {
@@ -78,8 +88,15 @@ export class SimpleCacheDrawer {
         let shaderDescArr = null;
         let textureDescArr = null;
 
-        shaderDescArr = [{ name: 'u_transforms[0]', type: 'mat3[]' }, { name: 'u_colors[0]', type: 'vec4[]' }];
-        ShaderBuilder.createShaderUnit(this.batchUnit.shader, gl, getVertSourceV3SegN(segN), getFragSourceSegN(segN), shaderDescArr);
+        // shaderDescArr = [{ name: 'u_transforms[0]', type: 'mat3[]' }, { name: 'u_colors[0]', type: 'vec4[]' }];
+        // ShaderBuilder.createShaderUnit(this.batchUnit.shader, gl, getVertSourceV3SegN(segN), getFragSourceSegN(segN), shaderDescArr);
+        shaderDescArr = [
+            { name: 'u_transforms[0]', type: 'mat3[]' },
+            { name: 'u_viewMat', type: 'mat3' },
+            { name: 'u_projMat', type: 'mat3' },
+            { name: 'u_colors[0]', type: 'vec4[]' }
+        ];
+        ShaderBuilder.createShaderUnit(this.batchUnit.shader, gl, getVertSourceMVPV3SegN(segN), getFragSourceSegN(segN), shaderDescArr);
         program = this.batchUnit.shader.program;
         VertexBuilder.createVAO(this.batchUnit.vertex, gl, program, getVertsWithVEOSegN(segN), [3], [3 * 4], ['a_pos']);
         VertexBuilder.createVEO(this.batchUnit.vertex, gl, getIndicesWithSegN(segN));

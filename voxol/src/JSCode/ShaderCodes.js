@@ -89,6 +89,26 @@ void main() {
 }
 `;
 
+export function getVertSourceMVPV3SegN(n) {
+
+    const vertSourceV3SegN = `#version 300 es
+precision highp float;
+
+layout(location = 0) in vec3 a_pos;
+uniform mat3 u_transforms[${n}];
+uniform mat3 u_viewMat;
+uniform mat3 u_projMat;
+out float v_idx;
+void main() {
+    v_idx = a_pos.z;
+    int idx = int(a_pos.z);
+    mat3 trans = u_projMat * u_viewMat * u_transforms[idx];
+    vec3 pos = trans * vec3(a_pos.xy, 1.0);
+    gl_Position = vec4(pos.xy, 0.0, 1.0);
+}
+`;
+    return vertSourceV3SegN;
+}
 export function getVertSourceV3SegN(n) {
 
     const vertSourceV3SegN = `#version 300 es

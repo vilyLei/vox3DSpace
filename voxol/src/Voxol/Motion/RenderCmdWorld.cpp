@@ -378,10 +378,13 @@ void RenderCmdWorld::run()
         bounds.pos.y = node.y;
         bounds.width = node.scaleX;
         bounds.height = node.scaleY;
-        rectDesc.transform = projMat;
-        // view mat and proj mat maybe become to a camera function 
-        rectDesc.transform.append(viewMat);
-        rectDesc.transform.append(node.transform);
+
+        rectDesc.transform = node.transform;
+
+        // rectDesc.transform = projMat;
+        // // view mat and proj mat maybe become to a camera function 
+        // rectDesc.transform.append(viewMat);
+        // rectDesc.transform.append(node.transform);
         
         // node.updateToMat33(rectDesc.transform);
         // rectDesc.transform.print();
