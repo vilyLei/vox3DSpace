@@ -16,7 +16,11 @@ bool SizeDesc::isEqual(const SizeDesc& desc) const
 
 bool ViewComponent::viewZoomWithFixPos(const Point2DDesc& fixPos, float dstScale)
 {
-
+    if(dstScale < 0.001f)
+        return false;
+    if(dstScale > 1000.0f)
+        return false;
+        
     // printf("ViewComponent::viewZoomWithFixPos(), fixPos(%f, %f)\n", fixPos.x, fixPos.y);
     // 基本约定: 在scale为1.0的时候，窗口坐标和世界坐标一致(假定没有相对平移)
     auto scale = desc.zoom;
@@ -26,16 +30,22 @@ bool ViewComponent::viewZoomWithFixPos(const Point2DDesc& fixPos, float dstScale
     desc.zoom = dstScale;
     dstScale  = desc.zoom;
 
-    auto px  = -pos.x / scale;
-    auto py  = -pos.y / scale;
-    auto wx0 = (fixPos.x / scale) + px;
-    auto wy0 = (fixPos.y / scale) + py;
+    // preserve precision
+    auto s = std::roundf(scale * 1000) / 1000;
 
-    // 将当前的鼠标坐标转换到world坐标
+    auto px  = -pos.x / s;
+    auto py  = -pos.y / s;
+    auto wx0 = (fixPos.x / s) + px;
+    auto wy0 = (fixPos.y / s) + py;
+
+    // preserve precision
+    s = std::roundf(dstScale * 1000) / 1000;
+
+    // 将当前的鼠标坐标转换到 world 坐标
     // 已知 position( wx0,  wy0 ) 数据
     // 计算出在窗口坐标空间下的对应的坐标, 假定world space和window space坐标原点对齐
-    auto vx0      = wx0 * dstScale;
-    auto vy0      = wy0 * dstScale;
+    auto vx0      = wx0 * s;
+    auto vy0      = wy0 * s;
     auto disX     = vx0 - fixPos.x;
     auto disY     = vy0 - fixPos.y;
     desc.position = {-disX, -disY};
@@ -269,8 +279,18 @@ void RenderCmdWorld::setMouseParams(float x, float y, int type, float value)
     {
         dirty          = true;
         auto& viewDesc = view.desc;
-        auto& pos      = viewDesc.position;
-        viewMat.setTo(pos.x, pos.y, viewDesc.zoom, viewDesc.zoom);
+
+        auto pos      = viewDesc.position;
+
+        // preserve precision
+        pos.x = std::roundf(pos.x * 1000) / 1000;
+        pos.y = std::roundf(pos.y * 1000) / 1000;
+        
+        // preserve precision
+        auto zoom = std::roundf(viewDesc.zoom * 1000) / 1000;
+        printf("RenderCmdWorld::run() zoom: %f\n", zoom);
+
+        viewMat.setTo(pos.x, pos.y, zoom, zoom);
     }
     // if (type == 4)
     // {
