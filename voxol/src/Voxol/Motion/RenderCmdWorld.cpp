@@ -20,7 +20,7 @@ bool ViewComponent::viewZoomWithFixPos(const Point2DDesc& fixPos, float dstScale
         return false;
     if(dstScale > 1000.0f)
         return false;
-        
+
     // printf("ViewComponent::viewZoomWithFixPos(), fixPos(%f, %f)\n", fixPos.x, fixPos.y);
     // 基本约定: 在scale为1.0的时候，窗口坐标和世界坐标一致(假定没有相对平移)
     auto scale = desc.zoom;
@@ -290,7 +290,8 @@ void RenderCmdWorld::setMouseParams(float x, float y, int type, float value)
         auto zoom = std::roundf(viewDesc.zoom * 1000) / 1000;
         printf("RenderCmdWorld::run() zoom: %f\n", zoom);
 
-        viewMat.setTo(pos.x, pos.y, zoom, zoom);
+        viewMat.setTo(std::roundf(pos.x), std::roundf(pos.y), zoom, zoom);
+        // viewMat.setTo(pos.x, pos.y, zoom, zoom);
     }
     // if (type == 4)
     // {

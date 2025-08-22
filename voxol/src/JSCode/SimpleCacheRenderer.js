@@ -163,10 +163,11 @@ export class SimpleCacheDrawer {
 
     }
 
-    draw() {
+    draw(ctx) {
 
+        let moduleIns = this.moduleIns;
         let gl = this.glCtx;
-        let ctx = this.moduleIns.viewTransDesc;;
+        ctx = ctx == undefined ? moduleIns.viewTransDesc : ctx;
 
         let unit = this.screenColorUnit;
         if (unit.enabled) {
@@ -174,15 +175,17 @@ export class SimpleCacheDrawer {
             unit.draw(gl, ctx);
         }
     }
-    drawBatch(batchEle) {
+    drawBatch(ctx) {
 
+        let moduleIns = this.moduleIns;
         let gl = this.glCtx;
-        let ctx = this.moduleIns.viewTransDesc;;
+        ctx = ctx == undefined ? moduleIns.viewTransDesc : ctx;
 
         let matTot = this.batchTotal;
         let drawIndex = 0;
         let drewTot = 0;
 
+        let batchEle = moduleIns.batchEleDesc;
         let cmdIndex = batchEle.getElementDataIndex();
         let dataU32 = batchEle.heapU32;
         let dataF32 = batchEle.heapF32;

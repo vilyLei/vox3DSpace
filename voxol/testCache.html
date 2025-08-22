@@ -54,7 +54,7 @@
         let drawTimes = -1;
         let countTimes = 0;
 
-        function render() {
+        function render(ctx) {
 
             if (!moduleWrapper.isEnabled())
                 return;
@@ -76,7 +76,7 @@
             renderer.runBegin();
             let ins = moduleWrapper.ins;
             renderer.draw();
-            renderer.drawBatch(ins.batchEleDesc);
+            renderer.drawBatch();
             renderer.dirty = false;
             console.log("render() ...");
         }
