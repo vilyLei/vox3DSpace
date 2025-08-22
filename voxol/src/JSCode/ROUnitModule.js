@@ -125,8 +125,9 @@ export class MVPTexROUnit extends ROUnit {
             texNum = params.texturesNumber !== undefined ? params.texturesNumber : 0;
         }
 
-        this.shader = new ShaderUnit();
-        this.vertex = new VtxUnit();
+        this.shader = this.shader == null ? new ShaderUnit() : this.shader;
+        this.vertex = this.vertex == null ? new VtxUnit() : this.vertex;
+        
         this.objMatData = new Float32Array(
             [sx, 0, 0,
                 0, sy, 0,
@@ -257,7 +258,7 @@ export class BatchROUnit extends ROUnit {
         this.colorData = new Float32Array(tot * 4);
     }
     bind(gl, ctx) {
-        
+
         gl.useProgram(this.shader.program);
         gl.bindVertexArray(this.vertex.vao);
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.vertex.veo);
