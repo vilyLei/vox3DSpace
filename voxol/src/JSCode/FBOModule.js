@@ -1,5 +1,6 @@
 "use strict";
 
+import { Mat33 } from './Mat33.js';
 import { MVPTexROUnit, BatchROUnit, MVPROUnit, ROUnit } from './ROUnitModule.js';
 
 export class FBOUnit {
@@ -72,13 +73,16 @@ export class TileUnit {
         this.fboUnit.bindTexture(this.texture);
         this.texture = this.fboUnit.fboTex;
 
-        //
-        let currCtx = null;
+        let viewMat3 = new Mat33();
+        let projMat3 = new Mat33();
+        projMat3.ortho(this.width, this.height);
+
+        let currCtx = { viewF32: viewMat3.data, projF32: projMat3.data };
         wscRenderer.draw(currCtx);
 
         this.roUnit.setTextures([this.texture]);
     }
-    buildEnd(wscRenderer) {        
+    buildEnd(wscRenderer) {
     }
     draw() {
     }
