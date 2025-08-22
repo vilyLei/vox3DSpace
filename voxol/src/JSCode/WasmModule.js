@@ -12,7 +12,7 @@ function normlizeViewSize() {
     return [pw, ph];
 }
 
-function calcMouseXY(event) {
+function calcMouseXY(canvas, event) {
 
     const clientX = event.clientX;
     const clientY = event.clientY;
@@ -90,36 +90,36 @@ export class ModuleWrapper {
         let ins = this.ins;
 
         canvas.addEventListener('mousedown', event => {
-            let pos = calcMouseXY(event);
+            let pos = calcMouseXY(canvas, event);
             // console.log('mousedown(' + pos.x + ', ' + pos.y + ')');
             // console.log("event.button: ", event.button);
 
             ins.setMouseParamsFunc(pos.x, pos.y, event.button * 10 + 1, 0);
         });
         canvas.addEventListener('mouseup', event => {
-            let pos = calcMouseXY(event);
+            let pos = calcMouseXY(canvas, event);
             // console.log('mouseup(' + pos.x + ', ' + pos.y + ')');
             ins.setMouseParamsFunc(pos.x, pos.y, event.button * 10 + 2, 0);
         });
         window.addEventListener('mouseup', event => {
-            let pos = calcMouseXY(event);
+            let pos = calcMouseXY(canvas, event);
             // console.log('mouseup(' + pos.x + ', ' + pos.y + ')');
             ins.setMouseParamsFunc(pos.x, pos.y, event.button * 10 + 2, 0);
         });
         canvas.addEventListener('mousemove', event => {
-            let pos = calcMouseXY(event);
+            let pos = calcMouseXY(canvas, event);
             // console.log('mousemove(' + pos.x + ', ' + pos.y + ')');
             // console.log("mousemove, event.button: ", event.button);
             ins.setMouseParamsFunc(pos.x, pos.y, event.button * 10 + 3, 0);
         });
         canvas.addEventListener('mousewheel', event => {
-            let pos = calcMouseXY(event);
+            let pos = calcMouseXY(canvas, event);
             // console.log('mousewheel(' + pos.x + ', ' + pos.y + ')');
             // console.log("mousewheel, event.deltaY: ", event.deltaY);
             ins.setMouseParamsFunc(pos.x, pos.y, event.button * 10 + 4, event.deltaY);
         });
         canvas.addEventListener('click', event => {
-            let pos = calcMouseXY(event);
+            let pos = calcMouseXY(canvas, event);
             console.log('click(' + pos.x + ', ' + pos.y + ')');
             ins.setMouseParamsFunc(pos.x, pos.y, event.button * 10 + 5);
         });

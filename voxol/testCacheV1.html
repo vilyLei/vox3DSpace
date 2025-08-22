@@ -1,0 +1,311 @@
+<!doctype html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>test page</title>
+    <style>
+        /* 全屏画布基础样式 */
+        html,
+        body {
+            margin: 0;
+            height: 100%;
+            background: #0f0f11;
+            /* 作为画布加载前的底色 */
+        }
+
+        #app {
+            position: relative;
+            /* 作为 UI 的定位上下文 */
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            /* 防止滚动条 */
+        }
+
+        /* 画布填满容器（配合 JS 做 DPR 尺寸适配） */
+        #glcanvas {
+            position: absolute;
+            inset: 0;
+            /* top/right/bottom/left: 0 */
+            width: 100%;
+            height: 100%;
+            display: block;
+            /* 去掉默认 inline 空隙 */
+        }
+
+        /* 浮动按钮容器 */
+        .ui-bar {
+            position: absolute;
+            right: 24px;
+            bottom: 24px;
+            display: flex;
+            gap: 12px;
+            z-index: 10;
+            /* 确保在画布之上 */
+            pointer-events: auto;
+            /* 接受点击 */
+        }
+
+        /* 简约按钮样式 */
+        .btn {
+            -webkit-tap-highlight-color: transparent;
+            appearance: none;
+            border: none;
+            border-radius: 10px;
+            padding: 10px 18px;
+            font: 500 15px/1.2 system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial;
+            cursor: pointer;
+            transition: transform 0.08s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+            user-select: none;
+        }
+
+        .btn:active {
+            transform: translateY(1px) scale(0.98);
+        }
+
+        .btn-confirm {
+            color: #fff;
+            background: #22c55e;
+            /* 绿 */
+        }
+
+        .btn-confirm:hover {
+            background: #1fb455;
+        }
+
+        .btn-cancel {
+            color: #222;
+            background: #f1f3f5;
+            /* 浅灰 */
+        }
+
+        .btn-cancel:hover {
+            background: #e9ecef;
+        }
+
+        /* 小屏适配：按钮稍大、间距稍大 */
+        @media (max-width: 480px) {
+            .ui-bar {
+                right: 16px;
+                bottom: 16px;
+                gap: 10px;
+            }
+
+            .btn {
+                padding: 12px 18px;
+                font-size: 16px;
+                border-radius: 12px;
+            }
+        }
+    </style>
+    <script src="./build/voxolModule.js"></script>
+</head>
+
+<body>
+    <div id="app" aria-label="WebGL 画布与浮动按钮容器">
+        <canvas id="glcanvas" aria-label="WebGL 画布" tabindex="0"></canvas>
+
+        <!-- 浮动 UI 按钮 -->
+        <div class="ui-bar" aria-label="操作按钮">
+            <button class="btn btn-confirm" id="btnConfirm" aria-label="确定">确定</button>
+            <button class="btn btn-cancel" id="btnCancel" aria-label="取消">取消</button>
+        </div>
+    </div>
+
+    <script type="module">
+
+        import { SimpleCacheDrawer, printWith9Number } from './src/JSCode/SimpleCacheRenderer.js';
+        import { ModuleWrapper } from './src/JSCode/WasmModule.js';
+
+        // ---- WebGL 初始化（含 WebGL2 回退） ----
+        const canvas = document.getElementById('glcanvas');
+        /// @type {WebGL2RenderingContext | WebGLRenderingContext | null}
+        let gl = canvas.getContext('webgl2', { antialias: true, alpha: false, depth: false })
+            || canvas.getContext('webgl', { antialias: true, alpha: false, depth: false });
+
+        if (!gl) {
+            alert('此浏览器不支持 WebGL');
+        }
+
+        let moduleWrapper = new ModuleWrapper();
+        let viewTransDesc = moduleWrapper.ins.viewTransDesc;
+        let renderer = new SimpleCacheDrawer();
+
+        function initMoculeProcess(Module) {
+            moduleWrapper.initialize(Module, canvas, gl);
+            renderer.initialize(moduleWrapper.ins, gl, canvas.width, canvas.height);
+        };
+
+        VoxModule().then(Module => {
+            console.log("Voxol Wasm Module loaded.");
+            initMoculeProcess(Module);
+        });
+
+        let drawTimes = -1;
+        let countTimes = 0;
+
+        function render(ctx) {
+
+            if (!moduleWrapper.isEnabled())
+                return;
+
+            drawTimes++;
+            if (drawTimes % 1 != 0)
+                return;
+
+            countTimes++;
+            moduleWrapper.updateCtxViewParam((w, h) => {
+                renderer.setCtxSize(w, h);
+            });
+
+            let flag = moduleWrapper.run();
+            if (flag < 1 && !renderer.dirty)
+                return;
+
+            viewTransDesc.update();
+            renderer.runBegin();
+            let ins = moduleWrapper.ins;
+            renderer.draw();
+            renderer.drawBatch();
+            renderer.dirty = false;
+            console.log("render() ...");
+        }
+
+        function loopRun() {
+            render();
+            requestAnimationFrame(loopRun);
+        }
+        loopRun();
+
+
+        const btnConfirm = document.getElementById('btnConfirm');
+        const btnCancel = document.getElementById('btnCancel');
+
+        function onConfirm() {
+            // TODO: 在这里调用你的“确定”逻辑
+            console.log('[UI] 确定被点击');
+        }
+
+        function onCancel() {
+            // TODO: 在这里调用你的“取消”逻辑
+            console.log('[UI] 取消被点击');
+        }
+
+        btnConfirm.addEventListener('click', onConfirm);
+        btnCancel.addEventListener('click', onCancel);
+
+        // window.addEventListener('keydown', (e) => {
+        //     if (e.key === 'Enter') onConfirm();
+        //     if (e.key === 'Escape') onCancel();
+        // });
+
+        /*
+        // 根据 DPR 进行尺寸适配，确保像素清晰
+        function resizeCanvasToDisplaySize() {
+            const dpr = Math.max(1, window.devicePixelRatio || 1);
+            const displayWidth = Math.floor(canvas.clientWidth * dpr);
+            const displayHeight = Math.floor(canvas.clientHeight * dpr);
+            if (canvas.width !== displayWidth || canvas.height !== displayHeight) {
+                canvas.width = displayWidth;
+                canvas.height = displayHeight;
+            }
+            if (gl) {
+                gl.viewport(0, 0, canvas.width, canvas.height);
+            }
+        }
+
+        // 让 canvas 填满容器
+        function fitCanvas() {
+            const app = document.getElementById('app');
+            canvas.style.width = app.clientWidth + 'px';
+            canvas.style.height = app.clientHeight + 'px';
+            resizeCanvasToDisplaySize();
+        }
+
+        window.addEventListener('resize', fitCanvas);
+        window.addEventListener('orientationchange', fitCanvas);
+        fitCanvas();
+
+        // ---- 一个简单的渲染循环（颜色随时间变化）----
+        let start = performance.now();
+        function render(now) {
+            if (!gl) return;
+            const t = (now - start) * 0.001; // 秒
+            // 动态颜色，营造“活着”的背景
+            const r = (Math.sin(t * 0.6) + 1) * 0.5;  // 0..1
+            const g = (Math.sin(t * 0.8 + 2.0) + 1) * 0.5;
+            const b = (Math.sin(t * 1.0 + 4.0) + 1) * 0.5;
+            gl.clearColor(r * 0.2, g * 0.2, b * 0.2, 1.0); // 更柔和的暗色调
+            gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+            requestAnimationFrame(render);
+        }
+        requestAnimationFrame(render);
+
+        // ---- UI 交互：确定 / 取消 ----
+        const btnConfirm = document.getElementById('btnConfirm');
+        const btnCancel = document.getElementById('btnCancel');
+
+        function onConfirm() {
+            // TODO: 在这里调用你的“确定”逻辑
+            console.log('[UI] 确定被点击');
+            // 示例：闪一下背景更亮的绿色
+            flashTint([0.2, 0.6, 0.2]);
+        }
+
+        function onCancel() {
+            // TODO: 在这里调用你的“取消”逻辑
+            console.log('[UI] 取消被点击');
+            // 示例：闪一下背景更亮的红色
+            flashTint([0.6, 0.2, 0.2]);
+        }
+
+        btnConfirm.addEventListener('click', onConfirm);
+        btnCancel.addEventListener('click', onCancel);
+
+        // 一个小小的视觉反馈：短暂改变清屏色，渐变回去
+        let tint = [0, 0, 0];
+        let tintAlpha = 0;
+        function flashTint(color) {
+            tint = color.slice();
+            tintAlpha = 1.0;
+            animateTintFade();
+        }
+
+        let fading = false;
+        function animateTintFade() {
+            if (fading) return;
+            fading = true;
+            const duration = 350; // ms
+            const startTime = performance.now();
+            (function step(now) {
+                const k = Math.min(1, (now - startTime) / duration);
+                const a = 1 - k; // 由 1 渐变到 0
+                // 在下一帧渲染之前把清屏色叠加到目标颜色上
+                if (gl) {
+                    const base = [0.0, 0.0, 0.0];
+                    const r = base[0] * (1 - a) + tint[0] * a;
+                    const g = base[1] * (1 - a) + tint[1] * a;
+                    const b = base[2] * (1 - a) + tint[2] * a;
+                    gl.clearColor(r, g, b, 1.0);
+                }
+                if (k < 1) {
+                    requestAnimationFrame(step);
+                } else {
+                    fading = false;
+                }
+            })(performance.now());
+        }
+
+        // 可选：按键示例（Enter=确定，Esc=取消）
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') onConfirm();
+            if (e.key === 'Escape') onCancel();
+        });
+        //*/
+    </script>
+</body>
+
+</html>
