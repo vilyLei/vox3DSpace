@@ -60,8 +60,13 @@ Mat33 Mat33::rotate(float rotRadians)
 
 void Mat33::setTo(float tx, float ty, float sx, float sy, float rotRadians)
 {
-    float c = cosf(rotRadians);
-    float s = sinf(rotRadians);
+    float c = 1;
+    float s = 0;
+    if (std::abs(rotRadians) > 1e-5f)
+    {
+        c = cosf(rotRadians);
+        s = sinf(rotRadians);
+    }
 
     data = {
         c * sx, s * sx, 0,

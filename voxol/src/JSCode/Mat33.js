@@ -17,8 +17,12 @@ export class Mat33 {
 
     setTo(tx, ty, sx = 1, sy = 1, rotRadians = 0) {
 
-        let c = Math.cos(rotRadians);
-        let s = Math.sin(rotRadians);
+        let c = 1;
+        let s = 0;
+        if (Math.abs(rotRadians) > 1e-5) {
+            c = Math.cos(rotRadians);
+            s = Math.sin(rotRadians);
+        }
 
         this.data.set([c * sx, s * sx, 0,
         -s * sy, c * sy, 0,

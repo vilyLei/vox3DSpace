@@ -174,6 +174,7 @@ export class SimpleCacheDrawer {
             unit.bind(gl, ctx);
             unit.draw(gl, ctx);
         }
+        this.drawBatch();
     }
     drawBatch(ctx) {
 
