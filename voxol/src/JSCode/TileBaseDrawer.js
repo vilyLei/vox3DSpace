@@ -21,6 +21,10 @@ export class TileBaseDrawer {
 
         this.tile0 = null;
         this.tile1 = null;
+
+        this.tilesRN = 3;
+        this.tilesCN = 3;
+        this.tiles = new Array(this.tilesRN * this.tilesCN);
     }
     initialize(gl, wscRenderer) {
 
@@ -31,12 +35,27 @@ export class TileBaseDrawer {
 
         this.buildCfg();
 
-        this.tile0 = new TileUnit(256, 256);
-        this.tile0.initialize(wscRenderer, this.fboIns, this.texROUnit);
-        this.tile1 = new TileUnit(256, 256);
-        this.tile1.initialize(wscRenderer, this.fboIns, this.texROUnit);
-        this.tile1.setXY(256, 0);
-        this.tile1.update();
+        // this.tile0 = new TileUnit(256, 256);
+        // this.tile0.initialize(wscRenderer, this.fboIns, this.texROUnit);
+        // this.tile1 = new TileUnit(256, 256);
+        // this.tile1.initialize(wscRenderer, this.fboIns, this.texROUnit);
+        // this.tile1.setXY(256, 0);
+        // this.tile1.update();
+
+        let index = 0;
+        for (let i = 0; i < this.tilesRN; ++i) {
+            let py = i * 256;
+            for (let j = 0; j < this.tilesRN; ++j) {
+                let px = j * 256;
+                let tile = new TileUnit(256, 256);
+                tile.initialize(wscRenderer, this.fboIns, this.texROUnit);
+                tile.setXY(px, py);
+                tile.update();
+                this.tiles[index] = tile;
+                index++;
+            }
+        }
+
     }
     buildCfg() {
 
@@ -61,16 +80,25 @@ export class TileBaseDrawer {
         let wscRenderer = this.wscRenderer;
         let moduleIns = wscRenderer.moduleIns;
         let wscCtx = moduleIns.viewTransDesc;
+        // for test
         // this.tile0.drawTest();
         // this.tile1.drawTest();
+        // this.tile0.build();
+        // this.tile1.build();
+        // wscRenderer.runBegin();
+        // this.tile0.draw(wscCtx);
+        // this.tile1.draw(wscCtx);
 
-        this.tile0.build();
-        this.tile1.build();
-
+        let tiles = this.tiles;
+        let len = tiles.length;
+        for(let i = 0; i < len; ++i) {
+            tiles[i].build();
+        }
         wscRenderer.runBegin();
+        for(let i = 0; i < len; ++i) {
+            tiles[i].draw(wscCtx);
+        }
 
-        this.tile0.draw(wscCtx);
-        this.tile1.draw(wscCtx);
     }
 
 }
