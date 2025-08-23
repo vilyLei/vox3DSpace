@@ -131,6 +131,8 @@
             alert('此浏览器不支持 WebGL');
         }
 
+        let tileRendering = false;
+
         let moduleWrapper = new ModuleWrapper();
         let viewTransDesc = moduleWrapper.ins.viewTransDesc;
         let renderer = new SimpleCacheDrawer();
@@ -169,9 +171,12 @@
                 return;
 
             viewTransDesc.update();
+            if (tileRendering) {
 
-            renderer.runBegin();
-            renderer.draw();
+            } else {
+                renderer.runBegin();
+                renderer.draw();
+            }
 
             renderer.dirty = false;
             console.log("render() ...");
@@ -186,19 +191,12 @@
 
         const btnConfirm = document.getElementById('btnConfirm');
         const btnCancel = document.getElementById('btnCancel');
-
-        function onConfirm() {
-            // TODO: 在这里调用你的“确定”逻辑
-            console.log('[UI] 确定被点击');
-        }
-
-        function onCancel() {
-            // TODO: 在这里调用你的“取消”逻辑
-            console.log('[UI] 取消被点击');
-        }
-
-        btnConfirm.addEventListener('click', onConfirm);
-        btnCancel.addEventListener('click', onCancel);
+        btnConfirm.addEventListener('click', () => {
+            console.log('[UI] click confirm');
+        });
+        btnCancel.addEventListener('click', () => {
+            console.log('[UI] click cancle');
+        });
 
         // window.addEventListener('keydown', (e) => {
         //     if (e.key === 'Enter') onConfirm();

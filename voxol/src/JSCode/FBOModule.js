@@ -99,17 +99,21 @@ export class TileUnit {
 
         this.roUnit.setTextures([this.texture]);
     }
-    buildEnd(wscRenderer) {
+    buildEnd() {
+        this.fboUnit.unbindFBO();
+        this.wscRenderer.dirty = false;
     }
 
+    /// check tile area dirty yes or no
     tileDirtyCheck() {
         return true;
     }
     draw(ctx) {
-        // check tile area dirty yes or no
         let tileTirty = this.tileDirtyCheck();
         if (tileTirty) {
-
+            this.buildBegin();
+            this.build();
+            this.buildEnd();
         }
         let unit = this.roUnit;
         if (unit && unit.enabled) {
@@ -118,8 +122,9 @@ export class TileUnit {
         }
     }
     update() {
-        this.roUnit.setXY(this.x, this.y);
-        this.roUnit.setScaleXY(this.width, this.height);
+        let unit = this.roUnit;
+        unit.setXY(this.x, this.y);
+        unit.setScaleXY(this.width, this.height);
     }
 
 }

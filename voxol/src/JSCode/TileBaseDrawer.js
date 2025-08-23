@@ -52,8 +52,10 @@ export class TileBaseDrawer {
         VertexBuilder.createVAO(this.texROUnit.vertex, gl, program, getVertsWithUV(), [4], [4 * 4], ['a_pos']);
         VertexBuilder.createVEO(this.texROUnit.vertex, gl, getIndicesWithSegN(1));
     }
-    run() {
-        this.tile0
+    draw() {
+        let moduleIns = this.moduleIns;
+        let wscCtx = moduleIns.viewTransDesc;
+        this.tile0.draw();
     }
 
 }
