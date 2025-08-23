@@ -38,23 +38,21 @@ export class SimpleCacheDrawer {
         this.ctxWidth = 512;
         this.ctxHeight = 512;
 
-        this.dirty = true;
-        this.batchTotal = 4;
+        this.roScene = null;
 
+        this.dirty = true;
         this.drewTotal = 0;
 
-        this.batchUnit = new BatchROUnit(this.batchTotal);
-        this.batchUnit.initialize();
-
-        this.screenBgColorUnit = new ROUnit();
-        this.screenBgColorUnit.initialize();
-
-        this.mvpUnit = new MVPROUnit();
-        this.mvpUnit.initialize({ scaleX: 100, scaleY: 100 });
-        this.mvpUnit0 = this.mvpUnit.clone();
-        this.mvpUnit0.setRGBAWithNumberArr([1, 0.5, 0.5]);
-
-        this.testUnits = [];
+        // this.batchTotal = 4;
+        // this.batchUnit = new BatchROUnit(this.batchTotal);
+        // this.batchUnit.initialize();
+        // this.screenBgColorUnit = new ROUnit();
+        // this.screenBgColorUnit.initialize();
+        // this.mvpUnit = new MVPROUnit();
+        // this.mvpUnit.initialize({ scaleX: 100, scaleY: 100 });
+        // this.mvpUnit0 = this.mvpUnit.clone();
+        // this.mvpUnit0.setRGBAWithNumberArr([1, 0.5, 0.5]);
+        // this.testUnits = [];
 
     }
 
@@ -67,6 +65,7 @@ export class SimpleCacheDrawer {
 
         console.log("SimpleCacheDrawer::initialize() ...\n");
 
+        /*
         // let texUrls = ['./assets/box.jpg'];
         // let texUrls = ['./assets/letterA.png'];
         this.mvpTexUnit = new MVPTexROUnit();
@@ -82,9 +81,10 @@ export class SimpleCacheDrawer {
         texUnit0.setXY(560, 150);
 
         this.testUnits = [this.mvpUnit, this.mvpUnit0, this.mvpTexUnit, texUnit0];
+        //*/
     }
 
-
+    /*
     initRender(gl) {
 
         let segN = this.batchTotal;
@@ -140,16 +140,16 @@ export class SimpleCacheDrawer {
         VertexBuilder.createVEO(this.mvpTexUnit.vertex, gl, getIndicesWithSegN(1));
 
     }
+    //*/
 
-    normlizeViewSize() {
-
-        let pw = window.innerWidth;
-        let ph = window.innerHeight;
-        const dpr = window.devicePixelRatio || 1;
-        pw = Math.round(pw * dpr);
-        ph = Math.round(ph * dpr);
-        return [pw, ph];
-    }
+    // normlizeViewSize() {
+    //     let pw = window.innerWidth;
+    //     let ph = window.innerHeight;
+    //     const dpr = window.devicePixelRatio || 1;
+    //     pw = Math.round(pw * dpr);
+    //     ph = Math.round(ph * dpr);
+    //     return [pw, ph];
+    // }
 
     setCtxSize(vw, vh) {
 
@@ -174,7 +174,9 @@ export class SimpleCacheDrawer {
         let moduleIns = this.moduleIns;
         ctx = ctx == undefined ? moduleIns.viewTransDesc : ctx;
 
-        // let unit = this.screenBgColorUnit;
+        let scene = this.roScene;
+
+        // let unit = scene.screenBgColorUnit;
         // if (unit.enabled) {
         //     unit.bind(gl, ctx);
         //     unit.draw(gl, ctx);
@@ -183,11 +185,14 @@ export class SimpleCacheDrawer {
     }
     drawBatch(ctx) {
 
+        
+        let scene = this.roScene;
+
         let moduleIns = this.moduleIns;
         let gl = this.glCtx;
         ctx = ctx == undefined ? moduleIns.viewTransDesc : ctx;
 
-        let matTot = this.batchTotal;
+        let matTot = scene.batchTotal;
         let drawIndex = 0;
         let drewTot = 0;
 
@@ -196,7 +201,7 @@ export class SimpleCacheDrawer {
         let dataU32 = batchEle.heapU32;
         let dataF32 = batchEle.heapF32;
 
-        let unit = this.batchUnit;
+        let unit = scene.batchUnit;
 
 
         unit.bind(gl, ctx);
@@ -233,7 +238,7 @@ export class SimpleCacheDrawer {
             console.log("batch drew total: ", this.drewTotal);
         }
 
-        let units = this.testUnits;
+        let units = scene.testUnits;
         for (let i = 0; i < units.length; ++i) {
             unit = units[i];
             if (unit && unit.enabled) {

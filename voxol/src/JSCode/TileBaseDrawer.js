@@ -1,5 +1,4 @@
 "use strict";
-// import { SimpleCacheDrawer } from './SimpleCacheRenderer.js';
 
 import { ShaderBuilder } from './ShaderModule.js';
 import { VertexBuilder } from './VertexModule.js';
@@ -69,7 +68,7 @@ export class TileBaseDrawer {
         this.tile1.build();
 
         wscRenderer.runBegin();
-        
+
         this.tile0.draw(wscCtx);
         this.tile1.draw(wscCtx);
     }
