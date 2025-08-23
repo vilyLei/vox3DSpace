@@ -11,6 +11,11 @@ export function printWith9Number(numArr, index) {
     console.log(f32Str);
 }
 
+class BatchDrawer {
+    constructor(){
+
+    }
+}
 
 export class SimpleCacheDrawer {
 
@@ -69,15 +74,23 @@ export class SimpleCacheDrawer {
         //     unit.draw(gl, ctx);
         // }
         this.drawBatch(ctx);
+        
+        let units = scene.testUnits;
+        for (let i = 0; i < units.length; ++i) {
+            const unit = units[i];
+            if (unit && unit.enabled) {
+                unit.bind(gl, ctx);
+                unit.draw(gl, ctx);
+            }
+        }
     }
     drawBatch(ctx) {
 
-        
         let scene = this.roScene;
 
         let moduleIns = this.moduleIns;
         let gl = this.glCtx;
-        ctx = ctx == undefined ? moduleIns.viewTransDesc : ctx;
+        // ctx = ctx == undefined ? moduleIns.viewTransDesc : ctx;
 
         let matTot = scene.batchTotal;
         let drawIndex = 0;
@@ -89,7 +102,6 @@ export class SimpleCacheDrawer {
         let dataF32 = batchEle.heapF32;
 
         let unit = scene.batchUnit;
-
 
         unit.bind(gl, ctx);
 
@@ -125,14 +137,6 @@ export class SimpleCacheDrawer {
             console.log("batch drew total: ", this.drewTotal);
         }
 
-        let units = scene.testUnits;
-        for (let i = 0; i < units.length; ++i) {
-            unit = units[i];
-            if (unit && unit.enabled) {
-                unit.bind(gl, ctx);
-                unit.draw(gl, ctx);
-            }
-        }
     }
     runEnd() {
         this.dirty = false;

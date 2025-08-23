@@ -122,12 +122,12 @@
         import { TileBaseDrawer } from './src/JSCode/TileBaseDrawer.js';
 
         const canvas = document.getElementById('glcanvas');
-        /// @type {WebGL2RenderingContext | WebGLRenderingContext | null}
-        let gl = canvas.getContext('webgl2', { antialias: true, alpha: false, depth: false })
-            || canvas.getContext('webgl', { antialias: true, alpha: false, depth: false });
+        // let gl = canvas.getContext('webgl2', { antialias: true, alpha: false, depth: false })
+        //     || canvas.getContext('webgl', { antialias: true, alpha: false, depth: false });
 
+        let gl = canvas.getContext('webgl2', { antialias: true, alpha: false, depth: false });
         if (!gl) {
-            alert('此浏览器不支持 WebGL');
+            alert('Can not support WebGL2');
         }
 
         let tileRendering = false;
@@ -140,6 +140,7 @@
         let tileRenderer = new TileBaseDrawer();
 
         function initMoculeProcess(Module) {
+
             moduleWrapper.initialize(Module, canvas, gl);
             renderer.initialize(moduleWrapper.ins, gl, canvas.width, canvas.height);
             roScene.initialize(gl);
@@ -147,7 +148,12 @@
         };
 
         VoxModule().then(Module => {
+
             console.log("Voxol Wasm Module loaded.");
+
+            if (!gl)
+                return;
+
             initMoculeProcess(Module);
         });
 
@@ -187,6 +193,10 @@
         }
 
         function loopRun() {
+
+            if (!gl)
+                return;
+            
             render();
             requestAnimationFrame(loopRun);
         }
