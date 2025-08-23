@@ -1,7 +1,7 @@
 "use strict";
 
 import { Mat33 } from './Mat33.js';
-import { MVPTexROUnit, BatchROUnit, MVPROUnit, ROUnit } from './ROUnitModule.js';
+import { MVPTexROUnit } from './ROUnitModule.js';
 
 export class FBOUnit {
     constructor() {
@@ -51,10 +51,16 @@ export class TileUnit {
         this.width = width != undefined ? width : 256;
         this.height = height != undefined ? height : 256;
 
+        this.dirty = true;
+
         this.wscRenderer = null;
         this.texture = null;
         this.roUnit = new MVPTexROUnit();
         this.fboUnit = null;
+    }
+    setXY(tx, ty) {
+        this.x = tx;
+        this.y = ty;
     }
     initialize(wscRenderer, fboUnit, srcRoUnit) {
 
@@ -67,18 +73,18 @@ export class TileUnit {
     }
 
     buildBegin() {
-        
+
         let gl = this.fboUnit.glCtx;
 
         this.fboUnit.bindFBO(gl);
         this.fboUnit.bindTexture(this.texture, this.width, this.height);
-        
+
         gl.clearColor(0.55, 0.95, 0.55, 1);
         gl.clear(gl.COLOR_BUFFER_BIT);
         gl.viewport(0, 0, this.width, this.height);
         this.wscRenderer.dirty = true;
     }
-    build(ctx) {
+    buildDraw(ctx) {
 
         let gl = this.fboUnit.glCtx;
         let wscRenderer = this.wscRenderer;
@@ -89,7 +95,7 @@ export class TileUnit {
 
             let viewMat3 = new Mat33();
             viewMat3.data.set(wscCtx.viewF32);
-            viewMat3.setXY(this.x, this.y);
+            viewMat3.setXY(-this.x, -this.y);
             let projMat3 = new Mat33();
             projMat3.ortho(this.width, this.height);
 
@@ -110,18 +116,39 @@ export class TileUnit {
 
     /// check tile area dirty yes or no
     tileDirtyCheck() {
-        return true;
+        return this.dirty;
     }
+    build() {
+        let tileTirty = this.tileDirtyCheck();
+        if (tileTirty) {
+            this.buildBegin();
+            this.buildDraw();
+            this.buildEnd();
+            this.dirty = false;
+        }
+        return tileTirty;
+    }
+
     draw(ctx) {
 
         let gl = this.fboUnit.glCtx;
 
-        let tileTirty = this.tileDirtyCheck();
-        if (tileTirty) {
-            this.buildBegin();
-            this.build();
-            this.buildEnd();
+        // let wscRenderer = this.wscRenderer;
+        // let moduleIns = wscRenderer.moduleIns;
+        // let wscCtx = moduleIns.viewTransDesc;
+        // ctx = ctx == undefined ? wscCtx : ctx;
+
+        let unit = this.roUnit;
+        if (unit && unit.enabled) {
+            unit.bind(gl, ctx);
+            unit.draw(gl, ctx);
         }
+    }
+    drawTest(ctx) {
+
+        let gl = this.fboUnit.glCtx;
+
+        this.build();
 
         let wscRenderer = this.wscRenderer;
         let moduleIns = wscRenderer.moduleIns;

@@ -21,6 +21,7 @@ export class TileBaseDrawer {
         this.texROUnit = new MVPTexROUnit();
 
         this.tile0 = null;
+        this.tile1 = null;
     }
     initialize(gl, wscRenderer) {
 
@@ -30,8 +31,13 @@ export class TileBaseDrawer {
         this.fboIns.initialize(gl);
 
         this.buildCfg();
+
         this.tile0 = new TileUnit(256, 256);
         this.tile0.initialize(wscRenderer, this.fboIns, this.texROUnit);
+        this.tile1 = new TileUnit(256, 256);
+        this.tile1.initialize(wscRenderer, this.fboIns, this.texROUnit);
+        this.tile1.setXY(256, 0);
+        this.tile1.update();
     }
     buildCfg() {
 
@@ -56,7 +62,16 @@ export class TileBaseDrawer {
         let wscRenderer = this.wscRenderer;
         let moduleIns = wscRenderer.moduleIns;
         let wscCtx = moduleIns.viewTransDesc;
-        this.tile0.draw();
+        // this.tile0.drawTest();
+        // this.tile1.drawTest();
+
+        this.tile0.build();
+        this.tile1.build();
+
+        wscRenderer.runBegin();
+        
+        this.tile0.draw(wscCtx);
+        this.tile1.draw(wscCtx);
     }
 
 }
