@@ -46,8 +46,8 @@ export class SimpleCacheDrawer {
         this.batchUnit = new BatchROUnit(this.batchTotal);
         this.batchUnit.initialize();
 
-        this.screenColorUnit = new ROUnit();
-        this.screenColorUnit.initialize();
+        this.screenBgColorUnit = new ROUnit();
+        this.screenBgColorUnit.initialize();
 
         this.mvpUnit = new MVPROUnit();
         this.mvpUnit.initialize({ scaleX: 100, scaleY: 100 });
@@ -101,10 +101,10 @@ export class SimpleCacheDrawer {
         VertexBuilder.createVEO(this.batchUnit.vertex, gl, getIndicesWithSegN(segN));
 
         shaderDescArr = [{ name: 'u_objMat', type: 'mat3' }, { name: 'u_color', type: 'vec4' }];
-        ShaderBuilder.createShaderUnit(this.screenColorUnit.shader, gl, vertSourceScreenV3, fragSource, shaderDescArr);
-        program = this.screenColorUnit.shader.program;
-        VertexBuilder.createVAO(this.screenColorUnit.vertex, gl, program, getVertsWithVEOSegN(1), [2], [2 * 4], ['a_pos']);
-        VertexBuilder.createVEO(this.screenColorUnit.vertex, gl, getIndicesWithSegN(1));
+        ShaderBuilder.createShaderUnit(this.screenBgColorUnit.shader, gl, vertSourceScreenV3, fragSource, shaderDescArr);
+        program = this.screenBgColorUnit.shader.program;
+        VertexBuilder.createVAO(this.screenBgColorUnit.vertex, gl, program, getVertsWithVEOSegN(1), [2], [2 * 4], ['a_pos']);
+        VertexBuilder.createVEO(this.screenBgColorUnit.vertex, gl, getIndicesWithSegN(1));
 
         shaderDescArr = [
             { name: 'u_objMat', type: 'mat3' },
@@ -168,11 +168,11 @@ export class SimpleCacheDrawer {
         let gl = this.glCtx;
         ctx = ctx == undefined ? moduleIns.viewTransDesc : ctx;
 
-        let unit = this.screenColorUnit;
-        if (unit.enabled) {
-            unit.bind(gl, ctx);
-            unit.draw(gl, ctx);
-        }
+        // let unit = this.screenBgColorUnit;
+        // if (unit.enabled) {
+        //     unit.bind(gl, ctx);
+        //     unit.draw(gl, ctx);
+        // }
         this.drawBatch(ctx);
     }
     drawBatch(ctx) {
