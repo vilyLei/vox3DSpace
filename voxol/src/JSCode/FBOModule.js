@@ -50,12 +50,14 @@ export class TileUnit {
         this.width = width != undefined ? width : 256;
         this.height = height != undefined ? height : 256;
 
+        this.wscRenderer = null;
         this.texture = null;
         this.roUnit = new MVPTexROUnit();
         this.fboUnit = null;
     }
-    initialize(fboUnit, srcRoUnit) {
+    initialize(wscRenderer, fboUnit, srcRoUnit) {
 
+        this.wscRenderer = wscRenderer;
         this.fboUnit = fboUnit;
 
         this.roUnit.shader = srcRoUnit.shader;
@@ -63,32 +65,52 @@ export class TileUnit {
         this.roUnit.initialize({ scaleX: this.width, scaleY: this.height, texturesNumber: 1 });
     }
 
-    buildBegin(wscRenderer) {
+    buildBegin() {
         let gl = this.fboUnit.glCtx;
         gl.clearColor(0.75, 0.95, 0.75, 1);
         gl.clear(gl.COLOR_BUFFER_BIT);
         gl.viewport(0, 0, this.width, this.height);
-        wscRenderer.dirty = true;
+        this.wscRenderer.dirty = true;
     }
-    build(wscRenderer) {
+    build(ctx) {
+
+
+        if (ctx == undefined) {
+
+            let viewMat3 = new Mat33();
+            viewMat3.data.set(wscCtx.viewF32);
+            viewMat3.setXY(this.x, this.y);
+            let projMat3 = new Mat33();
+            projMat3.ortho(this.width, this.height);
+
+            ctx = { viewF32: viewMat3.data, projF32: projMat3.data };
+        }
+
+        let moduleIns = this.moduleIns;
+        let wscCtx = moduleIns.viewTransDesc;
+
+        let wscRenderer = this.wscRenderer;
         let gl = this.fboUnit.glCtx;
         this.fboUnit.bindFBO(gl);
         this.fboUnit.bindTexture(this.texture);
         this.texture = this.fboUnit.fboTex;
 
-        let viewMat3 = new Mat33();
-        let projMat3 = new Mat33();
-        projMat3.ortho(this.width, this.height);
-
-        let currCtx = { viewF32: viewMat3.data, projF32: projMat3.data };
-        wscRenderer.draw(currCtx);
+        wscRenderer.draw(ctx);
 
         this.roUnit.setTextures([this.texture]);
     }
     buildEnd(wscRenderer) {
     }
 
+    tileDirtyCheck() {
+        return true;
+    }
     draw(ctx) {
+        // check tile area dirty yes or no
+        let tileTirty = this.tileDirtyCheck();
+        if (tileTirty) {
+
+        }
         let unit = this.roUnit;
         if (unit && unit.enabled) {
             unit.bind(gl, ctx);

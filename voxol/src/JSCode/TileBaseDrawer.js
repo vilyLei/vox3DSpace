@@ -36,7 +36,7 @@ export class TileBaseDrawer {
     buildCfg() {
 
         let gl = this.glCtx;
-        
+
         this.texROUnit.initialize({ scaleX: 128, scaleY: 128, texturesNumber: 1 });
         let shaderDescArr = [
             { name: 'u_objMat', type: 'mat3' },
@@ -51,6 +51,9 @@ export class TileBaseDrawer {
         let program = this.texROUnit.shader.program;
         VertexBuilder.createVAO(this.texROUnit.vertex, gl, program, getVertsWithUV(), [4], [4 * 4], ['a_pos']);
         VertexBuilder.createVEO(this.texROUnit.vertex, gl, getIndicesWithSegN(1));
+    }
+    run() {
+        this.tile0
     }
 
 }

@@ -28,6 +28,10 @@ export class Mat33 {
         -s * sy, c * sy, 0,
             tx, ty, 1]);
     }
+    setXY(tx, ty) {
+        this.data[6] = tx;
+        this.data[7] = ty;
+    }
 
     ortho(width, height) {
 

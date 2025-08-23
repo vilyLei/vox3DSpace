@@ -74,6 +74,12 @@ void Mat33::setTo(float tx, float ty, float sx, float sy, float rotRadians)
         tx, ty, 1};
 }
 
+void Mat33::setXY(float tx, float ty)
+{
+    data[6] = tx;
+    data[7] = ty;
+}
+
 void Mat33::ortho(float width, float height)
 {
     data = {
