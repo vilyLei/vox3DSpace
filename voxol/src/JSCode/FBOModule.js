@@ -16,12 +16,13 @@ export class FBOUnit {
     }
 
     bindFBO() {
-        let gl = this.fboUnit.glCtx;
+        let gl = this.glCtx;
         gl.bindFramebuffer(gl.FRAMEBUFFER, this.fbo);
     }
 
     bindTexture(fboTex, width, height) {
-        let gl = this.fboUnit.glCtx;
+
+        let gl = this.glCtx;
 
         this.fboTex = fboTex == undefined ? gl.createTexture() : fboTex;
 
@@ -37,7 +38,7 @@ export class FBOUnit {
     }
 
     unbindFBO() {
-        let gl = this.fboUnit.glCtx;
+        let gl = this.glCtx;
         gl.bindFramebuffer(gl.FRAMEBUFFER, null);
     }
 }
@@ -74,6 +75,10 @@ export class TileUnit {
     }
     build(ctx) {
 
+        let gl = this.fboUnit.glCtx;
+        let wscRenderer = this.wscRenderer;
+        let moduleIns = wscRenderer.moduleIns;
+        let wscCtx = moduleIns.viewTransDesc;
 
         if (ctx == undefined) {
 
@@ -86,16 +91,12 @@ export class TileUnit {
             ctx = { viewF32: viewMat3.data, projF32: projMat3.data };
         }
 
-        let moduleIns = this.moduleIns;
-        let wscCtx = moduleIns.viewTransDesc;
-
-        let wscRenderer = this.wscRenderer;
-        let gl = this.fboUnit.glCtx;
         this.fboUnit.bindFBO(gl);
         this.fboUnit.bindTexture(this.texture);
         this.texture = this.fboUnit.fboTex;
-
+        console.log("TileUnit::build() A ctx: ", ctx);
         wscRenderer.draw(ctx);
+        console.log("TileUnit::build() B ...");
 
         this.roUnit.setTextures([this.texture]);
     }
@@ -109,12 +110,20 @@ export class TileUnit {
         return true;
     }
     draw(ctx) {
+
+        let gl = this.fboUnit.glCtx;
+
         let tileTirty = this.tileDirtyCheck();
         if (tileTirty) {
             this.buildBegin();
             this.build();
             this.buildEnd();
         }
+
+        let wscRenderer = this.wscRenderer;
+        let moduleIns = wscRenderer.moduleIns;
+        let wscCtx = moduleIns.viewTransDesc;
+        ctx = ctx == undefined ? wscCtx : ctx;
         let unit = this.roUnit;
         if (unit && unit.enabled) {
             unit.bind(gl, ctx);
@@ -122,6 +131,9 @@ export class TileUnit {
         }
     }
     update() {
+
+        let gl = this.fboUnit.glCtx;
+
         let unit = this.roUnit;
         unit.setXY(this.x, this.y);
         unit.setScaleXY(this.width, this.height);

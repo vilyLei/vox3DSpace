@@ -172,7 +172,7 @@
 
             viewTransDesc.update();
             if (tileRendering) {
-
+                tileRenderer.draw();
             } else {
                 renderer.runBegin();
                 renderer.draw();
@@ -188,11 +188,12 @@
         }
         loopRun();
 
-
         const btnConfirm = document.getElementById('btnConfirm');
         const btnCancel = document.getElementById('btnCancel');
         btnConfirm.addEventListener('click', () => {
             console.log('[UI] click confirm');
+            tileRendering = true;
+            renderer.dirty = true;
         });
         btnCancel.addEventListener('click', () => {
             console.log('[UI] click cancle');

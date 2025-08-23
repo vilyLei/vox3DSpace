@@ -31,7 +31,7 @@ export class TileBaseDrawer {
 
         this.buildCfg();
         this.tile0 = new TileUnit(256, 256);
-        this.tile0.initialize(this.fboIns, this.texROUnit);
+        this.tile0.initialize(wscRenderer, this.fboIns, this.texROUnit);
     }
     buildCfg() {
 
@@ -53,7 +53,8 @@ export class TileBaseDrawer {
         VertexBuilder.createVEO(this.texROUnit.vertex, gl, getIndicesWithSegN(1));
     }
     draw() {
-        let moduleIns = this.moduleIns;
+        let wscRenderer = this.wscRenderer;
+        let moduleIns = wscRenderer.moduleIns;
         let wscCtx = moduleIns.viewTransDesc;
         this.tile0.draw();
     }
