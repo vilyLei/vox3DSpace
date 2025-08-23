@@ -37,8 +37,6 @@ export class SimpleROScene {
 
         this.mvpUnit = new MVPROUnit();
         this.mvpUnit.initialize({ scaleX: 100, scaleY: 100 });
-        this.mvpUnit0 = this.mvpUnit.clone();
-        this.mvpUnit0.setRGBAWithNumberArr([1, 0.5, 0.5]);
 
         this.testUnits = [];
         this.initScene(gl);
@@ -102,18 +100,34 @@ export class SimpleROScene {
         VertexBuilder.createVAO(this.mvpTexUnit.vertex, gl, program, getVertsWithUV(), [4], [4 * 4], ['a_pos']);
         VertexBuilder.createVEO(this.mvpTexUnit.vertex, gl, getIndicesWithSegN(1));
 
-
         this.mvpTexUnit.setXY(360, 200);
         this.mvpTexUnit.setRGBAWithNumberArr([1, 1, 1, 0.5]);
         this.mvpTexUnit.setTexturesWithUrls(['./assets/box.jpg'], this);
-        // this.initRender(gl);
 
         let texUnit0 = this.mvpTexUnit.clone();
         texUnit0.setRGBAWithNumberArr([1, 1, 1, 1]);
         texUnit0.setTexturesWithUrls(['./assets/letterA.png'], this);
         texUnit0.setXY(560, 150);
 
-        this.testUnits = [this.mvpUnit, this.mvpUnit0, this.mvpTexUnit, texUnit0];
+        let mvpUnit0 = this.mvpUnit.clone();
+        mvpUnit0.setRGBAWithNumberArr([1, 0.5, 0.5]);
+
+        let mvpUnit1 = mvpUnit0.clone();
+        mvpUnit1.setRGBAWithNumberArr([0.2, 0.5, 0.1]);
+        mvpUnit1.setScaleXY(200, 200);
+        mvpUnit1.setXY(60, 360);
+
+        let mvpUnit1A = mvpUnit1.clone();
+        mvpUnit1A.setRGBAWithNumberArr([0.9, 0.9, 0]);
+        mvpUnit1A.setScaleXY(200, 1);
+        mvpUnit1A.setXY(60, 400);
+
+        let mvpUnit1B = mvpUnit1.clone();
+        mvpUnit1B.setRGBAWithNumberArr([0.9, 0.9, 0]);
+        mvpUnit1B.setScaleXY(200, 1);
+        mvpUnit1B.setXY(60, 435);
+
+        this.testUnits = [this.mvpUnit, mvpUnit0, mvpUnit1, mvpUnit1A, mvpUnit1B, this.mvpTexUnit, texUnit0, ];
     }
     runBegin() {
         
