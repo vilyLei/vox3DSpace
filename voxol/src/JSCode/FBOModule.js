@@ -67,8 +67,13 @@ export class TileUnit {
     }
 
     buildBegin() {
+        
         let gl = this.fboUnit.glCtx;
-        gl.clearColor(0.75, 0.95, 0.75, 1);
+
+        this.fboUnit.bindFBO(gl);
+        this.fboUnit.bindTexture(this.texture, this.width, this.height);
+        
+        gl.clearColor(0.55, 0.95, 0.55, 1);
         gl.clear(gl.COLOR_BUFFER_BIT);
         gl.viewport(0, 0, this.width, this.height);
         this.wscRenderer.dirty = true;
@@ -91,8 +96,6 @@ export class TileUnit {
             ctx = { viewF32: viewMat3.data, projF32: projMat3.data };
         }
 
-        this.fboUnit.bindFBO(gl);
-        this.fboUnit.bindTexture(this.texture);
         this.texture = this.fboUnit.fboTex;
         console.log("TileUnit::build() A ctx: ", ctx);
         wscRenderer.draw(ctx);
@@ -124,6 +127,9 @@ export class TileUnit {
         let moduleIns = wscRenderer.moduleIns;
         let wscCtx = moduleIns.viewTransDesc;
         ctx = ctx == undefined ? wscCtx : ctx;
+
+        wscRenderer.runBegin();
+
         let unit = this.roUnit;
         if (unit && unit.enabled) {
             unit.bind(gl, ctx);
