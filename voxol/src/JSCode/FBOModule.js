@@ -36,7 +36,7 @@ export class FBOUnit {
         gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, this.fboTex, 0);
     }
 
-    unbindFBO(gl) {
+    unbindFBO() {
         let gl = this.fboUnit.glCtx;
         gl.bindFramebuffer(gl.FRAMEBUFFER, null);
     }
@@ -55,11 +55,14 @@ export class TileUnit {
         this.fboUnit = null;
     }
     initialize(fboUnit, srcRoUnit) {
+        
         this.fboUnit = fboUnit;
+
         this.roUnit.shader = srcRoUnit.shader;
         this.roUnit.vertex = srcRoUnit.vertex;
         this.roUnit.initialize({ scaleX: this.width, scaleY: this.height, texturesNumber: 1 });
     }
+
     buildBegin(wscRenderer) {
         let gl = this.fboUnit.glCtx;
         gl.clearColor(0.75, 0.95, 0.75, 1);
@@ -84,6 +87,7 @@ export class TileUnit {
     }
     buildEnd(wscRenderer) {
     }
+
     draw() {
     }
     update() {

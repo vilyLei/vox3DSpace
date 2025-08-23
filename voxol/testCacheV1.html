@@ -117,8 +117,9 @@
 
     <script type="module">
 
-        import { SimpleCacheDrawer, printWith9Number } from './src/JSCode/SimpleCacheRenderer.js';
         import { ModuleWrapper } from './src/JSCode/WasmModule.js';
+        import { SimpleCacheDrawer, printWith9Number } from './src/JSCode/SimpleCacheRenderer.js';
+        import { TileBaseDrawer } from './src/JSCode/TileBaseDrawer.js';
 
         // ---- WebGL 初始化（含 WebGL2 回退） ----
         const canvas = document.getElementById('glcanvas');
@@ -166,9 +167,10 @@
                 return;
 
             viewTransDesc.update();
+
             renderer.runBegin();
-            let ins = moduleWrapper.ins;
             renderer.draw();
+
             renderer.dirty = false;
             console.log("render() ...");
         }
