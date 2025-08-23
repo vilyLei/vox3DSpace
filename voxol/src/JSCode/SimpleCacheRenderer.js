@@ -2,7 +2,7 @@
 
 import { ShaderBuilder } from './ShaderModule.js';
 import { VertexBuilder } from './VertexModule.js';
-import { getIndicesWithSegN, getVertsWithVEOSegN, getVertsWithUV} from './GeomUtils.js';
+import { getIndicesWithSegN, getVertsWithVEOSegN, getVertsWithUV } from './GeomUtils.js';
 import { MVPTexROUnit, BatchROUnit, MVPROUnit, ROUnit } from './ROUnitModule.js';
 import {
     fragPreMultAlphaTexSource,
@@ -54,12 +54,11 @@ export class SimpleCacheDrawer {
         this.mvpUnit0 = this.mvpUnit.clone();
         this.mvpUnit0.setRGBAWithNumberArr([1, 0.5, 0.5]);
 
+        this.testUnits = [];
+
     }
 
     initialize(moduleIns, gl, vw, vh) {
-
-
-        let thisRef = this;
 
         this.moduleIns = moduleIns;
         this.glCtx = gl;
@@ -68,14 +67,21 @@ export class SimpleCacheDrawer {
 
         console.log("SimpleCacheDrawer::initialize() ...\n");
 
-        let texUrls = ['./assets/box.jpg'];
+        // let texUrls = ['./assets/box.jpg'];
         // let texUrls = ['./assets/letterA.png'];
         this.mvpTexUnit = new MVPTexROUnit();
-        this.mvpTexUnit.initialize({ scaleX: 200, scaleY: 200, texturesNumber: texUrls.length });
+        this.mvpTexUnit.initialize({ scaleX: 200, scaleY: 200 });
         this.mvpTexUnit.setXY(360, 200);
-        this.mvpTexUnit.setRGBAWithNumberArr([1,1,1, 0.5]);
-        this.mvpTexUnit.setTexturesWithUrls(texUrls, this);
+        this.mvpTexUnit.setRGBAWithNumberArr([1, 1, 1, 0.5]);
+        this.mvpTexUnit.setTexturesWithUrls(['./assets/box.jpg'], this);
         this.initRender(gl);
+
+        let texUnit0 = this.mvpTexUnit.clone();
+        texUnit0.setRGBAWithNumberArr([1, 1, 1, 1]);
+        texUnit0.setTexturesWithUrls(['./assets/letterA.png'], this);
+        texUnit0.setXY(560, 150);
+
+        this.testUnits = [this.mvpUnit, this.mvpUnit0, this.mvpTexUnit, texUnit0];
     }
 
 
@@ -164,8 +170,8 @@ export class SimpleCacheDrawer {
 
     draw(ctx) {
 
-        let moduleIns = this.moduleIns;
         let gl = this.glCtx;
+        let moduleIns = this.moduleIns;
         ctx = ctx == undefined ? moduleIns.viewTransDesc : ctx;
 
         // let unit = this.screenBgColorUnit;
@@ -224,24 +230,16 @@ export class SimpleCacheDrawer {
 
         if (drewTot != this.drewTotal) {
             this.drewTotal = drewTot;
-            console.log("drewTotal: ", this.drewTotal);
+            console.log("batch drew total: ", this.drewTotal);
         }
 
-        unit = this.mvpUnit;
-        if (unit && unit.enabled) {
-            unit.bind(gl, ctx);
-            unit.draw(gl, ctx);
-        }
-        unit = this.mvpUnit0;
-        if (unit && unit.enabled) {
-            unit.bind(gl, ctx);
-            unit.draw(gl, ctx);
-        }
-
-        unit = this.mvpTexUnit;
-        if (unit && unit.enabled) {
-            unit.bind(gl, ctx);
-            unit.draw(gl, ctx);
+        let units = this.testUnits;
+        for (let i = 0; i < units.length; ++i) {
+            unit = units[i];
+            if (unit && unit.enabled) {
+                unit.bind(gl, ctx);
+                unit.draw(gl, ctx);
+            }
         }
     }
     runEnd() {

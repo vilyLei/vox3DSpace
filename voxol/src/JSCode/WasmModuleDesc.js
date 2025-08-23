@@ -2,9 +2,11 @@
 export class ViewTransDesc {
 
     constructor() {
+
         this.dataIndex = -1;
         this.cmd = 0;
         this.bufSize = 0;
+        
         this.heapU32 = null;
         this.heapF32 = null;
 

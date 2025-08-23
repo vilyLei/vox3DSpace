@@ -127,7 +127,7 @@ export class MVPTexROUnit extends ROUnit {
 
         this.shader = this.shader == null ? new ShaderUnit() : this.shader;
         this.vertex = this.vertex == null ? new VtxUnit() : this.vertex;
-        
+
         this.objMatData = new Float32Array(
             [sx, 0, 0,
                 0, sy, 0,
@@ -142,10 +142,10 @@ export class MVPTexROUnit extends ROUnit {
 
     clone() {
 
-        let unit = new MVPROUnit();
+        let unit = new MVPTexROUnit();
         unit.enabled = this.enabled;
         unit.shader = this.shader;
-        unit.vertex = new VtxUnit();
+        unit.vertex = this.vertex;
         unit.objMatData = this.objMatData.slice();
         unit.colorData = this.colorData.slice();
         if (this.textures != null) {
@@ -165,6 +165,7 @@ export class MVPTexROUnit extends ROUnit {
         }
         this.enabled = true;
     }
+
     setTextureAt(tex, index) {
         if (tex == undefined || this.textures == null || index < 0 || index >= this.textures.length)
             return;
@@ -174,10 +175,17 @@ export class MVPTexROUnit extends ROUnit {
 
     setTexturesWithUrls(urls, ctx) {
 
-        if (urls == undefined || urls.length == undefined)
+        if (urls == undefined || urls.length == undefined || urls.length < 1)
             return;
+
+        this.enabled = false;
+        let texNum = urls.length;
+        if (texNum > 0) {
+            this.textures = new Array(texNum).fill(null);
+        }
+
         let thisRef = this;
-        for (let i = 0; i < urls.length; ++i) {
+        for (let i = 0; i < texNum; ++i) {
             TextureBuilder.loadImageAndCreateTexture(ctx.glCtx, urls[i], i, (tex, index) => {
                 thisRef.setTextureAt(tex, index);
                 if (thisRef.enabled && ctx != undefined) {
