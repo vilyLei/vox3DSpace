@@ -55,7 +55,7 @@ export class TileUnit {
         this.fboUnit = null;
     }
     initialize(fboUnit, srcRoUnit) {
-        
+
         this.fboUnit = fboUnit;
 
         this.roUnit.shader = srcRoUnit.shader;
@@ -88,7 +88,12 @@ export class TileUnit {
     buildEnd(wscRenderer) {
     }
 
-    draw() {
+    draw(ctx) {
+        let unit = this.roUnit;
+        if (unit && unit.enabled) {
+            unit.bind(gl, ctx);
+            unit.draw(gl, ctx);
+        }
     }
     update() {
         this.roUnit.setXY(this.x, this.y);

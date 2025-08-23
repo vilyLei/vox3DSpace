@@ -134,10 +134,12 @@
         let moduleWrapper = new ModuleWrapper();
         let viewTransDesc = moduleWrapper.ins.viewTransDesc;
         let renderer = new SimpleCacheDrawer();
+        let tileRenderer = new TileBaseDrawer();
 
         function initMoculeProcess(Module) {
             moduleWrapper.initialize(Module, canvas, gl);
             renderer.initialize(moduleWrapper.ins, gl, canvas.width, canvas.height);
+            tileRenderer.initialize(gl, renderer);
         };
 
         VoxModule().then(Module => {

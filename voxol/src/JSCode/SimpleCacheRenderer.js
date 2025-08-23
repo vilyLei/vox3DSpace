@@ -2,7 +2,6 @@
 
 import { ShaderBuilder } from './ShaderModule.js';
 import { VertexBuilder } from './VertexModule.js';
-import { TextureBuilder } from './TextureModule.js';
 import { getIndicesWithSegN, getVertsWithVEOSegN, getVertsWithUV} from './GeomUtils.js';
 import { MVPTexROUnit, BatchROUnit, MVPROUnit, ROUnit } from './ROUnitModule.js';
 import {
