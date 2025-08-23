@@ -121,7 +121,6 @@
         import { SimpleCacheDrawer, printWith9Number } from './src/JSCode/SimpleCacheRenderer.js';
         import { TileBaseDrawer } from './src/JSCode/TileBaseDrawer.js';
 
-        // ---- WebGL 初始化（含 WebGL2 回退） ----
         const canvas = document.getElementById('glcanvas');
         /// @type {WebGL2RenderingContext | WebGLRenderingContext | null}
         let gl = canvas.getContext('webgl2', { antialias: true, alpha: false, depth: false })
