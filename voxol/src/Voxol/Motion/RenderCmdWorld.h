@@ -4,6 +4,7 @@
 #include "RenderCmdComp.h"
 #include "../Math/Mat33.h"
 #include "RenderCmdNode.h"
+#include "RenderCmdBufBuilder.h"
 
 namespace Voxol::Motion
 {
@@ -20,7 +21,8 @@ public:
     CanvasDesc  canvas{};
     ViewDesc    view{};
 
-    std::vector<uint8_t> buffer{};
+    // std::vector<uint8_t> buffer{};
+    RenderCmdBufBuilder bufBuilder{};
 
     bool dirty = true;
 

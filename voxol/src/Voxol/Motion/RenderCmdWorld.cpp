@@ -30,10 +30,12 @@ void RenderCmdWorld::initialize()
 
     printf("Voxol::Motion::RenderCmdWorld::initialize() total: %d\n", total);
 
-    buffer.resize(total * 2 * sizeof(Mat33) + 32);
+    // buffer.resize(total * 2 * sizeof(Mat33) + 32);
     // build head data
-    auto bytesTotal = sizeof(mHeadData);
-    std::memcpy(buffer.data(), mHeadData, bytesTotal);
+    // auto bytesTotal = sizeof(mHeadData);
+    // std::memcpy(buffer.data(), mHeadData, bytesTotal);
+
+    bufBuilder.initialize(total * 2 * sizeof(Mat33) + 32);
 
     commands.resize(total);
     cmdNodes.resize(total);
@@ -171,8 +173,8 @@ void RenderCmdWorld::setMouseParams(float x, float y, int type, float value)
 
             auto&& v0 = mat.mapPoint({0.0f, 0.0f});
             printf("RenderCmdWorld::setMouseParams(), click, v0(%f, %f)\n", v0.x, v0.y);
-            auto&& v1 = invMat.mapPoint({mousePos.x, mousePos.y});
-            auto hit = node.contains(v1.x, v1.y);
+            auto&& v1  = invMat.mapPoint({mousePos.x, mousePos.y});
+            auto   hit = node.contains(v1.x, v1.y);
             printf("RenderCmdWorld::setMouseParams(), click, node.contains() hit: %d\n", hit);
             v1.x *= node.scaleX;
             v1.y *= node.scaleY;
@@ -187,12 +189,12 @@ void RenderCmdWorld::setMouseParams(float x, float y, int type, float value)
         dirty          = true;
         auto& viewDesc = view.desc;
 
-        auto pos      = viewDesc.position;
+        auto pos = viewDesc.position;
 
         // preserve precision
         pos.x = std::roundf(pos.x * 1000) / 1000;
         pos.y = std::roundf(pos.y * 1000) / 1000;
-        
+
         // preserve precision
         auto zoom = std::roundf(viewDesc.zoom * 1000) / 1000;
         printf("RenderCmdWorld::run() zoom: %f\n", zoom);
@@ -218,6 +220,18 @@ void RenderCmdWorld::run()
 
     initialize();
 
+    auto cmdsTotal = static_cast<uint32_t>(cmdNodes.size());
+    for (auto i = 0; i < cmdsTotal; i++)
+    {
+        cmdNodes[i].update();
+    }
+
+    CameraCmdDesc camDesc{};
+    camDesc.projMat = projMat;
+    camDesc.viewMat = viewMat;
+    bufBuilder.build(cmdNodes, camDesc);
+
+    /*
     auto cmdsTotal = static_cast<uint32_t>(cmdNodes.size());
 
     // printf("RenderCmdWorld::run() sizeof(projMat): %zu\n", sizeof(projMat));
@@ -329,13 +343,15 @@ void RenderCmdWorld::run()
 
     auto bytesTotal = sizeof(mTailData);
     std::memcpy(bufPtr + bufBytesIndex, mTailData, bytesTotal);
+    //*/
     // printf("RenderCmdWorld::run() B cmdsTotal: %zu\n", cmdsTotal);
 }
 
 
 const uint8_t* RenderCmdWorld::cmdBuffer() const
 {
-    return buffer.data();
+    // return buffer.data();
+    return bufBuilder.getBufferPtr();
 }
 
 } // namespace Voxol::Motion

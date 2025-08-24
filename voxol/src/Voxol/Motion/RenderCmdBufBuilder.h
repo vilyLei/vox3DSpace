@@ -4,6 +4,7 @@
 #include <cstdlib>
 #include <vector>
 #include "RenderCmdComp.h"
+#include "RenderCmdNode.h"
 
 namespace Voxol::Motion
 {
@@ -16,7 +17,8 @@ public:
 
 public:
     void initialize(size_t bufSize);
-    void build();
+    void build(const std::vector<DrawCmdTestNode>& cmdNodes, CameraCmdDesc& camDesc);
+    const uint8_t* getBufferPtr() const;
 
 private:
     std::vector<uint8_t> mBuffer{};
