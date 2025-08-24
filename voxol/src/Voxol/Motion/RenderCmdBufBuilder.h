@@ -28,6 +28,7 @@ private:
     void writeTail();
     void writeVersion();
     void writeCamInfo();
+    void writeBatchROUnitBegin(uint32_t cmdsTotal);
 
 private:
     uint8_t*             bufPtr;

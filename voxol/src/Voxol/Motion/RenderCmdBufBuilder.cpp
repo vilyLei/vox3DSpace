@@ -46,6 +46,19 @@ void RenderCmdBufBuilder::writeCamInfo()
     camDesc.updateToBuffer(bufPtr + bufBytesIndex, bufBytesIndex, bufBytesSafeLength);
     bufBytesIndex += camDesc.descSize * 4;
 }
+void RenderCmdBufBuilder::writeBatchROUnitBegin(uint32_t cmdsTotal)
+{
+    // batch rounit rendering cmd
+    auto trunkCmd      = 22;
+    auto descBytesSize = sizeof(trunkCmd);
+    std::memcpy(bufPtr + bufBytesIndex, &trunkCmd, descBytesSize);
+    bufBytesIndex += descBytesSize;
+
+    BatchElementCmdDesc batchDesc{};
+    batchDesc.descSize = cmdsTotal;
+    batchDesc.updateToBuffer(bufPtr + bufBytesIndex, bufBytesIndex, bufBytesSafeLength);
+    bufBytesIndex += 2 * 4;
+}
 void RenderCmdBufBuilder::build(const std::vector<DrawCmdTestNode>& cmdNodes)
 {
     auto cmdsTotal = static_cast<uint32_t>(cmdNodes.size());
@@ -61,15 +74,15 @@ void RenderCmdBufBuilder::build(const std::vector<DrawCmdTestNode>& cmdNodes)
     writeCamInfo();
 
     // batch rounit rendering cmd
-    auto trunkCmd      = 22;
-    auto descBytesSize = sizeof(trunkCmd);
-    std::memcpy(bufPtr + bufBytesIndex, &trunkCmd, descBytesSize);
-    bufBytesIndex += descBytesSize;
-
-    BatchElementCmdDesc batchDesc{};
-    batchDesc.descSize = cmdsTotal;
-    batchDesc.updateToBuffer(bufPtr + bufBytesIndex, bufBytesIndex, bufBytesSafeLength);
-    bufBytesIndex += 2 * 4;
+    // auto trunkCmd      = 22;
+    // auto descBytesSize = sizeof(trunkCmd);
+    // std::memcpy(bufPtr + bufBytesIndex, &trunkCmd, descBytesSize);
+    // bufBytesIndex += descBytesSize;
+    // BatchElementCmdDesc batchDesc{};
+    // batchDesc.descSize = cmdsTotal;
+    // batchDesc.updateToBuffer(bufPtr + bufBytesIndex, bufBytesIndex, bufBytesSafeLength);
+    // bufBytesIndex += 2 * 4;
+    writeBatchROUnitBegin(cmdsTotal);
 
     RectDrawCmdDesc rectDesc{};
     for (auto i = 0; i < cmdsTotal; i++)
