@@ -8,7 +8,7 @@ void RenderCmdBufBuilder::initialize(size_t bufSize)
     // auto bytesTotal = sizeof(mHeadData);
     // std::memcpy(mBuffer.data(), mHeadData, bytesTotal);
 }
-void RenderCmdBufBuilder::build(const std::vector<DrawCmdTestNode>& cmdNodes, CameraCmdDesc& camDesc)
+void RenderCmdBufBuilder::build(const std::vector<DrawCmdTestNode>& cmdNodes)
 {
     auto cmdsTotal = static_cast<uint32_t>(cmdNodes.size());
 
@@ -39,14 +39,9 @@ void RenderCmdBufBuilder::build(const std::vector<DrawCmdTestNode>& cmdNodes, Ca
     std::memcpy(bufPtr + bufBytesIndex, &trunkCmd, descBytesSize);
     bufBytesIndex += descBytesSize;
 
-    // printf("projMat:\n");
-    // projMat.print();
-
-    // CameraCmdDesc camDesc{};
-    // camDesc.projMat = projMat;
-    // camDesc.viewMat = viewMat;
     camDesc.updateToBuffer(bufPtr + bufBytesIndex, bufBytesIndex, bufBytesLength);
     bufBytesIndex += camDesc.descSize * 4;
+
     // batch rounit rendering cmd
     trunkCmd      = 22;
     descBytesSize = sizeof(trunkCmd);

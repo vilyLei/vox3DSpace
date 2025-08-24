@@ -17,8 +17,11 @@ public:
 
 public:
     void initialize(size_t bufSize);
-    void build(const std::vector<DrawCmdTestNode>& cmdNodes, CameraCmdDesc& camDesc);
+    void build(const std::vector<DrawCmdTestNode>& cmdNodes);
     const uint8_t* getBufferPtr() const;
+
+public:
+    CameraCmdDesc camDesc{};
 
 private:
     std::vector<uint8_t> mBuffer{};

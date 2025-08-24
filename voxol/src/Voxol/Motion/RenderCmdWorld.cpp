@@ -244,10 +244,10 @@ void RenderCmdWorld::run()
         cmdNodes[i].update();
     }
 
-    CameraCmdDesc camDesc{};
+    auto& camDesc = bufBuilder.camDesc;
     camDesc.projMat = projMat;
     camDesc.viewMat = viewMat;
-    bufBuilder.build(cmdNodes, camDesc);
+    bufBuilder.build(cmdNodes);
 
     // printf("RenderCmdWorld::run() B cmdsTotal: %zu\n", cmdsTotal);
 }
