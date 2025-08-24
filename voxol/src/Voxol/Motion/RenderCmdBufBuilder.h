@@ -26,6 +26,7 @@ public:
 private:
     void writeHead();
     void writeVersion();
+    void writeCamInfo();
 
 private:
     uint8_t*             bufPtr;

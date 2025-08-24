@@ -9,7 +9,7 @@ void RenderCmdBufBuilder::initialize(size_t bufSize)
     mBuffer.resize(bufSize);
     bufBytesSafeLength = bufSize - 8;
     bufBytesIndex      = 0;
-    bufPtr        = (uint8_t*)mBuffer.data();
+    bufPtr             = (uint8_t*)mBuffer.data();
 
 
     // build head data
@@ -19,7 +19,7 @@ void RenderCmdBufBuilder::initialize(size_t bufSize)
 
 void RenderCmdBufBuilder::writeHead()
 {
-    bufBytesIndex = 0;
+    bufBytesIndex      = 0;
     auto descBytesSize = sizeof(mHeadData);
     // auto bufPtr        = (uint8_t*)mBuffer.data();
     std::memcpy(bufPtr + bufBytesIndex, mHeadData, descBytesSize);
@@ -30,7 +30,16 @@ void RenderCmdBufBuilder::writeVersion()
     auto descBytesSize = sizeof(version);
     std::memcpy(bufPtr + bufBytesIndex, &version, descBytesSize);
     bufBytesIndex += descBytesSize;
+}
 
+void RenderCmdBufBuilder::writeCamInfo()
+{
+    uint32_t trunkCmd      = 20;
+    auto     descBytesSize = sizeof(trunkCmd);
+    std::memcpy(bufPtr + bufBytesIndex, &trunkCmd, descBytesSize);
+    bufBytesIndex += descBytesSize;
+    camDesc.updateToBuffer(bufPtr + bufBytesIndex, bufBytesIndex, bufBytesSafeLength);
+    bufBytesIndex += camDesc.descSize * 4;
 }
 void RenderCmdBufBuilder::build(const std::vector<DrawCmdTestNode>& cmdNodes)
 {
@@ -63,19 +72,19 @@ void RenderCmdBufBuilder::build(const std::vector<DrawCmdTestNode>& cmdNodes)
 
     writeHead();
     writeVersion();
+
+    // uint32_t trunkCmd      = 20;
+    // auto     descBytesSize = sizeof(trunkCmd);
+    // std::memcpy(bufPtr + bufBytesIndex, &trunkCmd, descBytesSize);
+    // bufBytesIndex += descBytesSize;
+    // camDesc.updateToBuffer(bufPtr + bufBytesIndex, bufBytesIndex, bufBytesSafeLength);
+    // bufBytesIndex += camDesc.descSize * 4;
     
-
-    uint32_t trunkCmd = 20;
-    auto descBytesSize     = sizeof(trunkCmd);
-    std::memcpy(bufPtr + bufBytesIndex, &trunkCmd, descBytesSize);
-    bufBytesIndex += descBytesSize;
-
-    camDesc.updateToBuffer(bufPtr + bufBytesIndex, bufBytesIndex, bufBytesSafeLength);
-    bufBytesIndex += camDesc.descSize * 4;
+    writeCamInfo();
 
     // batch rounit rendering cmd
-    trunkCmd      = 22;
-    descBytesSize = sizeof(trunkCmd);
+    auto trunkCmd      = 22;
+    auto descBytesSize = sizeof(trunkCmd);
     std::memcpy(bufPtr + bufBytesIndex, &trunkCmd, descBytesSize);
     bufBytesIndex += descBytesSize;
 
