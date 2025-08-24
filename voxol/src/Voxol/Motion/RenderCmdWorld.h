@@ -2,13 +2,15 @@
 #define VOXOL_RENDER_CMD_WORLD_H
 
 
-#include <vector>
-#include "../Base/BaseDefine.h"
+// #include <vector>
+// #include "../Base/BaseDefine.h"
+#include "RenderCmdComp.h"
 #include "../Math/Mat33.h"
 #include "RenderCmdNode.h"
 
 namespace Voxol::Motion
 {
+/*
 struct Point2DDesc
 {
     float x{0};
@@ -53,7 +55,7 @@ struct CanvasDesc
     ViewComponent view{};
     int           index{0};
 };
-
+//*/
 class RenderCmdWorld
 {
 public:

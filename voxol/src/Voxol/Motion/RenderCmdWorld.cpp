@@ -3,7 +3,7 @@
 #include <cmath>
 namespace Voxol::Motion
 {
-
+/*
 bool Point2DDesc::isEqual(const Point2DDesc& pos) const
 {
     return std::abs(pos.x - x) < 1e-5f && std::abs(pos.y - y) < 1e-5f;
@@ -95,7 +95,7 @@ void ViewComponent::moveEnd(const Point2DDesc& pos)
 {
     moving = false;
 }
-
+//*/
 
 RenderCmdWorld::RenderCmdWorld()
 {
@@ -348,7 +348,7 @@ void RenderCmdWorld::run()
     camDesc.viewMat = viewMat;
     camDesc.updateToBuffer(bufPtr + bufBytesIndex, bufBytesIndex, bufBytesLength);
     bufBytesIndex += camDesc.descSize * 4;
-
+    // batch rounit rendering cmd
     trunkCmd = 22;
     descBytesSize = sizeof(trunkCmd);
     std::memcpy(bufPtr + bufBytesIndex, &trunkCmd, descBytesSize);
