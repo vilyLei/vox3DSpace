@@ -70,6 +70,12 @@ export class TileUnit {
         this.texture = null;
         this.roUnit = new MVPTexROUnit();
         this.fboUnit = null;
+
+        this.viewMat3 = new Mat33();
+            // viewMat3.data.set(wscCtx.viewF32);
+            // viewMat3.setXY(-this.x, -this.y);
+        this.projMat3 = new Mat33();
+        this.projMat3.ortho(this.width, this.height);
     }
     setXY(tx, ty) {
         this.x = tx;
@@ -106,12 +112,10 @@ export class TileUnit {
 
         if (ctx == undefined) {
 
-            let viewMat3 = new Mat33();
+            let viewMat3 = this.viewMat3;
             viewMat3.data.set(wscCtx.viewF32);
             viewMat3.setXY(-this.x, -this.y);
-            let projMat3 = new Mat33();
-            projMat3.ortho(this.width, this.height);
-
+            let projMat3 = this.projMat3;
             ctx = { viewF32: viewMat3.data, projF32: projMat3.data };
         }
 
