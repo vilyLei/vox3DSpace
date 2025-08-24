@@ -11,17 +11,12 @@ void RenderCmdBufBuilder::initialize(size_t bufSize)
     bufBytesIndex      = 0;
     bufPtr             = (uint8_t*)mBuffer.data();
 
-
-    // build head data
-    // auto bytesTotal = sizeof(mHeadData);
-    // std::memcpy(mBuffer.data(), mHeadData, bytesTotal);
 }
 
 void RenderCmdBufBuilder::writeHead()
 {
     bufBytesIndex      = 0;
     auto descBytesSize = sizeof(mHeadData);
-    // auto bufPtr        = (uint8_t*)mBuffer.data();
     std::memcpy(bufPtr + bufBytesIndex, mHeadData, descBytesSize);
     bufBytesIndex += descBytesSize;
 }
@@ -62,32 +57,32 @@ void RenderCmdBufBuilder::writeBatchCmdNodeBegin(uint32_t cmdsTotal)
 
 void RenderCmdBufBuilder::writeCmdNode(RectDrawCmdDesc& unitDesc, const DrawCmdTestNode& node)
 {
-        unitDesc.rcmd  = node.rcmd;
-        unitDesc.color = node.color;
-        auto& bounds   = unitDesc.bounds;
-        bounds.pos.x   = node.x;
-        bounds.pos.y   = node.y;
-        bounds.width   = node.scaleX;
-        bounds.height  = node.scaleY;
+    unitDesc.rcmd  = node.rcmd;
+    unitDesc.color = node.color;
+    auto& bounds   = unitDesc.bounds;
+    bounds.pos.x   = node.x;
+    bounds.pos.y   = node.y;
+    bounds.width   = node.scaleX;
+    bounds.height  = node.scaleY;
 
-        unitDesc.transform = node.transform;
+    unitDesc.transform = node.transform;
 
-        // rectDesc.transform = projMat;
-        // // view mat and proj mat maybe become to a camera function
-        // rectDesc.transform.append(viewMat);
-        // rectDesc.transform.append(node.transform);
+    // rectDesc.transform = projMat;
+    // // view mat and proj mat maybe become to a camera function
+    // rectDesc.transform.append(viewMat);
+    // rectDesc.transform.append(node.transform);
 
-        // node.updateToMat33(rectDesc.transform);
-        // rectDesc.transform.print();
-        // printf(">    >     >\n");
-        // rectDesc.transform.prepend(viewMat);
-        // rectDesc.transform.prepend(projMat);
-        // rectDesc.transform.print();
-        // printf(">    >     >\n");
+    // node.updateToMat33(rectDesc.transform);
+    // rectDesc.transform.print();
+    // printf(">    >     >\n");
+    // rectDesc.transform.prepend(viewMat);
+    // rectDesc.transform.prepend(projMat);
+    // rectDesc.transform.print();
+    // printf(">    >     >\n");
 
-        unitDesc.updateToBuffer(bufPtr + bufBytesIndex, bufBytesIndex, bufBytesSafeLength);
+    unitDesc.updateToBuffer(bufPtr + bufBytesIndex, bufBytesIndex, bufBytesSafeLength);
 
-        bufBytesIndex += unitDesc.descSize * 4;
+    bufBytesIndex += unitDesc.descSize * 4;
 }
 void RenderCmdBufBuilder::build(const std::vector<DrawCmdTestNode>& cmdNodes)
 {
@@ -95,9 +90,6 @@ void RenderCmdBufBuilder::build(const std::vector<DrawCmdTestNode>& cmdNodes)
 
     // printf("RenderCmdBufBuilder::build() sizeof(projMat): %zu\n", sizeof(projMat));
     // printf("RenderCmdBufBuilder::build() cmdsTotal: %zu\n", cmdsTotal);
-
-    uint32_t default_cmd = 0x32;
-    uint32_t end_cmd     = 0x0;
 
     writeHead();
     writeVersion();
@@ -107,35 +99,9 @@ void RenderCmdBufBuilder::build(const std::vector<DrawCmdTestNode>& cmdNodes)
     RectDrawCmdDesc unitDesc{};
     for (auto i = 0; i < cmdsTotal; i++)
     {
-
-        /*
-        auto& node = cmdNodes[i];
-
-        unitDesc.rcmd  = node.rcmd;
-        unitDesc.color = node.color;
-        auto& bounds   = unitDesc.bounds;
-        bounds.pos.x   = node.x;
-        bounds.pos.y   = node.y;
-        bounds.width   = node.scaleX;
-        bounds.height  = node.scaleY;
-        unitDesc.transform = node.transform;
-        // rectDesc.transform = projMat;
-        // // view mat and proj mat maybe become to a camera function
-        // rectDesc.transform.append(viewMat);
-        // rectDesc.transform.append(node.transform);
-
-        // node.updateToMat33(rectDesc.transform);
-        // rectDesc.transform.print();
-        // printf(">    >     >\n");
-        // rectDesc.transform.prepend(viewMat);
-        // rectDesc.transform.prepend(projMat);
-        // rectDesc.transform.print();
-        // printf(">    >     >\n");
-        unitDesc.updateToBuffer(bufPtr + bufBytesIndex, bufBytesIndex, bufBytesSafeLength);
-        bufBytesIndex += unitDesc.descSize * 4;
-        //*/
         writeCmdNode(unitDesc, cmdNodes[i]);
     }
+    
     writeTail();
 
     // printf("RenderCmdBufBuilder::build() B cmdsTotal: %zu\n", cmdsTotal);
