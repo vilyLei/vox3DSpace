@@ -1,9 +1,6 @@
 #ifndef VOXOL_RENDER_CMD_WORLD_H
 #define VOXOL_RENDER_CMD_WORLD_H
 
-
-// #include <vector>
-// #include "../Base/BaseDefine.h"
 #include "RenderCmdComp.h"
 #include "../Math/Mat33.h"
 #include "RenderCmdNode.h"
