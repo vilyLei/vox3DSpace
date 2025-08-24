@@ -5,8 +5,8 @@ void RenderCmdBufBuilder::initialize(size_t bufSize)
 {
     mBuffer.resize(bufSize);
     // build head data
-    auto bytesTotal = sizeof(mHeadData);
-    std::memcpy(mBuffer.data(), mHeadData, bytesTotal);
+    // auto bytesTotal = sizeof(mHeadData);
+    // std::memcpy(mBuffer.data(), mHeadData, bytesTotal);
 }
 void RenderCmdBufBuilder::build(const std::vector<DrawCmdTestNode>& cmdNodes, CameraCmdDesc& camDesc)
 {
