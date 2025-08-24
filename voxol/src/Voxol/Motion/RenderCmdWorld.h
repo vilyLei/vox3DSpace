@@ -39,8 +39,6 @@ public:
 
 private:
     bool     mInit = true;
-    uint32_t mHeadData[2]{0xffffffff, 0xffffffff};
-    uint32_t mTailData[2]{0x0, 0x0};
 };
 
 } // namespace Voxol::Motion

@@ -211,6 +211,7 @@ void RenderCmdWorld::run()
 
     initialize();
 
+    auto cmdsTotal = static_cast<uint32_t>(cmdNodes.size());
 
     // RectTarget::Rect boundary = {0, 0, canvas.size.width * 1.0f, canvas.size.height * 1.0f};
 
@@ -238,7 +239,6 @@ void RenderCmdWorld::run()
     //     //printf("node (x=%f, y=%f)\n", node.x, node.y);
     // }
 
-    auto cmdsTotal = static_cast<uint32_t>(cmdNodes.size());
     for (auto i = 0; i < cmdsTotal; i++)
     {
         cmdNodes[i].update();
