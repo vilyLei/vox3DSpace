@@ -25,6 +25,7 @@ public:
 
 private:
     void writeHead();
+    void writeTail();
     void writeVersion();
     void writeCamInfo();
 
