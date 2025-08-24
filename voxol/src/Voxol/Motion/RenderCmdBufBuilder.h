@@ -28,7 +28,8 @@ private:
     void writeTail();
     void writeVersion();
     void writeCamInfo();
-    void writeBatchROUnitBegin(uint32_t cmdsTotal);
+    void writeBatchCmdNodeBegin(uint32_t cmdsTotal);
+    void writeCmdNode(RectDrawCmdDesc& unitDesc, const DrawCmdTestNode& node);
 
 private:
     uint8_t*             bufPtr;

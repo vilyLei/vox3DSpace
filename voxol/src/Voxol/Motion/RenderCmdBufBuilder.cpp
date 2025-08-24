@@ -46,7 +46,7 @@ void RenderCmdBufBuilder::writeCamInfo()
     camDesc.updateToBuffer(bufPtr + bufBytesIndex, bufBytesIndex, bufBytesSafeLength);
     bufBytesIndex += camDesc.descSize * 4;
 }
-void RenderCmdBufBuilder::writeBatchROUnitBegin(uint32_t cmdsTotal)
+void RenderCmdBufBuilder::writeBatchCmdNodeBegin(uint32_t cmdsTotal)
 {
     // batch rounit rendering cmd
     auto trunkCmd      = 22;
@@ -59,36 +59,18 @@ void RenderCmdBufBuilder::writeBatchROUnitBegin(uint32_t cmdsTotal)
     batchDesc.updateToBuffer(bufPtr + bufBytesIndex, bufBytesIndex, bufBytesSafeLength);
     bufBytesIndex += 2 * 4;
 }
-void RenderCmdBufBuilder::build(const std::vector<DrawCmdTestNode>& cmdNodes)
+
+void RenderCmdBufBuilder::writeCmdNode(RectDrawCmdDesc& unitDesc, const DrawCmdTestNode& node)
 {
-    auto cmdsTotal = static_cast<uint32_t>(cmdNodes.size());
-
-    // printf("RenderCmdBufBuilder::build() sizeof(projMat): %zu\n", sizeof(projMat));
-    // printf("RenderCmdBufBuilder::build() cmdsTotal: %zu\n", cmdsTotal);
-
-    uint32_t default_cmd = 0x32;
-    uint32_t end_cmd     = 0x0;
-
-    writeHead();
-    writeVersion();
-    writeCamInfo();
-    writeBatchROUnitBegin(cmdsTotal);
-
-    RectDrawCmdDesc rectDesc{};
-    for (auto i = 0; i < cmdsTotal; i++)
-    {
-
-        auto& node = cmdNodes[i];
-
-        rectDesc.rcmd  = node.rcmd;
-        rectDesc.color = node.color;
-        auto& bounds   = rectDesc.bounds;
+        unitDesc.rcmd  = node.rcmd;
+        unitDesc.color = node.color;
+        auto& bounds   = unitDesc.bounds;
         bounds.pos.x   = node.x;
         bounds.pos.y   = node.y;
         bounds.width   = node.scaleX;
         bounds.height  = node.scaleY;
 
-        rectDesc.transform = node.transform;
+        unitDesc.transform = node.transform;
 
         // rectDesc.transform = projMat;
         // // view mat and proj mat maybe become to a camera function
@@ -103,9 +85,56 @@ void RenderCmdBufBuilder::build(const std::vector<DrawCmdTestNode>& cmdNodes)
         // rectDesc.transform.print();
         // printf(">    >     >\n");
 
-        rectDesc.updateToBuffer(bufPtr + bufBytesIndex, bufBytesIndex, bufBytesSafeLength);
+        unitDesc.updateToBuffer(bufPtr + bufBytesIndex, bufBytesIndex, bufBytesSafeLength);
 
-        bufBytesIndex += rectDesc.descSize * 4;
+        bufBytesIndex += unitDesc.descSize * 4;
+}
+void RenderCmdBufBuilder::build(const std::vector<DrawCmdTestNode>& cmdNodes)
+{
+    auto cmdsTotal = static_cast<uint32_t>(cmdNodes.size());
+
+    // printf("RenderCmdBufBuilder::build() sizeof(projMat): %zu\n", sizeof(projMat));
+    // printf("RenderCmdBufBuilder::build() cmdsTotal: %zu\n", cmdsTotal);
+
+    uint32_t default_cmd = 0x32;
+    uint32_t end_cmd     = 0x0;
+
+    writeHead();
+    writeVersion();
+    writeCamInfo();
+    writeBatchCmdNodeBegin(cmdsTotal);
+
+    RectDrawCmdDesc unitDesc{};
+    for (auto i = 0; i < cmdsTotal; i++)
+    {
+
+        /*
+        auto& node = cmdNodes[i];
+
+        unitDesc.rcmd  = node.rcmd;
+        unitDesc.color = node.color;
+        auto& bounds   = unitDesc.bounds;
+        bounds.pos.x   = node.x;
+        bounds.pos.y   = node.y;
+        bounds.width   = node.scaleX;
+        bounds.height  = node.scaleY;
+        unitDesc.transform = node.transform;
+        // rectDesc.transform = projMat;
+        // // view mat and proj mat maybe become to a camera function
+        // rectDesc.transform.append(viewMat);
+        // rectDesc.transform.append(node.transform);
+
+        // node.updateToMat33(rectDesc.transform);
+        // rectDesc.transform.print();
+        // printf(">    >     >\n");
+        // rectDesc.transform.prepend(viewMat);
+        // rectDesc.transform.prepend(projMat);
+        // rectDesc.transform.print();
+        // printf(">    >     >\n");
+        unitDesc.updateToBuffer(bufPtr + bufBytesIndex, bufBytesIndex, bufBytesSafeLength);
+        bufBytesIndex += unitDesc.descSize * 4;
+        //*/
+        writeCmdNode(unitDesc, cmdNodes[i]);
     }
     writeTail();
 
