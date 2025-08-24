@@ -121,6 +121,8 @@ void RenderCmdBufBuilder::build(const std::vector<DrawCmdTestNode>& cmdNodes, Ca
 
     auto bytesTotal = sizeof(mTailData);
     std::memcpy(bufPtr + bufBytesIndex, mTailData, bytesTotal);
+    
+    // printf("RenderCmdBufBuilder::run() B cmdsTotal: %zu\n", cmdsTotal);
 }
 
 const uint8_t* RenderCmdBufBuilder::getBufferPtr() const
