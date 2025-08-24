@@ -9,11 +9,28 @@ void RenderCmdBufBuilder::initialize(size_t bufSize)
     mBuffer.resize(bufSize);
     bufBytesSafeLength = bufSize - 8;
     bufBytesIndex      = 0;
+    bufPtr        = (uint8_t*)mBuffer.data();
 
 
     // build head data
     // auto bytesTotal = sizeof(mHeadData);
     // std::memcpy(mBuffer.data(), mHeadData, bytesTotal);
+}
+
+void RenderCmdBufBuilder::writeHead()
+{
+    bufBytesIndex = 0;
+    auto descBytesSize = sizeof(mHeadData);
+    // auto bufPtr        = (uint8_t*)mBuffer.data();
+    std::memcpy(bufPtr + bufBytesIndex, mHeadData, descBytesSize);
+    bufBytesIndex += descBytesSize;
+}
+void RenderCmdBufBuilder::writeVersion()
+{
+    auto descBytesSize = sizeof(version);
+    std::memcpy(bufPtr + bufBytesIndex, &version, descBytesSize);
+    bufBytesIndex += descBytesSize;
+
 }
 void RenderCmdBufBuilder::build(const std::vector<DrawCmdTestNode>& cmdNodes)
 {
@@ -28,22 +45,28 @@ void RenderCmdBufBuilder::build(const std::vector<DrawCmdTestNode>& cmdNodes)
     /// 4bytes version
     /// 4bytes cmds total
 
-    bufBytesIndex = 0;
+    // bufBytesIndex = 0;
 
-    auto descBytesSize = sizeof(mHeadData);
-    auto bufPtr        = (uint8_t*)mBuffer.data();
-    std::memcpy(bufPtr + bufBytesIndex, mHeadData, descBytesSize);
-    bufBytesIndex += descBytesSize;
 
-    uint32_t version = 3;
-    // printf("version: %d\n", version);
 
-    descBytesSize = sizeof(version);
-    std::memcpy(bufPtr + bufBytesIndex, &version, descBytesSize);
-    bufBytesIndex += descBytesSize;
+    // auto bufPtr        = (uint8_t*)mBuffer.data();
+
+    // auto descBytesSize = sizeof(mHeadData);
+    // auto bufPtr        = (uint8_t*)mBuffer.data();
+    // std::memcpy(bufPtr + bufBytesIndex, mHeadData, descBytesSize);
+    // bufBytesIndex += descBytesSize;
+    // uint32_t version = 3;
+    // // printf("version: %d\n", version);
+    // descBytesSize = sizeof(version);
+    // std::memcpy(bufPtr + bufBytesIndex, &version, descBytesSize);
+    // bufBytesIndex += descBytesSize;
+
+    writeHead();
+    writeVersion();
+    
 
     uint32_t trunkCmd = 20;
-    descBytesSize     = sizeof(trunkCmd);
+    auto descBytesSize     = sizeof(trunkCmd);
     std::memcpy(bufPtr + bufBytesIndex, &trunkCmd, descBytesSize);
     bufBytesIndex += descBytesSize;
 
@@ -69,12 +92,11 @@ void RenderCmdBufBuilder::build(const std::vector<DrawCmdTestNode>& cmdNodes)
 
         rectDesc.rcmd  = node.rcmd;
         rectDesc.color = node.color;
-        // node.update();
-        auto& bounds  = rectDesc.bounds;
-        bounds.pos.x  = node.x;
-        bounds.pos.y  = node.y;
-        bounds.width  = node.scaleX;
-        bounds.height = node.scaleY;
+        auto& bounds   = rectDesc.bounds;
+        bounds.pos.x   = node.x;
+        bounds.pos.y   = node.y;
+        bounds.width   = node.scaleX;
+        bounds.height  = node.scaleY;
 
         rectDesc.transform = node.transform;
 
