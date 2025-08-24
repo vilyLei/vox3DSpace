@@ -3,7 +3,14 @@ namespace Voxol::Motion
 {
 void RenderCmdBufBuilder::initialize(size_t bufSize)
 {
+    if (bufSize < 32)
+        bufSize = 32;
+
     mBuffer.resize(bufSize);
+    bufBytesSafeLength = bufSize - 8;
+    bufBytesIndex      = 0;
+
+
     // build head data
     // auto bytesTotal = sizeof(mHeadData);
     // std::memcpy(mBuffer.data(), mHeadData, bytesTotal);
@@ -20,14 +27,15 @@ void RenderCmdBufBuilder::build(const std::vector<DrawCmdTestNode>& cmdNodes)
     /// 8bytes head
     /// 4bytes version
     /// 4bytes cmds total
-    auto bufBytesLength = mBuffer.size() - 8;
-    auto bufBytesIndex  = 0;
-    auto descBytesSize  = sizeof(mHeadData);
-    auto bufPtr         = (uint8_t*)mBuffer.data();
+
+    bufBytesIndex = 0;
+
+    auto descBytesSize = sizeof(mHeadData);
+    auto bufPtr        = (uint8_t*)mBuffer.data();
     std::memcpy(bufPtr + bufBytesIndex, mHeadData, descBytesSize);
     bufBytesIndex += descBytesSize;
-    uint32_t version = 3;
 
+    uint32_t version = 3;
     // printf("version: %d\n", version);
 
     descBytesSize = sizeof(version);
@@ -39,7 +47,7 @@ void RenderCmdBufBuilder::build(const std::vector<DrawCmdTestNode>& cmdNodes)
     std::memcpy(bufPtr + bufBytesIndex, &trunkCmd, descBytesSize);
     bufBytesIndex += descBytesSize;
 
-    camDesc.updateToBuffer(bufPtr + bufBytesIndex, bufBytesIndex, bufBytesLength);
+    camDesc.updateToBuffer(bufPtr + bufBytesIndex, bufBytesIndex, bufBytesSafeLength);
     bufBytesIndex += camDesc.descSize * 4;
 
     // batch rounit rendering cmd
@@ -50,7 +58,7 @@ void RenderCmdBufBuilder::build(const std::vector<DrawCmdTestNode>& cmdNodes)
 
     BatchElementCmdDesc batchDesc{};
     batchDesc.descSize = cmdsTotal;
-    batchDesc.updateToBuffer(bufPtr + bufBytesIndex, bufBytesIndex, bufBytesLength);
+    batchDesc.updateToBuffer(bufPtr + bufBytesIndex, bufBytesIndex, bufBytesSafeLength);
     bufBytesIndex += 2 * 4;
 
     RectDrawCmdDesc rectDesc{};
@@ -83,7 +91,7 @@ void RenderCmdBufBuilder::build(const std::vector<DrawCmdTestNode>& cmdNodes)
         // rectDesc.transform.print();
         // printf(">    >     >\n");
 
-        rectDesc.updateToBuffer(bufPtr + bufBytesIndex, bufBytesIndex, bufBytesLength);
+        rectDesc.updateToBuffer(bufPtr + bufBytesIndex, bufBytesIndex, bufBytesSafeLength);
 
         bufBytesIndex += rectDesc.descSize * 4;
     }

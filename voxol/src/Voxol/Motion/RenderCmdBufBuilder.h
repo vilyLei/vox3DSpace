@@ -24,6 +24,8 @@ public:
     CameraCmdDesc camDesc{};
 
 private:
+    size_t bufBytesIndex = 0;
+    size_t bufBytesSafeLength = 0;
     std::vector<uint8_t> mBuffer{};
     uint32_t mHeadData[2]{0xffffffff, 0xffffffff};
     uint32_t mTailData[2]{0x0, 0x0};
