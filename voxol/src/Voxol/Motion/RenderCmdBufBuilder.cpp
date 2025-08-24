@@ -58,32 +58,6 @@ void RenderCmdBufBuilder::build(const std::vector<DrawCmdTestNode>& cmdNodes, Ca
     batchDesc.updateToBuffer(bufPtr + bufBytesIndex, bufBytesIndex, bufBytesLength);
     bufBytesIndex += 2 * 4;
 
-    // RectTarget::Rect boundary = {0, 0, canvas.size.width * 1.0f, canvas.size.height * 1.0f};
-
-    // for (auto i = 0; i < cmdsTotal; i++)
-    // {
-    //     auto& node = cmdNodes[i];
-    //     node.moveingNode.update(2, boundary);
-    // }
-    // for (size_t i = 0; i < cmdsTotal; ++i)
-    // {
-    //     auto& node0 = cmdNodes[i];
-    //     for (size_t j = i + 1; j < cmdsTotal; ++j)
-    //     {
-    //         auto& node1 = cmdNodes[j];
-    //         RectTarget::handleCollision(node0.moveingNode, node1.moveingNode);
-    //     }
-    // }
-    // for (auto i = 0; i < cmdsTotal; i++)
-    // {
-    //     auto& node = cmdNodes[i];
-    //     auto& r = node.moveingNode.rect;
-    //     node.dirty = true;
-    //     node.x = r.pos.x;
-    //     node.y = r.pos.y;
-    //     //printf("node (x=%f, y=%f)\n", node.x, node.y);
-    // }
-
     RectDrawCmdDesc rectDesc{};
     for (auto i = 0; i < cmdsTotal; i++)
     {
@@ -121,7 +95,7 @@ void RenderCmdBufBuilder::build(const std::vector<DrawCmdTestNode>& cmdNodes, Ca
 
     auto bytesTotal = sizeof(mTailData);
     std::memcpy(bufPtr + bufBytesIndex, mTailData, bytesTotal);
-    
+
     // printf("RenderCmdBufBuilder::run() B cmdsTotal: %zu\n", cmdsTotal);
 }
 
