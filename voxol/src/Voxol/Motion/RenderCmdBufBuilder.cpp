@@ -10,7 +10,6 @@ void RenderCmdBufBuilder::initialize(size_t bufSize)
     bufBytesSafeLength = bufSize - 8;
     bufBytesIndex      = 0;
     bufPtr             = (uint8_t*)mBuffer.data();
-
 }
 
 void RenderCmdBufBuilder::writeHead()
@@ -40,6 +39,14 @@ void RenderCmdBufBuilder::writeCamInfo()
     bufBytesIndex += descBytesSize;
     camDesc.updateToBuffer(bufPtr + bufBytesIndex, bufBytesIndex, bufBytesSafeLength);
     bufBytesIndex += camDesc.descSize * 4;
+}
+
+void RenderCmdBufBuilder::writeRenderingBegin()
+{
+    auto trunkCmd      = 21;
+    auto descBytesSize = sizeof(trunkCmd);
+    std::memcpy(bufPtr + bufBytesIndex, &trunkCmd, descBytesSize);
+    bufBytesIndex += descBytesSize;
 }
 void RenderCmdBufBuilder::writeBatchCmdNodeBegin(uint32_t cmdsTotal)
 {
@@ -84,24 +91,38 @@ void RenderCmdBufBuilder::writeCmdNode(RectDrawCmdDesc& unitDesc, const DrawCmdT
 
     bufBytesIndex += unitDesc.descSize * 4;
 }
-void RenderCmdBufBuilder::build(const std::vector<DrawCmdTestNode>& cmdNodes)
+void RenderCmdBufBuilder::build(const std::vector<DrawCmdTestNode>& cmdBatchNodes, const std::vector<DrawCmdTestNode>& cmdNodes)
 {
-    auto cmdsTotal = static_cast<uint32_t>(cmdNodes.size());
 
     // printf("RenderCmdBufBuilder::build() sizeof(projMat): %zu\n", sizeof(projMat));
     // printf("RenderCmdBufBuilder::build() cmdsTotal: %zu\n", cmdsTotal);
 
     writeHead();
     writeVersion();
-    writeCamInfo();
-    writeBatchCmdNodeBegin(cmdsTotal);
+    writeCamInfo();    
+    writeRenderingBegin();
 
     RectDrawCmdDesc unitDesc{};
-    for (auto i = 0; i < cmdsTotal; i++)
+
+    if (!cmdBatchNodes.empty())
     {
-        writeCmdNode(unitDesc, cmdNodes[i]);
+        auto tot = static_cast<uint32_t>(cmdBatchNodes.size());
+        writeBatchCmdNodeBegin(tot);
+        for (auto i = 0; i < tot; i++)
+        {
+            writeCmdNode(unitDesc, cmdBatchNodes[i]);
+        }
     }
-    
+    if (!cmdNodes.empty())
+    {
+        auto tot = static_cast<uint32_t>(cmdNodes.size());
+        for (auto i = 0; i < tot; i++)
+        {
+            writeCmdNode(unitDesc, cmdNodes[i]);
+        }
+    }
+
+
     writeTail();
 
     // printf("RenderCmdBufBuilder::build() B cmdsTotal: %zu\n", cmdsTotal);

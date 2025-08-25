@@ -17,7 +17,7 @@ public:
 
 public:
     void           initialize(size_t bufSize);
-    void           build(const std::vector<DrawCmdTestNode>& cmdNodes);
+    void           build(const std::vector<DrawCmdTestNode>& cmdBatchNodes, const std::vector<DrawCmdTestNode>& cmdNodes);
     const uint8_t* getBufferPtr() const;
 
 public:
@@ -28,6 +28,7 @@ private:
     void writeTail();
     void writeVersion();
     void writeCamInfo();
+    void writeRenderingBegin();
     void writeBatchCmdNodeBegin(uint32_t cmdsTotal);
     void writeCmdNode(RectDrawCmdDesc& unitDesc, const DrawCmdTestNode& node);
 

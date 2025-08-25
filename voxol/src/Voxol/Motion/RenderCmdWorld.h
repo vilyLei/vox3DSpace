@@ -12,8 +12,12 @@ namespace Voxol::Motion
 class RenderCmdWorld
 {
 public:
+
     std::vector<uint32_t>        commands{};
+
+    std::vector<DrawCmdTestNode> cmdBatchNodes{};
     std::vector<DrawCmdTestNode> cmdNodes{};
+
     Voxol::Math::Mat33           viewMat{};
     Voxol::Math::Mat33           projMat{};
 
@@ -31,6 +35,7 @@ public:
 
 public:
     void           initialize();
+    void           update();
     void           run();
     void           setGPUCtxSize(int w, int h);
     void           setMouseXY(float x, float y);

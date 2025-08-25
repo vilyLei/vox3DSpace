@@ -18,18 +18,21 @@ void RenderCmdWorld::initialize()
 
 
     // printf("RenderCmdWorld::initialize() viewMat:\n");
+    auto cmdsTotal = 0;
 
-    auto rn    = 3 * 1;
-    auto cn    = 4 * 1;
-    auto total = rn * cn;
-    auto rsize = 70.0f;
+    auto rn             = 3 * 1;
+    auto cn             = 4 * 1;
+    auto cmdsBatchTotal = rn * cn;
+    auto rsize          = 70.0f;
 
+    auto total = cmdsBatchTotal + cmdsTotal;
     printf("Voxol::Motion::RenderCmdWorld::initialize() total: %d\n", total);
 
-    bufBuilder.initialize(total * 2 * sizeof(Mat33) + 32);
+    bufBuilder.initialize((total + 8) * sizeof(RectDrawCmdDesc));
 
     commands.resize(total);
-    cmdNodes.resize(total);
+    cmdBatchNodes.resize(total);
+    cmdNodes.resize(cmdsTotal);
 
     auto  index = 0;
     float dis   = 2;
@@ -40,7 +43,7 @@ void RenderCmdWorld::initialize()
         {
             auto px         = 50 + (j * (rsize + dis));
             commands[index] = 1;
-            auto& node      = cmdNodes[index];
+            auto& node      = cmdBatchNodes[index];
             node.color      = 0xff0000aa | ((index % 256) << 16);
             node.color      = node.color | (((i * j * 2) % 256) << 16);
             // printf("node.color: %X\n", node.color);
@@ -87,6 +90,61 @@ void RenderCmdWorld::initialize()
     mInit = false;
 }
 
+void RenderCmdWorld::run()
+{
+    if (!dirty)
+        return;
+    dirty = false;
+
+
+    initialize();
+
+    auto cmdsTotal = static_cast<uint32_t>(cmdBatchNodes.size());
+
+    // RectTarget::Rect boundary = {0, 0, canvas.size.width * 1.0f, canvas.size.height * 1.0f};
+
+    // for (auto i = 0; i < cmdsTotal; i++)
+    // {
+    //     auto& node = cmdBatchNodes[i];
+    //     node.moveingNode.update(2, boundary);
+    // }
+    // for (size_t i = 0; i < cmdsTotal; ++i)
+    // {
+    //     auto& node0 = cmdBatchNodes[i];
+    //     for (size_t j = i + 1; j < cmdsTotal; ++j)
+    //     {
+    //         auto& node1 = cmdBatchNodes[j];
+    //         RectTarget::handleCollision(node0.moveingNode, node1.moveingNode);
+    //     }
+    // }
+    // for (auto i = 0; i < cmdsTotal; i++)
+    // {
+    //     auto& node = cmdBatchNodes[i];
+    //     auto& r = node.moveingNode.rect;
+    //     node.dirty = true;
+    //     node.x = r.pos.x;
+    //     node.y = r.pos.y;
+    //     //printf("node (x=%f, y=%f)\n", node.x, node.y);
+    // }
+
+    for (auto i = 0; i < cmdsTotal; i++)
+    {
+        cmdBatchNodes[i].update();
+    }
+
+    auto& camDesc   = bufBuilder.camDesc;
+    camDesc.projMat = projMat;
+    camDesc.viewMat = viewMat;
+    bufBuilder.build(cmdBatchNodes, cmdNodes);
+
+    // printf("RenderCmdWorld::run() B cmdsTotal: %zu\n", cmdsTotal);
+}
+
+void RenderCmdWorld::update()
+{
+}
+
+
 void RenderCmdWorld::setGPUCtxSize(int w, int h)
 {
     SizeDesc desc{static_cast<float>(w), static_cast<float>(h)};
@@ -106,7 +164,7 @@ void RenderCmdWorld::setMouseXY(float x, float y)
     mousePos             = {x, y};
     canvas.view.mousePos = mousePos;
 
-    // auto& node = cmdNodes[0];
+    // auto& node = cmdBatchNodes[0];
     // node.x     = x;
     // node.y     = y;
     // dirty      = true;
@@ -151,7 +209,7 @@ void RenderCmdWorld::setMouseParams(float x, float y, int type, float value)
             printf("RenderCmdWorld::setMouseParams(), click, mousePos(%f, %f)\n", mousePos.x, mousePos.y);
             auto  i    = 0;
             auto  pos  = mousePos;
-            auto& node = cmdNodes[i];
+            auto& node = cmdBatchNodes[i];
             printf("RenderCmdWorld::setMouseParams(), click, node(x=%f, y=%f), scale(sx=%f, sy=%f)\n", node.x, node.y, node.scaleX, node.scaleY);
             Mat33 mat{};
             node.updateToMat33(mat);
@@ -202,56 +260,6 @@ void RenderCmdWorld::setMouseParams(float x, float y, int type, float value)
     //     viewMat.setTo(pos.x, pos.y, viewDesc.zoom, viewDesc.zoom);
     // }
 }
-void RenderCmdWorld::run()
-{
-    if (!dirty)
-        return;
-    dirty = false;
-
-
-    initialize();
-
-    auto cmdsTotal = static_cast<uint32_t>(cmdNodes.size());
-
-    // RectTarget::Rect boundary = {0, 0, canvas.size.width * 1.0f, canvas.size.height * 1.0f};
-
-    // for (auto i = 0; i < cmdsTotal; i++)
-    // {
-    //     auto& node = cmdNodes[i];
-    //     node.moveingNode.update(2, boundary);
-    // }
-    // for (size_t i = 0; i < cmdsTotal; ++i)
-    // {
-    //     auto& node0 = cmdNodes[i];
-    //     for (size_t j = i + 1; j < cmdsTotal; ++j)
-    //     {
-    //         auto& node1 = cmdNodes[j];
-    //         RectTarget::handleCollision(node0.moveingNode, node1.moveingNode);
-    //     }
-    // }
-    // for (auto i = 0; i < cmdsTotal; i++)
-    // {
-    //     auto& node = cmdNodes[i];
-    //     auto& r = node.moveingNode.rect;
-    //     node.dirty = true;
-    //     node.x = r.pos.x;
-    //     node.y = r.pos.y;
-    //     //printf("node (x=%f, y=%f)\n", node.x, node.y);
-    // }
-
-    for (auto i = 0; i < cmdsTotal; i++)
-    {
-        cmdNodes[i].update();
-    }
-
-    auto& camDesc = bufBuilder.camDesc;
-    camDesc.projMat = projMat;
-    camDesc.viewMat = viewMat;
-    bufBuilder.build(cmdNodes);
-
-    // printf("RenderCmdWorld::run() B cmdsTotal: %zu\n", cmdsTotal);
-}
-
 
 const uint8_t* RenderCmdWorld::cmdBuffer() const
 {

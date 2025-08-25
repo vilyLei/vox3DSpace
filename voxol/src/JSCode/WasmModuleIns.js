@@ -14,6 +14,7 @@ export class ModuleInstance {
         this.viewTransDesc = new ViewTransDesc();
         this.batchEleDesc = new BatchElementDesc();
 
+        this.renderingDataIndex = 0;
         this.version = 0;
     }
 
@@ -84,6 +85,12 @@ export class ModuleInstance {
 
             trunkCmd = cmdBufU32Arr[bufIndex];
             // console.log("trunkCmd: ", trunkCmd);
+            bufIndex++;
+        }
+        if (trunkCmd == 21) {
+            console.log("rendering begin trunkCmd: ", trunkCmd);
+            this.renderingDataIndex = bufIndex;
+            trunkCmd = cmdBufU32Arr[bufIndex];
             bufIndex++;
         }
 

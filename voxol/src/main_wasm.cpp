@@ -207,6 +207,7 @@ extern "C"
     EMSCRIPTEN_KEEPALIVE
     int run()
     {
+        rcmdWorld.update();
         auto dirty = rcmdWorld.dirty;
         rcmdWorld.run();
         return dirty ? 1 : 0;
