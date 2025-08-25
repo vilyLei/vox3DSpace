@@ -67,6 +67,7 @@ export class SimpleCacheDrawer {
         ctx = ctx == undefined ? moduleIns.viewTransDesc : ctx;
 
         let scene = this.roScene;
+        let drcUnits = scene.drcUnits;
 
         // let unit = scene.screenBgColorUnit;
         // if (unit.enabled) {
@@ -87,11 +88,29 @@ export class SimpleCacheDrawer {
             let cmd = heapU32[cmdIndex];
             switch (cmd) {
                 case 22:
-                    cmdIndex ++;
+                    cmdIndex++;
                     batchEle.parse(cmdIndex);
                     cmdIndex = batchEle.getElementDataIndex();
                     cmdIndex = this.drawBatch(ctx, cmdIndex, batchEle.cmdsTotal);
-                    loop = false;
+                    // loop = false;
+                    break;
+                case 0x32:
+                    let descSize = heapU32[cmdIndex + 1];
+                    let mroid = heapU32[cmdIndex + 6];
+                    let rounit = drcUnits[mroid];
+                    rounit.parse(cmdIndex, heapU32, heapF32);
+                    if(rounit.enabled) {
+                        rounit.bind(gl, ctx);
+                        rounit.draw(gl, ctx);
+                    }
+                    cmdIndex += descSize;
+                    break;
+                    
+                case 0x0:
+                    if(heapU32[cmdIndex + 1] == 0x0) {
+                        console.log("SimpleCacheDrawer::initialize() exec cmds to buf tail !!!\n");
+                        loop = false;
+                    }
                     break;
                 default:
                     break;

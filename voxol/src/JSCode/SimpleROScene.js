@@ -23,7 +23,8 @@ export class SimpleROScene {
         this.glCtx = null;
 
         this.dirty = true;
-
+        
+        this.drcUnits = [];
         this.batchTotal = 4;
         this.batchUnit = new BatchROUnit(this.batchTotal);
         this.batchUnit.initialize();
@@ -100,13 +101,20 @@ export class SimpleROScene {
         VertexBuilder.createVAO(this.mvpTexUnit.vertex, gl, program, getVertsWithUV(), [4], [4 * 4], ['a_pos']);
         VertexBuilder.createVEO(this.mvpTexUnit.vertex, gl, getIndicesWithSegN(1));
 
+
+        let unitBase = this.mvpUnit.clone();
+        let unitTexBase = this.mvpTexUnit.clone();
+        this.drcUnits = [unitBase, unitBase, unitBase, unitTexBase];
+
         this.mvpTexUnit.setXY(360, 200);
         this.mvpTexUnit.setRGBAWithNumberArr([1, 1, 1, 0.5]);
         this.mvpTexUnit.setTexturesWithUrls(['./assets/box.jpg'], this);
 
         let texUnit0 = this.mvpTexUnit.clone();
         texUnit0.setRGBAWithNumberArr([1, 1, 1, 1]);
-        texUnit0.setTexturesWithUrls(['./assets/letterA.png'], this);
+        texUnit0.setTexturesWithUrls(['./assets/letterA.png'], this, ()=>{
+            unitTexBase.setTextures(texUnit0.textures);
+        });
         texUnit0.setXY(560, 150);
 
         let mvpUnit0 = this.mvpUnit.clone();

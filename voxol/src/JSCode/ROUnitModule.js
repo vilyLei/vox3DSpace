@@ -102,6 +102,26 @@ export class MVPROUnit extends ROUnit {
         gl.drawElements(gl.TRIANGLES, this.vertex.indices.length, gl.UNSIGNED_SHORT, 0);
     }
     destroy() { }
+    
+    parse(cmdIndex, dataU32, dataF32) {
+
+        let f32BoundsIndex = cmdIndex + 2;
+        let boundsvs = dataF32.subarray(f32BoundsIndex, f32BoundsIndex + 4);
+
+        let mroid = dataU32[cmdIndex + 6];
+        // console.log("BatchROUnit::parse(), mroid: ", mroid);
+
+        let colorU32 = dataU32[cmdIndex + 7];
+        let a = ((colorU32 >> 24) & 0xff) / 255.0;
+        let r = ((colorU32 >> 16) & 0xff) / 255.0;
+        let g = ((colorU32 >> 8) & 0xff) / 255.0;
+        let b = (colorU32 & 0xff) / 255.0;
+        this.colorData.set([r, g, b, a]);
+
+        let f32Index = cmdIndex + 8;
+        let matvs = dataF32.subarray(f32Index, f32Index + 9);
+        this.objMatData.set(matvs);
+    }
 }
 
 
@@ -173,7 +193,7 @@ export class MVPTexROUnit extends ROUnit {
         this.checkTextures();
     }
 
-    setTexturesWithUrls(urls, ctx) {
+    setTexturesWithUrls(urls, ctx, loadedCall) {
 
         if (urls == undefined || urls.length == undefined || urls.length < 1)
             return;
@@ -190,6 +210,9 @@ export class MVPTexROUnit extends ROUnit {
                 thisRef.setTextureAt(tex, index);
                 if (thisRef.enabled && ctx != undefined) {
                     ctx.dirty = true;
+                    if(loadedCall != undefined) {
+                        loadedCall();
+                    }
                     console.log(`setTexturesWithUrls() ctx.dirty: `, ctx.dirty);
                 }
                 console.log(`setTexturesWithUrls() build a tex(${i}), url: `, urls[i]);
@@ -250,6 +273,25 @@ export class MVPTexROUnit extends ROUnit {
         gl.drawElements(gl.TRIANGLES, this.vertex.indices.length, gl.UNSIGNED_SHORT, 0);
     }
     destroy() { }
+    parse(cmdIndex, dataU32, dataF32) {
+
+        let f32BoundsIndex = cmdIndex + 2;
+        let boundsvs = dataF32.subarray(f32BoundsIndex, f32BoundsIndex + 4);
+
+        let mroid = dataU32[cmdIndex + 6];
+        // console.log("BatchROUnit::parse(), mroid: ", mroid);
+
+        let colorU32 = dataU32[cmdIndex + 7];
+        let a = ((colorU32 >> 24) & 0xff) / 255.0;
+        let r = ((colorU32 >> 16) & 0xff) / 255.0;
+        let g = ((colorU32 >> 8) & 0xff) / 255.0;
+        let b = (colorU32 & 0xff) / 255.0;
+        this.colorData.set([r, g, b, a]);
+
+        let f32Index = cmdIndex + 8;
+        let matvs = dataF32.subarray(f32Index, f32Index + 9);
+        this.objMatData.set(matvs);
+    }
 }
 
 export class BatchROUnit extends ROUnit {
@@ -288,8 +330,8 @@ export class BatchROUnit extends ROUnit {
         let boundsvs = dataF32.subarray(f32BoundsIndex, f32BoundsIndex + 4);
 
         let mroid = dataU32[cmdIndex + 6];
-        console.log("BatchROUnit::parse(), mroid: ", mroid);
-        
+        // console.log("BatchROUnit::parse(), mroid: ", mroid);
+
         let colorU32 = dataU32[cmdIndex + 7];
         let a = ((colorU32 >> 24) & 0xff) / 255.0;
         let r = ((colorU32 >> 16) & 0xff) / 255.0;
