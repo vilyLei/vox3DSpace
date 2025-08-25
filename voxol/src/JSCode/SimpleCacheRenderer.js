@@ -12,7 +12,7 @@ export function printWith9Number(numArr, index) {
 }
 
 class BatchDrawer {
-    constructor(){
+    constructor() {
 
     }
 }
@@ -73,18 +73,45 @@ export class SimpleCacheDrawer {
         //     unit.bind(gl, ctx);
         //     unit.draw(gl, ctx);
         // }
-        this.drawBatch(ctx);
-        
-        let units = scene.testUnits;
-        for (let i = 0; i < units.length; ++i) {
-            const unit = units[i];
-            if (unit && unit.enabled) {
-                unit.bind(gl, ctx);
-                unit.draw(gl, ctx);
+
+        let batchEle = moduleIns.batchEleDesc;
+        // let cmdIndex = batchEle.getElementDataIndex();
+        // this.drawBatch(ctx, cmdIndex);
+
+        let heapU32 = moduleIns.heapU32;
+        let heapF32 = moduleIns.heapF32;
+
+        let cmdIndex = moduleIns.renderingDataIndex;
+        let loop = true;
+        for (; loop;) {
+            let cmd = heapU32[cmdIndex];
+            switch (cmd) {
+                case 22:
+                    cmdIndex ++;
+                    batchEle.parse(cmdIndex);
+                    cmdIndex = batchEle.getElementDataIndex();
+                    cmdIndex = this.drawBatch(ctx, cmdIndex, batchEle.cmdsTotal);
+                    loop = false;
+                    break;
+                default:
+                    break;
+
             }
         }
+
+        // let units = scene.testUnits;
+        // for (let i = 0; i < units.length; ++i) {
+        //     const unit = units[i];
+        //     if (unit && unit.enabled) {
+        //         unit.bind(gl, ctx);
+        //         unit.draw(gl, ctx);
+        //     }
+        // }
     }
-    drawBatch(ctx) {
+    drawBatch(ctx, cmdIndex, total) {
+
+        if (total == undefined)
+            total = 0xffffff;
 
         let scene = this.roScene;
 
@@ -92,12 +119,13 @@ export class SimpleCacheDrawer {
         let gl = this.glCtx;
         // ctx = ctx == undefined ? moduleIns.viewTransDesc : ctx;
 
+        let tot = 0;
         let matTot = scene.batchTotal;
         let drawIndex = 0;
         let drewTot = 0;
 
         let batchEle = moduleIns.batchEleDesc;
-        let cmdIndex = batchEle.getElementDataIndex();
+        // let cmdIndex = batchEle.getElementDataIndex();
         let dataU32 = batchEle.heapU32;
         let dataF32 = batchEle.heapF32;
 
@@ -109,6 +137,10 @@ export class SimpleCacheDrawer {
             if (drewTot >= 180000) {
                 break;
             }
+            if (tot >= total) {
+                console.log("drawing batch cmds all !!!");
+                break;
+            }
             let cmd = dataU32[cmdIndex];
             if (cmd == 0) {
                 // console.log("drawing cmd exec end !!!");
@@ -117,7 +149,10 @@ export class SimpleCacheDrawer {
             let descSize = dataU32[cmdIndex + 1];
             switch (cmd) {
                 case 0x32:
-                    unit.parse(drawIndex, cmdIndex, dataU32, dataF32);
+                    {
+                        tot++;
+                        unit.parse(drawIndex, cmdIndex, dataU32, dataF32);
+                    }
                     break;
                 default:
                     break;
@@ -136,7 +171,7 @@ export class SimpleCacheDrawer {
             this.drewTotal = drewTot;
             console.log("batch drew total: ", this.drewTotal);
         }
-
+        return cmdIndex;
     }
     runEnd() {
         this.dirty = false;

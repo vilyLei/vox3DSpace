@@ -50,6 +50,7 @@ void RenderCmdBufBuilder::writeRenderingBegin()
 }
 void RenderCmdBufBuilder::writeBatchCmdNodeBegin(uint32_t cmdsTotal)
 {
+    printf("RenderCmdBufBuilder::writeBatchCmdNodeBegin(), cmdsTotal: %d\n", cmdsTotal);
     // batch rounit rendering cmd
     auto trunkCmd      = 22;
     auto descBytesSize = sizeof(trunkCmd);
@@ -65,6 +66,7 @@ void RenderCmdBufBuilder::writeBatchCmdNodeBegin(uint32_t cmdsTotal)
 void RenderCmdBufBuilder::writeCmdNode(RectDrawCmdDesc& unitDesc, const DrawCmdTestNode& node)
 {
     unitDesc.rcmd  = node.rcmd;
+    unitDesc.mroid = node.mroid;
     unitDesc.color = node.color;
     auto& bounds   = unitDesc.bounds;
     bounds.pos.x   = node.x;

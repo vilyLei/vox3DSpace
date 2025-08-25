@@ -18,7 +18,7 @@ void RenderCmdWorld::initialize()
 
 
     // printf("RenderCmdWorld::initialize() viewMat:\n");
-    auto cmdsTotal = 0;
+    auto cmdsTotal = 1;
 
     auto rn             = 3 * 1;
     auto cn             = 4 * 1;
@@ -31,7 +31,7 @@ void RenderCmdWorld::initialize()
     bufBuilder.initialize((total + 8) * sizeof(RectDrawCmdDesc));
 
     commands.resize(total);
-    cmdBatchNodes.resize(total);
+    cmdBatchNodes.resize(cmdsBatchTotal);
     cmdNodes.resize(cmdsTotal);
 
     auto  index = 0;
@@ -51,6 +51,7 @@ void RenderCmdWorld::initialize()
             node.y      = py;
             node.scaleX = rsize;
             node.scaleY = rsize;
+            node.mroid  = 1;
 
             /*
             auto pindex = i * cn + j;
@@ -86,6 +87,15 @@ void RenderCmdWorld::initialize()
             index++;
         }
     }
+
+    auto  nodeIndex = 0;
+    auto& node0     = cmdNodes[nodeIndex];
+    node0.color     = 0xff00aaaa;
+    node0.x         = 300;
+    node0.y         = 300;
+    node0.scaleX    = 128;
+    node0.scaleY    = 128;
+    node0.mroid     = 2;
 
     mInit = false;
 }
@@ -130,6 +140,11 @@ void RenderCmdWorld::run()
     for (auto i = 0; i < cmdsTotal; i++)
     {
         cmdBatchNodes[i].update();
+    }
+    cmdsTotal = static_cast<uint32_t>(cmdNodes.size());
+    for (auto i = 0; i < cmdsTotal; i++)
+    {
+        cmdNodes[i].update();
     }
 
     auto& camDesc   = bufBuilder.camDesc;
