@@ -18,7 +18,8 @@ void RenderCmdWorld::initialize()
 
 
     // printf("RenderCmdWorld::initialize() viewMat:\n");
-    auto cmdsTotal = 1;
+
+    auto cmdsTotal = 2;
 
     auto rn             = 3 * 1;
     auto cn             = 4 * 1;
@@ -96,6 +97,15 @@ void RenderCmdWorld::initialize()
     node0.scaleX    = 128;
     node0.scaleY    = 128;
     node0.mroid     = 2;
+
+    nodeIndex++;
+    auto& node1     = cmdNodes[nodeIndex];
+    node1.color     = 0xffffffff;
+    node1.x         = 500;
+    node1.y         = 350;
+    node1.scaleX    = 128;
+    node1.scaleY    = 128;
+    node1.mroid     = 3;
 
     mInit = false;
 }
