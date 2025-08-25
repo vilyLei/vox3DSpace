@@ -249,4 +249,35 @@ void Mat33::print() const
     }
     printf("}\n");
 }
+
+namespace Mat33Utils
+{
+    
+void makeRotationMat33WithPivot(Mat33& transform, Vec2 localPivot, Vec2 fixCV, float scaleX, float scaleY, float rotation) {
+
+    transform.setTo(scaleX - localPivot.x, scaleY - localPivot.y, scaleX, scaleY, rotation);
+    auto&& cv   = transform.mapPoint({localPivot.x / scaleX, localPivot.y / scaleY});
+    auto&  data = transform.data;
+    data[6] += fixCV.x - cv.x;
+    data[7] += fixCV.y - cv.y;
+}
+Mat33 makeRotationMat33WithPivot(Vec2 localPivot, Vec2 fixCV, float scaleX, float scaleY, float rotation)
+{
+    Mat33  mat(scaleX - localPivot.x, scaleY - localPivot.y, scaleX, scaleY, rotation);
+    auto&& cv   = mat.mapPoint({localPivot.x / scaleX, localPivot.y / scaleY});
+    auto&  data = mat.data;
+    data[6] += fixCV.x - cv.x;
+    data[7] += fixCV.y - cv.y;
+    return mat;
+}
+Mat33 makeRotationMat33WithCenter(Vec2 fixCV, float scaleX, float scaleY, float rotation)
+{
+    Mat33 mat(scaleX * -0.5f, scaleY * -0.5f, scaleX, scaleY, rotation);
+    auto&&  tempCV = mat.mapPoint({0.5f, 0.5f});
+    auto& data   = mat.data;
+    data[6] += fixCV.x - tempCV.x;
+    data[7] += fixCV.y - tempCV.y;
+    return mat;
+}
+} // namespace Mat33Utils
 } // namespace Voxol::Math

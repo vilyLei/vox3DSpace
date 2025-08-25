@@ -167,6 +167,14 @@ void RenderCmdWorld::run()
 
 void RenderCmdWorld::update()
 {
+    auto& node     = cmdNodes[0];
+
+    Vec2 localPivot{64.0f, 64.0f};
+    Vec2 fixCV{300.0f, 300.0f};
+    Mat33Utils::makeRotationMat33WithPivot(node.transform, localPivot, fixCV, node.scaleX, node.scaleY, node.rotation);
+    node.rotation += 0.1f;
+    node.dirty = false;
+    dirty = true;
 }
 
 

@@ -108,7 +108,7 @@ export class SimpleCacheDrawer {
                     
                 case 0x0:
                     if(heapU32[cmdIndex + 1] == 0x0) {
-                        console.log("SimpleCacheDrawer::initialize() exec cmds to buf tail !!!\n");
+                        // console.log("SimpleCacheDrawer::initialize() exec cmds to buf tail !!!\n");
                         loop = false;
                     }
                     break;
@@ -157,7 +157,7 @@ export class SimpleCacheDrawer {
                 break;
             }
             if (tot >= total) {
-                console.log("drawing batch cmds all !!!");
+                // console.log("drawing batch cmds all !!!");
                 break;
             }
             let cmd = dataU32[cmdIndex];
@@ -188,7 +188,7 @@ export class SimpleCacheDrawer {
 
         if (drewTot != this.drewTotal) {
             this.drewTotal = drewTot;
-            console.log("batch drew total: ", this.drewTotal);
+            // console.log("batch drew total: ", this.drewTotal);
         }
         return cmdIndex;
     }

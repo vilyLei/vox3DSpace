@@ -189,14 +189,14 @@
 
             renderer.dirty = false;
             roScene.dirty = false;
-            console.log("render() ...");
+            // console.log("render() ...");
         }
 
         function loopRun() {
 
             if (!gl)
                 return;
-            
+
             render();
             requestAnimationFrame(loopRun);
         }

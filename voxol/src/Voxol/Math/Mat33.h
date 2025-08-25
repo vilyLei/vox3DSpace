@@ -58,15 +58,9 @@ public:
 };
 namespace Mat33Utils
 {
-Mat33 makeRotationMat33WithPivot(Vec2 localPivot, Vec2 fixCV, float scaleX, float scaleY, float rotation)
-{
-    Mat33 mat(scaleX - localPivot.x, scaleY - localPivot.y, scaleX, scaleY, rotation);
-    auto&&  cv = mat.mapPoint({localPivot.x / scaleX, localPivot.y / scaleY});
-    auto& data   = mat.data;
-    data[6] += fixCV.x - cv.x;
-    data[7] += fixCV.y - cv.y;
-    return mat;
-}
+void makeRotationMat33WithPivot(Mat33& transform, Vec2 localPivot, Vec2 fixCV, float scaleX, float scaleY, float rotation);
+Mat33 makeRotationMat33WithPivot(Vec2 localPivot, Vec2 fixCV, float scaleX, float scaleY, float rotation);
+Mat33 makeRotationMat33WithCenter(Vec2 fixCV, float scaleX, float scaleY, float rotation);
 } // namespace Mat33Utils
 } // namespace Voxol::Math
 

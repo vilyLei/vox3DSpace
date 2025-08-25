@@ -50,7 +50,7 @@ void RenderCmdBufBuilder::writeRenderingBegin()
 }
 void RenderCmdBufBuilder::writeBatchCmdNodeBegin(uint32_t cmdsTotal)
 {
-    printf("RenderCmdBufBuilder::writeBatchCmdNodeBegin(), cmdsTotal: %d\n", cmdsTotal);
+    // printf("RenderCmdBufBuilder::writeBatchCmdNodeBegin(), cmdsTotal: %d\n", cmdsTotal);
     // batch rounit rendering cmd
     auto trunkCmd      = 22;
     auto descBytesSize = sizeof(trunkCmd);
