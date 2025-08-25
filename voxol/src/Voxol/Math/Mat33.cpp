@@ -31,7 +31,7 @@ void Mat33::identity()
         0, 0, 1};
 }
 
-Mat33 Mat33::translate(float tx, float ty)
+Mat33 Mat33::makeTranslate(float tx, float ty)
 {
     return {
         1, 0, 0,
@@ -39,7 +39,7 @@ Mat33 Mat33::translate(float tx, float ty)
         tx, ty, 1};
 }
 
-Mat33 Mat33::scale(float sx, float sy)
+Mat33 Mat33::makeScale(float sx, float sy)
 {
     return {
         sx, 0, 0,
@@ -47,7 +47,7 @@ Mat33 Mat33::scale(float sx, float sy)
         0, 0, 1};
 }
 
-Mat33 Mat33::rotate(float rotRadians)
+Mat33 Mat33::makeRotate(float rotRadians)
 {
     float c = cosf(rotRadians);
     float s = sinf(rotRadians);

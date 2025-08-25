@@ -31,9 +31,9 @@ public:
 
     void identity();
 
-    static Mat33 translate(float tx, float ty);
-    static Mat33 scale(float sx = 1.0f, float sy = 1.0f);
-    static Mat33 rotate(float radians = 0.0f);
+    static Mat33 makeTranslate(float tx, float ty);
+    static Mat33 makeScale(float sx = 1.0f, float sy = 1.0f);
+    static Mat33 makeRotate(float radians = 0.0f);
 
     void ortho(float width, float height);
 
@@ -56,6 +56,18 @@ public:
 
     void print() const;
 };
+namespace Mat33Utils
+{
+Mat33 makeRotationMat33WithPivot(Vec2 localPivot, Vec2 fixCV, float scaleX, float scaleY, float rotation)
+{
+    Mat33 mat(scaleX - localPivot.x, scaleY - localPivot.y, scaleX, scaleY, rotation);
+    auto&&  cv = mat.mapPoint({localPivot.x / scaleX, localPivot.y / scaleY});
+    auto& data   = mat.data;
+    data[6] += fixCV.x - cv.x;
+    data[7] += fixCV.y - cv.y;
+    return mat;
+}
+} // namespace Mat33Utils
 } // namespace Voxol::Math
 
 #endif // VOXOL_MAT3_H
