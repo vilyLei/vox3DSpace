@@ -80,7 +80,7 @@ bool UIMouseCtrl::setMouseParams(ViewComponent& view, float x, float y, int type
         auto zoom = std::roundf(viewDesc.zoom * 1000) / 1000;
         printf("RenderCmdWorld::run() zoom: %f\n", zoom);
 
-        viewMat.setTo(std::roundf(pos.x), std::roundf(pos.y), zoom, zoom);
+        // viewMat.setTo(std::roundf(pos.x), std::roundf(pos.y), zoom, zoom);
         // viewMat.setTo(pos.x, pos.y, zoom, zoom);
     }
     // if (type == 4)
@@ -91,5 +91,6 @@ bool UIMouseCtrl::setMouseParams(ViewComponent& view, float x, float y, int type
     //     auto& pos      = viewDesc.position;
     //     viewMat.setTo(pos.x, pos.y, viewDesc.zoom, viewDesc.zoom);
     // }
+    return viewDirty;
 }
 } // namespace Voxol::Motion
