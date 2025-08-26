@@ -275,6 +275,7 @@ void RenderCmdWorld::setMouseParams(float x, float y, int type, float value)
         // printf("RenderCmdWorld::run() zoom: %f\n", zoom);
         // view.viewMat.setTo(std::roundf(pos.x), std::roundf(pos.y), zoom, zoom);
         // // viewMat.setTo(pos.x, pos.y, zoom, zoom);
+        view.update();
     }
     // if (type == 4)
     // {
