@@ -136,7 +136,6 @@ export class SimpleCacheDrawer {
 
         let moduleIns = this.moduleIns;
         let gl = this.glCtx;
-        // ctx = ctx == undefined ? moduleIns.viewTransDesc : ctx;
 
         let tot = 0;
         let matTot = scene.batchTotal;
@@ -144,7 +143,6 @@ export class SimpleCacheDrawer {
         let drewTot = 0;
 
         let batchEle = moduleIns.batchEleDesc;
-        // let cmdIndex = batchEle.getElementDataIndex();
         let dataU32 = batchEle.heapU32;
         let dataF32 = batchEle.heapF32;
 
@@ -157,7 +155,7 @@ export class SimpleCacheDrawer {
                 break;
             }
             if (tot >= total) {
-                // console.log("drawing batch cmds all !!!");
+                // console.log(`drawing batch cmds all tot=${tot}, total=${total} !!!`);
                 break;
             }
             let cmd = dataU32[cmdIndex];

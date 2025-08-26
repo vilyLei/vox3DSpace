@@ -19,7 +19,7 @@ void RenderCmdWorld::initialize()
 
     // printf("RenderCmdWorld::initialize() viewMat:\n");
 
-    auto cmdsTotal = 0;
+    auto cmdsTotal = 2;
 
     auto rn             = 3 * 1;
     auto cn             = 4 * 1;

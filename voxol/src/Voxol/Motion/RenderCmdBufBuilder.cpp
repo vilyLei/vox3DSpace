@@ -58,9 +58,10 @@ void RenderCmdBufBuilder::writeBatchCmdNodeBegin(uint32_t cmdsTotal)
     bufBytesIndex += descBytesSize;
 
     BatchElementCmdDesc batchDesc{};
-    batchDesc.descSize = cmdsTotal;
+    batchDesc.total = cmdsTotal;
     batchDesc.updateToBuffer(bufPtr + bufBytesIndex, bufBytesIndex, bufBytesSafeLength);
-    bufBytesIndex += 2 * 4;
+    // bufBytesIndex += 2 * 4;
+    bufBytesIndex += batchDesc.descSize * 4;
 }
 
 void RenderCmdBufBuilder::writeCmdNode(const DrawCmdTestNode& node)

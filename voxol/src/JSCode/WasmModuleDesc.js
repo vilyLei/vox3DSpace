@@ -80,11 +80,11 @@ export class BatchElementDesc {
         let heapU32 = this.heapU32;
         // let heapF32 = this.heapF32;
 
-        this.elementDataIndex = bufIndex + 2;
+        this.elementDataIndex = bufIndex + 3;
 
         this.cmd = heapU32[bufIndex];
         this.bufSize = heapU32[bufIndex + 1];
-        this.cmdsTotal = this.bufSize;
+        this.cmdsTotal = heapU32[bufIndex + 2];
 
         // console.log(`BatchElementDesc::update(), cmd: 0x${this.cmd.toString(16)}, cmdsTotal: ${this.cmdsTotal}`);
 

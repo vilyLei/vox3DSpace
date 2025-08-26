@@ -59,6 +59,7 @@ struct BatchElementCmdDesc
 {
     uint32_t rcmd     = 0x31;
     uint32_t descSize = 0x20;
+    uint32_t total = 0;
     bool     updateToBuffer(uint8_t* buffer, size_t bufBytesIndex, size_t bufBytesLength);
 };
 struct DrawingCmdDesc

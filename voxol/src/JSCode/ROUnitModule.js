@@ -337,6 +337,7 @@ export class BatchROUnit extends ROUnit {
         let r = ((colorU32 >> 16) & 0xff) / 255.0;
         let g = ((colorU32 >> 8) & 0xff) / 255.0;
         let b = (colorU32 & 0xff) / 255.0;
+        // console.log("[r, g, b, a]: ", [r, g, b, a]);
         this.colorData.set([r, g, b, a], drawIndex * 4);
 
         let f32Index = cmdIndex + 8;
