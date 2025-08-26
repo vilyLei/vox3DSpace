@@ -7,7 +7,7 @@ bool UIMouseCtrl::setMouseParams(ViewComponent& view, float x, float y, int type
     auto  viewDirty = false;
     auto& mousePos  = view.mousePos;
     mousePos        = {x, y};
-    // printf("RenderCmdWorld::setMouseParams(), type: %d\n", type);
+    // printf("UIMouseCtrl::setMouseParams(), type: %d\n", type);
     switch (type)
     {
         case 11:
@@ -36,13 +36,13 @@ bool UIMouseCtrl::setMouseParams(ViewComponent& view, float x, float y, int type
         {
 
             /*
-            printf("RenderCmdWorld::setMouseParams(), click, type: %d, value: %f\n", type, value);
-            printf("RenderCmdWorld::setMouseParams(), click, mousePos(%f, %f)\n", mousePos.x, mousePos.y);
+            printf("UIMouseCtrl::setMouseParams(), click, type: %d, value: %f\n", type, value);
+            printf("UIMouseCtrl::setMouseParams(), click, mousePos(%f, %f)\n", mousePos.x, mousePos.y);
             auto  i      = 0;
             auto  pos    = mousePos;
             auto& node   = cmdBatchNodes[i];
             auto& bounds = node.drcDesc.bounds;
-            printf("RenderCmdWorld::setMouseParams(), click, node(x=%f, y=%f), scale(sx=%f, sy=%f)\n", bounds.pos.x, bounds.pos.y, bounds.width, bounds.height);
+            printf("UIMouseCtrl::setMouseParams(), click, node(x=%f, y=%f), scale(sx=%f, sy=%f)\n", bounds.pos.x, bounds.pos.y, bounds.width, bounds.height);
             Mat33 mat{};
             node.updateToMat33(mat);
             printf("mat:\n");
@@ -53,13 +53,13 @@ bool UIMouseCtrl::setMouseParams(ViewComponent& view, float x, float y, int type
             invMat.print();
 
             auto&& v0 = mat.mapPoint({0.0f, 0.0f});
-            printf("RenderCmdWorld::setMouseParams(), click, v0(%f, %f)\n", v0.x, v0.y);
+            printf("UIMouseCtrl::setMouseParams(), click, v0(%f, %f)\n", v0.x, v0.y);
             auto&& v1  = invMat.mapPoint({mousePos.x, mousePos.y});
             auto   hit = node.contains(v1.x, v1.y);
-            printf("RenderCmdWorld::setMouseParams(), click, node.contains() hit: %d\n", hit);
+            printf("UIMouseCtrl::setMouseParams(), click, node.contains() hit: %d\n", hit);
             v1.x *= bounds.width;
             v1.y *= bounds.height;
-            printf("RenderCmdWorld::setMouseParams(), click, v1(%f, %f)\n", v1.x, v1.y);
+            printf("UIMouseCtrl::setMouseParams(), click, v1(%f, %f)\n", v1.x, v1.y);
             //*/
         }
 
@@ -68,20 +68,7 @@ bool UIMouseCtrl::setMouseParams(ViewComponent& view, float x, float y, int type
     }
     if (viewDirty)
     {
-        // dirty          = true;
-        auto& viewDesc = view.desc;
-
-        auto pos = viewDesc.position;
-
-        // preserve precision
-        pos.x = std::roundf(pos.x * 1000) / 1000;
-        pos.y = std::roundf(pos.y * 1000) / 1000;
-        // preserve precision
-        auto zoom = std::roundf(viewDesc.zoom * 1000) / 1000;
-        printf("RenderCmdWorld::run() zoom: %f\n", zoom);
-
-        // viewMat.setTo(std::roundf(pos.x), std::roundf(pos.y), zoom, zoom);
-        // viewMat.setTo(pos.x, pos.y, zoom, zoom);
+        view.update();
     }
     // if (type == 4)
     // {
