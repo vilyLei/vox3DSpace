@@ -19,7 +19,7 @@ void RenderCmdWorld::initialize()
 
     // printf("RenderCmdWorld::initialize() viewMat:\n");
 
-    auto cmdsTotal = 2;
+    auto cmdsTotal = 0;
 
     auto rn             = 3 * 1;
     auto cn             = 4 * 1;
@@ -29,7 +29,7 @@ void RenderCmdWorld::initialize()
     auto total = cmdsBatchTotal + cmdsTotal;
     printf("Voxol::Motion::RenderCmdWorld::initialize() total: %d\n", total);
 
-    bufBuilder.initialize((total + 8) * sizeof(RectDrawCmdDesc));
+    bufBuilder.initialize((total + 8) * sizeof(DrawingCmdDesc));
 
     commands.resize(total);
     cmdBatchNodes.resize(cmdsBatchTotal);
@@ -45,14 +45,13 @@ void RenderCmdWorld::initialize()
             auto px         = 50 + (j * (rsize + dis));
             commands[index] = 1;
             auto& node      = cmdBatchNodes[index];
-            node.color      = 0xff0000aa | ((index % 256) << 16);
-            node.color      = node.color | (((i * j * 2) % 256) << 16);
+            auto& desc      = node.drcDesc;
+            desc.color      = 0xff0000aa | ((index % 256) << 16);
+            desc.color      = desc.color | (((i * j * 2) % 256) << 16);
             // printf("node.color: %X\n", node.color);
-            node.x      = px;
-            node.y      = py;
-            node.scaleX = rsize;
-            node.scaleY = rsize;
-            node.mroid  = 1;
+            desc.bounds.setXY(px, py);
+            desc.bounds.setSize(rsize, rsize);
+            desc.mroid = 1;
 
             /*
             auto pindex = i * cn + j;
@@ -82,30 +81,27 @@ void RenderCmdWorld::initialize()
             }
             //*/
 
-            node.moveingNode.rect = {node.x, node.y, rsize * 1.0f, rsize * 1.0f};
+            node.moveingNode.rect = desc.bounds;
             node.init();
 
             index++;
         }
     }
 
-    auto  nodeIndex = 0;
-    auto& node0     = cmdNodes[nodeIndex];
-    node0.color     = 0xff00aaaa;
-    node0.x         = 300;
-    node0.y         = 300;
-    node0.scaleX    = 128;
-    node0.scaleY    = 128;
-    node0.mroid     = 2;
+    if (!cmdNodes.empty())
+    {
+        auto  nodeIndex      = 0;
+        auto& node0          = cmdNodes[nodeIndex];
+        node0.drcDesc.color  = 0xff00aaaa;
+        node0.drcDesc.bounds = {{300, 300}, 128, 128};
+        node0.drcDesc.mroid  = 2;
 
-    nodeIndex++;
-    auto& node1     = cmdNodes[nodeIndex];
-    node1.color     = 0xffffffff;
-    node1.x         = 500;
-    node1.y         = 350;
-    node1.scaleX    = 128;
-    node1.scaleY    = 128;
-    node1.mroid     = 3;
+        nodeIndex++;
+        auto& node1          = cmdNodes[nodeIndex];
+        node1.drcDesc.color  = 0xffffffff;
+        node1.drcDesc.bounds = {{500, 350}, 128, 128};
+        node1.drcDesc.mroid  = 3;
+    }
 
     mInit = false;
 }
@@ -167,14 +163,19 @@ void RenderCmdWorld::run()
 
 void RenderCmdWorld::update()
 {
-    auto& node     = cmdNodes[0];
+    if (!cmdNodes.empty())
+    {
+        auto& node = cmdNodes[0];
 
-    Vec2 localPivot{64.0f, 64.0f};
-    Vec2 fixCV{300.0f, 300.0f};
-    Mat33Utils::makeRotationMat33WithPivot(node.transform, localPivot, fixCV, node.scaleX, node.scaleY, node.rotation);
-    node.rotation += 0.1f;
-    node.dirty = false;
-    dirty = true;
+        Vec2  localPivot{64.0f, 64.0f};
+        Vec2  fixCV{300.0f, 300.0f};
+        auto& desc   = node.drcDesc;
+        auto& bounds = node.drcDesc.bounds;
+        Mat33Utils::makeRotationMat33WithPivot(desc.transform, localPivot, fixCV, bounds.width, bounds.height, node.rotation);
+        node.rotation += 0.1f;
+        node.dirty = false;
+        dirty      = true;
+    }
 }
 
 
@@ -240,10 +241,11 @@ void RenderCmdWorld::setMouseParams(float x, float y, int type, float value)
 
             printf("RenderCmdWorld::setMouseParams(), click, type: %d, value: %f\n", type, value);
             printf("RenderCmdWorld::setMouseParams(), click, mousePos(%f, %f)\n", mousePos.x, mousePos.y);
-            auto  i    = 0;
-            auto  pos  = mousePos;
-            auto& node = cmdBatchNodes[i];
-            printf("RenderCmdWorld::setMouseParams(), click, node(x=%f, y=%f), scale(sx=%f, sy=%f)\n", node.x, node.y, node.scaleX, node.scaleY);
+            auto  i      = 0;
+            auto  pos    = mousePos;
+            auto& node   = cmdBatchNodes[i];
+            auto& bounds = node.drcDesc.bounds;
+            printf("RenderCmdWorld::setMouseParams(), click, node(x=%f, y=%f), scale(sx=%f, sy=%f)\n", bounds.pos.x, bounds.pos.y, bounds.width, bounds.height);
             Mat33 mat{};
             node.updateToMat33(mat);
             printf("mat:\n");
@@ -258,8 +260,8 @@ void RenderCmdWorld::setMouseParams(float x, float y, int type, float value)
             auto&& v1  = invMat.mapPoint({mousePos.x, mousePos.y});
             auto   hit = node.contains(v1.x, v1.y);
             printf("RenderCmdWorld::setMouseParams(), click, node.contains() hit: %d\n", hit);
-            v1.x *= node.scaleX;
-            v1.y *= node.scaleY;
+            v1.x *= bounds.width;
+            v1.y *= bounds.height;
             printf("RenderCmdWorld::setMouseParams(), click, v1(%f, %f)\n", v1.x, v1.y);
         }
 

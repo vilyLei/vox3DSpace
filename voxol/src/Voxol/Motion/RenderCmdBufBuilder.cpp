@@ -63,18 +63,18 @@ void RenderCmdBufBuilder::writeBatchCmdNodeBegin(uint32_t cmdsTotal)
     bufBytesIndex += 2 * 4;
 }
 
-void RenderCmdBufBuilder::writeCmdNode(RectDrawCmdDesc& unitDesc, const DrawCmdTestNode& node)
+void RenderCmdBufBuilder::writeCmdNode(const DrawCmdTestNode& node)
 {
-    unitDesc.rcmd  = node.rcmd;
-    unitDesc.mroid = node.mroid;
-    unitDesc.color = node.color;
-    auto& bounds   = unitDesc.bounds;
-    bounds.pos.x   = node.x;
-    bounds.pos.y   = node.y;
-    bounds.width   = node.scaleX;
-    bounds.height  = node.scaleY;
+    // unitDesc.rcmd  = node.rcmd;
+    // unitDesc.mroid = node.mroid;
+    // unitDesc.color = node.color;
+    // auto& bounds   = unitDesc.bounds;
+    // bounds.pos.x   = node.x;
+    // bounds.pos.y   = node.y;
+    // bounds.width   = node.scaleX;
+    // bounds.height  = node.scaleY;
 
-    unitDesc.transform = node.transform;
+    // unitDesc.transform = node.transform;
 
     // rectDesc.transform = projMat;
     // // view mat and proj mat maybe become to a camera function
@@ -89,9 +89,10 @@ void RenderCmdBufBuilder::writeCmdNode(RectDrawCmdDesc& unitDesc, const DrawCmdT
     // rectDesc.transform.print();
     // printf(">    >     >\n");
 
-    unitDesc.updateToBuffer(bufPtr + bufBytesIndex, bufBytesIndex, bufBytesSafeLength);
 
-    bufBytesIndex += unitDesc.descSize * 4;
+    node.drcDesc.updateToBuffer(bufPtr + bufBytesIndex, bufBytesIndex, bufBytesSafeLength);
+
+    bufBytesIndex += node.drcDesc.descSize * 4;
 }
 void RenderCmdBufBuilder::build(const std::vector<DrawCmdTestNode>& cmdBatchNodes, const std::vector<DrawCmdTestNode>& cmdNodes)
 {
@@ -104,7 +105,7 @@ void RenderCmdBufBuilder::build(const std::vector<DrawCmdTestNode>& cmdBatchNode
     writeCamInfo();    
     writeRenderingBegin();
 
-    RectDrawCmdDesc unitDesc{};
+    DrawingCmdDesc unitDesc{};
 
     if (!cmdBatchNodes.empty())
     {
@@ -112,7 +113,7 @@ void RenderCmdBufBuilder::build(const std::vector<DrawCmdTestNode>& cmdBatchNode
         writeBatchCmdNodeBegin(tot);
         for (auto i = 0; i < tot; i++)
         {
-            writeCmdNode(unitDesc, cmdBatchNodes[i]);
+            writeCmdNode(cmdBatchNodes[i]);
         }
     }
     if (!cmdNodes.empty())
@@ -120,7 +121,7 @@ void RenderCmdBufBuilder::build(const std::vector<DrawCmdTestNode>& cmdBatchNode
         auto tot = static_cast<uint32_t>(cmdNodes.size());
         for (auto i = 0; i < tot; i++)
         {
-            writeCmdNode(unitDesc, cmdNodes[i]);
+            writeCmdNode(cmdNodes[i]);
         }
     }
 

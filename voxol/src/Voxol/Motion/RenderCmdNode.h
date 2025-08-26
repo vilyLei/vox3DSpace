@@ -27,6 +27,8 @@ struct Rect
     float width;
     float height;
 
+    void setXY(float x, float y);
+    void setSize(float w, float h);
     bool intersects(const Rect& other) const;
 };
 
@@ -59,7 +61,7 @@ struct BatchElementCmdDesc
     uint32_t descSize = 0x20;
     bool     updateToBuffer(uint8_t* buffer, size_t bufBytesIndex, size_t bufBytesLength);
 };
-struct RectDrawCmdDesc
+struct DrawingCmdDesc
 {
     uint32_t         rcmd     = 0x32;
     uint32_t         descSize = 0x20;
@@ -68,25 +70,30 @@ struct RectDrawCmdDesc
     uint32_t         color = 0xff00aa00;
     Mat33            transform{};
 
-    bool updateToBuffer(uint8_t* buffer, size_t bufBytesIndex, size_t bufBytesLength);
+    bool updateToBuffer(uint8_t* buffer, size_t bufBytesIndex, size_t bufBytesLength) const;
+    void update();
 };
 
 struct DrawCmdTestNode
 {
-    uint32_t rcmd   = 0x32;
-    uint32_t mroid  = 0;
-    uint32_t color  = 0xff00aa00;
-    float    x      = 0;
-    float    y      = 0;
-    float    scaleX = 1;
-    float    scaleY = 1;
+    // uint32_t rcmd   = 0x32;
+    // uint32_t mroid  = 0;
+    // uint32_t color  = 0xff00aa00;
+    // float    x      = 0;
+    // float    y      = 0;
+    // float    scaleX = 1;
+    // float    scaleY = 1;
     /// @brief radian value
     float rotation = 0;
-
-    Mat33 transform{};
+    // Mat33 transform{};
     bool  dirty = true;
 
     RectTarget::MovingRect moveingNode{};
+    DrawingCmdDesc drcDesc{};
+
+
+    void setXY(float x, float y);
+    void setSize(float w, float h);
 
     void init();
     void updateToMat33(Mat33& mat);

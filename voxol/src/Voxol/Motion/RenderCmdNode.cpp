@@ -18,6 +18,18 @@ Vec2 Vec2::operator+(const Vec2& other) const { return {x + other.x, y + other.y
 Vec2 Vec2::operator-(const Vec2& other) const { return {x - other.x, y - other.y}; }
 Vec2 Vec2::operator*(float s) const { return {x * s, y * s}; }
 
+
+void Rect::setXY(float x, float y)
+{
+    pos.x = x;
+    pos.y = y;
+}
+void Rect::setSize(float w, float h)
+{
+    width  = w;
+    height = h;
+}
+
 bool Rect::intersects(const Rect& other) const
 {
     return !(pos.x + width < other.pos.x || pos.x > other.pos.x + other.width ||
@@ -74,61 +86,73 @@ bool BatchElementCmdDesc::updateToBuffer(uint8_t* buffer, size_t bufBytesIndex, 
         // printf("BatchElementCmdDesc::updateToBuffer() AAA ...\n");
         return false;
     }
-    // descSize = static_cast<uint32_t>(bytesSize) / 4;
+    descSize = static_cast<uint32_t>(bytesSize) / 4;
     // printf("descSize: %d, bytesSize: %d\n", descSize, bytesSize);
     std::memcpy(buffer, this, bytesSize);
     // printf("BatchElementCmdDesc::updateToBuffer() BBB ...\n");
     return true;
 }
 
-bool RectDrawCmdDesc::updateToBuffer(uint8_t* buffer, size_t bufBytesIndex, size_t bufBytesLength)
+bool DrawingCmdDesc::updateToBuffer(uint8_t* buffer, size_t bufBytesIndex, size_t bufBytesLength) const
 {
-    constexpr auto bytesSize = sizeof(RectDrawCmdDesc);
+    constexpr auto bytesSize = sizeof(DrawingCmdDesc);
 
     if ((bufBytesIndex + bytesSize) > bufBytesLength)
     {
         // printf("RectDrawCmdDesc::updateToBuffer() AAA ...\n");
         return false;
     }
-    descSize = static_cast<uint32_t>(bytesSize) / 4;
     // printf("descSize: %d, bytesSize: %d\n", descSize, bytesSize);
     std::memcpy(buffer, this, bytesSize);
     // printf("RectDrawCmdDesc::updateToBuffer() BBB ...\n");
     return true;
 }
+void DrawingCmdDesc::update()
+{
+    constexpr auto bytesSize = sizeof(DrawingCmdDesc);
+    descSize                 = static_cast<uint32_t>(bytesSize) / 4;
+}
 
-// void RectDrawCmdDesc::updateToBuffer(uint8_t* buffer)
-// {
-//     constexpr auto descBytesSize = sizeof(RectDrawCmdDesc);
-//     constexpr auto stride = static_cast<uint32_t>(descBytesSize) / 4;
-//     descSize = stride;
-//     //printf("descSize: %d\n", descSize);
-//     std::memcpy(buffer, this, descBytesSize);
-// }
 
+void DrawCmdTestNode::setXY(float x, float y)
+{
+    drcDesc.bounds.setXY(x, y);
+}
+void DrawCmdTestNode::setSize(float w, float h)
+{
+    drcDesc.bounds.setSize(w, h);
+}
 
 void DrawCmdTestNode::init()
 {
-    auto vx = (randomFloatValue() * 0.5f - 0.5f) * 2 + randomFloatValue();
-    auto vy = (randomFloatValue() * 0.5f - 0.5f) * 2 + randomFloatValue();
+    auto vx              = (randomFloatValue() * 0.5f - 0.5f) * 2 + randomFloatValue();
+    auto vy              = (randomFloatValue() * 0.5f - 0.5f) * 2 + randomFloatValue();
     moveingNode.velocity = {vx, vy};
 }
 void DrawCmdTestNode::updateToMat33(Mat33& mat)
 {
-    mat.setTo(x, y, scaleX, scaleY, rotation);
+    auto& bounds = drcDesc.bounds;
+    auto& pos    = bounds.pos;
+    mat.setTo(pos.x, pos.y, bounds.width, bounds.height, rotation);
 }
 
-bool DrawCmdTestNode::contains(float px, float py) const {
-    if(px < 0.0f || py < 0.0f)
+bool DrawCmdTestNode::contains(float px, float py) const
+{
+    if (px < 0.0f || py < 0.0f)
         return false;
-    if(px > 1.0f || py > 1.0f)
+    if (px > 1.0f || py > 1.0f)
         return false;
     return true;
 }
-void DrawCmdTestNode::update() {
-    if(dirty) {
+void DrawCmdTestNode::update()
+{
+    if (dirty)
+    {
+        drcDesc.update();
+        auto& bounds = drcDesc.bounds;
+        auto& pos    = bounds.pos;
+        drcDesc.transform.setTo(pos.x, pos.y, bounds.width, bounds.height, rotation);
         dirty = true;
-        transform.setTo(x, y, scaleX, scaleY, rotation);
     }
 }
 

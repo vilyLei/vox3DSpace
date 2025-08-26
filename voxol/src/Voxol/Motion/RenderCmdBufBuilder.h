@@ -30,7 +30,7 @@ private:
     void writeCamInfo();
     void writeRenderingBegin();
     void writeBatchCmdNodeBegin(uint32_t cmdsTotal);
-    void writeCmdNode(RectDrawCmdDesc& unitDesc, const DrawCmdTestNode& node);
+    void writeCmdNode(const DrawCmdTestNode& node);
 
 private:
     uint8_t*             bufPtr;
