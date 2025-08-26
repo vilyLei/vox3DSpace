@@ -96,4 +96,19 @@ void ViewComponent::moveEnd(const Point2DDesc& pos)
     moving = false;
 }
 
+void ViewComponent::update()
+{
+    auto pos = desc.position;
+
+    // preserve precision
+    pos.x = std::roundf(pos.x * 1000) / 1000;
+    pos.y = std::roundf(pos.y * 1000) / 1000;
+
+    // preserve precision
+    auto zoom = std::roundf(desc.zoom * 1000) / 1000;
+    printf("ViewComponent::update() zoom: %f\n", zoom);
+
+    viewMat.setTo(std::roundf(pos.x), std::roundf(pos.y), zoom, zoom);
+}
+
 } // namespace Voxol::Motion

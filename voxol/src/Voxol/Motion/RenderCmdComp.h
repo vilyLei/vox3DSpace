@@ -40,6 +40,7 @@ struct ViewComponent
     void moveBegin(const Point2DDesc& pos);
     bool move(const Point2DDesc& pos);
     void moveEnd(const Point2DDesc& pos);
+    void update();
 
 private:
     Point2DDesc fixOriginPos{};

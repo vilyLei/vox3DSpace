@@ -264,20 +264,17 @@ void RenderCmdWorld::setMouseParams(float x, float y, int type, float value)
     if (viewDirty)
     {
         dirty          = true;
-        auto& viewDesc = view.desc;
 
-        auto pos = viewDesc.position;
-
-        // preserve precision
-        pos.x = std::roundf(pos.x * 1000) / 1000;
-        pos.y = std::roundf(pos.y * 1000) / 1000;
-
-        // preserve precision
-        auto zoom = std::roundf(viewDesc.zoom * 1000) / 1000;
-        printf("RenderCmdWorld::run() zoom: %f\n", zoom);
-
-        view.viewMat.setTo(std::roundf(pos.x), std::roundf(pos.y), zoom, zoom);
-        // viewMat.setTo(pos.x, pos.y, zoom, zoom);
+        // auto& viewDesc = view.desc;
+        // auto pos = viewDesc.position;
+        // // preserve precision
+        // pos.x = std::roundf(pos.x * 1000) / 1000;
+        // pos.y = std::roundf(pos.y * 1000) / 1000;
+        // // preserve precision
+        // auto zoom = std::roundf(viewDesc.zoom * 1000) / 1000;
+        // printf("RenderCmdWorld::run() zoom: %f\n", zoom);
+        // view.viewMat.setTo(std::roundf(pos.x), std::roundf(pos.y), zoom, zoom);
+        // // viewMat.setTo(pos.x, pos.y, zoom, zoom);
     }
     // if (type == 4)
     // {
