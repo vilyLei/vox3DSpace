@@ -7,6 +7,14 @@
 
 namespace Voxol::Motion
 {
+struct UIMouseParam
+{
+    float x = 0;
+    float y = 0;
+    int type = 0;
+    float value = 0;
+};
+
 class UIMouseCtrl
 {
 private:
@@ -15,7 +23,7 @@ public:
     ~UIMouseCtrl() = default;
 
 public:
-    bool setMouseParams(ViewComponent& view, float x, float y, int type, float value);
+    bool setMouseParams(ViewComponent& view, const UIMouseParam& param);
 };
 
 } // namespace Voxol::Motion

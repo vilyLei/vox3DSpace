@@ -5,6 +5,7 @@
 #include "../Math/Mat33.h"
 #include "RenderCmdNode.h"
 #include "RenderCmdBufBuilder.h"
+#include "UIMouseCtrl.h"
 
 namespace Voxol::Motion
 {
@@ -22,8 +23,8 @@ public:
     // Voxol::Math::Mat33           projMat{};
 
     CanvasDesc  canvas{};
-
     RenderCmdBufBuilder bufBuilder{};
+    UIMouseCtrl mouseCtrl{};
 
     bool dirty = true;
 
@@ -37,7 +38,7 @@ public:
     void           run();
     void           setGPUCtxSize(int w, int h);
     void           setMouseXY(float x, float y);
-    void           setMouseParams(float x, float y, int type, float value);
+    void           setMouseParams(const UIMouseParam& param);
     const uint8_t* cmdBuffer() const;
 
 private:

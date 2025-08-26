@@ -198,8 +198,10 @@ void RenderCmdWorld::setMouseXY(float x, float y)
     canvas.view.mousePos = {x, y};
 }
 
-void RenderCmdWorld::setMouseParams(float x, float y, int type, float value)
+void RenderCmdWorld::setMouseParams(const UIMouseParam& param)
 {
+    dirty = dirty || mouseCtrl.setMouseParams(canvas.view, param);
+    /*
     auto  viewDirty = false;
     auto& view      = canvas.view;
     auto& mousePos  = canvas.view.mousePos;
@@ -285,6 +287,7 @@ void RenderCmdWorld::setMouseParams(float x, float y, int type, float value)
     //     auto& pos      = viewDesc.position;
     //     viewMat.setTo(pos.x, pos.y, viewDesc.zoom, viewDesc.zoom);
     // }
+    //*/
 }
 
 const uint8_t* RenderCmdWorld::cmdBuffer() const

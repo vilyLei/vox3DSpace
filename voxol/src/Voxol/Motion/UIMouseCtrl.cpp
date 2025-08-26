@@ -2,13 +2,13 @@
 #include "UIMouseCtrl.h"
 namespace Voxol::Motion
 {
-bool UIMouseCtrl::setMouseParams(ViewComponent& view, float x, float y, int type, float value)
+bool UIMouseCtrl::setMouseParams(ViewComponent& view, const UIMouseParam& param)
 {
     auto  viewDirty = false;
     auto& mousePos  = view.mousePos;
-    mousePos        = {x, y};
+    mousePos        = {param.x, param.y};
     // printf("UIMouseCtrl::setMouseParams(), type: %d\n", type);
-    switch (type)
+    switch (param.type)
     {
         case 11:
         {
@@ -28,7 +28,7 @@ bool UIMouseCtrl::setMouseParams(ViewComponent& view, float x, float y, int type
         break;
         case 4:
         {
-            auto dv   = std::abs(value) > 1 ? value * 0.01f : value;
+            auto dv   = std::abs(param.value) > 1 ? param.value * 0.01f : param.value;
             viewDirty = view.updateViewZoom(mousePos, -dv, 1.2f);
         }
         break;
