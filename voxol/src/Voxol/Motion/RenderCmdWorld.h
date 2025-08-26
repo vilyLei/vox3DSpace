@@ -21,7 +21,7 @@ public:
     Voxol::Math::Mat33           viewMat{};
     Voxol::Math::Mat33           projMat{};
 
-    Point2DDesc mousePos{};
+    // Point2DDesc mousePos{};
     CanvasDesc  canvas{};
     ViewDesc    view{};
 

@@ -193,24 +193,15 @@ void RenderCmdWorld::setGPUCtxSize(int w, int h)
 
 void RenderCmdWorld::setMouseXY(float x, float y)
 {
-    // using namespace Voxol::Math;
-
-    mousePos             = {x, y};
-    canvas.view.mousePos = mousePos;
-
-    // auto& node = cmdBatchNodes[0];
-    // node.x     = x;
-    // node.y     = y;
-    // dirty      = true;
-    // printf("RenderCmdWorld::setMouseXY(%f, %f)\n", x, y);
+    canvas.view.mousePos = {x, y};
 }
 
 void RenderCmdWorld::setMouseParams(float x, float y, int type, float value)
 {
-    setMouseXY(x, y);
-
     auto  viewDirty = false;
     auto& view      = canvas.view;
+    auto& mousePos  = canvas.view.mousePos;
+    mousePos = {x,y};
     // printf("RenderCmdWorld::setMouseParams(), type: %d\n", type);
     switch (type)
     {

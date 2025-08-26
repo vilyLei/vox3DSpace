@@ -60,23 +60,11 @@ void RenderCmdBufBuilder::writeBatchCmdNodeBegin(uint32_t cmdsTotal)
     BatchElementCmdDesc batchDesc{};
     batchDesc.total = cmdsTotal;
     batchDesc.updateToBuffer(bufPtr + bufBytesIndex, bufBytesIndex, bufBytesSafeLength);
-    // bufBytesIndex += 2 * 4;
     bufBytesIndex += batchDesc.descSize * 4;
 }
 
 void RenderCmdBufBuilder::writeCmdNode(const DrawCmdTestNode& node)
 {
-    // unitDesc.rcmd  = node.rcmd;
-    // unitDesc.mroid = node.mroid;
-    // unitDesc.color = node.color;
-    // auto& bounds   = unitDesc.bounds;
-    // bounds.pos.x   = node.x;
-    // bounds.pos.y   = node.y;
-    // bounds.width   = node.scaleX;
-    // bounds.height  = node.scaleY;
-
-    // unitDesc.transform = node.transform;
-
     // rectDesc.transform = projMat;
     // // view mat and proj mat maybe become to a camera function
     // rectDesc.transform.append(viewMat);
@@ -89,7 +77,6 @@ void RenderCmdBufBuilder::writeCmdNode(const DrawCmdTestNode& node)
     // rectDesc.transform.prepend(projMat);
     // rectDesc.transform.print();
     // printf(">    >     >\n");
-
 
     node.drcDesc.updateToBuffer(bufPtr + bufBytesIndex, bufBytesIndex, bufBytesSafeLength);
 
