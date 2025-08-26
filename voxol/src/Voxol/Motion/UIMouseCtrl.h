@@ -15,7 +15,7 @@ public:
     ~UIMouseCtrl() = default;
 
 public:
-    void setMouseParams(ViewComponent& view, float x, float y, int type, float value);
+    bool setMouseParams(ViewComponent& view, float x, float y, int type, float value);
 };
 
 } // namespace Voxol::Motion
