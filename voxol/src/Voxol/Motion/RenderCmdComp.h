@@ -3,6 +3,7 @@
 
 #include <vector>
 #include "../Base/BaseDefine.h"
+#include "../Math/Mat33.h"
 
 namespace Voxol::Motion
 {
@@ -27,21 +28,24 @@ struct ViewDesc
 
 struct ViewComponent
 {
-    ViewDesc desc{};
-    Point2DDesc mousePos{};
-    float    viewScale{1};
+    ViewDesc           desc{};
+    Point2DDesc        mousePos{};
+    float              viewScale{1};
+    Voxol::Math::Mat33 viewMat{};
+    Voxol::Math::Mat33 projMat{};
 
-    bool     viewZoomWithFixPos(const Point2DDesc& zoomPos, float dstScale);
-    bool     updateViewZoom(const Point2DDesc& fixPos, float delta, float speed = 1.2f);
+    bool viewZoomWithFixPos(const Point2DDesc& zoomPos, float dstScale);
+    bool updateViewZoom(const Point2DDesc& fixPos, float delta, float speed = 1.2f);
 
     void moveBegin(const Point2DDesc& pos);
     bool move(const Point2DDesc& pos);
     void moveEnd(const Point2DDesc& pos);
+
 private:
     Point2DDesc fixOriginPos{};
     Point2DDesc fixPos{};
     Point2DDesc fixViewPos{};
-    bool moving{false};
+    bool        moving{false};
 };
 
 struct CanvasDesc

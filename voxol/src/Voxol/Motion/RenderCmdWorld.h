@@ -18,8 +18,8 @@ public:
     std::vector<DrawCmdTestNode> cmdBatchNodes{};
     std::vector<DrawCmdTestNode> cmdNodes{};
 
-    Voxol::Math::Mat33           viewMat{};
-    Voxol::Math::Mat33           projMat{};
+    // Voxol::Math::Mat33           viewMat{};
+    // Voxol::Math::Mat33           projMat{};
 
     CanvasDesc  canvas{};
 

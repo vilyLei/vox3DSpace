@@ -153,9 +153,10 @@ void RenderCmdWorld::run()
         cmdNodes[i].update();
     }
 
+    auto& view      = canvas.view;
     auto& camDesc   = bufBuilder.camDesc;
-    camDesc.projMat = projMat;
-    camDesc.viewMat = viewMat;
+    camDesc.projMat = view.projMat;
+    camDesc.viewMat = view.viewMat;
     bufBuilder.build(cmdBatchNodes, cmdNodes);
 
     // printf("RenderCmdWorld::run() B cmdsTotal: %zu\n", cmdsTotal);
@@ -181,11 +182,12 @@ void RenderCmdWorld::update()
 
 void RenderCmdWorld::setGPUCtxSize(int w, int h)
 {
+    auto& view      = canvas.view;
     SizeDesc desc{static_cast<float>(w), static_cast<float>(h)};
     if (!canvas.size.isEqual(desc))
     {
         canvas.size = desc;
-        projMat.ortho(w, h);
+        view.projMat.ortho(w, h);
         dirty = true;
         // printf("RenderCmdWorld::setGPUCtxSize() ...\n");
     }
@@ -274,7 +276,7 @@ void RenderCmdWorld::setMouseParams(float x, float y, int type, float value)
         auto zoom = std::roundf(viewDesc.zoom * 1000) / 1000;
         printf("RenderCmdWorld::run() zoom: %f\n", zoom);
 
-        viewMat.setTo(std::roundf(pos.x), std::roundf(pos.y), zoom, zoom);
+        view.viewMat.setTo(std::roundf(pos.x), std::roundf(pos.y), zoom, zoom);
         // viewMat.setTo(pos.x, pos.y, zoom, zoom);
     }
     // if (type == 4)
