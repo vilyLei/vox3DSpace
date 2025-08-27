@@ -120,6 +120,8 @@ class TileRODesc {
         let moduleIns = wscRenderer.moduleIns;
         let wscCtx = moduleIns.viewTransDesc;
 
+        let pw = this.width;
+        let ph = this.height;
         if (ctx == undefined) {
 
             let zoom = 1;
@@ -127,6 +129,7 @@ class TileRODesc {
             viewMat3.data.set(wscCtx.viewF32);
             viewMat3.setXY(-this.x, -this.y, zoom, zoom);
             let projMat3 = this.projMat3;
+            projMat3.ortho(pw, ph);
             ctx = { viewF32: viewMat3.data, projF32: projMat3.data };
         }
         wscRenderer.draw(ctx);

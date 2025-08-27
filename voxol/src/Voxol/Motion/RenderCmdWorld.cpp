@@ -29,7 +29,7 @@ void RenderCmdWorld::initialize()
 
     // printf("RenderCmdWorld::initialize() viewMat:\n");
 
-    auto cmdsTotal = 2;
+    auto cmdsTotal = 6;
 
     auto rn             = 3 * 1;
     auto cn             = 4 * 1;
@@ -105,7 +105,7 @@ void RenderCmdWorld::initialize()
         node0.drcDesc.color  = 0xff00aaaa;
         node0.drcDesc.bounds = {{300, 300}, 128, 128};
         node0.drcDesc.mroid  = 2;
-        node0.rotation = 0.3f;
+        node0.rotation       = 0.3f;
         testRotationOp(node0);
 
         nodeIndex++;
@@ -113,6 +113,21 @@ void RenderCmdWorld::initialize()
         node1.drcDesc.color  = 0xffffffff;
         node1.drcDesc.bounds = {{500, 350}, 128, 128};
         node1.drcDesc.mroid  = 3;
+
+        nodeIndex++;
+        auto& node2          = cmdNodes[nodeIndex];
+        node2.drcDesc.color  = 0xff003333;
+        node2.drcDesc.bounds = {{300, 530}, 128, 128};
+        node2.drcDesc.mroid  = 2;
+        nodeIndex++;
+        for (auto i = 0; i < 3; ++i)
+        {
+            auto& drcDesc  = cmdNodes[nodeIndex].drcDesc;
+            drcDesc.color  = 0xffbbbb00;
+            drcDesc.bounds = {{300.0f, 560.0f + i * 20}, 128, 1};
+            drcDesc.mroid  = 2;
+            nodeIndex++;
+        }
     }
 
     mInit = false;
