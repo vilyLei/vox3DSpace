@@ -113,18 +113,20 @@ class TileRODesc {
         this.wscRenderer.dirty = true;
     }
     
-    buildDraw(ctx) {
+    buildDraw(ctx, pos) {
 
-        let gl = this.fboUnit.glCtx;
         let wscRenderer = this.wscRenderer;
-        let moduleIns = wscRenderer.moduleIns;
-        let wscCtx = moduleIns.viewTransDesc;
 
-        let pw = this.width;
-        let ph = this.height;
-        let px = this.x;
-        let py = this.y;
+        if(pos == undefined) {
+            pos = {x:0,y:0};
+        }
+        
         if (ctx == undefined) {
+
+            let pw = this.width;
+            let ph = this.height;
+            let px = pos.x + this.x;
+            let py = pos.y + this.y;
 
             let zoom = 1;
             let viewMat3 = this.viewMat3;
