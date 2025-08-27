@@ -164,19 +164,20 @@ void RenderCmdWorld::run()
 
 void RenderCmdWorld::update()
 {
-    if (!cmdNodes.empty())
-    {
-        auto& node = cmdNodes[0];
+    // //for test
+    // if (!cmdNodes.empty())
+    // {
+    //     auto& node = cmdNodes[0];
 
-        Vec2  localPivot{64.0f, 64.0f};
-        Vec2  fixCV{300.0f, 300.0f};
-        auto& desc   = node.drcDesc;
-        auto& bounds = node.drcDesc.bounds;
-        Mat33Utils::makeRotationMat33WithPivot(desc.transform, localPivot, fixCV, bounds.width, bounds.height, node.rotation);
-        node.rotation += 0.1f;
-        node.dirty = false;
-        dirty      = true;
-    }
+    //     Vec2  localPivot{64.0f, 64.0f};
+    //     Vec2  fixCV{300.0f, 300.0f};
+    //     auto& desc   = node.drcDesc;
+    //     auto& bounds = node.drcDesc.bounds;
+    //     Mat33Utils::makeRotationMat33WithPivot(desc.transform, localPivot, fixCV, bounds.width, bounds.height, node.rotation);
+    //     node.rotation += 0.1f;
+    //     node.dirty = false;
+    //     dirty      = true;
+    // }
 }
 
 
