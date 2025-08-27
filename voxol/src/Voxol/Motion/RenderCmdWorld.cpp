@@ -10,6 +10,16 @@ RenderCmdWorld::RenderCmdWorld()
 RenderCmdWorld::~RenderCmdWorld()
 {
 }
+void testRotationOp(DrawCmdTestNode& node)
+{
+    Vec2  localPivot{64.0f, 64.0f};
+    Vec2  fixCV{300.0f, 300.0f};
+    auto& desc   = node.drcDesc;
+    auto& bounds = node.drcDesc.bounds;
+    Mat33Utils::makeRotationMat33WithPivot(desc.transform, localPivot, fixCV, bounds.width, bounds.height, node.rotation);
+    node.rotation += 0.1f;
+    node.dirty = false;
+}
 void RenderCmdWorld::initialize()
 {
     if (!mInit)
@@ -95,6 +105,8 @@ void RenderCmdWorld::initialize()
         node0.drcDesc.color  = 0xff00aaaa;
         node0.drcDesc.bounds = {{300, 300}, 128, 128};
         node0.drcDesc.mroid  = 2;
+        node0.rotation = 0.3f;
+        testRotationOp(node0);
 
         nodeIndex++;
         auto& node1          = cmdNodes[nodeIndex];
@@ -164,26 +176,18 @@ void RenderCmdWorld::run()
 
 void RenderCmdWorld::update()
 {
-    // //for test
     // if (!cmdNodes.empty())
     // {
-    //     auto& node = cmdNodes[0];
-
-    //     Vec2  localPivot{64.0f, 64.0f};
-    //     Vec2  fixCV{300.0f, 300.0f};
-    //     auto& desc   = node.drcDesc;
-    //     auto& bounds = node.drcDesc.bounds;
-    //     Mat33Utils::makeRotationMat33WithPivot(desc.transform, localPivot, fixCV, bounds.width, bounds.height, node.rotation);
-    //     node.rotation += 0.1f;
-    //     node.dirty = false;
-    //     dirty      = true;
+    //     testRotationOp(cmdNodes[0]);
+    //     cmdNodes[0].rotation += 0.05f;
+    //     dirty = true;
     // }
 }
 
 
 void RenderCmdWorld::setGPUCtxSize(int w, int h)
 {
-    auto& view      = canvas.view;
+    auto&    view = canvas.view;
     SizeDesc desc{static_cast<float>(w), static_cast<float>(h)};
     if (!canvas.size.isEqual(desc))
     {
