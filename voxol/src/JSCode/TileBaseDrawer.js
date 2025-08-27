@@ -11,6 +11,12 @@ import {
 
 import { FBOUnit, TileUnit } from './FBOModule.js';
 
+function calcCeilOfTwoLevel(value) {
+    return Math.ceil(Math.log(value) / Math.LN2);
+}
+function calcCeilPowerOfTwo(value) {
+    return Math.pow(2, Math.ceil(Math.log(value) / Math.LN2));
+}
 export class TileBaseDrawer {
     constructor() {
 
@@ -75,9 +81,11 @@ export class TileBaseDrawer {
         VertexBuilder.createVEO(this.texROUnit.vertex, gl, getIndicesWithSegN(1));
     }
     draw() {
+
         let wscRenderer = this.wscRenderer;
         let moduleIns = wscRenderer.moduleIns;
         let wscCtx = moduleIns.viewTransDesc;
+
         // for test
         // this.tile0.drawTest();
         // this.tile1.drawTest();
@@ -87,13 +95,22 @@ export class TileBaseDrawer {
         // this.tile0.draw(wscCtx);
         // this.tile1.draw(wscCtx);
 
+        let zoom = moduleIns.getZoom();
+
+        let sizeValue = zoom * 256;
+        let lv = calcCeilOfTwoLevel(sizeValue) - 1;
+        if (lv < 7)
+            lv = 7;
+        console.log(`draw(), zoom=${zoom}, lv=${lv}, (2 << lv)=${2 << lv}`);
+        // console.log("draw(), lv: ", lv, ", lv << 2: ", 2 << lv);
+
         let tiles = this.tiles;
         let len = tiles.length;
-        for(let i = 0; i < len; ++i) {
+        for (let i = 0; i < len; ++i) {
             tiles[i].build();
         }
         wscRenderer.runBegin();
-        for(let i = 0; i < len; ++i) {
+        for (let i = 0; i < len; ++i) {
             tiles[i].draw(wscCtx);
         }
 

@@ -64,7 +64,7 @@ class TileRODesc {
         this.width = width != undefined ? width : 256;
         this.height = height != undefined ? height : 256;
 
-        this.level = 8;
+        this.level = 7;
 
         this.dirty = true;
 
@@ -104,6 +104,7 @@ class TileRODesc {
 
         this.fboUnit.bindFBO(gl);
         this.fboUnit.bindTexture(this.texture, this.width, this.height);
+        this.texture = this.fboUnit.fboTex;
 
         gl.clearColor(0.55, 0.95, 0.55, 1);
         gl.clear(gl.COLOR_BUFFER_BIT);
@@ -118,6 +119,7 @@ class TileRODesc {
         let wscRenderer = this.wscRenderer;
         let moduleIns = wscRenderer.moduleIns;
         let wscCtx = moduleIns.viewTransDesc;
+
         if (ctx == undefined) {
 
             let zoom = 1;
@@ -127,8 +129,6 @@ class TileRODesc {
             let projMat3 = this.projMat3;
             ctx = { viewF32: viewMat3.data, projF32: projMat3.data };
         }
-
-        this.texture = this.fboUnit.fboTex;
         wscRenderer.draw(ctx);
     }
 
