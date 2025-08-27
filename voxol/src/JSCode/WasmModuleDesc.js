@@ -6,13 +6,20 @@ export class ViewTransDesc {
         this.dataIndex = -1;
         this.cmd = 0;
         this.bufSize = 0;
-        
+
         this.heapU32 = null;
         this.heapF32 = null;
 
         this.projF32 = null;
         this.viewF32 = null;
     }
+
+    getZoom() {
+        if (this.viewF32)
+            return this.viewF32[0];
+        return 1;
+    }
+    
     parse(bufIndex) {
 
         if (bufIndex != undefined || bufIndex >= 0) {
@@ -27,7 +34,7 @@ export class ViewTransDesc {
             return;
 
         let bufIndex = this.dataIndex;
-        
+
         let heapU32 = this.heapU32;
         let heapF32 = this.heapF32;
 
@@ -75,7 +82,7 @@ export class BatchElementDesc {
 
         if (this.dataIndex < 0)
             return;
-        
+
         let bufIndex = this.dataIndex;
         let heapU32 = this.heapU32;
         // let heapF32 = this.heapF32;

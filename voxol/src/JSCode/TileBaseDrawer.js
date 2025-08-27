@@ -19,8 +19,8 @@ export class TileBaseDrawer {
         this.fboIns = null;
         this.texROUnit = new MVPTexROUnit();
 
-        this.tile0 = null;
-        this.tile1 = null;
+        // this.tile0 = null;
+        // this.tile1 = null;
 
         this.tilesRN = 3;
         this.tilesCN = 3;
@@ -47,10 +47,8 @@ export class TileBaseDrawer {
             let py = i * 256;
             for (let j = 0; j < this.tilesRN; ++j) {
                 let px = j * 256;
-                let tile = new TileUnit(256, 256);
+                let tile = new TileUnit(px, py, 256, 256);
                 tile.initialize(wscRenderer, this.fboIns, this.texROUnit);
-                tile.setXY(px, py);
-                tile.update();
                 this.tiles[index] = tile;
                 index++;
             }

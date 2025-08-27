@@ -56,41 +56,48 @@ export class FBOUnit {
     }
 }
 
-export class TileUnit {
-    constructor(width, height) {
+class TileRODesc {
+    constructor(x, y, width, height) {
 
-        this.x = 0;
-        this.y = 0;
+        this.x = x != undefined ? x : 0;
+        this.y = y != undefined ? y : 0;
         this.width = width != undefined ? width : 256;
         this.height = height != undefined ? height : 256;
+
+        this.level = 8;
 
         this.dirty = true;
 
         this.wscRenderer = null;
         this.texture = null;
-        this.roUnit = new MVPTexROUnit();
         this.fboUnit = null;
 
         this.viewMat3 = new Mat33();
-            // viewMat3.data.set(wscCtx.viewF32);
-            // viewMat3.setXY(-this.x, -this.y);
         this.projMat3 = new Mat33();
         this.projMat3.ortho(this.width, this.height);
     }
+    setLevel(level) {
+
+        if (this.level == level)
+            return;
+
+        let gl = this.fboUnit.glCtx;
+        if (this.texture) {
+            gl.deleteTexture(this.texture);
+        }
+        this.level = level;
+        this.dirty = true;
+
+    }
+
     setXY(tx, ty) {
         this.x = tx;
         this.y = ty;
     }
-    initialize(wscRenderer, fboUnit, srcRoUnit) {
-
-        this.wscRenderer = wscRenderer;
-        this.fboUnit = fboUnit;
-
-        this.roUnit.shader = srcRoUnit.shader;
-        this.roUnit.vertex = srcRoUnit.vertex;
-        this.roUnit.initialize({ scaleX: this.width, scaleY: this.height, texturesNumber: 1 });
+    setSize(pw, ph) {
+        this.width = pw;
+        this.height = ph;
     }
-
     buildBegin() {
 
         let gl = this.fboUnit.glCtx;
@@ -101,54 +108,85 @@ export class TileUnit {
         gl.clearColor(0.55, 0.95, 0.55, 1);
         gl.clear(gl.COLOR_BUFFER_BIT);
         gl.viewport(0, 0, this.width, this.height);
+
         this.wscRenderer.dirty = true;
     }
+    
     buildDraw(ctx) {
 
         let gl = this.fboUnit.glCtx;
         let wscRenderer = this.wscRenderer;
         let moduleIns = wscRenderer.moduleIns;
         let wscCtx = moduleIns.viewTransDesc;
-
         if (ctx == undefined) {
 
+            let zoom = 1;
             let viewMat3 = this.viewMat3;
             viewMat3.data.set(wscCtx.viewF32);
-            viewMat3.setXY(-this.x, -this.y);
+            viewMat3.setXY(-this.x, -this.y, zoom, zoom);
             let projMat3 = this.projMat3;
             ctx = { viewF32: viewMat3.data, projF32: projMat3.data };
         }
 
         this.texture = this.fboUnit.fboTex;
-        console.log("TileUnit::build() A ctx: ", ctx);
         wscRenderer.draw(ctx);
-        console.log("TileUnit::build() B ...");
-
-        this.roUnit.setTextures([this.texture]);
     }
+
     buildEnd() {
+
         this.fboUnit.unbindFBO();
         this.wscRenderer.dirty = false;
+        this.dirty = false;
+    }
+}
+export class TileUnit {
+    constructor(x, y, width, height) {
+
+        this.roDesc = new TileRODesc(x, y, width, height);
+        this.roUnit = new MVPTexROUnit();
+    }
+    setLevel(level) {
+
+        if (this.level == level)
+            return;
+
+        this.level = level;
+        this.dirty = true;
+
+    }
+    initialize(wscRenderer, fboUnit, srcRoUnit) {
+
+        let desc = this.roDesc;
+        desc.wscRenderer = wscRenderer;
+        desc.fboUnit = fboUnit;
+
+        this.roUnit.shader = srcRoUnit.shader;
+        this.roUnit.vertex = srcRoUnit.vertex;
+        this.roUnit.initialize({ scaleX: desc.width, scaleY: desc.height, texturesNumber: 1 });
+        this.roUnit.setXY(desc.x, desc.y);
     }
 
     /// check tile area dirty yes or no
     tileDirtyCheck() {
-        return this.dirty;
+        let desc = this.roDesc;
+        return desc.dirty;
     }
     build() {
+        let desc = this.roDesc;
         let tileTirty = this.tileDirtyCheck();
         if (tileTirty) {
-            this.buildBegin();
-            this.buildDraw();
-            this.buildEnd();
-            this.dirty = false;
+            desc.buildBegin();
+            desc.buildDraw();
+            desc.buildEnd();
+            this.roUnit.setTextures([desc.texture]);
         }
         return tileTirty;
     }
 
     draw(ctx) {
 
-        let gl = this.fboUnit.glCtx;
+        let desc = this.roDesc;
+        let gl = desc.fboUnit.glCtx;
 
         // let wscRenderer = this.wscRenderer;
         // let moduleIns = wscRenderer.moduleIns;
@@ -163,11 +201,12 @@ export class TileUnit {
     }
     drawTest(ctx) {
 
-        let gl = this.fboUnit.glCtx;
+        let desc = this.roDesc;
+        let gl = desc.fboUnit.glCtx;
 
         this.build();
 
-        let wscRenderer = this.wscRenderer;
+        let wscRenderer = desc.wscRenderer;
         let moduleIns = wscRenderer.moduleIns;
         let wscCtx = moduleIns.viewTransDesc;
         ctx = ctx == undefined ? wscCtx : ctx;
@@ -182,11 +221,12 @@ export class TileUnit {
     }
     update() {
 
-        let gl = this.fboUnit.glCtx;
+        let desc = this.roDesc;
+        let gl = desc.fboUnit.glCtx;
 
         let unit = this.roUnit;
         unit.setXY(this.x, this.y);
-        unit.setScaleXY(this.width, this.height);
+        unit.setScaleXY(desc.width, desc.height);
     }
 
 }

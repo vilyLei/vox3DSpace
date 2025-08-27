@@ -18,6 +18,10 @@ export class ModuleInstance {
         this.version = 0;
     }
 
+    getZoom() {
+        return this.viewTransDesc.getZoom();
+    }
+    
     initialize(module) {
 
         // console.log("ModuleInstance::initialize() ...");
