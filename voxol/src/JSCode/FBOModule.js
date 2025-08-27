@@ -122,12 +122,13 @@ class TileRODesc {
 
         let pw = this.width;
         let ph = this.height;
+        let px = this.x;
+        let py = this.y;
         if (ctx == undefined) {
 
             let zoom = 1;
             let viewMat3 = this.viewMat3;
-            viewMat3.data.set(wscCtx.viewF32);
-            viewMat3.setXY(-this.x, -this.y, zoom, zoom);
+            viewMat3.setTo(-px, -py, zoom, zoom);
             let projMat3 = this.projMat3;
             projMat3.ortho(pw, ph);
             ctx = { viewF32: viewMat3.data, projF32: projMat3.data };
