@@ -60,8 +60,10 @@ export class FBOUnit {
 class TileRODesc {
     constructor(x, y, width, height) {
 
+        // defaut value: world space coordinates
         this.x = x != undefined ? x : 0;
         this.y = y != undefined ? y : 0;
+
         this.width = width != undefined ? width : 256;
         this.height = height != undefined ? height : 256;
 
@@ -76,7 +78,7 @@ class TileRODesc {
         this.viewMat3 = new Mat33();
         this.projMat3 = new Mat33();
         this.projMat3.ortho(this.width, this.height);
-        this.viewTransDesc = { 
+        this.viewTransDesc = {
             viewF32: this.viewMat3.data,
             projF32: this.projMat3.data,
             viewWBounds: new ViewBounds(0, 0, 512, 512)
@@ -106,49 +108,45 @@ class TileRODesc {
     }
     buildBegin() {
 
+
+        this.wscRenderer.dirty = true;
+    }
+
+    buildDraw() {
+
         let gl = this.fboUnit.glCtx;
+        let wscRenderer = this.wscRenderer;
+
+        let pw = this.width;
+        let ph = this.height;
+
+        let zoom = 1;
+
+        pw *= zoom;
+        ph *= zoom;
+
+        let px = this.x * zoom;
+        let py = this.y * zoom;
+
+        this.viewMat3.setTo(-px, -py, zoom, zoom);
+        this.projMat3.ortho(pw, ph);
+
+        console.log("TileRODesc::buildDraw(), this.viewTransDesc: ", this.viewTransDesc);
 
         this.fboUnit.bindFBO(gl);
-        this.fboUnit.bindTexture(this.texture, this.width, this.height);
+        this.fboUnit.bindTexture(this.texture, pw, ph);
         this.texture = this.fboUnit.fboTex;
 
         gl.clearColor(0.55, 0.95, 0.55, 1);
         gl.clear(gl.COLOR_BUFFER_BIT);
-        gl.viewport(0, 0, this.width, this.height);
+        gl.viewport(0, 0, pw, ph);
 
-        this.wscRenderer.dirty = true;
-    }
-    
-    buildDraw(ctx, pos) {
+        wscRenderer.draw(this.viewTransDesc);
 
-        let wscRenderer = this.wscRenderer;
-
-        if(pos == undefined) {
-            pos = {x:0,y:0};
-        }
-
-        if (ctx == undefined) {
-
-            let pw = this.width;
-            let ph = this.height;
-            let px = pos.x + this.x;
-            let py = pos.y + this.y;
-
-            let zoom = 1;
-            let viewMat3 = this.viewMat3;
-            viewMat3.setTo(-px, -py, zoom, zoom);
-            let projMat3 = this.projMat3;
-            projMat3.ortho(pw, ph);
-            ctx = this.viewTransDesc;
-
-            console.log("TileRODesc::buildDraw(), this.viewTransDesc: ", this.viewTransDesc);
-        }
-        wscRenderer.draw(ctx);
+        this.fboUnit.unbindFBO();
     }
 
     buildEnd() {
-
-        this.fboUnit.unbindFBO();
         this.wscRenderer.dirty = false;
         this.dirty = false;
     }
