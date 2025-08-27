@@ -108,11 +108,14 @@ class TileRODesc {
     }
     buildBegin() {
 
-
         this.wscRenderer.dirty = true;
     }
 
     buildDraw() {
+
+        let moduleIns = wscRenderer.moduleIns;
+        let wscCtx = moduleIns.viewTransDesc;
+        // 判断当前 tile是否被view world bounds包含, 如果包含了才会实际执行绘制
 
         let gl = this.fboUnit.glCtx;
         let wscRenderer = this.wscRenderer;
@@ -140,7 +143,7 @@ class TileRODesc {
         gl.clearColor(0.55, 0.95, 0.55, 1);
         gl.clear(gl.COLOR_BUFFER_BIT);
         gl.viewport(0, 0, pw, ph);
-
+        // 如果绘制的有实际内容，则这个tile有效，反之无效， 无效了之后这个tile资源就可以释放了
         wscRenderer.draw(this.viewTransDesc);
 
         this.fboUnit.unbindFBO();
