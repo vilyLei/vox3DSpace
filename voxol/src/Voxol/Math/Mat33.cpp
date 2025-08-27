@@ -203,7 +203,6 @@ Vec2 Mat33::mapPoint(const Vec2& point) const
 
 bool Mat33::inverseTo(Mat33& lhs) const
 {
-    auto& a = data;
     float det =
         data[0] * (data[4] * data[8] - data[5] * data[7]) -
         data[3] * (data[1] * data[8] - data[2] * data[7]) +

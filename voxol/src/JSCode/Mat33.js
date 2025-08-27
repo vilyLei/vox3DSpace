@@ -73,6 +73,44 @@ export class Mat33 {
         sfs.set(result);
     }
 
+    mapPoint(point)
+    {
+        let data = this.ata;
+        let px = data[0] * point.x + data[3] * point.y + data[6];
+        let py = data[1] * point.x + data[4] * point.y + data[7];
+        return {x: px, y: py};
+    }
+    
+    inverseTo(lhs)
+    {
+        let data = this.data;
+        let det =
+            data[0] * (data[4] * data[8] - data[5] * data[7]) -
+            data[3] * (data[1] * data[8] - data[2] * data[7]) +
+            data[6] * (data[1] * data[5] - data[2] * data[4]);
+    
+        if (Math.abs(det) < 1e-8)
+        {
+            return false;
+        }
+    
+        let invDet = 1.0 / det;
+    
+        let invData = lhs.data;
+        invData[0]    = (data[4] * data[8] - data[5] * data[7]) * invDet;
+        invData[1]    = -(data[1] * data[8] - data[2] * data[7]) * invDet;
+        invData[2]    = (data[1] * data[5] - data[2] * data[4]) * invDet;
+    
+        invData[3] = -(data[3] * data[8] - data[5] * data[6]) * invDet;
+        invData[4] = (data[0] * data[8] - data[2] * data[6]) * invDet;
+        invData[5] = -(data[0] * data[5] - data[2] * data[3]) * invDet;
+    
+        invData[6] = (data[3] * data[7] - data[4] * data[6]) * invDet;
+        invData[7] = -(data[0] * data[7] - data[1] * data[6]) * invDet;
+        invData[8] = (data[0] * data[4] - data[1] * data[3]) * invDet;
+    
+        return true;
+    }
     print() {
         let data = this.data;
         console.log("{\n");

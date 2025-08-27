@@ -1,4 +1,7 @@
 "use strict";
+
+import { ViewBounds } from './CGeomBase.js';
+
 export class ViewTransDesc {
 
     constructor() {
@@ -12,14 +15,19 @@ export class ViewTransDesc {
 
         this.projF32 = null;
         this.viewF32 = null;
+
+        // view bounds in the world space
+        this.viewWBounds = new ViewBounds(0, 0, 512, 512);
     }
 
     getZoom() {
+        
         if (this.viewF32)
             return this.viewF32[0];
+
         return 1;
     }
-    
+
     parse(bufIndex) {
 
         if (bufIndex != undefined || bufIndex >= 0) {
