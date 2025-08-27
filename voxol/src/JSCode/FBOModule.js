@@ -1,6 +1,7 @@
 "use strict";
 
 import { Mat33 } from './Mat33.js';
+import { ViewBounds } from './CGeomBase.js';
 import { MVPTexROUnit } from './ROUnitModule.js';
 
 export class FBOUnit {
@@ -75,6 +76,11 @@ class TileRODesc {
         this.viewMat3 = new Mat33();
         this.projMat3 = new Mat33();
         this.projMat3.ortho(this.width, this.height);
+        this.viewTransDesc = { 
+            viewF32: this.viewMat3.data,
+            projF32: this.projMat3.data,
+            viewWBounds: new ViewBounds(0, 0, 512, 512)
+        };
     }
     setLevel(level) {
 
@@ -120,7 +126,7 @@ class TileRODesc {
         if(pos == undefined) {
             pos = {x:0,y:0};
         }
-        
+
         if (ctx == undefined) {
 
             let pw = this.width;
@@ -133,7 +139,9 @@ class TileRODesc {
             viewMat3.setTo(-px, -py, zoom, zoom);
             let projMat3 = this.projMat3;
             projMat3.ortho(pw, ph);
-            ctx = { viewF32: viewMat3.data, projF32: projMat3.data };
+            ctx = this.viewTransDesc;
+
+            console.log("TileRODesc::buildDraw(), this.viewTransDesc: ", this.viewTransDesc);
         }
         wscRenderer.draw(ctx);
     }
