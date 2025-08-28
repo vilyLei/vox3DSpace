@@ -1,7 +1,7 @@
 "use strict";
 
 import { Mat33 } from './Mat33.js';
-import { ViewBounds } from './CGeomBase.js';
+import { Bounds2D } from './CGeomBase.js';
 import { MVPTexROUnit } from './ROUnitModule.js';
 
 export class FBOUnit {
@@ -81,7 +81,7 @@ class TileRODesc {
         this.viewTransDesc = {
             viewF32: this.viewMat3.data,
             projF32: this.projMat3.data,
-            viewWBounds: new ViewBounds(0, 0, 512, 512)
+            viewWorldBounds: new Bounds2D(0, 0, 512, 512)
         };
     }
     setLevel(level) {
