@@ -38,9 +38,12 @@ export class SimpleROScene {
 
         this.mvpUnit = new MVPROUnit();
         this.mvpUnit.initialize({ scaleX: 100, scaleY: 100 });
+        this.bgUnit = null;
 
         this.testUnits = [];
         this.initScene(gl);
+        this.bgUnit = this.mvpUnit.clone();
+        this.bgUnit.setRGBAWithNumberArr([0.8,0.9,0.7, 1]);
     }
 
     initScene(gl) {

@@ -14,7 +14,7 @@ export class ROUnit {
         this.enabled = true;
         this.shader = new ShaderUnit();
         this.vertex = new VtxUnit();
-        this.transData = new Float32Array([1, 0, 0,
+        this.objMatData = new Float32Array([1, 0, 0,
             0, 1, 0,
             0, 0, 1]);
         this.colorData = new Float32Array([0.3, 0.3, 0.3, 1]);
@@ -36,6 +36,13 @@ export class ROUnit {
         this.objMatData[0] = sx;
         this.objMatData[4] = sy;
     }
+    getXY() {
+        return {x: this.objMatData[6], y: this.objMatData[7]};
+    }
+    getScaleXY() {
+        return {x: this.objMatData[0], y: this.objMatData[4]};
+    }
+    
     bind(gl, ctx) {
         gl.useProgram(this.shader.program);
         gl.bindVertexArray(this.vertex.vao);
@@ -43,7 +50,7 @@ export class ROUnit {
     }
     draw(gl, ctx) {
         let uniforms = this.shader.uniforms;
-        gl.uniformMatrix3fv(uniforms[0].location, false, this.transData, 0, 9);
+        gl.uniformMatrix3fv(uniforms[0].location, false, this.objMatData, 0, 9);
         gl.uniform4fv(uniforms[1].location, this.colorData, 0, 4);
         gl.drawElements(gl.TRIANGLES, this.vertex.indices.length, gl.UNSIGNED_SHORT, 0);
     }

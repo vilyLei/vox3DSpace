@@ -64,10 +64,20 @@ export class SimpleCacheDrawer {
 
         let gl = this.glCtx;
         let moduleIns = this.moduleIns;
-        ctx = ctx == undefined ? moduleIns.viewTransDesc : ctx;
+        let vDesc = moduleIns.viewTransDesc;
+        ctx = ctx == undefined ? vDesc : ctx;
 
         let scene = this.roScene;
         let drcUnits = scene.drcUnits;
+
+        let vwBounds = vDesc.viewWorldBounds;
+        let bgUnit =  scene.bgUnit;
+        // if(bgUnit && bgUnit.enabled) {
+        //     bgUnit.setXY(vwBounds.x + 5, vwBounds.y + 5);
+        //     bgUnit.setScaleXY(vwBounds.width - 10, vwBounds.height - 10);
+        //     bgUnit.bind(gl, ctx);
+        //     bgUnit.draw(gl, ctx);
+        // }
 
         // let unit = scene.screenBgColorUnit;
         // if (unit.enabled) {
