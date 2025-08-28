@@ -9,7 +9,7 @@ import {
     vertTexMVPSource,
 } from './ShaderCodes.js';
 
-import { FBOUnit, TileUnit } from './FBOModule.js';
+import { FBOUnit, TileGrid, TileUnit } from './FBOModule.js';
 
 function calcCeilOfTwoLevel(value) {
     return Math.ceil(Math.log(value) / Math.LN2);
@@ -53,7 +53,7 @@ export class TileBaseDrawer {
             let py = i * 256;
             for (let j = 0; j < this.tilesRN; ++j) {
                 let px = j * 256;
-                let tile = new TileUnit(px, py, 256, 256);
+                let tile = new TileGrid(px, py, 256, 256);
                 tile.initialize(wscRenderer, this.fboIns, this.texROUnit);
                 this.tiles[index] = tile;
                 index++;
@@ -98,15 +98,15 @@ export class TileBaseDrawer {
         let zoom = moduleIns.getZoom();
 
         let sizeValue = zoom * 256;
-        let lv = calcCeilOfTwoLevel(sizeValue) - 1;
-        if (lv < 7)
-            lv = 7;
-        console.log(`draw(), zoom=${zoom}, lv=${lv}, (2 << lv)=${2 << lv}`);
-        // console.log("draw(), lv: ", lv, ", lv << 2: ", 2 << lv);
+        let level = calcCeilOfTwoLevel(sizeValue) - 1;
+        if (level < 7)
+            level = 7;
+        console.log(`draw(), zoom=${zoom}, level=${level}, (2 << lv)=${2 << level}`);
 
         let tiles = this.tiles;
         let len = tiles.length;
         for (let i = 0; i < len; ++i) {
+            tiles[i].setLevel(level);
             tiles[i].build();
         }
         wscRenderer.runBegin();

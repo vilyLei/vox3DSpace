@@ -136,9 +136,11 @@ class TileRODesc {
         let ph = this.height;
 
         let zoom = 1;
-        if (this.lv) {
 
+        if (this.level >= 9) {
+            zoom = 512 / pw;
         }
+
         pw *= zoom;
         ph *= zoom;
 
@@ -150,7 +152,7 @@ class TileRODesc {
         vtDesc.viewMat3.setTo(-px, -py, zoom, zoom);
         vtDesc.projMat3.ortho(pw, ph);
 
-        console.log("TileRODesc::buildDraw(), lv: ", this.lv);
+        console.log("TileRODesc::buildDraw(), level: ", this.level, ", zoom: ", zoom, ", size: ", pw);
         console.log("TileRODesc::buildDraw(), this.viewTransDesc: ", vtDesc);
 
         let fbo = this.fboUnit;
