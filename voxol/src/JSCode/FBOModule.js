@@ -329,10 +329,11 @@ export class TileGrid {
             let k = 0;
             for (let i = 0; i < n; ++i) {
                 let py = i * dSize;
-                for (let j = 0; n; ++j) {
+                for (let j = 0; j < n; ++j) {
                     let px = j * dSize;
                     let pu = new TileUnit(px, py, dSize, dSize);
                     pu.initialize(roDesc.wscRenderer, roDesc.fboUnit, unit.roUnit);
+                    this.units[k] = pu;
                     k++;
                 }
             }
