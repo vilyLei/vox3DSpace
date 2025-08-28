@@ -81,7 +81,7 @@ class TileRODesc {
         this.viewTransDesc = {
             viewF32: this.viewMat3.data,
             projF32: this.projMat3.data,
-            viewWorldBounds: new Bounds2D(0, 0, 512, 512)
+            viewWorldBounds: new Bounds2D(this.x, this.y, this.width, this.height)
         };
     }
     destroy() {
@@ -317,5 +317,30 @@ export class TileGrid {
     }
     initialize(wscRenderer, fboUnit, srcRoUnit) {
         this.unit.initialize(wscRenderer, fboUnit, srcRoUnit);
+    }
+    build() {
+        let dirty = this.dirty;
+        let flag = false;
+        if (this.level < 9) {
+            this.unit.build();
+        } else if (this.units) {
+            for (let i = 0, ln = this.units.length; i < ln; ++i) {
+                let fb = this.units[i].build();
+                flag = flag || !fb;
+            }
+            this.dirty = flag;
+        }
+
+        return dirty;
+    }
+
+    draw(ctx) {
+        if (this.level < 9) {
+            this.unit.draw(ctx);
+        } else if (this.units) {
+            for (let i = 0, ln = this.units.length; i < ln; ++i) {
+                this.units[i].draw(ctx);
+            }
+        }
     }
 }
