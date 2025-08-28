@@ -17,6 +17,7 @@ export class ViewTransDesc {
         
         this.projMat3 = new Mat33();
         this.viewMat3 = new Mat33();
+        this.viewInvMat3 = new Mat33();
 
         this.projF32 = this.projMat3.data;
         this.viewF32 = this.viewMat3.data;
@@ -66,7 +67,8 @@ export class ViewTransDesc {
         this.projF32.set(projmatvs);
         this.viewF32.set(viewmatvs);
 
-        this.viewBounds.mapWithMat33To(this.viewMat3, this.viewWorldBounds);
+        this.viewMat3.inverseTo(this.viewInvMat3);
+        this.viewBounds.mapWithMat33To(this.viewInvMat3, this.viewWorldBounds);
 
         console.log("this.viewBounds: ", this.viewBounds);
         console.log("this.viewWorldBounds: ", this.viewWorldBounds);
