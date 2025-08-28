@@ -71,10 +71,11 @@ export class SimpleCacheDrawer {
         let drcUnits = scene.drcUnits;
 
         let vwBounds = vDesc.viewWorldBounds;
-        let bgUnit =  scene.bgUnit;
+        // let bgUnit =  scene.bgUnit;
         // if(bgUnit && bgUnit.enabled) {
-        //     bgUnit.setXY(vwBounds.x + 5, vwBounds.y + 5);
-        //     bgUnit.setScaleXY(vwBounds.width - 10, vwBounds.height - 10);
+        //     let dis = 5.0 / moduleIns.getZoom();
+        //     bgUnit.setXY(vwBounds.x + dis, vwBounds.y + dis);
+        //     bgUnit.setScaleXY(vwBounds.width - 2 * dis, vwBounds.height - 2 * dis);
         //     bgUnit.bind(gl, ctx);
         //     bgUnit.draw(gl, ctx);
         // }

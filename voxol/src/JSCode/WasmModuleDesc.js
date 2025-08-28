@@ -70,8 +70,8 @@ export class ViewTransDesc {
         this.viewMat3.inverseTo(this.viewInvMat3);
         this.viewBounds.mapWithMat33To(this.viewInvMat3, this.viewWorldBounds);
 
-        console.log("this.viewBounds: ", this.viewBounds);
-        console.log("this.viewWorldBounds: ", this.viewWorldBounds);
+        // console.log("this.viewBounds: ", this.viewBounds);
+        // console.log("this.viewWorldBounds: ", this.viewWorldBounds);
     }
 }
 
