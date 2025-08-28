@@ -104,6 +104,9 @@ class TileRODesc {
     }
     setLevel(level) {
 
+        if (level == undefined)
+            return;
+
         if (this.level == level)
             return;
 
@@ -147,7 +150,7 @@ class TileRODesc {
 
         let zoom = 1;
 
-        if (this.level >= 9) {
+        if (this.level > 7) {
             zoom = 512 / pw;
         }
 
@@ -192,11 +195,7 @@ export class TileUnit {
     }
     setLevel(level) {
 
-        if (this.level == level)
-            return;
-
-        this.level = level;
-        this.dirty = true;
+        this.roDesc.setLevel(level);
 
     }
     destroy() {
@@ -249,7 +248,7 @@ export class TileUnit {
 
         let unit = this.roUnit;
         if (unit && unit.enabled) {
-            
+
             ctx.status.tileDraw();
 
             unit.bind(gl, ctx);
@@ -302,7 +301,7 @@ export class TileGrid {
 
         if (this.level == level)
             return;
-        if (this.level >= 9) {
+        if (this.level >= 9 && level < 9) {
             this.unit.enabled = true;
         }
         if (this.units) {
@@ -311,20 +310,24 @@ export class TileGrid {
             }
             this.units = null;
         }
+        console.log("TileGrid::setLevel(), level: ", level);
+
         this.level = level;
         this.dirty = true;
+
         if (this.level < 9) {
-            this.unit.setLevel();
+            this.unit.setLevel(level);
         } else {
 
             let unit = this.unit;
             let roDesc = unit.roDesc;
             unit.enabled = false;
+
             let n = 2 << (this.level - 9);
             let dSize = roDesc.width / n;
             this.units = new Array(n * n);
             let k = 0;
-            for (let i = 0; n; ++i) {
+            for (let i = 0; i < n; ++i) {
                 let py = i * dSize;
                 for (let j = 0; n; ++j) {
                     let px = j * dSize;
@@ -333,6 +336,7 @@ export class TileGrid {
                     k++;
                 }
             }
+            console.log("TileGrid::setLevel(), this.units: ", this.units);
         }
 
     }
