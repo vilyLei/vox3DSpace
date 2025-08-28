@@ -1,6 +1,6 @@
 "use strict";
 
-export class ViewBounds {
+export class Bounds2D {
 
     constructor(x, y, width, height) {
 
@@ -42,11 +42,11 @@ export class ViewBounds {
 
     setRB(r, b) {
 
-        l = l != undefined ? l : this.x;
-        t = t != undefined ? t : this.y;
+        r = r != undefined ? r : this.right;
+        b = b != undefined ? b : this.bottom;
 
-        this.left = l;
-        this.top = t;
+        this.right = r;
+        this.bottom = b;
 
         updateXYWH();
     }
@@ -69,8 +69,8 @@ export class ViewBounds {
     toZero() {
 
         this.x = this.left = 0;
-        this.y = this.right = 0;
-        this.top = 0;
+        this.y = this.top = 0;
+        this.right = 0;
         this.bottom = 0;
         this.width = 0;
         this.height = 0;
@@ -122,7 +122,7 @@ export class ViewBounds {
         this.right = this.x + this.width;
         this.bottom = this.y + this.height;
     }
-    scaleAndTranslateTo(sx, sy, tx, ty) {
+    mapWithMat33To(mat3, dst) {
 
     }
 }
