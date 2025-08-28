@@ -65,6 +65,11 @@ export class ViewTransDesc {
         // console.log(viewmatvs);
         this.projF32.set(projmatvs);
         this.viewF32.set(viewmatvs);
+
+        this.viewBounds.mapWithMat33To(this.viewMat3, this.viewWorldBounds);
+
+        console.log("this.viewBounds: ", this.viewBounds);
+        console.log("this.viewWorldBounds: ", this.viewWorldBounds);
     }
 }
 

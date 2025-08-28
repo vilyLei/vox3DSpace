@@ -10,7 +10,7 @@ export class Bounds2D {
     copyFrom(src) {
         this.setXYWH(src.x, src.y, src.width, src.height);
     }
-    
+
     setXY(x, y) {
 
         this.x = x != undefined ? x : 0;
@@ -83,8 +83,8 @@ export class Bounds2D {
     toEmpty() {
 
         this.x = this.left = 0xffffff;
-        this.y = this.right = -0xffffff;
-        this.top = 0xffffff;
+        this.y = this.top = 0xffffff;
+        this.right = -0xffffff;
         this.bottom = -0xffffff;
         this.width = 0;
         this.height = 0;
@@ -127,6 +127,33 @@ export class Bounds2D {
         this.bottom = this.y + this.height;
     }
     mapWithMat33To(mat3, dst) {
-
+        dst.toEmpty();
+        let pv = mat3.mapXY(this.left, this.top);
+        dst.addXY(pv.x, pv.y);
+        pv = mat3.mapXY(this.right, this.top);
+        dst.addXY(pv.x, pv.y);
+        pv = mat3.mapXY(this.right, this.bottom);
+        dst.addXY(pv.x, pv.y);
+        pv = mat3.mapXY(this.left, this.bottom);
+        dst.addXY(pv.x, pv.y);
+        dst.updateXYWH();
+    }
+    addXY(px, py) {
+        if (this.left > px) this.left = px;
+        if (this.right < px) this.right = px;
+        if (this.top > py) this.top = py;
+        if (this.bottom < py) this.bottom = py;
+    }
+    calcDistanceFrom(other) {
+        let dx = Math.max(0, Math.max(other.x - this.right, this.x - other.right));
+        let dy = Math.max(0, Math.max(other.y - this.bottom, this.y - other.bottom));
+        return Math.sqrt(dx * dx + dy * dy);
+    }
+    intersect(other) {
+        if (other.left > this.right || other.right < this.left)
+            return false;
+        if (other.y > this.bottom || other.bottom < this.y)
+            return false;
+        return true;
     }
 }

@@ -74,9 +74,16 @@ export class Mat33 {
     }
 
     mapPoint(point) {
-        let data = this.ata;
+        let data = this.data;
         let px = data[0] * point.x + data[3] * point.y + data[6];
         let py = data[1] * point.x + data[4] * point.y + data[7];
+        return { x: px, y: py };
+    }
+    
+    mapXY(x, y) {
+        let data = this.data;
+        let px = data[0] * x + data[3] * y + data[6];
+        let py = data[1] * x + data[4] * y + data[7];
         return { x: px, y: py };
     }
 
