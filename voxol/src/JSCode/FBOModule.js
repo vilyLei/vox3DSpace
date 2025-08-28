@@ -3,6 +3,7 @@
 import { Mat33 } from './Mat33.js';
 import { Bounds2D } from './CGeomBase.js';
 import { MVPTexROUnit } from './ROUnitModule.js';
+import { ViewTransDesc } from './RenderCtx.js';
 
 export class FBOUnit {
     constructor() {
@@ -75,14 +76,10 @@ class TileRODesc {
         this.texture = null;
         this.fboUnit = null;
 
-        this.viewMat3 = new Mat33();
-        this.projMat3 = new Mat33();
-        this.projMat3.ortho(this.width, this.height);
-        this.viewTransDesc = {
-            viewF32: this.viewMat3.data,
-            projF32: this.projMat3.data,
-            viewWorldBounds: new Bounds2D(this.x, this.y, this.width, this.height)
-        };
+        // this.viewMat3 = new Mat33();
+        // this.projMat3 = new Mat33();
+        // this.projMat3.ortho(this.width, this.height);
+        this.viewTransDesc = new ViewTransDesc();
     }
     destroy() {
 
@@ -143,22 +140,25 @@ class TileRODesc {
         let px = this.x * zoom;
         let py = this.y * zoom;
 
-        this.viewMat3.setTo(-px, -py, zoom, zoom);
-        this.projMat3.ortho(pw, ph);
+        let vtDesc = this.viewTransDesc;
 
-        console.log("TileRODesc::buildDraw(), this.viewTransDesc: ", this.viewTransDesc);
+        vtDesc.viewMat3.setTo(-px, -py, zoom, zoom);
+        vtDesc.projMat3.ortho(pw, ph);
 
-        this.fboUnit.bindFBO(gl);
-        this.fboUnit.bindTexture(this.texture, pw, ph);
-        this.texture = this.fboUnit.fboTex;
+        console.log("TileRODesc::buildDraw(), this.viewTransDesc: ", vtDesc);
+
+        let fbo = this.fboUnit;
+        fbo.bindFBO(gl);
+        fbo.bindTexture(this.texture, pw, ph);
+        this.texture = fbo.fboTex;
 
         gl.clearColor(0.55, 0.95, 0.55, 1);
         gl.clear(gl.COLOR_BUFFER_BIT);
         gl.viewport(0, 0, pw, ph);
         // 如果绘制的有实际内容，则这个tile有效，反之无效， 无效了之后这个tile资源就可以释放了
-        wscRenderer.draw(this.viewTransDesc);
+        wscRenderer.draw( vtDesc );
 
-        this.fboUnit.unbindFBO();
+        fbo.unbindFBO();
     }
 
     buildEnd() {

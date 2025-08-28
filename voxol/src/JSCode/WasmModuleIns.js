@@ -1,4 +1,5 @@
 "use strict";
+
 import { ViewTransDesc } from './RenderCtx.js';
 import { BatchElementDesc } from './WasmModuleDesc.js';
 
