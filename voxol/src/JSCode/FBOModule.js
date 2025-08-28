@@ -84,6 +84,18 @@ class TileRODesc {
             viewWorldBounds: new Bounds2D(0, 0, 512, 512)
         };
     }
+    destroy() {
+
+        let gl = this.fboUnit.glCtx;
+        if (this.texture) {
+            gl.deleteTexture(this.texture);
+        }
+
+        this.wscRenderer = null;
+        this.texture = null;
+        this.fboUnit = null;
+        this.viewTransDesc = null;
+    }
     setLevel(level) {
 
         if (this.level == level)
@@ -169,6 +181,15 @@ export class TileUnit {
         this.dirty = true;
 
     }
+    destroy() {
+        this.roDesc.destroy();
+        if (this.roUnit) {
+            this.roUnit.vertex = null;
+            this.roUnit.shader = null;
+            this.roUnit.textures = null;
+            this.roUnit = null;
+        }
+    }
     initialize(wscRenderer, fboUnit, srcRoUnit) {
 
         let desc = this.roDesc;
@@ -243,5 +264,58 @@ export class TileUnit {
         unit.setXY(this.x, this.y);
         unit.setScaleXY(desc.width, desc.height);
     }
+}
 
+export class TileGrid {
+    constructor(x, y, width, height) {
+
+
+        this.level = 7;
+        this.dirty = true;
+        this.unit = new TileUnit(x, y, width, height);
+
+        this.units = null;
+    }
+
+    setLevel(level) {
+
+        if (this.level == level)
+            return;
+        if (this.level >= 9) {
+            this.unit.enabled = true;
+        }
+        if (this.units) {
+            for (let i = 0, ln = this.units.length; i < ln; ++i) {
+                this.units[i].destroy();
+            }
+            this.units = null;
+        }
+        this.level = level;
+        this.dirty = true;
+        if (this.level < 9) {
+            this.unit.setLevel();
+        } else {
+
+            let unit = this.unit;
+            let roDesc = unit.roDesc;
+            unit.enabled = false;
+            let n = 2 << (this.level - 9);
+            let dSize = roDesc.width / n;
+            this.units = new Array(n * n);
+            let k = 0;
+            for (let i = 0; n; ++i) {
+                let py = i * dSize;
+                for (let j = 0; n; ++j) {
+                    let px = j * dSize;
+                    let pu = new TileUnit(px, py, dSize, dSize);
+                    pu.initialize(roDesc.wscRenderer, roDesc.fboUnit, unit.oUnit);
+                    k++;
+                }
+            }
+        }
+
+    }
+    initialize(wscRenderer, fboUnit, srcRoUnit) {
+        this.unit.initialize(wscRenderer, fboUnit, srcRoUnit);
+    }
 }
