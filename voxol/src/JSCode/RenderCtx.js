@@ -2,6 +2,25 @@
 import { Mat33 } from './Mat33.js';
 import { Bounds2D } from './CGeomBase.js';
 
+export class RenderStatus {
+    constructor() {
+        this.tileBuildTimes = 0;
+        this.tileDrawTimes = 0;
+    }
+    reset() {
+        this.tileBuildTimes = 0;
+        this.tileDrawTimes = 0;
+    }
+    tileBuild() {
+        this.tileBuildTimes ++;
+    }
+    tileDraw() {
+        this.tileDrawTimes ++;
+    }
+    print() {        
+        console.log(`RenderStatus( tileBuildTimes = ${this.tileBuildTimes}, tileDrawTimes = ${this.tileDrawTimes})`);
+    }
+}
 export class ViewTransDesc {
 
     constructor() {
@@ -13,7 +32,6 @@ export class ViewTransDesc {
         this.heapU32 = null;
         this.heapF32 = null;
 
-
         this.projMat3 = new Mat33();
         this.viewMat3 = new Mat33();
         this.viewInvMat3 = new Mat33();
@@ -24,6 +42,8 @@ export class ViewTransDesc {
         this.viewBounds = new Bounds2D(0, 0, 512, 512);
         // view bounds in the world space
         this.viewWorldBounds = new Bounds2D(0, 0, 512, 512);
+
+        this.status = new RenderStatus();
     }
     destroy() {
 

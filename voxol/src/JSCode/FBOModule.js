@@ -6,10 +6,14 @@ import { MVPTexROUnit } from './ROUnitModule.js';
 import { ViewTransDesc } from './RenderCtx.js';
 
 export class FBOUnit {
+
     constructor() {
+
         this.fbo = null;
         this.fboTex = null;
         this.glCtx = null;
+
+        this.bindTexTimes = 0;
     }
 
     initialize(gl, fbo) {
@@ -41,6 +45,8 @@ export class FBOUnit {
         gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, this.fboTex, 0);
 
         gl.bindTexture(gl.TEXTURE_2D, null);
+
+        this.bindTexTimes++;
     }
 
     unbindFBO() {
@@ -103,7 +109,9 @@ class TileRODesc {
 
         let gl = this.fboUnit.glCtx;
         if (this.texture) {
+            console.log("TileRODesc::setLevel(), level: ", level, ", gl.deleteTexture() ...");
             gl.deleteTexture(this.texture);
+            this.texture = null;
         }
         this.level = level;
         this.dirty = true;
@@ -129,6 +137,8 @@ class TileRODesc {
         let moduleIns = wscRenderer.moduleIns;
         let wscCtx = moduleIns.viewTransDesc;
         // 判断当前 tile是否被view world bounds包含, 如果包含了才会实际执行绘制
+
+        wscCtx.status.tileBuild();
 
         let gl = this.fboUnit.glCtx;
 
@@ -239,6 +249,9 @@ export class TileUnit {
 
         let unit = this.roUnit;
         if (unit && unit.enabled) {
+            
+            ctx.status.tileDraw();
+
             unit.bind(gl, ctx);
             unit.draw(gl, ctx);
         }
@@ -316,7 +329,7 @@ export class TileGrid {
                 for (let j = 0; n; ++j) {
                     let px = j * dSize;
                     let pu = new TileUnit(px, py, dSize, dSize);
-                    pu.initialize(roDesc.wscRenderer, roDesc.fboUnit, unit.oUnit);
+                    pu.initialize(roDesc.wscRenderer, roDesc.fboUnit, unit.roUnit);
                     k++;
                 }
             }

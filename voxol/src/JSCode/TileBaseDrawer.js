@@ -85,6 +85,11 @@ export class TileBaseDrawer {
         let wscRenderer = this.wscRenderer;
         let moduleIns = wscRenderer.moduleIns;
         let wscCtx = moduleIns.viewTransDesc;
+        let rstatus = wscCtx.status;
+        let fbo = this.fboIns;
+        fbo.bindTexTimes = 0;        
+
+        rstatus.reset();
 
         // for test
         // this.tile0.drawTest();
@@ -101,7 +106,7 @@ export class TileBaseDrawer {
         let level = calcCeilOfTwoLevel(sizeValue) - 1;
         if (level < 7)
             level = 7;
-        console.log(`draw(), zoom=${zoom}, level=${level}, (2 << lv)=${2 << level}`);
+        console.log(`TileBaseDrawer::draw(), zoom = ${zoom}, level = ${level}, (2 << lv)=${2 << level}`);
 
         let tiles = this.tiles;
         let len = tiles.length;
@@ -109,10 +114,15 @@ export class TileBaseDrawer {
             tiles[i].setLevel(level);
             tiles[i].build();
         }
+
+
         wscRenderer.runBegin();
+
         for (let i = 0; i < len; ++i) {
             tiles[i].draw(wscCtx);
         }
+        console.log(`draw(), bindTexTimes = ${fbo.bindTexTimes}`);
+        rstatus.print();
 
     }
 
