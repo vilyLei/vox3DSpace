@@ -214,9 +214,9 @@ extern "C"
     }
 
     EMSCRIPTEN_KEEPALIVE
-    uint8_t* getCmds() { return (uint8_t*)rcmdWorld.commands.data(); }
+    uint8_t* getCmds() { return (uint8_t*)rcmdWorld.nodeScene.commands.data(); }
     EMSCRIPTEN_KEEPALIVE
-    size_t getCmdsTotal() { return rcmdWorld.commands.size(); }
+    size_t getCmdsTotal() { return rcmdWorld.nodeScene.commands.size(); }
     EMSCRIPTEN_KEEPALIVE
     uint8_t* getRenderCmdBuffer() { return (uint8_t*)rcmdWorld.cmdBuffer(); }
 }

@@ -6,6 +6,7 @@
 #include "RenderCmdNode.h"
 #include "RenderCmdBufBuilder.h"
 #include "UIMouseCtrl.h"
+#include "RenderNodeScene.h"
 
 namespace Voxol::Motion
 {
@@ -14,23 +15,22 @@ class RenderCmdWorld
 {
 public:
 
-    std::vector<uint32_t>        commands{};
-
-    std::vector<DrawCmdTestNode> cmdBatchNodes{};
-    std::vector<DrawCmdTestNode> cmdNodes{};
-
-    // Voxol::Math::Mat33           viewMat{};
-    // Voxol::Math::Mat33           projMat{};
+    // std::vector<uint32_t>        commands{};
+    // std::vector<DrawCmdTestNode> cmdBatchNodes{};
+    // std::vector<DrawCmdTestNode> cmdNodes{};
+    
 
     CanvasDesc  canvas{};
     RenderCmdBufBuilder bufBuilder{};
+    
+    RenderNodeScene nodeScene{};
     UIMouseCtrl mouseCtrl{};
 
     bool dirty = true;
 
 public:
-    RenderCmdWorld();
-    ~RenderCmdWorld();
+    RenderCmdWorld() = default;
+    ~RenderCmdWorld() = default;
 
 public:
     void           initialize();

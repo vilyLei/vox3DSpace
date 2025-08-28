@@ -4,26 +4,24 @@
 namespace Voxol::Motion
 {
 
-RenderCmdWorld::RenderCmdWorld()
-{
-}
-RenderCmdWorld::~RenderCmdWorld()
-{
-}
-void testRotationOp(DrawCmdTestNode& node)
-{
-    Vec2  localPivot{64.0f, 64.0f};
-    Vec2  fixCV{300.0f, 300.0f};
-    auto& desc   = node.drcDesc;
-    auto& bounds = node.drcDesc.bounds;
-    Mat33Utils::makeRotationMat33WithPivot(desc.transform, localPivot, fixCV, bounds.width, bounds.height, node.rotation);
-    node.rotation += 0.1f;
-    node.dirty = false;
-}
+// void testRotationOp(DrawCmdTestNode& node)
+// {
+//     Vec2  localPivot{64.0f, 64.0f};
+//     Vec2  fixCV{300.0f, 300.0f};
+//     auto& desc   = node.drcDesc;
+//     auto& bounds = node.drcDesc.bounds;
+//     Mat33Utils::makeRotationMat33WithPivot(desc.transform, localPivot, fixCV, bounds.width, bounds.height, node.rotation);
+//     node.rotation += 0.1f;
+//     node.dirty = false;
+// }
 void RenderCmdWorld::initialize()
 {
     if (!mInit)
         return;
+
+    nodeScene.initialize();
+    bufBuilder.initialize((nodeScene.getNodesTotal() + 8) * sizeof(DrawingCmdDesc));
+    /*
     using namespace Voxol::Math;
 
 
@@ -63,33 +61,6 @@ void RenderCmdWorld::initialize()
             desc.bounds.setSize(rsize, rsize);
             desc.mroid = 1;
 
-            /*
-            auto pindex = i * cn + j;
-            if(pindex == 11) {
-                node.scaleY = 1;
-                node.x = px - (rsize + dis);
-                // node.y = py - 0.25f;
-                node.color = 0xffaa0000;
-            }
-            if(pindex == 10) {
-                node.scaleX = rsize * 2;
-                node.scaleY = 1;
-                // node.x = px - (rsize + dis);
-                node.y += (rsize + dis) * 2;
-                node.rotation = 0.5f;
-                // node.y = py - 0.25f;
-                node.color = 0xffaa0000;
-            }            
-            if(pindex == 9) {
-                // node.scaleX = rsize * 2;
-                node.scaleY = 0.2f;
-                // node.x = px - (rsize + dis);
-                node.y += (rsize + dis);
-                // node.rotation = 0.5f;
-                // node.y = py - 0.25f;
-                node.color = 0xffaa0000;
-            }
-            //*/
 
             node.moveingNode.rect = desc.bounds;
             node.init();
@@ -129,7 +100,7 @@ void RenderCmdWorld::initialize()
             nodeIndex++;
         }
     }
-
+    //*/
     mInit = false;
 }
 
@@ -142,7 +113,7 @@ void RenderCmdWorld::run()
 
     initialize();
 
-    auto cmdsTotal = static_cast<uint32_t>(cmdBatchNodes.size());
+    auto cmdsTotal = static_cast<uint32_t>(nodeScene.cmdBatchNodes.size());
 
     // RectTarget::Rect boundary = {0, 0, canvas.size.width * 1.0f, canvas.size.height * 1.0f};
 
@@ -172,19 +143,19 @@ void RenderCmdWorld::run()
 
     for (auto i = 0; i < cmdsTotal; i++)
     {
-        cmdBatchNodes[i].update();
+        nodeScene.cmdBatchNodes[i].update();
     }
-    cmdsTotal = static_cast<uint32_t>(cmdNodes.size());
+    cmdsTotal = static_cast<uint32_t>(nodeScene.cmdNodes.size());
     for (auto i = 0; i < cmdsTotal; i++)
     {
-        cmdNodes[i].update();
+        nodeScene.cmdNodes[i].update();
     }
 
     auto& view      = canvas.view;
     auto& camDesc   = bufBuilder.camDesc;
     camDesc.projMat = view.projMat;
     camDesc.viewMat = view.viewMat;
-    bufBuilder.build(cmdBatchNodes, cmdNodes);
+    bufBuilder.build(nodeScene.cmdBatchNodes, nodeScene.cmdNodes);
 
     // printf("RenderCmdWorld::run() B cmdsTotal: %zu\n", cmdsTotal);
 }
