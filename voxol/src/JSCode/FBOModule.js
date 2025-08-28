@@ -65,7 +65,7 @@ export class FBOUnit {
 }
 
 class TileRODesc {
-    constructor(x, y, width, height) {
+    constructor(x, y, width, height, level) {
 
         // defaut value: world space coordinates
         this.x = x != undefined ? x : 0;
@@ -73,8 +73,7 @@ class TileRODesc {
 
         this.width = width != undefined ? width : 256;
         this.height = height != undefined ? height : 256;
-
-        this.level = 7;
+        this.level = level != undefined ? level : 7;
 
         this.dirty = true;
 
@@ -165,7 +164,7 @@ class TileRODesc {
         vtDesc.viewMat3.setTo(-px, -py, zoom, zoom);
         vtDesc.projMat3.ortho(pw, ph);
 
-        console.log("TileRODesc::buildDraw(), level: ", this.level, ", zoom: ", zoom, ", size: ", pw);
+        console.log("TileRODesc::buildDraw(), level: ", this.level, ", zoom: ", zoom, ", size: ", pw, ", x: ", this.x, ",y: ", this.y);
         console.log("TileRODesc::buildDraw(), this.viewTransDesc: ", vtDesc);
 
         let fbo = this.fboUnit;
@@ -188,9 +187,9 @@ class TileRODesc {
     }
 }
 export class TileUnit {
-    constructor(x, y, width, height) {
+    constructor(x, y, width, height, level) {
 
-        this.roDesc = new TileRODesc(x, y, width, height);
+        this.roDesc = new TileRODesc(x, y, width, height, level);
         this.roUnit = new MVPTexROUnit();
     }
     setLevel(level) {
@@ -287,12 +286,12 @@ export class TileUnit {
 }
 
 export class TileGrid {
-    constructor(x, y, width, height) {
+    constructor(x, y, width, height, level) {
 
 
-        this.level = 7;
+        this.unit = new TileUnit(x, y, width, height, level);
+        this.level = this.unit.roDesc.level;
         this.dirty = true;
-        this.unit = new TileUnit(x, y, width, height);
 
         this.units = null;
     }
@@ -328,10 +327,10 @@ export class TileGrid {
             this.units = new Array(n * n);
             let k = 0;
             for (let i = 0; i < n; ++i) {
-                let py = i * dSize;
+                let py = roDesc.y + i * dSize;
                 for (let j = 0; j < n; ++j) {
-                    let px = j * dSize;
-                    let pu = new TileUnit(px, py, dSize, dSize);
+                    let px = roDesc.x + j * dSize;
+                    let pu = new TileUnit(px, py, dSize, dSize, level);
                     pu.initialize(roDesc.wscRenderer, roDesc.fboUnit, unit.roUnit);
                     this.units[k] = pu;
                     k++;
