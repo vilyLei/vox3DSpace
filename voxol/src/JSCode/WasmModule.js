@@ -164,7 +164,7 @@ export class ModuleWrapper {
             canvas.style.width = `${pw / dpr}px`;
             canvas.style.height = `${ph / dpr}px`;
 
-            this.ins.setGPUCtxSizeFunc(pw, ph);
+            this.ins.setGPUCtxSize(pw, ph);
             if (callback) {
                 callback(pw, ph);
             }

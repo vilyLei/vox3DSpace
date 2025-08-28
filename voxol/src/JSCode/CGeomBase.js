@@ -7,6 +7,10 @@ export class Bounds2D {
         this.setXYWH(x, y, width, height);
     }
 
+    copyFrom(src) {
+        this.setXYWH(src.x, src.y, src.width, src.height);
+    }
+    
     setXY(x, y) {
 
         this.x = x != undefined ? x : 0;

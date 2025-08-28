@@ -38,6 +38,11 @@ export class ModuleInstance {
         this.getCmdsExec = module.cwrap("getCmds", "number");
         this.getRenderCmdBufferExec = module.cwrap("getRenderCmdBuffer", "number");
     }
+    setGPUCtxSize(pw, ph) {
+        this.setGPUCtxSizeFunc(pw, ph);
+        let bounds = this.viewTransDesc.viewBounds;
+        bounds.setWH(pw, ph);
+    }
     updateHeapInfo() {
 
         let heapU8 = this.module.HEAPU8;

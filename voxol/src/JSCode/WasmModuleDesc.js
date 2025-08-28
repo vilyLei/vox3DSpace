@@ -1,5 +1,6 @@
 "use strict";
 
+import { Mat33 } from './Mat33.js';
 import { Bounds2D } from './CGeomBase.js';
 
 export class ViewTransDesc {
@@ -13,8 +14,12 @@ export class ViewTransDesc {
         this.heapU32 = null;
         this.heapF32 = null;
 
-        this.projF32 = null;
-        this.viewF32 = null;
+        
+        this.projMat3 = new Mat33();
+        this.viewMat3 = new Mat33();
+
+        this.projF32 = this.projMat3.data;
+        this.viewF32 = this.viewMat3.data;
 
         this.viewBounds = new Bounds2D(0, 0, 512, 512);
         // view bounds in the world space
@@ -58,8 +63,8 @@ export class ViewTransDesc {
         // console.log(projmatvs);
         // console.log("ViewTransDesc::parse() viewmatvs: ");
         // console.log(viewmatvs);
-        this.projF32 = projmatvs;
-        this.viewF32 = viewmatvs;
+        this.projF32.set(projmatvs);
+        this.viewF32.set(viewmatvs);
     }
 }
 
