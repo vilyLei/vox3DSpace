@@ -106,14 +106,15 @@ void RenderCmdWorld::initialize()
 
 void RenderCmdWorld::run()
 {
-    if (!dirty)
+
+    if (!dirty && nodeScene.dirty)
         return;
     dirty = false;
 
 
     initialize();
 
-    auto cmdsTotal = static_cast<uint32_t>(nodeScene.cmdBatchNodes.size());
+    // auto cmdsTotal = static_cast<uint32_t>(nodeScene.cmdBatchNodes.size());
 
     // RectTarget::Rect boundary = {0, 0, canvas.size.width * 1.0f, canvas.size.height * 1.0f};
 
@@ -141,15 +142,17 @@ void RenderCmdWorld::run()
     //     //printf("node (x=%f, y=%f)\n", node.x, node.y);
     // }
 
-    for (auto i = 0; i < cmdsTotal; i++)
-    {
-        nodeScene.cmdBatchNodes[i].update();
-    }
-    cmdsTotal = static_cast<uint32_t>(nodeScene.cmdNodes.size());
-    for (auto i = 0; i < cmdsTotal; i++)
-    {
-        nodeScene.cmdNodes[i].update();
-    }
+    nodeScene.run();
+
+    // for (auto i = 0; i < cmdsTotal; i++)
+    // {
+    //     nodeScene.cmdBatchNodes[i].update();
+    // }
+    // cmdsTotal = static_cast<uint32_t>(nodeScene.cmdNodes.size());
+    // for (auto i = 0; i < cmdsTotal; i++)
+    // {
+    //     nodeScene.cmdNodes[i].update();
+    // }
 
     auto& view      = canvas.view;
     auto& camDesc   = bufBuilder.camDesc;
@@ -162,12 +165,7 @@ void RenderCmdWorld::run()
 
 void RenderCmdWorld::update()
 {
-    // if (!cmdNodes.empty())
-    // {
-    //     testRotationOp(cmdNodes[0]);
-    //     cmdNodes[0].rotation += 0.05f;
-    //     dirty = true;
-    // }
+    nodeScene.update();
 }
 
 

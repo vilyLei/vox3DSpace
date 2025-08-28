@@ -96,7 +96,32 @@ void RenderNodeScene::initialize()
 
     mInit = false;
 }
+void RenderNodeScene::update()
+{
+    if (!cmdNodes.empty())
+    {
+        testRotationOp(cmdNodes[0]);
+        cmdNodes[0].rotation += 0.05f;
+        dirty = true;
+    }
+}
+void RenderNodeScene::run()
+{
+    if (!dirty)
+        return;
+    dirty = false;
 
+    auto cmdsTotal = cmdBatchNodes.size();
+    for (auto i = 0; i < cmdsTotal; i++)
+    {
+        cmdBatchNodes[i].update();
+    }
+    cmdsTotal = cmdNodes.size();
+    for (auto i = 0; i < cmdsTotal; i++)
+    {
+        cmdNodes[i].update();
+    }
+}
 int RenderNodeScene::getNodesTotal() const
 {
     return static_cast<int>(cmdBatchNodes.size() + cmdNodes.size());

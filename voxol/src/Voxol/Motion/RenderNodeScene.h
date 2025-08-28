@@ -27,7 +27,9 @@ public:
 
 public:
     void initialize();
-    int getNodesTotal() const;
+    int  getNodesTotal() const;
+    void update();
+    void run();
 
 private:
     bool mInit = true;
