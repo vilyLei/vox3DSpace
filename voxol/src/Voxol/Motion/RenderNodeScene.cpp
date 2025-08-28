@@ -98,12 +98,12 @@ void RenderNodeScene::initialize()
 }
 void RenderNodeScene::update()
 {
-    if (!cmdNodes.empty())
-    {
-        testRotationOp(cmdNodes[0]);
-        cmdNodes[0].rotation += 0.05f;
-        dirty = true;
-    }
+    // if (!cmdNodes.empty())
+    // {
+    //     testRotationOp(cmdNodes[0]);
+    //     cmdNodes[0].rotation += 0.05f;
+    //     dirty = true;
+    // }
 }
 void RenderNodeScene::run()
 {
