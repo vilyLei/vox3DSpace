@@ -21,7 +21,7 @@ void RenderNodeScene::initialize()
     using namespace Voxol::Math;
 
 
-    // printf("RenderCmdWorld::initialize() viewMat:\n");
+    // printf("RenderNodeScene::initialize() ...\n");
 
     auto cmdsTotal = 6;
 
@@ -31,7 +31,7 @@ void RenderNodeScene::initialize()
     auto rsize          = 70.0f;
 
     auto total = cmdsBatchTotal + cmdsTotal;
-    printf("Voxol::Motion::RenderCmdWorld::initialize() total: %d\n", total);
+    printf("Voxol::Motion::RenderNodeScene::initialize() total: %d\n", total);
 
     commands.resize(total);
     cmdBatchNodes.resize(cmdsBatchTotal);
@@ -99,6 +99,6 @@ void RenderNodeScene::initialize()
 
 int RenderNodeScene::getNodesTotal() const
 {
-    return static_cast<int>(cmdNodes.size() + cmdNodes.size());
+    return static_cast<int>(cmdBatchNodes.size() + cmdNodes.size());
 }
 } // namespace Voxol::Motion
