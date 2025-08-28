@@ -80,6 +80,7 @@ class TileRODesc {
         // this.projMat3 = new Mat33();
         // this.projMat3.ortho(this.width, this.height);
         this.viewTransDesc = new ViewTransDesc();
+        this.viewTransDesc.viewWorldBounds.setXYWH(this.x, this.y, this.width, this.height);
     }
     destroy() {
 
@@ -87,7 +88,9 @@ class TileRODesc {
         if (this.texture) {
             gl.deleteTexture(this.texture);
         }
-
+        if (this.viewTransDesc) {
+            this.viewTransDesc.destroy();
+        }
         this.wscRenderer = null;
         this.texture = null;
         this.fboUnit = null;
@@ -133,7 +136,9 @@ class TileRODesc {
         let ph = this.height;
 
         let zoom = 1;
+        if (this.lv) {
 
+        }
         pw *= zoom;
         ph *= zoom;
 
@@ -145,6 +150,7 @@ class TileRODesc {
         vtDesc.viewMat3.setTo(-px, -py, zoom, zoom);
         vtDesc.projMat3.ortho(pw, ph);
 
+        console.log("TileRODesc::buildDraw(), lv: ", this.lv);
         console.log("TileRODesc::buildDraw(), this.viewTransDesc: ", vtDesc);
 
         let fbo = this.fboUnit;
@@ -156,7 +162,7 @@ class TileRODesc {
         gl.clear(gl.COLOR_BUFFER_BIT);
         gl.viewport(0, 0, pw, ph);
         // 如果绘制的有实际内容，则这个tile有效，反之无效， 无效了之后这个tile资源就可以释放了
-        wscRenderer.draw( vtDesc );
+        wscRenderer.draw(vtDesc);
 
         fbo.unbindFBO();
     }

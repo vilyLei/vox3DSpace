@@ -13,7 +13,7 @@ export class ViewTransDesc {
         this.heapU32 = null;
         this.heapF32 = null;
 
-        
+
         this.projMat3 = new Mat33();
         this.viewMat3 = new Mat33();
         this.viewInvMat3 = new Mat33();
@@ -25,9 +25,25 @@ export class ViewTransDesc {
         // view bounds in the world space
         this.viewWorldBounds = new Bounds2D(0, 0, 512, 512);
     }
+    destroy() {
+
+        this.heapU32 = null;
+        this.heapF32 = null;
+
+        this.projMat3 = null;
+        this.viewMat3 = null;
+        this.viewInvMat3 = null;
+
+        this.projF32 = null;
+        this.viewF32 = null;
+
+        this.viewBounds = null;
+        // view bounds in the world space
+        this.viewWorldBounds = null;
+    }
 
     getZoom() {
-        
+
         if (this.viewF32)
             return this.viewF32[0];
 
