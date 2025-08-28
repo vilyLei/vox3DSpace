@@ -113,12 +113,12 @@ class TileRODesc {
 
     buildDraw() {
 
+        let wscRenderer = this.wscRenderer;
         let moduleIns = wscRenderer.moduleIns;
         let wscCtx = moduleIns.viewTransDesc;
         // 判断当前 tile是否被view world bounds包含, 如果包含了才会实际执行绘制
 
         let gl = this.fboUnit.glCtx;
-        let wscRenderer = this.wscRenderer;
 
         let pw = this.width;
         let ph = this.height;
