@@ -1,6 +1,6 @@
 "use strict";
-
-import { BatchElementDesc, ViewTransDesc } from './WasmModuleDesc.js';
+import { ViewTransDesc } from './RenderCtx.js';
+import { BatchElementDesc } from './WasmModuleDesc.js';
 
 export class ModuleInstance {
 
