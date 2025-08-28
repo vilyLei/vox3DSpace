@@ -149,7 +149,14 @@ export class Bounds2D {
         let dy = Math.max(0, Math.max(other.y - this.bottom, this.y - other.bottom));
         return Math.sqrt(dx * dx + dy * dy);
     }
-    intersect(other) {
+    contains(x, y) {
+        if (x < this.left || x > this.right)
+            return false;
+        if (y < this.top || y > this.bottom)
+            return false;
+        return true;
+    }
+    intersects(other) {
         if (other.left > this.right || other.right < this.left)
             return false;
         if (other.y > this.bottom || other.bottom < this.y)
