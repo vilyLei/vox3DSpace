@@ -107,7 +107,7 @@ void RenderCmdWorld::initialize()
 void RenderCmdWorld::run()
 {
 
-    if (!dirty && nodeScene.dirty)
+    if (!dirty && !nodeScene.dirty)
         return;
     dirty = false;
 
