@@ -28,7 +28,7 @@ void RenderCmdWorld::initialize()
 void RenderCmdWorld::run()
 {
 
-    if (!dirty && !nodeScene.dirty)
+    if (!isDirty())
         return;
     dirty = false;
 
@@ -64,7 +64,7 @@ void RenderCmdWorld::run()
     // }
 
     nodeScene.run();
-    
+
     auto& view      = canvas.view;
     auto& camDesc   = bufBuilder.camDesc;
     camDesc.projMat = view.projMat;
@@ -77,6 +77,10 @@ void RenderCmdWorld::run()
 void RenderCmdWorld::update()
 {
     nodeScene.update();
+}
+bool RenderCmdWorld::isDirty() const
+{
+    return dirty || nodeScene.dirty;
 }
 
 

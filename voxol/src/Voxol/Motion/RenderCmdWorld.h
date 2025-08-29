@@ -10,39 +10,38 @@
 
 namespace Voxol::Motion
 {
-    
+
 class RenderCmdWorld
 {
 public:
-
     // std::vector<uint32_t>        commands{};
     // std::vector<DrawCmdTestNode> cmdBatchNodes{};
     // std::vector<DrawCmdTestNode> cmdNodes{};
-    
 
-    CanvasDesc  canvas{};
+
+    CanvasDesc          canvas{};
     RenderCmdBufBuilder bufBuilder{};
-    
-    RenderNodeScene nodeScene{};
-    UIMouseCtrl mouseCtrl{};
 
-    bool dirty = true;
+    RenderNodeScene nodeScene{};
+    UIMouseCtrl     mouseCtrl{};
 
 public:
-    RenderCmdWorld() = default;
+    RenderCmdWorld()  = default;
     ~RenderCmdWorld() = default;
 
 public:
     void           initialize();
     void           update();
     void           run();
+    bool           isDirty() const;
     void           setGPUCtxSize(int w, int h);
     void           setMouseXY(float x, float y);
     void           setMouseParams(const UIMouseParam& param);
     const uint8_t* cmdBuffer() const;
 
 private:
-    bool     mInit = true;
+    bool mInit = true;
+    bool dirty = true;
 };
 
 } // namespace Voxol::Motion
