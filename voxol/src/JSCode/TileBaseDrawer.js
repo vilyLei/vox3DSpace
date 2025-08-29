@@ -106,19 +106,19 @@ export class TileBaseDrawer {
         let zoom = moduleIns.getZoom();
 
         let sizeValue = zoom * 256;
-        let level = calcCeilOfTwoLevel(sizeValue) - 1;
-        if (level < 7)
-            level = 7;
-        console.log(`TileBaseDrawer::draw(), zoom = ${zoom}, level = ${level}, (2 << level)=${2 << level}`);
+        let viewLevel = calcCeilOfTwoLevel(sizeValue) - 1;
+        if (viewLevel < 7)
+            viewLevel = 7;
+        console.log(`TileBaseDrawer::draw(), zoom = ${zoom}, viewLevel = ${viewLevel}, (2 << viewLevel)=${2 << viewLevel}`);
         if(zoom < 0.9) {
-            let downLevel = calcFloorOfTwoLevel(256/zoom) - 1;
-            console.log(`TileBaseDrawer::draw(), downLevel = ${downLevel}, level = ${level}, (2 << downLevel)=${2 << downLevel}`);
+            let worldLevel = calcFloorOfTwoLevel(256/zoom) - 1;
+            console.log(`TileBaseDrawer::draw(), worldLevel = ${worldLevel}, viewLevel = ${viewLevel}, (2 << worldLevel)=${2 << worldLevel}`);
         }
 
         let tiles = this.tiles;
         let len = tiles.length;
         for (let i = 0; i < len; ++i) {
-            tiles[i].setLevel(level);
+            tiles[i].setViewLevel(viewLevel);
             tiles[i].build();
         }
 

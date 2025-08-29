@@ -44,6 +44,10 @@ export class ViewTransDesc {
         this.viewWorldBounds = new Bounds2D(0, 0, 512, 512);
 
         this.status = new RenderStatus();
+        //viewWorldBounds.setXYWH(this.x, this.y, this.width, this.height);
+    }
+    setViewWorldBoundsXYWH(x, y, width, height) {
+        this.viewWorldBounds.setXYWH(x, y, width, height);
     }
     destroy() {
 

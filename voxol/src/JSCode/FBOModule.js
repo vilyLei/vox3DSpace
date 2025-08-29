@@ -63,7 +63,7 @@ export class FBOUnit {
 }
 
 class TileRODesc {
-    constructor(x, y, width, height, level) {
+    constructor(x, y, width, height, viewLevel) {
 
         // defaut value: world space coordinates
         this.x = x != undefined ? x : 0;
@@ -71,7 +71,7 @@ class TileRODesc {
 
         this.width = width != undefined ? width : 256;
         this.height = height != undefined ? height : 256;
-        this.level = level != undefined ? level : 7;
+        this.viewLevel = viewLevel != undefined ? viewLevel : 7;
 
         this.dirty = true;
 
@@ -80,7 +80,7 @@ class TileRODesc {
         this.fboUnit = null;
 
         this.viewTransDesc = new ViewTransDesc();
-        this.viewTransDesc.viewWorldBounds.setXYWH(this.x, this.y, this.width, this.height);
+        this.viewTransDesc.setViewWorldBoundsXYWH(this.x, this.y, this.width, this.height);
     }
     destroy() {
 
@@ -96,21 +96,21 @@ class TileRODesc {
         this.fboUnit = null;
         this.viewTransDesc = null;
     }
-    setLevel(level) {
+    setViewLevel(viewLevel) {
 
-        if (level == undefined)
+        if (viewLevel == undefined)
             return;
 
-        if (this.level == level)
+        if (this.viewLevel == viewLevel)
             return;
 
         let gl = this.fboUnit.glCtx;
         if (this.texture) {
-            console.log("TileRODesc::setLevel(), level: ", level, ", gl.deleteTexture() ...");
+            console.log("TileRODesc::setViewLevel(), viewLevel: ", viewLevel, ", gl.deleteTexture() ...");
             gl.deleteTexture(this.texture);
             this.texture = null;
         }
-        this.level = level;
+        this.viewLevel = viewLevel;
         this.dirty = true;
 
     }
@@ -144,7 +144,7 @@ class TileRODesc {
 
         let zoom = 1;
 
-        if (this.level > 7) {
+        if (this.viewLevel > 7) {
             zoom = 512 / pw;
         }
 
@@ -159,7 +159,7 @@ class TileRODesc {
         vtDesc.viewMat3.setTo(-px, -py, zoom, zoom);
         vtDesc.projMat3.ortho(pw, ph);
 
-        console.log("TileRODesc::buildDraw(), level: ", this.level, ", zoom: ", zoom, ", size: ", pw, ", x: ", this.x, ",y: ", this.y);
+        console.log("TileRODesc::buildDraw(), viewLevel: ", this.viewLevel, ", zoom: ", zoom, ", size: ", pw, ", x: ", this.x, ",y: ", this.y);
         // console.log("TileRODesc::buildDraw(), this.viewTransDesc: ", vtDesc);
 
         let fbo = this.fboUnit;
@@ -182,14 +182,14 @@ class TileRODesc {
     }
 }
 export class TileUnit {
-    constructor(x, y, width, height, level) {
+    constructor(x, y, width, height, viewLevel) {
 
-        this.roDesc = new TileRODesc(x, y, width, height, level);
+        this.roDesc = new TileRODesc(x, y, width, height, viewLevel);
         this.roUnit = new MVPTexROUnit();
     }
-    setLevel(level) {
+    setViewLevel(viewLevel) {
 
-        this.roDesc.setLevel(level);
+        this.roDesc.setViewLevel(viewLevel);
 
     }
     destroy() {
@@ -301,21 +301,21 @@ export class TileUnit {
 }
 
 export class TileGrid {
-    constructor(x, y, width, height, level) {
+    constructor(x, y, width, height, viewLevel) {
 
 
-        this.unit = new TileUnit(x, y, width, height, level);
-        this.level = this.unit.roDesc.level;
+        this.unit = new TileUnit(x, y, width, height, viewLevel);
+        this.viewLevel = this.unit.roDesc.viewLevel;
         this.dirty = true;
 
         this.units = null;
     }
 
-    setLevel(level) {
+    setViewLevel(viewLevel) {
 
-        if (this.level == level)
+        if (this.viewLevel == viewLevel)
             return;
-        if (this.level >= 9 && level < 9) {
+        if (this.viewLevel >= 9 && viewLevel < 9) {
             this.unit.enabled = true;
         }
         if (this.units) {
@@ -324,20 +324,20 @@ export class TileGrid {
             }
             this.units = null;
         }
-        console.log("TileGrid::setLevel(), level: ", level);
+        console.log("TileGrid::setViewLevel(), viewLevel: ", viewLevel);
 
-        this.level = level;
+        this.viewLevel = viewLevel;
         this.dirty = true;
 
-        if (this.level < 9) {
-            this.unit.setLevel(level);
+        if (this.viewLevel < 9) {
+            this.unit.setViewLevel(viewLevel);
         } else {
 
             let unit = this.unit;
             let roDesc = unit.roDesc;
             unit.enabled = false;
 
-            let n = 2 << (this.level - 9);
+            let n = 2 << (this.viewLevel - 9);
             let dSize = roDesc.width / n;
             this.units = new Array(n * n);
             let k = 0;
@@ -345,13 +345,13 @@ export class TileGrid {
                 let py = roDesc.y + i * dSize;
                 for (let j = 0; j < n; ++j) {
                     let px = roDesc.x + j * dSize;
-                    let pu = new TileUnit(px, py, dSize, dSize, level);
+                    let pu = new TileUnit(px, py, dSize, dSize, viewLevel);
                     pu.initialize(roDesc.wscRenderer, roDesc.fboUnit, unit.roUnit);
                     this.units[k] = pu;
                     k++;
                 }
             }
-            console.log("TileGrid::setLevel(), this.units: ", this.units);
+            console.log("TileGrid::setViewLevel(), this.units: ", this.units);
         }
 
     }
@@ -365,7 +365,7 @@ export class TileGrid {
         }
         let dirty = this.dirty;
         let flag = false;
-        if (this.level < 9) {
+        if (this.viewLevel < 9) {
             this.unit.build();
         } else if (this.units) {
             for (let i = 0, ln = this.units.length; i < ln; ++i) {
@@ -383,7 +383,7 @@ export class TileGrid {
             // console.log("TileGrid::draw(), false draw() ...");
             return;
         }
-        if (this.level < 9) {
+        if (this.viewLevel < 9) {
             this.unit.draw(ctx);
         } else if (this.units) {
             for (let i = 0, ln = this.units.length; i < ln; ++i) {
