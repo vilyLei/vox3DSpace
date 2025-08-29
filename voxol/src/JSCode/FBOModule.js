@@ -276,7 +276,10 @@ export class TileUnit {
         if (unit && unit.enabled) {
 
             ctx.status.tileDraw();
-
+            // for debug
+            unit.colorData[0] = 0.9 + 0.2 * (ctx.status.tileDrawTimes%6)/6;
+            unit.colorData[1] = 0.9 + 0.2 * (ctx.status.tileDrawTimes%5)/5;
+            
             unit.bind(gl, ctx);
             unit.draw(gl, ctx);
         }

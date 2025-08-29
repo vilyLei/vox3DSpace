@@ -104,6 +104,7 @@ export class TileBaseDrawer {
         // this.tile1.draw(wscCtx);
 
         let zoom = moduleIns.getZoom();
+        // zoom = Math.round(zoom * 1000) / 1000;
 
         let sizeValue = zoom * 256;
         let viewLevel = calcCeilOfTwoLevel(sizeValue) - 1;
