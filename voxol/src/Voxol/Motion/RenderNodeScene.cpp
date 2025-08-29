@@ -92,6 +92,7 @@ void RenderNodeScene::initialize()
             drcDesc.mroid  = 2;
             nodeIndex++;
         }
+        cmdNodes[nodeIndex - 1].rotation = -0.2f;
     }
 
     mInit = false;
