@@ -14,6 +14,9 @@ import { FBOUnit, TileGrid, TileUnit } from './FBOModule.js';
 function calcCeilOfTwoLevel(value) {
     return Math.ceil(Math.log(value) / Math.LN2);
 }
+function calcFloorOfTwoLevel(value) {
+    return Math.floor(Math.log(value) / Math.LN2);
+}
 function calcCeilPowerOfTwo(value) {
     return Math.pow(2, Math.ceil(Math.log(value) / Math.LN2));
 }
@@ -106,7 +109,11 @@ export class TileBaseDrawer {
         let level = calcCeilOfTwoLevel(sizeValue) - 1;
         if (level < 7)
             level = 7;
-        console.log(`TileBaseDrawer::draw(), zoom = ${zoom}, level = ${level}, (2 << lv)=${2 << level}`);
+        console.log(`TileBaseDrawer::draw(), zoom = ${zoom}, level = ${level}, (2 << level)=${2 << level}`);
+        if(zoom < 0.9) {
+            let downLevel = calcFloorOfTwoLevel(256/zoom) - 1;
+            console.log(`TileBaseDrawer::draw(), downLevel = ${downLevel}, level = ${level}, (2 << downLevel)=${2 << downLevel}`);
+        }
 
         let tiles = this.tiles;
         let len = tiles.length;

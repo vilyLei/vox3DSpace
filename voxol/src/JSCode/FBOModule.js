@@ -1,7 +1,5 @@
 "use strict";
 
-import { Mat33 } from './Mat33.js';
-import { Bounds2D } from './CGeomBase.js';
 import { MVPTexROUnit } from './ROUnitModule.js';
 import { ViewTransDesc } from './RenderCtx.js';
 
@@ -81,9 +79,6 @@ class TileRODesc {
         this.texture = null;
         this.fboUnit = null;
 
-        // this.viewMat3 = new Mat33();
-        // this.projMat3 = new Mat33();
-        // this.projMat3.ortho(this.width, this.height);
         this.viewTransDesc = new ViewTransDesc();
         this.viewTransDesc.viewWorldBounds.setXYWH(this.x, this.y, this.width, this.height);
     }
@@ -165,7 +160,7 @@ class TileRODesc {
         vtDesc.projMat3.ortho(pw, ph);
 
         console.log("TileRODesc::buildDraw(), level: ", this.level, ", zoom: ", zoom, ", size: ", pw, ", x: ", this.x, ",y: ", this.y);
-        console.log("TileRODesc::buildDraw(), this.viewTransDesc: ", vtDesc);
+        // console.log("TileRODesc::buildDraw(), this.viewTransDesc: ", vtDesc);
 
         let fbo = this.fboUnit;
         fbo.bindFBO(gl);
@@ -235,8 +230,8 @@ export class TileUnit {
     }
     build() {
         if(!this.checkDrawing()) {
-            console.log("TileUnit::build(), false build() ...");
-            return;
+            // console.log("TileUnit::build(), false build() ...");
+            return false;
         }
         let desc = this.roDesc;
         let tileTirty = this.tileDirtyCheck();
@@ -252,7 +247,7 @@ export class TileUnit {
     draw(ctx) {
 
         if(!this.checkDrawing()) {
-            console.log("TileUnit::draw(), false draw() ...");
+            // console.log("TileUnit::draw(), false draw() ...");
             return;
         }
 
@@ -385,7 +380,7 @@ export class TileGrid {
 
     draw(ctx) {
         if(!this.unit.checkDrawing()) {
-            console.log("TileGrid::draw(), false draw() ...");
+            // console.log("TileGrid::draw(), false draw() ...");
             return;
         }
         if (this.level < 9) {
