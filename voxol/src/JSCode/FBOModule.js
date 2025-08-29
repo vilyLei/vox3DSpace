@@ -218,12 +218,26 @@ export class TileUnit {
         this.roUnit.setXY(desc.x, desc.y);
     }
 
+    checkDrawing() {
+
+        let desc = this.roDesc;
+        let wscRenderer = desc.wscRenderer;
+        let moduleIns = wscRenderer.moduleIns;
+        let wscCtx = moduleIns.viewTransDesc;
+
+        let hit = wscCtx.viewWorldBounds.intersects(desc.viewTransDesc.viewWorldBounds);
+        return hit;
+    }
     /// check tile area dirty yes or no
     tileDirtyCheck() {
         let desc = this.roDesc;
         return desc.dirty;
     }
     build() {
+        if(!this.checkDrawing()) {
+            console.log("TileUnit::build(), false build() ...");
+            return;
+        }
         let desc = this.roDesc;
         let tileTirty = this.tileDirtyCheck();
         if (tileTirty) {
@@ -236,6 +250,11 @@ export class TileUnit {
     }
 
     draw(ctx) {
+
+        if(!this.checkDrawing()) {
+            console.log("TileUnit::draw(), false draw() ...");
+            return;
+        }
 
         let desc = this.roDesc;
         let gl = desc.fboUnit.glCtx;
@@ -254,6 +273,7 @@ export class TileUnit {
             unit.draw(gl, ctx);
         }
     }
+
     drawTest(ctx) {
 
         let desc = this.roDesc;
@@ -344,6 +364,10 @@ export class TileGrid {
         this.unit.initialize(wscRenderer, fboUnit, srcRoUnit);
     }
     build() {
+        if(!this.unit.checkDrawing()) {
+            console.log("TileGrid::build(), false build() ...");
+            return;
+        }
         let dirty = this.dirty;
         let flag = false;
         if (this.level < 9) {
@@ -360,6 +384,10 @@ export class TileGrid {
     }
 
     draw(ctx) {
+        if(!this.unit.checkDrawing()) {
+            console.log("TileGrid::draw(), false draw() ...");
+            return;
+        }
         if (this.level < 9) {
             this.unit.draw(ctx);
         } else if (this.units) {
