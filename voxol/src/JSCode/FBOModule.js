@@ -72,6 +72,7 @@ class TileRODesc {
         this.width = width != undefined ? width : 256;
         this.height = height != undefined ? height : 256;
         this.viewLevel = viewLevel != undefined ? viewLevel : 7;
+        this.worldLevel = 1;
 
         this.dirty = true;
 
@@ -95,6 +96,24 @@ class TileRODesc {
         this.texture = null;
         this.fboUnit = null;
         this.viewTransDesc = null;
+    }
+    setWorldevel(worldLevel) {
+
+        if (worldLevel == undefined)
+            return;
+
+        if (this.worldLevel == worldLevel)
+            return;
+
+        let gl = this.fboUnit.glCtx;
+        if (this.texture) {
+            console.log("TileRODesc::setWorldevel(), worldLevel: ", viewLevel, ", gl.deleteTexture() ...");
+            gl.deleteTexture(this.texture);
+            this.texture = null;
+        }
+        this.worldLevel = worldLevel;
+        this.dirty = true;
+
     }
     setViewLevel(viewLevel) {
 
@@ -160,7 +179,7 @@ class TileRODesc {
         vtDesc.projMat3.ortho(pw, ph);
 
         console.log("TileRODesc::buildDraw(), viewLevel: ", this.viewLevel, ", zoom: ", zoom, ", size: ", pw, ", x: ", this.x, ",y: ", this.y);
-        // console.log("TileRODesc::buildDraw(), this.viewTransDesc: ", vtDesc);
+        console.log("TileRODesc::buildDraw(), vtDesc: ", vtDesc);
 
         let fbo = this.fboUnit;
         fbo.bindFBO(gl);
@@ -187,10 +206,13 @@ export class TileUnit {
         this.roDesc = new TileRODesc(x, y, width, height, viewLevel);
         this.roUnit = new MVPTexROUnit();
     }
+
+    setWorldLevel(worldLevel) {
+        this.roDesc.setWorldLevel(worldLevel);
+    }
+
     setViewLevel(viewLevel) {
-
         this.roDesc.setViewLevel(viewLevel);
-
     }
     destroy() {
         this.roDesc.destroy();
@@ -297,12 +319,36 @@ export class TileGrid {
 
         this.unit = new TileUnit(x, y, width, height, viewLevel);
         this.viewLevel = this.unit.roDesc.viewLevel;
+        this.worldLevel = 1;
+
         this.dirty = true;
 
         this.units = null;
     }
 
+    // setWorldLevel(worldLevel) {
+    //     this.roDesc.setWorldLevel(worldLevel);
+    // }
+    
+    setWorldLevel(worldLevel) {
+
+        if(worldLevel == undefined)
+            return;
+
+        if (this.worldLevel == worldLevel)
+            return;
+
+        this.worldLevel = worldLevel;
+        this.dirty = true;
+        this.unit.setWorldLevel(worldLevel);
+
+        console.log("TileGrid::setWorldLevel(), worldLevel: ", worldLevel);
+    }
+
     setViewLevel(viewLevel) {
+
+        if(viewLevel == undefined)
+            return;
 
         if (this.viewLevel == viewLevel)
             return;
@@ -362,7 +408,7 @@ export class TileGrid {
         }
 
         let dirty = this.dirty;
-        
+
         let flag = false;
         if (this.viewLevel < 9) {
             this.unit.build();
