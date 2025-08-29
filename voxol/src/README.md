@@ -1,6 +1,7 @@
 #
 Web 端 10 million renderable graphics primitives 规模, PC Native 端 100 million renderable graphics primitives 规模
-
+#
+3D,2D,视频等的混合编辑/展示/交互
 #
 编辑，播放，这两个看似不同的系统，实际上核心系统应该基于同一机制。
 编辑可以看做是编辑器或者设计工具，也就是内容生产系统。
@@ -13,6 +14,7 @@ Web 端 10 million renderable graphics primitives 规模, PC Native 端 100 mill
 3. 播放\展示\应用系统。例如可以组合为一个游戏player。
 
 #
+基于协议、数据、命令的分离式的、算力驱动的系统设计。
 主系统分为两端: 驱动端(生产端), 执行端(消费端)
 驱动端产生命令队列，而执行端则解释并执行这些命令。
 驱动端不会包含具体表现所需要的资源，而执行端则要拥有这些资源的管理能力。这也是分布式机制的设计原则。
@@ -20,3 +22,5 @@ Web 端 10 million renderable graphics primitives 规模, PC Native 端 100 mill
 
 #
 这种空间管理机制下，必然会出现2倍的渲染实现效果.
+#
+核心机制可直接跨平台迁移。
