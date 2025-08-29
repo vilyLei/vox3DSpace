@@ -90,7 +90,7 @@ export class TileBaseDrawer {
         let wscCtx = moduleIns.viewTransDesc;
         let rstatus = wscCtx.status;
         let fbo = this.fboIns;
-        fbo.bindTexTimes = 0;        
+        fbo.bindTexTimes = 0;
 
         rstatus.reset();
 
@@ -110,23 +110,29 @@ export class TileBaseDrawer {
         if (viewLevel < 7)
             viewLevel = 7;
         console.log(`TileBaseDrawer::draw(), zoom = ${zoom}, viewLevel = ${viewLevel}, (2 << viewLevel)=${2 << viewLevel}`);
-        if(zoom < 0.9) {
-            let worldLevel = calcFloorOfTwoLevel(256/zoom) - 1;
+        if (zoom < 0.9) {
+            let worldLevel = calcFloorOfTwoLevel(256 / zoom) - 1;
             console.log(`TileBaseDrawer::draw(), worldLevel = ${worldLevel}, viewLevel = ${viewLevel}, (2 << worldLevel)=${2 << worldLevel}`);
         }
 
         let tiles = this.tiles;
         let len = tiles.length;
         for (let i = 0; i < len; ++i) {
-            tiles[i].setViewLevel(viewLevel);
-            tiles[i].build();
+            const t = tiles[i];
+            if (t.checkDrawing()) {
+                t.setViewLevel(viewLevel);
+                t.build();
+            }
         }
 
 
         wscRenderer.runBegin();
 
         for (let i = 0; i < len; ++i) {
-            tiles[i].draw(wscCtx);
+            const t = tiles[i];
+            if (t.checkDrawing()) {
+                tiles[i].draw(wscCtx);
+            }
         }
         console.log(`draw(), bindTexTimes = ${fbo.bindTexTimes}`);
         rstatus.print();
