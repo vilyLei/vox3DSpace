@@ -1,5 +1,5 @@
 #
-Web 端 10 million renderable graphics primitives 规模, PC Native 端 100 million renderable graphics primitives 规模
+Web 端 10 million renderable graphics primitives 规模, PC Native 端 100 million renderable graphics primitives 规模, Mobile 端 1 million renderable graphics primitives 规模
 #
 3D,2D,视频等的混合编辑/展示/交互
 #
