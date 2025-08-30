@@ -1,0 +1,40 @@
+{
+  "name": "Space data format example",
+  "version": "0.0.1",
+  "resource": {
+    "list": []
+  },
+  "topology": {
+    "desc": {},
+    "list": []
+  },
+  "rscene": {
+    "view": {
+      "trans": [
+        1,
+        1,
+        0,
+        100,
+        65
+      ]
+    },
+    "countent": {
+      "desc": {},
+      "units": [
+        {
+          "rcmd": 50,
+          "size": 16,
+          "mroid": 1,
+          "color": "ff00aa00",
+          "trans": [
+            128,
+            128,
+            0,
+            100,
+            65
+          ]
+        }
+      ]
+    }
+  }
+}
