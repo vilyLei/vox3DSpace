@@ -94,6 +94,7 @@ class TileRODesc {
         if (this.viewTransDesc.debugging) {
             this.viewTransDesc.clearColor.set([0.55, 0.95, 0.55, 1]);
         }
+        this.hasDrawing = false;
     }
     destroy() {
 
@@ -190,7 +191,6 @@ class TileRODesc {
         let worldBounds = vtDesc.viewWorldBounds;
         let vpx = worldBounds.x * viewZoom;
         let vpy = worldBounds.y * viewZoom;
-
         vtDesc.viewMat3.setTo(-vpx, -vpy, viewZoom, viewZoom);
         vtDesc.projMat3.ortho(pw, ph);
 
@@ -203,12 +203,16 @@ class TileRODesc {
         this.texture = fbo.fboTex;
 
         let cvs = vtDesc.clearColor;
-        // gl.clearColor(0.55, 0.95, 0.55, 1);
         gl.clearColor(cvs[0], cvs[1], cvs[2], cvs[3]);
         gl.clear(gl.COLOR_BUFFER_BIT);
         gl.viewport(0, 0, pw, ph);
+        
+        vtDesc.status.drawTimes = 0;
+
         // 如果绘制的有实际内容，则这个tile有效，反之无效， 无效了之后这个tile资源就可以释放了
         wscRenderer.draw(vtDesc);
+
+        this.hasDrawing = vtDesc.status.drawTimes > 0;
 
         fbo.unbindFBO();
     }
@@ -274,10 +278,12 @@ export class TileUnit {
     }
 
     build() {
+
         if (!this.checkDrawing()) {
             // console.log("TileUnit::build(), false build() ...");
             return false;
         }
+
         let desc = this.roDesc;
         let tileTirty = desc.dirty;
         if (tileTirty) {
@@ -303,7 +309,7 @@ export class TileUnit {
         let gl = desc.fboUnit.glCtx;
 
         let unit = this.roUnit;
-        if (unit && unit.enabled) {
+        if (unit && unit.enabled && desc.hasDrawing) {
 
             ctx.status.tileDraw();
             // for debug

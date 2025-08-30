@@ -6,16 +6,21 @@ export class RenderStatus {
     constructor() {
         this.tileBuildTimes = 0;
         this.tileDrawTimes = 0;
+        this.drawTimes = 0;
     }
     reset() {
         this.tileBuildTimes = 0;
         this.tileDrawTimes = 0;
+        this.drawTimes = 0;
     }
     tileBuild() {
         this.tileBuildTimes ++;
     }
     tileDraw() {
         this.tileDrawTimes ++;
+    }
+    draw() {
+        this.drawTimes ++;
     }
     print() {        
         console.log(`RenderStatus( tileBuildTimes = ${this.tileBuildTimes}, tileDrawTimes = ${this.tileDrawTimes})`);

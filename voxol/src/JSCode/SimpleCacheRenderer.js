@@ -68,13 +68,13 @@ export class SimpleCacheDrawer {
 
         let gl = this.glCtx;
         let moduleIns = this.moduleIns;
-        let vDesc = moduleIns.viewTransDesc;
-        ctx = ctx == undefined ? vDesc : ctx;
+        let vtDesc = moduleIns.viewTransDesc;
+        ctx = ctx == undefined ? vtDesc : ctx;
 
         let scene = this.roScene;
         let drcUnits = scene.drcUnits;
 
-        let vwBounds = vDesc.viewWorldBounds;
+        let vwBounds = vtDesc.viewWorldBounds;
         let bounds = new Bounds2D();
         // let bgUnit =  scene.bgUnit;
         // if(bgUnit && bgUnit.enabled) {
@@ -114,8 +114,13 @@ export class SimpleCacheDrawer {
                     let descSize = heapU32[cmdIndex + 1];
                     let mroid = heapU32[cmdIndex + 6];
                     let rounit = drcUnits[mroid];
-                    rounit.parse(cmdIndex, heapU32, heapF32, bounds);
-                    if(rounit.enabled) {
+
+                    let hit = rounit.boundsTest(cmdIndex, heapU32, heapF32, bounds, vwBounds);
+
+                    if(hit && rounit.enabled) {
+                        rounit.parse(cmdIndex, heapU32, heapF32);
+                        ctx.status.drawTimes ++;
+
                         rounit.bind(gl, ctx);
                         rounit.draw(gl, ctx);
                     }
@@ -162,6 +167,9 @@ export class SimpleCacheDrawer {
         let dataU32 = batchEle.heapU32;
         let dataF32 = batchEle.heapF32;
 
+        let vtDesc = moduleIns.viewTransDesc;
+
+        let vwBounds = vtDesc.viewWorldBounds;
         let bounds = new Bounds2D();
 
         let unit = scene.batchUnit;
@@ -174,6 +182,16 @@ export class SimpleCacheDrawer {
             }
             if (tot >= total) {
                 // console.log(`drawing batch cmds all tot=${tot}, total=${total} !!!`);
+
+                if (drawIndex > 0) {
+                    for(let i = drawIndex + 1; i < matTot; ++i) {
+                        unit.transData.set([0,0,0,  0,0,0,  0,0,0], i * 9);
+                    }
+                    drewTot += drawIndex + 1;
+                    unit.draw(gl, ctx);
+                    drawIndex = 0;
+                }
+
                 break;
             }
             let cmd = dataU32[cmdIndex];
@@ -185,8 +203,13 @@ export class SimpleCacheDrawer {
             switch (cmd) {
                 case 0x32:
                     {
+                        
+                        let hit = unit.boundsTest(cmdIndex, dataU32, dataF32, bounds, vwBounds);
+                        if(hit) {
+                            unit.parse(drawIndex, cmdIndex, dataU32, dataF32);
+                            drawIndex++;
+                        }
                         tot++;
-                        unit.parse(drawIndex, cmdIndex, dataU32, dataF32, bounds);
                     }
                     break;
                 default:
@@ -194,7 +217,6 @@ export class SimpleCacheDrawer {
             }
             cmdIndex += descSize;
 
-            drawIndex++;
             if (drawIndex >= matTot) {
                 drewTot += matTot;
                 unit.draw(gl, ctx);
