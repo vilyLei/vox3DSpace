@@ -61,13 +61,16 @@ export class FBOUnit {
         gl.bindFramebuffer(gl.FRAMEBUFFER, null);
     }
 }
-const TileParams = {
+
+export const TileParams = {
     defaultViewSize: 256,
     defaultViewLevel: 7,
     defaultViewFixedLevel: 9,
     defaultViewFixedSize: 512,
     defaultWorldLevel: 7,
+    defaultWorldFixZoom: 0.9,
 }
+
 class TileRODesc {
     constructor(x, y, width, height, viewLevel) {
 
@@ -170,18 +173,20 @@ class TileRODesc {
         let zoom = 1;
 
         if (this.viewLevel > TileParams.defaultViewLevel) {
+            // 镜头拉近的放大过程
             zoom = TileParams.defaultViewFixedSize / pw;
+            pw *= zoom;
+            ph *= zoom;
+        }else if (this.worldLevel > TileParams.defaultWorldLevel) {
+            let zoomT = TileParams.defaultViewFixedSize / (2 << this.worldLevel);
         }
 
-        pw *= zoom;
-        ph *= zoom;
-
-        let px = this.x * zoom;
-        let py = this.y * zoom;
+        let vpx = this.x * zoom;
+        let vpy = this.y * zoom;
 
         let vtDesc = this.viewTransDesc;
 
-        vtDesc.viewMat3.setTo(-px, -py, zoom, zoom);
+        vtDesc.viewMat3.setTo(-vpx, -vpy, zoom, zoom);
         vtDesc.projMat3.ortho(pw, ph);
 
         console.log("TileRODesc::buildDraw(), viewLevel: ", this.viewLevel, ", zoom: ", zoom, ", size: ", pw, ", x: ", this.x, ",y: ", this.y);

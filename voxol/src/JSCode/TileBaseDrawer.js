@@ -9,7 +9,7 @@ import {
     vertTexMVPSource,
 } from './ShaderCodes.js';
 
-import { FBOUnit, TileGrid, TileUnit } from './FBOModule.js';
+import { TileParams, FBOUnit, TileGrid, TileUnit } from './FBOModule.js';
 
 function calcCeilOfTwoLevel(value) {
     return Math.ceil(Math.log(value) / Math.LN2);
@@ -106,13 +106,16 @@ export class TileBaseDrawer {
         let zoom = moduleIns.getZoom();
         // zoom = Math.round(zoom * 1000) / 1000;
 
-        let sizeValue = zoom * 256;
+        let defaultViewSize = TileParams.defaultViewSize;
+
+        let sizeValue = zoom * defaultViewSize;
         let viewLevel = calcCeilOfTwoLevel(sizeValue) - 1;
-        if (viewLevel < 7)
-            viewLevel = 7;
+        if (viewLevel < TileParams.defaultViewLevel)
+            viewLevel = TileParams.defaultViewLevel;
+        
         console.log(`TileBaseDrawer::draw(), zoom = ${zoom}, viewLevel = ${viewLevel}, (2 << viewLevel)=${2 << viewLevel}`);
-        if (zoom < 0.9) {
-            let worldLevel = calcFloorOfTwoLevel(256 / zoom) - 1;
+        if (zoom < TileParams.defaultWorldFixZoom) {
+            let worldLevel = calcFloorOfTwoLevel(defaultViewSize / zoom) - 1;
             console.log(`TileBaseDrawer::draw(), worldLevel = ${worldLevel}, viewLevel = ${viewLevel}, (2 << worldLevel)=${2 << worldLevel}`);
         }
 
