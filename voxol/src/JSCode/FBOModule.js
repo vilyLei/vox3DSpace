@@ -169,7 +169,7 @@ class TileRODesc {
 
         let zoom = 1;
 
-        if (this.viewLevel > TileParams.defaultViewFixedLevel) {
+        if (this.viewLevel > TileParams.defaultViewLevel) {
             zoom = TileParams.defaultViewFixedSize / pw;
         }
 
