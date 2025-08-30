@@ -1,5 +1,8 @@
 "use strict";
 
+
+import { Bounds2D } from './CGeomBase.js';
+
 export function printWith9Number(numArr, index) {
 
     let f32Str = "";
@@ -9,12 +12,6 @@ export function printWith9Number(numArr, index) {
     }
     console.log("array9Numbers:");
     console.log(f32Str);
-}
-
-class BatchDrawer {
-    constructor() {
-
-    }
 }
 
 export class SimpleCacheDrawer {
@@ -59,7 +56,6 @@ export class SimpleCacheDrawer {
         let moduleIns = this.moduleIns;
         let vtDesc = moduleIns.viewTransDesc;
 
-        // gl.clearColor(0.95, 0.95, 0.95, 1);
         let cvs = vtDesc.clearColor;
         gl.clearColor(cvs[0], cvs[1], cvs[2], cvs[3]);
 
@@ -79,6 +75,7 @@ export class SimpleCacheDrawer {
         let drcUnits = scene.drcUnits;
 
         let vwBounds = vDesc.viewWorldBounds;
+        let bounds = new Bounds2D();
         // let bgUnit =  scene.bgUnit;
         // if(bgUnit && bgUnit.enabled) {
         //     let dis = 5.0 / moduleIns.getZoom();
@@ -117,7 +114,7 @@ export class SimpleCacheDrawer {
                     let descSize = heapU32[cmdIndex + 1];
                     let mroid = heapU32[cmdIndex + 6];
                     let rounit = drcUnits[mroid];
-                    rounit.parse(cmdIndex, heapU32, heapF32);
+                    rounit.parse(cmdIndex, heapU32, heapF32, bounds);
                     if(rounit.enabled) {
                         rounit.bind(gl, ctx);
                         rounit.draw(gl, ctx);
@@ -165,6 +162,8 @@ export class SimpleCacheDrawer {
         let dataU32 = batchEle.heapU32;
         let dataF32 = batchEle.heapF32;
 
+        let bounds = new Bounds2D();
+
         let unit = scene.batchUnit;
 
         unit.bind(gl, ctx);
@@ -187,7 +186,7 @@ export class SimpleCacheDrawer {
                 case 0x32:
                     {
                         tot++;
-                        unit.parse(drawIndex, cmdIndex, dataU32, dataF32);
+                        unit.parse(drawIndex, cmdIndex, dataU32, dataF32, bounds);
                     }
                     break;
                 default:

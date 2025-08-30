@@ -110,10 +110,11 @@ export class MVPROUnit extends ROUnit {
     }
     destroy() { }
     
-    parse(cmdIndex, dataU32, dataF32) {
+    parse(cmdIndex, dataU32, dataF32, bounds) {
 
         let f32BoundsIndex = cmdIndex + 2;
         let boundsvs = dataF32.subarray(f32BoundsIndex, f32BoundsIndex + 4);
+        bounds.setXYWH(boundsvs[0], boundsvs[1], boundsvs[2], boundsvs[3]);
 
         let mroid = dataU32[cmdIndex + 6];
         // console.log("BatchROUnit::parse(), mroid: ", mroid);
@@ -220,10 +221,10 @@ export class MVPTexROUnit extends ROUnit {
                     if(loadedCall != undefined) {
                         loadedCall();
                     }
-                    console.log(`setTexturesWithUrls() ctx.dirty: `, ctx.dirty);
+                    // console.log(`setTexturesWithUrls() ctx.dirty: `, ctx.dirty);
                 }
-                console.log(`setTexturesWithUrls() build a tex(${i}), url: `, urls[i]);
-                console.log(`setTexturesWithUrls() thisRef.enabled: `, thisRef.enabled);
+                // console.log(`setTexturesWithUrls() build a tex(${i}), url: `, urls[i]);
+                // console.log(`setTexturesWithUrls() thisRef.enabled: `, thisRef.enabled);
             });
         }
     }
@@ -280,10 +281,11 @@ export class MVPTexROUnit extends ROUnit {
         gl.drawElements(gl.TRIANGLES, this.vertex.indices.length, gl.UNSIGNED_SHORT, 0);
     }
     destroy() { }
-    parse(cmdIndex, dataU32, dataF32) {
+    parse(cmdIndex, dataU32, dataF32, bounds) {
 
         let f32BoundsIndex = cmdIndex + 2;
         let boundsvs = dataF32.subarray(f32BoundsIndex, f32BoundsIndex + 4);
+        bounds.setXYWH(boundsvs[0], boundsvs[1], boundsvs[2], boundsvs[3]);
 
         let mroid = dataU32[cmdIndex + 6];
         // console.log("BatchROUnit::parse(), mroid: ", mroid);
@@ -331,10 +333,11 @@ export class BatchROUnit extends ROUnit {
         gl.uniform4fv(uniforms[3].location, this.colorData, 0, tot * 4);
         gl.drawElements(gl.TRIANGLES, this.vertex.indices.length, gl.UNSIGNED_SHORT, 0);
     }
-    parse(drawIndex, cmdIndex, dataU32, dataF32) {
+    parse(drawIndex, cmdIndex, dataU32, dataF32, bounds) {
 
         let f32BoundsIndex = cmdIndex + 2;
         let boundsvs = dataF32.subarray(f32BoundsIndex, f32BoundsIndex + 4);
+        bounds.setXYWH(boundsvs[0], boundsvs[1], boundsvs[2], boundsvs[3]);
 
         let mroid = dataU32[cmdIndex + 6];
         // console.log("BatchROUnit::parse(), mroid: ", mroid);

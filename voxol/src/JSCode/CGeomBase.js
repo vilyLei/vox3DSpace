@@ -27,8 +27,8 @@ export class Bounds2D {
 
         this.x = x != undefined ? x : 0;
         this.y = y != undefined ? y : 0;
-        this.width = width != undefined ? width : 256;
-        this.height = height != undefined ? height : 256;
+        this.width = width != undefined ? width : 0;
+        this.height = height != undefined ? height : 0;
 
         this.updateLTRB();
     }

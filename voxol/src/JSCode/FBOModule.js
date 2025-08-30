@@ -311,8 +311,6 @@ export class TileUnit {
                 unit.colorData[0] = 0.9 + 0.2 * (ctx.status.tileDrawTimes % 6) / 6;
                 unit.colorData[1] = 0.9 + 0.2 * (ctx.status.tileDrawTimes % 5) / 5;
             }
-            let pv = unit.getXY();
-            console.log("TileUnit::draw(), pv: ", pv);
             unit.bind(gl, ctx);
             unit.draw(gl, ctx);
         }
