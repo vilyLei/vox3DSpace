@@ -106,7 +106,7 @@ class TileRODesc {
         this.fboUnit = null;
         this.viewTransDesc = null;
     }
-    setWorldevel(worldLevel) {
+    setWorldLevel(worldLevel) {
 
         if (worldLevel == undefined)
             return;
@@ -114,14 +114,13 @@ class TileRODesc {
         if (this.worldLevel == worldLevel)
             return;
 
-        let gl = this.fboUnit.glCtx;
-        if (this.texture) {
-            console.log("TileRODesc::setWorldevel(), worldLevel: ", viewLevel, ", gl.deleteTexture() ...");
-            gl.deleteTexture(this.texture);
-            this.texture = null;
-        }
         this.worldLevel = worldLevel;
         this.dirty = true;
+
+        let currSize = 2 << worldLevel;
+        let worldZoom = currSize / TileParams.defaultViewSize;
+        console.log("TileRODesc::setWorldLevel(), worldZoom: ", worldZoom,", worldLevel: ", worldLevel);
+        this.viewTransDesc.setViewWorldBoundsXYWH(this.x * worldZoom, this.y * worldZoom, this.width * worldZoom, this.height * worldZoom);
 
     }
     setViewLevel(viewLevel) {
@@ -140,7 +139,6 @@ class TileRODesc {
         }
         this.viewLevel = viewLevel;
         this.dirty = true;
-
     }
 
     setXY(tx, ty) {
@@ -170,27 +168,31 @@ class TileRODesc {
         let pw = this.width;
         let ph = this.height;
 
-        let zoom = 1;
+        let viewZoom = 1;
+        let worldZoom = 1;
+        // let wzoom
 
         if (this.viewLevel > TileParams.defaultViewLevel) {
             // 镜头拉近的放大过程
-            zoom = TileParams.defaultViewFixedSize / pw;
-            pw *= zoom;
-            ph *= zoom;
-        }else if (this.worldLevel > TileParams.defaultWorldLevel) {
-            let zoomT = TileParams.defaultViewFixedSize / (2 << this.worldLevel);
-            console.log("TileRODesc::buildDraw(), zoomT: ", zoomT);
+            viewZoom = TileParams.defaultViewFixedSize / pw;
+            pw *= viewZoom;
+            ph *= viewZoom;
+        } else if (this.worldLevel > TileParams.defaultWorldLevel) {
+            let currSize = 2 << this.worldLevel;
+            let viewZoomT = TileParams.defaultViewSize / currSize;
+            viewZoom = viewZoomT;
+            console.log("TileRODesc::buildDraw(), viewZoomT: ", viewZoomT);
         }
 
-        let vpx = this.x * zoom;
-        let vpy = this.y * zoom;
+        let vpx = this.x * viewZoom;
+        let vpy = this.y * viewZoom;
 
         let vtDesc = this.viewTransDesc;
 
-        vtDesc.viewMat3.setTo(-vpx, -vpy, zoom, zoom);
+        vtDesc.viewMat3.setTo(-vpx, -vpy, viewZoom, viewZoom);
         vtDesc.projMat3.ortho(pw, ph);
 
-        console.log("TileRODesc::buildDraw(), viewLevel: ", this.viewLevel, ", zoom: ", zoom, ", size: ", pw, ", x: ", this.x, ",y: ", this.y);
+        console.log("TileRODesc::buildDraw(), viewLevel: ", this.viewLevel, ", worldLevel: ", this.worldLevel, ", viewZoom: ", viewZoom, ", size: ", pw, ", x: ", this.x, ",y: ", this.y);
         console.log("TileRODesc::buildDraw(), vtDesc: ", vtDesc);
 
         let fbo = this.fboUnit;
@@ -220,11 +222,20 @@ export class TileUnit {
     }
 
     setWorldLevel(worldLevel) {
-        this.roDesc.setWorldLevel(worldLevel);
+        let roDesc = this.roDesc;
+        roDesc.setWorldLevel(worldLevel);
+        if (roDesc.dirty) {
+            let currSize = 2 << roDesc.worldLevel;
+            let worldZoom = currSize / TileParams.defaultViewSize;
+            this.roUnit.setXY(this.x * worldZoom, this.y * worldZoom);
+            this.roUnit.setScaleXY(this.width * worldZoom, this.height * worldZoom);
+            console.log("TileRODesc::setWorldLevel(), worldZoom: ", worldZoom,", worldLevel: ", worldLevel);
+        }
     }
 
     setViewLevel(viewLevel) {
-        this.roDesc.setViewLevel(viewLevel);
+        let roDesc = this.roDesc;
+        roDesc.setViewLevel(viewLevel);
     }
     destroy() {
         this.roDesc.destroy();
@@ -257,9 +268,9 @@ export class TileUnit {
         let hit = wscCtx.viewWorldBounds.intersects(desc.viewTransDesc.viewWorldBounds);
         return hit;
     }
-    
+
     build() {
-        if(!this.checkDrawing()) {
+        if (!this.checkDrawing()) {
             // console.log("TileUnit::build(), false build() ...");
             return false;
         }
@@ -276,7 +287,7 @@ export class TileUnit {
 
     draw(ctx) {
 
-        if(!this.checkDrawing()) {
+        if (!this.checkDrawing()) {
             // console.log("TileUnit::draw(), false draw() ...");
             return;
         }
@@ -289,8 +300,8 @@ export class TileUnit {
 
             ctx.status.tileDraw();
             // for debug
-            unit.colorData[0] = 0.9 + 0.2 * (ctx.status.tileDrawTimes%6)/6;
-            unit.colorData[1] = 0.9 + 0.2 * (ctx.status.tileDrawTimes%5)/5;
+            unit.colorData[0] = 0.9 + 0.2 * (ctx.status.tileDrawTimes % 6) / 6;
+            unit.colorData[1] = 0.9 + 0.2 * (ctx.status.tileDrawTimes % 5) / 5;
 
             unit.bind(gl, ctx);
             unit.draw(gl, ctx);
@@ -344,10 +355,10 @@ export class TileGrid {
     // setWorldLevel(worldLevel) {
     //     this.roDesc.setWorldLevel(worldLevel);
     // }
-    
+
     setWorldLevel(worldLevel) {
 
-        if(worldLevel == undefined)
+        if (worldLevel == undefined)
             return;
 
         if (this.worldLevel == worldLevel)
@@ -362,7 +373,7 @@ export class TileGrid {
 
     setViewLevel(viewLevel) {
 
-        if(viewLevel == undefined)
+        if (viewLevel == undefined)
             return;
 
         if (this.viewLevel == viewLevel)
@@ -417,7 +428,7 @@ export class TileGrid {
 
     build() {
 
-        if(!this.unit.checkDrawing()) {
+        if (!this.unit.checkDrawing()) {
             console.log("TileGrid::build(), false build() ...");
             return;
         }
@@ -439,7 +450,7 @@ export class TileGrid {
     }
 
     draw(ctx) {
-        if(!this.unit.checkDrawing()) {
+        if (!this.unit.checkDrawing()) {
             // console.log("TileGrid::draw(), false draw() ...");
             return;
         }
