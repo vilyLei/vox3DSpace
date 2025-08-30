@@ -77,17 +77,10 @@ struct DrawingCmdDesc
 };
 
 struct DrawCmdTestNode
-{
-    // uint32_t rcmd   = 0x32;
-    // uint32_t mroid  = 0;
-    // uint32_t color  = 0xff00aa00;
-    // float    x      = 0;
-    // float    y      = 0;
-    // float    scaleX = 1;
-    // float    scaleY = 1;
-    /// @brief radian value
+{    
+    RectTarget::Rect bounds{};
+    /// radian value
     float rotation = 0;
-    // Mat33 transform{};
     bool  dirty = true;
 
     RectTarget::MovingRect moveingNode{};
@@ -103,14 +96,12 @@ struct DrawCmdTestNode
     void update();
 };
 
-class RenderCmdNode
-{
-private:
-    /* data */
-public:
-    RenderCmdNode()  = default;
-    ~RenderCmdNode() = default;
-};
+// class RenderCmdNode
+// {
+// public:
+//     RenderCmdNode()  = default;
+//     ~RenderCmdNode() = default;
+// };
 
 } // namespace Voxol::Motion
 #endif

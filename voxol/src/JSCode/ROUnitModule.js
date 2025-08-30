@@ -118,7 +118,7 @@ export class MVPROUnit extends ROUnit {
         return wcBounds.intersects( bounds );
     }
 
-    parse(cmdIndex, dataU32, dataF32, bounds) {
+    parse(cmdIndex, dataU32, dataF32) {
 
         // let f32BoundsIndex = cmdIndex + 2;
         // let boundsvs = dataF32.subarray(f32BoundsIndex, f32BoundsIndex + 4);
@@ -136,6 +136,7 @@ export class MVPROUnit extends ROUnit {
 
         let f32Index = cmdIndex + 8;
         let matvs = dataF32.subarray(f32Index, f32Index + 9);
+        // console.log("MVPROUnit::parse(), matvs: ", matvs);
         this.objMatData.set(matvs);
     }
 }

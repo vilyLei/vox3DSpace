@@ -140,9 +140,8 @@ void DrawCmdTestNode::init()
 }
 void DrawCmdTestNode::updateToMat33(Mat33& mat)
 {
-    auto& bounds = drcDesc.bounds;
-    auto& pos    = bounds.pos;
-    mat.setTo(pos.x, pos.y, bounds.width, bounds.height, rotation);
+    auto& pos = bounds.pos;
+    drcDesc.transform.setTo(pos.x, pos.y, bounds.width, bounds.height, rotation);
 }
 
 bool DrawCmdTestNode::contains(float px, float py) const
@@ -158,8 +157,7 @@ void DrawCmdTestNode::update()
     if (dirty)
     {
         drcDesc.update();
-        auto& bounds = drcDesc.bounds;
-        auto& pos    = bounds.pos;
+        auto& pos = bounds.pos;
         drcDesc.transform.setTo(pos.x, pos.y, bounds.width, bounds.height, rotation);
         dirty = true;
     }

@@ -181,9 +181,7 @@ class TileRODesc {
             ph *= viewZoom;
         } else if (this.worldLevel > TileParams.defaultWorldLevel) {
             let currSize = 2 << this.worldLevel;
-            let viewZoomT = TileParams.defaultViewSize / currSize;
-            viewZoom = viewZoomT;
-            console.log("TileRODesc::buildDraw(), viewZoomT: ", viewZoomT);
+            viewZoom = TileParams.defaultViewSize / currSize;
         }
 
 
@@ -213,10 +211,7 @@ class TileRODesc {
         wscRenderer.draw(vtDesc);
 
         this.hasDrawing = vtDesc.status.drawTimes > 0;
-        console.log("this.hasDrawing: ", this.hasDrawing, ", drawTimes: ", vtDesc.status.drawTimes);
-        // if(!this.hasDrawing) {
-        //     console.log(" hasDrawing false >>> >>> ...");
-        // }
+        // console.log("this.hasDrawing: ", this.hasDrawing, ", drawTimes: ", vtDesc.status.drawTimes);
 
         fbo.unbindFBO();
     }

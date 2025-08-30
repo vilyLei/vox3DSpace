@@ -51,8 +51,9 @@ void RenderNodeScene::initialize()
             desc.color      = 0xff0000aa | ((index % 256) << 16);
             desc.color      = desc.color | (((i * j * 2) % 256) << 16);
             // printf("node.color: %X\n", node.color);
-            desc.bounds.setXY(px, py);
-            desc.bounds.setSize(rsize, rsize);
+            node.bounds.setXY(px, py);
+            node.bounds.setSize(rsize, rsize);
+            desc.bounds = node.bounds;
             desc.mroid = 1;
 
             node.moveingNode.rect = desc.bounds;
@@ -67,7 +68,8 @@ void RenderNodeScene::initialize()
         auto  nodeIndex      = 0;
         auto& node0          = cmdNodes[nodeIndex];
         node0.drcDesc.color  = 0xff00aaaa;
-        node0.drcDesc.bounds = {{300, 300}, 128, 128};
+        node0.bounds = {{300, 300}, 128, 128};
+        node0.drcDesc.bounds = node0.bounds;
         node0.drcDesc.mroid  = 2;
         node0.rotation       = 0.3f;
         testRotationOp(node0);        
@@ -76,25 +78,28 @@ void RenderNodeScene::initialize()
         nodeIndex++;
         auto& node1          = cmdNodes[nodeIndex];
         node1.drcDesc.color  = 0xffffffff;
-        node1.drcDesc.bounds = {{500, 350}, 128, 128};
+        node1.bounds = {{500, 350}, 128, 128};
+        node1.drcDesc.bounds = node1.bounds;
         node1.drcDesc.mroid  = 3;
 
         nodeIndex++;
         auto& node2          = cmdNodes[nodeIndex];
         node2.drcDesc.color  = 0xff003333;
-        node2.drcDesc.bounds = {{300, 530}, 128, 128};
+        node2.bounds = {{300, 530}, 128, 128};
+        node2.drcDesc.bounds = node2.bounds;
         node2.drcDesc.mroid  = 2;
         nodeIndex++;
         for (auto i = 0; i < 3; ++i)
         {
             auto& drcDesc  = cmdNodes[nodeIndex].drcDesc;
             drcDesc.color  = 0xffbbbb00;
-            drcDesc.bounds = {{300.0f, 560.0f + i * 20}, 128, 1};
+            cmdNodes[nodeIndex].bounds = {{300.0f, 560.0f + i * 20}, 128, 1};
+            drcDesc.bounds = cmdNodes[nodeIndex].bounds;
             drcDesc.mroid  = 2;
             nodeIndex++;
         }
         cmdNodes[nodeIndex - 1].rotation = -0.2f;
-        // cmdNodes[nodeIndex - 1].drcDesc.bounds.outset(2, 10);
+        cmdNodes[nodeIndex - 1].drcDesc.bounds.outset(20, 50);
     }
 
     mInit = false;

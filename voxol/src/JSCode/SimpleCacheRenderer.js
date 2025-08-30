@@ -93,8 +93,6 @@ export class SimpleCacheDrawer {
         // }
 
         let batchEle = moduleIns.batchEleDesc;
-        // let cmdIndex = batchEle.getElementDataIndex();
-        // this.drawBatch(ctx, cmdIndex);
 
         let heapU32 = moduleIns.heapU32;
         let heapF32 = moduleIns.heapF32;
@@ -109,7 +107,6 @@ export class SimpleCacheDrawer {
                     batchEle.parse(cmdIndex);
                     cmdIndex = batchEle.getElementDataIndex();
                     cmdIndex = this.drawBatch(ctx, cmdIndex, batchEle.cmdsTotal);
-                    // loop = false;
                     break;
                 case 0x32:
                     let descSize = heapU32[cmdIndex + 1];
@@ -160,7 +157,7 @@ export class SimpleCacheDrawer {
         let gl = this.glCtx;
 
         let tot = 0;
-        let matTot = scene.batchTotal;
+        let batchTot = scene.batchTotal;
         let drawIndex = 0;
         let drewTot = 0;
 
@@ -186,7 +183,7 @@ export class SimpleCacheDrawer {
                 // console.log(`drawing batch cmds all tot=${tot}, total=${total} !!!`);
 
                 if (drawIndex > 0) {
-                    for(let i = drawIndex + 1; i < matTot; ++i) {
+                    for(let i = drawIndex + 1; i < batchTot; ++i) {
                         unit.transData.set([0,0,0,  0,0,0,  0,0,0], i * 9);
                     }
                     drewTot += drawIndex + 1;
@@ -220,8 +217,8 @@ export class SimpleCacheDrawer {
             }
             cmdIndex += descSize;
 
-            if (drawIndex >= matTot) {
-                drewTot += matTot;
+            if (drawIndex >= batchTot) {
+                drewTot += batchTot;
                 unit.draw(gl, ctx);
                 drawIndex = 0;
             }
