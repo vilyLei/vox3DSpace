@@ -206,6 +206,7 @@ export class SimpleCacheDrawer {
                         
                         let hit = unit.boundsTest(cmdIndex, dataU32, dataF32, bounds, vwBounds);
                         if(hit) {
+                            ctx.status.drawTimes ++;
                             unit.parse(drawIndex, cmdIndex, dataU32, dataF32);
                             drawIndex++;
                         }
