@@ -169,8 +169,6 @@ class TileRODesc {
         let ph = this.height;
 
         let viewZoom = 1;
-        let worldZoom = 1;
-        // let wzoom
 
         if (this.viewLevel > TileParams.defaultViewLevel) {
             // 镜头拉近的放大过程
@@ -227,8 +225,8 @@ export class TileUnit {
         if (roDesc.dirty) {
             let currSize = 2 << roDesc.worldLevel;
             let worldZoom = currSize / TileParams.defaultViewSize;
-            this.roUnit.setXY(this.x * worldZoom, this.y * worldZoom);
-            this.roUnit.setScaleXY(this.width * worldZoom, this.height * worldZoom);
+            this.roUnit.setXY(roDesc.x * worldZoom, roDesc.y * worldZoom);
+            this.roUnit.setScaleXY(roDesc.width * worldZoom, roDesc.height * worldZoom);
             console.log("TileRODesc::setWorldLevel(), worldZoom: ", worldZoom,", worldLevel: ", worldLevel);
         }
     }
