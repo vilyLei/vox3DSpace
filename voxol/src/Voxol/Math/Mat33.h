@@ -1,6 +1,6 @@
 
-#ifndef VOXOL_MAT3_H
-#define VOXOL_MAT3_H
+#ifndef VOXOLMATH_MAT33_H
+#define VOXOLMATH_MAT33_H
 
 #include <array>
 #include <initializer_list>
@@ -9,15 +9,10 @@
 // #define APPLY_WASM_SIMD 1
 #    include <wasm_simd128.h>
 #endif
+#include "Vec2.h"
 
 namespace Voxol::Math
 {
-struct Vec2
-{
-    float x{};
-    float y{};
-};
-
 
 /// 2D矩阵类声明，支持SIMD优化、列主序、WebGL/GLES友好
 class Mat33
@@ -64,4 +59,4 @@ Mat33 makeRotationMat33WithCenter(Vec2 fixCV, float scaleX, float scaleY, float 
 } // namespace Mat33Utils
 } // namespace Voxol::Math
 
-#endif // VOXOL_MAT3_H
+#endif // VOXOLMATH_MAT33_H

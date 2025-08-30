@@ -123,7 +123,7 @@ export class TileBaseDrawer {
 
         let tiles = this.tiles;
         let len = tiles.length;
-        // len = 2;
+        
         for (let i = 0; i < len; ++i) {
             const t = tiles[i];
             if (t.checkDrawing()) {
@@ -135,7 +135,7 @@ export class TileBaseDrawer {
 
 
         wscRenderer.runBegin();
-        
+
         rstatus.drawTimes = 0;
 
         for (let i = 0; i < len; ++i) {

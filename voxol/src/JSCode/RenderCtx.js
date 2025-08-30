@@ -50,7 +50,7 @@ export class ViewTransDesc {
 
         this.status = new RenderStatus();
         this.clearColor = new Float32Array([0.95, 0.95, 0.95, 1]);
-        this.debugging = false;
+        this.debugging = true;
     }
     setViewWorldBoundsXYWH(x, y, width, height) {
         this.viewWorldBounds.setXYWH(x, y, width, height);
