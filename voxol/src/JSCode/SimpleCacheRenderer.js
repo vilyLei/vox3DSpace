@@ -74,7 +74,8 @@ export class SimpleCacheDrawer {
         let scene = this.roScene;
         let drcUnits = scene.drcUnits;
 
-        let vwBounds = vtDesc.viewWorldBounds;
+        // let vwBounds = vtDesc.viewWorldBounds;
+        let vwBounds = ctx.viewWorldBounds;
         let bounds = new Bounds2D();
         // let bgUnit =  scene.bgUnit;
         // if(bgUnit && bgUnit.enabled) {
@@ -169,7 +170,8 @@ export class SimpleCacheDrawer {
 
         let vtDesc = moduleIns.viewTransDesc;
 
-        let vwBounds = vtDesc.viewWorldBounds;
+        // let vwBounds = vtDesc.viewWorldBounds;
+        let vwBounds = ctx.viewWorldBounds;
         let bounds = new Bounds2D();
 
         let unit = scene.batchUnit;

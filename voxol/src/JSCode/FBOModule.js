@@ -213,6 +213,10 @@ class TileRODesc {
         wscRenderer.draw(vtDesc);
 
         this.hasDrawing = vtDesc.status.drawTimes > 0;
+        console.log("this.hasDrawing: ", this.hasDrawing, ", drawTimes: ", vtDesc.status.drawTimes);
+        // if(!this.hasDrawing) {
+        //     console.log(" hasDrawing false >>> >>> ...");
+        // }
 
         fbo.unbindFBO();
     }
