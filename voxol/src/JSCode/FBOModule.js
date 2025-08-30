@@ -61,7 +61,13 @@ export class FBOUnit {
         gl.bindFramebuffer(gl.FRAMEBUFFER, null);
     }
 }
-
+const TileParams = {
+    defaultViewSize: 256,
+    defaultViewLevel: 7,
+    defaultViewFixedLevel: 9,
+    defaultViewFixedSize: 512,
+    defaultWorldLevel: 7,
+}
 class TileRODesc {
     constructor(x, y, width, height, viewLevel) {
 
@@ -69,10 +75,10 @@ class TileRODesc {
         this.x = x != undefined ? x : 0;
         this.y = y != undefined ? y : 0;
 
-        this.width = width != undefined ? width : 256;
-        this.height = height != undefined ? height : 256;
-        this.viewLevel = viewLevel != undefined ? viewLevel : 7;
-        this.worldLevel = 1;
+        this.width = width != undefined ? width : TileParams.defaultViewSize;
+        this.height = height != undefined ? height : TileParams.defaultViewSize;
+        this.viewLevel = viewLevel != undefined ? viewLevel : TileParams.defaultViewLevel;
+        this.worldLevel = TileParams.defaultWorldLevel;
 
         this.dirty = true;
 
@@ -163,8 +169,8 @@ class TileRODesc {
 
         let zoom = 1;
 
-        if (this.viewLevel > 7) {
-            zoom = 512 / pw;
+        if (this.viewLevel > TileParams.defaultViewFixedLevel) {
+            zoom = TileParams.defaultViewFixedSize / pw;
         }
 
         pw *= zoom;
@@ -279,7 +285,7 @@ export class TileUnit {
             // for debug
             unit.colorData[0] = 0.9 + 0.2 * (ctx.status.tileDrawTimes%6)/6;
             unit.colorData[1] = 0.9 + 0.2 * (ctx.status.tileDrawTimes%5)/5;
-            
+
             unit.bind(gl, ctx);
             unit.draw(gl, ctx);
         }
@@ -322,7 +328,7 @@ export class TileGrid {
 
         this.unit = new TileUnit(x, y, width, height, viewLevel);
         this.viewLevel = this.unit.roDesc.viewLevel;
-        this.worldLevel = 1;
+        this.worldLevel = TileParams.defaultWorldLevel;
 
         this.dirty = true;
 
@@ -355,7 +361,7 @@ export class TileGrid {
 
         if (this.viewLevel == viewLevel)
             return;
-        if (this.viewLevel >= 9 && viewLevel < 9) {
+        if (this.viewLevel >= TileParams.defaultViewFixedLevel && viewLevel < TileParams.defaultViewFixedLevel) {
             this.unit.enabled = true;
         }
         if (this.units) {
@@ -369,7 +375,7 @@ export class TileGrid {
         this.viewLevel = viewLevel;
         this.dirty = true;
 
-        if (this.viewLevel < 9) {
+        if (this.viewLevel < TileParams.defaultViewFixedLevel) {
             this.unit.setViewLevel(viewLevel);
         } else {
 
@@ -377,7 +383,7 @@ export class TileGrid {
             let roDesc = unit.roDesc;
             unit.enabled = false;
 
-            let n = 2 << (this.viewLevel - 9);
+            let n = 2 << (this.viewLevel - TileParams.defaultViewFixedLevel);
             let dSize = roDesc.width / n;
             this.units = new Array(n * n);
             let k = 0;
@@ -413,7 +419,7 @@ export class TileGrid {
         let dirty = this.dirty;
 
         let flag = false;
-        if (this.viewLevel < 9) {
+        if (this.viewLevel < TileParams.defaultViewFixedLevel) {
             this.unit.build();
         } else if (this.units) {
             for (let i = 0, ln = this.units.length; i < ln; ++i) {
@@ -431,7 +437,7 @@ export class TileGrid {
             // console.log("TileGrid::draw(), false draw() ...");
             return;
         }
-        if (this.viewLevel < 9) {
+        if (this.viewLevel < TileParams.defaultViewFixedLevel) {
             this.unit.draw(ctx);
         } else if (this.units) {
             for (let i = 0, ln = this.units.length; i < ln; ++i) {

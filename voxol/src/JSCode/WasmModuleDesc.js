@@ -35,7 +35,6 @@ export class BatchElementDesc {
 
         let bufIndex = this.dataIndex;
         let heapU32 = this.heapU32;
-        // let heapF32 = this.heapF32;
 
         this.elementDataIndex = bufIndex + 3;
 
