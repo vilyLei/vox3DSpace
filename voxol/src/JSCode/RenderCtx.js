@@ -39,7 +39,7 @@ export class ViewTransDesc {
 
         this.projMat3 = new Mat33();
         this.viewMat3 = new Mat33();
-        this.viewInvMat3 = new Mat33();
+        this.viewInvMat3 = null;
 
         this.projF32 = this.projMat3.data;
         this.viewF32 = this.viewMat3.data;
@@ -50,8 +50,7 @@ export class ViewTransDesc {
 
         this.status = new RenderStatus();
         this.clearColor = new Float32Array([0.95, 0.95, 0.95, 1]);
-        // this.clearColor = new Float32Array([0.55, 0.95, 0.55, 1]);
-        this.debugging = true;
+        this.debugging = false;
     }
     setViewWorldBoundsXYWH(x, y, width, height) {
         this.viewWorldBounds.setXYWH(x, y, width, height);
@@ -92,7 +91,9 @@ export class ViewTransDesc {
     update() {
 
         this.updateData();
-
+        if(!this.viewInvMat3) {
+            this.viewInvMat3 = new Mat33();
+        }
         this.viewMat3.inverseTo(this.viewInvMat3);
         this.viewBounds.mapWithMat33To(this.viewInvMat3, this.viewWorldBounds);
 

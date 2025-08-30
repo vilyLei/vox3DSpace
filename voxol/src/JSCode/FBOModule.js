@@ -92,7 +92,7 @@ class TileRODesc {
         this.viewTransDesc = new ViewTransDesc();
         this.viewTransDesc.setViewWorldBoundsXYWH(this.x, this.y, this.width, this.height);
         if (this.viewTransDesc.debugging) {
-            this.viewTransDesc.clearColor.set([0.55, 0.95, 0.55, 1]);
+            this.viewTransDesc.clearColor.set([0.85, 0.95, 0.85, 1]);
         }
         this.hasDrawing = false;
     }
