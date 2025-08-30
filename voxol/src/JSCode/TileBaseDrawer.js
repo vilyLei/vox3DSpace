@@ -112,12 +112,14 @@ export class TileBaseDrawer {
         let viewLevel = calcCeilOfTwoLevel(sizeValue) - 1;
         if (viewLevel < TileParams.defaultViewLevel)
             viewLevel = TileParams.defaultViewLevel;
-        
+
         console.log(`TileBaseDrawer::draw(), zoom = ${zoom}, viewLevel = ${viewLevel}, (2 << viewLevel)=${2 << viewLevel}`);
-        if (zoom < TileParams.defaultWorldFixZoom) {
-            let worldLevel = calcFloorOfTwoLevel(defaultViewSize / zoom) - 1;
-            console.log(`TileBaseDrawer::draw(), worldLevel = ${worldLevel}, viewLevel = ${viewLevel}, (2 << worldLevel)=${2 << worldLevel}`);
-        }
+
+        let worldLevel = calcFloorOfTwoLevel(defaultViewSize / zoom) - 1;
+        if (worldLevel < TileParams.defaultViewLevel)
+            worldLevel = TileParams.defaultViewLevel;
+        
+        console.log(`TileBaseDrawer::draw(), worldLevel = ${worldLevel}, viewLevel = ${viewLevel}, (2 << worldLevel)=${2 << worldLevel}`);
 
         let tiles = this.tiles;
         let len = tiles.length;

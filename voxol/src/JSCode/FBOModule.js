@@ -179,6 +179,7 @@ class TileRODesc {
             ph *= zoom;
         }else if (this.worldLevel > TileParams.defaultWorldLevel) {
             let zoomT = TileParams.defaultViewFixedSize / (2 << this.worldLevel);
+            console.log("TileRODesc::buildDraw(), zoomT: ", zoomT);
         }
 
         let vpx = this.x * zoom;
