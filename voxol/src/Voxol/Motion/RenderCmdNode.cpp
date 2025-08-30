@@ -36,6 +36,15 @@ bool Rect::intersects(const Rect& other) const
              pos.y + height < other.pos.y || pos.y > other.pos.y + other.height);
 }
 
+void Rect::outset(float dx, float dy)
+{
+    pos.x -= dx;
+    pos.y -= dy;
+
+    width += dx * 2;
+    height += dy * 2;
+}
+
 
 MovingRect::MovingRect(Rect r, Vec2 v) :
     rect(r), velocity(v) {}

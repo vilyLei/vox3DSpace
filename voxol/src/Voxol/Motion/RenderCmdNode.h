@@ -30,6 +30,7 @@ struct Rect
     void setXY(float x, float y);
     void setSize(float w, float h);
     bool intersects(const Rect& other) const;
+    void outset(float dx, float dy);
 };
 
 struct MovingRect

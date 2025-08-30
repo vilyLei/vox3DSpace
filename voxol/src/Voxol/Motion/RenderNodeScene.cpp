@@ -70,7 +70,8 @@ void RenderNodeScene::initialize()
         node0.drcDesc.bounds = {{300, 300}, 128, 128};
         node0.drcDesc.mroid  = 2;
         node0.rotation       = 0.3f;
-        testRotationOp(node0);
+        testRotationOp(node0);        
+        node0.drcDesc.bounds.outset(50, 50);
         //
         nodeIndex++;
         auto& node1          = cmdNodes[nodeIndex];
@@ -93,6 +94,7 @@ void RenderNodeScene::initialize()
             nodeIndex++;
         }
         cmdNodes[nodeIndex - 1].rotation = -0.2f;
+        // cmdNodes[nodeIndex - 1].drcDesc.bounds.outset(2, 10);
     }
 
     mInit = false;
