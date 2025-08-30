@@ -182,10 +182,11 @@ class TileRODesc {
             console.log("TileRODesc::buildDraw(), viewZoomT: ", viewZoomT);
         }
 
-        let vpx = this.x * viewZoom;
-        let vpy = this.y * viewZoom;
 
         let vtDesc = this.viewTransDesc;
+        let worldBounds = vtDesc.viewWorldBounds;
+        let vpx = worldBounds.x * viewZoom;
+        let vpy = worldBounds.y * viewZoom;
 
         vtDesc.viewMat3.setTo(-vpx, -vpy, viewZoom, viewZoom);
         vtDesc.projMat3.ortho(pw, ph);
@@ -300,7 +301,8 @@ export class TileUnit {
             // for debug
             unit.colorData[0] = 0.9 + 0.2 * (ctx.status.tileDrawTimes % 6) / 6;
             unit.colorData[1] = 0.9 + 0.2 * (ctx.status.tileDrawTimes % 5) / 5;
-
+            let pv = unit.getXY();
+            console.log("TileUnit::draw(), pv: ", pv);
             unit.bind(gl, ctx);
             unit.draw(gl, ctx);
         }
