@@ -44,6 +44,9 @@ export class ViewTransDesc {
         this.viewWorldBounds = new Bounds2D(0, 0, 512, 512);
 
         this.status = new RenderStatus();
+        this.clearColor = new Float32Array([0.95, 0.95, 0.95, 1]);
+        // this.clearColor = new Float32Array([0.55, 0.95, 0.55, 1]);
+        this.debugging = true;
     }
     setViewWorldBoundsXYWH(x, y, width, height) {
         this.viewWorldBounds.setXYWH(x, y, width, height);

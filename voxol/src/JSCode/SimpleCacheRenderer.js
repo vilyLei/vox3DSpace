@@ -54,7 +54,15 @@ export class SimpleCacheDrawer {
         let gl = this.glCtx;
         let vw = this.ctxWidth;
         let vh = this.ctxHeight;
-        gl.clearColor(0.95, 0.95, 0.95, 1);
+
+        
+        let moduleIns = this.moduleIns;
+        let vtDesc = moduleIns.viewTransDesc;
+
+        // gl.clearColor(0.95, 0.95, 0.95, 1);
+        let cvs = vtDesc.clearColor;
+        gl.clearColor(cvs[0], cvs[1], cvs[2], cvs[3]);
+
         gl.clear(gl.COLOR_BUFFER_BIT);
         gl.viewport(0, 0, vw, vh);
 

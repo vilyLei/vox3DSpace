@@ -91,6 +91,9 @@ class TileRODesc {
 
         this.viewTransDesc = new ViewTransDesc();
         this.viewTransDesc.setViewWorldBoundsXYWH(this.x, this.y, this.width, this.height);
+        if (this.viewTransDesc.debugging) {
+            this.viewTransDesc.clearColor.set([0.55, 0.95, 0.55, 1]);
+        }
     }
     destroy() {
 
@@ -119,7 +122,7 @@ class TileRODesc {
 
         let currSize = 2 << worldLevel;
         let worldZoom = currSize / TileParams.defaultViewSize;
-        console.log("TileRODesc::setWorldLevel(), worldZoom: ", worldZoom,", worldLevel: ", worldLevel);
+        console.log("TileRODesc::setWorldLevel(), worldZoom: ", worldZoom, ", worldLevel: ", worldLevel);
         this.viewTransDesc.setViewWorldBoundsXYWH(this.x * worldZoom, this.y * worldZoom, this.width * worldZoom, this.height * worldZoom);
 
     }
@@ -199,7 +202,9 @@ class TileRODesc {
         fbo.bindTexture(this.texture, pw, ph);
         this.texture = fbo.fboTex;
 
-        gl.clearColor(0.55, 0.95, 0.55, 1);
+        let cvs = vtDesc.clearColor;
+        // gl.clearColor(0.55, 0.95, 0.55, 1);
+        gl.clearColor(cvs[0], cvs[1], cvs[2], cvs[3]);
         gl.clear(gl.COLOR_BUFFER_BIT);
         gl.viewport(0, 0, pw, ph);
         // 如果绘制的有实际内容，则这个tile有效，反之无效， 无效了之后这个tile资源就可以释放了
@@ -228,7 +233,7 @@ export class TileUnit {
             let worldZoom = currSize / TileParams.defaultViewSize;
             this.roUnit.setXY(roDesc.x * worldZoom, roDesc.y * worldZoom);
             this.roUnit.setScaleXY(roDesc.width * worldZoom, roDesc.height * worldZoom);
-            console.log("TileRODesc::setWorldLevel(), worldZoom: ", worldZoom,", worldLevel: ", worldLevel);
+            console.log("TileRODesc::setWorldLevel(), worldZoom: ", worldZoom, ", worldLevel: ", worldLevel);
         }
     }
 
@@ -292,6 +297,9 @@ export class TileUnit {
         }
 
         let desc = this.roDesc;
+        let wscRenderer = desc.wscRenderer;
+        let moduleIns = wscRenderer.moduleIns;
+        let wscCtx = moduleIns.viewTransDesc;
         let gl = desc.fboUnit.glCtx;
 
         let unit = this.roUnit;
@@ -299,8 +307,10 @@ export class TileUnit {
 
             ctx.status.tileDraw();
             // for debug
-            unit.colorData[0] = 0.9 + 0.2 * (ctx.status.tileDrawTimes % 6) / 6;
-            unit.colorData[1] = 0.9 + 0.2 * (ctx.status.tileDrawTimes % 5) / 5;
+            if (wscCtx.debugging) {
+                unit.colorData[0] = 0.9 + 0.2 * (ctx.status.tileDrawTimes % 6) / 6;
+                unit.colorData[1] = 0.9 + 0.2 * (ctx.status.tileDrawTimes % 5) / 5;
+            }
             let pv = unit.getXY();
             console.log("TileUnit::draw(), pv: ", pv);
             unit.bind(gl, ctx);
