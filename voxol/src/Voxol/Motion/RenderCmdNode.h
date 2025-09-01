@@ -13,27 +13,6 @@ using namespace Voxol::Math;
 namespace RectTarget
 {
 
-// struct Vec2
-// {
-//     float x, y;
-
-//     Vec2 operator+(const Vec2& other) const;
-//     Vec2 operator-(const Vec2& other) const;
-//     Vec2 operator*(float s) const;
-// };
-
-// struct Rect
-// {
-//     Vec2  pos;
-//     float width;
-//     float height;
-
-//     void setXY(float x, float y);
-//     void setSize(float w, float h);
-//     bool intersects(const Rect& other) const;
-//     void outset(float dx, float dy);
-// };
-
 struct MovingRect
 {
     VxRect rect{};

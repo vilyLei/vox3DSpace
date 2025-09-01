@@ -14,38 +14,6 @@ float                                 randomFloatValue()
 namespace RectTarget
 {
 
-// Vec2 Vec2::operator+(const Vec2& other) const { return {x + other.x, y + other.y}; }
-// Vec2 Vec2::operator-(const Vec2& other) const { return {x - other.x, y - other.y}; }
-// Vec2 Vec2::operator*(float s) const { return {x * s, y * s}; }
-
-
-// void Rect::setXY(float x, float y)
-// {
-//     pos.x = x;
-//     pos.y = y;
-// }
-// void Rect::setSize(float w, float h)
-// {
-//     width  = w;
-//     height = h;
-// }
-
-// bool Rect::intersects(const Rect& other) const
-// {
-//     return !(pos.x + width < other.pos.x || pos.x > other.pos.x + other.width ||
-//              pos.y + height < other.pos.y || pos.y > other.pos.y + other.height);
-// }
-
-// void Rect::outset(float dx, float dy)
-// {
-//     pos.x -= dx;
-//     pos.y -= dy;
-
-//     width += dx * 2;
-//     height += dy * 2;
-// }
-
-
 MovingRect::MovingRect(VxRect r, Vec2 v) :
     rect(r), velocity(v) {}
 
@@ -53,7 +21,7 @@ void MovingRect::update(float dt, const VxRect& boundary)
 {
     rect.min = rect.min + velocity * dt;
 
-    // 边界反弹
+    // a simple simulation: rebound from the boundary
     if (rect.fX < boundary.fX || rect.fX + rect.width() > boundary.fX + boundary.width())
         velocity.x *= -1;
     if (rect.fY < boundary.fY || rect.fY + rect.height() > boundary.fY + boundary.height())
