@@ -36,10 +36,14 @@ public:
     };
 
 public:
-    
+    static VxRect makeWH(float pw, float ph);
+    static VxRect makeXYWH(float px, float py, float pw, float ph);
+    static VxRect makeLTRB(float pl, float pt, float pr, float pb);
+
     void setXY(float px, float py);
     void setWH(float pw, float ph);
     void setXYWH(float px, float py, float pw, float ph);
+    void setLTRB(float pl, float pt, float pr, float pb);
 
     
     void setSize(float pw, float ph);

@@ -10,7 +10,7 @@ void testRotationOp(DrawCmdTestNode& node)
     Vec2  fixCV{300.0f, 300.0f};
     auto& desc   = node.drcDesc;
     auto& bounds = node.drcDesc.bounds;
-    Mat33Utils::makeRotationMat33WithPivot(desc.transform, localPivot, fixCV, bounds.width, bounds.height, node.rotation);
+    Mat33Utils::makeRotationMat33WithPivot(desc.transform, localPivot, fixCV, bounds.width(), bounds.height(), node.rotation);
     node.rotation += 0.1f;
     node.dirty = false;
 }
@@ -68,7 +68,7 @@ void RenderNodeScene::initialize()
         auto  nodeIndex      = 0;
         auto& node0          = cmdNodes[nodeIndex];
         node0.drcDesc.color  = 0xff00aaaa;
-        node0.bounds = {{300, 300}, 128, 128};
+        node0.bounds = VxRect::makeXYWH(300, 300, 128, 128);
         node0.drcDesc.bounds = node0.bounds;
         node0.drcDesc.mroid  = 2;
         node0.rotation       = 0.3f;
@@ -78,14 +78,14 @@ void RenderNodeScene::initialize()
         nodeIndex++;
         auto& node1          = cmdNodes[nodeIndex];
         node1.drcDesc.color  = 0xffffffff;
-        node1.bounds = {{500, 350}, 128, 128};
+        node1.bounds = VxRect::makeXYWH(500, 350, 128, 128);
         node1.drcDesc.bounds = node1.bounds;
         node1.drcDesc.mroid  = 3;
 
         nodeIndex++;
         auto& node2          = cmdNodes[nodeIndex];
         node2.drcDesc.color  = 0xff003333;
-        node2.bounds = {{300, 530}, 128, 128};
+        node2.bounds = VxRect::makeXYWH(300, 530, 128, 128);
         node2.drcDesc.bounds = node2.bounds;
         node2.drcDesc.mroid  = 2;
         nodeIndex++;
@@ -93,7 +93,7 @@ void RenderNodeScene::initialize()
         {
             auto& drcDesc  = cmdNodes[nodeIndex].drcDesc;
             drcDesc.color  = 0xffbbbb00;
-            cmdNodes[nodeIndex].bounds = {{300.0f, 560.0f + i * 20}, 128, 1};
+            cmdNodes[nodeIndex].bounds = VxRect::makeXYWH(300.0f, 560.0f + i * 20, 128, 1);
             drcDesc.bounds = cmdNodes[nodeIndex].bounds;
             drcDesc.mroid  = 2;
             nodeIndex++;

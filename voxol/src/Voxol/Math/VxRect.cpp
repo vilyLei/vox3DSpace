@@ -4,10 +4,31 @@
 namespace Voxol::Math
 {
 
+VxRect VxRect::makeWH(float pw, float ph)
+{
+    pw = pw > 0 ? pw : 0;
+    ph = ph > 0 ? ph : 0;
+    return VxRect{0, 0, pw, ph};
+}
+VxRect VxRect::makeXYWH(float px, float py, float pw, float ph)
+{
+    pw = pw > 0 ? pw : 0;
+    ph = ph > 0 ? ph : 0;
+    return VxRect{px, py, px + pw, py + ph};
+}
+VxRect VxRect::makeLTRB(float pl, float pt, float pr, float pb)
+{
+    auto pw = pr - pl;
+    auto ph = pb - pt;
+
+    pw = pw > 0 ? pw : 0;
+    ph = ph > 0 ? ph : 0;
+
+    return VxRect{pl, pt, pl + pw, pt + ph};
+}
 
 void VxRect::setXY(float px, float py)
 {
-
     fX = px;
     fY = py;
 }
@@ -27,6 +48,21 @@ void VxRect::setXYWH(float px, float py, float pw, float ph)
 
     fX = px;
     fY = py;
+
+    pw = pw > 0 ? pw : 0;
+    ph = ph > 0 ? ph : 0;
+
+    fRight  = fX + pw;
+    fBottom = fY + ph;
+}
+
+void VxRect::setLTRB(float pl, float pt, float pr, float pb)
+{
+    fX = pl;
+    fY = pt;
+
+    auto pw = pr - pl;
+    auto ph = pb - pt;
 
     pw = pw > 0 ? pw : 0;
     ph = ph > 0 ? ph : 0;

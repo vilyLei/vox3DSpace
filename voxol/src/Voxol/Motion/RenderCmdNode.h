@@ -3,6 +3,7 @@
 
 #include "../Base/BaseDefine.h"
 #include "../Math/Mat33.h"
+#include "../Math/VxRect.h"
 
 namespace Voxol::Motion
 {
@@ -21,26 +22,25 @@ namespace RectTarget
 //     Vec2 operator*(float s) const;
 // };
 
-struct Rect
-{
-    Vec2  pos;
-    float width;
-    float height;
+// struct Rect
+// {
+//     Vec2  pos;
+//     float width;
+//     float height;
 
-    void setXY(float x, float y);
-    void setSize(float w, float h);
-    bool intersects(const Rect& other) const;
-    void outset(float dx, float dy);
-};
+//     void setXY(float x, float y);
+//     void setSize(float w, float h);
+//     bool intersects(const Rect& other) const;
+//     void outset(float dx, float dy);
+// };
 
 struct MovingRect
 {
-    Rect rect;
-    Vec2 velocity;
+    VxRect rect{};
+    Vec2 velocity{};
     MovingRect() = default;
-    MovingRect(Rect r, Vec2 v);
-
-    void update(float dt, const Rect& boundary);
+    MovingRect(VxRect r, Vec2 v);
+    void update(float dt, const VxRect& boundary);
 };
 
 void handleCollision(MovingRect& a, MovingRect& b);
@@ -67,7 +67,7 @@ struct DrawingCmdDesc
 {
     uint32_t         rcmd     = 0x32;
     uint32_t         descSize = 0x20;
-    RectTarget::Rect bounds{};
+    VxRect bounds{};
     uint32_t         mroid = 0;
     uint32_t         color = 0xff00aa00;
     Mat33            transform{};
@@ -78,7 +78,7 @@ struct DrawingCmdDesc
 
 struct DrawCmdTestNode
 {    
-    RectTarget::Rect bounds{};
+    VxRect bounds{};
     /// radian value
     float rotation = 0;
     bool  dirty = true;

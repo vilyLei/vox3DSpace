@@ -19,45 +19,44 @@ namespace RectTarget
 // Vec2 Vec2::operator*(float s) const { return {x * s, y * s}; }
 
 
-void Rect::setXY(float x, float y)
-{
-    pos.x = x;
-    pos.y = y;
-}
-void Rect::setSize(float w, float h)
-{
-    width  = w;
-    height = h;
-}
+// void Rect::setXY(float x, float y)
+// {
+//     pos.x = x;
+//     pos.y = y;
+// }
+// void Rect::setSize(float w, float h)
+// {
+//     width  = w;
+//     height = h;
+// }
 
-bool Rect::intersects(const Rect& other) const
-{
-    return !(pos.x + width < other.pos.x || pos.x > other.pos.x + other.width ||
-             pos.y + height < other.pos.y || pos.y > other.pos.y + other.height);
-}
+// bool Rect::intersects(const Rect& other) const
+// {
+//     return !(pos.x + width < other.pos.x || pos.x > other.pos.x + other.width ||
+//              pos.y + height < other.pos.y || pos.y > other.pos.y + other.height);
+// }
 
-void Rect::outset(float dx, float dy)
-{
-    pos.x -= dx;
-    pos.y -= dy;
+// void Rect::outset(float dx, float dy)
+// {
+//     pos.x -= dx;
+//     pos.y -= dy;
 
-    width += dx * 2;
-    height += dy * 2;
-}
+//     width += dx * 2;
+//     height += dy * 2;
+// }
 
 
-MovingRect::MovingRect(Rect r, Vec2 v) :
+MovingRect::MovingRect(VxRect r, Vec2 v) :
     rect(r), velocity(v) {}
 
-void MovingRect::update(float dt, const Rect& boundary)
+void MovingRect::update(float dt, const VxRect& boundary)
 {
-    rect.pos = rect.pos + velocity * dt;
+    rect.min = rect.min + velocity * dt;
 
     // 边界反弹
-    if (rect.pos.x < boundary.pos.x || rect.pos.x + rect.width > boundary.pos.x + boundary.width)
+    if (rect.fX < boundary.fX || rect.fX + rect.width() > boundary.fX + boundary.width())
         velocity.x *= -1;
-
-    if (rect.pos.y < boundary.pos.y || rect.pos.y + rect.height > boundary.pos.y + boundary.height)
+    if (rect.fY < boundary.fY || rect.fY + rect.height() > boundary.fY + boundary.height())
         velocity.y *= -1;
 }
 
@@ -140,8 +139,7 @@ void DrawCmdTestNode::init()
 }
 void DrawCmdTestNode::updateToMat33(Mat33& mat)
 {
-    auto& pos = bounds.pos;
-    drcDesc.transform.setTo(pos.x, pos.y, bounds.width, bounds.height, rotation);
+    drcDesc.transform.setTo(bounds.fX, bounds.fY, bounds.width(), bounds.height(), rotation);
 }
 
 bool DrawCmdTestNode::contains(float px, float py) const
@@ -157,8 +155,7 @@ void DrawCmdTestNode::update()
     if (dirty)
     {
         drcDesc.update();
-        auto& pos = bounds.pos;
-        drcDesc.transform.setTo(pos.x, pos.y, bounds.width, bounds.height, rotation);
+        drcDesc.transform.setTo(bounds.fX, bounds.fY, bounds.width(), bounds.height(), rotation);
         dirty = true;
     }
 }
