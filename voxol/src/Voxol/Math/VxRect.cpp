@@ -1,18 +1,18 @@
 
-#include "Rect2D.h"
+#include "VxRect.h"
 
 namespace Voxol::Math
 {
 
-float Rect2D::width() const
+float VxRect::width() const
 {
     return fRight - fX;
 }
-float Rect2D::height() const
+float VxRect::height() const
 {
     return fBottom - fY;
 }
-void Rect2D::update()
+void VxRect::update()
 {
 }
 } // namespace Voxol::Math
