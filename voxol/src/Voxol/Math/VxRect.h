@@ -22,8 +22,8 @@ public:
         {
             float fX;
             float fY;
-            float fR;
-            float fB;
+            float fRX;
+            float fBY;
         };
         struct
         {
@@ -36,9 +36,22 @@ public:
     };
 
 public:
+    
+    void setXY(float px, float py);
+    void setWH(float pw, float ph);
+    void setXYWH(float px, float py, float pw, float ph);
+    
+    float x() const;
+    float y() const;
+    float left() const;
+    float top() const;
+    float right() const;
+    float bottom() const;
+
     float width() const;
     float height() const;
     void  update();
+    bool isEmpty() const;
 };
 } // namespace Voxol::Math
 
