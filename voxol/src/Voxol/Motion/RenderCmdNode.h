@@ -12,14 +12,14 @@ using namespace Voxol::Math;
 namespace RectTarget
 {
 
-struct Vec2
-{
-    float x, y;
+// struct Vec2
+// {
+//     float x, y;
 
-    Vec2 operator+(const Vec2& other) const;
-    Vec2 operator-(const Vec2& other) const;
-    Vec2 operator*(float s) const;
-};
+//     Vec2 operator+(const Vec2& other) const;
+//     Vec2 operator-(const Vec2& other) const;
+//     Vec2 operator*(float s) const;
+// };
 
 struct Rect
 {
@@ -95,13 +95,6 @@ struct DrawCmdTestNode
     bool contains(float px, float py) const;
     void update();
 };
-
-// class RenderCmdNode
-// {
-// public:
-//     RenderCmdNode()  = default;
-//     ~RenderCmdNode() = default;
-// };
 
 } // namespace Voxol::Motion
 #endif
