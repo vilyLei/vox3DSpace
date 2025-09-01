@@ -40,7 +40,13 @@ public:
     void setXY(float px, float py);
     void setWH(float pw, float ph);
     void setXYWH(float px, float py, float pw, float ph);
+
     
+    void setSize(float pw, float ph);
+    bool intersects(const VxRect& other) const;
+    void outset(float dx, float dy);
+    bool contains(float px, float py) const;
+
     float x() const;
     float y() const;
     float left() const;
