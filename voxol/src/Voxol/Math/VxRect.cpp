@@ -71,6 +71,15 @@ void VxRect::setLTRB(float pl, float pt, float pr, float pb)
     fBottom = fY + ph;
 }
 
+
+void VxRect::addXY(float px, float py)
+{
+    if (fLeft > px) fLeft = px;
+    if (fRight < px) fRight = px;
+    if (fTop > py) fTop = py;
+    if (fBottom < py) fBottom = py;
+}
+
 void VxRect::setSize(float pw, float ph)
 {
     pw = pw > 0 ? pw : 0;

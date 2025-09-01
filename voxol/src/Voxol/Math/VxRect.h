@@ -45,6 +45,8 @@ public:
     void setXYWH(float px, float py, float pw, float ph);
     void setLTRB(float pl, float pt, float pr, float pb);
 
+    void addXY(float px, float py);
+
     
     void setSize(float pw, float ph);
     bool intersects(const VxRect& other) const;
