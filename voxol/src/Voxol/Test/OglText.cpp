@@ -12,6 +12,7 @@ int OglText::initialize()
 {
 
     std::string fontPath = "C:/Windows/Fonts/arial.ttf";
+    fontPath = "C:/Windows/Fonts/SimHei.ttf";
 
     // Init FreeType
     FT_Library ft;
@@ -34,8 +35,18 @@ int OglText::initialize()
     FT_Set_Pixel_Sizes(face, 0, pixelSize);
 
     // choose the glyph to render
-    const char ch = 'A';
-    if (FT_Load_Char(face, ch, FT_LOAD_RENDER))
+    //const char ch = 'A';
+    //if (FT_Load_Char(face, ch, FT_LOAD_RENDER))
+    //{
+    //    std::cerr << "FT_Load_Char failed\n";
+    //    FT_Done_Face(face);
+    //    FT_Done_FreeType(ft);
+    //    return -1;
+    //}
+
+    char32_t ch          = U'жа';
+    FT_UInt  glyph_index = FT_Get_Char_Index(face, ch);
+    if (FT_Load_Glyph(face, glyph_index, FT_LOAD_RENDER))
     {
         std::cerr << "FT_Load_Char failed\n";
         FT_Done_Face(face);
