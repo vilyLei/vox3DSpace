@@ -147,6 +147,12 @@ void OglRenderer::initRenderRes()
     //OglText
     OglText text{};
     text.initialize();
+
+    RawData::Image2DBytesData imgData{text.glyphWidth, text.glyphHeight, text.glyphBuffer};
+    glyphDrawUnit.color = {0.0f, 0.3, 0.3f, 1.0f};
+    glyphDrawUnit.objMat.setTo(360, 320, imgData.width, imgData.height);
+
+    Gpu::buildRedFormatTexDrawUnit(glyphDrawUnit, imgData);
     
 }
 void OglRenderer::render()
@@ -165,6 +171,9 @@ void OglRenderer::render()
 
     redFormatexDrawUnit.mvp = projM;
     redFormatexDrawUnit.draw();
+
+    glyphDrawUnit.mvp = projM;
+    glyphDrawUnit.draw();
 
 }
 
