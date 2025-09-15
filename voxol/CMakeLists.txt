@@ -136,6 +136,17 @@ else()
 
   add_compile_definitions(NATIVE_RUNTIME=1)
   
+  add_library(freetype STATIC IMPORTED)
+  
+  set_target_properties(freetype PROPERTIES
+    IMPORTED_LOCATION_DEBUG
+    "${SRC_DIR}/thirdPart/freetype/lib/freetyped.lib"
+    IMPORTED_LOCATION_RELEASE
+    "${SRC_DIR}/thirdPart/freetype/lib/freetyp.lib"
+    INTERFACE_INCLUDE_DIRECTORIES
+    "${SRC_DIR}/thirdPart/freetype/include"
+  )
+
   add_executable(voxolModule ${ALL_SOURCES})
   target_link_directories(voxolModule PRIVATE ${THIRDPARTY_LIB})
   target_link_libraries(voxolModule PRIVATE
@@ -144,4 +155,5 @@ else()
     glfw3
   )
   target_compile_definitions(voxolModule PRIVATE GLEW_STATIC)
+  target_link_libraries(voxolModule PRIVATE freetype)
 endif()

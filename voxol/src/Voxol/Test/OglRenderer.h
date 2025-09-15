@@ -37,6 +37,9 @@ private:
     void initRenderRes();
     void render();
     void draw();
+    
+    RawData::Image2DBytesData glyphImgData{};
+
 
 private:
 
