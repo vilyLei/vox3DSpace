@@ -48,7 +48,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 }
 void mousePos_callback(GLFWwindow* window, double posX, double posY)
 {
-    std::cout << "mouse pos(" << posX << ", " << posY << ")" << std::endl;
+    //std::cout << "mouse pos(" << posX << ", " << posY << ")" << std::endl;
 }
 void mouseButton_callback(GLFWwindow* window, int sign, int flag, int type)
 {
@@ -169,6 +169,15 @@ void OglRenderer::initRenderRes()
     baseDrawUnit.objMat.setTo(100, 100, 200, 80);
     Gpu::buildBaseDrawUnit(baseDrawUnit);
 
+    texDrawUnit.color = {0.9f, 0.9, 0.9f, 1.0f};
+    texDrawUnit.objMat.setTo(150, 70, 100, 220);
+    Gpu::buildTexDrawUnit(texDrawUnit);
+
+    redFormatexDrawUnit.color = {0.3f, 0.0, 0.3f, 1.0f};
+    redFormatexDrawUnit.objMat.setTo(220, 220, 70, 70);
+    Gpu::buildRedFormatTexDrawUnit(redFormatexDrawUnit);
+    //redFormatexDrawUnit
+
     /*
     GLuint vs = OglTest::compileShader(GL_VERTEX_SHADER, OglTest::vertShaderSource);
     GLuint fs = OglTest::compileShader(GL_FRAGMENT_SHADER, OglTest::fragShaderSource);
@@ -208,8 +217,14 @@ void OglRenderer::render()
     projM.ortho(ctxWidth, ctxHeight);
 
     baseDrawUnit.mvp = projM;
-    baseDrawUnit.bindGPU();
     baseDrawUnit.draw();
+
+    texDrawUnit.mvp = projM;
+    texDrawUnit.draw();
+
+    redFormatexDrawUnit.mvp = projM;
+    redFormatexDrawUnit.draw();
+    //redFormatexDrawUnit
 
 /*
     if (!program)

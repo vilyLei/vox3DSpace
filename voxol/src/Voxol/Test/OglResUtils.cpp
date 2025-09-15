@@ -339,6 +339,8 @@ void DrawingUnit::draw()
     if (shader.program <= GL_ZERO)
         return;
 
+    bindGPU();
+
     glEnable(GL_BLEND);
     glBlendFuncSeparate(
         GL_SRC_ALPHA,

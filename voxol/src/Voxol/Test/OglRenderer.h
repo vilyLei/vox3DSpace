@@ -46,6 +46,8 @@ private:
     // GLint  matrixLoc;
     // GLint  colorLoc;
     Gpu::DrawingUnit baseDrawUnit{};
+    Gpu::DrawingUnit texDrawUnit{};
+    Gpu::DrawingUnit redFormatexDrawUnit{};
 };
 
 
