@@ -8,6 +8,8 @@
 //
 // http-server -p 666 --cors
 
+/// native: cmake -B build
+
 #include <cstdint>
 #include <cstdio>
 #include <chrono>

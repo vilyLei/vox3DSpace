@@ -136,8 +136,8 @@ int main()
     // testMemoryManage();
     // calcProfileTest();
 
-    //runRendering();
-    runConcurrent();
+    runRendering();
+    //runConcurrent();
 
     return 1;
 }
