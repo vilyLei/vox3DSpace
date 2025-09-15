@@ -135,16 +135,47 @@ else()
   message(STATUS "Target: Native (OpenGL)")
 
   add_compile_definitions(NATIVE_RUNTIME=1)
-  
+
+  add_library(bzip2 STATIC IMPORTED)
+  set_target_properties(bzip2 PROPERTIES
+    IMPORTED_LOCATION "${SRC_DIR}/thirdPart/bzip2/lib/bz2d.lib"
+    INTERFACE_INCLUDE_DIRECTORIES "${SRC_DIR}/thirdPart/bzip2/include"
+  )
+
+  add_library(brotlidec STATIC IMPORTED)
+  set_target_properties(brotlidec PROPERTIES
+    IMPORTED_LOCATION "${SRC_DIR}/thirdPart/brotli/lib/brotlidec.lib"
+    INTERFACE_INCLUDE_DIRECTORIES "${SRC_DIR}/thirdPart/brotli/include"
+  )
+
+  add_library(brotlicommon STATIC IMPORTED)
+  set_target_properties(brotlicommon PROPERTIES
+    IMPORTED_LOCATION "${SRC_DIR}/thirdPart/brotli/lib/brotlicommon.lib"
+    INTERFACE_INCLUDE_DIRECTORIES "${SRC_DIR}/thirdPart/brotli/include"
+  )
+
   add_library(freetype STATIC IMPORTED)
-  
   set_target_properties(freetype PROPERTIES
-    IMPORTED_LOCATION_DEBUG
+    IMPORTED_LOCATION
     "${SRC_DIR}/thirdPart/freetype/lib/freetyped.lib"
-    IMPORTED_LOCATION_RELEASE
-    "${SRC_DIR}/thirdPart/freetype/lib/freetyp.lib"
+    # IMPORTED_LOCATION_DEBUG
+    # "${SRC_DIR}/thirdPart/freetype/lib/freetyped.lib"
+    # IMPORTED_LOCATION_RELEASE
+    # "${SRC_DIR}/thirdPart/freetype/lib/freetyp.lib"
     INTERFACE_INCLUDE_DIRECTORIES
     "${SRC_DIR}/thirdPart/freetype/include"
+  )
+
+  add_library(libpng STATIC IMPORTED)
+  set_target_properties(libpng PROPERTIES
+    IMPORTED_LOCATION "${SRC_DIR}/thirdPart/libpng/lib/libpng16d.lib"
+    INTERFACE_INCLUDE_DIRECTORIES "${SRC_DIR}/thirdPart/libpng/include"
+  )
+
+  add_library(zlib STATIC IMPORTED)
+  set_target_properties(zlib PROPERTIES
+    IMPORTED_LOCATION "${SRC_DIR}/thirdPart/zlib/lib/zlibd.lib"
+    INTERFACE_INCLUDE_DIRECTORIES "${SRC_DIR}/thirdPart/zlib/include"
   )
 
   add_executable(voxolModule ${ALL_SOURCES})
@@ -155,5 +186,5 @@ else()
     glfw3
   )
   target_compile_definitions(voxolModule PRIVATE GLEW_STATIC)
-  target_link_libraries(voxolModule PRIVATE freetype)
+  target_link_libraries(voxolModule PRIVATE freetype bzip2 brotlidec brotlicommon libpng zlib)
 endif()

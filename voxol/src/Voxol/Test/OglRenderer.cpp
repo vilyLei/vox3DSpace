@@ -1,4 +1,5 @@
 #include "OglRenderer.h"
+#include "OglText.h"
 
 namespace Voxol::Test
 {
@@ -142,6 +143,10 @@ void OglRenderer::initRenderRes()
     redFormatexDrawUnit.color = {0.3f, 0.0, 0.3f, 1.0f};
     redFormatexDrawUnit.objMat.setTo(220, 220, 70, 70);
     Gpu::buildRedFormatTexDrawUnit(redFormatexDrawUnit);
+
+    //OglText
+    OglText text{};
+    text.initialize();
     
 }
 void OglRenderer::render()
