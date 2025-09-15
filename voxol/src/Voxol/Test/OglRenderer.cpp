@@ -2,6 +2,7 @@
 
 namespace Voxol::Test
 {
+    /*
 namespace OglTest
 {
 
@@ -34,7 +35,7 @@ GLuint compileShader(GLenum type, const char* source)
 }
 } // namespace OglTest
 
-
+//*/
 
 GLuint ctxCurrWidth  = 800;
 GLuint ctxCurrHeight = 600;
@@ -132,7 +133,7 @@ int OglRenderer::initCtx()
     // Define the viewport dimensions
     glViewport(0, 0, ctxWidth, ctxHeight);
 
-    initRender();
+    initRenderRes();
     // Game loop
     while (!glfwWindowShouldClose(window))
     {
@@ -148,8 +149,8 @@ int OglRenderer::initCtx()
         glClearColor(0.95f, 0.95f, 0.95f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        //render();
-        draw();
+        render();
+        // draw();
 
         // Swap the screen buffers
         glfwSwapBuffers(window);
@@ -162,8 +163,13 @@ int OglRenderer::initCtx()
 
 
 
-void OglRenderer::initRender()
+void OglRenderer::initRenderRes()
 {
+    baseDrawUnit.color = {0.1f, 0.6, 0.3f, 1.0f};
+    baseDrawUnit.objMat.setTo(100, 100, 200, 80);
+    Gpu::buildBaseDrawUnit(baseDrawUnit);
+
+    /*
     GLuint vs = OglTest::compileShader(GL_VERTEX_SHADER, OglTest::vertShaderSource);
     GLuint fs = OglTest::compileShader(GL_FRAGMENT_SHADER, OglTest::fragShaderSource);
     program   = glCreateProgram();
@@ -191,11 +197,21 @@ void OglRenderer::initRender()
     glBindVertexArray(vao);
     glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
     glEnableVertexAttribArray(0);
+    //*/
 }
 void OglRenderer::render()
 {
     using namespace Voxol::Math;
 
+
+    Mat33 projM;
+    projM.ortho(ctxWidth, ctxHeight);
+
+    baseDrawUnit.mvp = projM;
+    baseDrawUnit.bindGPU();
+    baseDrawUnit.draw();
+
+/*
     if (!program)
         return;
 
@@ -240,10 +256,12 @@ void OglRenderer::render()
 
         glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
     }
+    //*/
 }
 
 void OglRenderer::draw()
 {
+    /*
     using namespace Voxol::Math;
 
     if (!program)
@@ -319,6 +337,7 @@ void OglRenderer::draw()
         cmdIndex += descSize;
 
     }
+    //*/
 }
 void OglRenderer::init()
 {

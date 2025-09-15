@@ -116,11 +116,11 @@ void runRendering()
     rcmdWorld.setGPUCtxSize(renderer.ctxWidth, renderer.ctxHeight);
     rcmdWorld.run();
 
-    renderer.onDraw = [&](GLuint, GLuint) {
-        rcmdWorld.setGPUCtxSize(renderer.ctxWidth, renderer.ctxHeight);
-        rcmdWorld.run();
-        renderer.cmdBuf = rcmdWorld.buffer;
-    };
+    //renderer.onDraw = [&](GLuint, GLuint) {
+    //    rcmdWorld.setGPUCtxSize(renderer.ctxWidth, renderer.ctxHeight);
+    //    rcmdWorld.run();
+    //    renderer.cmdBuf = rcmdWorld.buffer;
+    //};
     renderer.init();
 }
 void runConcurrent()

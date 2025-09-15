@@ -3,6 +3,7 @@
 
 #include "../Base/BaseDefine.h"
 #include "../Math/Mat33.h"
+#include "OglResUtils.h"
 
 #include <iostream>
 #include <cmath>
@@ -14,10 +15,9 @@
 
 namespace Voxol::Test
 {
-namespace OglTest
-{
-
-}
+// namespace OglTest
+// {
+// }
 class OglRenderer
 {
 public:
@@ -36,15 +36,16 @@ public:
 private:
 
     int initCtx();
-    void initRender();
+    void initRenderRes();
     void render();
     void draw();
 
 private:
-    GLuint program;
-    GLuint vao;
-    GLint  matrixLoc;
-    GLint  colorLoc;
+    // GLuint program;
+    // GLuint vao;
+    // GLint  matrixLoc;
+    // GLint  colorLoc;
+    Gpu::DrawingUnit baseDrawUnit{};
 };
 
 
