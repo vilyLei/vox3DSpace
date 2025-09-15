@@ -2,40 +2,6 @@
 
 namespace Voxol::Test
 {
-    /*
-namespace OglTest
-{
-
-const char* vertShaderSource = R"(#version 330 core
-precision highp float;
-
-layout(location = 0) in vec2 a_position;
-
-uniform mat3 u_matrix;
-
-void main() {
-    vec3 pos = u_matrix * vec3(a_position, 1.0);
-    gl_Position = vec4(pos.xy, 0.0, 1.0);
-})";
-
-const char* fragShaderSource = R"(#version 330 core
-precision mediump float;
-uniform vec4 u_color;
-out vec4 outColor;
-void main() {
-    outColor = u_color;
-})";
-
-GLuint compileShader(GLenum type, const char* source)
-{
-    GLuint shader = glCreateShader(type);
-    glShaderSource(shader, 1, &source, nullptr);
-    glCompileShader(shader);
-    return shader;
-}
-} // namespace OglTest
-
-//*/
 
 GLuint ctxCurrWidth  = 800;
 GLuint ctxCurrHeight = 600;
@@ -176,37 +142,7 @@ void OglRenderer::initRenderRes()
     redFormatexDrawUnit.color = {0.3f, 0.0, 0.3f, 1.0f};
     redFormatexDrawUnit.objMat.setTo(220, 220, 70, 70);
     Gpu::buildRedFormatTexDrawUnit(redFormatexDrawUnit);
-    //redFormatexDrawUnit
-
-    /*
-    GLuint vs = OglTest::compileShader(GL_VERTEX_SHADER, OglTest::vertShaderSource);
-    GLuint fs = OglTest::compileShader(GL_FRAGMENT_SHADER, OglTest::fragShaderSource);
-    program   = glCreateProgram();
-    glAttachShader(program, vs);
-    glAttachShader(program, fs);
-    glLinkProgram(program);
-
-    matrixLoc = glGetUniformLocation(program, "u_matrix");
-    colorLoc  = glGetUniformLocation(program, "u_color");
-
-    float x = 0, y = 0, w = 1, h = 1;
-
-    float verts[] = {
-        x, y,
-        x + w, y,
-        x, y + h,
-        x + w, y + h};
-
-    GLuint vbo;
-    glGenBuffers(1, &vbo);
-    glBindBuffer(GL_ARRAY_BUFFER, vbo);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(verts), verts, GL_STATIC_DRAW);
-
-    glGenVertexArrays(1, &vao);
-    glBindVertexArray(vao);
-    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
-    glEnableVertexAttribArray(0);
-    //*/
+    
 }
 void OglRenderer::render()
 {
@@ -224,54 +160,7 @@ void OglRenderer::render()
 
     redFormatexDrawUnit.mvp = projM;
     redFormatexDrawUnit.draw();
-    //redFormatexDrawUnit
 
-/*
-    if (!program)
-        return;
-
-    //glViewport(vpDesc.x, vpDesc.y, vpDesc.width, vpDesc.height);
-    //// glClearColor(0.95f, 0.95f, 0.95f, 1.0f);
-    //glClearColor(0.95f, 0.95f, 0.95f, 1.0f);
-    //glClear(GL_COLOR_BUFFER_BIT);
-    glUseProgram(program);
-    glBindVertexArray(vao);
-
-    auto scale = 0.5f;
-    // scale = (std::cos(angle * 3) * 0.5f + 0.5f) * 0.5f + 0.5f;
-
-    Mat33 projM;
-    projM.ortho(ctxWidth, ctxHeight);
-
-    {
-        Mat33 objM(100, 200, 200, 100);
-        // Mat33 mvp = projM * objM;
-        Mat33 mvp = projM;
-        mvp.append(objM);
-
-        glUniformMatrix3fv(matrixLoc, 1, GL_FALSE, mvp.ptr());
-        std::array<float, 4> color = {0.0f, 0.6f, 0.0f, 1.0f};
-        glUniform4fv(colorLoc, 1, color.data());
-
-        glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-    }
-    {
-        float px = 150;
-        float py = 250;
-
-        Mat33 objM(px, py, 200, 150);
-
-        // Mat33 mvp = projM * objM;
-        Mat33 mvp = objM;
-        mvp.prepend(projM);
-
-        glUniformMatrix3fv(matrixLoc, 1, GL_FALSE, mvp.ptr());
-        std::array<float, 4> color = {0.0f, 0.6f, 0.8f, 1.0f};
-        glUniform4fv(colorLoc, 1, color.data());
-
-        glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-    }
-    //*/
 }
 
 void OglRenderer::draw()

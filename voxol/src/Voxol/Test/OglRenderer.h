@@ -15,9 +15,7 @@
 
 namespace Voxol::Test
 {
-// namespace OglTest
-// {
-// }
+
 class OglRenderer
 {
 public:
@@ -41,13 +39,11 @@ private:
     void draw();
 
 private:
-    // GLuint program;
-    // GLuint vao;
-    // GLint  matrixLoc;
-    // GLint  colorLoc;
+
     Gpu::DrawingUnit baseDrawUnit{};
     Gpu::DrawingUnit texDrawUnit{};
     Gpu::DrawingUnit redFormatexDrawUnit{};
+    Gpu::DrawingUnit glyphDrawUnit{};
 };
 
 
