@@ -8,5 +8,8 @@ constexpr size_t DEFAULT_SLAB_BLOCK_SIZE = 64 * 1024;
 
 using VoxolEntity = uint32_t;
 constexpr VoxolEntity VoxolEntity_None = 0xFFFFFFFF;
+#ifndef NATIVE_RUNTIME
+#define __EMSCRIPTEN__ 1
+#endif
 
 #endif  // VOXOL_BASE_DEFINE_H

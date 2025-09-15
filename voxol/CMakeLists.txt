@@ -134,6 +134,8 @@ else()
   # ---------- 本地桌面 OpenGL 构建 ----------
   message(STATUS "Target: Native (OpenGL)")
 
+  add_compile_definitions(NATIVE_RUNTIME=1)
+  
   add_executable(voxolModule ${ALL_SOURCES})
   target_link_directories(voxolModule PRIVATE ${THIRDPARTY_LIB})
   target_link_libraries(voxolModule PRIVATE
