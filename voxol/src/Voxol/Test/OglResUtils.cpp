@@ -64,6 +64,22 @@ void              main()
 }
 )";
 
+const char* fragRGBGlyphFormatTexSource = R"(#version 330 core
+    precision     mediump float;
+uniform vec4      u_color;
+in vec2           v_uv;
+uniform sampler2D u_tex0;
+out vec4          fragColor;
+void              main()
+{
+    vec4 texColor = u_color;
+    vec3 glyColor = texture(u_tex0, v_uv).rgb;
+    texColor.rgb *= glyColor;
+    texColor.a = (glyColor.r + glyColor.g + glyColor.b)/3.0;
+    fragColor = texColor;
+}
+)";
+
 GLuint compileShader(GLenum type, const char* source)
 {
     GLuint shader = glCreateShader(type);
