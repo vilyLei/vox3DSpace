@@ -36,9 +36,6 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
     ctxCurrHeight = height;
 }
 
-OglRenderer::~OglRenderer()
-{
-}
 int OglRenderer::initCtx()
 {
     int ver_major = 3;
@@ -132,6 +129,8 @@ int OglRenderer::initCtx()
 
 void OglRenderer::initRenderRes()
 {
+    mScene.initScene();
+    /*
     baseDrawUnit.color = {0.1f, 0.6, 0.3f, 1.0f};
     baseDrawUnit.objMat.setTo(100, 100, 200, 80);
     Gpu::buildBaseDrawUnit(baseDrawUnit);
@@ -151,6 +150,7 @@ void OglRenderer::initRenderRes()
     glyphDrawUnit.objMat.setTo(360, 320, imgData.width, imgData.height);
 
     Gpu::buildRedFormatTexDrawUnit(glyphDrawUnit, imgData);
+    //*/
     
 }
 void OglRenderer::render()
@@ -160,7 +160,8 @@ void OglRenderer::render()
 
     Mat33 projM;
     projM.ortho(ctxWidth, ctxHeight);
-
+    mScene.render(projM);
+    /*
     baseDrawUnit.mvp = projM;
     baseDrawUnit.draw();
 
@@ -172,7 +173,7 @@ void OglRenderer::render()
 
     glyphDrawUnit.mvp = projM;
     glyphDrawUnit.draw();
-
+    //*/
 }
 
 void OglRenderer::draw()

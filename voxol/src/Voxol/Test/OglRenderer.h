@@ -4,6 +4,7 @@
 #include "../Base/BaseDefine.h"
 #include "../Math/Mat33.h"
 #include "OglResUtils.h"
+#include "OglTestScene.h"
 
 #include <iostream>
 #include <cmath>
@@ -20,7 +21,7 @@ class OglRenderer
 {
 public:
     OglRenderer()  = default;
-    ~OglRenderer();
+    virtual ~OglRenderer() = default;
 
 public:
     void init();
@@ -40,11 +41,11 @@ private:
 
 
 private:
-
-    Gpu::DrawingUnit baseDrawUnit{};
-    Gpu::DrawingUnit texDrawUnit{};
-    Gpu::DrawingUnit redFormatexDrawUnit{};
-    Gpu::DrawingUnit glyphDrawUnit{};
+    OglTestScene     mScene{};
+    //Gpu::DrawingUnit baseDrawUnit{};
+    //Gpu::DrawingUnit texDrawUnit{};
+    //Gpu::DrawingUnit redFormatexDrawUnit{};
+    //Gpu::DrawingUnit glyphDrawUnit{};
 };
 
 
