@@ -4,6 +4,7 @@
 #include "OglResUtils.h"
 #include <vector>
 #include <ft2build.h>
+#include <string>
 #include FT_FREETYPE_H
 #include FT_LCD_FILTER_H
 
@@ -19,11 +20,11 @@ public:
     void dispose();
 };
 
-class OglText
+class OglTextGlyphBuilder
 {
 public:
-    OglText() = default;
-    virtual ~OglText() = default;
+    OglTextGlyphBuilder() = default;
+    virtual ~OglTextGlyphBuilder() = default;
 
 public:
     bool initFont(const std::string& fontPath = "C:/Windows/Fonts/SimHei.ttf");
@@ -37,5 +38,14 @@ private:
     OglTextFT              mFT{};
 };
 
+/// single line or multiple lines text field class;
+class OglTextField
+{
+public:
+    OglTextField()          = default;
+    virtual ~OglTextField() = default;
+
+public:
+};
 } // namespace Voxol::Test
 #endif

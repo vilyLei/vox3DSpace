@@ -8,6 +8,7 @@ namespace Voxol::Test
 
 OglTextFT ::~OglTextFT()
 {
+    dispose();
 }
 void OglTextFT::dispose()
 {
@@ -21,7 +22,7 @@ void OglTextFT::dispose()
 }
 
 
-bool OglText::initFont(const std::string& fontPath)
+bool OglTextGlyphBuilder::initFont(const std::string& fontPath)
 {
     if (mFT.face != nullptr)
         return true;
@@ -45,7 +46,7 @@ bool OglText::initFont(const std::string& fontPath)
     return true;
 }
 
-RawData::TextGlyphData OglText::createGlyph(char32_t ch32, int pixelSize, bool useSubpixel)
+RawData::TextGlyphData OglTextGlyphBuilder::createGlyph(char32_t ch32, int pixelSize, bool useSubpixel)
 {
     FT_Set_Pixel_Sizes(mFT.face, 0, pixelSize);
     FT_UInt glyph_index = FT_Get_Char_Index(mFT.face, ch32);
@@ -64,7 +65,7 @@ RawData::TextGlyphData OglText::createGlyph(char32_t ch32, int pixelSize, bool u
     }
     return createGlyphData(useSubpixel);
 }
-RawData::TextGlyphData OglText::createGlyph(char ch, int pixelSize, bool useSubpixel)
+RawData::TextGlyphData OglTextGlyphBuilder::createGlyph(char ch, int pixelSize, bool useSubpixel)
 {
     FT_Set_Pixel_Sizes(mFT.face, 0, pixelSize);
     FT_UInt glyph_index = FT_Get_Char_Index(mFT.face, ch);
@@ -83,7 +84,7 @@ RawData::TextGlyphData OglText::createGlyph(char ch, int pixelSize, bool useSubp
     return createGlyphData(useSubpixel);
 }
 
-RawData::TextGlyphData OglText::createGlyphData(bool useSubpixel)
+RawData::TextGlyphData OglTextGlyphBuilder::createGlyphData(bool useSubpixel)
 {
 
     FT_GlyphSlot g    = mFT.face->glyph;
@@ -139,7 +140,7 @@ RawData::TextGlyphData OglText::createGlyphData(bool useSubpixel)
     return glyphData;
 }
 
-RawData::TextGlyphData OglText::testBuildGlyph()
+RawData::TextGlyphData OglTextGlyphBuilder::testBuildGlyph()
 {
 
     std::string fontPath = "C:/Windows/Fonts/arial.ttf";

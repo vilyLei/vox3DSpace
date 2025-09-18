@@ -19,12 +19,12 @@ void OglTestScene::initScene()
     redFormatexDrawUnit.objMat.setTo(220, 220, 70, 70);
     Gpu::buildRedFormatTexDrawUnit(redFormatexDrawUnit);
 
-    OglText text{};
-    text.initFont();
-    //auto&& glyData = text.testBuildGlyph();
+    OglTextGlyphBuilder textBuilder{};
+    textBuilder.initFont();
+    //auto&& glyData = textBuilder.testBuildGlyph();
 
     char32_t ch         = U'жа';
-    auto&&   glyData    = text.createGlyph(ch, 32);
+    auto&&   glyData    = textBuilder.createGlyph(ch, 32);
     auto&   imgData = glyData.image;
     glyphDrawUnit.color = {0.0f, 0.3, 0.3f, 1.0f};
     glyphDrawUnit.objMat.setTo(360, 320, imgData.width, imgData.height);
