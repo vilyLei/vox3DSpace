@@ -42,10 +42,6 @@ private:
 
 private:
     OglTestScene     mScene{};
-    //Gpu::DrawingUnit baseDrawUnit{};
-    //Gpu::DrawingUnit texDrawUnit{};
-    //Gpu::DrawingUnit redFormatexDrawUnit{};
-    //Gpu::DrawingUnit glyphDrawUnit{};
 };
 
 
