@@ -217,4 +217,62 @@ RawData::TextGlyphData OglTextGlyphBuilder::testBuildGlyph()
     FT_Done_FreeType(ft);
     return glyphData;
 }
+
+
+void OglTextField::testInit(OglTextGlyphBuilder& builder)
+{
+
+    std::u32string chList = U"Á¿ÖÐÎÄABCghPijkpqW";
+    auto           total  = chList.size();
+    mUnits.resize(total);
+    mGlyphs.resize(total);
+
+    float px    = 350;
+    float py    = 380;
+    float scale = 1;
+    for (auto i = 0; i < total; i++)
+    {
+        auto ch    = chList[i];
+        mGlyphs[i] = builder.createGlyph(ch, 32, false);
+    }
+
+    int lineAscent  = 0;
+    int lineDescent = 0;
+
+    for (auto i = 0; i < total; i++)
+    {
+        auto& chData = mGlyphs[i];
+        lineAscent   = std::max(lineAscent, chData.bearingY);
+        lineDescent  = std::max(lineDescent, chData.image.height - chData.bearingY);
+    }
+    for (auto i = 0; i < total; i++)
+    {
+        auto& chData = mGlyphs[i];
+        auto& img    = chData.image;
+        float xpos   = px + chData.bearingX * scale;
+        //float  ypos       = py - (img.height - chData.bearingY) * scale;
+        // float ypos = py - chData.bearingY * scale;
+        auto  disY = (lineAscent - chData.bearingY) * scale;
+        float ypos = py + disY;
+
+        px += (chData.advance >> 6) * scale;
+
+        float w = img.width * scale;
+        float h = img.height * scale;
+
+        auto& unit = mUnits[i];
+        unit.color = {0.0f, 0.7f, 0.7f, 1.0f};
+        unit.objMat.setTo(xpos, ypos, w, h);
+        Gpu::buildGlyphTexDrawUnit(unit, chData);
+    }
+}
+void OglTextField::render(const Voxol::Math::Mat33& projM) {
+
+    for (auto& unit : mUnits)
+    {
+        unit.mvp = projM;
+        unit.draw();
+    }
+
+}
 } // namespace Voxol::Test

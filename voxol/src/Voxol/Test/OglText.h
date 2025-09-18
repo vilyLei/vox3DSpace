@@ -46,6 +46,12 @@ public:
     virtual ~OglTextField() = default;
 
 public:
+    void testInit(OglTextGlyphBuilder& builder);
+    void render(const Voxol::Math::Mat33& projM);
+
+private:
+    std::vector<Gpu::DrawingUnit> mUnits{};
+    std::vector<RawData::TextGlyphData> mGlyphs{};
 };
 } // namespace Voxol::Test
 #endif
