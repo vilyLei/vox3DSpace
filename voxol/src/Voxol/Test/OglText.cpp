@@ -124,7 +124,7 @@ RawData::TextGlyphData OglText::createGlyphData(bool useSubpixel)
         if (useSubpixel)
         {
             imgData.format = GL_RGB;
-            imgData.width  = bmpW / 3; // Êµ¼Ê×Ö·û¿í¶È
+            imgData.width  = bmpW / 3;
         }
         else
         {
@@ -145,7 +145,6 @@ RawData::TextGlyphData OglText::testBuildGlyph()
     std::string fontPath = "C:/Windows/Fonts/arial.ttf";
     fontPath             = "C:/Windows/Fonts/SimHei.ttf";
 
-    // Init FreeType
     FT_Library ft;
     if (FT_Init_FreeType(&ft))
     {
