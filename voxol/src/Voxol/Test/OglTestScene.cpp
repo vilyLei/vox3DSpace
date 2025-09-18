@@ -29,7 +29,8 @@ void OglTestScene::initScene()
     glyphDrawUnit.color = {0.0f, 0.3, 0.3f, 1.0f};
     glyphDrawUnit.objMat.setTo(360, 320, imgData.width, imgData.height);
 
-    Gpu::buildRedFormatTexDrawUnit(glyphDrawUnit, imgData);
+    //Gpu::buildRedFormatTexDrawUnit(glyphDrawUnit, imgData);
+    Gpu::buildGlyphTexDrawUnit(glyphDrawUnit, glyData);
     
 }
 void OglTestScene::render(const Voxol::Math::Mat33& projM)

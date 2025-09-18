@@ -264,6 +264,24 @@ std::vector<unsigned char> createGrayGradientImage(int w, int h)
     }
     return data;
 }
+std::vector<unsigned char> createRGBGradientImage(int w, int h)
+{
+    std::vector<unsigned char> data(w * h * 3);
+    for (int y = 0; y < h; y++)
+    {
+        for (int x = 0; x < w; x++)
+        {
+            float         t     = float(x) / float(w - 1); // 左黑 -> 右白
+            unsigned char value = (unsigned char)(t * 255);
+
+            auto k      = (y * w + x) * 3;
+            data[k]     = value;
+            data[k + 1] = value;
+            data[k + 2] = value;
+        }
+    }
+    return data;
+}
 
 } // namespace ResUtils
 namespace Gpu
@@ -424,6 +442,39 @@ void buildRedFormatTexDrawUnit(DrawingUnit& unit, const RawData::Image2DBytesDat
     else
     {
         auto tex = ResUtils::createTextureFromImageBytes(imgData.width, imgData.height, imgData.buffer, GL_RED, GL_RED, 1);
+        shader.textures.push_back(tex);
+    }
+
+    auto& vert = unit.vertex;
+    vert.buildTexRes();
+}
+
+void buildGlyphTexDrawUnit(DrawingUnit& unit, const RawData::TextGlyphData& glyphData)
+{
+    auto& imgData = glyphData.image;
+    if (!glyphData.useSubpixel)
+    {
+        buildRedFormatTexDrawUnit(unit, imgData);
+        return;
+    }
+    auto& shader = unit.shader;
+
+    shader.program   = ResUtils::createSahderProgram(ResUtils::vertTexSource, ResUtils::fragRGBGlyphFormatTexSource);
+    shader.matrixLoc = glGetUniformLocation(shader.program, "u_matrix");
+    shader.colorLoc  = glGetUniformLocation(shader.program, "u_color");
+    auto texLoc      = glGetUniformLocation(shader.program, "u_tex0");
+    shader.texLocs.push_back(texLoc);
+    if (imgData.width < 1 || imgData.height < 1 || imgData.buffer.empty())
+    {
+        auto imgW         = 16;
+        auto imgH         = 16;
+        auto imgBytesData = ResUtils::createRGBGradientImage(imgW, imgH);
+        auto tex          = ResUtils::createTextureFromImageBytes(imgW, imgH, imgBytesData, GL_RGB, GL_RGB, 3);
+        shader.textures.push_back(tex);
+    }
+    else
+    {
+        auto tex = ResUtils::createTextureFromImageBytes(imgData.width, imgData.height, imgData.buffer, GL_RGB, GL_RGB, 3);
         shader.textures.push_back(tex);
     }
 
