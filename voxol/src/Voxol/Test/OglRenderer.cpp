@@ -144,11 +144,9 @@ void OglRenderer::initRenderRes()
     redFormatexDrawUnit.objMat.setTo(220, 220, 70, 70);
     Gpu::buildRedFormatTexDrawUnit(redFormatexDrawUnit);
 
-    //OglText
     OglText text{};
-    text.initialize();
-
-    RawData::Image2DBytesData imgData{text.glyphWidth, text.glyphHeight, text.glyphBuffer};
+    auto&& glyData = text.testBuildGlyph();
+    auto&   imgData = glyData.image;
     glyphDrawUnit.color = {0.0f, 0.3, 0.3f, 1.0f};
     glyphDrawUnit.objMat.setTo(360, 320, imgData.width, imgData.height);
 

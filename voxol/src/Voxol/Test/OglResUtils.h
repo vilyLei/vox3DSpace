@@ -30,23 +30,34 @@ std::vector<unsigned short> getIndicesWithSegN(int n);
 GLuint                      createTextureFromImageBytes(int imageWidth, int imageHeight, const std::vector<unsigned char>& buffer, GLint internalformat = GL_RGBA, GLint format = GL_RGBA, GLint alignment = 4);
 std::vector<unsigned char>  createRGBAImgBytes(int imageWidth, int imageHeight);
 
-} // namespace OglTest
+} // namespace ResUtils
 namespace RawData
 {
 struct Image2DBytesData
 {
-    int                        width  = 0;
-    int                        height = 0;
+    int                        width          = 0;
+    int                        height         = 0;
+    GLint                      internalformat = GL_RGBA;
+    GLint                      format         = GL_RGBA;
     std::vector<unsigned char> buffer{};
+};
+struct TextGlyphData
+{
+    int bearingX = 0;
+    int bearingY = 0;
+    unsigned int advance = 0;
+    bool useSubpixel = false;
+    Image2DBytesData image{};
+
 };
 } // namespace RawData
 namespace Gpu
 {
 struct ShdNode
 {
-    GLint              program   = GL_ZERO;
-    GLint              matrixLoc = GL_ZERO;
-    GLint              colorLoc  = GL_ZERO;
+    GLint               program   = GL_ZERO;
+    GLint               matrixLoc = GL_ZERO;
+    GLint               colorLoc  = GL_ZERO;
     std::vector<GLint>  texLocs{};
     std::vector<GLuint> textures{};
     void                buildGPURes();
@@ -91,6 +102,6 @@ void buildBaseDrawUnit(DrawingUnit& unit);
 void buildTexDrawUnit(DrawingUnit& unit);
 void buildRedFormatTexDrawUnit(DrawingUnit& unit, const RawData::Image2DBytesData& imgData = {});
 
-} // namespace GpuRes
-}
+} // namespace Gpu
+} // namespace Voxol::Test
 #endif

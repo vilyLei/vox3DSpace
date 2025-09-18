@@ -8,7 +8,7 @@
 namespace Voxol::Test
 {
 
-int OglText::initialize()
+RawData::TextGlyphData OglText::testBuildGlyph()
 {
 
     std::string fontPath = "C:/Windows/Fonts/arial.ttf";
@@ -19,7 +19,7 @@ int OglText::initialize()
     if (FT_Init_FreeType(&ft))
     {
         std::cerr << "FT_Init_FreeType failed\n";
-        return -1;
+        return {};
     }
 
     FT_Face face;
@@ -27,7 +27,7 @@ int OglText::initialize()
     {
         std::cerr << "FT_New_Face failed for " << fontPath << "\n";
         FT_Done_FreeType(ft);
-        return -1;
+        return {};
     }
 
     // set pixel size
@@ -51,15 +51,22 @@ int OglText::initialize()
         std::cerr << "FT_Load_Char failed\n";
         FT_Done_Face(face);
         FT_Done_FreeType(ft);
-        return -1;
+        return {};
     }
+
+    RawData::TextGlyphData glyphData{};
+    auto&                  glyphImg = glyphData.image;
 
     FT_GlyphSlot g = face->glyph;
 
     // Copy into continuous buffer respecting pitch
-    glyphWidth   = g->bitmap.width;
-    glyphHeight  = g->bitmap.rows;
-    auto& bitmap = glyphBuffer;
+    auto glyphWidth       = g->bitmap.width;
+    auto glyphHeight = g->bitmap.rows;
+
+    glyphImg.width     = glyphWidth;
+    glyphImg.height = glyphHeight;
+
+    auto& bitmap       = glyphImg.buffer;
     if (glyphWidth > 0 && glyphHeight > 0)
     {
         bitmap.resize(glyphWidth * glyphHeight);
@@ -67,7 +74,6 @@ int OglText::initialize()
         {
             unsigned char* src = g->bitmap.buffer + row * g->bitmap.pitch;
             unsigned char* dst = bitmap.data() + row * glyphWidth;
-            // copy bmpW bytes from src (pitch may be larger)
             memcpy(dst, src, glyphWidth);
         }
     }
@@ -78,6 +84,6 @@ int OglText::initialize()
 
     FT_Done_Face(face);
     FT_Done_FreeType(ft);
-    return 1;
+    return glyphData;
 }
 } // namespace Voxol::Test

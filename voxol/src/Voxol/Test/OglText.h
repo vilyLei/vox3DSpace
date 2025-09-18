@@ -1,7 +1,7 @@
 #ifndef VOXOL_OGL_TEXT_H
 #define VOXOL_OGL_TEXT_H
 
-#include "../Base/BaseDefine.h"
+#include "OglResUtils.h"
 #include <vector>
 
 namespace Voxol::Test
@@ -13,12 +13,12 @@ public:
     virtual ~OglText() = default;
 
 public:
-    int initialize();
+    RawData::TextGlyphData testBuildGlyph();
 
 public:
-    int                        glyphWidth = 0;
-    int                        glyphHeight = 0;
-    std::vector<unsigned char> glyphBuffer{};
+    //int                        glyphWidth = 0;
+    //int                        glyphHeight = 0;
+    //std::vector<unsigned char> glyphBuffer{};
 };
 
 } // namespace Voxol::Test
