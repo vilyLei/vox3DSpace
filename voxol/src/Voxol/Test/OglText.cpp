@@ -85,32 +85,25 @@ RawData::TextGlyphData OglText::createGlyph(char ch, int pixelSize, bool useSubp
 
 RawData::TextGlyphData OglText::createGlyphData(bool useSubpixel)
 {
-    //FT_Set_Pixel_Sizes(mFT.face, 0, pixelSize);
-    //FT_UInt glyph_index = FT_Get_Char_Index(mFT.face, ch32);
-    //int loadFlags = FT_LOAD_RENDER;
-    //if (useSubpixel)
-    //{
-    //    loadFlags |= FT_LOAD_TARGET_LCD;
-    //    FT_Library_SetLcdFilter(mFT.face->glyph->library, FT_LCD_FILTER_DEFAULT);
-    //}
-    //if (FT_Load_Glyph(mFT.face, glyph_index, loadFlags))
-    //{
-    //    std::cerr << "FT_Load_Glyph failed\n";
-    //    return {};
-    //}
 
     FT_GlyphSlot g    = mFT.face->glyph;
-    int          bmpW = g->bitmap.width;
-    int          bmpH = g->bitmap.rows;
+    auto&        bmp  = g->bitmap;
 
-    RawData::TextGlyphData tfData{};
-    auto&                  imgData = tfData.image;
+    int          bmpW = bmp.width;
+    int          bmpH = bmp.rows;
+
+    RawData::TextGlyphData glyphData{};
+    auto&                  imgData = glyphData.image;
     imgData.width                  = bmpW;
     imgData.height                 = bmpH;
     auto& bitmap                   = imgData.buffer;
 
     if (bmpW > 0 && bmpH > 0)
     {
+        glyphData.bearingX = g->bitmap_left;
+        glyphData.bearingY = g->bitmap_top;
+        glyphData.advance  = static_cast<unsigned int>(g->advance.x >> 6);
+
         bitmap.resize(bmpW * bmpH);
 
         int pitch    = g->bitmap.pitch;
@@ -143,7 +136,7 @@ RawData::TextGlyphData OglText::createGlyphData(bool useSubpixel)
         std::cerr << "Empty glyph bitmap\n";
     }
 
-    return tfData;
+    return glyphData;
 }
 
 RawData::TextGlyphData OglText::testBuildGlyph()
