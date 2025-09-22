@@ -38,6 +38,7 @@ private:
     Gpu::DrawingUnit glyphDrawUnit{};
     Gpu::DrawingUnit pngUnit{};
     MSDFText         msdfText{};
+    std::vector<Gpu::DrawingUnit> msdfTextDrawUnits{};
 };
 
 

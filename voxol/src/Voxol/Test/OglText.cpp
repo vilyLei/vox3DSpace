@@ -283,7 +283,10 @@ void MSDFText::initialize(const std::string& atlasImgPath, const std::string& js
 {
     OglImage imgObj{};
     //imgObj.loadPNGFromAssets("msdf/arial_atlas.png");
+
     mAtlasImgData = imgObj.loadPNGFromAssets(atlasImgPath);
+
+    mAtlasImgData.tex = ResUtils::createTextureFromImageBytes(mAtlasImgData.width, mAtlasImgData.height, mAtlasImgData.buffer);
 
     auto texPath = std::filesystem::path(SRC_DIR) / "assets/";
     loadGlyphs(texPath.string() + jsonPath);
@@ -338,11 +341,10 @@ std::unordered_map<int, RawData::MSDFGlyph> MSDFText::loadGlyphs(const std::stri
     return glyphMap;
 }
 void MSDFText::buildText(const std::string&               text,
-                         std::vector<Gpu::DrawingUnit>&   units,
-                         const RawData::Image2DBytesData& imgData,
+                         std::vector<Gpu::DrawingUnit>& units,
+                         const Voxol::Math::Vec2&       pos,
                          float                            fontSize,
-                         const std::array<float, 4>&      color,
-                         const Voxol::Math::Vec2&         pos)
+                         const std::array<float, 4>&      color)
 {
     if (text.empty()) return;
 
@@ -375,7 +377,7 @@ void MSDFText::buildText(const std::string&               text,
                           pos.y - y1,
                           pw, ph);
 
-        Gpu::buildMSDFTexDrawUnit(unit, imgData, glyph);
+        Gpu::buildMSDFTexDrawUnit(unit, mAtlasImgData, glyph);
 
         units.push_back(unit);
 

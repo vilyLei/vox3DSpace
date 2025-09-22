@@ -66,11 +66,10 @@ public:
     void                                        initialize(const std::string& atlasImgPath, const std::string& jsonPath);
     std::unordered_map<int, RawData::MSDFGlyph> loadGlyphs(const std::string& jsonFile);
     void                                        buildText(const std::string&               text,
-                                                          std::vector<Gpu::DrawingUnit>&   units,
-                                                          const RawData::Image2DBytesData& imgData,
+                                                          std::vector<Gpu::DrawingUnit>& units,
+                                                          const Voxol::Math::Vec2&       pos      = {},
                                                           float                            fontSize = 20,
-                                                          const std::array<float, 4>&      color    = {},
-                                                          const Voxol::Math::Vec2&         pos      = {});
+                                                          const std::array<float, 4>&      color    = {0,0,0,1});
 
 private:
     RawData::Image2DBytesData mAtlasImgData{};

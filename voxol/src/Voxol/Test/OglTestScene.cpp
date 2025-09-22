@@ -38,6 +38,9 @@ void OglTestScene::initScene()
     Gpu::buildTexDrawUnit(pngUnit, pngData);
 
     msdfText.initialize("msdf/arial_atlas.png", "msdf/arial_atlas.json");
+
+    std::string text = "Hello, Cute Boy!";
+    msdfText.buildText(text, msdfTextDrawUnits, {300, 100});
     
 }
 void OglTestScene::render(const Voxol::Math::Mat33& projM)
@@ -57,7 +60,11 @@ void OglTestScene::render(const Voxol::Math::Mat33& projM)
     pngUnit.mvp = projM;
     pngUnit.draw();
     
-
+    for (auto& unit : msdfTextDrawUnits)
+    {
+        unit.mvp = projM;
+        unit.draw();
+    }
 }
 
 } // namespace Voxol::Test
