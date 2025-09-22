@@ -316,9 +316,6 @@ void MSDFAtlas::reset() {
 namespace Gpu
 {
 
-void ShdNode::buildGPURes()
-{
-}
 void ShdNode::bindGPU()
 {
 
@@ -344,6 +341,14 @@ void VertNode::buildBaseRes()
 void VertNode::buildTexRes()
 {
     auto&&     vs     = ResUtils::getVertsWithUVVEOSegN(1);
+    VertVSNode vsNode = {4, 4, vs};
+    vsNodes.push_back(vsNode);
+    indices = ResUtils::getIndicesWithSegN(1);
+    buildGPURes();
+}
+void VertNode::buildTexResFlipYUvs(float u0, float v0, float u1, float v1)
+{
+    auto&&     vs     = ResUtils::getVertsWithUVVEOFlipY(u0,u1,v0,v1);
     VertVSNode vsNode = {4, 4, vs};
     vsNodes.push_back(vsNode);
     indices = ResUtils::getIndicesWithSegN(1);
@@ -456,6 +461,22 @@ void buildTexDrawUnit(DrawingUnit& unit, const RawData::Image2DBytesData& imgDat
 
     auto& vert = unit.vertex;
     vert.buildTexRes();
+}
+void buildMSDFTexDrawUnit(DrawingUnit& unit, const RawData::Image2DBytesData& imgData, const RawData::MSDFGlyph& glyph)
+{
+    auto& shader = unit.shader;
+
+    shader.program   = ResUtils::createSahderProgram(ResUtils::vertTexSource, ResUtils::fragTexSource);
+    shader.matrixLoc = glGetUniformLocation(shader.program, "u_matrix");
+    shader.colorLoc  = glGetUniformLocation(shader.program, "u_color");
+    auto texLoc      = glGetUniformLocation(shader.program, "u_tex0");
+    shader.texLocs.push_back(texLoc);
+
+    auto tex = imgData.tex > 0 ? imgData.tex : ResUtils::createTextureFromImageBytes(imgData.width, imgData.height, imgData.buffer);
+    shader.textures.push_back(tex);
+
+    auto& vert = unit.vertex;
+    vert.buildTexResFlipYUvs(glyph.atlasLeft, glyph.atlasBottom, glyph.atlasRight, glyph.atlasTop);
 }
 
 void buildRedFormatTexDrawUnit(DrawingUnit& unit, const RawData::Image2DBytesData& imgData)

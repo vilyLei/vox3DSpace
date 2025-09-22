@@ -44,6 +44,7 @@ struct Image2DBytesData
     GLint                      internalformat = GL_RGBA;
     GLint                      format         = GL_RGBA;
     std::vector<unsigned char> buffer{};
+    GLuint                     tex = 0;
 };
 struct TextGlyphData
 {
@@ -59,6 +60,8 @@ struct MSDFGlyph
     float advance;
     float planeLeft, planeBottom, planeRight, planeTop;
     float atlasLeft, atlasBottom, atlasRight, atlasTop;
+
+    //GLuint tex = 0;
 };
 
 struct MSDFAtlas
@@ -80,7 +83,6 @@ struct ShdNode
     GLint               colorLoc  = GL_ZERO;
     std::vector<GLint>  texLocs{};
     std::vector<GLuint> textures{};
-    void                buildGPURes();
     void                bindGPU();
 };
 
@@ -99,6 +101,7 @@ struct VertNode
     std::vector<unsigned short> indices{};
     void                        buildBaseRes();
     void                        buildTexRes();
+    void                        buildTexResFlipYUvs(float u0 = 0, float v0 = 0, float u1 = 1, float v1 = 1);
     void                        buildGPURes();
     void                        bindGPU();
     GLsizei                     indicesSize() const;
@@ -120,6 +123,10 @@ struct DrawingUnit
 
 void buildBaseDrawUnit(DrawingUnit& unit);
 void buildTexDrawUnit(DrawingUnit& unit, const RawData::Image2DBytesData& imgData = {});
+void buildMSDFTexDrawUnit(
+    DrawingUnit&                     unit,
+    const RawData::Image2DBytesData& imgData,
+    const RawData::MSDFGlyph&        glyph);
 void buildRedFormatTexDrawUnit(DrawingUnit& unit, const RawData::Image2DBytesData& imgData = {});
 void buildGlyphTexDrawUnit(DrawingUnit& unit, const RawData::TextGlyphData& glyphData = {});
 

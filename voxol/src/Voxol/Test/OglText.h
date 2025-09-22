@@ -25,11 +25,11 @@ public:
 class OglTextGlyphBuilder
 {
 public:
-    OglTextGlyphBuilder() = default;
+    OglTextGlyphBuilder()          = default;
     virtual ~OglTextGlyphBuilder() = default;
 
 public:
-    bool initFont(const std::string& fontPath = "C:/Windows/Fonts/SimHei.ttf");
+    bool                   initFont(const std::string& fontPath = "C:/Windows/Fonts/SimHei.ttf");
     RawData::TextGlyphData createGlyph(char32_t ch32, int pixelSize, bool useSubpixel = false);
     RawData::TextGlyphData createGlyph(char ch32, int pixelSize, bool useSubpixel = false);
 
@@ -52,24 +52,29 @@ public:
     void render(const Voxol::Math::Mat33& projM);
 
 private:
-    std::vector<Gpu::DrawingUnit> mUnits{};
+    std::vector<Gpu::DrawingUnit>       mUnits{};
     std::vector<RawData::TextGlyphData> mGlyphs{};
 };
 
 class MSDFText
 {
 public:
-    MSDFText()              = default;
+    MSDFText()          = default;
     virtual ~MSDFText() = default;
 
 public:
-    void initialize(const std::string& atlasImgPath, const std::string& jsonPath);
+    void                                        initialize(const std::string& atlasImgPath, const std::string& jsonPath);
     std::unordered_map<int, RawData::MSDFGlyph> loadGlyphs(const std::string& jsonFile);
+    void                                        buildText(const std::string&               text,
+                                                          std::vector<Gpu::DrawingUnit>&   units,
+                                                          const RawData::Image2DBytesData& imgData,
+                                                          float                            fontSize = 20,
+                                                          const std::array<float, 4>&      color    = {},
+                                                          const Voxol::Math::Vec2&         pos      = {});
 
 private:
     RawData::Image2DBytesData mAtlasImgData{};
     RawData::MSDFAtlas        mMSDFAtlas{};
-
 };
 
 } // namespace Voxol::Test

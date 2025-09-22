@@ -37,7 +37,7 @@ bool OglTextGlyphBuilder::initFont(const std::string& fontPath)
     FT_Face face;
     if (FT_New_Face(ft, fontPath.data(), 0, &face))
     {
-        printf("FT_New_Face failed for %s\n", fontPath);
+        printf("FT_New_Face failed for %s\n", fontPath.c_str());
         FT_Done_FreeType(ft);
         return false;
     }
@@ -87,11 +87,11 @@ RawData::TextGlyphData OglTextGlyphBuilder::createGlyph(char ch, int pixelSize, 
 RawData::TextGlyphData OglTextGlyphBuilder::createGlyphData(bool useSubpixel)
 {
 
-    FT_GlyphSlot g    = mFT.face->glyph;
-    auto&        bmp  = g->bitmap;
+    FT_GlyphSlot g   = mFT.face->glyph;
+    auto&        bmp = g->bitmap;
 
-    int          bmpW = bmp.width;
-    int          bmpH = bmp.rows;
+    int bmpW = bmp.width;
+    int bmpH = bmp.rows;
 
     RawData::TextGlyphData glyphData{};
     auto&                  imgData = glyphData.image;
@@ -156,7 +156,7 @@ RawData::TextGlyphData OglTextGlyphBuilder::testBuildGlyph()
     FT_Face face;
     if (FT_New_Face(ft, fontPath.data(), 0, &face))
     {
-        printf("FT_New_Face failed for %s\n", fontPath);
+        printf("FT_New_Face failed for %s\n", fontPath.c_str());
         FT_Done_FreeType(ft);
         return {};
     }
@@ -266,14 +266,14 @@ void OglTextField::testInit(OglTextGlyphBuilder& builder)
         Gpu::buildGlyphTexDrawUnit(unit, chData);
     }
 }
-void OglTextField::render(const Voxol::Math::Mat33& projM) {
+void OglTextField::render(const Voxol::Math::Mat33& projM)
+{
 
     for (auto& unit : mUnits)
     {
         unit.mvp = projM;
         unit.draw();
     }
-
 }
 /// thanks: https://github.com/Chlumsky/msdf-atlas-gen/releases
 /// msdf-atlas-gen.exe -font "C:\Windows\Fonts\arial.ttf" -imageout "atlas.png" -json "atlas.json" -type msdf
@@ -285,9 +285,8 @@ void MSDFText::initialize(const std::string& atlasImgPath, const std::string& js
     //imgObj.loadPNGFromAssets("msdf/arial_atlas.png");
     mAtlasImgData = imgObj.loadPNGFromAssets(atlasImgPath);
 
-    auto texPath  = std::filesystem::path(SRC_DIR) / "assets/";
+    auto texPath = std::filesystem::path(SRC_DIR) / "assets/";
     loadGlyphs(texPath.string() + jsonPath);
-    
 }
 std::unordered_map<int, RawData::MSDFGlyph> MSDFText::loadGlyphs(const std::string& jsonFile)
 {
@@ -337,5 +336,50 @@ std::unordered_map<int, RawData::MSDFGlyph> MSDFText::loadGlyphs(const std::stri
         glyphMap[g["unicode"]] = glyph;
     }
     return glyphMap;
+}
+void MSDFText::buildText(const std::string&               text,
+                         std::vector<Gpu::DrawingUnit>&   units,
+                         const RawData::Image2DBytesData& imgData,
+                         float                            fontSize,
+                         const std::array<float, 4>&      color,
+                         const Voxol::Math::Vec2&         pos)
+{
+    if (text.empty()) return;
+
+    units.clear();
+    units.reserve(text.size());
+
+    auto& atlas = mMSDFAtlas;
+    float scale = fontSize / atlas.emSize;
+
+    float penX = 0.0f;
+
+    for (unsigned char c : text)
+    {
+        auto it = atlas.glyphs.find((int)c);
+        if (it == atlas.glyphs.end()) continue;
+
+        const RawData::MSDFGlyph& glyph = it->second;
+
+        Gpu::DrawingUnit unit;
+
+        float x0 = glyph.planeLeft * scale;
+        float y1 = glyph.planeTop * scale;
+
+        float pw = (glyph.planeRight - glyph.planeLeft) * scale;
+        float ph = (glyph.planeTop - glyph.planeBottom) * scale;
+
+        unit.color = color;
+        // pos.y 就是基线
+        unit.objMat.setTo(pos.x + penX + x0,
+                          pos.y - y1,
+                          pw, ph);
+
+        Gpu::buildMSDFTexDrawUnit(unit, imgData, glyph);
+
+        units.push_back(unit);
+
+        penX += glyph.advance * scale; // 横向推进
+    }
 }
 } // namespace Voxol::Test
