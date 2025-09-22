@@ -21,7 +21,7 @@ project(voxolModule)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# ================== 路径设置 ==================
+# ================== env path setting ==================
 set(SRC_DIR "${CMAKE_SOURCE_DIR}/src")
 set(VOX_DIR "${SRC_DIR}/Voxol")
 set(RENDER_DIR "${VOX_DIR}/Render")
@@ -37,7 +37,7 @@ set(TASK_DIR "${VOX_DIR}/Task")
 set(THIRDPARTY_INCLUDE "${SRC_DIR}/thirdPart/opengl/libx64/include")
 set(THIRDPARTY_LIB "${SRC_DIR}/thirdPart/opengl/libx64/lib")
 
-# ================== 包含头文件 ==================
+# ================== .h files dir setting ==================
 include_directories(
   ${VOX_DIR}
   ${RENDER_DIR}
@@ -53,7 +53,7 @@ include_directories(
   ${THIRDPARTY_INCLUDE}
 )
 
-# ================== 源文件收集 ==================
+# ================== .cpp files dir setting ==================
 file(GLOB RENDER_SRC "${RENDER_DIR}/*.cpp" "${RENDER_DIR}/*.h")
 file(GLOB MATH_SRC "${MATH_DIR}/*.cpp" "${MATH_DIR}/*.h")
 file(GLOB BASE_SRC "${BASE_DIR}/*.cpp" "${BASE_DIR}/*.h")
@@ -135,6 +135,7 @@ else()
   message(STATUS "Target: Native (OpenGL)")
 
   add_compile_definitions(NATIVE_RUNTIME=1)
+  add_compile_definitions(SRC_DIR="${CMAKE_CURRENT_SOURCE_DIR}")
 
   add_library(bzip2 STATIC IMPORTED)
   set_target_properties(bzip2 PROPERTIES
