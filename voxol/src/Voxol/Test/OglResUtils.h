@@ -99,7 +99,7 @@ struct DrawingUnit
 };
 
 void buildBaseDrawUnit(DrawingUnit& unit);
-void buildTexDrawUnit(DrawingUnit& unit);
+void buildTexDrawUnit(DrawingUnit& unit, const RawData::Image2DBytesData& imgData = {});
 void buildRedFormatTexDrawUnit(DrawingUnit& unit, const RawData::Image2DBytesData& imgData = {});
 void buildGlyphTexDrawUnit(DrawingUnit& unit, const RawData::TextGlyphData& glyphData = {});
 

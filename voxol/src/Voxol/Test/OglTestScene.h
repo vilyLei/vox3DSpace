@@ -4,6 +4,7 @@
 #include "../Base/BaseDefine.h"
 #include "../Math/Mat33.h"
 #include "OglResUtils.h"
+#include "OglImage.h"
 
 #include <iostream>
 #include <cmath>
@@ -34,6 +35,7 @@ private:
     Gpu::DrawingUnit texDrawUnit{};
     Gpu::DrawingUnit redFormatexDrawUnit{};
     Gpu::DrawingUnit glyphDrawUnit{};
+    Gpu::DrawingUnit pngUnit{};
 };
 
 

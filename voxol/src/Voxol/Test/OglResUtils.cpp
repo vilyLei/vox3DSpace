@@ -401,7 +401,7 @@ void buildBaseDrawUnit(DrawingUnit& unit)
     vert.buildBaseRes();
 }
 
-void buildTexDrawUnit(DrawingUnit& unit)
+void buildTexDrawUnit(DrawingUnit& unit, const RawData::Image2DBytesData& imgData)
 {
     auto& shader = unit.shader;
 
@@ -411,11 +411,19 @@ void buildTexDrawUnit(DrawingUnit& unit)
     auto texLoc      = glGetUniformLocation(shader.program, "u_tex0");
     shader.texLocs.push_back(texLoc);
 
-    auto imgW    = 4;
-    auto imgH    = 4;
-    auto imgData = ResUtils::createRGBAImgBytes(imgW, imgH);
-    auto tex     = ResUtils::createTextureFromImageBytes(imgW, imgH, imgData);
-    shader.textures.push_back(tex);
+    if (imgData.width < 1 || imgData.height < 1 || imgData.buffer.empty())
+    {
+        auto imgW = 4;
+        auto imgH = 4;
+        auto data   = ResUtils::createRGBAImgBytes(imgW, imgH);
+        auto tex  = ResUtils::createTextureFromImageBytes(imgW, imgH, data);
+        shader.textures.push_back(tex);
+    }
+    else
+    {
+        auto tex = ResUtils::createTextureFromImageBytes(imgData.width, imgData.height, imgData.buffer);
+        shader.textures.push_back(tex);
+    }
 
     auto& vert = unit.vertex;
     vert.buildTexRes();

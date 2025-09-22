@@ -31,6 +31,12 @@ void OglTestScene::initScene()
 
     //Gpu::buildRedFormatTexDrawUnit(glyphDrawUnit, imgData);
     Gpu::buildGlyphTexDrawUnit(glyphDrawUnit, glyData);
+
+    OglImage imgObj{};
+    auto&&   pngData = imgObj.loadPNGFromAssets("letterA.png");
+    pngUnit.objMat.setTo(360, 150, pngData.width, pngData.height);
+    Gpu::buildTexDrawUnit(pngUnit, pngData);
+
     
 }
 void OglTestScene::render(const Voxol::Math::Mat33& projM)
@@ -46,6 +52,10 @@ void OglTestScene::render(const Voxol::Math::Mat33& projM)
 
     glyphDrawUnit.mvp = projM;
     glyphDrawUnit.draw();
+
+    pngUnit.mvp = projM;
+    pngUnit.draw();
+    
 
 }
 
