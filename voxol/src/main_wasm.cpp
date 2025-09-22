@@ -10,6 +10,10 @@
 
 /// native: cmake -B build
 
+// cmake -B build
+// cmake --build build
+
+
 #include <cstdint>
 #include <cstdio>
 #include <chrono>

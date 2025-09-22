@@ -8,6 +8,9 @@
 //
 // http-server -p 666 --cors
 
+
+// cmake -B build -G Ninja
+
 /*
 
 glew32d.lib
