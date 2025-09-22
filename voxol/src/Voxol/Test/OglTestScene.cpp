@@ -59,7 +59,7 @@ void OglTestScene::render(const Voxol::Math::Mat33& projM)
 
     pngUnit.mvp = projM;
     pngUnit.draw();
-    
+
     for (auto& unit : msdfTextDrawUnits)
     {
         unit.mvp = projM;

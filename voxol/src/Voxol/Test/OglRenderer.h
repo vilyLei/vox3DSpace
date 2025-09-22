@@ -27,8 +27,8 @@ public:
     void init();
 
 public:
-    GLuint         ctxWidth = 800;
-    GLuint         ctxHeight = 600;
+    GLuint         ctxWidth = 1200;
+    GLuint         ctxHeight = 900;
     std::vector<uint8_t> cmdBuf{};
     std::function<void(GLuint, GLuint)> onDraw;
 

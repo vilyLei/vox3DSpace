@@ -3,8 +3,8 @@
 namespace Voxol::Test
 {
 
-GLuint ctxCurrWidth  = 800;
-GLuint ctxCurrHeight = 600;
+GLuint ctxCurrWidth  = 1200;
+GLuint ctxCurrHeight = 800;
 // Is called whenever a key is pressed/released via GLFW
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode)
 {
