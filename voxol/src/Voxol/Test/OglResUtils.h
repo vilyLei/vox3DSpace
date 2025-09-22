@@ -101,6 +101,7 @@ struct VertNode
     std::vector<unsigned short> indices{};
     void                        buildBaseRes();
     void                        buildTexRes();
+    void                        buildTexResUvs(float u0 = 0, float v0 = 0, float u1 = 1, float v1 = 1);
     void                        buildTexResFlipYUvs(float u0 = 0, float v0 = 0, float u1 = 1, float v1 = 1);
     void                        buildGPURes();
     void                        bindGPU();

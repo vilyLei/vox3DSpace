@@ -91,28 +91,23 @@ uniform sampler2D u_tex0;
 out vec4          fragColor;
 
 float median(float r, float g, float b) {
-    return max(min(r, g), min(max(r, g), b)); // 三通道的中位数，取 signed distance
+    return max(min(r, g), min(max(r, g), b));
 }
 
 void main()
 {
     vec2 pos = v_uv;
 
-    // distanceRange 映射成像素范围
     float pxRange = 2.0;
     vec2 msdfUnit = pxRange / vec2(textureSize(u_tex0, 0));
 
-    // 取出MSDF三通道
     vec3 sc = texture(u_tex0, pos).rgb;
     float sigDist = median(sc.r, sc.g, sc.b) - 0.5;
 
-    // 抗锯齿: 使用 fwidth 得到像素梯度
     sigDist *= dot(msdfUnit, 0.5 / fwidth(pos));
 
-    // 透明度
     float opacity = clamp(sigDist + 0.5, 0.0, 1.0);
 
-    // 背景和前景颜色
     vec4 bgColor = vec4(u_color.rgb, 0.0);
     vec4 fgColor = u_color;
 
@@ -387,9 +382,17 @@ void VertNode::buildTexRes()
     indices = ResUtils::getIndicesWithSegN(1);
     buildGPURes();
 }
+void VertNode::buildTexResUvs(float u0, float v0, float u1, float v1)
+{
+    auto&&     vs     = ResUtils::getVertsWithUVVEO(u0, v0, u1, v1);
+    VertVSNode vsNode = {4, 4, vs};
+    vsNodes.push_back(vsNode);
+    indices = ResUtils::getIndicesWithSegN(1);
+    buildGPURes();
+}
 void VertNode::buildTexResFlipYUvs(float u0, float v0, float u1, float v1)
 {
-    auto&&     vs     = ResUtils::getVertsWithUVVEOFlipY(u0,u1,v0,v1);
+    auto&&     vs     = ResUtils::getVertsWithUVVEOFlipY(u0,v0,u1,v1);
     VertVSNode vsNode = {4, 4, vs};
     vsNodes.push_back(vsNode);
     indices = ResUtils::getIndicesWithSegN(1);
@@ -517,7 +520,7 @@ void buildMSDFTexDrawUnit(DrawingUnit& unit, const RawData::Image2DBytesData& im
     shader.textures.push_back(tex);
 
     auto& vert = unit.vertex;
-    vert.buildTexResFlipYUvs(glyph.atlasLeft, glyph.atlasBottom, glyph.atlasRight, glyph.atlasTop);
+    vert.buildTexResFlipYUvs(glyph.atlasLeft, glyph.atlasTop, glyph.atlasRight, glyph.atlasBottom);
 }
 
 void buildRedFormatTexDrawUnit(DrawingUnit& unit, const RawData::Image2DBytesData& imgData)

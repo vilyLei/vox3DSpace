@@ -40,7 +40,7 @@ void OglTestScene::initScene()
     msdfText.initialize("msdf/arial_atlas.png", "msdf/arial_atlas.json");
 
     std::string text = "Hello, Cute Boy!";
-    msdfText.buildText(text, msdfTextDrawUnits, {300, 100});
+    msdfText.buildText(text, msdfTextDrawUnits, {300, 100}, 50);
     
 }
 void OglTestScene::render(const Voxol::Math::Mat33& projM)
