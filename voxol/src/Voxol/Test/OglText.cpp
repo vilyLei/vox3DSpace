@@ -1,7 +1,6 @@
 #include "OglText.h"
-
+#include <nlohmann/json.hpp>
 #include <string>
-#include <iostream>
 
 namespace Voxol::Test
 {
@@ -30,14 +29,14 @@ bool OglTextGlyphBuilder::initFont(const std::string& fontPath)
     FT_Library ft;
     if (FT_Init_FreeType(&ft))
     {
-        std::cerr << "FT_Init_FreeType failed\n";
+        printf("FT_Init_FreeType failed\n");
         return false;
     }
 
     FT_Face face;
     if (FT_New_Face(ft, fontPath.data(), 0, &face))
     {
-        std::cerr << "FT_New_Face failed for " << fontPath << "\n";
+        printf("FT_New_Face failed for %s\n", fontPath);
         FT_Done_FreeType(ft);
         return false;
     }
@@ -60,7 +59,7 @@ RawData::TextGlyphData OglTextGlyphBuilder::createGlyph(char32_t ch32, int pixel
 
     if (FT_Load_Glyph(mFT.face, glyph_index, loadFlags))
     {
-        std::cerr << "FT_Load_Glyph failed\n";
+        printf("FT_Load_Glyph failed\n");
         return {};
     }
     return createGlyphData(useSubpixel);
@@ -78,7 +77,7 @@ RawData::TextGlyphData OglTextGlyphBuilder::createGlyph(char ch, int pixelSize, 
     }
     if (FT_Load_Char(mFT.face, ch, loadFlags))
     {
-        std::cerr << "FT_Load_Char failed\n";
+        printf("FT_Load_Char failed\n");
         return {};
     }
     return createGlyphData(useSubpixel);
@@ -134,7 +133,7 @@ RawData::TextGlyphData OglTextGlyphBuilder::createGlyphData(bool useSubpixel)
     }
     else
     {
-        std::cerr << "Empty glyph bitmap\n";
+        printf("Empty glyph bitmap\n");
     }
 
     return glyphData;
@@ -149,14 +148,14 @@ RawData::TextGlyphData OglTextGlyphBuilder::testBuildGlyph()
     FT_Library ft;
     if (FT_Init_FreeType(&ft))
     {
-        std::cerr << "FT_Init_FreeType failed\n";
+        printf("FT_Init_FreeType failed\n");
         return {};
     }
 
     FT_Face face;
     if (FT_New_Face(ft, fontPath.data(), 0, &face))
     {
-        std::cerr << "FT_New_Face failed for " << fontPath << "\n";
+        printf("FT_New_Face failed for %s\n", fontPath);
         FT_Done_FreeType(ft);
         return {};
     }
@@ -179,7 +178,7 @@ RawData::TextGlyphData OglTextGlyphBuilder::testBuildGlyph()
     FT_UInt  glyph_index = FT_Get_Char_Index(face, ch);
     if (FT_Load_Glyph(face, glyph_index, FT_LOAD_RENDER))
     {
-        std::cerr << "FT_Load_Char failed\n";
+        printf("FT_Load_Char failed\n");
         FT_Done_Face(face);
         FT_Done_FreeType(ft);
         return {};
@@ -210,7 +209,7 @@ RawData::TextGlyphData OglTextGlyphBuilder::testBuildGlyph()
     }
     else
     {
-        std::cerr << "Empty glyph bitmap\n";
+        printf("Empty glyph bitmap\n");
     }
 
     FT_Done_Face(face);
@@ -274,5 +273,14 @@ void OglTextField::render(const Voxol::Math::Mat33& projM) {
         unit.draw();
     }
 
+}
+/// thanks: https://github.com/Chlumsky/msdf-atlas-gen/releases
+/// msdf-atlas-gen.exe -font "C:\Windows\Fonts\arial.ttf" -imageout "atlas.png" -json "atlas.json" -type msdf
+void MSDFText::initialize(const std::string& atlasImgPath, const std::string& jsonPath)
+{
+    OglImage imgObj{};
+    //imgObj.loadPNGFromAssets("msdf/arial_atlas.png");
+    mAtlasImgData = imgObj.loadPNGFromAssets(atlasImgPath);
+    
 }
 } // namespace Voxol::Test

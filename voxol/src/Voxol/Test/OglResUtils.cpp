@@ -173,7 +173,6 @@ std::vector<float> getVertsWithUVVEOSegN(int n)
 
 std::vector<float> getVertsWithUVVEO(float u0, float v0, float u1, float v1)
 {
-
     float              x = 0, y = 0, w = 1, h = 1;
     std::vector<float> verts = {
         x, y, u0, v0,
@@ -185,7 +184,6 @@ std::vector<float> getVertsWithUVVEO(float u0, float v0, float u1, float v1)
 
 std::vector<float> getVertsWithUVVEOFlipY(float u0, float v0, float u1, float v1)
 {
-
     float              x = 0, y = 0, w = 1, h = 1;
     std::vector<float> verts = {
         x, y, u0, 1.0f - v0,

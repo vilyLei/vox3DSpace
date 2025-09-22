@@ -2,9 +2,11 @@
 #define VOXOL_OGL_TEXT_H
 
 #include "OglResUtils.h"
+#include "OglImage.h"
 #include <vector>
 #include <ft2build.h>
 #include <string>
+
 #include FT_FREETYPE_H
 #include FT_LCD_FILTER_H
 
@@ -52,6 +54,17 @@ public:
 private:
     std::vector<Gpu::DrawingUnit> mUnits{};
     std::vector<RawData::TextGlyphData> mGlyphs{};
+};
+class MSDFText
+{
+public:
+    MSDFText()              = default;
+    virtual ~MSDFText() = default;
+    void initialize(const std::string& atlasImgPath, const std::string& jsonPath);
+
+private:
+    RawData::Image2DBytesData mAtlasImgData{};
+
 };
 } // namespace Voxol::Test
 #endif

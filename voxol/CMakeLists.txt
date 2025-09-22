@@ -37,6 +37,9 @@ set(TASK_DIR "${VOX_DIR}/Task")
 set(THIRDPARTY_INCLUDE "${SRC_DIR}/thirdPart/opengl/libx64/include")
 set(THIRDPARTY_LIB "${SRC_DIR}/thirdPart/opengl/libx64/lib")
 
+
+set(JSON_INCLUDE_DIR ${SRC_DIR}/thirdPart/json)
+
 # ================== .h files dir setting ==================
 include_directories(
   ${VOX_DIR}
@@ -51,6 +54,7 @@ include_directories(
   ${TEST_DIR}
   ${TASK_DIR}
   ${THIRDPARTY_INCLUDE}
+  ${JSON_INCLUDE_DIR}
 )
 
 # ================== .cpp files dir setting ==================
