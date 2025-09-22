@@ -50,6 +50,7 @@ void              main()
     fragColor = texColor * u_color;
 }
 )";
+
 const char* fragRedFormatTexSource = R"(#version 330 core
     precision     mediump float;
 uniform vec4      u_color;
@@ -78,6 +79,46 @@ void              main()
     texColor.a = (glyColor.r + glyColor.g + glyColor.b)/3.0;
     fragColor = texColor;
 }
+)";
+
+
+const char* fragMSDFTexSource = R"(#version 330 core
+precision mediump float;
+
+uniform vec4      u_color;
+in vec2           v_uv; 
+uniform sampler2D u_tex0;
+out vec4          fragColor;
+
+float median(float r, float g, float b) {
+    return max(min(r, g), min(max(r, g), b)); // 三通道的中位数，取 signed distance
+}
+
+void main()
+{
+    vec2 pos = v_uv;
+
+    // distanceRange 映射成像素范围
+    float pxRange = 2.0;
+    vec2 msdfUnit = pxRange / vec2(textureSize(u_tex0, 0));
+
+    // 取出MSDF三通道
+    vec3 sc = texture(u_tex0, pos).rgb;
+    float sigDist = median(sc.r, sc.g, sc.b) - 0.5;
+
+    // 抗锯齿: 使用 fwidth 得到像素梯度
+    sigDist *= dot(msdfUnit, 0.5 / fwidth(pos));
+
+    // 透明度
+    float opacity = clamp(sigDist + 0.5, 0.0, 1.0);
+
+    // 背景和前景颜色
+    vec4 bgColor = vec4(u_color.rgb, 0.0);
+    vec4 fgColor = u_color;
+
+    fragColor = mix(bgColor, fgColor, opacity);
+}
+
 )";
 
 GLuint compileShader(GLenum type, const char* source)
@@ -466,7 +507,7 @@ void buildMSDFTexDrawUnit(DrawingUnit& unit, const RawData::Image2DBytesData& im
 {
     auto& shader = unit.shader;
 
-    shader.program   = ResUtils::createSahderProgram(ResUtils::vertTexSource, ResUtils::fragTexSource);
+    shader.program   = ResUtils::createSahderProgram(ResUtils::vertTexSource, ResUtils::fragMSDFTexSource);
     shader.matrixLoc = glGetUniformLocation(shader.program, "u_matrix");
     shader.colorLoc  = glGetUniformLocation(shader.program, "u_color");
     auto texLoc      = glGetUniformLocation(shader.program, "u_tex0");
