@@ -170,6 +170,31 @@ std::vector<float> getVertsWithUVVEOSegN(int n)
         return verts;
     }
 }
+
+std::vector<float> getVertsWithUVVEO(float u0, float v0, float u1, float v1)
+{
+
+    float              x = 0, y = 0, w = 1, h = 1;
+    std::vector<float> verts = {
+        x, y, u0, v0,
+        x + w, y, u1, v0,
+        x + w, y + h, u1, v1,
+        x, y + h, u0, v1};
+    return verts;
+}
+
+std::vector<float> getVertsWithUVVEOFlipY(float u0, float v0, float u1, float v1)
+{
+
+    float              x = 0, y = 0, w = 1, h = 1;
+    std::vector<float> verts = {
+        x, y, u0, 1.0f - v0,
+        x + w, y, u1, 1.0f - v0,
+        x + w, y + h, u1, 1.0f - v1,
+        x, y + h, u0, 1.0f - v1};
+    return verts;
+}
+
 std::vector<unsigned short> getIndicesWithSegN(int n)
 {
 
@@ -225,13 +250,11 @@ GLuint createTextureFromImageBytes(int imageWidth, int imageHeight, const std::v
 }
 std::vector<unsigned char> createRGBAImgBytes(int imageWidth, int imageHeight)
 {
-    //auto                       k = 0;
     std::vector<unsigned char> data(imageWidth * imageHeight * 4);
     for (auto i = 0; i < imageWidth; i++)
     {
         for (auto j = 0; j < imageHeight; j++)
         {
-            //int k = (i * imageWidth + j) * 4;
             float         t = float(j) / float(imageWidth - 1);
             unsigned char r = (unsigned char)((1.0f - t) * 255);
             unsigned char g = (unsigned char)(t * 255);
@@ -415,7 +438,7 @@ void buildTexDrawUnit(DrawingUnit& unit, const RawData::Image2DBytesData& imgDat
     {
         auto imgW = 4;
         auto imgH = 4;
-        auto data   = ResUtils::createRGBAImgBytes(imgW, imgH);
+        auto data = ResUtils::createRGBAImgBytes(imgW, imgH);
         auto tex  = ResUtils::createTextureFromImageBytes(imgW, imgH, data);
         shader.textures.push_back(tex);
     }

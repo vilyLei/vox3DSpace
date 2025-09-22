@@ -26,6 +26,9 @@ GLuint                      compileShader(GLenum type, const char* source);
 GLuint                      createSahderProgram(const char* vertSource, const char* fragSource);
 std::vector<float>          getVertsWithVEOSegN(int n);
 std::vector<float>          getVertsWithUVVEOSegN(int n);
+
+std::vector<float> getVertsWithUVVEO(float u0 = 0, float v0 = 0, float u1 = 1, float v1 = 1);
+std::vector<float> getVertsWithUVVEOFlipY(float u0 = 0, float v0 = 0, float u1 = 1, float v1 = 1);
 std::vector<unsigned short> getIndicesWithSegN(int n);
 GLuint                      createTextureFromImageBytes(int imageWidth, int imageHeight, const std::vector<unsigned char>& buffer, GLint internalformat = GL_RGBA, GLint format = GL_RGBA, GLint alignment = 4);
 std::vector<unsigned char>  createRGBAImgBytes(int imageWidth, int imageHeight);
