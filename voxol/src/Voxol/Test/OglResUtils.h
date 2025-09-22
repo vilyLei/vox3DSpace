@@ -8,6 +8,7 @@
 #include <cmath>
 #include <vector>
 #include <functional>
+#include <unordered_map>
 
 #include <GL/glew.h>
 #include <glfw3.h>
@@ -53,6 +54,22 @@ struct TextGlyphData
     Image2DBytesData image{};
 
 };
+struct MSDFGlyph
+{
+    float advance;
+    float planeLeft, planeBottom, planeRight, planeTop;
+    float atlasLeft, atlasBottom, atlasRight, atlasTop;
+};
+
+struct MSDFAtlas
+{
+    int                  width, height;
+    float                emSize, lineHeight, ascender, descender;
+    float                distanceRange;
+    std::unordered_map<int, MSDFGlyph> glyphs;
+    void                               reset();
+};
+
 } // namespace RawData
 namespace Gpu
 {

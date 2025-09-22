@@ -60,10 +60,14 @@ class MSDFText
 public:
     MSDFText()              = default;
     virtual ~MSDFText() = default;
+
+public:
     void initialize(const std::string& atlasImgPath, const std::string& jsonPath);
+    std::unordered_map<int, RawData::MSDFGlyph> loadGlyphs(const std::string& jsonFile);
 
 private:
     RawData::Image2DBytesData mAtlasImgData{};
+    RawData::MSDFAtlas        mMSDFAtlas{};
 
 };
 } // namespace Voxol::Test

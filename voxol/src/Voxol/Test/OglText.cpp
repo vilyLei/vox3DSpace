@@ -1,6 +1,7 @@
 #include "OglText.h"
 #include <nlohmann/json.hpp>
 #include <string>
+#include <fstream>
 
 namespace Voxol::Test
 {
@@ -276,11 +277,65 @@ void OglTextField::render(const Voxol::Math::Mat33& projM) {
 }
 /// thanks: https://github.com/Chlumsky/msdf-atlas-gen/releases
 /// msdf-atlas-gen.exe -font "C:\Windows\Fonts\arial.ttf" -imageout "atlas.png" -json "atlas.json" -type msdf
+///
+
 void MSDFText::initialize(const std::string& atlasImgPath, const std::string& jsonPath)
 {
     OglImage imgObj{};
     //imgObj.loadPNGFromAssets("msdf/arial_atlas.png");
     mAtlasImgData = imgObj.loadPNGFromAssets(atlasImgPath);
+
+    auto texPath  = std::filesystem::path(SRC_DIR) / "assets/";
+    loadGlyphs(texPath.string() + jsonPath);
     
+}
+std::unordered_map<int, RawData::MSDFGlyph> MSDFText::loadGlyphs(const std::string& jsonFile)
+{
+    std::ifstream  f(jsonFile);
+    nlohmann::json j;
+    f >> j;
+
+    mMSDFAtlas.reset();
+
+    auto& atlas         = mMSDFAtlas;
+    atlas.width         = j["atlas"]["width"];
+    atlas.height        = j["atlas"]["height"];
+    atlas.distanceRange = j["atlas"]["distanceRange"];
+    atlas.emSize        = j["metrics"]["emSize"];
+    atlas.lineHeight    = j["metrics"]["lineHeight"];
+    atlas.ascender      = j["metrics"]["ascender"];
+    atlas.descender     = j["metrics"]["descender"];
+
+    auto& glyphMap = atlas.glyphs;
+    for (auto& g : j["glyphs"])
+    {
+        RawData::MSDFGlyph glyph;
+        glyph.advance = g["advance"];
+        if (g.contains("planeBounds"))
+        {
+            glyph.planeLeft   = g["planeBounds"]["left"];
+            glyph.planeBottom = g["planeBounds"]["bottom"];
+            glyph.planeRight  = g["planeBounds"]["right"];
+            glyph.planeTop    = g["planeBounds"]["top"];
+        }
+        else
+        {
+            glyph.planeLeft = glyph.planeBottom = glyph.planeRight = glyph.planeTop = 0;
+        }
+        if (g.contains("atlasBounds"))
+        {
+            auto& ab          = g["atlasBounds"];
+            glyph.atlasLeft   = float(ab["left"]) / atlas.width;
+            glyph.atlasBottom = float(ab["bottom"]) / atlas.height;
+            glyph.atlasRight  = float(ab["right"]) / atlas.width;
+            glyph.atlasTop    = float(ab["top"]) / atlas.height;
+        }
+        else
+        {
+            glyph.atlasLeft = glyph.atlasBottom = glyph.atlasRight = glyph.atlasTop = 0;
+        }
+        glyphMap[g["unicode"]] = glyph;
+    }
+    return glyphMap;
 }
 } // namespace Voxol::Test

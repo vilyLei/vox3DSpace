@@ -305,6 +305,14 @@ std::vector<unsigned char> createRGBGradientImage(int w, int h)
 }
 
 } // namespace ResUtils
+
+namespace RawData
+{
+void MSDFAtlas::reset() {
+    glyphs.clear();
+}
+}
+
 namespace Gpu
 {
 
