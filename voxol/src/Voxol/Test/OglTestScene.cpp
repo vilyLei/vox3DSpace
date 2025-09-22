@@ -37,6 +37,7 @@ void OglTestScene::initScene()
     pngUnit.objMat.setTo(360, 150, pngData.width, pngData.height);
     Gpu::buildTexDrawUnit(pngUnit, pngData);
 
+    msdfText.initialize("msdf/arial_atlas.png", "msdf/arial_atlas.json");
     
 }
 void OglTestScene::render(const Voxol::Math::Mat33& projM)

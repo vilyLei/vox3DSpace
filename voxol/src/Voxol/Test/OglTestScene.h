@@ -5,6 +5,7 @@
 #include "../Math/Mat33.h"
 #include "OglResUtils.h"
 #include "OglImage.h"
+#include "OglText.h"
 
 #include <iostream>
 #include <cmath>
@@ -36,6 +37,7 @@ private:
     Gpu::DrawingUnit redFormatexDrawUnit{};
     Gpu::DrawingUnit glyphDrawUnit{};
     Gpu::DrawingUnit pngUnit{};
+    MSDFText         msdfText{};
 };
 
 

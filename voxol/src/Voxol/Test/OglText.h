@@ -55,6 +55,7 @@ private:
     std::vector<Gpu::DrawingUnit> mUnits{};
     std::vector<RawData::TextGlyphData> mGlyphs{};
 };
+
 class MSDFText
 {
 public:
@@ -70,5 +71,6 @@ private:
     RawData::MSDFAtlas        mMSDFAtlas{};
 
 };
+
 } // namespace Voxol::Test
 #endif
