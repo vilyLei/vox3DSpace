@@ -59,8 +59,55 @@ float aa(float d) {
 
 const char* sdfFragSourceFuncs = R"(
     
-float circleSdf(float radius, vec2 center, vec2 xy) {
+float sdfCircle(float radius, vec2 center, vec2 xy) {
     return length(xy - center) - radius;
+}
+// ---------------- Ring / Donut ----------------
+float sdfRing(vec2 p, float radius, float thickness) {
+    return abs(length(p) - radius) - thickness * 0.5;
+}
+
+// ---------------- Rectangle ----------------
+float sdfRect(vec2 p, vec2 size) {
+    vec2 d = abs(p) - size;
+    return length(max(d, 0.0)) + min(max(d.x, d.y), 0.0);
+}
+
+// ---------------- Rounded Rectangle ----------------
+float sdfRoundedRect(vec2 p, vec2 size, float radius) {
+    vec2 d = abs(p) - size;
+    return length(max(d, 0.0)) - radius;
+}
+
+// ---------------- Triangle ----------------
+// Equilateral triangle centered at origin
+float sdfTriangle(vec2 p, float size) {
+    const float k = sqrt(3.0);
+    p.x = abs(p.x) - size;
+    p.y = p.y + size/k;
+    if( p.x + k*p.y > 0.0 ) p = vec2(p.x - k*p.y, -k*p.x - p.y)/2.0;
+    p.x -= clamp(p.x, -2.0*size, 0.0);
+    return -length(p)*sign(p.y);
+}
+
+// ---------------- Star ----------------
+float sdfStar(vec2 p, float rOuter, float rInner, int n) {
+    float angle = atan(p.y, p.x);
+    float radius = length(p);
+    float k = float(n)*0.5;
+    float m = cos(mod(angle*k,3.14159265) - 3.14159265*0.5);
+    float d = radius - mix(rOuter, rInner, m);
+    return d;
+}
+
+// ---------------- Sector ----------------
+float sdfSector(vec2 p, float radius, vec2 dirStart, vec2 dirEnd) {
+    float len = length(p);
+    float dRadius = len - radius;
+    float sideStart = - (dirStart.x * p.y - dirStart.y * p.x); // cross(dirStart, p)
+    float sideEnd   =   (dirEnd.x   * p.y - dirEnd.y   * p.x); // cross(dirEnd, p)
+    float dAngle = max(sideStart, sideEnd);
+    return max(dRadius, dAngle);
 }
 
 )";
@@ -71,7 +118,7 @@ const char* sdfCircleFragSource = R"(
 void main()
 {
     vec2 center = vec2(0.5, 0.5);
-    float d = circleSdf(0.5, center, v_uv);
+    float d = sdfCircle(0.5, center, v_uv);
     
     float alpha = aa(d) * u_color.a;
 
