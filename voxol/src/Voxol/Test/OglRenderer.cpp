@@ -1,10 +1,9 @@
 #include "OglRenderer.h"
+#include <chrono>
 
 namespace Voxol::Test
 {
 
-GLuint ctxCurrWidth  = 1200;
-GLuint ctxCurrHeight = 800;
 // Is called whenever a key is pressed/released via GLFW
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode)
 {
@@ -29,10 +28,25 @@ void mouseEnter_callback(GLFWwindow* window, int flag)
 //{
 //    std::cout << "mouse button(xoffset=" << xoffset << ", yoffset=" << yoffset << ")" << std::endl;
 //}
-void framebuffer_size_callback(GLFWwindow* window, int width, int height)
+
+
+GLuint OglRenderer::ctxCurrWidth = 1200;
+GLuint OglRenderer::ctxCurrHeight = 800;
+
+void OglRenderer::framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
-    ctxCurrWidth  = width;
-    ctxCurrHeight = height;
+    //ctxCurrWidth  = width;
+    //ctxCurrHeight = height;
+    int fw;
+    int fh;
+    glfwGetFramebufferSize(window, &fw, &fh);
+    ctxCurrWidth  = fw;
+    ctxCurrHeight = fh;
+    auto renderer = static_cast<OglRenderer*>(glfwGetWindowUserPointer(window));
+    if (renderer)
+    {
+        renderer->dirty = true;
+    }
 }
 
 void OglRenderer::scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
@@ -134,17 +148,20 @@ int OglRenderer::initCtx()
     //    std::cout << "extends info:" << info << std::endl;
     //}
     // Define the viewport dimensions
-    glViewport(0, 0, ctxCurrWidth, ctxCurrHeight);
+    //glViewport(0, 0, ctxCurrWidth, ctxCurrHeight);
+    int fw;
+    int fh;
+    glfwGetFramebufferSize(window, &fw, &fh);
+    ctxCurrWidth = fw;
+    ctxCurrHeight = fh;
 
     initRenderRes();
     // Game loop
     while (!glfwWindowShouldClose(window))
     {
+        std::this_thread::sleep_for(std::chrono::milliseconds(10));
         // Check if any events have been activiated (key pressed, mouse moved etc.) and call corresponding response functions
         glfwPollEvents();
-
-        //ctxWidth  = ctxCurrWidth;
-        //ctxHeight = ctxCurrHeight;
 
         glViewport(0, 0, ctxCurrWidth, ctxCurrHeight);
         // Render

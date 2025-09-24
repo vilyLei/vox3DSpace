@@ -49,7 +49,10 @@ private:
     static void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
     static void mousePos_callback(GLFWwindow* window, double posX, double posY);
     static void mouseButton_callback(GLFWwindow* window, int sign, int flag, int type);
+    static void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 
+    static GLuint ctxCurrWidth;
+    static GLuint ctxCurrHeight;
 
     void setMouseXY(float x, float y);
 
