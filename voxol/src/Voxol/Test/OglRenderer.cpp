@@ -12,29 +12,66 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
         glfwSetWindowShouldClose(window, GL_TRUE);
 }
-void mousePos_callback(GLFWwindow* window, double posX, double posY)
-{
-    //std::cout << "mouse pos(" << posX << ", " << posY << ")" << std::endl;
-}
-void mouseButton_callback(GLFWwindow* window, int sign, int flag, int type)
-{
-    std::cout << "mouse button(sign=" << sign << ", flag=" << flag << ",type=" << type << ")" << std::endl;
-}
+//void mousePos_callback(GLFWwindow* window, double posX, double posY)
+//{
+//    //std::cout << "mouse pos(" << posX << ", " << posY << ")" << std::endl;
+//}
+//void mouseButton_callback(GLFWwindow* window, int sign, int flag, int type)
+//{
+//    std::cout << "mouse button(sign=" << sign << ", flag=" << flag << ",type=" << type << ")" << std::endl;
+//}
 void mouseEnter_callback(GLFWwindow* window, int flag)
 {
 
     std::cout << "mouse enter(flag=" << flag << ")" << std::endl;
 }
-void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
-{
-    std::cout << "mouse button(xoffset=" << xoffset << ", yoffset=" << yoffset << ")" << std::endl;
-}
+//void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
+//{
+//    std::cout << "mouse button(xoffset=" << xoffset << ", yoffset=" << yoffset << ")" << std::endl;
+//}
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
     ctxCurrWidth  = width;
     ctxCurrHeight = height;
 }
 
+void OglRenderer::scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
+{
+    //std::cout << "mouse button( xoffset=" << xoffset << ", yoffset=" << yoffset << ")" << std::endl;
+    auto renderer = static_cast<OglRenderer*>(glfwGetWindowUserPointer(window));
+    if (renderer)
+    {
+        auto  mouseActType = 4;
+        auto& mousePos     = renderer->mousePos;
+        Voxol::Motion::UIMouseParam param{mousePos.x, mousePos.y, mouseActType, yoffset};
+        //renderer->setMouseParams(mousePos.x, mousePos.y, mouseActType, yoffset);
+        renderer->setMouseParams(param);
+    }
+}
+void OglRenderer::mousePos_callback(GLFWwindow* window, double posX, double posY)
+{
+    std::cout << "OglRenderer::mousePos_callback(), mouse pos(" << posX << ", " << posY << ")" << std::endl;
+    auto renderer = static_cast<OglRenderer*>(glfwGetWindowUserPointer(window));
+    if (renderer)
+    {
+        renderer->setMouseXY(posX, posY);
+    }
+}
+
+void OglRenderer::mouseButton_callback(GLFWwindow* window, int sign, int flag, int type)
+{
+    //std::cout << "mouse button( sign=" << sign << ", flag=" << flag << ",type=" << type << ")" << std::endl;
+    auto renderer = static_cast<OglRenderer*>(glfwGetWindowUserPointer(window));
+    if (renderer)
+    {
+        auto  btn          = sign + 1;
+        auto  mouseActType = flag > 0 ? btn * 10 + 1 : btn * 10 + 2;
+        auto& mousePos     = renderer->mousePos;
+        //renderer->setMouseParams(mousePos.x, mousePos.y, mouseActType, 0);
+        Voxol::Motion::UIMouseParam param{mousePos.x, mousePos.y, mouseActType, 0};
+        renderer->setMouseParams(param);
+    }
+}
 int OglRenderer::initCtx()
 {
     int ver_major = 3;
@@ -50,7 +87,7 @@ int OglRenderer::initCtx()
     glfwWindowHint(GLFW_RESIZABLE, GL_TRUE);
 
     // Create a GLFWwindow object that we can use for GLFW's functions
-    GLFWwindow* window = glfwCreateWindow(ctxWidth, ctxHeight, "VoxolModule", nullptr, nullptr);
+    GLFWwindow* window = glfwCreateWindow(ctxCurrWidth, ctxCurrHeight, "VoxolModule", nullptr, nullptr);
     if (window == nullptr)
     {
         std::cout << "Failed to create GLFW window" << std::endl;
@@ -58,6 +95,9 @@ int OglRenderer::initCtx()
         return -1;
     }
     glfwMakeContextCurrent(window);
+
+    glfwSetWindowUserPointer(window, this);
+
     // Set the required callback functions
     glfwSetKeyCallback(window, key_callback);
     glfwSetCursorPosCallback(window, mousePos_callback);
@@ -94,7 +134,7 @@ int OglRenderer::initCtx()
     //    std::cout << "extends info:" << info << std::endl;
     //}
     // Define the viewport dimensions
-    glViewport(0, 0, ctxWidth, ctxHeight);
+    glViewport(0, 0, ctxCurrWidth, ctxCurrHeight);
 
     initRenderRes();
     // Game loop
@@ -103,10 +143,10 @@ int OglRenderer::initCtx()
         // Check if any events have been activiated (key pressed, mouse moved etc.) and call corresponding response functions
         glfwPollEvents();
 
-        ctxWidth = ctxCurrWidth;
-        ctxHeight = ctxCurrHeight;
+        //ctxWidth  = ctxCurrWidth;
+        //ctxHeight = ctxCurrHeight;
 
-        glViewport(0, 0, ctxWidth, ctxHeight);
+        glViewport(0, 0, ctxCurrWidth, ctxCurrHeight);
         // Render
         // Clear the colorbuffer
         glClearColor(0.95f, 0.95f, 0.95f, 1.0f);
@@ -124,19 +164,47 @@ int OglRenderer::initCtx()
     return 0;
 }
 
+void OglRenderer::setMouseXY(float x, float y)
+{
+    mousePos             = {x, y};
+    if (!mousePos.isEqual(canvas.view.mousePos))
+    {
+        canvas.view.mousePos = mousePos;
+        setMouseParams({mousePos.x, mousePos.y, 3, 0});
+    }
+    //canvas.view.mousePos = {x, y};
+}
+
+void OglRenderer::setMouseParams(const Voxol::Motion::UIMouseParam& param)
+{
+    auto flag = mouseCtrl.setMouseParams(canvas.view, param);
+    dirty     = dirty || flag;
+}
 
 
 void OglRenderer::initRenderRes()
 {
-    mScene.initScene();    
+    mScene.initScene();
 }
 void OglRenderer::render()
 {
     using namespace Voxol::Math;
 
-    Mat33 projM;
-    projM.ortho(ctxWidth, ctxHeight);
-    mScene.render(projM);
+    //Mat33 projM;
+    //projM.ortho(ctxWidth, ctxHeight);
+
+    if (ctxWidth != ctxCurrWidth || ctxHeight != ctxCurrHeight)
+    {
+        ctxWidth = ctxCurrWidth;
+        ctxHeight = ctxCurrHeight;
+        canvas.view.projMat.ortho(ctxWidth, ctxHeight);
+        dirty = true;
+    }
+    Mat33 mat = canvas.view.projMat;
+    mat.append(canvas.view.viewMat);
+    mScene.render(mat);
+
+    dirty = false;
 }
 
 void OglRenderer::draw()

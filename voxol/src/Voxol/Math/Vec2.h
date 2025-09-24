@@ -16,6 +16,7 @@ public:
     Vec2 operator+(const Vec2& other) const;
     Vec2 operator-(const Vec2& other) const;
     Vec2 operator*(float s) const;
+    bool isEqual(const Vec2& pos) const;
 };
 } // namespace Voxol::Math
 

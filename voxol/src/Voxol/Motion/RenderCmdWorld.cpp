@@ -104,7 +104,10 @@ void RenderCmdWorld::setMouseXY(float x, float y)
 
 void RenderCmdWorld::setMouseParams(const UIMouseParam& param)
 {
-    dirty = dirty || mouseCtrl.setMouseParams(canvas.view, param);
+    //dirty = dirty || mouseCtrl.setMouseParams(canvas.view, param);
+
+    auto flag = mouseCtrl.setMouseParams(canvas.view, param);
+    dirty     = dirty || flag;
 }
 
 const uint8_t* RenderCmdWorld::cmdBuffer() const

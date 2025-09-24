@@ -5,6 +5,8 @@
 #include "../Math/Mat33.h"
 #include "OglResUtils.h"
 #include "OglTestScene.h"
+#include "../Motion/RenderCmdComp.h"
+#include "../Motion/UIMouseCtrl.h"
 
 #include <iostream>
 #include <cmath>
@@ -20,28 +22,41 @@ namespace Voxol::Test
 class OglRenderer
 {
 public:
-    OglRenderer()  = default;
+    OglRenderer()          = default;
     virtual ~OglRenderer() = default;
 
 public:
     void init();
 
 public:
-    GLuint         ctxWidth = 1200;
-    GLuint         ctxHeight = 900;
-    std::vector<uint8_t> cmdBuf{};
+    GLuint                              ctxWidth  = 8;
+    GLuint                              ctxHeight = 8;
+    std::vector<uint8_t>                cmdBuf{};
     std::function<void(GLuint, GLuint)> onDraw;
 
 private:
-
-    int initCtx();
+    int  initCtx();
     void initRenderRes();
     void render();
     void draw();
 
 
+    Voxol::Motion::Point2DDesc mousePos{};
+    Voxol::Motion::CanvasDesc  canvas{};
+    Voxol::Motion::UIMouseCtrl mouseCtrl{};
+
 private:
-    OglTestScene     mScene{};
+    static void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
+    static void mousePos_callback(GLFWwindow* window, double posX, double posY);
+    static void mouseButton_callback(GLFWwindow* window, int sign, int flag, int type);
+
+
+    void setMouseXY(float x, float y);
+
+    void setMouseParams(const Voxol::Motion::UIMouseParam& param);
+
+    OglTestScene mScene{};
+    bool         dirty = true;
 };
 
 
