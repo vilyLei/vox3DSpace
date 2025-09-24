@@ -7,6 +7,11 @@ namespace Voxol::Test
 
 void OglTestScene::initScene()
 {
+    if (voassModeFlag)
+    {
+        initVoassScene();
+        return;
+    }
     baseDrawUnit.color = {0.1f, 0.6, 0.3f, 1.0f};
     baseDrawUnit.objMat.setTo(100, 100, 200, 80);
     Gpu::buildBaseDrawUnit(baseDrawUnit);
@@ -43,28 +48,37 @@ void OglTestScene::initScene()
     msdfText.buildText(text, msdfTextDrawUnits, {300, 100}, 50);
     
 }
-void OglTestScene::render(const Voxol::Math::Mat33& projM)
+void OglTestScene::render(const Voxol::Math::Mat33& vpMat)
 {
-    baseDrawUnit.mvp = projM;
+    if (voassModeFlag)
+    {
+        renderVoass(vpMat);
+        return;
+    }
+    baseDrawUnit.mvp = vpMat;
     baseDrawUnit.draw();
 
-    texDrawUnit.mvp = projM;
+    texDrawUnit.mvp = vpMat;
     texDrawUnit.draw();
 
-    redFormatexDrawUnit.mvp = projM;
+    redFormatexDrawUnit.mvp = vpMat;
     redFormatexDrawUnit.draw();
 
-    glyphDrawUnit.mvp = projM;
+    glyphDrawUnit.mvp = vpMat;
     glyphDrawUnit.draw();
 
-    pngUnit.mvp = projM;
+    pngUnit.mvp = vpMat;
     pngUnit.draw();
 
     for (auto& unit : msdfTextDrawUnits)
     {
-        unit.mvp = projM;
+        unit.mvp = vpMat;
         unit.draw();
     }
 }
 
+void  OglTestScene::initVoassScene(){
+}
+void OglTestScene::renderVoass(const Voxol::Math::Mat33& vpMat) {
+}
 } // namespace Voxol::Test

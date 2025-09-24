@@ -507,7 +507,7 @@ void buildTexDrawUnit(DrawingUnit& unit, const RawData::Image2DBytesData& imgDat
     vert.buildTexRes();
 }
 
-void buildSDFDrawUnit(DrawingUnit& unit, Voass::Render::Shader::SDFShapeType type = Voass::Render::Shader::SDFShapeType::Circle) {
+void buildSDFDrawUnit(DrawingUnit& unit, Voass::Render::Shader::SDFShapeType type) {
 
     auto& shader = unit.shader;
     using namespace Voass::Render;

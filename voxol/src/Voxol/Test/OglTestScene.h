@@ -27,10 +27,16 @@ public:
 
 public:
     void initScene();
-    void render(const Voxol::Math::Mat33& projM);
+    void render(const Voxol::Math::Mat33& vpMat);
 
 
 private:
+
+    
+    void initVoassScene();
+    void renderVoass(const Voxol::Math::Mat33& vpMat);
+
+    bool voassModeFlag = true;
 
     Gpu::DrawingUnit baseDrawUnit{};
     Gpu::DrawingUnit texDrawUnit{};
