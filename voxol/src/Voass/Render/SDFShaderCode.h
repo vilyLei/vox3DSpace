@@ -15,7 +15,8 @@ enum class SDFShapeType : uint8_t
     Rect         = 0x4,
     RoundedRect  = 0x5,
     Triangle     = 0x6,
-    Star         = 0x7
+    Star         = 0x7,
+    Sector         = 0x8,
 };
 
 const char* getSdfVertShdCode();

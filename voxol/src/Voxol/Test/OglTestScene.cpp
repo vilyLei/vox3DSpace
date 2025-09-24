@@ -90,10 +90,20 @@ void  OglTestScene::initVoassScene(){
     //Gpu::buildSDFDrawUnit(sdfCircleUnit, Shader::SDFShapeType::MultiCircles);
 
     sdfMultiCirclesUnit.color = {0.6f, 0.0, 0.3f, 1.0f};
-    sdfMultiCirclesUnit.objMat.setTo(190, 100, 200, 200);
+    sdfMultiCirclesUnit.objMat.setTo(270, 100, 200, 200);
     //Gpu::buildSDFDrawUnit(sdfCircleUnit, Shader::SDFShapeType::Circle);
     Gpu::buildSDFDrawUnit(sdfMultiCirclesUnit, Shader::SDFShapeType::MultiCircles);
     //sdfMultiCirclesUnit
+    //sdfRingUnit
+
+    sdfSectorUnit.color = {0.1f, 0.3, 0.6f, 1.f};
+    sdfSectorUnit.objMat.setTo(100, 100, 200, 200);
+    Gpu::buildSDFDrawUnit(sdfSectorUnit, Shader::SDFShapeType::Sector);
+
+    sdfRingUnit.color = {0.5f, 0.1, 0.6f, 1.f};
+    sdfRingUnit.objMat.setTo(100, 100, 200, 200);
+    Gpu::buildSDFDrawUnit(sdfRingUnit, Shader::SDFShapeType::Ring);
+
 }
 void OglTestScene::renderVoass(const Voxol::Math::Mat33& vpMat) {
 
@@ -102,5 +112,9 @@ void OglTestScene::renderVoass(const Voxol::Math::Mat33& vpMat) {
     sdfCircleUnit.draw();
     sdfMultiCirclesUnit.mvp = vpMat;
     sdfMultiCirclesUnit.draw();
+    sdfSectorUnit.mvp = vpMat;
+    sdfSectorUnit.draw();
+    sdfRingUnit.mvp = vpMat;
+    sdfRingUnit.draw();
 }
 } // namespace Voxol::Test

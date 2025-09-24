@@ -100,7 +100,6 @@ float sdfStar(vec2 p, float rOuter, float rInner, int n) {
     return d;
 }
 
-// ---------------- Sector ----------------
 float sdfSector(vec2 p, float radius, vec2 dirStart, vec2 dirEnd) {
     float len = length(p);
     float dRadius = len - radius;
@@ -155,6 +154,34 @@ void main()
 }
 )";
 
+
+const char* sdfRingFragSource = R"(
+  
+void main()
+{
+    vec2 center = vec2(0.5, 0.5);
+    float d = sdfRing(v_uv - center, 0.4, 0.1);
+
+    float alpha = aa(d) * u_color.a;
+
+    fragColor = vec4(u_color.rgb * alpha, alpha);
+}
+)";
+
+
+const char* sdfSectorFragSource = R"(
+  
+void main()
+{
+    vec2 center = vec2(0.5, 0.5);
+    float d = sdfSector(v_uv - center, 0.5, vec2(-1.0, 0.2), vec2(0.5, 0.5));
+
+    float alpha = aa(d) * u_color.a;
+
+    fragColor = vec4(u_color.rgb * alpha, alpha);
+}
+)";
+
 const char* getSdfVertShdCode() {
     return sdfVertSource;
 }
@@ -171,14 +198,22 @@ const char* getSdfFragShdCode(SDFShapeType type)
             source += sdfMultiCirclesFragSource;
             break;
         case Voass::Render::Shader::SDFShapeType::Ring:
+            source += sdfRingFragSource;
             break;
         case Voass::Render::Shader::SDFShapeType::Rect:
+            source += sdfRingFragSource;
             break;
         case Voass::Render::Shader::SDFShapeType::RoundedRect:
+            source += sdfRingFragSource;
             break;
         case Voass::Render::Shader::SDFShapeType::Triangle:
+            source += sdfRingFragSource;
             break;
         case Voass::Render::Shader::SDFShapeType::Star:
+            source += sdfRingFragSource;
+            break;
+        case Voass::Render::Shader::SDFShapeType::Sector:
+            source += sdfSectorFragSource;
             break;
         default:
             source += sdfCircleFragSource;
