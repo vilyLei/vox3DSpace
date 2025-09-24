@@ -34,11 +34,13 @@ set(PHYSICS_DIR "${VOX_DIR}/Physics")
 set(UTIL_DIR "${VOX_DIR}/Util")
 set(TEST_DIR "${VOX_DIR}/Test")
 set(TASK_DIR "${VOX_DIR}/Task")
+
+set(VOASS_DIR "${SRC_DIR}/Voass")
+set(VOASS_RENDER_DIR "${VOASS_DIR}/Render")
+
 set(THIRDPARTY_INCLUDE "${SRC_DIR}/thirdPart/opengl/libx64/include")
 set(THIRDPARTY_LIB "${SRC_DIR}/thirdPart/opengl/libx64/lib")
-
-
-set(JSON_INCLUDE_DIR ${SRC_DIR}/thirdPart/json)
+set(JSON_INCLUDE_DIR "${SRC_DIR}/thirdPart/json")
 
 # ================== .h files dir setting ==================
 include_directories(
@@ -53,7 +55,11 @@ include_directories(
   ${UTIL_DIR}
   ${TEST_DIR}
   ${TASK_DIR}
+
+  ${VOASS_RENDER_DIR}
+
   ${THIRDPARTY_INCLUDE}
+  
   ${JSON_INCLUDE_DIR}
 )
 
@@ -69,6 +75,8 @@ file(GLOB UTIL_SRC "${UTIL_DIR}/*.cpp" "${UTIL_DIR}/*.h")
 file(GLOB TEST_SRC "${TEST_DIR}/*.cpp" "${TEST_DIR}/*.h")
 file(GLOB TASK_SRC "${TASK_DIR}/*.cpp" "${TASK_DIR}/*.h")
 
+file(GLOB VOASS_RENDER_SRC "${VOASS_RENDER_DIR}/*.cpp" "${VOASS_RENDER_DIR}/*.h")
+
 set(ALL_SOURCES
   ${RENDER_SRC}
   ${MATH_SRC}
@@ -80,6 +88,8 @@ set(ALL_SOURCES
   ${UTIL_SRC}
   ${TEST_SRC}
   ${TASK_SRC}
+
+  ${VOASS_RENDER_SRC}
 )
 
 source_group("Render" FILES ${RENDER_SRC})
@@ -92,6 +102,7 @@ source_group("Physics" FILES ${PHYSICS_SRC})
 source_group("Util" FILES ${UTIL_SRC})
 source_group("Test" FILES ${TEST_SRC})
 source_group("Task" FILES ${TASK_SRC})
+source_group("VoassRender" FILES ${VOASS_RENDER_SRC})
 
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Emscripten")

@@ -3,6 +3,7 @@
 
 #include "../Base/BaseDefine.h"
 #include "../Math/Mat33.h"
+#include "SDFShaderCode.h"
 
 #include <iostream>
 #include <cmath>
@@ -124,6 +125,7 @@ struct DrawingUnit
 
 void buildBaseDrawUnit(DrawingUnit& unit);
 void buildTexDrawUnit(DrawingUnit& unit, const RawData::Image2DBytesData& imgData = {});
+void buildSDFDrawUnit(DrawingUnit& unit, Voass::Render::Shader::SDFShapeType type = Voass::Render::Shader::SDFShapeType::Circle);
 void buildMSDFTexDrawUnit(
     DrawingUnit&                     unit,
     const RawData::Image2DBytesData& imgData,

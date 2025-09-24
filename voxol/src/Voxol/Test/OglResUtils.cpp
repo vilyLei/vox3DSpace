@@ -506,6 +506,19 @@ void buildTexDrawUnit(DrawingUnit& unit, const RawData::Image2DBytesData& imgDat
     auto& vert = unit.vertex;
     vert.buildTexRes();
 }
+
+void buildSDFDrawUnit(DrawingUnit& unit, Voass::Render::Shader::SDFShapeType type = Voass::Render::Shader::SDFShapeType::Circle) {
+
+    auto& shader = unit.shader;
+    using namespace Voass::Render;
+
+    shader.program   = ResUtils::createSahderProgram(Shader::getSdfVertShdCode(), Shader::getSdfFragShdCode(type));
+    shader.matrixLoc = glGetUniformLocation(shader.program, "u_matrix");
+    shader.colorLoc  = glGetUniformLocation(shader.program, "u_color");
+
+    auto& vert = unit.vertex;
+    vert.buildTexRes();
+}
 void buildMSDFTexDrawUnit(DrawingUnit& unit, const RawData::Image2DBytesData& imgData, const RawData::MSDFGlyph& glyph)
 {
     auto& shader = unit.shader;
