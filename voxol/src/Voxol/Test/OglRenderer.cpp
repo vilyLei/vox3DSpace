@@ -4,39 +4,22 @@
 namespace Voxol::Test
 {
 
-// Is called whenever a key is pressed/released via GLFW
-void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode)
+GLuint OglRenderer::ctxCurrWidth = 1200;
+GLuint OglRenderer::ctxCurrHeight = 800;
+
+void OglRenderer::key_callback(GLFWwindow* window, int key, int scancode, int action, int mode)
 {
     std::cout << "key code: " << key << std::endl;
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
         glfwSetWindowShouldClose(window, GL_TRUE);
 }
-//void mousePos_callback(GLFWwindow* window, double posX, double posY)
-//{
-//    //std::cout << "mouse pos(" << posX << ", " << posY << ")" << std::endl;
-//}
-//void mouseButton_callback(GLFWwindow* window, int sign, int flag, int type)
-//{
-//    std::cout << "mouse button(sign=" << sign << ", flag=" << flag << ",type=" << type << ")" << std::endl;
-//}
-void mouseEnter_callback(GLFWwindow* window, int flag)
+void OglRenderer::mouseEnter_callback(GLFWwindow* window, int flag)
 {
 
     std::cout << "mouse enter(flag=" << flag << ")" << std::endl;
 }
-//void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
-//{
-//    std::cout << "mouse button(xoffset=" << xoffset << ", yoffset=" << yoffset << ")" << std::endl;
-//}
-
-
-GLuint OglRenderer::ctxCurrWidth = 1200;
-GLuint OglRenderer::ctxCurrHeight = 800;
-
 void OglRenderer::framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
-    //ctxCurrWidth  = width;
-    //ctxCurrHeight = height;
     int fw;
     int fh;
     glfwGetFramebufferSize(window, &fw, &fh);
@@ -64,7 +47,7 @@ void OglRenderer::scroll_callback(GLFWwindow* window, double xoffset, double yof
 }
 void OglRenderer::mousePos_callback(GLFWwindow* window, double posX, double posY)
 {
-    std::cout << "OglRenderer::mousePos_callback(), mouse pos(" << posX << ", " << posY << ")" << std::endl;
+    //std::cout << "OglRenderer::mousePos_callback(), mouse pos(" << posX << ", " << posY << ")" << std::endl;
     auto renderer = static_cast<OglRenderer*>(glfwGetWindowUserPointer(window));
     if (renderer)
     {
@@ -147,8 +130,7 @@ int OglRenderer::initCtx()
     //    const GLubyte* info = glGetStringi(GL_EXTENSIONS, i);
     //    std::cout << "extends info:" << info << std::endl;
     //}
-    // Define the viewport dimensions
-    //glViewport(0, 0, ctxCurrWidth, ctxCurrHeight);
+
     int fw;
     int fh;
     glfwGetFramebufferSize(window, &fw, &fh);
@@ -162,18 +144,20 @@ int OglRenderer::initCtx()
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
         // Check if any events have been activiated (key pressed, mouse moved etc.) and call corresponding response functions
         glfwPollEvents();
+        if (dirty) {
 
-        glViewport(0, 0, ctxCurrWidth, ctxCurrHeight);
-        // Render
-        // Clear the colorbuffer
-        glClearColor(0.95f, 0.95f, 0.95f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
+            glViewport(0, 0, ctxCurrWidth, ctxCurrHeight);
+            // Render
+            // Clear the colorbuffer
+            glClearColor(0.95f, 0.95f, 0.95f, 1.0f);
+            glClear(GL_COLOR_BUFFER_BIT);
 
-        render();
-        // draw();
+            render();
+            // draw();
 
-        // Swap the screen buffers
-        glfwSwapBuffers(window);
+            // Swap the screen buffers
+            glfwSwapBuffers(window);
+        }
     }
 
     // Terminate GLFW, clearing any resources allocated by GLFW.

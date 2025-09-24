@@ -7,7 +7,7 @@ bool UIMouseCtrl::setMouseParams(ViewComponent& view, const UIMouseParam& param)
     auto  viewDirty = false;
     auto& mousePos  = view.mousePos;
     mousePos        = {param.x, param.y};
-    printf("UIMouseCtrl::setMouseParams(), param.type: %d, param.value: %f\n", param.type, param.value);
+    //printf("UIMouseCtrl::setMouseParams(), param.type: %d, param.value: %f\n", param.type, param.value);
     switch (param.type)
     {
         case 11:
