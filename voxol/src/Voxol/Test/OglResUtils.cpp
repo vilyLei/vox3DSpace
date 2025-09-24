@@ -454,11 +454,18 @@ void DrawingUnit::draw()
     bindGPU();
 
     glEnable(GL_BLEND);
-    glBlendFuncSeparate(
-        GL_SRC_ALPHA,
-        GL_ONE_MINUS_SRC_ALPHA,
-        GL_ONE,
-        GL_ONE_MINUS_SRC_ALPHA);
+    if (shader.textures.empty()) {
+
+        glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+    }
+    else
+    {
+        glBlendFuncSeparate(
+            GL_SRC_ALPHA,
+            GL_ONE_MINUS_SRC_ALPHA,
+            GL_ONE,
+            GL_ONE_MINUS_SRC_ALPHA);
+    }
 
     mvp.append(objMat);
 

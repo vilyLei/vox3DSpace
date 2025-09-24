@@ -22,10 +22,24 @@ const char* sdfFragSource = R"(#version 330 core
 uniform vec4      u_color;
 in vec2           v_uv;
 out vec4          fragColor;
+
+float circleSdf(float radius, vec2 center, vec2 xy) {
+    return length(xy - center) - radius;
+}
+
+float aa(float d) {
+    float factor = fwidth(d);
+    return clamp(0.5 - d / factor, 0.0, 1.0);
+}
+
 void              main()
 {
-    fragColor = texColor * u_color;
-    fragColor.xy *= v_uv.xy;
+    vec2 center = vec2(0.5, 0.5);
+    float d = circleSdf(0.5, center, v_uv);
+    
+    float alpha = aa(d) * u_color.a;
+
+    fragColor = vec4(u_color.rgb * alpha, alpha);
 }
 )";
 const char* getSdfVertShdCode() {
