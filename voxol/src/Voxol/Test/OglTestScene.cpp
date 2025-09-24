@@ -86,7 +86,8 @@ void  OglTestScene::initVoassScene(){
 
     sdfCircleUnit.color = {0.1f, 0.6, 0.3f, 1.0f};
     sdfCircleUnit.objMat.setTo(100, 100, 200, 200);
-    Gpu::buildSDFDrawUnit(sdfCircleUnit, Shader::SDFShapeType::Circle);
+    //Gpu::buildSDFDrawUnit(sdfCircleUnit, Shader::SDFShapeType::Circle);
+    Gpu::buildSDFDrawUnit(sdfCircleUnit, Shader::SDFShapeType::MultiCircles);
 }
 void OglTestScene::renderVoass(const Voxol::Math::Mat33& vpMat) {
 

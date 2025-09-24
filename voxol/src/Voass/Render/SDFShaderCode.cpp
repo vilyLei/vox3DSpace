@@ -140,6 +140,21 @@ void main()
 }
 )";
 
+const char* sdfMultiCirclesFragSource = R"(
+  
+void main()
+{
+    vec2 center0 = vec2(0.25, 0.25);
+    float d0 = sdfCircle(0.2, center0, v_uv);
+    vec2 center1 = vec2(0.65, 0.45);
+    float d1 = sdfCircle(0.3, center1, v_uv);
+    float d = smoothUnion(d0, d1, 0.2);
+    float alpha = aa(d) * u_color.a;
+
+    fragColor = vec4(u_color.rgb * alpha, alpha);
+}
+)";
+
 const char* getSdfVertShdCode() {
     return sdfVertSource;
 }
@@ -152,9 +167,8 @@ const char* getSdfFragShdCode(SDFShapeType type)
     source = head + funcs;
     switch (type)
     {
-        case Voass::Render::Shader::SDFShapeType::Circle:
-            break;
         case Voass::Render::Shader::SDFShapeType::MultiCircles:
+            source += sdfMultiCirclesFragSource;
             break;
         case Voass::Render::Shader::SDFShapeType::Ring:
             break;
@@ -167,9 +181,9 @@ const char* getSdfFragShdCode(SDFShapeType type)
         case Voass::Render::Shader::SDFShapeType::Star:
             break;
         default:
+            source += sdfCircleFragSource;
             break;
     }
-    source += sdfCircleFragSource;
     //printf("source: \n%s\n", source.data());
     return source.data();
 }
