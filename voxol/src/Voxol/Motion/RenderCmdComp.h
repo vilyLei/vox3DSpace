@@ -7,13 +7,6 @@
 
 namespace Voxol::Motion
 {
-//struct Point2DDesc
-//{
-//    float x{0};
-//    float y{0};
-//
-//    bool isEqual(const Point2DDesc& pos) const;
-//};
  
 using Point2DDesc = Voxol::Math::Vec2;
 

@@ -172,7 +172,6 @@ void OglRenderer::setMouseXY(float x, float y)
         canvas.view.mousePos = mousePos;
         setMouseParams({mousePos.x, mousePos.y, 3, 0});
     }
-    //canvas.view.mousePos = {x, y};
 }
 
 void OglRenderer::setMouseParams(const Voxol::Motion::UIMouseParam& param)
@@ -190,9 +189,6 @@ void OglRenderer::render()
 {
     using namespace Voxol::Math;
 
-    //Mat33 projM;
-    //projM.ortho(ctxWidth, ctxHeight);
-
     if (ctxWidth != ctxCurrWidth || ctxHeight != ctxCurrHeight)
     {
         ctxWidth = ctxCurrWidth;
@@ -200,9 +196,12 @@ void OglRenderer::render()
         canvas.view.projMat.ortho(ctxWidth, ctxHeight);
         dirty = true;
     }
-    Mat33 mat = canvas.view.projMat;
-    mat.append(canvas.view.viewMat);
-    mScene.render(mat);
+    //if (dirty)
+    //{
+        Mat33 mat = canvas.view.projMat;
+        mat.append(canvas.view.viewMat);
+        mScene.render(mat);
+    //}
 
     dirty = false;
 }

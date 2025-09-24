@@ -4,11 +4,6 @@
 namespace Voxol::Motion
 {
 
-//bool Point2DDesc::isEqual(const Point2DDesc& pos) const
-//{
-//    return std::abs(pos.x - x) < 1e-5f && std::abs(pos.y - y) < 1e-5f;
-//}
-
 bool SizeDesc::isEqual(const SizeDesc& desc) const
 {
     return std::abs(desc.width - width) < 1e-5f && std::abs(desc.height - height) < 1e-5f;
