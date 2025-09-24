@@ -110,6 +110,20 @@ float sdfSector(vec2 p, float radius, vec2 dirStart, vec2 dirEnd) {
     return max(dRadius, dAngle);
 }
 
+float intersect(float a, float b) { return max(a, b); }
+float union(float a, float b) { return min(a, b); }
+float subtract(float a, float b) { return max(a, -b); }
+
+float smoothUnion(float d1, float d2, float k) {
+    float h = clamp(0.5 + 0.5*(d2 - d1)/k, 0.0, 1.0);
+    return mix(d2, d1, h) - k*h*(1.0 - h);
+}
+float smoothSubtract(float d1, float d2, float k) {
+    return smoothUnion(d1, -d2, k);
+}
+float smoothIntersect(float d1, float d2, float k) {
+    return -smoothUnion(-d1, -d2, k);
+}
 )";
 
 
