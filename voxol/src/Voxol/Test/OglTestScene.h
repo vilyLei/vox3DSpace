@@ -48,6 +48,7 @@ private:
 
     
     Gpu::DrawingUnit sdfCircleUnit{};
+    Gpu::DrawingUnit sdfMultiCirclesUnit{};
 };
 
 
