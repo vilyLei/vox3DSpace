@@ -100,9 +100,15 @@ void  OglTestScene::initVoassScene(){
     sdfSectorUnit.objMat.setTo(100, 100, 200, 200);
     Gpu::buildSDFDrawUnit(sdfSectorUnit, Shader::SDFShapeType::Sector);
 
-    sdfRingUnit.color = {0.5f, 0.1, 0.6f, 1.f};
+    sdfRingUnit.color = {0.1f, 0.5, 0.6f, 1.f};
     sdfRingUnit.objMat.setTo(100, 100, 200, 200);
     Gpu::buildSDFDrawUnit(sdfRingUnit, Shader::SDFShapeType::Ring);
+
+    //sdfRoundedRectUnit
+
+    sdfRoundedRectUnit.color = {0.2f, 0.7, 0.3f, 1.f};
+    sdfRoundedRectUnit.objMat.setTo(300, 200, 200, 200);
+    Gpu::buildSDFDrawUnit(sdfRoundedRectUnit, Shader::SDFShapeType::RoundedRect);
 
 }
 void OglTestScene::renderVoass(const Voxol::Math::Mat33& vpMat) {
@@ -110,11 +116,17 @@ void OglTestScene::renderVoass(const Voxol::Math::Mat33& vpMat) {
     
     sdfCircleUnit.mvp = vpMat;
     sdfCircleUnit.draw();
+
     sdfMultiCirclesUnit.mvp = vpMat;
     sdfMultiCirclesUnit.draw();
+
     sdfSectorUnit.mvp = vpMat;
     sdfSectorUnit.draw();
+
     sdfRingUnit.mvp = vpMat;
     sdfRingUnit.draw();
+
+    sdfRoundedRectUnit.mvp = vpMat;
+    sdfRoundedRectUnit.draw();
 }
 } // namespace Voxol::Test
