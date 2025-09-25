@@ -52,6 +52,7 @@ private:
     Gpu::DrawingUnit sdfRingUnit{};
     Gpu::DrawingUnit sdfSectorUnit{};
     Gpu::DrawingUnit sdfRoundedRectUnit{};
+    Gpu::DrawingUnit sdfTriangleUnit{};
 };
 
 

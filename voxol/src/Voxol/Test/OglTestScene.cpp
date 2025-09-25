@@ -110,6 +110,11 @@ void  OglTestScene::initVoassScene(){
     sdfRoundedRectUnit.objMat.setTo(300, 200, 200, 200);
     Gpu::buildSDFDrawUnit(sdfRoundedRectUnit, Shader::SDFShapeType::RoundedRect);
 
+    sdfTriangleUnit.color = {0.4f, 0.2, 0.2f, 1.f};
+    sdfTriangleUnit.objMat.setTo(300, 300, 200, 200);
+    Gpu::buildSDFDrawUnit(sdfTriangleUnit, Shader::SDFShapeType::Triangle);
+    
+
 }
 void OglTestScene::renderVoass(const Voxol::Math::Mat33& vpMat) {
 
@@ -128,5 +133,9 @@ void OglTestScene::renderVoass(const Voxol::Math::Mat33& vpMat) {
 
     sdfRoundedRectUnit.mvp = vpMat;
     sdfRoundedRectUnit.draw();
+
+    sdfTriangleUnit.mvp = vpMat;
+    sdfTriangleUnit.draw();
+    //
 }
 } // namespace Voxol::Test

@@ -249,6 +249,24 @@ void main()
 }
 )";
 
+
+const char* sdfTriangleFragSource = R"(
+  
+void main()
+{
+    vec2 center = vec2(0.5, 0.5);
+    float d = sdfTriangle(v_uv - center, 0.3);
+
+    //float d1 = sdfCircle(v_uv - center, 0.2);
+    //d = smoothIntersect(-d1, -d, 0.2);
+    ////d = smoothUnion(d, d1, 0.5);
+
+    float alpha = aa(d) * u_color.a;
+
+    fragColor = vec4(u_color.rgb * alpha, alpha);
+}
+)";
+
 const char* getSdfVertShdCode() {
     return sdfVertSource;
 }
@@ -275,7 +293,7 @@ const char* getSdfFragShdCode(SDFShapeType type)
             source += sdfRoundedRectFragSource;
             break;
         case Voass::Render::Shader::SDFShapeType::Triangle:
-            source += sdfRingFragSource;
+            source += sdfTriangleFragSource;
             break;
         case Voass::Render::Shader::SDFShapeType::Star:
             source += sdfRingFragSource;
