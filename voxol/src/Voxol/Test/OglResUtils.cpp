@@ -514,6 +514,29 @@ void buildTexDrawUnit(DrawingUnit& unit, const RawData::Image2DBytesData& imgDat
     vert.buildTexRes();
 }
 
+void buildTexDrawUnitFromTex(DrawingUnit& unit, GLuint tex, bool uvFlipY)
+{
+
+    auto& shader = unit.shader;
+
+    shader.program   = ResUtils::createSahderProgram(ResUtils::vertTexSource, ResUtils::fragTexSource);
+    shader.matrixLoc = glGetUniformLocation(shader.program, "u_matrix");
+    shader.colorLoc  = glGetUniformLocation(shader.program, "u_color");
+    auto texLoc      = glGetUniformLocation(shader.program, "u_tex0");
+    shader.texLocs.push_back(texLoc);
+    shader.textures.push_back(tex);
+
+    auto& vert = unit.vertex;
+    if (uvFlipY)
+    {
+        vert.buildTexRes();
+    }
+    else
+    {
+        vert.buildTexResFlipYUvs();
+    }
+}
+
 void buildSDFDrawUnit(DrawingUnit& unit, Voass::Render::Shader::SDFShapeType type, bool clip)
 {
     if (clip)
