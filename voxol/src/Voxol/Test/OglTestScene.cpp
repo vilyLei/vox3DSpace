@@ -84,11 +84,12 @@ void  OglTestScene::initVoassScene(){
 
     //Gpu::DrawingUnit sdfCircleUnit{};
 
-    sdfCircleUnit.color = {0.1f, 0.6, 0.3f, 1.0f};
+    sdfCircleUnit.color = {0.9f, 0.0, 0.3f, 1.0f};
     sdfCircleUnit.objMat.setTo(100, 100, 200, 200);
-    Gpu::buildSDFDrawUnit(sdfCircleUnit, Shader::SDFShapeType::Circle);
+    sdfCircleUnit.blendMode = 2;
+    Gpu::buildSDFDrawUnit(sdfCircleUnit, Shader::SDFShapeType::Circle, true);
     //Gpu::buildSDFDrawUnit(sdfCircleUnit, Shader::SDFShapeType::MultiCircles);
-
+    return;
     sdfMultiCirclesUnit.color = {0.6f, 0.0, 0.3f, 1.0f};
     sdfMultiCirclesUnit.objMat.setTo(270, 100, 200, 200);
     //Gpu::buildSDFDrawUnit(sdfCircleUnit, Shader::SDFShapeType::Circle);
@@ -122,6 +123,11 @@ void OglTestScene::renderVoass(const Voxol::Math::Mat33& vpMat) {
     sdfCircleUnit.mvp = vpMat;
     sdfCircleUnit.draw();
 
+    sdfCircleUnit.color = {0.7f, 0.7, 0.7f, 1.0f};
+    sdfCircleUnit.mvp = vpMat;
+    sdfCircleUnit.draw();
+
+    return;
     sdfMultiCirclesUnit.mvp = vpMat;
     sdfMultiCirclesUnit.draw();
 

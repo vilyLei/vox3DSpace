@@ -454,7 +454,7 @@ void DrawingUnit::draw()
     bindGPU();
 
     glEnable(GL_BLEND);
-    if (shader.textures.empty()) {
+    if (blendMode < 2 && shader.textures.empty()) {
 
         glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
     }
@@ -514,12 +514,13 @@ void buildTexDrawUnit(DrawingUnit& unit, const RawData::Image2DBytesData& imgDat
     vert.buildTexRes();
 }
 
-void buildSDFDrawUnit(DrawingUnit& unit, Voass::Render::Shader::SDFShapeType type) {
+void buildSDFDrawUnit(DrawingUnit& unit, Voass::Render::Shader::SDFShapeType type, bool clip)
+{
 
     auto& shader = unit.shader;
     using namespace Voass::Render;
 
-    shader.program   = ResUtils::createSahderProgram(Shader::getSdfVertShdCode(), Shader::getSdfFragShdCode(type));
+    shader.program   = ResUtils::createSahderProgram(Shader::getSdfVertShdCode(), Shader::getSdfFragShdCode(type, clip));
     shader.matrixLoc = glGetUniformLocation(shader.program, "u_matrix");
     shader.colorLoc  = glGetUniformLocation(shader.program, "u_color");
 

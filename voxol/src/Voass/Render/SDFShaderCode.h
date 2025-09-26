@@ -20,7 +20,7 @@ enum class SDFShapeType : uint8_t
 };
 
 const char* getSdfVertShdCode();
-const char* getSdfFragShdCode(SDFShapeType type);
+const char* getSdfFragShdCode(SDFShapeType type, bool clip = false);
 } // namespace Shader
 } // namespace Voass::Render
 #endif

@@ -118,6 +118,7 @@ struct DrawingUnit
     std::array<float, 4> color{1.0f, 1.0f, 1.0f, 1.0f};
     Voxol::Math::Mat33   objMat{};
     Voxol::Math::Mat33   mvp{};
+    int                  blendMode = 1;
 
     void bindGPU();
     void draw();
@@ -125,7 +126,7 @@ struct DrawingUnit
 
 void buildBaseDrawUnit(DrawingUnit& unit);
 void buildTexDrawUnit(DrawingUnit& unit, const RawData::Image2DBytesData& imgData = {});
-void buildSDFDrawUnit(DrawingUnit& unit, Voass::Render::Shader::SDFShapeType type = Voass::Render::Shader::SDFShapeType::Circle);
+void buildSDFDrawUnit(DrawingUnit& unit, Voass::Render::Shader::SDFShapeType type = Voass::Render::Shader::SDFShapeType::Circle, bool clip = false);
 void buildMSDFTexDrawUnit(
     DrawingUnit&                     unit,
     const RawData::Image2DBytesData& imgData,

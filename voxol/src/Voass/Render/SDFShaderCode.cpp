@@ -57,6 +57,17 @@ float aa(float d) {
 }
 )";
 
+
+const char* sdfFragSourceClipDef = R"(
+
+#define SDF_COLOR_CLIP 1
+
+vec4 clipSdfColor(vec4 c4, vec4 bgColor4, float d) {
+//fragColor = d > 0.5 ? u_color : vec4(u_color.xyz, 0.0);
+    return d > 0.3 ? vec4(mix(bgColor4.xyz, c4.xyz, d), c4.w) : vec4(bgColor4.xyz, 0.0);
+}
+)";
+
 const char* sdfFragSourceFuncs = R"(
     
 float sdfCircleBase(float radius, vec2 center, vec2 xy) {
@@ -65,18 +76,16 @@ float sdfCircleBase(float radius, vec2 center, vec2 xy) {
 float sdfCircle(vec2 p, float r) {
     return length(p) - r;
 }
-// ---------------- Ring / Donut ----------------
+
 float sdfRing(vec2 p, float radius, float thickness) {
     return abs(length(p) - radius) - thickness * 0.5;
 }
 
-// ---------------- Rectangle ----------------
 float sdfRect(vec2 p, vec2 size) {
     vec2 d = abs(p) - size;
     return length(max(d, 0.0)) + min(max(d.x, d.y), 0.0);
 }
 
-// ---------------- Rounded Rectangle ----------------
 float sdfRoundedRect(vec2 p, vec2 size, float radius) {
     vec2 d = abs(p) - size;
     return length(max(d, 0.0)) - radius;
@@ -93,7 +102,7 @@ float sdfTriangle(vec2 p, float size) {
     return -length(p)*sign(p.y);
 }
 
-// ---------------- Star ----------------
+
 float sdfStar(vec2 p, float rOuter, float rInner, int n) {
     float angle = atan(p.y, p.x);
     float radius = length(p);
@@ -174,7 +183,8 @@ float buildRoundRect(vec2 globalPV, vec2 rectCV, vec2 rectHalfSize, vec4 radius4
     float d = union4(d0, d1, d2, d3);
 
     float rd = sdfRect(globalPV - rectCV, rectHalfSize);
-    d =  subtract(rd, d);
+    //d =  subtract(rd, d);
+    d = max(rd, -d);
     return d;
 }
 )";
@@ -186,9 +196,13 @@ void main()
     vec2 center = vec2(0.5, 0.5);
     float d = sdfCircle( v_uv - center, 0.5 );
     
-    float alpha = aa(d) * u_color.a;
-
+    d = aa(d);
+#ifndef SDF_COLOR_CLIP
+    float alpha = d * u_color.a;
     fragColor = vec4(u_color.rgb * alpha, alpha);
+#else
+    fragColor = clipSdfColor(u_color, vec4(0.95,0.95,0.95, 1.0), d);
+#endif
 }
 )";
 
@@ -200,7 +214,7 @@ void main()
     float d0 = sdfCircle(v_uv - center0, 0.2);
     vec2 center1 = vec2(0.65, 0.45);
     float d1 = sdfCircle(v_uv - center1, 0.3);
-    float d = smoothUnion(d0, d1, 0.2);
+    float d = smoothUnion(d0, d1, 0.02);
     float alpha = aa(d) * u_color.a;
 
     fragColor = vec4(u_color.rgb * alpha, alpha);
@@ -241,7 +255,7 @@ const char* sdfRoundedRectFragSource = R"(
 void main()
 {
     vec2 center = vec2(0.5, 0.5);
-    float d = buildRoundRect(v_uv, center, vec2(0.3, 0.3), vec4(0.2, 0.1, 0.3, 0.1));
+    float d = buildRoundRect(v_uv, center, vec2(0.3, 0.3), vec4(0.2, 0.1, 0.4, 0.1));
 
     float alpha = aa(d) * u_color.a;
 
@@ -255,11 +269,12 @@ const char* sdfTriangleFragSource = R"(
 void main()
 {
     vec2 center = vec2(0.5, 0.5);
+    vec2 center1 = vec2(0.7, 0.6);
     float d = sdfTriangle(v_uv - center, 0.3);
 
-    //float d1 = sdfCircle(v_uv - center, 0.2);
+    float d1 = sdfCircle(v_uv - center1, 0.2);
     //d = smoothIntersect(-d1, -d, 0.2);
-    ////d = smoothUnion(d, d1, 0.5);
+    d = smoothUnion(d, d1, 0.2);
 
     float alpha = aa(d) * u_color.a;
 
@@ -272,11 +287,17 @@ const char* getSdfVertShdCode() {
 }
 std::string source{};
 
-const char* getSdfFragShdCode(SDFShapeType type)
+const char* getSdfFragShdCode(SDFShapeType type, bool clip)
 {
     std::string head = sdfFragSourceHead;
     std::string funcs = sdfFragSourceFuncs;
-    source = head + funcs;
+    source = head;
+    if (clip)
+    {
+        source += sdfFragSourceClipDef;
+    }
+    source += funcs;
+
     switch (type)
     {
         case Voass::Render::Shader::SDFShapeType::MultiCircles:
@@ -305,7 +326,7 @@ const char* getSdfFragShdCode(SDFShapeType type)
             source += sdfCircleFragSource;
             break;
     }
-    //printf("source: \n%s\n", source.data());
+    printf("source: \n%s\n", source.data());
     return source.data();
 }
 }
