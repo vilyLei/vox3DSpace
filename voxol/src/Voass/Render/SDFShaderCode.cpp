@@ -79,6 +79,7 @@ vec4 buildFragColor(vec4 color4, float d) {
     return clipSdfColor(color4, fgColor, d);
 #endif
 }
+
 float sdfCircleBase(float radius, vec2 center, vec2 xy) {
     return length(xy - center) - radius;
 }
@@ -158,6 +159,18 @@ float smoothUnion4(float d0, float d1, float d2, float d3, float k) {
     return d;
 }
 
+vec4 smoothUnion(vec4 d1, vec4 d2, float k) {
+    float h = clamp(0.5 + 0.5 * (d2.w - d1.w) / k, 0.0, 1.0);
+    float d = mix(d2.w, d1.w, h) - k * h * (1.0 - h);
+    vec3 col = mix(d1.xyz, d2.xyz, h);
+    return vec4(col, d);
+}
+
+vec4 smoothUnionVec4(vec4 c1, vec4 c2, float d1, float d2, float k) {
+    float h = clamp(0.5 + 0.5 * (d2 - d1) / k, 0.0, 1.0);
+    return mix(c1, c2, h);
+}
+
 )";
 
 const char* sdfFragSourceRoundedRetFuncs = R"(
@@ -217,9 +230,15 @@ void main()
     float d0 = sdfCircle(v_uv - center0, 0.2);
     vec2 center1 = vec2(0.65, 0.45);
     float d1 = sdfCircle(v_uv - center1, 0.3);
-    float d = smoothUnion(d0, d1, 0.02);
     
-    fragColor = buildFragColor(u_color, d);
+    vec4 c0 = vec4(u_color.xyz, d0);
+    vec4 c1 = vec4(vec3(0.0,0.5, 0.0), d1);
+    float d = smoothUnion(d0, d1, 0.02);
+    //vec4 cd = smoothUnion(c0, c1, 0.2);
+    //float d = cd.w;
+    //cd.a = u_color.a;
+    vec4 cd = smoothUnionVec4(vec4(0.0, 0.5, 0.0, 0.5), u_color, d0, d1, 0.2);
+    fragColor = buildFragColor(cd, d);
 }
 )";
 
@@ -328,7 +347,7 @@ const char* getSdfFragShdCode(SDFShapeType type, bool clip)
             source += sdfCircleFragSource;
             break;
     }
-    printf("source: \n%s\n", source.data());
+    //printf("source: \n%s\n", source.data());
     return source.data();
 }
 }
