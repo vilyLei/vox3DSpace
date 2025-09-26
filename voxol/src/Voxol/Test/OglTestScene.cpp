@@ -20,7 +20,13 @@ void OglTestScene::initScene()
     texDrawUnit.objMat.setTo(150, 70, 100, 220);
     Gpu::buildTexDrawUnit(texDrawUnit);
 
-    redFormatexDrawUnit.color = {0.3f, 0.0, 0.3f, 1.0f};
+
+    static float time        = 0.0f;
+
+    time += 0.1f;
+
+    redFormatexDrawUnit.color = {0.2f + std::abs(std::cos(time)) * 0.5f, 0.0, 0.3f, 1.0f};
+
     redFormatexDrawUnit.objMat.setTo(220, 220, 70, 70);
     Gpu::buildRedFormatTexDrawUnit(redFormatexDrawUnit);
 
@@ -127,6 +133,10 @@ void OglTestScene::renderVoass(const Voxol::Math::Mat33& vpMat) {
 
     sdfMultiCirclesUnit.mvp = vpMat;
     sdfMultiCirclesUnit.draw();
+
+    //static float time = 0.0f;
+    //time += 0.1f;
+    //sdfMultiCirclesUnit.color = {0.2f + std::abs(std::cos(time)) * 0.5f, 0.0, 0.3f, 1.0f};
 
     sdfMultiCirclesUnit.color = {0.7f, 0.7, 0.7f, 1.0f};
     sdfMultiCirclesUnit.mvp = vpMat;
