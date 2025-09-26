@@ -6,6 +6,7 @@
 #include "OglResUtils.h"
 #include "OglImage.h"
 #include "OglText.h"
+#include "OglFbo.h"
 
 #include <iostream>
 #include <cmath>
@@ -37,6 +38,8 @@ private:
     void renderVoass(const Voxol::Math::Mat33& vpMat);
 
     bool voassModeFlag = true;
+
+    OglFbo mFbo{};
 
     Gpu::DrawingUnit baseDrawUnit{};
     Gpu::DrawingUnit texDrawUnit{};
