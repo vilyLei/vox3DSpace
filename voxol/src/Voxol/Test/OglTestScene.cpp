@@ -83,11 +83,10 @@ void  OglTestScene::initVoassScene(){
     using namespace Voass::Render;
 
     //Gpu::DrawingUnit sdfCircleUnit{};
-
+    bool colorClip      = true;
     sdfCircleUnit.color = {0.9f, 0.0, 0.3f, 1.0f};
     sdfCircleUnit.objMat.setTo(100, 100, 200, 200);
-    sdfCircleUnit.blendMode = 2;
-    Gpu::buildSDFDrawUnit(sdfCircleUnit, Shader::SDFShapeType::Circle, true);
+    Gpu::buildSDFDrawUnit(sdfCircleUnit, Shader::SDFShapeType::Circle, colorClip);
     //Gpu::buildSDFDrawUnit(sdfCircleUnit, Shader::SDFShapeType::MultiCircles);
     return;
     sdfMultiCirclesUnit.color = {0.6f, 0.0, 0.3f, 1.0f};

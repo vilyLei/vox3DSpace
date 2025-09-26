@@ -516,6 +516,8 @@ void buildTexDrawUnit(DrawingUnit& unit, const RawData::Image2DBytesData& imgDat
 
 void buildSDFDrawUnit(DrawingUnit& unit, Voass::Render::Shader::SDFShapeType type, bool clip)
 {
+    if (clip)
+        unit.blendMode = 2;
 
     auto& shader = unit.shader;
     using namespace Voass::Render;
