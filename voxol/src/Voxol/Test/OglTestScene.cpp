@@ -90,7 +90,7 @@ void  OglTestScene::initVoassScene(){
     //Gpu::buildSDFDrawUnit(sdfCircleUnit, Shader::SDFShapeType::MultiCircles);
 
     sdfMultiCirclesUnit.color = {0.6f, 0.0, 0.3f, 1.0f};
-    sdfMultiCirclesUnit.objMat.setTo(270, 100, 200, 200);
+    sdfMultiCirclesUnit.objMat.setTo(330, 100, 200, 200);
     //Gpu::buildSDFDrawUnit(sdfCircleUnit, Shader::SDFShapeType::Circle);
     Gpu::buildSDFDrawUnit(sdfMultiCirclesUnit, Shader::SDFShapeType::MultiCircles, colorClip);
 
@@ -103,11 +103,11 @@ void  OglTestScene::initVoassScene(){
     sdfRingUnit.objMat.setTo(100, 100, 200, 200);
     Gpu::buildSDFDrawUnit(sdfRingUnit, Shader::SDFShapeType::Ring, colorClip);
 
-    return;
 
-    sdfRoundedRectUnit.color = {0.2f, 0.7, 0.3f, 1.f};
-    sdfRoundedRectUnit.objMat.setTo(300, 200, 200, 200);
-    Gpu::buildSDFDrawUnit(sdfRoundedRectUnit, Shader::SDFShapeType::RoundedRect);
+    sdfRoundedRectUnit.color = {0.5f, 0.2, 0.3f, 1.f};
+    sdfRoundedRectUnit.objMat.setTo(300, 260, 200, 200);
+    Gpu::buildSDFDrawUnit(sdfRoundedRectUnit, Shader::SDFShapeType::RoundedRect, colorClip);
+    return;
 
     sdfTriangleUnit.color = {0.4f, 0.2, 0.2f, 1.f};
     sdfTriangleUnit.objMat.setTo(300, 300, 200, 200);

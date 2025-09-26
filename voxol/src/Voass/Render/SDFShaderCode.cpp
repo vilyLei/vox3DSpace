@@ -271,9 +271,9 @@ void main()
     vec2 center = vec2(0.5, 0.5);
     float d = buildRoundRect(v_uv, center, vec2(0.3, 0.3), vec4(0.2, 0.1, 0.4, 0.1));
 
-    float alpha = aa(d) * u_color.a;
-
-    fragColor = vec4(u_color.rgb * alpha, alpha);
+    //float alpha = aa(d) * u_color.a;
+    //fragColor = vec4(u_color.rgb * alpha, alpha);
+    fragColor = buildFragColor(u_color, d);
 }
 )";
 

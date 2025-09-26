@@ -12,9 +12,9 @@ bool SizeDesc::isEqual(const SizeDesc& desc) const
 
 bool ViewComponent::viewZoomWithFixPos(const Point2DDesc& fixPos, float dstScale)
 {
-    if (dstScale < 0.001f)
+    if (dstScale < 0.0001f)
         return false;
-    if (dstScale > 1000.0f)
+    if (dstScale > 10000.0f)
         return false;
 
     // printf("ViewComponent::viewZoomWithFixPos(), fixPos(%f, %f)\n", fixPos.x, fixPos.y);
