@@ -247,7 +247,7 @@ void main()
     vec2 center = vec2(0.5, 0.5);
     float d = sdfRing(v_uv - center, 0.4, 0.1);
 
-    fragColor = buildFragColor(u_color, d);
+    fragColor = buildFragColor(u_color, d) * vec4(v_uv.xy, 1.0, 1.0);
 }
 )";
 

@@ -95,11 +95,11 @@ void  OglTestScene::initVoassScene(){
     Gpu::buildSDFDrawUnit(sdfMultiCirclesUnit, Shader::SDFShapeType::MultiCircles, colorClip);
 
 
-    sdfSectorUnit.color = {0.1f, 0.3, 0.6f, 1.f};
+    sdfSectorUnit.color = {0.6f, 0.2, 0.5f, 1.f};
     sdfSectorUnit.objMat.setTo(100, 100, 200, 200);
     Gpu::buildSDFDrawUnit(sdfSectorUnit, Shader::SDFShapeType::Sector, colorClip);
 
-    sdfRingUnit.color = {0.1f, 0.5, 0.6f, 1.f};
+    sdfRingUnit.color = {0.6f, 0.2f, 0.6f, 0.5f};
     sdfRingUnit.objMat.setTo(100, 100, 200, 200);
     Gpu::buildSDFDrawUnit(sdfRingUnit, Shader::SDFShapeType::Ring, colorClip);
 
