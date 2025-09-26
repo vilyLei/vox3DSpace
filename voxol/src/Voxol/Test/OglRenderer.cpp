@@ -152,7 +152,7 @@ int OglRenderer::initCtx()
             // Render
             // Clear the colorbuffer
             glClearColor(0.95f, 0.95f, 0.95f, 1.0f);
-            glClear(GL_COLOR_BUFFER_BIT);
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
             render();
             // draw();

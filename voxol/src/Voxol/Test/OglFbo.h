@@ -6,6 +6,7 @@
 #    include <iostream>
 #    include <cmath>
 #    include <vector>
+#    include <array>
 #    include <functional>
 
 #    include <GL/glew.h>
@@ -23,8 +24,8 @@ public:
     void   init(GLuint fbo);
     void   bindTextureAt(GLuint fboTex, int width, int height, int index);
     GLuint getTextureAt(int index) const;
-    void   bindFBO();
-    void   unbindFBO();
+    void   bindFBO(int width, int height, const std::array<float, 4>& clearColor);
+    void   unbindFBO(int width, int height, const std::array<float, 4>& clearColor);
     void   dispose();
 
 private:
