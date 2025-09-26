@@ -63,7 +63,7 @@ const char* sdfFragSourceClipDef = R"(
 #define SDF_COLOR_CLIP 1
 
 vec4 clipSdfColor(vec4 c4, vec4 bgColor4, float d) {
-    return d > 0.3 ? vec4(mix(bgColor4.xyz, c4.xyz, d), c4.w) : vec4(bgColor4.xyz, 0.0);
+    return d > 0.75 ? vec4(mix(bgColor4.xyz, c4.xyz, d), c4.w) : vec4(bgColor4.xyz, 0.0);
 }
 )";
 
@@ -234,9 +234,6 @@ void main()
     vec4 c0 = vec4(u_color.xyz, d0);
     vec4 c1 = vec4(vec3(0.0,0.5, 0.0), d1);
     float d = smoothUnion(d0, d1, 0.02);
-    //vec4 cd = smoothUnion(c0, c1, 0.2);
-    //float d = cd.w;
-    //cd.a = u_color.a;
     vec4 cd = smoothUnionVec4(vec4(0.0, 0.5, 0.0, 0.5), u_color, d0, d1, 0.2);
     fragColor = buildFragColor(cd, d);
 }
@@ -250,9 +247,7 @@ void main()
     vec2 center = vec2(0.5, 0.5);
     float d = sdfRing(v_uv - center, 0.4, 0.1);
 
-    float alpha = aa(d) * u_color.a;
-
-    fragColor = vec4(u_color.rgb * alpha, alpha);
+    fragColor = buildFragColor(u_color, d);
 }
 )";
 
@@ -264,9 +259,7 @@ void main()
     vec2 center = vec2(0.5, 0.5);
     float d = sdfSector(v_uv - center, 0.5, vec2(-1.0, 0.2), vec2(0.5, 0.5));
 
-    float alpha = aa(d) * u_color.a;
-
-    fragColor = vec4(u_color.rgb * alpha, alpha);
+    fragColor = buildFragColor(u_color, d);
 }
 )";
 
