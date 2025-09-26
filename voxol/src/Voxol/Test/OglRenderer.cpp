@@ -77,12 +77,14 @@ int OglRenderer::initCtx()
     // Init GLFW
     glfwInit();
     // Set all the required options for GLFW
+    glfwWindowHint(GLFW_SAMPLES, 0);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, ver_major);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, ver_minor);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     //glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
     glfwWindowHint(GLFW_RESIZABLE, GL_TRUE);
 
+    glDisable(GL_MULTISAMPLE);
     // Create a GLFWwindow object that we can use for GLFW's functions
     GLFWwindow* window = glfwCreateWindow(ctxCurrWidth, ctxCurrHeight, "VoxolModule", nullptr, nullptr);
     if (window == nullptr)

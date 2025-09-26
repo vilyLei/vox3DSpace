@@ -63,13 +63,22 @@ const char* sdfFragSourceClipDef = R"(
 #define SDF_COLOR_CLIP 1
 
 vec4 clipSdfColor(vec4 c4, vec4 bgColor4, float d) {
-//fragColor = d > 0.5 ? u_color : vec4(u_color.xyz, 0.0);
     return d > 0.3 ? vec4(mix(bgColor4.xyz, c4.xyz, d), c4.w) : vec4(bgColor4.xyz, 0.0);
 }
 )";
 
 const char* sdfFragSourceFuncs = R"(
     
+vec4 buildFragColor(vec4 color4, float d) {
+    d = aa(d);
+#ifndef SDF_COLOR_CLIP
+    float alpha = d * color4.a;
+    return vec4(color4.rgb * alpha, alpha);
+#else
+    vec4 fgColor = vec4(0.95,0.95,0.95, 1.0);
+    return clipSdfColor(color4, fgColor, d);
+#endif
+}
 float sdfCircleBase(float radius, vec2 center, vec2 xy) {
     return length(xy - center) - radius;
 }
@@ -196,13 +205,7 @@ void main()
     vec2 center = vec2(0.5, 0.5);
     float d = sdfCircle( v_uv - center, 0.5 );
     
-    d = aa(d);
-#ifndef SDF_COLOR_CLIP
-    float alpha = d * u_color.a;
-    fragColor = vec4(u_color.rgb * alpha, alpha);
-#else
-    fragColor = clipSdfColor(u_color, vec4(0.95,0.95,0.95, 1.0), d);
-#endif
+    fragColor = buildFragColor(u_color, d);
 }
 )";
 
@@ -215,9 +218,8 @@ void main()
     vec2 center1 = vec2(0.65, 0.45);
     float d1 = sdfCircle(v_uv - center1, 0.3);
     float d = smoothUnion(d0, d1, 0.02);
-    float alpha = aa(d) * u_color.a;
-
-    fragColor = vec4(u_color.rgb * alpha, alpha);
+    
+    fragColor = buildFragColor(u_color, d);
 }
 )";
 
