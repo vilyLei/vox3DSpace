@@ -446,6 +446,16 @@ void DrawingUnit::bindGPU()
     vertex.bindGPU();
 }
 
+GLuint DrawingUnit::getTextureAt(int index) const
+{
+
+    if (shader.program <= GL_ZERO || shader.textures.empty() || index < 0)
+        return GL_ZERO;
+    if (index < 0 || index >= shader.textures.size())
+        return GL_ZERO;
+
+    return shader.textures[index];
+}
 void DrawingUnit::draw()
 {
     if (shader.program <= GL_ZERO)

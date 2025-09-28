@@ -122,6 +122,7 @@ struct DrawingUnit
     bool                  colorClip = false;
 
     void bindGPU();
+    GLuint getTextureAt(int index) const;
     void draw();
 };
 

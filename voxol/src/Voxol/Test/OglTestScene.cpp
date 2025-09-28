@@ -110,7 +110,7 @@ void  OglTestScene::initVoassScene(){
     Gpu::buildSDFDrawUnit(sdfRingUnit, Shader::SDFShapeType::Ring, colorClip);
 
 
-    sdfRoundedRectUnit.color = {0.5f, 0.2, 0.3f, 1.f};
+    sdfRoundedRectUnit.color = {0.5f, 0.6, 0.3f, 1.f};
     sdfRoundedRectUnit.objMat.setTo(300, 260, 200, 200);
     Gpu::buildSDFDrawUnit(sdfRoundedRectUnit, Shader::SDFShapeType::RoundedRect, colorClip);
 
