@@ -124,23 +124,33 @@ void  OglTestScene::initVoassScene(){
 
 void OglTestScene::renderVoass(const Voxol::Math::Mat33& vpMat)
 {
-    auto useTexSampleDrawig = false;
+    auto useTexSampleDrawig = true;
     if (useTexSampleDrawig)
     {
         auto               pos = viewMat.getXY();
         auto               scaleXY = viewMat.getScaleXY();
+
         auto mat = projMat;
         Voxol::Math::Mat33 vMat;
         vMat.setXY(pos);
         vMat.setScaleXY(scaleXY);
         
         mat.append(vMat);
+
         auto fboW = 512;
         auto fboH = 512;
+        auto fboTexIndex = 0;
+
         mFbo.bindFBO(fboW, fboH, {0, 0, 0, 0});
+        mFbo.bindTextureAt(tile0Unit.getTextureAt(0), fboTexIndex, fboW, fboH);
+
 
         mFbo.unbindFBO(ctxCurrWidth, ctxCurrHeight, {.95f, .95f, .95f, 1.0f});
 
+        Gpu::buildTexDrawUnitWithTex(tile0Unit, mFbo.getTextureAt(fboTexIndex), true);
+
+        tile0Unit.mvp = vpMat;
+        tile0Unit.draw();
     }
     else {
         renderSdfUnits(vpMat);

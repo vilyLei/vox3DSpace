@@ -38,7 +38,6 @@ public:
 
 private:
 
-    
     void initVoassScene();
     void renderVoass(const Voxol::Math::Mat33& vpMat);
     void renderSdfUnits(const Voxol::Math::Mat33& vpMat);
@@ -62,6 +61,8 @@ private:
     Gpu::DrawingUnit sdfSectorUnit{};
     Gpu::DrawingUnit sdfRoundedRectUnit{};
     Gpu::DrawingUnit sdfTriangleUnit{};
+
+    Gpu::DrawingUnit tile0Unit{};
 };
 
 

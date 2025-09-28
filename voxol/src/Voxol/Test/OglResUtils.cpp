@@ -539,7 +539,7 @@ void buildTexDrawUnitWithTex(DrawingUnit& unit, GLuint tex, bool uvFlipY) {
 
     auto& shader = unit.shader;
 
-    if (shader.program > GL_ZERO)
+    if (shader.program <= GL_ZERO)
     {
         shader.program   = ResUtils::createSahderProgram(ResUtils::vertTexSource, ResUtils::fragTexSource);
         shader.matrixLoc = glGetUniformLocation(shader.program, "u_matrix");

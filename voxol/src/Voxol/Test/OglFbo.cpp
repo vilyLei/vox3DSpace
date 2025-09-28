@@ -18,7 +18,7 @@ GLuint OglFbo::getTextureAt(int index) const
 {
     return mColorTex;
 }
-void OglFbo::bindTextureAt(GLuint fboTex, int width, int height, int index)
+void OglFbo::bindTextureAt(GLuint fboTex, int index, int width, int height)
 {
     mColorTex = fboTex;
     if (fboTex <= GL_ZERO)

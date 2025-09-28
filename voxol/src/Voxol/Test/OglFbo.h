@@ -22,7 +22,7 @@ public:
 
 public:
     void   init(GLuint fbo);
-    void   bindTextureAt(GLuint fboTex, int width, int height, int index);
+    void   bindTextureAt(GLuint fboTex, int index, int width, int height);
     GLuint getTextureAt(int index) const;
     void   bindFBO(int width, int height, const std::array<float, 4>& clearColor);
     void   unbindFBO(int width, int height, const std::array<float, 4>& clearColor);
