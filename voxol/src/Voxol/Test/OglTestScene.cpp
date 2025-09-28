@@ -137,7 +137,9 @@ void OglTestScene::renderVoass(const Voxol::Math::Mat33& vpMat)
         mat.append(vMat);
         auto fboW = 512;
         auto fboH = 512;
-        mFbo.bindFBO()
+        mFbo.bindFBO(fboW, fboH, {0, 0, 0, 0});
+
+        mFbo.unbindFBO(ctxCurrWidth, ctxCurrHeight, {.95f, .95f, .95f, 1.0f});
 
     }
     else {
