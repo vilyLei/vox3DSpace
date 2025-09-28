@@ -80,6 +80,10 @@ void Mat33::setXY(float tx, float ty)
     data[7] = ty;
 }
 
+Vec2 Mat33::getScaleXY() const
+{
+    return {data[0], data[4]};
+}
 void Mat33::ortho(float width, float height)
 {
     data = {

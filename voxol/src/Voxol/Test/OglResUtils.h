@@ -119,6 +119,7 @@ struct DrawingUnit
     Voxol::Math::Mat33   objMat{};
     Voxol::Math::Mat33   mvp{};
     int                  blendMode = 1;
+    bool                  colorClip = false;
 
     void bindGPU();
     void draw();

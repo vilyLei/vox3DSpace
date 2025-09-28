@@ -539,8 +539,10 @@ void buildTexDrawUnitFromTex(DrawingUnit& unit, GLuint tex, bool uvFlipY)
 
 void buildSDFDrawUnit(DrawingUnit& unit, Voass::Render::Shader::SDFShapeType type, bool clip)
 {
-    if (clip)
+    if (clip) {
+        unit.colorClip = true;
         unit.blendMode = 2;
+    }
 
     auto& shader = unit.shader;
     using namespace Voass::Render;

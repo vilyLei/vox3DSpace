@@ -203,6 +203,8 @@ void OglRenderer::render()
     //{
         Mat33 mat = canvas.view.projMat;
         mat.append(canvas.view.viewMat);
+        mScene.projMat = canvas.view.projMat;
+        mScene.viewMat = canvas.view.viewMat;
         mScene.render(mat);
     //}
 

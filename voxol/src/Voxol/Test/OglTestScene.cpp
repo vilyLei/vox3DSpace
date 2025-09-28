@@ -120,9 +120,29 @@ void  OglTestScene::initVoassScene(){
     
 
 }
-void OglTestScene::renderVoass(const Voxol::Math::Mat33& vpMat) {
 
+
+void OglTestScene::renderVoass(const Voxol::Math::Mat33& vpMat)
+{
+    auto useTexSampleDrawig = false;
+    if (useTexSampleDrawig)
+    {
+        auto               scaleXY = viewMat.getScaleXY();
+        auto mat = projMat;
+        Voxol::Math::Mat33 vMat    = Voxol::Math::Mat33::makeScale(scaleXY.x, scaleXY.y);
+        
+        mat.append(vMat);
+
+    }
+    else {
+        renderSdfUnits(vpMat);
+    }
+}
+
+void OglTestScene::renderSdfUnits(const Voxol::Math::Mat33& vpMat)
+{
     
+    sdfCircleUnit.color = {0.9f, 0.0, 0.7f, 1.0f};
     sdfCircleUnit.mvp = vpMat;
     sdfCircleUnit.draw();
 
