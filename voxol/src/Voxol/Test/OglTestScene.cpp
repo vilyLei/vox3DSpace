@@ -127,11 +127,17 @@ void OglTestScene::renderVoass(const Voxol::Math::Mat33& vpMat)
     auto useTexSampleDrawig = false;
     if (useTexSampleDrawig)
     {
+        auto               pos = viewMat.getXY();
         auto               scaleXY = viewMat.getScaleXY();
         auto mat = projMat;
-        Voxol::Math::Mat33 vMat    = Voxol::Math::Mat33::makeScale(scaleXY.x, scaleXY.y);
+        Voxol::Math::Mat33 vMat;
+        vMat.setXY(pos);
+        vMat.setScaleXY(scaleXY);
         
         mat.append(vMat);
+        auto fboW = 512;
+        auto fboH = 512;
+        mFbo.bindFBO()
 
     }
     else {

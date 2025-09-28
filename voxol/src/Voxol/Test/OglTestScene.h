@@ -30,6 +30,9 @@ public:
     void initScene();
     void render(const Voxol::Math::Mat33& vpMat);
 
+    
+    GLuint      ctxCurrWidth = 800;
+    GLuint      ctxCurrHeight = 600;
     Voxol::Math::Mat33 projMat{};
     Voxol::Math::Mat33 viewMat{};
 
