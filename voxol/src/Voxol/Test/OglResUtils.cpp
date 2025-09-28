@@ -449,12 +449,23 @@ void DrawingUnit::bindGPU()
 GLuint DrawingUnit::getTextureAt(int index) const
 {
 
-    if (shader.program <= GL_ZERO || shader.textures.empty() || index < 0)
+    if (shader.program <= GL_ZERO || shader.textures.empty())
         return GL_ZERO;
     if (index < 0 || index >= shader.textures.size())
         return GL_ZERO;
 
     return shader.textures[index];
+}
+
+void DrawingUnit::setTextureAt(GLuint tex, int index)
+{
+    if (shader.program <= GL_ZERO || shader.textures.empty())
+        return;
+
+    if (index < 0 || index >= shader.textures.size())
+        return;
+
+    shader.textures[index] = tex;
 }
 void DrawingUnit::draw()
 {
@@ -522,6 +533,34 @@ void buildTexDrawUnit(DrawingUnit& unit, const RawData::Image2DBytesData& imgDat
 
     auto& vert = unit.vertex;
     vert.buildTexRes();
+}
+
+void buildTexDrawUnitWithTex(DrawingUnit& unit, GLuint tex, bool uvFlipY) {
+
+    auto& shader = unit.shader;
+
+    if (shader.program > GL_ZERO)
+    {
+        shader.program   = ResUtils::createSahderProgram(ResUtils::vertTexSource, ResUtils::fragTexSource);
+        shader.matrixLoc = glGetUniformLocation(shader.program, "u_matrix");
+        shader.colorLoc  = glGetUniformLocation(shader.program, "u_color");
+        auto texLoc      = glGetUniformLocation(shader.program, "u_tex0");
+        shader.texLocs.push_back(texLoc);
+        shader.textures.push_back(tex);
+    }
+    auto& vert = unit.vertex;
+
+    if (vert.vao > GL_ZERO)
+    {
+        return;
+    }
+    if (uvFlipY)
+    {
+        vert.buildTexResFlipYUvs();
+    }
+    else {
+        vert.buildTexRes();
+    }
 }
 
 void buildTexDrawUnitFromTex(DrawingUnit& unit, GLuint tex, bool uvFlipY)
