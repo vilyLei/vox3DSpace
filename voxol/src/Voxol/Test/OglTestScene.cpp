@@ -88,6 +88,8 @@ void  OglTestScene::initVoassScene(){
     
     using namespace Voass::Render;
 
+    mFbo.init(GL_ZERO);
+
     //Gpu::DrawingUnit sdfCircleUnit{};
     bool colorClip      = false;
     sdfCircleUnit.color = {0.9f, 0.0, 0.3f, 1.0f};
@@ -145,10 +147,10 @@ void OglTestScene::renderVoass(const Voxol::Math::Mat33& vpMat)
         fboVPM.append(vMat);
 
 
-        mFbo.bindFBO(fboW, fboH, {0, 0, 0, 0});
+        mFbo.bindFBO(fboW, fboH, {0.1, 0.3, 0.1, 1});
         mFbo.bindTextureAt(tile0Unit.getTextureAt(0), fboTexIndex, fboW, fboH);
                 
-        renderSdfUnits(fboVPM);
+        //renderSdfUnits(fboVPM);
 
         mFbo.unbindFBO(ctxCurrWidth, ctxCurrHeight, {.95f, .95f, .95f, 1.0f});
 
