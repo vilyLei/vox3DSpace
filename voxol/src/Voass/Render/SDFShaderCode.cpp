@@ -53,7 +53,8 @@ out vec4          fragColor;
 
 float aa(float d) {
     float factor = fwidth(d);
-    return clamp(0.5 - d / factor, 0.0, 1.0);
+    //return clamp(0.5 - d / factor, 0.0, 1.0);
+    return smoothstep(0.0, factor, -d);
 }
 )";
 
@@ -63,7 +64,7 @@ const char* sdfFragSourceClipDef = R"(
 #define SDF_COLOR_CLIP 1
 
 vec4 clipSdfColor(vec4 c4, vec4 bgColor4, float d) {
-    return d > 0.75 ? vec4(mix(bgColor4.xyz, c4.xyz, d), c4.w) : vec4(bgColor4.xyz, 0.0);
+    return d > 0.5 ? vec4(bgColor4.xyz * d, c4.w) : vec4(bgColor4.xyz, 0.0);
 }
 )";
 
@@ -75,8 +76,7 @@ vec4 buildFragColor(vec4 color4, float d) {
     float alpha = d * color4.a;
     return vec4(color4.rgb * alpha, alpha);
 #else
-    vec4 fgColor = vec4(0.95,0.95,0.95, 1.0);
-    return clipSdfColor(color4, fgColor, d);
+    return clipSdfColor(color4, color4, d);
 #endif
 }
 
