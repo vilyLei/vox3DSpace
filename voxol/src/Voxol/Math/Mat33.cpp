@@ -74,10 +74,21 @@ void Mat33::setTo(float tx, float ty, float sx, float sy, float rotRadians)
         tx, ty, 1};
 }
 
+void Mat33::setXY(const Vec2& pos)
+{
+    data[6] = pos.x;
+    data[7] = pos.y;
+}
+
 void Mat33::setXY(float tx, float ty)
 {
     data[6] = tx;
     data[7] = ty;
+}
+
+Vec2 Mat33::getXY() const
+{
+    return {data[6], data[7]};
 }
 
 void Mat33::setScaleXY(const Vec2& scaleXY)

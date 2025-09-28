@@ -33,7 +33,10 @@ public:
     void ortho(float width, float height);
 
     void setTo(float tx, float ty, float sx = 1.0f, float sy = 1.0f, float rotRadians = 0.0f);
+    void setXY(const Vec2& pos);
     void setXY(float tx, float ty);
+    Vec2 getXY() const;
+
     void setScaleXY(const Vec2& scaleXY);
     void setScaleXY(float sx, float sy);
     Vec2 getScaleXY() const;
