@@ -34,6 +34,8 @@ public:
 
     void setTo(float tx, float ty, float sx = 1.0f, float sy = 1.0f, float rotRadians = 0.0f);
     void setXY(float tx, float ty);
+    void setScaleXY(const Vec2& scaleXY);
+    void setScaleXY(float sx, float sy);
     Vec2 getScaleXY() const;
 
     void  transpose();

@@ -80,6 +80,16 @@ void Mat33::setXY(float tx, float ty)
     data[7] = ty;
 }
 
+void Mat33::setScaleXY(const Vec2& scaleXY)
+{
+    data[0] = scaleXY.x;
+    data[4] = scaleXY.y;
+}
+void Mat33::setScaleXY(float sx, float sy)
+{
+    data[0] = sx;
+    data[4] = sy;
+}
 Vec2 Mat33::getScaleXY() const
 {
     return {data[0], data[4]};
