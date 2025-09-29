@@ -209,8 +209,8 @@ void OglRenderer::render()
         mScene.viewMat = canvas.view.viewMat;
         mScene.render(mat);
     //}
-
-    dirty = false;
+    // for test
+    //dirty = false;
 }
 
 void OglRenderer::draw()
