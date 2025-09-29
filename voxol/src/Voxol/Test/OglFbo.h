@@ -24,8 +24,9 @@ public:
     void   init(GLuint fbo);
     void   bindTextureAt(GLuint fboTex, int index, int width, int height);
     GLuint getTextureAt(int index) const;
-    void   bindFBO(int width, int height, const std::array<float, 4>& clearColor);
-    void   unbindFBO(int width, int height, const std::array<float, 4>& clearColor);
+    void   bindFBO();
+    void   renderBegin(const std::array<int, 4>& viewportParams, const std::array<float, 4>& clearColor);
+    void   unbindFBO(const std::array<int, 4>& viewportParams, const std::array<float, 4>& clearColor);
     void   dispose();
 
 private:

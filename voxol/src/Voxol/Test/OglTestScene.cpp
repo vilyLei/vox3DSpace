@@ -130,12 +130,12 @@ void OglTestScene::renderVoass(const Voxol::Math::Mat33& vpMat)
     if (useTexSampleDrawig)
     {
 
-        auto               fboW        = 512;
-        auto               fboH        = 512;
-        auto               fboTexIndex = 0;
+        auto fboW        = 512;
+        auto fboH        = 512;
+        auto fboTexIndex = 0;
 
-        auto               pos = viewMat.getXY();
-        auto               scaleXY = viewMat.getScaleXY();
+        auto pos     = viewMat.getXY();
+        auto scaleXY = viewMat.getScaleXY();
 
         Voxol::Math::Mat33 fboVPM{};
         fboVPM.ortho(fboW, fboH);
@@ -143,16 +143,17 @@ void OglTestScene::renderVoass(const Voxol::Math::Mat33& vpMat)
         Voxol::Math::Mat33 vMat;
         //vMat.setXY(pos);
         //vMat.setScaleXY(scaleXY);
-        
+
         fboVPM.append(vMat);
 
 
-        mFbo.bindFBO(fboW, fboH, {0.1, 0.3, 0.1, 1});
+        mFbo.bindFBO();
+        mFbo.renderBegin({0,0,fboW, fboH}, {0.1, 0.3, 0.1, 1});
         mFbo.bindTextureAt(tile0Unit.getTextureAt(0), fboTexIndex, fboW, fboH);
                 
         renderSdfUnits(fboVPM);
 
-        mFbo.unbindFBO(ctxCurrWidth, ctxCurrHeight, {.95f, .95f, .95f, 1.0f});
+        mFbo.unbindFBO({0, 0, ctxCurrWidth, ctxCurrHeight}, {.95f, .95f, .95f, 1.0f});
 
         Gpu::buildTexDrawUnitWithTex(tile0Unit, mFbo.getTextureAt(fboTexIndex), true);
 
