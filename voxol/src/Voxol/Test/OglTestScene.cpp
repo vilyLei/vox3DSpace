@@ -148,8 +148,8 @@ void OglTestScene::renderVoass(const Voxol::Math::Mat33& vpMat)
 
 
         mFbo.bindFBO();
-        mFbo.renderBegin({0,0,fboW, fboH}, {0.1, 0.3, 0.1, 1});
         mFbo.bindTextureAt(tile0Unit.getTextureAt(0), fboTexIndex, fboW, fboH);
+        mFbo.renderBegin({0, 0, fboW, fboH}, {0.1, 0.3, 0.1, 1});
                 
         renderSdfUnits(fboVPM);
 
