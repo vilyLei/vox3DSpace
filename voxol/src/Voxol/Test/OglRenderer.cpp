@@ -84,7 +84,6 @@ int OglRenderer::initCtx()
     //glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
     glfwWindowHint(GLFW_RESIZABLE, GL_TRUE);
 
-    glDisable(GL_MULTISAMPLE);
     // Create a GLFWwindow object that we can use for GLFW's functions
     GLFWwindow* window = glfwCreateWindow(ctxCurrWidth, ctxCurrHeight, "VoxolModule", nullptr, nullptr);
     if (window == nullptr)
@@ -105,6 +104,7 @@ int OglRenderer::initCtx()
     glfwSetScrollCallback(window, scroll_callback);
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
+    glDisable(GL_MULTISAMPLE);
     // Set this to true so GLEW knows to use a modern approach to retrieving function pointers and extensions
     glewExperimental = GL_TRUE;
     // Initialize GLEW to setup the OpenGL Function pointers

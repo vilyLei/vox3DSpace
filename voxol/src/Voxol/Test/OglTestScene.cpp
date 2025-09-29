@@ -91,7 +91,7 @@ void  OglTestScene::initVoassScene(){
     mFbo.init(GL_ZERO);
 
     //Gpu::DrawingUnit sdfCircleUnit{};
-    bool colorClip      = false;
+    bool colorClip      = true;
     sdfCircleUnit.color = {0.9f, 0.0, 0.3f, 1.0f};
     sdfCircleUnit.objMat.setTo(100, 100, 200, 200);
     Gpu::buildSDFDrawUnit(sdfCircleUnit, Shader::SDFShapeType::Circle, colorClip);
@@ -141,8 +141,8 @@ void OglTestScene::renderVoass(const Voxol::Math::Mat33& vpMat)
         fboVPM.ortho(fboW, fboH);
 
         Voxol::Math::Mat33 vMat;
-        //vMat.setXY(pos);
-        //vMat.setScaleXY(scaleXY);
+        vMat.setXY(pos);
+        vMat.setScaleXY(scaleXY);
 
         fboVPM.append(vMat);
 
@@ -158,7 +158,8 @@ void OglTestScene::renderVoass(const Voxol::Math::Mat33& vpMat)
         Gpu::buildTexDrawUnitWithTex(tile0Unit, mFbo.getTextureAt(fboTexIndex), true);
 
         tile0Unit.objMat.setTo(0, 0, fboW * 0.5f, fboH * 0.5f);
-        tile0Unit.mvp = vpMat;
+        //tile0Unit.mvp = vpMat;
+        tile0Unit.mvp = projMat;
         tile0Unit.draw();
     }
     else {
