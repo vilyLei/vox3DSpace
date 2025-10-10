@@ -7,7 +7,7 @@ namespace Voxol::Tile
         mFbo.init(GL_ZERO);
     }
     
-    void TileScene::run()
+    void TileScene::run(const Render::Draw::DrawContext& ctx)
     {
     }
 }

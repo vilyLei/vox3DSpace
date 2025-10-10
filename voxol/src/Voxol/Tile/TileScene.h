@@ -4,12 +4,16 @@
 #include "GridDef.h"
 #include "../Math/Mat33.h"
 #include "../Math/VxRect.h"
+#include "../Render/DrawCtx.h"
 #include "../Test/OglResUtils.h"
 #include "../Test/OglFbo.h"
+#include <functional>
+
 
 namespace Voxol::Tile
 {
     using namespace Voxol::Math;
+
 
     class TileScene
     {
@@ -19,7 +23,7 @@ namespace Voxol::Tile
     public:
     
         void initalize();        
-        void run();
+        void run(const Render::Draw::DrawContext& ctx);
 
     private:
         Test::OglFbo mFbo{};

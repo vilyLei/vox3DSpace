@@ -13,7 +13,7 @@ public:
 
 public:
     void initalize();
-    void run();
+    void run(const Render::Draw::DrawContext& ctx);
 
 private:
     TileScene mScene{};
