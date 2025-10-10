@@ -5,6 +5,7 @@
 #include "../Math/Mat33.h"
 #include "../Math/VxRect.h"
 #include "../Test/OglResUtils.h"
+#include "../Test/OglFbo.h"
 
 namespace Voxol::Tile
 {
@@ -19,6 +20,9 @@ namespace Voxol::Tile
     
         void initalize();        
         void run();
+
+    private:
+        Test::OglFbo mFbo{};
     };
     
 }

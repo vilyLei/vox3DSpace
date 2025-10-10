@@ -88,7 +88,7 @@ void  OglTestScene::initVoassScene(){
     
     using namespace Voass::Render;
 
-    mFbo.init(GL_ZERO);
+    tileSys.initalize();
 
     //Gpu::DrawingUnit sdfCircleUnit{};
     bool colorClip      = false;
@@ -131,6 +131,9 @@ void OglTestScene::renderVoass(const Math::Mat33& vpMat)
     };
     drawCall({} , vpMat);
     return;
+
+    mFbo.init(GL_ZERO);
+
     auto useTexSampleDrawig = false;
     if (useTexSampleDrawig)
     {
