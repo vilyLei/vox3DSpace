@@ -98,6 +98,8 @@ struct VertNode
 {
     GLuint                      vao = GL_ZERO;
     GLuint                      veo = GL_ZERO;
+    GLenum                      drawMode = GL_TRIANGLES;
+    float                       lineWidth = 1;
     std::vector<VertVSNode>     vsNodes{};
     std::vector<unsigned short> indices{};
     void                        buildBaseRes();
@@ -107,7 +109,10 @@ struct VertNode
     void                        buildGPURes();
     void                        bindGPU();
     GLsizei                     indicesSize() const;
+    GLsizei                     vertexesSize() const;
     void                        draw();
+    void                        toShape();
+    void                        toLine();
 };
 
 struct DrawingUnit

@@ -133,6 +133,9 @@ int OglRenderer::initCtx()
     //    std::cout << "extends info:" << info << std::endl;
     //}
 
+    glEnable(GL_LINE_SMOOTH);
+    glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
+
     int fw;
     int fh;
     glfwGetFramebufferSize(window, &fw, &fh);

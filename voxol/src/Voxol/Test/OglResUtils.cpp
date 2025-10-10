@@ -24,7 +24,7 @@ void main() {
 })";
 
 
-const char* vertTexSource          = R"(#version 330 core
+const char* vertTexSource = R"(#version 330 core
 precision highp float;
 
 layout(location = 0) in vec4 a_pos;
@@ -38,7 +38,7 @@ void main() {
     gl_Position = vec4(pos.xy, 0.0, 1.0);
 }
 )";
-const char* fragTexSource          = R"(#version 330 core
+const char* fragTexSource = R"(#version 330 core
     precision     mediump float;
 uniform vec4      u_color;
 in vec2           v_uv;
@@ -344,10 +344,11 @@ std::vector<unsigned char> createRGBGradientImage(int w, int h)
 
 namespace RawData
 {
-void MSDFAtlas::reset() {
+void MSDFAtlas::reset()
+{
     glyphs.clear();
 }
-}
+} // namespace RawData
 
 namespace Gpu
 {
@@ -392,7 +393,7 @@ void VertNode::buildTexResUvs(float u0, float v0, float u1, float v1)
 }
 void VertNode::buildTexResFlipYUvs(float u0, float v0, float u1, float v1)
 {
-    auto&&     vs     = ResUtils::getVertsWithUVVEOFlipY(u0,v0,u1,v1);
+    auto&&     vs     = ResUtils::getVertsWithUVVEOFlipY(u0, v0, u1, v1);
     VertVSNode vsNode = {4, 4, vs};
     vsNodes.push_back(vsNode);
     indices = ResUtils::getIndicesWithSegN(1);
@@ -433,15 +434,45 @@ GLsizei VertNode::indicesSize() const
 {
     return static_cast<GLsizei>(indices.size());
 }
+
+GLsizei VertNode::vertexesSize() const
+{
+
+    if (vsNodes.empty())
+        return 0;
+
+    auto& node = vsNodes[0];
+    auto& vs   = node.vs;
+    return static_cast<GLsizei>(vs.size() / node.componentSize);
+}
+
 void VertNode::draw()
 {
     auto isize = indicesSize();
-    glDrawElements(GL_TRIANGLES, isize, GL_UNSIGNED_SHORT, 0);
+    auto vsize = vertexesSize();
+    switch (drawMode)
+    {
+        case GL_LINE_LOOP:
+            glLineWidth(lineWidth);
+            glDrawArrays(GL_LINE_LOOP, 0, vsize);
+            break;
+        default:
+            glDrawElements(drawMode, isize, GL_UNSIGNED_SHORT, 0);
+            break;
+    }
+}
+
+void VertNode::toShape()
+{
+    drawMode = GL_TRIANGLES;
+}
+void VertNode::toLine()
+{
+    drawMode = GL_LINE_LOOP;
 }
 
 void DrawingUnit::bindGPU()
 {
-
     shader.bindGPU();
     vertex.bindGPU();
 }
@@ -475,7 +506,8 @@ void DrawingUnit::draw()
     bindGPU();
 
     glEnable(GL_BLEND);
-    if (blendMode < 2 && shader.textures.empty()) {
+    if (blendMode < 2 && shader.textures.empty())
+    {
 
         glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
     }
@@ -535,7 +567,8 @@ void buildTexDrawUnit(DrawingUnit& unit, const RawData::Image2DBytesData& imgDat
     vert.buildTexRes();
 }
 
-void buildTexDrawUnitWithTex(DrawingUnit& unit, GLuint tex, bool uvFlipY) {
+void buildTexDrawUnitWithTex(DrawingUnit& unit, GLuint tex, bool uvFlipY)
+{
 
     auto& shader = unit.shader;
 
@@ -558,7 +591,8 @@ void buildTexDrawUnitWithTex(DrawingUnit& unit, GLuint tex, bool uvFlipY) {
     {
         vert.buildTexResFlipYUvs();
     }
-    else {
+    else
+    {
         vert.buildTexRes();
     }
 }
@@ -588,7 +622,8 @@ void buildTexDrawUnitFromTex(DrawingUnit& unit, GLuint tex, bool uvFlipY)
 
 void buildSDFDrawUnit(DrawingUnit& unit, Voass::Render::Shader::SDFShapeType type, bool clip)
 {
-    if (clip) {
+    if (clip)
+    {
         unit.colorClip = true;
         unit.blendMode = 2;
     }
