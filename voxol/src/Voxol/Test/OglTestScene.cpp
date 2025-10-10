@@ -129,14 +129,14 @@ void OglTestScene::renderVoass(const Math::Mat33& vpMat)
     auto drawCall = [this](const Math::VxRect& viewWBounds, const Math::Mat33& vpMat) {
         renderSdfUnits(vpMat);
     };
-    drawCall({} , vpMat);
+    //drawCall({} , vpMat);
     auto& ctx           = drawCtx;
     ctx.viewport.width = ctxCurrWidth;
     ctx.viewport.height = ctxCurrHeight;
 
     auto& params = ctx.params;
-
     ctx.drawCall        = drawCall;
+    tileSys.run(ctx);
     return;
 
     mFbo.init(GL_ZERO);
