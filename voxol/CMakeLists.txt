@@ -34,6 +34,7 @@ set(PHYSICS_DIR "${VOX_DIR}/Physics")
 set(UTIL_DIR "${VOX_DIR}/Util")
 set(TEST_DIR "${VOX_DIR}/Test")
 set(TASK_DIR "${VOX_DIR}/Task")
+set(TILE_DIR "${VOX_DIR}/Tile")
 
 set(VOASS_DIR "${SRC_DIR}/Voass")
 set(VOASS_RENDER_DIR "${VOASS_DIR}/Render")
@@ -55,6 +56,7 @@ include_directories(
   ${UTIL_DIR}
   ${TEST_DIR}
   ${TASK_DIR}
+  ${TILE_DIR}
 
   ${VOASS_RENDER_DIR}
 
@@ -74,6 +76,7 @@ file(GLOB PHYSICS_SRC "${PHYSICS_DIR}/*.cpp" "${PHYSICS_DIR}/*.h")
 file(GLOB UTIL_SRC "${UTIL_DIR}/*.cpp" "${UTIL_DIR}/*.h")
 file(GLOB TEST_SRC "${TEST_DIR}/*.cpp" "${TEST_DIR}/*.h")
 file(GLOB TASK_SRC "${TASK_DIR}/*.cpp" "${TASK_DIR}/*.h")
+file(GLOB TILE_SRC "${TILE_DIR}/*.cpp" "${TILE_DIR}/*.h")
 
 file(GLOB VOASS_RENDER_SRC "${VOASS_RENDER_DIR}/*.cpp" "${VOASS_RENDER_DIR}/*.h")
 
@@ -88,6 +91,7 @@ set(ALL_SOURCES
   ${UTIL_SRC}
   ${TEST_SRC}
   ${TASK_SRC}
+  ${TILE_SRC}
 
   ${VOASS_RENDER_SRC}
 )

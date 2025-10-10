@@ -129,9 +129,9 @@ void OglTestScene::renderVoass(const Voxol::Math::Mat33& vpMat)
     auto useTexSampleDrawig = true;
     if (useTexSampleDrawig)
     {
-
-        auto fboW        = 512;
-        auto fboH        = 512;
+        int  fboSize     = 256 * 2;
+        auto fboW        = fboSize;
+        auto fboH        = fboSize;
         auto fboTexIndex = 0;
 
         auto pos     = viewMat.getXY();
@@ -157,7 +157,8 @@ void OglTestScene::renderVoass(const Voxol::Math::Mat33& vpMat)
 
         Gpu::buildTexDrawUnitWithTex(tile0Unit, mFbo.getTextureAt(fboTexIndex), true);
 
-        tile0Unit.objMat.setTo(0, 0, fboW * 0.5f, fboH * 0.5f);
+        fboW = fboH = 256;
+        tile0Unit.objMat.setTo(0, 0, fboW, fboH);
         //tile0Unit.mvp = vpMat;
         tile0Unit.mvp = projMat;
         tile0Unit.draw();

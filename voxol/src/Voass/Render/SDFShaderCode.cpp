@@ -64,7 +64,7 @@ const char* sdfFragSourceClipDef = R"(
 #define SDF_COLOR_CLIP 1
 
 vec4 clipSdfColor(vec4 c4, vec4 bgColor4, float d) {
-    return d > 0.5 ? vec4(bgColor4.xyz * d, c4.w) : vec4(bgColor4.xyz, 0.0);
+    return d >= 1.0 ? vec4(bgColor4.xyz, c4.w * d) : vec4(bgColor4.xyz, 0.0);
 }
 )";
 

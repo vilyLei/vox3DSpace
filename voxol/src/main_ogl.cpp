@@ -4,12 +4,15 @@
 
 // ..\..\..\..\dev\webwasm\emsdk\emsdk_env.bat
 // emcmake "C:/Program Files/CMake/bin/cmake.exe" -B build -G Ninja
-// cmake --build build
+// cmake --build buildvs
 //
+// cmake --build buildvs
 // http-server -p 666 --cors
 
+//>>>> cmake -B buildvs
+//>>>> cmake --build buildvs
 
-// cmake -B build -G Ninja
+// cmake -B buildvs -G Ninja
 
 /*
 
