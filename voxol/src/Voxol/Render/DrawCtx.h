@@ -1,6 +1,7 @@
 #ifndef VOXOL_RENDER_DRAW_CTX_H
 #define VOXOL_RENDER_DRAW_CTX_H
 
+#include <functional>
 #include "../Base/BaseDefine.h"
 #include "../Math/VxRect.h"
 
@@ -29,3 +30,4 @@ struct DrawContext
 };
 } // namespace Draw
 } // namespace Voxol::Render
+#endif

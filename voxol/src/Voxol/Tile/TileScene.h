@@ -7,7 +7,6 @@
 #include "../Render/DrawCtx.h"
 #include "../Test/OglResUtils.h"
 #include "../Test/OglFbo.h"
-#include <functional>
 
 
 namespace Voxol::Tile
