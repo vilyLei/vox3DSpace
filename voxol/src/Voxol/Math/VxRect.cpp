@@ -72,6 +72,17 @@ void VxRect::setLTRB(float pl, float pt, float pr, float pb)
 }
 
 
+void VxRect::mat33MapTo(const Mat33& mat3, VxRect& dst)
+{
+    auto pv = mat3.mapXY(fX, fY);
+    dst.toEmpty(pv.x, pv.y);
+    pv = mat3.mapXY(fRX, fY);
+    dst.addXY(pv.x, pv.y);
+    pv = mat3.mapXY(fRX, fBY);
+    dst.addXY(pv.x, pv.y);
+    pv = mat3.mapXY(fX, fBY);
+    dst.addXY(pv.x, pv.y);
+}
 void VxRect::addXY(float px, float py)
 {
     if (fLeft > px) fLeft = px;
@@ -129,8 +140,11 @@ float VxRect::height() const
 {
     return fBottom - fTop;
 }
-void VxRect::update()
+
+void VxRect::toEmpty(float px, float py)
 {
+    fX = fRX = px;
+    fY = fBY = py;
 }
 
 bool VxRect::isEmpty() const

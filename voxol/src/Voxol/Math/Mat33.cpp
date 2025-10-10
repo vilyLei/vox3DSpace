@@ -226,6 +226,13 @@ Vec2 Mat33::mapPoint(const Vec2& point) const
     return {px, py};
 }
 
+Vec2 Mat33::mapXY(float x, float y) const
+{
+    float px = data[0] * x + data[3] * y + data[6];
+    float py = data[1] * x + data[4] * y + data[7];
+    return {px, py};
+}
+
 bool Mat33::inverseTo(Mat33& lhs) const
 {
     float det =

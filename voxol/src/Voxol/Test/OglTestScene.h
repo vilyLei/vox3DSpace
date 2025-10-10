@@ -4,6 +4,7 @@
 #include "../Tile/TileSystem.h"
 #include "../Base/BaseDefine.h"
 #include "../Math/Mat33.h"
+#include "../Math/VxRect.h"
 #include "OglResUtils.h"
 #include "OglImage.h"
 #include "OglText.h"
@@ -36,11 +37,13 @@ public:
     int                ctxCurrHeight = 600;
     Voxol::Math::Mat33 projMat{};
     Voxol::Math::Mat33 viewMat{};
+    Voxol::Math::VxRect viewVBounds{};
+    Voxol::Math::VxRect viewWBounds{};
 
 private:
 
     void initVoassScene();
-    void renderVoass(const Voxol::Math::Mat33& vpMat);
+    void renderVoass(const Math::Mat33& vpMat);
     void renderSdfUnits(const Voxol::Math::Mat33& vpMat);
 
     bool voassModeFlag = true;

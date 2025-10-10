@@ -3,6 +3,7 @@
 #define VOXOL_MATH_VX_RECT_H
 
 #include "Vec2.h"
+#include "Mat33.h"
 #include <cmath>
 
 namespace Voxol::Math
@@ -32,7 +33,7 @@ public:
             float fRight;
             float fBottom;
         };
-        float data[4];
+        float data[4]{};
     };
 
 public:
@@ -45,6 +46,7 @@ public:
     void setXYWH(float px, float py, float pw, float ph);
     void setLTRB(float pl, float pt, float pr, float pb);
 
+    void mat33MapTo(const Mat33& mat3, VxRect& dst);
     void addXY(float px, float py);
 
     
@@ -62,7 +64,7 @@ public:
 
     float width() const;
     float height() const;
-    void  update();
+    void  toEmpty(float px = 0, float py = 0);
     bool isEmpty() const;
 };
 } // namespace Voxol::Math

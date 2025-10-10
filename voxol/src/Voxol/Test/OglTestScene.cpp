@@ -91,7 +91,7 @@ void  OglTestScene::initVoassScene(){
     mFbo.init(GL_ZERO);
 
     //Gpu::DrawingUnit sdfCircleUnit{};
-    bool colorClip      = true;
+    bool colorClip      = false;
     sdfCircleUnit.color = {0.9f, 0.0, 0.3f, 1.0f};
     sdfCircleUnit.objMat.setTo(100, 100, 200, 200);
     Gpu::buildSDFDrawUnit(sdfCircleUnit, Shader::SDFShapeType::Circle, colorClip);
@@ -124,9 +124,14 @@ void  OglTestScene::initVoassScene(){
 }
 
 
-void OglTestScene::renderVoass(const Voxol::Math::Mat33& vpMat)
+void OglTestScene::renderVoass(const Math::Mat33& vpMat)
 {
-    auto useTexSampleDrawig = true;
+    auto drawCall = [this](const Math::VxRect& viewWBounds, const Math::Mat33& vpMat) {
+        renderSdfUnits(vpMat);
+    };
+    drawCall({} , vpMat);
+    return;
+    auto useTexSampleDrawig = false;
     if (useTexSampleDrawig)
     {
         int  fboSize     = 256 * 2;

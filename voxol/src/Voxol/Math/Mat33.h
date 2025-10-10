@@ -52,6 +52,7 @@ public:
 
     const float* ptr() const;
     Vec2         mapPoint(const Vec2& point) const;
+    Vec2         mapXY(float x, float y) const;
 
     bool inverseTo(Mat33& lhs) const;
 
