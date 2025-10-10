@@ -1,6 +1,7 @@
 #ifndef VOXOL_OGL_TEST_SCENE_H
 #define VOXOL_OGL_TEST_SCENE_H
 
+#include "../Tile/TileSystem.h"
 #include "../Base/BaseDefine.h"
 #include "../Math/Mat33.h"
 #include "OglResUtils.h"
@@ -45,6 +46,8 @@ private:
     bool voassModeFlag = true;
 
     OglFbo mFbo{};
+
+    Tile::TileSystem tileSys{};
 
     Gpu::DrawingUnit baseDrawUnit{};
     Gpu::DrawingUnit texDrawUnit{};

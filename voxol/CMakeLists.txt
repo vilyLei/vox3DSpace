@@ -106,6 +106,7 @@ source_group("Physics" FILES ${PHYSICS_SRC})
 source_group("Util" FILES ${UTIL_SRC})
 source_group("Test" FILES ${TEST_SRC})
 source_group("Task" FILES ${TASK_SRC})
+source_group("Tile" FILES ${TILE_SRC})
 source_group("VoassRender" FILES ${VOASS_RENDER_SRC})
 
 
