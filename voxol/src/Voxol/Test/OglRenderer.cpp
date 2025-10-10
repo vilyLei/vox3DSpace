@@ -208,8 +208,9 @@ void OglRenderer::render()
         mat.append(canvas.view.viewMat);
         mScene.ctxCurrWidth = ctxCurrWidth;
         mScene.ctxCurrHeight = ctxCurrHeight;
-        mScene.projMat = canvas.view.projMat;
-        mScene.viewMat = canvas.view.viewMat;
+        auto params          = mScene.drawCtx.params;
+        params.projMat       = canvas.view.projMat;
+        params.viewMat       = canvas.view.viewMat;
         mScene.render(mat);
     //}
     // for test

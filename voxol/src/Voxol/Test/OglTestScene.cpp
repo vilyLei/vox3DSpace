@@ -130,6 +130,13 @@ void OglTestScene::renderVoass(const Math::Mat33& vpMat)
         renderSdfUnits(vpMat);
     };
     drawCall({} , vpMat);
+    auto& ctx           = drawCtx;
+    ctx.viewport.width = ctxCurrWidth;
+    ctx.viewport.height = ctxCurrHeight;
+
+    auto& params = ctx.params;
+
+    ctx.drawCall        = drawCall;
     return;
 
     mFbo.init(GL_ZERO);
@@ -142,8 +149,8 @@ void OglTestScene::renderVoass(const Math::Mat33& vpMat)
         auto fboH        = fboSize;
         auto fboTexIndex = 0;
 
-        auto pos     = viewMat.getXY();
-        auto scaleXY = viewMat.getScaleXY();
+        auto pos     = params.viewMat.getXY();
+        auto scaleXY = params.viewMat.getScaleXY();
 
         Voxol::Math::Mat33 fboVPM{};
         fboVPM.ortho(fboW, fboH);
@@ -168,7 +175,7 @@ void OglTestScene::renderVoass(const Math::Mat33& vpMat)
         fboW = fboH = 256;
         tile0Unit.objMat.setTo(0, 0, fboW, fboH);
         //tile0Unit.mvp = vpMat;
-        tile0Unit.mvp = projMat;
+        tile0Unit.mvp = params.projMat;
         tile0Unit.draw();
     }
     else {

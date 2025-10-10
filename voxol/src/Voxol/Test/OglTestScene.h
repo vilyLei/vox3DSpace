@@ -32,16 +32,17 @@ public:
     void initScene();
     void render(const Voxol::Math::Mat33& vpMat);
 
-    
-    int      ctxCurrWidth = 800;
-    int                ctxCurrHeight = 600;
-    Voxol::Math::Mat33 projMat{};
-    Voxol::Math::Mat33 viewMat{};
-    Voxol::Math::VxRect viewVBounds{};
-    Voxol::Math::VxRect viewWBounds{};
+
+    int ctxCurrWidth  = 800;
+    int                       ctxCurrHeight = 600;
+    Render::Draw::DrawContext drawCtx{};
+
+    //Voxol::Math::Mat33 projMat{};
+    //Voxol::Math::Mat33 viewMat{};
+    //Voxol::Math::VxRect viewVBounds{};
+    //Voxol::Math::VxRect viewWBounds{};
 
 private:
-
     void initVoassScene();
     void renderVoass(const Math::Mat33& vpMat);
     void renderSdfUnits(const Voxol::Math::Mat33& vpMat);
@@ -50,17 +51,17 @@ private:
 
     OglFbo mFbo{};
 
-    Tile::TileSystem tileSys{};
+    Tile::TileSystem          tileSys{};
 
-    Gpu::DrawingUnit baseDrawUnit{};
-    Gpu::DrawingUnit texDrawUnit{};
-    Gpu::DrawingUnit redFormatexDrawUnit{};
-    Gpu::DrawingUnit glyphDrawUnit{};
-    Gpu::DrawingUnit pngUnit{};
-    MSDFText         msdfText{};
+    Gpu::DrawingUnit              baseDrawUnit{};
+    Gpu::DrawingUnit              texDrawUnit{};
+    Gpu::DrawingUnit              redFormatexDrawUnit{};
+    Gpu::DrawingUnit              glyphDrawUnit{};
+    Gpu::DrawingUnit              pngUnit{};
+    MSDFText                      msdfText{};
     std::vector<Gpu::DrawingUnit> msdfTextDrawUnits{};
 
-    
+
     Gpu::DrawingUnit sdfCircleUnit{};
     Gpu::DrawingUnit sdfMultiCirclesUnit{};
     Gpu::DrawingUnit sdfRingUnit{};
