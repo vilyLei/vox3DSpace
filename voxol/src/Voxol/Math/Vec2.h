@@ -6,6 +6,7 @@
 
 namespace Voxol::Math
 {
+
 struct Vec2
 {
 public:

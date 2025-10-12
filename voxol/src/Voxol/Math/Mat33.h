@@ -1,6 +1,6 @@
 
-#ifndef VOXOLMATH_MAT33_H
-#define VOXOLMATH_MAT33_H
+#ifndef VOXOL_MATH_MAT33_H
+#define VOXOL_MATH_MAT33_H
 
 #include <array>
 #include <initializer_list>

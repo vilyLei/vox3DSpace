@@ -471,10 +471,20 @@ void VertNode::toLine()
     drawMode = GL_LINE_LOOP;
 }
 
+
 void DrawingUnit::bindGPU()
 {
     shader.bindGPU();
     vertex.bindGPU();
+}
+
+void DrawingUnit::setColor(uint32_t argb32)
+{
+    auto a = ((argb32 >> 24) & 0xff) / 255.0f;
+    auto r = ((argb32 >> 16) & 0xff) / 255.0f;
+    auto g = ((argb32 >> 8) & 0xff) / 255.0f;
+    auto b = (argb32 & 0xff) / 255.0f;
+    color  = {r,g,b,a};
 }
 
 GLuint DrawingUnit::getTextureAt(int index) const

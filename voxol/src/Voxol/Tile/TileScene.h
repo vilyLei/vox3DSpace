@@ -26,6 +26,10 @@ namespace Voxol::Tile
 
     private:
         Render::OglFbo mFbo{};
+
+        int gridSize = 256;
+
+        Test::Gpu::DrawingUnit gridOutlineUnit{};
     };
     
 }
