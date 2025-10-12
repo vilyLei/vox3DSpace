@@ -53,11 +53,11 @@ void GridRect::expand(int32_t margin) noexcept
 }
 
 
-inline RectPos xyToRC(float x, float y, float areaSize)
+inline RectPos xyToRC(float x, float y, float areaSize, int32_t depth)
 {
     auto r = static_cast<int32_t>(std::floor(static_cast<double>(y) / areaSize));
     auto c = static_cast<int32_t>(std::floor(static_cast<double>(x) / areaSize));
-    return {r, c, 0};
+    return {r, c, depth};
 }
 
 inline Math::Vec2 rcToXY(const RectPos& rc, float areaSize)

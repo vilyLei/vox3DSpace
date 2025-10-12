@@ -87,7 +87,7 @@ struct RectPos
     }
 };
 
-inline RectPos      xyToRC(float x, float y, float areaSize);
+inline RectPos      xyToRC(float x, float y, float areaSize, int32_t depth = 0);
 inline Math::Vec2   rcToXY(const RectPos& rc, float areaSize);
 inline GridRect     fromWorldBounds(const Math::VxRect& bounds, int32_t areaSize, float offset = 0.0f);
 inline Math::VxRect toWorldBounds(const GridRect& rc, int32_t areaSize);
