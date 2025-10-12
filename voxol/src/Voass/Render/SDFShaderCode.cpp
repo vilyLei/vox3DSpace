@@ -63,7 +63,11 @@ float randUV( vec2 uv ) {
 const vec4 dither_fector = vec4( factor, -factor, factor, factor);
 vec4 dithering( vec4 color, vec2 puv ) {
     float grid_position = randUV( puv );
+    
     return color + mix( 2.0 * dither_fector, -2.0 * dither_fector, grid_position );
+    //color = pow(color, vec4(2.2));
+    //color = color + mix( 2.0 * dither_fector, -2.0 * dither_fector, grid_position );
+    //return pow(color, vec4(1.0/2.2));
 }
 float aa(float d) {
     float factor = fwidth(d);
