@@ -31,16 +31,7 @@ public:
 public:
     void initScene();
     void render(const Voxol::Math::Mat33& vpMat);
-
-
-    int ctxCurrWidth  = 800;
-    int                       ctxCurrHeight = 600;
     Render::Draw::DrawContext drawCtx{};
-
-    //Voxol::Math::Mat33 projMat{};
-    //Voxol::Math::Mat33 viewMat{};
-    //Voxol::Math::VxRect viewVBounds{};
-    //Voxol::Math::VxRect viewWBounds{};
 
 private:
     void initVoassScene();

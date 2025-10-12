@@ -27,6 +27,8 @@ struct DrawContext
     DrawViewport viewport{};
     DrawParams   params{};
     DrawCallType drawCall;
+    float        zoom = 1;
+    bool        dirty = 1;
 };
 } // namespace Draw
 } // namespace Voxol::Render

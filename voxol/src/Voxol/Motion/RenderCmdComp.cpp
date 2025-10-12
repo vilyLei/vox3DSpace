@@ -27,7 +27,7 @@ bool ViewComponent::viewZoomWithFixPos(const Point2DDesc& fixPos, float dstScale
     dstScale  = desc.zoom;
 
     // preserve precision
-    auto s = std::roundf(scale * 1000) / 1000;
+    auto s = std::roundf(scale * 10000) / 10000;
 
     auto px  = -pos.x / s;
     auto py  = -pos.y / s;
@@ -35,7 +35,7 @@ bool ViewComponent::viewZoomWithFixPos(const Point2DDesc& fixPos, float dstScale
     auto wy0 = (fixPos.y / s) + py;
 
     // preserve precision
-    s = std::roundf(dstScale * 1000) / 1000;
+    s = std::roundf(dstScale * 10000) / 10000;
 
     // 将当前的鼠标坐标转换到 world 坐标
     // 已知 position( wx0,  wy0 ) 数据
@@ -103,6 +103,7 @@ void ViewComponent::update()
     // preserve precision
     auto zoom = std::roundf(desc.zoom * 1000) / 1000;
     printf("ViewComponent::update() zoom: %f\n", zoom);
+    desc.zoom = zoom;
 
     viewMat.setTo(std::roundf(pos.x), std::roundf(pos.y), zoom, zoom);
 }

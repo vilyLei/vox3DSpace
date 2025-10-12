@@ -130,11 +130,11 @@ void OglTestScene::renderVoass(const Math::Mat33& vpMat)
         renderSdfUnits(vpMat);
     };
     //drawCall({} , vpMat);
+    //return;
     auto& ctx           = drawCtx;
-    ctx.viewport.width = ctxCurrWidth;
-    ctx.viewport.height = ctxCurrHeight;
 
     auto& params = ctx.params;
+    auto& viewport = ctx.viewport;
     ctx.drawCall        = drawCall;
     tileSys.run(ctx);
     return;
@@ -168,7 +168,7 @@ void OglTestScene::renderVoass(const Math::Mat33& vpMat)
                 
         renderSdfUnits(fboVPM);
 
-        mFbo.unbindFBO({0, 0, ctxCurrWidth, ctxCurrHeight}, {.95f, .95f, .95f, 1.0f});
+        mFbo.unbindFBO({0, 0, viewport.width, viewport.height}, {.95f, .95f, .95f, 1.0f});
 
         Gpu::buildTexDrawUnitWithTex(tile0Unit, mFbo.getTextureAt(fboTexIndex), true);
 
@@ -211,8 +211,15 @@ void OglTestScene::renderSdfUnits(const Voxol::Math::Mat33& vpMat)
     sdfRingUnit.mvp = vpMat;
     sdfRingUnit.draw();
 
+    sdfRoundedRectUnit.color = {0.5f, 0.6, 0.3f, 1.f};
+    sdfRoundedRectUnit.objMat.setTo(300, 260, 200, 200);
     sdfRoundedRectUnit.mvp = vpMat;
     sdfRoundedRectUnit.draw();
+
+    //sdfRoundedRectUnit.color = {0.5f, 0.6, 0.3f, 1.f};
+    //sdfRoundedRectUnit.objMat.setTo(417, 260, 200, 200);
+    //sdfRoundedRectUnit.mvp = vpMat;
+    //sdfRoundedRectUnit.draw();
 
     sdfTriangleUnit.mvp = vpMat;
     sdfTriangleUnit.draw();

@@ -149,7 +149,7 @@ int OglRenderer::initCtx()
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
         // Check if any events have been activiated (key pressed, mouse moved etc.) and call corresponding response functions
         glfwPollEvents();
-        if (dirty) {
+        //if (dirty) {
 
             glViewport(0, 0, ctxCurrWidth, ctxCurrHeight);
             // Render
@@ -162,7 +162,7 @@ int OglRenderer::initCtx()
 
             // Swap the screen buffers
             glfwSwapBuffers(window);
-        }
+        //}
     }
 
     // Terminate GLFW, clearing any resources allocated by GLFW.
@@ -195,26 +195,32 @@ void OglRenderer::render()
 {
     using namespace Voxol::Math;
 
+    auto& view = canvas.view;
+
+    auto& rctx = mScene.drawCtx;
     if (ctxWidth != ctxCurrWidth || ctxHeight != ctxCurrHeight)
     {
         ctxWidth = ctxCurrWidth;
         ctxHeight = ctxCurrHeight;
-        canvas.view.projMat.ortho(ctxWidth, ctxHeight);
+        rctx.viewport.width  = ctxWidth;
+        rctx.viewport.height = ctxHeight;
+
+        view.projMat.ortho(ctxWidth, ctxHeight);
         dirty = true;
     }
+    rctx.zoom            = view.desc.zoom;
+    mScene.drawCtx.dirty = dirty;
     //if (dirty)
     //{
-        Mat33 mat = canvas.view.projMat;
-        mat.append(canvas.view.viewMat);
-        mScene.ctxCurrWidth = ctxCurrWidth;
-        mScene.ctxCurrHeight = ctxCurrHeight;
-        auto params          = mScene.drawCtx.params;
-        params.projMat       = canvas.view.projMat;
-        params.viewMat       = canvas.view.viewMat;
-        mScene.render(mat);
+    Mat33 mat = view.projMat;
+    mat.append(view.viewMat);
+    auto& params          = rctx.params;
+    params.projMat       = view.projMat;
+    params.viewMat       = view.viewMat;
+    mScene.render(mat);
     //}
     // for test
-    //dirty = false;
+    dirty = false;
 }
 
 void OglRenderer::draw()
