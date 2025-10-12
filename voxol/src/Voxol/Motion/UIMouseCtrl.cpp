@@ -28,7 +28,10 @@ bool UIMouseCtrl::setMouseParams(ViewComponent& view, const UIMouseParam& param)
         break;
         case 4:
         {
-            auto dv   = std::abs(param.value) > 1 ? param.value * 0.01f : param.value;
+            //#ifdef _WIN32
+            //auto dv   = std::abs(param.value) >= 5 ? param.value * 0.01f : param.value;
+            auto dv   = param.value > 0 ? 1 : -1;
+            printf("scroll dv: %f, param.value: %f\n", dv, param.value);
             viewDirty = view.updateViewZoom(mousePos, dv, 1.2f);
         }
         break;

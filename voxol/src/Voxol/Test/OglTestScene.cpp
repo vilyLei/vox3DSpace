@@ -128,6 +128,11 @@ void  OglTestScene::initVoassScene(){
     boundsUnit.vertex.toLine();
     boundsUnit.vertex.lineWidth = 5;
     Test::Gpu::buildBaseDrawUnit(boundsUnit);
+
+    
+    baseDrawUnit.color = {0.1f, 0.6, 0.3f, 1.0f};
+    baseDrawUnit.objMat.setTo(100, 100, 200, 80);
+    Gpu::buildBaseDrawUnit(baseDrawUnit);
 }
 
 
@@ -235,10 +240,16 @@ void OglTestScene::renderSdfUnits(const Voxol::Math::Mat33& vpMat)
     sdfRoundedRectUnit.mvp = vpMat;
     sdfRoundedRectUnit.draw();
 
-    //sdfRoundedRectUnit.color = {0.5f, 0.6, 0.3f, 1.f};
-    //sdfRoundedRectUnit.objMat.setTo(417, 260, 200, 200);
-    //sdfRoundedRectUnit.mvp = vpMat;
-    //sdfRoundedRectUnit.draw();
+    sdfRoundedRectUnit.color = {0.5f, 0.6, 0.3f, 1.f};
+    sdfRoundedRectUnit.objMat.setTo(500, 260, 200, 200);
+    sdfRoundedRectUnit.mvp = vpMat;
+    sdfRoundedRectUnit.draw();
+
+    
+    baseDrawUnit.color = {0.1f, 0.6, 0.3f, 1.0f};
+    baseDrawUnit.objMat.setTo(100, 300, 300, 30, 3.1415926f/3);
+    baseDrawUnit.mvp = vpMat;
+    baseDrawUnit.draw();
 
     sdfTriangleUnit.setColor(0x8000aa00);
     sdfTriangleUnit.mvp = vpMat;

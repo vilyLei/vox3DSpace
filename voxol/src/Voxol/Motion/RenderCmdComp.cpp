@@ -97,11 +97,11 @@ void ViewComponent::update()
     auto pos = desc.position;
 
     // preserve precision
-    pos.x = std::roundf(pos.x * 1000) / 1000;
-    pos.y = std::roundf(pos.y * 1000) / 1000;
+    pos.x = std::roundf(pos.x * 10000) / 10000;
+    pos.y = std::roundf(pos.y * 10000) / 10000;
 
     // preserve precision
-    auto zoom = std::roundf(desc.zoom * 1000) / 1000;
+    auto zoom = std::roundf(desc.zoom * 10000) / 10000;
     printf("ViewComponent::update() zoom: %f\n", zoom);
     desc.zoom = zoom;
 

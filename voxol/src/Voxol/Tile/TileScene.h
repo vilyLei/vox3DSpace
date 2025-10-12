@@ -13,31 +13,32 @@
 
 namespace Voxol::Tile
 {
-    using namespace Voxol::Math;
+using namespace Voxol::Math;
 
 
-    class TileScene
-    {
-    public:
-        TileScene() = default;
-        ~TileScene() = default;
-    public:
-    
-        void initalize();
-        void buildGrid(Grid::Unit& unit, const Render::Draw::DrawContext& ctx);
-        void run(const Render::Draw::DrawContext& ctx);
+class TileScene
+{
+public:
+    TileScene()  = default;
+    ~TileScene() = default;
 
-    private:
-        Render::OglFbo mFbo{};
+public:
+    void initalize();
+    void buildGrid(Grid::Unit& unit, const Render::Draw::DrawContext& ctx);
+    void run(const Render::Draw::DrawContext& ctx);
 
-        int gridSize = 256;
+private:
+    Render::OglFbo mFbo{};
 
-        std::vector<Grid::Unit> gridUnits{};
-        Grid::Unit outlineUnit{};
+    int gridSize = 256;
 
-        Math::Mat33               gridProjMat{};
-        Render::Draw::ClearParams             clearParam{};
-    };
-    
-}
+    std::vector<Grid::Unit> gridUnits{};
+    Grid::Unit              outlineUnit{};
+
+    Math::Mat33               gridProjMat{};
+    Render::Draw::ClearParams clearParam{};
+    int                       gridsTotal = 0;
+};
+
+} // namespace Voxol::Tile
 #endif

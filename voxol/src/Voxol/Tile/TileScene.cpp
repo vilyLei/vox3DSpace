@@ -65,10 +65,10 @@ namespace Voxol::Tile
 
         auto dstSize = std::pow(2, lv);
         auto lvScale = float(gridSize) / dstSize;
-        if (ctx.dirty)
-        {
-            printf("TileScene::run(), value: %f, lv: %d, dstSize: %f, lvScale: %f\n", value, lv, dstSize, lvScale);
-        }
+        //if (ctx.dirty)
+        //{
+        //    printf("TileScene::run(), value: %f, lv: %d, dstSize: %f, lvScale: %f\n", value, lv, dstSize, lvScale);
+        //}
 
         gridProjMat.ortho(gridSize, gridSize);
         clearParam.viewport = {0, 0, gridSize, gridSize};
@@ -84,27 +84,31 @@ namespace Voxol::Tile
         auto k = 0;
         auto gr = RC::xyRectToRCRect(params.viewWBounds, currGridSize);
         ///*
-        for (auto r = gr.minR; r <= gr.maxR; r++)
+        if (ctx.dirty)
         {
-            for (auto c = gr.minC; c <= gr.maxC; c++)
+            for (auto r = gr.minR; r <= gr.maxR; r++)
             {
-                gridUnits[k].setRCAndAreaSize({r, c}, currGridSize);
-                buildGrid(gridUnits[k], ctx);
+                for (auto c = gr.minC; c <= gr.maxC; c++)
+                {
+                    gridUnits[k].setRCAndAreaSize({r, c}, currGridSize);
+                    buildGrid(gridUnits[k], ctx);
 
-                k++;
+                    k++;
+                }
             }
+            gridsTotal = k;
         }
 
-        for (auto i = 0; i < k; i++)
+        for (auto i = 0; i < gridsTotal; i++)
         {
             gridUnits[i].drawUnit.mvp = vpM;
             gridUnits[i].drawUnit.draw();
         }
 
-        if (ctx.dirty)
-        {
-            printf("TileScene::run(), tile grids total: %d\n", k);
-        }
+        //if (ctx.dirty)
+        //{
+        //    printf("TileScene::run(), tile grids total: %d\n", k);
+        //}
         return;
         //*/
         //*
