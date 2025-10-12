@@ -131,7 +131,7 @@ void OglTestScene::renderVoass(const Math::Mat33& vpMat)
     auto& ctx    = drawCtx;
     auto& params = ctx.drawParam;
 
-    /*
+    ///*
     auto drawCall = [this](const Math::VxRect& viewWBounds, const Math::Mat33& vpMat) {
         renderSdfUnits(vpMat);
     };
