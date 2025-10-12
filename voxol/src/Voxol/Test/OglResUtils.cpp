@@ -521,7 +521,7 @@ void DrawingUnit::draw()
     bindGPU();
 
     glEnable(GL_BLEND);
-    if (blendMode < 2 && shader.textures.empty())
+    if ((blendMode < 2 && shader.textures.empty()) || blendMode == 3)
     {
 
         glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
