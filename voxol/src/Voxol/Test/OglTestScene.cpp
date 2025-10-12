@@ -126,24 +126,28 @@ void  OglTestScene::initVoassScene(){
 
 void OglTestScene::renderVoass(const Math::Mat33& vpMat)
 {
+    auto& ctx    = drawCtx;
+    auto& params = ctx.drawParam;
+
+    /*
     auto drawCall = [this](const Math::VxRect& viewWBounds, const Math::Mat33& vpMat) {
         renderSdfUnits(vpMat);
     };
     //drawCall({} , vpMat);
     //return;
-    auto& ctx           = drawCtx;
-
-    auto& params = ctx.params;
-    auto& viewport = ctx.viewport;
+    auto& viewport = ctx.clearParam.viewport;
     ctx.drawCall        = drawCall;
     tileSys.run(ctx);
     return;
+    //*/
 
     mFbo.init(GL_ZERO);
 
-    auto useTexSampleDrawig = false;
+    auto useTexSampleDrawig = true;
     if (useTexSampleDrawig)
     {
+        Render::Draw::ClearParams clearParam{};
+
         int  fboSize     = 256 * 2;
         auto fboW        = fboSize;
         auto fboH        = fboSize;
@@ -161,14 +165,17 @@ void OglTestScene::renderVoass(const Math::Mat33& vpMat)
 
         fboVPM.append(vMat);
 
+        clearParam.viewport = {0, 0, fboW, fboH};
+        clearParam.clearColor = {0.1, 0.3, 0.1, 1};
 
         mFbo.bindFBO();
         mFbo.bindTextureAt(tile0Unit.getTextureAt(0), fboTexIndex, fboW, fboH);
-        mFbo.renderBegin({0, 0, fboW, fboH}, {0.1, 0.3, 0.1, 1});
+        //mFbo.renderBegin({0, 0, fboW, fboH}, {0.1, 0.3, 0.1, 1});
+        mFbo.renderBegin(clearParam);
                 
         renderSdfUnits(fboVPM);
 
-        mFbo.unbindFBO({0, 0, viewport.width, viewport.height}, {.95f, .95f, .95f, 1.0f});
+        mFbo.unbindFBO(ctx.clearParam);
 
         Gpu::buildTexDrawUnitWithTex(tile0Unit, mFbo.getTextureAt(fboTexIndex), true);
 

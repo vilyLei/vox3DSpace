@@ -71,8 +71,9 @@ void OglRenderer::mouseButton_callback(GLFWwindow* window, int sign, int flag, i
 }
 int OglRenderer::initCtx()
 {
-    auto& rctx = mScene.drawCtx;
-    rctx.clearColor = {0.95f, 0.95f, 0.95f, 1.0f};
+    //auto& rctx = mScene.drawCtx;
+    //auto& clearParam = rctx.clearParam;
+    //clearParam.clearColor = {0.95f, 0.95f, 0.95f, 1.0f};
 
     int ver_major = 3;
     int ver_minor = 3;
@@ -154,12 +155,12 @@ int OglRenderer::initCtx()
         glfwPollEvents();
         //if (dirty) {
 
-            glViewport(0, 0, ctxCurrWidth, ctxCurrHeight);
-            // Render
-            // Clear the colorbuffer
-            auto& cc = rctx.clearColor;
-            glClearColor(cc.r, cc.g, cc.b, cc.a);
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+            //glViewport(0, 0, ctxCurrWidth, ctxCurrHeight);
+            //// Render
+            //// Clear the colorbuffer
+            //auto& cc = clearParam.clearColor;
+            //glClearColor(cc.r, cc.g, cc.b, cc.a);
+            //glClear(clearParam.clearMask);
 
             render();
             // draw();
@@ -206,8 +207,8 @@ void OglRenderer::render()
     {
         ctxWidth = ctxCurrWidth;
         ctxHeight = ctxCurrHeight;
-        rctx.viewport.width  = ctxWidth;
-        rctx.viewport.height = ctxHeight;
+
+        rctx.clearParam.viewport = {0, 0, static_cast<int>(ctxWidth), static_cast<int>(ctxHeight)};
 
         view.projMat.ortho(ctxWidth, ctxHeight);
         dirty = true;
@@ -218,9 +219,12 @@ void OglRenderer::render()
     //{
     Mat33 mat = view.projMat;
     mat.append(view.viewMat);
-    auto& params          = rctx.params;
+    auto& params          = rctx.drawParam;
     params.projMat       = view.projMat;
     params.viewMat       = view.viewMat;
+
+    rctx.clearParam.apply();
+
     mScene.render(mat);
     //}
     // for test
