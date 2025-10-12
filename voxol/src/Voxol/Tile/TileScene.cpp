@@ -12,17 +12,25 @@ namespace Voxol::Tile
 
         gridUnits.resize(128);
 
-        Test::Gpu::buildTexDrawUnitWithTex(gridUnits[0].drawUnit, GL_ZERO, true);
+        auto& srcUnit = gridUnits[0].drawUnit;
+        Test::Gpu::buildTexDrawUnitWithTex(srcUnit, GL_ZERO, true);
+
+        for (auto i = 1; i < gridUnits.size(); ++i)
+        {
+            auto& unit = gridUnits[i].drawUnit;
+            unit.vertex = srcUnit.vertex;
+            unit.shader = srcUnit.shader;
+        }
         
     }
 
-    void TileScene::buildGrid(Grid::Unit& unit, const Render::Draw::DrawContext& ctx, int fboTexSize)
+    void TileScene::buildGrid(Grid::Unit& unit, const Render::Draw::DrawContext& ctx)
     {
 
         auto&  drawUnit = unit.drawUnit;
         auto&& pos      = drawUnit.objMat.getXY();
 
-        auto        scale = fboTexSize / unit.areaSize;
+        auto scale = gridSize / unit.areaSize;
 
         Math::Mat33 vpM = gridProjMat;
 
@@ -48,7 +56,7 @@ namespace Voxol::Tile
         auto&       params = ctx.drawParam;
         Math::Mat33 vpM = params.projMat;
         vpM.append(params.viewMat);
-        ctx.drawCall({}, vpM);
+
 
         // the default gridSize value is 256
         auto value = gridSize * ctx.zoom;
@@ -66,25 +74,21 @@ namespace Voxol::Tile
         clearParam.clearColor = {0.95f, 0.95f, 0.95f, 0};
 
         auto currGridSize = 256.0f;
-        auto texSize      = gridSize;
 
         currGridSize = gridSize * lvScale;
 
 
-        auto pv = RC::xyToRC(3, 0, 10);
-
-        //outlineUnit.objMat.setTo(0, 0, currGridSize, currGridSize);
         outlineUnit.drawUnit.setColor(0x50550055);
 
         auto k = 0;
         auto gr = RC::xyRectToRCRect(params.viewWBounds, currGridSize);
-        /*
+        ///*
         for (auto r = gr.minR; r <= gr.maxR; r++)
         {
             for (auto c = gr.minC; c <= gr.maxC; c++)
             {
-                gridUnits[k].setPosAndSize({r, c}, currGridSize);
-                buildGridUnit(gridUnits[k], ctx, texSize);
+                gridUnits[k].setRCAndAreaSize({r, c}, currGridSize);
+                buildGrid(gridUnits[k], ctx);
 
                 k++;
             }
@@ -95,8 +99,15 @@ namespace Voxol::Tile
             gridUnits[i].drawUnit.mvp = vpM;
             gridUnits[i].drawUnit.draw();
         }
-        //*/
 
+        if (ctx.dirty)
+        {
+            printf("TileScene::run(), tile grids total: %d\n", k);
+        }
+        //return;
+        //*/
+        //*
+        //ctx.drawCall({}, vpM);
         auto& drawUnit = outlineUnit.drawUnit;
         for (auto r = gr.minR; r <= gr.maxR; r++)
         {
@@ -107,5 +118,6 @@ namespace Voxol::Tile
                 outlineUnit.drawUnit.draw();
             }
         }
+        //*/
     }
 }

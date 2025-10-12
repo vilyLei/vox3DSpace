@@ -24,7 +24,7 @@ namespace Voxol::Tile
     public:
     
         void initalize();
-        void buildGrid(Grid::Unit& unit, const Render::Draw::DrawContext& ctx, int fboTexSize);
+        void buildGrid(Grid::Unit& unit, const Render::Draw::DrawContext& ctx);
         void run(const Render::Draw::DrawContext& ctx);
 
     private:
