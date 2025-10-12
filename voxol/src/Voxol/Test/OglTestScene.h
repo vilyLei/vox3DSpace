@@ -5,10 +5,10 @@
 #include "../Base/BaseDefine.h"
 #include "../Math/Mat33.h"
 #include "../Math/VxRect.h"
+#include "../Render/OglFbo.h"
 #include "OglResUtils.h"
 #include "OglImage.h"
 #include "OglText.h"
-#include "OglFbo.h"
 
 #include <iostream>
 #include <cmath>
@@ -40,8 +40,7 @@ private:
 
     bool voassModeFlag = true;
 
-    OglFbo mFbo{};
-
+    Render::OglFbo mFbo{};
     Tile::TileSystem          tileSys{};
 
     Gpu::DrawingUnit              baseDrawUnit{};

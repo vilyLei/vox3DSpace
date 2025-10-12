@@ -6,7 +6,7 @@
 #include "../Math/VxRect.h"
 #include "../Render/DrawCtx.h"
 #include "../Test/OglResUtils.h"
-#include "../Test/OglFbo.h"
+#include "../Render/OglFbo.h"
 
 
 namespace Voxol::Tile
@@ -25,7 +25,7 @@ namespace Voxol::Tile
         void run(const Render::Draw::DrawContext& ctx);
 
     private:
-        Test::OglFbo mFbo{};
+        Render::OglFbo mFbo{};
     };
     
 }

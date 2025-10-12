@@ -11,10 +11,16 @@ namespace Draw
 {
 using DrawCallType = std::function<void(const Math::VxRect& viewWBounds, const Math::Mat33& vpMat)>;
 
-struct DrawViewport
+struct Viewport
 {
     int x, y, width, height;
 };
+struct ClearColor
+{
+    float r = 1, g = 1, b = 1, a = 1;
+};
+
+
 struct DrawParams
 {
     Math::Mat33  viewMat{};
@@ -24,7 +30,9 @@ struct DrawParams
 };
 struct DrawContext
 {
-    DrawViewport viewport{};
+    Viewport viewport{};
+    ClearColor clearColor{};
+    
     DrawParams   params{};
     DrawCallType drawCall;
     float        zoom = 1;

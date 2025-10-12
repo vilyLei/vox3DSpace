@@ -71,6 +71,9 @@ void OglRenderer::mouseButton_callback(GLFWwindow* window, int sign, int flag, i
 }
 int OglRenderer::initCtx()
 {
+    auto& rctx = mScene.drawCtx;
+    rctx.clearColor = {0.95f, 0.95f, 0.95f, 1.0f};
+
     int ver_major = 3;
     int ver_minor = 3;
     std::cout << "Starting GLFW context, OpenGL " << ver_major << "." << ver_minor << std::endl;
@@ -154,7 +157,8 @@ int OglRenderer::initCtx()
             glViewport(0, 0, ctxCurrWidth, ctxCurrHeight);
             // Render
             // Clear the colorbuffer
-            glClearColor(0.95f, 0.95f, 0.95f, 1.0f);
+            auto& cc = rctx.clearColor;
+            glClearColor(cc.r, cc.g, cc.b, cc.a);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
             render();
