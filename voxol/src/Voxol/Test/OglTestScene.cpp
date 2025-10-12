@@ -119,7 +119,7 @@ void  OglTestScene::initVoassScene(){
     Gpu::buildSDFDrawUnit(sdfRoundedRectUnit, Shader::SDFShapeType::RoundedRect, colorClip);
 
     sdfTriangleUnit.color = {0.7f, 0.2, 0.2f, 1.f};
-    sdfTriangleUnit.objMat.setTo(300, 300, 200, 200);
+    sdfTriangleUnit.objMat.setTo(300, 350, 200, 200);
     Gpu::buildSDFDrawUnit(sdfTriangleUnit, Shader::SDFShapeType::Triangle, colorClip);
     
     //boundsUnit

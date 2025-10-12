@@ -183,6 +183,12 @@ vec4 smoothUnion(vec4 d1, vec4 d2, float k) {
 vec4 smoothUnionVec4(vec4 c1, vec4 c2, float d1, float d2, float k) {
     float h = clamp(0.5 + 0.5 * (d2 - d1) / k, 0.0, 1.0);
     return mix(c1, c2, h);
+    //float fw = fwidth(h);
+    //h = smoothstep(0.0 - fw, 1.0 + fw, h);
+    //c1 = pow(c1, vec4(2.2));
+    //c2 = pow(c2, vec4(2.2));
+    //vec4 c = mix(c1, c2, h);
+    //return pow(c, vec4(1.0 / 2.2));
 }
 
 )";
