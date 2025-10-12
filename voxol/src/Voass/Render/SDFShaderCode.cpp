@@ -173,13 +173,6 @@ float smoothUnion4(float d0, float d1, float d2, float d3, float k) {
     return d;
 }
 
-vec4 smoothUnion(vec4 d1, vec4 d2, float k) {
-    float h = clamp(0.5 + 0.5 * (d2.w - d1.w) / k, 0.0, 1.0);
-    float d = mix(d2.w, d1.w, h) - k * h * (1.0 - h);
-    vec3 col = mix(d1.xyz, d2.xyz, h);
-    return vec4(col, d);
-}
-
 vec4 smoothUnionVec4(vec4 c1, vec4 c2, float d1, float d2, float k) {
     float h = clamp(0.5 + 0.5 * (d2 - d1) / k, 0.0, 1.0);
     return mix(c1, c2, h);
