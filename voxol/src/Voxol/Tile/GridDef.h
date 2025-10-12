@@ -7,6 +7,7 @@
 #include "../Base/BaseDefine.h"
 #include "../Math/VxRect.h"
 #include "../Math/Vec2.h"
+#include "../Test/OglResUtils.h""
 
 namespace Voxol::Tile
 {
@@ -93,6 +94,13 @@ inline GridRect     fromWorldBounds(const Math::VxRect& bounds, int32_t areaSize
 inline Math::VxRect toWorldBounds(const GridRect& rc, int32_t areaSize);
 
 } // namespace RC
+namespace Grid
+{
+struct Unit
+{
+    Test::Gpu::DrawingUnit drawUnit{};
 
+};
+}
 } // namespace Voxol::Tile
 #endif

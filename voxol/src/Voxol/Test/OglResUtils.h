@@ -24,13 +24,13 @@ extern const char* fragShaderSource;
 extern const char* vertTexSource;
 extern const char* fragTexSource;
 
-GLuint                      compileShader(GLenum type, const char* source);
-GLuint                      createSahderProgram(const char* vertSource, const char* fragSource);
-std::vector<float>          getVertsWithVEOSegN(int n);
-std::vector<float>          getVertsWithUVVEOSegN(int n);
+GLuint             compileShader(GLenum type, const char* source);
+GLuint             createSahderProgram(const char* vertSource, const char* fragSource);
+std::vector<float> getVertsWithVEOSegN(int n);
+std::vector<float> getVertsWithUVVEOSegN(int n);
 
-std::vector<float> getVertsWithUVVEO(float u0 = 0, float v0 = 0, float u1 = 1, float v1 = 1);
-std::vector<float> getVertsWithUVVEOFlipY(float u0 = 0, float v0 = 0, float u1 = 1, float v1 = 1);
+std::vector<float>          getVertsWithUVVEO(float u0 = 0, float v0 = 0, float u1 = 1, float v1 = 1);
+std::vector<float>          getVertsWithUVVEOFlipY(float u0 = 0, float v0 = 0, float u1 = 1, float v1 = 1);
 std::vector<unsigned short> getIndicesWithSegN(int n);
 GLuint                      createTextureFromImageBytes(int imageWidth, int imageHeight, const std::vector<unsigned char>& buffer, GLint internalformat = GL_RGBA, GLint format = GL_RGBA, GLint alignment = 4);
 std::vector<unsigned char>  createRGBAImgBytes(int imageWidth, int imageHeight);
@@ -49,12 +49,11 @@ struct Image2DBytesData
 };
 struct TextGlyphData
 {
-    int bearingX = 0;
-    int bearingY = 0;
-    unsigned int advance = 0;
-    bool useSubpixel = false;
+    int              bearingX    = 0;
+    int              bearingY    = 0;
+    unsigned int     advance     = 0;
+    bool             useSubpixel = false;
     Image2DBytesData image{};
-
 };
 struct MSDFGlyph
 {
@@ -67,9 +66,9 @@ struct MSDFGlyph
 
 struct MSDFAtlas
 {
-    int                  width, height;
-    float                emSize, lineHeight, ascender, descender;
-    float                distanceRange;
+    int                                width, height;
+    float                              emSize, lineHeight, ascender, descender;
+    float                              distanceRange;
     std::unordered_map<int, MSDFGlyph> glyphs;
     void                               reset();
 };
@@ -96,9 +95,9 @@ struct VertVSNode
 };
 struct VertNode
 {
-    GLuint                      vao = GL_ZERO;
-    GLuint                      veo = GL_ZERO;
-    GLenum                      drawMode = GL_TRIANGLES;
+    GLuint                      vao       = GL_ZERO;
+    GLuint                      veo       = GL_ZERO;
+    GLenum                      drawMode  = GL_TRIANGLES;
     float                       lineWidth = 1;
     std::vector<VertVSNode>     vsNodes{};
     std::vector<unsigned short> indices{};
@@ -124,12 +123,12 @@ struct DrawingUnit
     Voxol::Math::Mat33   objMat{};
     Voxol::Math::Mat33   mvp{};
     int                  blendMode = 1;
-    bool                  colorClip = false;
+    bool                 colorClip = false;
 
-    void bindGPU();
+    void   bindGPU();
     GLuint getTextureAt(int index) const;
-    void setTextureAt(GLuint tex, int index);
-    void draw();
+    void   setTextureAt(GLuint tex, int index);
+    void   draw();
 };
 
 void buildBaseDrawUnit(DrawingUnit& unit);

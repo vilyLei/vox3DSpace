@@ -86,4 +86,8 @@ inline Math::VxRect toWorldBounds(const GridRect& rc, int32_t areaSize)
 }
 
 } // namespace RC
+namespace Grid
+{
+
+}
 } // namespace Voxol::Tile

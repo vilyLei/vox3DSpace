@@ -60,6 +60,8 @@ private:
     Gpu::DrawingUnit sdfTriangleUnit{};
 
     Gpu::DrawingUnit tile0Unit{};
+
+    Gpu::DrawingUnit boundsUnit{};
 };
 
 
