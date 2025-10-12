@@ -7,6 +7,7 @@ namespace Voxol::Tile
     {
         mFbo.init(GL_ZERO);
 
+        outlineUnit.drawUnit.vertex.toLine();
         Test::Gpu::buildBaseDrawUnit(outlineUnit.drawUnit);
         
     }
@@ -29,19 +30,14 @@ namespace Voxol::Tile
             printf("value: %f, lv: %d, dstSize: %f, lvScale: %f\n", value, lv, dstSize, lvScale);
         }
 
-        //auto& rparams = ctx.drawParam;
- /*       auto  vM      = rparams.viewMat;
-        vpM           = rparams.projMat;
-        vpM.append(vM);*/
 
         auto currGridSize = 256.0f;
         auto texSize      = gridSize;
 
-        //vpM = rparams.projMat;
-        //vpM.append(rparams.viewMat);
-
         currGridSize = gridSize * lvScale;
 
+
+        auto pv = RC::xyToRC(3, 0, 10);
 
         //outlineUnit.objMat.setTo(0, 0, currGridSize, currGridSize);
         outlineUnit.drawUnit.setColor(0x50550055);
@@ -72,10 +68,6 @@ namespace Voxol::Tile
         {
             for (auto c = gr.minC; c <= gr.maxC; c++)
             {
-                //gridUnits[k].setPosAndSize({r, c}, currGridSize);
-                //buildGridUnit(gridUnits[k], ctx, texSize);
-
-                //k++;
                 outlineUnit.setRCAndAreaSize({r, c}, currGridSize);
                 outlineUnit.drawUnit.mvp = vpM;
                 outlineUnit.drawUnit.draw();
