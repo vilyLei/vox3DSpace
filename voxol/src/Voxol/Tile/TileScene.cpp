@@ -9,6 +9,10 @@ namespace Voxol::Tile
 
         outlineUnit.drawUnit.vertex.toLine();
         Test::Gpu::buildBaseDrawUnit(outlineUnit.drawUnit);
+
+        gridUnits.resize(128);
+
+        Test::Gpu::buildTexDrawUnitWithTex(gridUnits[0].drawUnit, GL_ZERO, true);
         
     }
 

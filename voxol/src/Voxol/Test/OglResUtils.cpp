@@ -355,6 +355,8 @@ namespace Gpu
 
 void ShdNode::bindGPU()
 {
+    if (textures.size() != texLocs.size())
+        return;
 
     glUseProgram(program);
 
@@ -513,6 +515,9 @@ void DrawingUnit::draw()
     if (shader.program <= GL_ZERO)
         return;
 
+    if (shader.textures.size() != shader.texLocs.size())
+        return;
+
     bindGPU();
 
     glEnable(GL_BLEND);
@@ -589,6 +594,9 @@ void buildTexDrawUnitWithTex(DrawingUnit& unit, GLuint tex, bool uvFlipY)
         shader.colorLoc  = glGetUniformLocation(shader.program, "u_color");
         auto texLoc      = glGetUniformLocation(shader.program, "u_tex0");
         shader.texLocs.push_back(texLoc);
+    }
+    if (shader.textures.empty() && tex > GL_ZERO)
+    {
         shader.textures.push_back(tex);
     }
     auto& vert = unit.vertex;
