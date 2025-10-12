@@ -1,5 +1,6 @@
 #include "TileScene.h"
 #include "../Math/MathDef.h"
+
 namespace Voxol::Tile
 {
     
@@ -10,7 +11,7 @@ namespace Voxol::Tile
         outlineUnit.drawUnit.vertex.toLine();
         Test::Gpu::buildBaseDrawUnit(outlineUnit.drawUnit);
 
-        gridUnits.resize(128);
+        gridUnits.resize(256);
 
         auto& srcUnit = gridUnits[0].drawUnit;
         Test::Gpu::buildTexDrawUnitWithTex(srcUnit, GL_ZERO, true);
@@ -104,7 +105,7 @@ namespace Voxol::Tile
         {
             printf("TileScene::run(), tile grids total: %d\n", k);
         }
-        //return;
+        return;
         //*/
         //*
         //ctx.drawCall({}, vpM);
