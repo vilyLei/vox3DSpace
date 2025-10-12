@@ -62,10 +62,7 @@ inline RectPos xyToRC(float x, float y, float areaSize, int32_t depth)
 
 inline Math::Vec2 rcToXY(const RectPos& rc, float areaSize)
 {
-    Math::Vec2 pos;
-    pos.x     = rc.c * areaSize;
-    pos.y     = rc.r * areaSize;
-    return pos;
+    return {rc.c * areaSize, rc.r * areaSize};
 }
 
 inline GridRect fromWorldBounds(const Math::VxRect& bounds, int32_t areaSize, float offset)
