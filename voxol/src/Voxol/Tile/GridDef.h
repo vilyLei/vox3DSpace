@@ -16,7 +16,7 @@ using namespace Voxol::Math;
 namespace RC
 {
 
-union GridRect
+union Rect
 {
     int32_t data[4]{};
 
@@ -36,24 +36,24 @@ union GridRect
         int32_t maxY;
     };
 
-    GridRect() = default;
-    GridRect(int32_t minC, int32_t minR, int32_t maxC, int32_t maxR);
+    Rect() = default;
+    Rect(int32_t minC, int32_t minR, int32_t maxC, int32_t maxR);
 
     [[nodiscard]] int32_t width() const noexcept;
     [[nodiscard]] int32_t height() const noexcept;
 
     [[nodiscard]] bool contains(int32_t r, int32_t c) const noexcept;
 
-    [[nodiscard]] bool overlaps(const GridRect& other) const noexcept;
+    [[nodiscard]] bool overlaps(const Rect& other) const noexcept;
 
     void expand(int32_t margin) noexcept;
 
-    [[nodiscard]] GridRect intersectWith(const GridRect& other) const noexcept;
+    [[nodiscard]] Rect intersectWith(const Rect& other) const noexcept;
 
-    [[nodiscard]] GridRect unionWith(const GridRect& other) const noexcept;
+    [[nodiscard]] Rect unionWith(const Rect& other) const noexcept;
 };
 
-struct RectPos
+struct Pos
 {
     union
     {
@@ -74,24 +74,24 @@ struct RectPos
         };
     };
 
-    RectPos() = default;
-    RectPos(int32_t r, int32_t c, int32_t level = 0) :
+    Pos() = default;
+    Pos(int32_t r, int32_t c, int32_t level = 0) :
         r(r), c(c), level(level) {}
 
-    [[nodiscard]] bool operator==(const RectPos& other) const noexcept
+    [[nodiscard]] bool operator==(const Pos& other) const noexcept
     {
         return value == other.value;
     }
-    [[nodiscard]] bool operator!=(const RectPos& other) const noexcept
+    [[nodiscard]] bool operator!=(const Pos& other) const noexcept
     {
         return value != other.value;
     }
 };
 
-inline RectPos      xyToRC(float x, float y, float areaSize, int32_t depth = 0);
-inline Math::Vec2   rcToXY(const RectPos& rc, float areaSize);
-inline GridRect     fromWorldBounds(const Math::VxRect& bounds, int32_t areaSize, float offset = 0.0f);
-inline Math::VxRect toWorldBounds(const GridRect& rc, int32_t areaSize);
+inline Pos          xyToRC(float x, float y, float areaSize, int32_t depth = 0);
+inline Math::Vec2   rcToXY(const Pos& rc, float areaSize);
+inline Rect         fromWorldBounds(const Math::VxRect& bounds, int32_t areaSize, float offset = 0.0f);
+inline Math::VxRect toWorldBounds(const Rect& rc, int32_t areaSize);
 
 } // namespace RC
 namespace Grid
@@ -99,7 +99,9 @@ namespace Grid
 struct Unit
 {
     Test::Gpu::DrawingUnit drawUnit{};
-
+    RC::Pos                rc{};
+    float areaSize = 256;
+    void setRCAndAreaSize(const RC::Pos& pos, float pareaSize);
 };
 }
 } // namespace Voxol::Tile
