@@ -6,6 +6,9 @@ namespace Voxol::Tile
     void TileScene::initalize()
     {
         mFbo.init(GL_ZERO);
+
+        Test::Gpu::buildBaseDrawUnit(gridOutlineUnit);
+        
     }
     
     void TileScene::run(const Render::Draw::DrawContext& ctx)

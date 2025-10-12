@@ -215,16 +215,22 @@ void OglRenderer::render()
     }
     rctx.zoom            = view.desc.zoom;
     mScene.drawCtx.dirty = dirty;
+    auto& params         = rctx.drawParam;
+    if (dirty) {
+        auto& vp = rctx.clearParam.viewport;
+        params.viewVBounds.setXYWH(vp.x, vp.y, vp.width, vp.height);
+        Mat33 invMat;
+        view.viewMat.inverseTo(invMat);
+        params.viewVBounds.mat33MapTo(invMat, params.viewWBounds);
+    }
     //if (dirty)
     //{
-    Mat33 mat = view.projMat;
-    mat.append(view.viewMat);
-    auto& params          = rctx.drawParam;
+    Mat33 vpMat = view.projMat;
+    vpMat.append(view.viewMat);
     params.projMat       = view.projMat;
     params.viewMat       = view.viewMat;
 
-
-    mScene.render(mat);
+    mScene.render(vpMat);
     //}
     // for test
     dirty = false;
