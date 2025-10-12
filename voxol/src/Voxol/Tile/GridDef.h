@@ -6,6 +6,7 @@
 #include <cstdint>
 #include "../Base/BaseDefine.h"
 #include "../Math/VxRect.h"
+#include "../Math/Vec2.h"
 
 namespace Voxol::Tile
 {
@@ -86,8 +87,8 @@ struct RectPos
     }
 };
 
-inline RectPos      xyToRC(int32_t x, int32_t y, int32_t areaSize);
-inline RectPos      rcToXY(const RectPos& rc, int32_t areaSize);
+inline RectPos      xyToRC(float x, float y, float areaSize);
+inline Math::Vec2   rcToXY(const RectPos& rc, float areaSize);
 inline GridRect     fromWorldBounds(const Math::VxRect& bounds, int32_t areaSize, float offset = 0.0f);
 inline Math::VxRect toWorldBounds(const GridRect& rc, int32_t areaSize);
 
