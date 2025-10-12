@@ -11,7 +11,6 @@
 
 namespace Voxol::Tile
 {
-using namespace Voxol::Math;
 
 namespace RC
 {
@@ -90,10 +89,11 @@ struct Pos
 
 inline Pos          xyToRC(float x, float y, float areaSize, int32_t depth = 0);
 inline Math::Vec2   rcToXY(const Pos& rc, float areaSize);
-inline Rect         fromWorldBounds(const Math::VxRect& bounds, int32_t areaSize, float offset = 0.0f);
-inline Math::VxRect toWorldBounds(const Rect& rc, int32_t areaSize);
+inline Rect         xyRectToRCRect(const Math::VxRect& bounds, float areaSize, float offset = 0.0f);
+inline Math::VxRect rcRectToXYRect(const Rect& rc, float areaSize);
 
 } // namespace RC
+
 namespace Grid
 {
 struct Unit

@@ -2,8 +2,6 @@
 
 namespace Voxol::Tile
 {
-using namespace Voxol::Math;
-
 namespace RC
 {
 
@@ -65,7 +63,7 @@ inline Math::Vec2 rcToXY(const Pos& rc, float areaSize)
     return {rc.c * areaSize, rc.r * areaSize};
 }
 
-inline Rect fromWorldBounds(const Math::VxRect& bounds, int32_t areaSize, float offset)
+inline Rect xyRectToRCRect(const Math::VxRect& bounds, float areaSize, float offset)
 {
     Rect rect;
     rect.minR = static_cast<int32_t>(std::floor((bounds.y() - offset) / areaSize));
@@ -75,7 +73,7 @@ inline Rect fromWorldBounds(const Math::VxRect& bounds, int32_t areaSize, float 
     return rect;
 }
 
-inline Math::VxRect toWorldBounds(const Rect& rc, int32_t areaSize)
+inline Math::VxRect rcRectToXYRect(const Rect& rc, float areaSize)
 {
     Math::VxRect b{};
     b.fX  = rc.minC * areaSize;

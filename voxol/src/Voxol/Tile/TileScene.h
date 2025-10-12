@@ -7,6 +7,7 @@
 #include "../Render/DrawCtx.h"
 #include "../Test/OglResUtils.h"
 #include "../Render/OglFbo.h"
+#include <vector>
 
 
 namespace Voxol::Tile
@@ -29,7 +30,8 @@ namespace Voxol::Tile
 
         int gridSize = 256;
 
-        Test::Gpu::DrawingUnit gridOutlineUnit{};
+        std::vector<Grid::Unit> gridUnits{};
+        Grid::Unit outlineUnit{};
     };
     
 }

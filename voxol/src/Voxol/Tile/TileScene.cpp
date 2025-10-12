@@ -7,7 +7,7 @@ namespace Voxol::Tile
     {
         mFbo.init(GL_ZERO);
 
-        Test::Gpu::buildBaseDrawUnit(gridOutlineUnit);
+        Test::Gpu::buildBaseDrawUnit(outlineUnit.drawUnit);
         
     }
     
@@ -18,7 +18,6 @@ namespace Voxol::Tile
         vpM.append(params.viewMat);
         ctx.drawCall({}, vpM);
 
-        /*
         // the default gridSize value is 256
         auto value = gridSize * ctx.zoom;
         auto lv    = Math::calcCeilOfTwoLevelToInt(value);
@@ -30,30 +29,32 @@ namespace Voxol::Tile
             printf("value: %f, lv: %d, dstSize: %f, lvScale: %f\n", value, lv, dstSize, lvScale);
         }
 
-        auto& rparams = ctx.drawParam;
-        auto  vM      = rparams.viewMat;
+        //auto& rparams = ctx.drawParam;
+ /*       auto  vM      = rparams.viewMat;
         vpM           = rparams.projMat;
-        vpM.append(vM);
+        vpM.append(vM);*/
 
         auto currGridSize = 256.0f;
         auto texSize      = gridSize;
 
-        vpM = rparams.projMat;
-        vpM.append(rparams.viewMat);
+        //vpM = rparams.projMat;
+        //vpM.append(rparams.viewMat);
 
         currGridSize = gridSize * lvScale;
-        gridOutlineUnit.objMat.setTo(0, 0, currGridSize, currGridSize);
-        gridOutlineUnit.setColor(0x50550055);
+
+
+        //outlineUnit.objMat.setTo(0, 0, currGridSize, currGridSize);
+        outlineUnit.drawUnit.setColor(0x50550055);
 
         auto k = 0;
-
-        auto gr = RC::calcRCRange(rparams.viewWBounds, currGridSize);
+        auto gr = RC::xyRectToRCRect(params.viewWBounds, currGridSize);
+        /*
         for (auto r = gr.minR; r <= gr.maxR; r++)
         {
             for (auto c = gr.minC; c <= gr.maxC; c++)
             {
                 gridUnits[k].setPosAndSize({r, c}, currGridSize);
-                buildGridUnit(gridUnits[k], rctx, texSize);
+                buildGridUnit(gridUnits[k], ctx, texSize);
 
                 k++;
             }
@@ -65,5 +66,20 @@ namespace Voxol::Tile
             gridUnits[i].drawUnit.draw();
         }
         //*/
+
+        auto& drawUnit = outlineUnit.drawUnit;
+        for (auto r = gr.minR; r <= gr.maxR; r++)
+        {
+            for (auto c = gr.minC; c <= gr.maxC; c++)
+            {
+                //gridUnits[k].setPosAndSize({r, c}, currGridSize);
+                //buildGridUnit(gridUnits[k], ctx, texSize);
+
+                //k++;
+                outlineUnit.setRCAndAreaSize({r, c}, currGridSize);
+                outlineUnit.drawUnit.mvp = vpM;
+                outlineUnit.drawUnit.draw();
+            }
+        }
     }
 }
