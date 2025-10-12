@@ -1,6 +1,7 @@
 #ifndef VOXOL_TILE_SCENE_H
 #define VOXOL_TILE_SCENE_H
 
+#include "DrawCtx.h"
 #include "GridDef.h"
 #include "../Math/Mat33.h"
 #include "../Math/VxRect.h"
@@ -22,7 +23,8 @@ namespace Voxol::Tile
         ~TileScene() = default;
     public:
     
-        void initalize();        
+        void initalize();
+        void buildGrid(Grid::Unit& unit, const Render::Draw::DrawContext& ctx, int fboTexSize);
         void run(const Render::Draw::DrawContext& ctx);
 
     private:
@@ -32,6 +34,9 @@ namespace Voxol::Tile
 
         std::vector<Grid::Unit> gridUnits{};
         Grid::Unit outlineUnit{};
+
+        Math::Mat33               gridProjMat{};
+        Render::Draw::ClearParams             clearParam{};
     };
     
 }

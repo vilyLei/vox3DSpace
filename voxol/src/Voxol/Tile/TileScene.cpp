@@ -11,7 +11,34 @@ namespace Voxol::Tile
         Test::Gpu::buildBaseDrawUnit(outlineUnit.drawUnit);
         
     }
-    
+
+    void TileScene::buildGrid(Grid::Unit& unit, const Render::Draw::DrawContext& ctx, int fboTexSize)
+    {
+
+        auto&  drawUnit = unit.drawUnit;
+        auto&& pos      = drawUnit.objMat.getXY();
+
+        auto        scale = fboTexSize / unit.areaSize;
+
+        Math::Mat33 vpM = gridProjMat;
+
+        Math::Mat33 viewM;
+        viewM.setScaleXY(scale, scale);
+        viewM.setXY(-pos.x * scale, -pos.y * scale);
+        vpM.append(viewM);
+
+        auto& rparams = ctx.drawParam;
+        auto& vp      = ctx.clearParam.viewport;
+
+        mFbo.bindFBO();
+        mFbo.bindTextureAt(drawUnit.getTextureAt(0), 0, gridSize, gridSize);
+        mFbo.renderBegin(clearParam);
+
+        ctx.drawCall(rparams.viewWBounds, vpM);
+        mFbo.unbindFBO(ctx.clearParam, true);
+
+        Test::Gpu::buildTexDrawUnitWithTex(drawUnit, mFbo.getTextureAt(0), true);
+    }
     void TileScene::run(const Render::Draw::DrawContext& ctx)
     {
         auto&       params = ctx.drawParam;
@@ -27,9 +54,12 @@ namespace Voxol::Tile
         auto lvScale = float(gridSize) / dstSize;
         if (ctx.dirty)
         {
-            printf("value: %f, lv: %d, dstSize: %f, lvScale: %f\n", value, lv, dstSize, lvScale);
+            printf("TileScene::run(), value: %f, lv: %d, dstSize: %f, lvScale: %f\n", value, lv, dstSize, lvScale);
         }
 
+        gridProjMat.ortho(gridSize, gridSize);
+        clearParam.viewport = {0, 0, gridSize, gridSize};
+        clearParam.clearColor = {0.95f, 0.95f, 0.95f, 0};
 
         auto currGridSize = 256.0f;
         auto texSize      = gridSize;
