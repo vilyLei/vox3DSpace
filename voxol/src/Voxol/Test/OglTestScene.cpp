@@ -56,6 +56,8 @@ void OglTestScene::initScene()
 }
 void OglTestScene::render(const Voxol::Math::Mat33& vpMat)
 {
+    drawCtx.clearParam.apply();
+
     if (voassModeFlag)
     {
         renderVoass(vpMat);

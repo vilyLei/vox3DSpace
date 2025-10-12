@@ -223,7 +223,6 @@ void OglRenderer::render()
     params.projMat       = view.projMat;
     params.viewMat       = view.viewMat;
 
-    rctx.clearParam.apply();
 
     mScene.render(mat);
     //}
