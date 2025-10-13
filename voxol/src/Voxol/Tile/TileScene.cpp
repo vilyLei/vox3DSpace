@@ -83,30 +83,61 @@ namespace Voxol::Tile
 
         outlineUnit.drawUnit.setColor(0x50550055);
 
-        auto k = 0;
+        //auto k = 0;
         auto gr = RC::xyRectToRCRect(params.viewWBounds, currGridSize);
         auto grDirty = currRCRect.isNotEqual(gr);
+
+        auto createFlag = ctx.dirty && viewGridLevel != lv;
         ///*
-        if (ctx.dirty)
+        if (createFlag)
         {
+            for (auto& e : unitIndexMap)
+            {
+                auto  k    = e.second.index;
+                auto& unit = gridUnits[k].drawUnit;
+                texPool.release(unit.getTextureAt(0));
+            }
+
+            unitIndexMap.clear();
+            unitIndexPool.reset();
+
+            viewGridsTotal = 0;
             for (auto r = gr.minR; r <= gr.maxR; r++)
             {
                 for (auto c = gr.minC; c <= gr.maxC; c++)
                 {
-                    gridUnits[k].setRCAndAreaSize({r, c}, currGridSize);
-                    buildGrid(gridUnits[k], ctx);
+                    //gridUnits[k].setRCAndAreaSize({r, c}, currGridSize);
+                    //buildGrid(gridUnits[k], ctx);
 
-                    k++;
+                    RC::Pos pos = {r, c, lv};
+
+                    auto  k    = unitIndexPool.acquire();
+                    auto& grid = gridUnits[k];
+                    grid.setRCAndAreaSize(pos, currGridSize);
+                    grid.drawUnit.setTextureAt(texPool.acquire(), 0);
+                    buildGrid(grid, ctx);
+
+                    unitIndexMap[pos.value] = {pos.value, k};
+
+                    viewGridsTotal++;
                 }
             }
-            gridsTotal = k;
+            printf("create tile grids tot: %d\n", viewGridsTotal);
+            //gridsTotal = k;
         }
 
-        for (auto i = 0; i < gridsTotal; i++)
+        for (auto& e : unitIndexMap)
         {
-            gridUnits[i].drawUnit.mvp = vpM;
-            gridUnits[i].drawUnit.draw();
+            auto  k    = e.second.index;
+            auto& unit = gridUnits[k].drawUnit;
+            unit.mvp   = vpM;
+            unit.draw();
         }
+        //for (auto i = 0; i < gridsTotal; i++)
+        //{
+        //    gridUnits[i].drawUnit.mvp = vpM;
+        //    gridUnits[i].drawUnit.draw();
+        //}
 
         //if (ctx.dirty)
         //{
