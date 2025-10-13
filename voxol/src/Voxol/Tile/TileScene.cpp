@@ -143,7 +143,7 @@ namespace Voxol::Tile
 
                     grid.drawUnit.setTextureAt(texPool.acquire(), 0);
 
-                    buildGridUnit(grid, rctx, texSize);
+                    buildGrid(grid, ctx);
                     unitIndexMap[pos.value] = {pos.value, k};
                 }
             }
