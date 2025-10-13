@@ -38,11 +38,12 @@ private:
     Math::Mat33               gridProjMat{};
     Render::Draw::ClearParams clearParam{};
     int                       gridsTotal = 0;
+    int                       level = 0;
 
     std::unordered_map<int64_t, Grid::IndexNode> unitIndexMap{};
     Grid::UnitTexPool                            texPool{};
     Grid::UnitIndexPool                          unitIndexPool{};
-    RC::Rect                                     currRCRange{};
+    RC::Rect                                     currRCRect{};
 };
 
 } // namespace Voxol::Tile

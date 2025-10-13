@@ -11,7 +11,9 @@ namespace Voxol::Tile
         outlineUnit.drawUnit.vertex.toLine();
         Test::Gpu::buildBaseDrawUnit(outlineUnit.drawUnit);
 
-        gridUnits.resize(256);
+        constexpr int UNITS_TOTAL = 256;
+        unitIndexPool.init(UNITS_TOTAL);
+        gridUnits.resize(UNITS_TOTAL);
 
         auto& srcUnit = gridUnits[0].drawUnit;
         Test::Gpu::buildTexDrawUnitWithTex(srcUnit, GL_ZERO, true);
@@ -83,6 +85,7 @@ namespace Voxol::Tile
 
         auto k = 0;
         auto gr = RC::xyRectToRCRect(params.viewWBounds, currGridSize);
+        auto grDirty = currRCRect.isNotEqual(gr);
         ///*
         if (ctx.dirty)
         {

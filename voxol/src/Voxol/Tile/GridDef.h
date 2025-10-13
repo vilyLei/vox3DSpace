@@ -55,7 +55,7 @@ union Rect
         return other.minX == minX && other.minY == minY && other.maxX == maxX && other.minX == maxY;
     }
     [[nodiscard]] inline bool isNotEqual(const Rect& other) const noexcept {
-        return other.minX != minX || other.minY != minY && other.maxX != maxX || other.minX != maxY;
+        return other.minX != minX || other.minY != minY || other.maxX != maxX || other.minX != maxY;
     }
 };
 
