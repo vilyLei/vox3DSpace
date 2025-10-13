@@ -126,6 +126,7 @@ struct DrawingUnit
     bool                 colorClip = false;
 
     void   bindGPU();
+    void   setTranslateAndScale(float tx, float ty, float sx = 1.0f, float sy = 1.0f);
     void   setColor(uint32_t argb32);
     GLuint getTextureAt(int index) const;
     void   setTextureAt(GLuint tex, int index);

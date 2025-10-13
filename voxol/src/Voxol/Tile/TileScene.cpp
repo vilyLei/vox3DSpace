@@ -125,7 +125,29 @@ namespace Voxol::Tile
         }
         if (adjustFlag)
         {
+            auto tot = 0;
+            for (auto r = gr.minR; r <= gr.maxR; r++)
+            {
+                for (auto c = gr.minC; c <= gr.maxC; c++)
+                {
+                    RC::Pos pos = {r, c, lv};
+                    if (unitIndexMap.contains(pos.value))
+                    {
+                        continue;
+                    }
+                    viewGridsTotal++;
+                    tot++;
+                    auto  k    = unitIndexPool.acquire();
+                    auto& grid = gridUnits[k];
+                    grid.setRCAndAreaSize(pos, currGridSize);
 
+                    grid.drawUnit.setTextureAt(texPool.acquire(), 0);
+
+                    buildGridUnit(grid, rctx, texSize);
+                    unitIndexMap[pos.value] = {pos.value, k};
+                }
+            }
+            printf("append tot: %d\n", tot);
         }
 
         for (auto& e : unitIndexMap)

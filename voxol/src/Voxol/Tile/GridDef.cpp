@@ -89,7 +89,7 @@ void Unit::setRCAndAreaSize(const RC::Pos& pos, float pareaSize) {
     rc        = pos;
     areaSize  = pareaSize;
     auto&& xy = RC::rcToXY(pos, areaSize);
-    drawUnit.objMat.setTo(xy.x, xy.y, areaSize, areaSize);
+    drawUnit.setTranslateAndScale(xy.x, xy.y, areaSize, areaSize);
 }
 
 }

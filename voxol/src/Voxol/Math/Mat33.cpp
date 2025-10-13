@@ -74,6 +74,14 @@ void Mat33::setTo(float tx, float ty, float sx, float sy, float rotRadians)
         tx, ty, 1};
 }
 
+void Mat33::setTranslateAndScale(float tx, float ty, float sx, float sy)
+{
+    data[0] = sx;
+    data[4] = sy;
+    data[6] = tx;
+    data[7] = ty;
+}
+
 void Mat33::setXY(const Vec2& pos)
 {
     data[6] = pos.x;

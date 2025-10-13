@@ -480,6 +480,10 @@ void DrawingUnit::bindGPU()
     vertex.bindGPU();
 }
 
+void DrawingUnit::setTranslateAndScale(float tx, float ty, float sx, float sy)
+{
+    objMat.setTranslateAndScale(tx,ty, sx, sy);
+}
 void DrawingUnit::setColor(uint32_t argb32)
 {
     auto a = ((argb32 >> 24) & 0xff) / 255.0f;
