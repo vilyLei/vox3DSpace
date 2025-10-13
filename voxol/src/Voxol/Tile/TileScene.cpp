@@ -80,15 +80,12 @@ namespace Voxol::Tile
 
         currGridSize = gridSize * lvScale;
 
-
-        outlineUnit.drawUnit.setColor(0x50550055);
-
-        //auto k = 0;
         auto gr = RC::xyRectToRCRect(params.viewWBounds, currGridSize);
         auto grDirty = currRCRect.isNotEqual(gr);
 
         auto createFlag = ctx.dirty && viewGridLevel != lv;
         auto adjustFlag = ctx.dirty && viewGridLevel == lv;
+        viewGridLevel = lv;
         ///*
         if (createFlag)
         {
@@ -168,6 +165,9 @@ namespace Voxol::Tile
         //*/
         //*
         //ctx.drawCall({}, vpM);
+
+
+        outlineUnit.drawUnit.setColor(0x50550055);
         auto& drawUnit = outlineUnit.drawUnit;
         for (auto r = gr.minR; r <= gr.maxR; r++)
         {
