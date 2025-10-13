@@ -88,6 +88,7 @@ namespace Voxol::Tile
         auto grDirty = currRCRect.isNotEqual(gr);
 
         auto createFlag = ctx.dirty && viewGridLevel != lv;
+        auto adjustFlag = ctx.dirty && viewGridLevel == lv;
         ///*
         if (createFlag)
         {
@@ -106,8 +107,6 @@ namespace Voxol::Tile
             {
                 for (auto c = gr.minC; c <= gr.maxC; c++)
                 {
-                    //gridUnits[k].setRCAndAreaSize({r, c}, currGridSize);
-                    //buildGrid(gridUnits[k], ctx);
 
                     RC::Pos pos = {r, c, lv};
 
@@ -123,7 +122,10 @@ namespace Voxol::Tile
                 }
             }
             printf("create tile grids tot: %d\n", viewGridsTotal);
-            //gridsTotal = k;
+        }
+        if (adjustFlag)
+        {
+
         }
 
         for (auto& e : unitIndexMap)
