@@ -59,16 +59,18 @@ void main() {
     
     float aa = fwidth(d);
     // 形状的内部（填充部分）
-    float shape = smoothstep(0.0, aa, -d);
+    float shapeFactor = smoothstep(0.0, aa, -d);
     // 形状的描边（外部部分）
     // float outline = smoothstep(strokeWidth, strokeWidth + aa, d);
     float outline = smoothstep(strokeWidth - aa, strokeWidth + aa, d);
     // 将描边和填充混合
-    vec4 color = mix(strokeColor, u_color, shape);
+    vec4 color = mix(strokeColor, u_color, shapeFactor);
     float alpha = (1.0 - outline) * color.a;
     float factor = step(1e-5, strokeWidth);
     fragColor = vec4(color.rgb * alpha, alpha) * factor;
-    //fragColor += (1.0 - factor);
+    // if strokeWidth value is zero, only show fill color
+    alpha = shapeFactor * u_color.a;
+    fragColor += vec4(u_color.rgb * alpha, alpha) * (1.0 - factor);
 }
 
 #endif
