@@ -92,14 +92,14 @@ namespace Voxol::Tile
         ///*
         if (createFlag)
         {
-            for (auto& e : unitIndexMap)
+            for (auto& e : viewUnitIndexMap)
             {
                 auto  k    = e.second.index;
                 auto& unit = gridUnits[k].drawUnit;
                 texPool.release(unit.getTextureAt(0));
             }
 
-            unitIndexMap.clear();
+            viewUnitIndexMap.clear();
             unitIndexPool.reset();
 
             viewGridsTotal = 0;
@@ -116,7 +116,7 @@ namespace Voxol::Tile
                     grid.drawUnit.setTextureAt(texPool.acquire(), 0);
                     buildGrid(grid, ctx);
 
-                    unitIndexMap[pos.value] = {pos.value, k};
+                    viewUnitIndexMap[pos.value] = {pos.value, k};
 
                     viewGridsTotal++;
                 }
@@ -131,7 +131,7 @@ namespace Voxol::Tile
                 for (auto c = gr.minC; c <= gr.maxC; c++)
                 {
                     RC::Pos pos = {r, c, lv};
-                    if (unitIndexMap.contains(pos.value))
+                    if (viewUnitIndexMap.contains(pos.value))
                     {
                         continue;
                     }
@@ -144,29 +144,26 @@ namespace Voxol::Tile
                     grid.drawUnit.setTextureAt(texPool.acquire(), 0);
 
                     buildGrid(grid, ctx);
-                    unitIndexMap[pos.value] = {pos.value, k};
+                    viewUnitIndexMap[pos.value] = {pos.value, k};
                 }
             }
             printf("append tot: %d\n", tot);
         }
 
-        for (auto& e : unitIndexMap)
+        for (auto& e : viewUnitIndexMap)
         {
             auto  k    = e.second.index;
             auto& unit = gridUnits[k].drawUnit;
             unit.mvp   = vpM;
             unit.draw();
         }
-        //for (auto i = 0; i < gridsTotal; i++)
-        //{
-        //    gridUnits[i].drawUnit.mvp = vpM;
-        //    gridUnits[i].drawUnit.draw();
-        //}
 
-        //if (ctx.dirty)
-        //{
-        //    printf("TileScene::run(), tile grids total: %d\n", k);
-        //}
+        texPool.dispose();
+
+        if (ctx.dirty)
+        {
+            printf("TileScene::run(), tile grids total: %zu\n", viewUnitIndexMap.size());
+        }
         return;
         //*/
         //*

@@ -40,7 +40,7 @@ private:
     int                       viewGridsTotal = 0;
     int                       viewGridLevel = 0;
 
-    std::unordered_map<int64_t, Grid::IndexNode> unitIndexMap{};
+    std::unordered_map<int64_t, Grid::IndexNode> viewUnitIndexMap{};
     Grid::UnitTexPool                            texPool{};
     Grid::UnitIndexPool                          unitIndexPool{};
     RC::Rect                                     currRCRect{};
