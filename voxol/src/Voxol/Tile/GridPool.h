@@ -21,8 +21,8 @@ public:
     void    reset();
 
 private:
-    std::unordered_set<int> busy_indices{};
-    std::unordered_set<int> free_indices{};
+    std::unordered_set<int> busyIndices{};
+    std::unordered_set<int> freeIndices{};
 };
 
 class UnitTexPool
@@ -38,8 +38,8 @@ public:
     void dispose();
 
 private:
-    std::unordered_set<GLuint> busy_textures{};
-    std::unordered_set<GLuint> free_textures{};
+    std::unordered_set<GLuint> busyTextures{};
+    std::unordered_set<GLuint> freeTextures{};
 };
 
 }
