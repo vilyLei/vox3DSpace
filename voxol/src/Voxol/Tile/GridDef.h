@@ -52,10 +52,10 @@ union Rect
     [[nodiscard]] Rect unionWith(const Rect& other) const noexcept;
 
     [[nodiscard]] inline bool isEqual(const Rect& other) const noexcept {
-        return other.minX == minX && other.minY == minY && other.maxX == maxX && other.minX == maxY;
+        return other.minX == minX && other.minY == minY && other.maxX == maxX && other.maxY == maxY;
     }
     [[nodiscard]] inline bool isNotEqual(const Rect& other) const noexcept {
-        return other.minX != minX || other.minY != minY || other.maxX != maxX || other.minX != maxY;
+        return other.minX != minX || other.minY != minY || other.maxX != maxX || other.maxY != maxY;
     }
 };
 
