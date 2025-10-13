@@ -208,6 +208,13 @@ void main()
 }
 )";
 
+const char* sdfRectFragSource = R"(#version 330 core
+precision mediump float;
+uniform vec4 u_color;
+out vec4 outColor;
+void main() {
+    outColor = u_color;
+})";
 const char* getSdfVertShdCode() {
     return sdfVertSource;
 }
@@ -215,12 +222,22 @@ std::string source{};
 
 const char* getSdfFragShdCode(SDFShapeType type, bool clip)
 {
-    //std::string head = sdfFragSourceHead;
-    //std::string funcs = sdfFragSourceFuncs;
+    static std::string sdfDefaultShapeStr;
     static std::string sdfFragSourceHeadStr;
     static std::string sdfFragSourceFuncsStr;
-    //sdfFragSourceFuncs
+    if (type == Voass::Render::Shader::SDFShapeType::Rect)
+    {
+        return sdfRectFragSource;
+    }
 #ifdef NATIVE_RUNTIME
+    if (type == Voass::Render::Shader::SDFShapeType::DefaultShape)
+    {
+        if (sdfDefaultShapeStr.empty())
+        {
+            sdfDefaultShapeStr = loadShaderCodeFromFile("sdfDefaultShape.glsl");
+        }
+        return sdfDefaultShapeStr.c_str();
+    }
 
     if (sdfFragSourceHeadStr.empty())
     {
@@ -230,8 +247,6 @@ const char* getSdfFragShdCode(SDFShapeType type, bool clip)
     {
         sdfFragSourceFuncsStr = loadShaderCodeFromFile("sdfFragSourceFuncs.glsl");
     }
-    //sdfFragSourceHead
-    //sdfFragSourceFuncs
 #endif
     source = sdfFragSourceHeadStr;
     if (clip)
@@ -249,9 +264,9 @@ const char* getSdfFragShdCode(SDFShapeType type, bool clip)
         case Voass::Render::Shader::SDFShapeType::Ring:
             source += sdfRingFragSource;
             break;
-        case Voass::Render::Shader::SDFShapeType::Rect:
-            source += sdfRingFragSource;
-            break;
+        //case Voass::Render::Shader::SDFShapeType::Rect:
+        //    source += sdfRingFragSource;
+        //    break;
         case Voass::Render::Shader::SDFShapeType::RoundedRect:
             source += sdfFragSourceRoundedRetFuncs;
             source += sdfRoundedRectFragSource;

@@ -13,6 +13,7 @@ std::string loadShaderCodeFromFile(const std::string& fileName);
 
 enum class SDFShapeType : uint8_t
 {
+    DefaultShape       = 0x0,
     Circle       = 0x1,
     MultiCircles = 0x2,
     Ring         = 0x3,

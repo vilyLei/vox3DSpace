@@ -62,6 +62,8 @@ private:
     Gpu::DrawingUnit tile0Unit{};
 
     Gpu::DrawingUnit boundsUnit{};
+
+    Gpu::DrawingUnit strokeShapeUnit{};
 };
 
 
