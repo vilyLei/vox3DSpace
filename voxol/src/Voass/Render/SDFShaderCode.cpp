@@ -113,7 +113,12 @@ float sdfRect(vec2 p, vec2 size) {
     vec2 d = abs(p) - size;
     return length(max(d, 0.0)) + min(max(d.x, d.y), 0.0);
 }
-
+float sdfRoundRect(vec2 pv, vec2 b, vec4 r) {
+    r.xy = (pv.x > 0.0) ? r.xy : r.zw;
+    r.x = (pv.y > 0.0) ? r.x : r.y;
+    vec2 q = abs(pv) - b + r.x;
+    return min(max(q.x, q.y), 0.0) + length(max(q, 0.0)) - r.x;
+}
 float sdfRoundedRect(vec2 p, vec2 size, float radius) {
     vec2 d = abs(p) - size;
     return length(max(d, 0.0)) - radius;
