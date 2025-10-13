@@ -2,7 +2,7 @@
 #define VOXOL_TILE_SCENE_H
 
 #include "DrawCtx.h"
-#include "GridDef.h"
+#include "GridPool.h"
 #include "../Math/Mat33.h"
 #include "../Math/VxRect.h"
 #include "../Render/DrawCtx.h"
@@ -38,6 +38,11 @@ private:
     Math::Mat33               gridProjMat{};
     Render::Draw::ClearParams clearParam{};
     int                       gridsTotal = 0;
+
+    std::unordered_map<int64_t, Grid::IndexNode> unitIndexMap{};
+    Grid::UnitTexPool                            texPool{};
+    Grid::UnitIndexPool                          unitIndexPool{};
+    RC::Rect                                     currRCRange{};
 };
 
 } // namespace Voxol::Tile
