@@ -50,7 +50,7 @@ union Rect
     [[nodiscard]] Rect intersectWith(const Rect& other) const noexcept;
 
     [[nodiscard]] Rect unionWith(const Rect& other) const noexcept;
-    
+
     [[nodiscard]] inline bool isEqual(const Rect& other) const noexcept {
         return other.minX == minX && other.minY == minY && other.maxX == maxX && other.minX == maxY;
     }
@@ -133,6 +133,11 @@ struct Unit
     RC::Pos                rc{};
     float areaSize = 256;
     void setRCAndAreaSize(const RC::Pos& pos, float pareaSize);
+};
+struct IndexNode
+{
+    int64_t value = 0;
+    int32_t index = 0;
 };
 }
 } // namespace Voxol::Tile
