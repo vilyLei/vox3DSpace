@@ -147,17 +147,37 @@ namespace Voxol::Tile
             printf("append tot: %d\n", tot);
         }
 
-        for (auto& e : viewUnitIndexMap)
+        //for (auto& e : viewUnitIndexMap)
+        //{
+        //    auto  k    = e.second.index;
+        //    if (gr.contains(e.second.pos))
+        //    {
+        //        auto& unit = gridUnits[k].drawUnit;
+        //        unit.mvp   = vpM;
+        //        unit.draw();
+        //    }
+        //    else {
+        //        // 准备移除
+        //    }
+        //}
+        for (auto&& it = viewUnitIndexMap.begin(); it != viewUnitIndexMap.end();)
         {
-            auto  k    = e.second.index;
-            if (gr.contains(e.second.pos))
+            auto& node = it->second;
+            auto  k    = node.index;
+            if (gr.contains(node.pos))
             {
                 auto& unit = gridUnits[k].drawUnit;
                 unit.mvp   = vpM;
                 unit.draw();
+                ++it;
             }
-            else {
+            else
+            {
                 // 准备移除
+                auto& unit = gridUnits[k].drawUnit;
+                printf("erase a grid node(r=%d, c=%d, level=%d).\n", node.pos.r, node.pos.c, node.pos.level);
+                texPool.release(unit.getTextureAt(0));
+                it = viewUnitIndexMap.erase(it);
             }
         }
 
