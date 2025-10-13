@@ -1,8 +1,26 @@
 #include "SDFShaderCode.h"
 #include <cstdio>
+#include <fstream>
+#include <filesystem>
+
 namespace Voass::Render {
 namespace Shader {
 
+std::string loadShaderCodeFromFile(const std::string& fileName)
+{
+    auto filePath = std::filesystem::path(SRC_DIR) / "assets/shaderCode/";
+    auto path     = filePath.string() + fileName;
+    
+    std::ifstream file(path, std::ios::binary | std::ios::ate);
+    if (!file) throw std::runtime_error("Cannot open file: " + path);
+
+    std::streamsize size = file.tellg();
+    file.seekg(0, std::ios::beg);
+
+    std::string content(size, '\0');
+    file.read(content.data(), size);
+    return content;
+}
 	
 const char* sdfVertSource = R"(#version 330 core
 precision highp float;
@@ -86,6 +104,21 @@ vec4 clipSdfColor(vec4 c4, vec4 bgColor4, float d) {
 }
 )";
 
+const char* sdfFragColorBuild = R"(
+
+vec4 buildFragColor(vec4 color4, float d) {
+    d = aa(d);
+#ifndef SDF_COLOR_CLIP
+    float alpha = d * color4.a;
+    return vec4(color4.rgb * alpha, alpha);
+#else
+    return clipSdfColor(color4, color4, d);
+#endif
+}
+
+)";
+
+/*
 const char* sdfFragSourceFuncs = R"(
     
 vec4 buildFragColor(vec4 color4, float d) {
@@ -194,7 +227,7 @@ vec4 smoothUnionVec4(vec4 c1, vec4 c2, float d1, float d2, float k) {
 }
 
 )";
-
+    //*/
 const char* sdfFragSourceRoundedRetFuncs = R"(
     float sdfRectSubInnerCircleCorner(vec2 gp, vec2 gcornerPos, vec2 rectHalfSize, vec2 direc, float radius) {
     
@@ -325,13 +358,23 @@ std::string source{};
 const char* getSdfFragShdCode(SDFShapeType type, bool clip)
 {
     std::string head = sdfFragSourceHead;
-    std::string funcs = sdfFragSourceFuncs;
+    //std::string funcs = sdfFragSourceFuncs;
+    static std::string sdfFragSourceFuncsStr;
+    //sdfFragSourceFuncs
+#ifdef NATIVE_RUNTIME
+    if (sdfFragSourceFuncsStr.empty())
+    {
+        sdfFragSourceFuncsStr = loadShaderCodeFromFile("sdfFragSourceFuncs.glsl");
+    }
+    //sdfFragSourceFuncs
+#endif
     source = head;
     if (clip)
     {
         source += sdfFragSourceClipDef;
     }
-    source += funcs;
+    source += sdfFragSourceFuncsStr;
+    source += sdfFragColorBuild;
 
     switch (type)
     {

@@ -2,11 +2,15 @@
 #define VOASS_RENDER_SDF_SDADER_CODE_H
 #include <string>
 #include <cstdint>
+#include <string>
 
 namespace Voass::Render
 {
 namespace Shader
 {
+
+std::string loadShaderCodeFromFile(const std::string& fileName);
+
 enum class SDFShapeType : uint8_t
 {
     Circle       = 0x1,
