@@ -104,10 +104,13 @@ namespace Voxol::Tile
             {
                 for (auto c = gr.minC; c <= gr.maxC; c++)
                 {
+                    auto k = unitIndexPool.acquire();
+                    if (k < 0) {
+                        continue;
+                    }
 
                     RC::Pos pos = {r, c, lv};
 
-                    auto  k    = unitIndexPool.acquire();
                     auto& grid = gridUnits[k];
                     grid.setRCAndAreaSize(pos, currGridSize);
                     grid.drawUnit.setTextureAt(texPool.acquire(), 0);
@@ -132,9 +135,14 @@ namespace Voxol::Tile
                     {
                         continue;
                     }
+                    auto k = unitIndexPool.acquire();
+                    if (k < 0)
+                    {
+                        continue;
+                    }
                     viewGridsTotal++;
                     tot++;
-                    auto  k    = unitIndexPool.acquire();
+
                     auto& grid = gridUnits[k];
                     grid.setRCAndAreaSize(pos, currGridSize);
 
@@ -147,19 +155,6 @@ namespace Voxol::Tile
             printf("append tot: %d\n", tot);
         }
 
-        //for (auto& e : viewUnitIndexMap)
-        //{
-        //    auto  k    = e.second.index;
-        //    if (gr.contains(e.second.pos))
-        //    {
-        //        auto& unit = gridUnits[k].drawUnit;
-        //        unit.mvp   = vpM;
-        //        unit.draw();
-        //    }
-        //    else {
-        //        // ×¼±¸ÒÆ³ý
-        //    }
-        //}
         for (auto&& it = viewUnitIndexMap.begin(); it != viewUnitIndexMap.end();)
         {
             auto& node = it->second;
