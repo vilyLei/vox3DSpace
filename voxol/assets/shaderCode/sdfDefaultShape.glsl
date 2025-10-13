@@ -52,21 +52,23 @@ void main() {
     vec2 center = vec2(0.5, 0.5);
     float d = roundRect(v_uv - center, vec2(0.35, 0.35), vec4(0.1, 0.2, 0.0, 0.3));
     
-    vec3 strokeColor = vec3(0.9, 0.1, 0.9);
+    vec4 strokeColor = vec4(0.9, 0.1, 0.9, 1.0);
 
     // 定义描边参数
-    float outlineWidth = 0.05;
+    float strokeWidth = 0.05;
     
     float aa = fwidth(d);
     // 形状的内部（填充部分）
     float shape = smoothstep(0.0, aa, -d);
     // 形状的描边（外部部分）
-    // float outline = smoothstep(outlineWidth, outlineWidth + aa, d);
-    float outline = smoothstep(outlineWidth - aa, outlineWidth + aa, d);
+    // float outline = smoothstep(strokeWidth, strokeWidth + aa, d);
+    float outline = smoothstep(strokeWidth - aa, strokeWidth + aa, d);
     // 将描边和填充混合
-    vec3 color = mix(strokeColor, u_color.rgb, shape);
-    float alpha = 1.0 - outline;
-    fragColor = vec4(color * alpha, alpha);
+    vec4 color = mix(strokeColor, u_color, shape);
+    float alpha = (1.0 - outline) * color.a;
+    float factor = step(1e-5, strokeWidth);
+    fragColor = vec4(color.rgb * alpha, alpha) * factor;
+    //fragColor += (1.0 - factor);
 }
 
 #endif
