@@ -506,12 +506,17 @@ GLuint DrawingUnit::getTextureAt(int index) const
 
 void DrawingUnit::setTextureAt(GLuint tex, int index)
 {
-    if (shader.program <= GL_ZERO || shader.textures.empty())
+    if (shader.program <= GL_ZERO || shader.texLocs.empty())
         return;
 
-    if (index < 0 || index >= shader.textures.size())
+    auto tot = shader.texLocs.size();
+    if (index < 0 || index >= tot)
         return;
 
+    if (shader.textures.size() < tot)
+    {
+        shader.textures.resize(tot);
+    }
     shader.textures[index] = tex;
 }
 void DrawingUnit::draw()
