@@ -1,13 +1,3 @@
-  
-// vec4 buildFragColor(vec4 color4, float d) {
-//     d = aa(d);
-// #ifndef SDF_COLOR_CLIP
-//     float alpha = d * color4.a;
-//     return vec4(color4.rgb * alpha, alpha);
-// #else
-//     return clipSdfColor(color4, color4, d);
-// #endif
-// }
 
 float sdfCircleBase(float radius, vec2 center, vec2 xy) {
     return length(xy - center) - radius;
