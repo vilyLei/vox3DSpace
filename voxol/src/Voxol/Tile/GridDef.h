@@ -15,6 +15,41 @@ namespace Voxol::Tile
 namespace RC
 {
 
+struct Pos
+{
+    union
+    {
+        int64_t value = 0;
+
+        struct
+        {
+            int64_t level : 16;
+            int64_t c : 24;
+            int64_t r : 24;
+        };
+
+        struct
+        {
+            int64_t depth : 16;
+            int64_t x : 24;
+            int64_t y : 24;
+        };
+    };
+
+    Pos() = default;
+    Pos(int32_t r, int32_t c, int32_t level = 0) :
+        r(r), c(c), level(level) {}
+
+    [[nodiscard]] inline bool operator==(const Pos& other) const noexcept
+    {
+        return value == other.value;
+    }
+    [[nodiscard]] inline bool operator!=(const Pos& other) const noexcept
+    {
+        return value != other.value;
+    }
+};
+
 union Rect
 {
     int32_t data[4]{};
@@ -42,6 +77,7 @@ union Rect
     [[nodiscard]] int32_t height() const noexcept;
 
     [[nodiscard]] bool contains(int32_t r, int32_t c) const noexcept;
+    [[nodiscard]] bool contains(const Pos& pos) const noexcept;
 
     [[nodiscard]] bool overlaps(const Rect& other) const noexcept;
 
@@ -56,41 +92,6 @@ union Rect
     }
     [[nodiscard]] inline bool isNotEqual(const Rect& other) const noexcept {
         return other.minX != minX || other.minY != minY || other.maxX != maxX || other.maxY != maxY;
-    }
-};
-
-struct Pos
-{
-    union
-    {
-        int64_t value = 0;
-
-        struct
-        {
-            int64_t level : 16;
-            int64_t c : 24;
-            int64_t r : 24;
-        };
-
-        struct
-        {
-            int64_t depth : 16;
-            int64_t x : 24;
-            int64_t y : 24;
-        };
-    };
-
-    Pos() = default;
-    Pos(int32_t r, int32_t c, int32_t level = 0) :
-        r(r), c(c), level(level) {}
-
-    [[nodiscard]] bool operator==(const Pos& other) const noexcept
-    {
-        return value == other.value;
-    }
-    [[nodiscard]] bool operator!=(const Pos& other) const noexcept
-    {
-        return value != other.value;
     }
 };
 
@@ -136,7 +137,7 @@ struct Unit
 };
 struct IndexNode
 {
-    int64_t value = 0;
+    RC::Pos pos{};
     int32_t index = 0;
 };
 }

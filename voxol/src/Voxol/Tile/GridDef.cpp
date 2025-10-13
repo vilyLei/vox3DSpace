@@ -15,6 +15,10 @@ Rect::Rect(int32_t minC, int32_t minR, int32_t maxC, int32_t maxR) :
 {
     return (r >= minR && r <= maxR && c >= minC && c <= maxC);
 }
+[[nodiscard]] bool Rect::contains(const Pos& pos) const noexcept
+{
+    return (pos.r >= minR && pos.r <= maxR && pos.c >= minC && pos.c <= maxC);
+}
 
 [[nodiscard]] bool Rect::overlaps(const Rect& other) const noexcept
 {

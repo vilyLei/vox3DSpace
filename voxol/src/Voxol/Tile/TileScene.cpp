@@ -113,7 +113,7 @@ namespace Voxol::Tile
                     grid.drawUnit.setTextureAt(texPool.acquire(), 0);
                     buildGrid(grid, ctx);
 
-                    viewUnitIndexMap[pos.value] = {pos.value, k};
+                    viewUnitIndexMap[pos.value] = {pos, k};
 
                     viewGridsTotal++;
                 }
@@ -141,7 +141,7 @@ namespace Voxol::Tile
                     grid.drawUnit.setTextureAt(texPool.acquire(), 0);
 
                     buildGrid(grid, ctx);
-                    viewUnitIndexMap[pos.value] = {pos.value, k};
+                    viewUnitIndexMap[pos.value] = {pos, k};
                 }
             }
             printf("append tot: %d\n", tot);
@@ -150,9 +150,15 @@ namespace Voxol::Tile
         for (auto& e : viewUnitIndexMap)
         {
             auto  k    = e.second.index;
-            auto& unit = gridUnits[k].drawUnit;
-            unit.mvp   = vpM;
-            unit.draw();
+            if (gr.contains(e.second.pos))
+            {
+                auto& unit = gridUnits[k].drawUnit;
+                unit.mvp   = vpM;
+                unit.draw();
+            }
+            else {
+                // ×¼±¸ÒÆ³ý
+            }
         }
 
         texPool.dispose();
