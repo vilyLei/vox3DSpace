@@ -169,6 +169,7 @@ namespace Voxol::Tile
             else
             {
                 // ×¼±¸ÒÆ³ý
+                unitIndexPool.release(k);
                 auto& unit = gridUnits[k].drawUnit;
                 printf("erase a grid node(r=%d, c=%d, level=%d).\n", node.pos.r, node.pos.c, node.pos.level);
                 texPool.release(unit.getTextureAt(0));

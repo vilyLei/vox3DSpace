@@ -429,7 +429,6 @@ void VertNode::buildGPURes()
 void VertNode::bindGPU()
 {
     glBindVertexArray(vao);
-    //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, veo);
 }
 
 GLsizei VertNode::indicesSize() const
