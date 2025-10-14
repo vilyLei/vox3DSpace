@@ -152,26 +152,33 @@ void OglTestScene::renderVoass(const Math::Mat33& vpMat)
     auto& ctx    = drawCtx;
     auto& params   = ctx.drawParam;
     auto& viewport = ctx.clearParam.viewport;
+    //etRenderSys
 
-    ///*
+    auto drawCall = [this](const Math::VxRect& bounds, const Math::Mat33& vpMat) {
+        etRenderSys.render(drawCtx, vpMat, sdfDrawUnits);
+    };
+    auto queryCall = [this](const Math::VxRect& bounds, const Math::Mat33& vpMat) -> int {
+        return etRenderSys.drawQuery(bounds, vpMat);
+    };
+
+    /*
     auto drawCall = [this](const Math::VxRect& bounds, const Math::Mat33& vpMat) {
         renderSdfUnits(vpMat);
     };
     auto queryCall = [this](const Math::VxRect& bounds, const Math::Mat33& vpMat) -> int {
         return 1;
     };
+    //*/
     //drawCall({} , vpMat);
     //return;
-    ctx.drawCall = drawCall;
+    ctx.drawCall  = drawCall;
     ctx.drawQuery = queryCall;
     tileSys.run(ctx);
-
     auto vwBounds = params.viewWBounds;
     boundsUnit.objMat.setTo(vwBounds.x(), vwBounds.y(), vwBounds.width(), vwBounds.height());
     boundsUnit.mvp = vpMat;
     boundsUnit.draw();
     return;
-    //*/
 
     mFbo.init(GL_ZERO);
 
