@@ -86,60 +86,19 @@ namespace Voxol::Tile
         auto createFlag = ctx.dirty && viewGridLevel != lv;
         auto adjustFlag = ctx.dirty && viewGridLevel == lv;
         viewGridLevel = lv;
-        /*
-        if (createFlag)
-        {
-            for (auto& e : viewUnitIndexMap)
-            {
-                auto  k    = e.second.index;
-                auto& unit = gridUnits[k].drawUnit;
-                texPool.release(unit.getTextureAt(0));
-            }
-
-            viewUnitIndexMap.clear();
-            unitIndexPool.reset();
-
-            viewGridsTotal = 0;
-            for (auto r = gr.minR; r <= gr.maxR; r++)
-            {
-                for (auto c = gr.minC; c <= gr.maxC; c++)
-                {
-                    auto k = unitIndexPool.acquire();
-                    if (k < 0) {
-                        continue;
-                    }
-
-                    RC::Pos pos = {r, c, lv};
-
-                    auto& grid = gridUnits[k];
-                    grid.setRCAndAreaSize(pos, currGridSize);
-                    grid.drawUnit.setTextureAt(texPool.acquire(), 0);
-                    buildGrid(grid, ctx);
-
-                    viewUnitIndexMap[pos.value] = {pos, k};
-
-                    viewGridsTotal++;
-                }
-            }
-            printf("create tile grids tot: %d\n", viewGridsTotal);
-        }
-        //*/
+        
         if (createFlag || adjustFlag)
         {
             for (auto&& it = viewUnitIndexMap.begin(); it != viewUnitIndexMap.end();)
             {
                 auto& node = it->second;
-                //auto  k    = node.index;
                 if (gr.contains(node.pos))
                 {
-                    //auto& unit = gridUnits[k].drawUnit;
-                    //unit.mvp   = vpM;
-                    //unit.draw();
                     ++it;
                 }
                 else
                 {
-                    // 准备移除
+                    // remove an element
                     unitIndexPool.release(node.index);
                     auto& unit = gridUnits[node.index].drawUnit;
                     printf("erase a grid node(r=%d, c=%d, level=%d).\n", node.pos.r, node.pos.c, node.pos.level);
@@ -178,27 +137,6 @@ namespace Voxol::Tile
             printf("append tot: %d\n", tot);
         }
 
-        //for (auto&& it = viewUnitIndexMap.begin(); it != viewUnitIndexMap.end();)
-        //{
-        //    auto& node = it->second;
-        //    auto  k    = node.index;
-        //    if (gr.contains(node.pos))
-        //    {
-        //        auto& unit = gridUnits[k].drawUnit;
-        //        unit.mvp   = vpM;
-        //        unit.draw();
-        //        ++it;
-        //    }
-        //    else
-        //    {
-        //        // 准备移除
-        //        unitIndexPool.release(k);
-        //        auto& unit = gridUnits[k].drawUnit;
-        //        printf("erase a grid node(r=%d, c=%d, level=%d).\n", node.pos.r, node.pos.c, node.pos.level);
-        //        texPool.release(unit.getTextureAt(0));
-        //        it = viewUnitIndexMap.erase(it);
-        //    }
-        //}
         for (auto&& it = viewUnitIndexMap.begin(); it != viewUnitIndexMap.end(); it++)
         {
             auto& node = it->second;
