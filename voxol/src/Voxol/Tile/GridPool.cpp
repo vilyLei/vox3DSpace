@@ -53,10 +53,10 @@ void UnitIndexPool::reset()
     {
         used[k] = 0;
     }
-    auto poolSize = static_cast<int32_t>(freeIndices.size());
+    auto poolSize = static_cast<int32_t>(used.size());
     for (int i = 0; i < poolSize; ++i)
     {
-        freeIndices[i] = i;
+        freeIndices.push_back(i);
     }
 }
 
