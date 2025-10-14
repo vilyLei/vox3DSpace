@@ -58,12 +58,12 @@ private:
     Gpu::DrawingUnit sdfSectorUnit{};
     Gpu::DrawingUnit sdfRoundedRectUnit{};
     Gpu::DrawingUnit sdfTriangleUnit{};
+    Gpu::DrawingUnit sdfRectUnit{};
+    Gpu::DrawingUnit strokeShapeUnit{};
 
     Gpu::DrawingUnit tile0Unit{};
 
     Gpu::DrawingUnit boundsUnit{};
-
-    Gpu::DrawingUnit strokeShapeUnit{};
 };
 
 

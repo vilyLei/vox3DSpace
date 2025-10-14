@@ -113,7 +113,6 @@ void  OglTestScene::initVoassScene(){
     sdfRingUnit.objMat.setTo(100, 100, 200, 200);
     Gpu::buildSDFDrawUnit(sdfRingUnit, Shader::SDFShapeType::Ring, colorClip);
 
-
     sdfRoundedRectUnit.color = {0.5f, 0.6, 0.3f, 1.f};
     sdfRoundedRectUnit.objMat.setTo(300, 260, 200, 200);
     Gpu::buildSDFDrawUnit(sdfRoundedRectUnit, Shader::SDFShapeType::RoundedRect, colorClip);
@@ -122,18 +121,19 @@ void  OglTestScene::initVoassScene(){
     sdfTriangleUnit.objMat.setTo(300, 350, 200, 200);
     Gpu::buildSDFDrawUnit(sdfTriangleUnit, Shader::SDFShapeType::Triangle, colorClip);
     
+    
+    sdfRectUnit.color = {0.1f, 0.6, 0.3f, 1.0f};
+    sdfRectUnit.objMat.setTo(100, 100, 200, 80);
+    Gpu::buildSDFDrawUnit(sdfRectUnit, Shader::SDFShapeType::Rect, colorClip);
+
+    Gpu::buildSDFDrawUnit(strokeShapeUnit, Shader::SDFShapeType::DefaultShape, colorClip);
+
+    
     boundsUnit.color = {0.0f, 0.3, 0.3f, 1.f};
     boundsUnit.objMat.setTo(0, 0, 150, 150);
     boundsUnit.vertex.toLine();
     boundsUnit.vertex.lineWidth = 5;
     Test::Gpu::buildBaseDrawUnit(boundsUnit);
-
-    
-    baseDrawUnit.color = {0.1f, 0.6, 0.3f, 1.0f};
-    baseDrawUnit.objMat.setTo(100, 100, 200, 80);
-    Gpu::buildSDFDrawUnit(baseDrawUnit, Shader::SDFShapeType::Rect, colorClip);
-
-    Gpu::buildSDFDrawUnit(strokeShapeUnit, Shader::SDFShapeType::DefaultShape, colorClip);
 }
 
 
@@ -251,10 +251,10 @@ void OglTestScene::renderSdfUnits(const Voxol::Math::Mat33& vpMat)
     sdfRoundedRectUnit.draw();
 
     
-    baseDrawUnit.color = {0.1f, 0.6, 0.3f, 1.0f};
-    baseDrawUnit.objMat.setTo(100, 300, 300, 30, 3.1415926f/3);
-    baseDrawUnit.mvp = vpMat;
-    baseDrawUnit.draw();
+    sdfRectUnit.color = {0.1f, 0.6, 0.3f, 1.0f};
+    sdfRectUnit.objMat.setTo(100, 300, 300, 30, 3.1415926f / 3);
+    sdfRectUnit.mvp = vpMat;
+    sdfRectUnit.draw();
 
     sdfTriangleUnit.setColor(0x8000aa00);
     sdfTriangleUnit.mvp = vpMat;
