@@ -84,7 +84,12 @@ void TileScene::run(const Render::Draw::DrawContext& ctx)
 
     auto createFlag = ctx.dirty && viewGridLevel != lv;
     auto adjustFlag   = ctx.dirty && viewGridLevel == lv;
+
+    static float preZoom      = ctx.zoom;
+    //auto toBiggerFlag = preZoom < ctx.zoom || viewGridLevel < lv;
     auto toBiggerFlag = viewGridLevel < lv;
+    preZoom = ctx.zoom;
+
 
     if (createFlag || adjustFlag)
     {
@@ -112,19 +117,25 @@ void TileScene::run(const Render::Draw::DrawContext& ctx)
         {
             for (auto c = gr.minC; c <= gr.maxC; c++)
             {
-                RC::Pos pos = {r, c, lv};
+                RC::Pos pos{r, c, lv};
                 if (viewUnitIndexMap.contains(pos.value))
                 {
                     if (toBiggerFlag)
                     {
                         auto&& xy = RC::rcToXY(pos, currGridSize);
-                        auto&& vb = Math::VxRect::makeXYWH(xy.x, xy.y, currGridSize, currGridSize);
-                        if (!ctx.drawQuery(vb, vpM))
-                        {
-                            continue;
-                        }
+                        auto&& vb   = Math::VxRect::makeXYWH(xy.x, xy.y, currGridSize, currGridSize);
                         auto&& node = viewUnitIndexMap[pos.value];
                         auto&  grid = gridUnits[node.index];
+                        if (!ctx.drawQuery(vb, vpM))
+                        {
+
+                            unitIndexPool.release(node.index);
+                            auto& unit = grid.drawUnit;
+                            printf("erase a grid node(r=%d, c=%d, level=%d) B.\n", node.pos.r, node.pos.c, node.pos.level);
+                            texPool.release(unit.getTextureAt(0));
+                            viewUnitIndexMap.erase(pos.value);
+                            continue;
+                        }
                         grid.setRCAndAreaSize(pos, currGridSize);
                         buildGrid(grid, ctx);
                     }
