@@ -78,6 +78,23 @@ void EntityRenderSystem::initalize()
     /// multi-circles
     entities[3].boundsId  = 2;
     entities[3].shadingId = 3;
+
+    // update bounds
+    std::unordered_map<uint32_t, uint32_t> map{};
+    for (auto& et : entities)
+    {
+        if (et.boundsId < 0 || et.shadingId < 0 || map.contains(et.boundsId))
+        {
+            continue;
+        }
+        map[et.boundsId] = 1;
+
+        auto& b = boundsVec[et.boundsId].bounds;
+        auto& shadingEt = shaderingEntities[et.shadingId];
+        auto& shdDesc   = shaderingDescVec[shadingEt.shadingDescId];
+        auto& trans     = shdDesc.transform;
+        b.setXYWH(trans.x, trans.y, trans.sx, trans.sy);
+    }
 }
 
 int EntityRenderSystem::drawQuery(const Math::VxRect& wbounds, const Math::Mat33& vpM)
