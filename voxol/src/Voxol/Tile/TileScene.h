@@ -39,8 +39,11 @@ private:
     Render::Draw::ClearParams clearParam{};
     int                       viewGridsTotal = 0;
     int                       viewGridLevel = 0;
-
+    /// <summary>
+    /// all units in the view scope 
+    /// </summary>
     std::unordered_map<int64_t, Grid::IndexNode> viewUnitIndexMap{};
+
     Grid::UnitTexPool                            texPool{};
     Grid::UnitIndexPool                          unitIndexPool{};
     RC::Rect                                     currRCRect{};
