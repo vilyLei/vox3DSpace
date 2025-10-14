@@ -2,6 +2,7 @@
 #define VOXOL_TILE_GRID_POOL_H
 
 #include "GridDef.h"
+#include <vector>
 #include <unordered_set>
 #include <unordered_map>
 
@@ -15,14 +16,14 @@ public:
     UnitIndexPool() = default;
 
 public:
-    void    init(size_t pool_size);
+    void    init(size_t poolSize);
     int32_t acquire();
     void    release(int32_t index);
     void    reset();
 
 private:
-    std::unordered_set<int> busyIndices{};
-    std::unordered_set<int> freeIndices{};
+    std::vector<int> used{};
+    std::vector<int> freeIndices{};
 };
 
 class UnitTexPool

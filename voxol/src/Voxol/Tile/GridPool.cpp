@@ -5,51 +5,59 @@ namespace Voxol::Tile
 {
 namespace Grid
 {
-void UnitIndexPool::init(size_t pool_size)
+void UnitIndexPool::init(size_t poolSize)
 {
-    for (int i = 0; i < pool_size; ++i)
+    freeIndices.resize(poolSize);
+    for (int i = 0; i < poolSize; ++i)
     {
-        freeIndices.insert(i);
+        freeIndices[i] = i;
     }
+    used.assign(poolSize, 0);
 }
+
 int32_t UnitIndexPool::acquire()
 {
+
     if (freeIndices.empty())
     {
         return -1;
     }
-
-    auto index = *freeIndices.begin();
-    if (busyIndices.contains(index))
-    {
-        printf("UnitIndexPool error acquire call ...\n");
-    }
-    freeIndices.erase(freeIndices.begin());
-    busyIndices.insert(index);
+    auto index = freeIndices.back();
+    freeIndices.pop_back();
+    used[index] = 1;
 
     return index;
 }
 
 void UnitIndexPool::release(int32_t index)
 {
-    if (freeIndices.contains(index) || !busyIndices.contains(index))
+    if (index < 0 || index >= static_cast<int32_t>(used.size()))
     {
-        printf("UnitIndexPool error release call ...\n");
+        printf("UnitIndexPool::release() release invalid index.\n");
         return;
     }
-    freeIndices.insert(index);
-    busyIndices.erase(index);
+    if (!used[index])
+    {
+        printf("UnitIndexPool::release() double release index.\n");
+        return;
+    }
+    used[index] = 0;
+    freeIndices.push_back(index);
 }
 void UnitIndexPool::reset()
 {
     if (freeIndices.empty())
         return;
 
-    for (auto k : busyIndices)
+    for (auto k : freeIndices)
     {
-        freeIndices.insert(k);
+        used[k] = 0;
     }
-    busyIndices.clear();
+    auto poolSize = static_cast<int32_t>(freeIndices.size());
+    for (int i = 0; i < poolSize; ++i)
+    {
+        freeIndices[i] = i;
+    }
 }
 
 
