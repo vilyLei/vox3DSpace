@@ -70,6 +70,14 @@ public:
     inline Vec2 center() const { return (min + max) * 0.5f; }
     inline Vec2 extent() const { return max - min; }
 
+    inline void expand(const VxRect& other)
+    {
+        min.x = std::min(min.x, other.min.x);
+        min.y = std::min(min.y, other.min.y);
+        max.x = std::max(max.x, other.max.x);
+        max.y = std::max(max.y, other.max.y);
+    }
+
     int   longestAxis() const;
     float centerAlong(int axis) const;
 };
