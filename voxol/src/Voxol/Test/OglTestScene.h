@@ -51,18 +51,9 @@ private:
     MSDFText                      msdfText{};
     std::vector<Gpu::DrawingUnit> msdfTextDrawUnits{};
 
-
-    Gpu::DrawingUnit sdfCircleUnit{};
-    Gpu::DrawingUnit sdfMultiCirclesUnit{};
-    Gpu::DrawingUnit sdfRingUnit{};
-    Gpu::DrawingUnit sdfSectorUnit{};
-    Gpu::DrawingUnit sdfRoundedRectUnit{};
-    Gpu::DrawingUnit sdfTriangleUnit{};
-    Gpu::DrawingUnit sdfRectUnit{};
-    Gpu::DrawingUnit strokeShapeUnit{};
+    std::vector<Gpu::DrawingUnit> sdfDrawUnits{8};
 
     Gpu::DrawingUnit tile0Unit{};
-
     Gpu::DrawingUnit boundsUnit{};
 };
 

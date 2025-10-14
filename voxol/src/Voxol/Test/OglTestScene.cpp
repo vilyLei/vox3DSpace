@@ -92,6 +92,15 @@ void  OglTestScene::initVoassScene(){
 
     tileSys.initalize();
 
+    auto& sdfCircleUnit      = sdfDrawUnits[0];
+    auto& sdfMultiCirclesUnit = sdfDrawUnits[1];
+    auto& sdfRingUnit         = sdfDrawUnits[2];
+    auto& sdfSectorUnit       = sdfDrawUnits[3];
+    auto& sdfRoundedRectUnit  = sdfDrawUnits[4];
+    auto& sdfTriangleUnit     = sdfDrawUnits[5];
+    auto& sdfRectUnit         = sdfDrawUnits[6];
+    auto& strokeShapeUnit     = sdfDrawUnits[7];
+
     //Gpu::DrawingUnit sdfCircleUnit{};
     bool colorClip      = false;
     sdfCircleUnit.color = {0.9f, 0.0, 0.3f, 1.0f};
@@ -214,23 +223,30 @@ void OglTestScene::renderVoass(const Math::Mat33& vpMat)
 
 void OglTestScene::renderSdfUnits(const Voxol::Math::Mat33& vpMat)
 {
+    auto& sdfCircleUnit       = sdfDrawUnits[0];
+    auto& sdfMultiCirclesUnit = sdfDrawUnits[1];
+    auto& sdfRingUnit         = sdfDrawUnits[2];
+    auto& sdfSectorUnit       = sdfDrawUnits[3];
+    auto& sdfRoundedRectUnit  = sdfDrawUnits[4];
+    auto& sdfTriangleUnit     = sdfDrawUnits[5];
+    auto& sdfRectUnit         = sdfDrawUnits[6];
+    auto& strokeShapeUnit     = sdfDrawUnits[7];
     
     sdfCircleUnit.color = {0.9f, 0.0, 0.7f, 1.0f};
     sdfCircleUnit.mvp = vpMat;
     sdfCircleUnit.draw();
-    //return;
+
     sdfCircleUnit.color = {0.7f, 0.7, 0.7f, 1.0f};
     sdfCircleUnit.mvp = vpMat;
     sdfCircleUnit.draw();
 
+    sdfMultiCirclesUnit.color = {0.6f, 0.0, 0.3f, 1.0f};
+    sdfMultiCirclesUnit.objMat.setTo(330, 100, 200, 200);
     sdfMultiCirclesUnit.mvp = vpMat;
     sdfMultiCirclesUnit.draw();
 
-    //static float time = 0.0f;
-    //time += 0.1f;
-    //sdfMultiCirclesUnit.color = {0.2f + std::abs(std::cos(time)) * 0.5f, 0.0, 0.3f, 1.0f};
-
-    sdfMultiCirclesUnit.color = {0.7f, 0.7, 0.7f, 1.0f};
+    sdfMultiCirclesUnit.objMat.setTo(360, 130, 200, 200);
+    sdfMultiCirclesUnit.color = {0.0, 0.7, 0.7f, 1.0f};
     sdfMultiCirclesUnit.mvp = vpMat;
     sdfMultiCirclesUnit.draw();
 
@@ -260,7 +276,6 @@ void OglTestScene::renderSdfUnits(const Voxol::Math::Mat33& vpMat)
     sdfTriangleUnit.mvp = vpMat;
     sdfTriangleUnit.draw();
 
-    //
     strokeShapeUnit.color = {0.5f, 0.3, 0.3f, 1.0f};
     strokeShapeUnit.objMat.setTo(700, 300, 100, 100);
     strokeShapeUnit.mvp = vpMat;
