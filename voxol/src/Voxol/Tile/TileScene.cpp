@@ -117,6 +117,13 @@ namespace Voxol::Tile
                     {
                         continue;
                     }
+                    auto&& xy = RC::rcToXY(pos, currGridSize);
+                    auto&& vb = Math::VxRect::makeXYWH(xy.x, xy.y, currGridSize, currGridSize);
+                    if (!ctx.drawQuery(vb, vpM))
+                    {
+                        continue;
+                    }
+
                     auto k = unitIndexPool.acquire();
                     if (k < 0)
                     {

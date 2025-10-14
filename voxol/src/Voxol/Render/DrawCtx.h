@@ -11,7 +11,8 @@ namespace Voxol::Render
 {
 namespace Draw
 {
-using DrawCallType = std::function<void(const Math::VxRect& viewWBounds, const Math::Mat33& vpMat)>;
+using DrawCallType = std::function<void(const Math::VxRect& bounds, const Math::Mat33& vpMat)>;
+using DrawQueryType = std::function<int(const Math::VxRect& bounds, const Math::Mat33& vpMat)>;
 
 struct Viewport
 {
@@ -42,6 +43,7 @@ struct DrawContext
     ClearParams  clearParam{};
     DrawParams   drawParam{};
     DrawCallType drawCall;
+    DrawQueryType drawQuery;
     float        zoom = 1;
     bool        dirty = 1;
 };
