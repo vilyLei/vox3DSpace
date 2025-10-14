@@ -2,6 +2,7 @@
 #define VOXOL_OGL_TEST_SCENE_H
 
 #include "../Tile/TileSystem.h"
+#include "../Render/EntityRenderSystem.h"
 #include "../Base/BaseDefine.h"
 #include "../Math/Mat33.h"
 #include "../Math/VxRect.h"
@@ -29,8 +30,8 @@ public:
     virtual ~OglTestScene() = default;
 
 public:
-    void initScene();
-    void render(const Voxol::Math::Mat33& vpMat);
+    void                      initScene();
+    void                      render(const Voxol::Math::Mat33& vpMat);
     Render::Draw::DrawContext drawCtx{};
 
 private:
@@ -40,8 +41,9 @@ private:
 
     bool voassModeFlag = true;
 
-    Render::OglFbo mFbo{};
-    Tile::TileSystem          tileSys{};
+    Render::OglFbo             mFbo{};
+    Tile::TileSystem           tileSys{};
+    Render::EntityRenderSystem etRenderSys{};
 
     Gpu::DrawingUnit              baseDrawUnit{};
     Gpu::DrawingUnit              texDrawUnit{};

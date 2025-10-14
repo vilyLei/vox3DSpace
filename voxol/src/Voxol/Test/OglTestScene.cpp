@@ -91,6 +91,7 @@ void  OglTestScene::initVoassScene(){
     using namespace Voass::Render;
 
     tileSys.initalize();
+    etRenderSys.initalize();
 
     auto& sdfCircleUnit      = sdfDrawUnits[0];
     auto& sdfMultiCirclesUnit = sdfDrawUnits[1];
