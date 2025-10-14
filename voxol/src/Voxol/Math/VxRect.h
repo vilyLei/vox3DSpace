@@ -65,7 +65,13 @@ public:
     float width() const;
     float height() const;
     void  toEmpty(float px = 0, float py = 0);
-    bool isEmpty() const;
+    bool  isEmpty() const;
+
+    inline Vec2 center() const { return (min + max) * 0.5f; }
+    inline Vec2 extent() const { return max - min; }
+
+    int   longestAxis() const;
+    float centerAlong(int axis) const;
 };
 } // namespace Voxol::Math
 

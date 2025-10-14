@@ -151,4 +151,15 @@ bool VxRect::isEmpty() const
 {
     return width() <= 0 || height() <= 0;
 }
+
+int VxRect::longestAxis() const
+{
+    auto&& ext = extent();
+    return (ext.x > ext.y) ? 0 : 1; /// 0 = x, 1 = y
+}
+float VxRect::centerAlong(int axis) const
+{
+    auto&& c = center();
+    return (axis == 0) ? c.x : c.y;
+}
 } // namespace Voxol::Math
