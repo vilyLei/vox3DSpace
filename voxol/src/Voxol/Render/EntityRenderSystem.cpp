@@ -104,7 +104,7 @@ int EntityRenderSystem::drawQuery(const Math::VxRect& wbounds, const Math::Mat33
     for (auto i = 0; i < total; i++)
     {
         auto& et = entities[i];
-        if (et.boundsId < 0)
+        if (et.boundsId < 0 || !et.visible)
             continue;
         auto& b = boundsVec[et.boundsId].bounds;
         if (wbounds.intersects(b))
@@ -120,7 +120,7 @@ void EntityRenderSystem::render(const Draw::DrawContext& rctx, const Math::Mat33
     for (auto i = 0; i < tot; i++)
     {
         auto& et = entities[queriedEIds[i]];
-        if (et.boundsId < 0 || et.shadingId < 0)
+        if (et.boundsId < 0 || et.shadingId < 0 || !et.visible)
             continue;
         drawUnit(et, rctx, vpM, drawingUnits);
     }

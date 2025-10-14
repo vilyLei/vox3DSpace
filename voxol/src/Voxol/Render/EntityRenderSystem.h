@@ -56,6 +56,7 @@ struct UnitEntity
     int32_t boundsId = -1;
     /// UnitShadingEntity vector index value
     int32_t shadingId = -1;
+    bool    visible   = true;
 };
 
 } // namespace Component
