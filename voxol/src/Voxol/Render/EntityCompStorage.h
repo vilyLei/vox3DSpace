@@ -9,9 +9,6 @@
 namespace Voxol::Render
 {
 
-//using namespace Voxol::Test;
-//using namespace Voxol::Tile;
-
 class EntityCompStorage
 {
 public:
@@ -50,6 +47,12 @@ public:
     const T& operator[](int32_t index) const
     {
         const auto& pool = getPool<T>();
+        return pool.get(index);
+    }
+    template <typename T>
+    T& operator[](int32_t index) const
+    {
+        auto& pool = getPool<T>();
         return pool.get(index);
     }
 

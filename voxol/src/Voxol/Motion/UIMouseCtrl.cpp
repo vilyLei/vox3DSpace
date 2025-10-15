@@ -10,23 +10,23 @@ bool UIMouseCtrl::setMouseParams(ViewComponent& view, const UIMouseParam& param)
     //printf("UIMouseCtrl::setMouseParams(), param.type: %d, param.value: %f\n", param.type, param.value);
     switch (param.type)
     {
-        case 11:
+        case UIMouseType::MOUSE_DOWN:
         {
             view.moveBegin(mousePos);
         }
         break;
-        case 12:
+        case UIMouseType::MOUSE_UP:
         {
             view.moveEnd(mousePos);
         }
         break;
-        case 3:
+        case UIMouseType::MOUSE_MOVE:
         {
 
             viewDirty = view.move(mousePos);
         }
         break;
-        case 4:
+        case UIMouseType::MOUSE_SCROLL:
         {
             //#ifdef _WIN32
             //auto dv   = std::abs(param.value) >= 5 ? param.value * 0.01f : param.value;
@@ -35,7 +35,7 @@ bool UIMouseCtrl::setMouseParams(ViewComponent& view, const UIMouseParam& param)
             viewDirty = view.updateViewZoom(mousePos, dv, 1.2f);
         }
         break;
-        case 5:
+        case UIMouseType::MOUSE_CLICK:
         {
 
             /*

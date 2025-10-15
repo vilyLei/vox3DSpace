@@ -10,6 +10,7 @@
 #include "OglResUtils.h"
 #include "OglImage.h"
 #include "OglText.h"
+#include "../Motion/UIMouseCtrl.h"
 
 #include <iostream>
 #include <cmath>
@@ -32,6 +33,7 @@ public:
 public:
     void                      initScene();
     void                      render(const Voxol::Math::Mat33& vpMat);
+    void                      setMouseParams(const Voxol::Motion::UIMouseParam& param);
     Render::Draw::DrawContext drawCtx{};
 
 private:
@@ -55,8 +57,9 @@ private:
 
     std::vector<Gpu::DrawingUnit> sdfDrawUnits{8};
 
-    Gpu::DrawingUnit tile0Unit{};
-    Gpu::DrawingUnit boundsUnit{};
+    Gpu::DrawingUnit     tile0Unit{};
+    Gpu::DrawingUnit     boundsUnit{};
+    std::vector<int32_t> queriedEIds{};
 };
 
 
