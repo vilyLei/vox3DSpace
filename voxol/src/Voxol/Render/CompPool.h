@@ -58,14 +58,23 @@ public:
         return idx;
     }
     template <typename Fn>
-    void forEach(Fn&& fn) noexcept
+    void forEach(const Fn& fn) noexcept
     {
         for (auto& obj : comps)
         {
             fn(obj);
         }
     }
-    // 分配并赋值（构造）
+    template <typename Fn>
+    void forEachWithIndex(const Fn& fn) noexcept
+    {
+        auto tot = static_cast<int32_t>(comps.size());
+        for (auto i = 0; i < tot; ++i)
+        {
+            fn(comps[i], i);
+        }
+    }
+
     template <typename... Args>
     int32_t emplace(Args&&... args)
     {

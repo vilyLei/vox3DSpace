@@ -22,18 +22,25 @@ void EntityRenderSystem::initalize()
         entities[i].id = i;
     }
     //for (auto i = 0; i < shaderingEntities.size(); ++i)
-    for (auto i = 0; i < total; ++i)
-    {
-        shaderingEntitiesPool[i].id = i;
-    }
+    //for (auto i = 0; i < total; ++i)
+    //{
+    //    shaderingEntitiesPool[i].id = i;
+    //}
 
     //for (auto i = 0; i < shaderingDescTotal; ++i)
     //{
     //    shaderingDescPool[i].id = i;
     //}
-    auto index = 0;
-    shaderingDescPool.forEach([&](auto& e) {
-        e.id = index++;
+    //auto index = 0;
+    //shaderingDescPool.forEach([&](auto& e) {
+    //    e.id = index++;
+    //});
+
+    shaderingEntitiesPool.forEachWithIndex([&](auto& e, int32_t index) {
+        e.id = index;
+    });
+    shaderingDescPool.forEachWithIndex([&](auto& e, int32_t index) {
+        e.id = index;
     });
 
     shaderingDescPool[0].color    = 0xff880077;
