@@ -70,8 +70,16 @@ public:
     {
         return m_objects[index];
     }
+    const T& operator[](int32_t index) const
+    {
+        return m_objects[index];
+    }
     // 通过句柄访问对象（返回指针或nullptr）
-    T& get(int32_t index) noexcept
+    T& get(int32_t index)
+    {
+        return m_objects[index];
+    }
+    const T& get(int32_t index) const
     {
         return m_objects[index];
     }

@@ -88,11 +88,27 @@ public:
         else
             static_assert(!sizeof(T), "Unsupported pool type");
     }
+    template <typename T>
+    const CompPool<T>& getPool() const
+    {
+        if constexpr (std::is_same_v<T, Component::UnitShadingEntity>)
+            return shaderingEntitiesPool;
+        else if constexpr (std::is_same_v<T, Component::UnitShadingBaseDesc>)
+            return shaderingDescPool;
+        else
+            static_assert(!sizeof(T), "Unsupported pool type");
+    }
+
+    template <typename T>
+    const T& getCompAt(int32_t index) const
+    {
+        const auto& pool = getPool<T>();
+        return pool.get(index);
+    }
 
 private:
     void                                      drawUnit(const Component::UnitEntity& entity, const Draw::DrawContext& rctx, const Math::Mat33& vpM, std::vector<Gpu::DrawingUnit> drawingUnits);
     std::vector<Component::UnitEntity>        entities{};
-    //std::vector<Component::UnitShadingEntity> shaderingEntities{};
     CompPool<Component::UnitShadingEntity>     shaderingEntitiesPool{};
     CompPool<Component::UnitShadingBaseDesc>  shaderingDescPool{};
     std::vector<int32_t>                     queriedEIds{};

@@ -124,7 +124,8 @@ void EntityRenderSystem::render(const Draw::DrawContext& rctx, const Math::Mat33
 
 void EntityRenderSystem::drawUnit(const Component::UnitEntity& entity, const Draw::DrawContext& rctx, const Math::Mat33& vpM, std::vector<Gpu::DrawingUnit> drawingUnits)
 {
-    auto& shadingEt = shaderingEntitiesPool[entity.shadingId];
+    //auto& shadingEt = shaderingEntitiesPool[entity.shadingId];
+    auto& shadingEt = getCompAt<Component::UnitShadingEntity>(entity.shadingId);
     auto& drawUnit  = drawingUnits[shadingEt.drawUnitId];
     auto& shdDesc   = shaderingDescPool[shadingEt.shadingDescId];
     auto& trans     = shdDesc.transform;
