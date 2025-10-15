@@ -1,34 +1,24 @@
-#ifndef VOXOL_ENTITY_RENDER_SYSTEM_H
-#define VOXOL_ENTITY_RENDER_SYSTEM_H
+#ifndef VOXOL_RENDER_ENTITY_COMP_STORAGE_H
+#define VOXOL_RENDER_ENTITY_COMP_STORAGE_H
 
 #include "../Tile/GridDef.h"
-#include "BVH2D.h"
-#include "DrawCtx.h"
 #include "CompPool.h"
 #include "EntityComponent.h"
-#include "EntityCompStorage.h"
+#include <vector>
 
 namespace Voxol::Render
 {
 
-using namespace Voxol::Test;
-using namespace Voxol::Tile;
+//using namespace Voxol::Test;
+//using namespace Voxol::Tile;
 
-class EntityRenderSystem
+class EntityCompStorage
 {
 public:
-    EntityRenderSystem()  = default;
-    ~EntityRenderSystem() = default;
+    EntityCompStorage()   = default;
+    ~EntityCompStorage() = default;
 
 public:
-    void initalize();
-    int  drawQuery(const Math::VxRect& bounds, const Math::Mat33& vpM);
-    void render(const Draw::DrawContext& rctx, const Math::Mat33& vpM, std::vector<Gpu::DrawingUnit> drawingUnits);
-    void clear();
-
-    std::vector<BVHItem2D> bvhItems;
-    BVH2D                  bvh{};
-    /*
     template <typename T>
     CompPool<T>& getPool()
     {
@@ -49,6 +39,7 @@ public:
         else
             static_assert(!sizeof(T), "Unsupported pool type");
     }
+
     template <typename T>
     const T& getCompAt(int32_t index) const
     {
@@ -61,14 +52,11 @@ public:
         const auto& pool = getPool<T>();
         return pool.get(index);
     }
-    //*/
-private:
-    void drawUnit(const Component::UnitEntity& entity, const Draw::DrawContext& rctx, const Math::Mat33& vpM, std::vector<Gpu::DrawingUnit> drawingUnits);
-    //std::vector<Component::UnitEntity>        entities{};
-    //CompPool<Component::UnitShadingEntity>     shaderingEntitiesPool{};
-    //CompPool<Component::UnitShadingBaseDesc>  shaderingDescPool{};
-    EntityCompStorage    storage{};
-    std::vector<int32_t> queriedEIds{};
+
+public:
+    std::vector<Component::UnitEntity>        entities{};
+    CompPool<Component::UnitShadingEntity>     shaderingEntitiesPool{};
+    CompPool<Component::UnitShadingBaseDesc>  shaderingDescPool{};
 };
 } // namespace Voxol::Render
 #endif

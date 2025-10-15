@@ -6,6 +6,11 @@ namespace Voxol::Render
 void EntityRenderSystem::initalize()
 {
     auto total = 10;
+
+    auto& entities = storage.entities;
+    auto& shaderingEntitiesPool = storage.shaderingEntitiesPool;
+    auto& shaderingDescPool     = storage.shaderingDescPool;
+
     entities.resize(total);
     //shaderingEntities.resize(total);
     shaderingEntitiesPool.initialize(total);
@@ -111,6 +116,8 @@ int EntityRenderSystem::drawQuery(const Math::VxRect& wbounds, const Math::Mat33
 }
 void EntityRenderSystem::render(const Draw::DrawContext& rctx, const Math::Mat33& vpM, std::vector<Gpu::DrawingUnit> drawingUnits)
 {
+
+    auto& entities = storage.entities;
     auto tot = queriedEIds.size();
     for (auto i = 0; i < tot; i++)
     {
@@ -124,8 +131,11 @@ void EntityRenderSystem::render(const Draw::DrawContext& rctx, const Math::Mat33
 
 void EntityRenderSystem::drawUnit(const Component::UnitEntity& entity, const Draw::DrawContext& rctx, const Math::Mat33& vpM, std::vector<Gpu::DrawingUnit> drawingUnits)
 {
+
+    auto& shaderingDescPool = storage.shaderingDescPool;
+
     //auto& shadingEt = shaderingEntitiesPool[entity.shadingId];
-    auto& shadingEt = getCompAt<Component::UnitShadingEntity>(entity.shadingId);
+    auto& shadingEt = storage.getCompAt<Component::UnitShadingEntity>(entity.shadingId);
     auto& drawUnit  = drawingUnits[shadingEt.drawUnitId];
     auto& shdDesc   = shaderingDescPool[shadingEt.shadingDescId];
     auto& trans     = shdDesc.transform;
