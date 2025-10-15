@@ -7,7 +7,8 @@ void EntityRenderSystem::initalize()
 {
     auto total = 10;
     entities.resize(total);
-    shaderingEntities.resize(total);
+    //shaderingEntities.resize(total);
+    shaderingEntitiesPool.initialize(total);
 
     auto shaderingDescTotal = total * 2;
     shaderingDescPool.initialize(shaderingDescTotal);
@@ -16,9 +17,10 @@ void EntityRenderSystem::initalize()
     {
         entities[i].id = i;
     }
-    for (auto i = 0; i < shaderingEntities.size(); ++i)
+    //for (auto i = 0; i < shaderingEntities.size(); ++i)
+    for (auto i = 0; i < total; ++i)
     {
-        shaderingEntities[i].id = i;
+        shaderingEntitiesPool[i].id = i;
     }
 
     for (auto i = 0; i < shaderingDescTotal; ++i)
@@ -38,20 +40,20 @@ void EntityRenderSystem::initalize()
     shaderingDescPool[3].transform = {250, 50, 150, 150, 0};
 
     /// circle
-    shaderingEntities[0].drawUnitId    = 0;
-    shaderingEntities[0].shadingDescId = 0;
+    shaderingEntitiesPool[0].drawUnitId    = 0;
+    shaderingEntitiesPool[0].shadingDescId = 0;
 
     /// circle
-    shaderingEntities[1].drawUnitId    = 0;
-    shaderingEntities[1].shadingDescId = 1;
+    shaderingEntitiesPool[1].drawUnitId = 0;
+    shaderingEntitiesPool[1].shadingDescId = 1;
 
     /// circle
-    shaderingEntities[2].drawUnitId    = 0;
-    shaderingEntities[2].shadingDescId = 2;
+    shaderingEntitiesPool[2].drawUnitId = 0;
+    shaderingEntitiesPool[2].shadingDescId = 2;
 
     /// multi-circles
-    shaderingEntities[3].drawUnitId    = 2;
-    shaderingEntities[3].shadingDescId = 3;
+    shaderingEntitiesPool[3].drawUnitId = 2;
+    shaderingEntitiesPool[3].shadingDescId = 3;
 
     /// circle
     entities[0].shadingId = 0;
@@ -88,7 +90,7 @@ void EntityRenderSystem::initalize()
         }
         map[boundsIndex] = 1;
 
-        auto& shadingEt = shaderingEntities[et.shadingId];
+        auto& shadingEt = shaderingEntitiesPool[et.shadingId];
         auto& shdDesc   = shaderingDescPool[shadingEt.shadingDescId];
         auto& trans     = shdDesc.transform;
 
@@ -122,7 +124,7 @@ void EntityRenderSystem::render(const Draw::DrawContext& rctx, const Math::Mat33
 
 void EntityRenderSystem::drawUnit(const Component::UnitEntity& entity, const Draw::DrawContext& rctx, const Math::Mat33& vpM, std::vector<Gpu::DrawingUnit> drawingUnits)
 {
-    auto& shadingEt = shaderingEntities[entity.shadingId];
+    auto& shadingEt = shaderingEntitiesPool[entity.shadingId];
     auto& drawUnit  = drawingUnits[shadingEt.drawUnitId];
     auto& shdDesc   = shaderingDescPool[shadingEt.shadingDescId];
     auto& trans     = shdDesc.transform;
