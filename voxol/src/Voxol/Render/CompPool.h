@@ -44,7 +44,7 @@ public:
         }
     }
 
-    // 分配对象（未初始化）
+    /// 分配对象(未初始化)
     int32_t allocate()
     {
         if (m_freeList.empty())
@@ -57,6 +57,7 @@ public:
 
         return idx;
     }
+
     template <typename Fn>
     void forEach(const Fn& fn) noexcept
     {
@@ -66,7 +67,26 @@ public:
         }
     }
     template <typename Fn>
+    void forEachConst(const Fn& fn) const noexcept
+    {
+        for (auto& obj : comps)
+        {
+            fn(obj);
+        }
+    }
+
+    template <typename Fn>
     void forEachWithIndex(const Fn& fn) noexcept
+    {
+        auto tot = static_cast<int32_t>(comps.size());
+        for (auto i = 0; i < tot; ++i)
+        {
+            fn(comps[i], i);
+        }
+    }
+
+    template <typename Fn>
+    void forEachWithIndexConst(const Fn& fn) const noexcept
     {
         auto tot = static_cast<int32_t>(comps.size());
         for (auto i = 0; i < tot; ++i)
