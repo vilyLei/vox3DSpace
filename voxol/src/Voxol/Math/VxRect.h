@@ -67,6 +67,8 @@ public:
     void  toEmpty(float px = 0, float py = 0);
     bool  isEmpty() const;
 
+    inline float centerX() const { return (fX + fRX) * 0.5f; }
+    inline float centerY() const { return (fY + fBY) * 0.5f; }
     inline Vec2 center() const { return (min + max) * 0.5f; }
     inline Vec2 extent() const { return max - min; }
 
