@@ -64,19 +64,15 @@ void EntityRenderSystem::initalize()
     shaderingEntities[3].shadingDescId = 3;
 
     /// circle
-    //entities[0].boundsId  = 0;
     entities[0].shadingId = 0;
 
     /// circle
-    //entities[1].boundsId  = 0;
     entities[1].shadingId = 1;
 
     /// circle
-    //entities[2].boundsId  = 1;
     entities[2].shadingId = 2;
 
     /// multi-circles
-    //entities[3].boundsId  = 2;
     entities[3].shadingId = 3;
 
     // update bounds
@@ -102,12 +98,9 @@ void EntityRenderSystem::initalize()
         }
         map[boundsIndex] = 1;
 
-        //auto& b = boundsVec[et.boundsId].bounds;
         auto& shadingEt = shaderingEntities[et.shadingId];
         auto& shdDesc   = shaderingDescVec[shadingEt.shadingDescId];
         auto& trans     = shdDesc.transform;
-
-        //b.setXYWH(trans.x, trans.y, trans.sx, trans.sy);
 
         auto& b = bvhItems[boundsIndex];
         b.bounds.setXYWH(trans.x, trans.y, trans.sx, trans.sy);
@@ -122,18 +115,6 @@ int EntityRenderSystem::drawQuery(const Math::VxRect& wbounds, const Math::Mat33
 {
     queriedEIds.clear();
     bvh.query(wbounds, queriedEIds);
-    //auto total = entities.size();
-    //for (auto i = 0; i < total; i++)
-    //{
-    //    auto& et = entities[i];
-    //    if (et.boundsId < 0 || !et.visible)
-    //        continue;
-    //    auto& b = boundsVec[et.boundsId].bounds;
-    //    if (wbounds.intersects(b))
-    //    {
-    //        queriedEIds.push_back(et.id);
-    //    }
-    //}
     return static_cast<int>(queriedEIds.size());
 }
 void EntityRenderSystem::render(const Draw::DrawContext& rctx, const Math::Mat33& vpM, std::vector<Gpu::DrawingUnit> drawingUnits)
@@ -143,7 +124,7 @@ void EntityRenderSystem::render(const Draw::DrawContext& rctx, const Math::Mat33
     {
         auto& item = bvhItems[queriedEIds[i]];
         auto& et   = entities[item.objectId];
-        if (et.boundsId < 0 || et.shadingId < 0 || !et.visible)
+        if (et.shadingId < 0 || !et.visible)
             continue;
         drawUnit(et, rctx, vpM, drawingUnits);
     }

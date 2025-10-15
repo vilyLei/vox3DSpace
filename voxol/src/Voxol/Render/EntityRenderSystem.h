@@ -82,7 +82,6 @@ private:
     std::vector<Component::UnitEntity>          entities{};
     std::vector<Component::UnitShadingEntity>   shaderingEntities{};
     std::vector<Component::UnitShadingBaseDesc> shaderingDescVec{};
-    std::vector<Component::UnitBounds>          boundsVec{};
     std::vector<int32_t>                        queriedEIds{};
 
 };
