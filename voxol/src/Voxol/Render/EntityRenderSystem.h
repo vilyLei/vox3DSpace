@@ -77,6 +77,17 @@ public:
 
     std::vector<BVHItem2D> bvhItems;
     BVH2D                  bvh{};
+    // 泛型封装访问：推导类型对应枚举
+    template <typename T>
+    CompPool<T>& getPool()
+    {
+        if constexpr (std::is_same_v<T, Component::UnitShadingEntity>)
+            return shaderingEntitiesPool;
+        else if constexpr (std::is_same_v<T, Component::UnitShadingBaseDesc>)
+            return shaderingDescPool;
+        else
+            static_assert(!sizeof(T), "Unsupported pool type");
+    }
 
 private:
     void                                      drawUnit(const Component::UnitEntity& entity, const Draw::DrawContext& rctx, const Math::Mat33& vpM, std::vector<Gpu::DrawingUnit> drawingUnits);
