@@ -8,13 +8,9 @@ void EntityRenderSystem::initalize()
     auto total = 10;
     entities.resize(total);
     shaderingEntities.resize(total);
-    //boundsVec.resize(total);
 
     auto shaderingDescTotal = total * 2;
     shaderingDescPool.initialize(shaderingDescTotal);
-
-    //shaderingDescVec.resize(total * 2);
-
 
     for (auto i = 0; i < entities.size(); ++i)
     {
@@ -24,21 +20,11 @@ void EntityRenderSystem::initalize()
     {
         shaderingEntities[i].id = i;
     }
-    //for (auto i = 0; i < boundsVec.size(); ++i)
-    //{
-    //    boundsVec[i].id = i;
-    //}
 
     for (auto i = 0; i < shaderingDescTotal; ++i)
     {
-        //shaderingDescVec[i].id = i;
         shaderingDescPool[i].id = i;
     }
-
-
-    //boundsVec[0].bounds.setXYWH(150, 50, 200, 200);
-    //boundsVec[1].bounds.setXYWH(510, 150, 100, 100);
-    //boundsVec[2].bounds.setXYWH(250, 50, 150, 150);
 
     shaderingDescPool[0].color    = 0xff880077;
     shaderingDescPool[0].transform = {150, 50, 200, 200, 0};

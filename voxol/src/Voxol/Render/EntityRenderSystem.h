@@ -15,12 +15,12 @@ using namespace Voxol::Tile;
 namespace Component
 {
 
-struct UnitBounds
-{
-    int32_t      id = -1;
-    Math::VxRect bounds{};
-    bool         dirty = true;
-};
+//struct UnitBounds
+//{
+//    int32_t      id = -1;
+//    Math::VxRect bounds{};
+//    bool         dirty = true;
+//};
 struct UnitTransform
 {
     float x = 0;
@@ -82,7 +82,6 @@ private:
     void                                      drawUnit(const Component::UnitEntity& entity, const Draw::DrawContext& rctx, const Math::Mat33& vpM, std::vector<Gpu::DrawingUnit> drawingUnits);
     std::vector<Component::UnitEntity>        entities{};
     std::vector<Component::UnitShadingEntity> shaderingEntities{};
-    //std::vector<Component::UnitShadingBaseDesc> shaderingDescVec{};
     CompPool<Component::UnitShadingBaseDesc> shaderingDescPool{};
     std::vector<int32_t>                     queriedEIds{};
 };
