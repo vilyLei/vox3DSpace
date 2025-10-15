@@ -5,63 +5,13 @@
 #include "BVH2D.h"
 #include "DrawCtx.h"
 #include "CompPool.h"
+#include "EntityComponent.h"
 
 namespace Voxol::Render
 {
 
 using namespace Voxol::Test;
 using namespace Voxol::Tile;
-
-namespace Component
-{
-
-//struct UnitBounds
-//{
-//    int32_t      id = -1;
-//    Math::VxRect bounds{};
-//    bool         dirty = true;
-//};
-struct UnitTransform
-{
-    float x = 0;
-    float y = 0;
-
-    /// x-axis scale
-    float sx = 1;
-    /// y-axis scale
-    float sy = 1;
-
-    ///  rotation radian
-    float rotation = 0;
-};
-
-struct UnitShadingBaseDesc
-{
-    int32_t       id = -1;
-    UnitTransform transform{};
-    uint32_t      color = 0xff000000;
-};
-
-struct UnitShadingEntity
-{
-    int32_t id = -1;
-    /// UnitShadingBaseDesc vector index value
-    int32_t shadingDescId = -1;
-    /// DrawingUnit vector index value
-    int32_t drawUnitId = -1;
-};
-
-struct UnitEntity
-{
-    int32_t id = -1;
-    /// UnitBounds vector index value
-    int32_t boundsId = -1;
-    /// UnitShadingEntity vector index value
-    int32_t shadingId = -1;
-    bool    visible   = true;
-};
-
-} // namespace Component
 
 class EntityRenderSystem
 {
@@ -77,7 +27,7 @@ public:
 
     std::vector<BVHItem2D> bvhItems;
     BVH2D                  bvh{};
-    // 泛型封装访问：推导类型对应枚举
+
     template <typename T>
     CompPool<T>& getPool()
     {
@@ -101,6 +51,12 @@ public:
 
     template <typename T>
     const T& getCompAt(int32_t index) const
+    {
+        const auto& pool = getPool<T>();
+        return pool.get(index);
+    }
+    template <typename T>
+    const T& operator[](int32_t index) const
     {
         const auto& pool = getPool<T>();
         return pool.get(index);
