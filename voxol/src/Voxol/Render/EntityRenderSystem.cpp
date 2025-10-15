@@ -12,7 +12,6 @@ void EntityRenderSystem::initalize()
     auto& shaderingDescPool     = storage.shaderingDescPool;
 
     entities.resize(total);
-    //shaderingEntities.resize(total);
     shaderingEntitiesPool.initialize(total);
 
     auto shaderingDescTotal = total * 2;
@@ -28,10 +27,14 @@ void EntityRenderSystem::initalize()
         shaderingEntitiesPool[i].id = i;
     }
 
-    for (auto i = 0; i < shaderingDescTotal; ++i)
-    {
-        shaderingDescPool[i].id = i;
-    }
+    //for (auto i = 0; i < shaderingDescTotal; ++i)
+    //{
+    //    shaderingDescPool[i].id = i;
+    //}
+    auto index = 0;
+    shaderingDescPool.forEach([&](auto& e) {
+        e.id = index++;
+    });
 
     shaderingDescPool[0].color    = 0xff880077;
     shaderingDescPool[0].transform = {150, 50, 200, 200, 0};

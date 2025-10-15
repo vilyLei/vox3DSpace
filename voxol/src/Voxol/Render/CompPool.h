@@ -33,10 +33,10 @@ public:
     // 预分配空间
     void reserve(size_t capacity)
     {
-        if (capacity > m_objects.size())
+        if (capacity > comps.size())
         {
-            size_t oldSize = m_objects.size();
-            m_objects.resize(capacity);
+            size_t oldSize = comps.size();
+            comps.resize(capacity);
             m_usedList.resize(capacity);
             m_freeList.reserve(capacity);
             for (size_t i = oldSize; i < capacity; ++i)
@@ -48,7 +48,7 @@ public:
     int32_t allocate()
     {
         if (m_freeList.empty())
-            reserve(m_objects.size() * 2 + 1);
+            reserve(comps.size() * 2 + 1);
 
         uint32_t idx = m_freeList.back();
         m_freeList.pop_back();
@@ -57,31 +57,38 @@ public:
 
         return idx;
     }
-
+    template <typename Fn>
+    void forEach(Fn&& fn) noexcept
+    {
+        for (auto& obj : comps)
+        {
+            fn(obj);
+        }
+    }
     // 分配并赋值（构造）
     template <typename... Args>
     int32_t emplace(Args&&... args)
     {
         auto index           = allocate();
-        m_objects[index] = T{std::forward<Args>(args)...};
+        comps[index] = T{std::forward<Args>(args)...};
         return index;
     }
     T& operator[](int32_t index)
     {
-        return m_objects[index];
+        return comps[index];
     }
     const T& operator[](int32_t index) const
     {
-        return m_objects[index];
+        return comps[index];
     }
     // 通过句柄访问对象（返回指针或nullptr）
     T& get(int32_t index)
     {
-        return m_objects[index];
+        return comps[index];
     }
     const T& get(int32_t index) const
     {
-        return m_objects[index];
+        return comps[index];
     }
 
     int32_t acquire() {
@@ -106,7 +113,7 @@ public:
     void reset()
     {
         m_freeList.clear();
-        for (uint32_t i = 0; i < m_objects.size(); ++i)
+        for (uint32_t i = 0; i < comps.size(); ++i)
         {
             m_freeList.push_back(i);
             m_usedList[i] = false;
@@ -121,14 +128,14 @@ public:
     // 判断句柄是否有效
     [[nodiscard]] bool isValid(int32_t index) const noexcept
     {
-        return index >= 0 && index < m_objects.size();
+        return index >= 0 && index < comps.size();
     }
 
     [[nodiscard]] size_t activeCount() const noexcept { return m_activeCount; }
-    [[nodiscard]] size_t capacity() const noexcept { return m_objects.size(); }
+    [[nodiscard]] size_t capacity() const noexcept { return comps.size(); }
 
 private:
-    std::vector<T>        m_objects;
+    std::vector<T>        comps;
     std::vector<bool>    m_usedList;
     std::vector<uint32_t> m_freeList;
     size_t                m_activeCount = 0;
