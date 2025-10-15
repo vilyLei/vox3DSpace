@@ -81,6 +81,8 @@ public:
     int   longestAxis() const;
     float centerAlong(int axis) const;
 };
+using Bounds = VxRect;
+
 } // namespace Voxol::Math
 
 #endif // VOXOL_MATH_VX_RECT_H
