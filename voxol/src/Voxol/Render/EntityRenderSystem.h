@@ -82,7 +82,7 @@ private:
     void                                      drawUnit(const Component::UnitEntity& entity, const Draw::DrawContext& rctx, const Math::Mat33& vpM, std::vector<Gpu::DrawingUnit> drawingUnits);
     std::vector<Component::UnitEntity>        entities{};
     std::vector<Component::UnitShadingEntity> shaderingEntities{};
-    CompPool<Component::UnitShadingBaseDesc> shaderingDescPool{};
+    CompPool<Component::UnitShadingBaseDesc>  shaderingDescPool{};
     std::vector<int32_t>                     queriedEIds{};
 };
 } // namespace Voxol::Render
