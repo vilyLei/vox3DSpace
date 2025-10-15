@@ -123,6 +123,9 @@ bool VxRect::contains(float px, float py) const
         return false;
     return true;
 }
+bool VxRect::contains(const Vec2& pv) const {
+    return contains(pv.x, pv.y);
+}
 
 float VxRect::x() const { return fX; }
 float VxRect::y() const { return fY; }

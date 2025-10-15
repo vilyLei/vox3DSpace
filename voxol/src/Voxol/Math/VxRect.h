@@ -54,6 +54,7 @@ public:
     bool intersects(const VxRect& other) const;
     void outset(float dx, float dy);
     bool contains(float px, float py) const;
+    bool contains(const Vec2& pv) const;
 
     float x() const;
     float y() const;

@@ -2,6 +2,7 @@
 #define VOXOL_ENTITY_RENDER_SYSTEM_H
 
 #include "../Tile/GridDef.h"
+#include "BVH2D.h"
 #include "DrawCtx.h"
 
 namespace Voxol::Render
@@ -73,13 +74,17 @@ public:
     void render(const Draw::DrawContext& rctx, const Math::Mat33& vpM, std::vector<Gpu::DrawingUnit> drawingUnits);
     void clear();
 
+    std::vector<BVHItem2D> bvhItems;
+    BVH2D bvh{};
+
 private:
     void                                        drawUnit(const Component::UnitEntity& entity, const Draw::DrawContext& rctx, const Math::Mat33& vpM, std::vector<Gpu::DrawingUnit> drawingUnits);
     std::vector<Component::UnitEntity>          entities{};
     std::vector<Component::UnitShadingEntity>   shaderingEntities{};
     std::vector<Component::UnitShadingBaseDesc> shaderingDescVec{};
     std::vector<Component::UnitBounds>          boundsVec{};
-    std::vector<uint32_t>                       queriedEIds{};
+    std::vector<int32_t>                        queriedEIds{};
+
 };
 } // namespace Voxol::Render
 #endif
