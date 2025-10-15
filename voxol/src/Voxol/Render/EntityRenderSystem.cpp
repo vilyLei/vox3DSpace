@@ -8,9 +8,12 @@ void EntityRenderSystem::initalize()
     auto total = 10;
     entities.resize(total);
     shaderingEntities.resize(total);
-    boundsVec.resize(total);
+    //boundsVec.resize(total);
 
-    shaderingDescVec.resize(total * 2);
+    auto shaderingDescTotal = total * 2;
+    shaderingDescPool.initialize(shaderingDescTotal);
+
+    //shaderingDescVec.resize(total * 2);
 
 
     for (auto i = 0; i < entities.size(); ++i)
@@ -21,31 +24,32 @@ void EntityRenderSystem::initalize()
     {
         shaderingEntities[i].id = i;
     }
-    for (auto i = 0; i < boundsVec.size(); ++i)
+    //for (auto i = 0; i < boundsVec.size(); ++i)
+    //{
+    //    boundsVec[i].id = i;
+    //}
+
+    for (auto i = 0; i < shaderingDescTotal; ++i)
     {
-        boundsVec[i].id = i;
+        //shaderingDescVec[i].id = i;
+        shaderingDescPool[i].id = i;
     }
 
-    for (auto i = 0; i < shaderingDescVec.size(); ++i)
-    {
-        shaderingDescVec[i].id = i;
-    }
 
+    //boundsVec[0].bounds.setXYWH(150, 50, 200, 200);
+    //boundsVec[1].bounds.setXYWH(510, 150, 100, 100);
+    //boundsVec[2].bounds.setXYWH(250, 50, 150, 150);
 
-    boundsVec[0].bounds.setXYWH(150, 50, 200, 200);
-    boundsVec[1].bounds.setXYWH(510, 150, 100, 100);
-    boundsVec[2].bounds.setXYWH(250, 50, 150, 150);
+    shaderingDescPool[0].color    = 0xff880077;
+    shaderingDescPool[0].transform = {150, 50, 200, 200, 0};
+    shaderingDescPool[1].color     = 0xff008855;
+    shaderingDescPool[1].transform = {150, 50, 200, 200, 0};
 
-    shaderingDescVec[0].color     = 0xff880077;
-    shaderingDescVec[0].transform = {150, 50, 200, 200, 0};
-    shaderingDescVec[1].color     = 0xff008855;
-    shaderingDescVec[1].transform = {150, 50, 200, 200, 0};
+    shaderingDescPool[2].color    = 0xff002233;
+    shaderingDescPool[2].transform = {510, 150, 100, 100, 0};
 
-    shaderingDescVec[2].color     = 0xff002233;
-    shaderingDescVec[2].transform = {510, 150, 100, 100, 0};
-
-    shaderingDescVec[3].color     = 0xff006666;
-    shaderingDescVec[3].transform = {250, 50, 150, 150, 0};
+    shaderingDescPool[3].color    = 0xff660066;
+    shaderingDescPool[3].transform = {250, 50, 150, 150, 0};
 
     /// circle
     shaderingEntities[0].drawUnitId    = 0;
@@ -99,7 +103,7 @@ void EntityRenderSystem::initalize()
         map[boundsIndex] = 1;
 
         auto& shadingEt = shaderingEntities[et.shadingId];
-        auto& shdDesc   = shaderingDescVec[shadingEt.shadingDescId];
+        auto& shdDesc   = shaderingDescPool[shadingEt.shadingDescId];
         auto& trans     = shdDesc.transform;
 
         auto& b = bvhItems[boundsIndex];
@@ -134,7 +138,7 @@ void EntityRenderSystem::drawUnit(const Component::UnitEntity& entity, const Dra
 {
     auto& shadingEt = shaderingEntities[entity.shadingId];
     auto& drawUnit  = drawingUnits[shadingEt.drawUnitId];
-    auto& shdDesc   = shaderingDescVec[shadingEt.shadingDescId];
+    auto& shdDesc   = shaderingDescPool[shadingEt.shadingDescId];
     auto& trans     = shdDesc.transform;
 
     drawUnit.blendMode = 1;

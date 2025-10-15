@@ -4,10 +4,11 @@
 #include "../Tile/GridDef.h"
 #include "BVH2D.h"
 #include "DrawCtx.h"
+#include "CompPool.h"
 
 namespace Voxol::Render
 {
-    
+
 using namespace Voxol::Test;
 using namespace Voxol::Tile;
 
@@ -75,15 +76,15 @@ public:
     void clear();
 
     std::vector<BVHItem2D> bvhItems;
-    BVH2D bvh{};
+    BVH2D                  bvh{};
 
 private:
-    void                                        drawUnit(const Component::UnitEntity& entity, const Draw::DrawContext& rctx, const Math::Mat33& vpM, std::vector<Gpu::DrawingUnit> drawingUnits);
-    std::vector<Component::UnitEntity>          entities{};
-    std::vector<Component::UnitShadingEntity>   shaderingEntities{};
-    std::vector<Component::UnitShadingBaseDesc> shaderingDescVec{};
-    std::vector<int32_t>                        queriedEIds{};
-
+    void                                      drawUnit(const Component::UnitEntity& entity, const Draw::DrawContext& rctx, const Math::Mat33& vpM, std::vector<Gpu::DrawingUnit> drawingUnits);
+    std::vector<Component::UnitEntity>        entities{};
+    std::vector<Component::UnitShadingEntity> shaderingEntities{};
+    //std::vector<Component::UnitShadingBaseDesc> shaderingDescVec{};
+    CompPool<Component::UnitShadingBaseDesc> shaderingDescPool{};
+    std::vector<int32_t>                     queriedEIds{};
 };
 } // namespace Voxol::Render
 #endif
