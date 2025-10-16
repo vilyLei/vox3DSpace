@@ -34,6 +34,7 @@ struct ClearParams
 struct DrawParams
 {
     Math::Mat33  viewMat{};
+    Math::Mat33  invViewMat{};
     Math::Mat33  projMat{};
     Math::VxRect viewVBounds{};
     Math::VxRect viewWBounds{};

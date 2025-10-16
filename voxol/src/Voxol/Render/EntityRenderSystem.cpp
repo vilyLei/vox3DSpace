@@ -122,6 +122,21 @@ void EntityRenderSystem::initalize()
     bvh.build();
 }
 
+Math::Vec2 EntityRenderSystem::getEntityXYAt(int32_t id) {
+    auto& et = storage.entities[id];
+    auto& shadingEt = storage.get<Component::UnitShadingEntity>(et.id);
+    auto& shdDesc = storage.get<Component::UnitShadingBaseDesc>(shadingEt.shadingDescId);
+    auto& trans     = shdDesc.transform;
+    return {trans.x, trans.y};
+}
+void EntityRenderSystem::setEntityXYAt(const Math::Vec2& pos, int32_t id) {
+    auto& et        = storage.entities[id];
+    auto& shadingEt = storage.get<Component::UnitShadingEntity>(et.id);
+    auto& shdDesc   = storage.get<Component::UnitShadingBaseDesc>(shadingEt.shadingDescId);
+    auto& trans     = shdDesc.transform;
+    trans.x         = pos.x;
+    trans.y         = pos.y;
+}
 int EntityRenderSystem::drawQuery(const Math::VxRect& wbounds, const Math::Mat33& vpM)
 {
     queriedEIds.clear();

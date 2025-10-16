@@ -219,9 +219,8 @@ void OglRenderer::render()
     if (dirty) {
         auto& vp = rctx.clearParam.viewport;
         params.viewVBounds.setXYWH(vp.x, vp.y, vp.width, vp.height);
-        Mat33 invMat;
-        view.viewMat.inverseTo(invMat);
-        params.viewVBounds.mat33MapTo(invMat, params.viewWBounds);
+        view.viewMat.inverseTo(rctx.drawParam.invViewMat);
+        params.viewVBounds.mat33MapTo(rctx.drawParam.invViewMat, params.viewWBounds);
     }
     //if (dirty)
     //{

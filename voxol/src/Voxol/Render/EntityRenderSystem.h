@@ -22,10 +22,12 @@ public:
     ~EntityRenderSystem() = default;
 
 public:
-    void initalize();
-    int  drawQuery(const Math::VxRect& bounds, const Math::Mat33& vpM);
-    void render(const Draw::DrawContext& rctx, const Math::Mat33& vpM, std::vector<Gpu::DrawingUnit> drawingUnits);
-    void clear();
+    void       initalize();
+    Math::Vec2 getEntityXYAt(int32_t id);
+    void       setEntityXYAt(const Math::Vec2& pos, int32_t id);
+    int        drawQuery(const Math::VxRect& bounds, const Math::Mat33& vpM);
+    void       render(const Draw::DrawContext& rctx, const Math::Mat33& vpM, std::vector<Gpu::DrawingUnit> drawingUnits);
+    void       clear();
 
     //std::vector<BVHItem2D> bvhItems;
     std::vector<V1::BVH2D::Item> bvhItems;
