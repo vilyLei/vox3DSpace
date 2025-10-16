@@ -66,14 +66,6 @@ struct DragEvent
         dirty = false;
     }
 };
-//struct MouseParam
-//{
-//    float x, y;
-//
-//    int type;
-//
-//    float value;
-//};
 
 struct MouseEvtManager
 {
