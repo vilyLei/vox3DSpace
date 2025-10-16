@@ -50,6 +50,7 @@ struct UnitEntity
     /// UnitShadingEntity vector index value
     int32_t shadingId = -1;
     bool    visible   = true;
+    bool    dirty   = true;
 };
 
 } // namespace Component

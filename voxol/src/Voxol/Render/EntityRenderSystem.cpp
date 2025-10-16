@@ -158,12 +158,11 @@ void EntityRenderSystem::drawUnit(const Component::UnitEntity& entity, const Dra
 
     auto& shaderingDescPool = storage.shaderingDescPool;
 
-    //auto& shadingEt = shaderingEntitiesPool[entity.shadingId];
     const auto& shadingEt = storage.get<Component::UnitShadingEntity>(entity.shadingId);
     auto& drawUnit  = drawingUnits[shadingEt.drawUnitId];
     auto& shdDesc   = shaderingDescPool[shadingEt.shadingDescId];
     auto& trans     = shdDesc.transform;
-
+    //printf("trans(x=%f, y=%f)\n", trans.x, trans.y);
     drawUnit.blendMode = 1;
     drawUnit.setColor(shdDesc.color);
     drawUnit.objMat.setXY(trans.x, trans.y);

@@ -122,14 +122,13 @@ struct EventManager
                     auto pv = dragEvt.entityOriginPos;
 
                     auto dv = wpv - dragEvt.mouseOriginPos;
-                    // {wpv.x - dragEvt.mouseOriginPos.x, wpv.y - dragEvt.mouseOriginPos.y};
                     pv.x += dv.x;
                     pv.y += dv.y;
-                    //storage.setEntityXYAt(pv, id);
+                    storage.setEntityXYAt(pv, id);
                     //auto b0 = bvh.getBoundsAt(id);
                     auto b = bvh.getBoundsAt(id);
                     b.setXY(pv.x, pv.y);
-                    b.print();
+                    //b.print();
                     bvh.updateItemBoundsByObjectId(id, b);
                     bvh.updateDirty();
                 }
