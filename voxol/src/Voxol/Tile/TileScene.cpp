@@ -26,6 +26,11 @@ void TileScene::initalize()
     }
 }
 
+void TileScene::addDirtyBounds(const Math::Bounds& bounds)
+{
+    auto gr = RC::xyRectToRCRect(bounds, currGridSize);
+}
+
 void TileScene::buildGrid(Grid::Unit& unit, const Render::Draw::DrawContext& ctx)
 {
 
@@ -79,7 +84,7 @@ void TileScene::run(const Render::Draw::DrawContext& ctx)
     clearParam.viewport   = {0, 0, gridSize, gridSize};
     clearParam.clearColor = {0.95f, 0.95f, 0.95f, 0};
 
-    auto currGridSize = 256.0f;
+    // auto currGridSize = 256.0f;
 
     currGridSize = gridSize * lvScale;
 

@@ -24,13 +24,16 @@ public:
 
 public:
     void initalize();
-    void buildGrid(Grid::Unit& unit, const Render::Draw::DrawContext& ctx);
+    void addDirtyBounds(const Math::Bounds& bounds);
     void run(const Render::Draw::DrawContext& ctx);
 
 private:
+    void buildGrid(Grid::Unit& unit, const Render::Draw::DrawContext& ctx);
+
     Render::OglFbo mFbo{};
 
     int gridSize = 256;
+    float currGridSize = 256;
 
     std::vector<Grid::Unit> gridUnits{};
     Grid::Unit              outlineUnit{};
@@ -39,10 +42,10 @@ private:
     Render::Draw::ClearParams clearParam{};
     int                       viewGridsTotal = 0;
     int                       viewGridLevel = 0;
-    /// <summary>
-    /// all units in the view scope 
-    /// </summary>
+
+    /// all units in the view scope
     std::unordered_map<int64_t, Grid::IndexNode> viewUnitIndexMap{};
+    std::unordered_map<int64_t, Grid::IndexNode> dirtyUnitIndexMap{};
 
     Grid::UnitTexPool                            texPool{};
     Grid::UnitIndexPool                          unitIndexPool{};

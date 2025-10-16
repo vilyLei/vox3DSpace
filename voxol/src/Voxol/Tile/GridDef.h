@@ -139,6 +139,7 @@ struct IndexNode
 {
     RC::Pos pos{};
     int32_t index = 0;
+    bool    dity  = false;
 };
 }
 } // namespace Voxol::Tile
