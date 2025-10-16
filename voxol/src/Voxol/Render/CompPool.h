@@ -227,7 +227,7 @@ public:
 
 private:
     std::vector<T>        comps;
-    std::vector<bool>     m_usedList;
+    std::vector<uint8_t>     m_usedList;
     std::vector<uint32_t> m_freeList;
     size_t                m_activeCount = 0;
 };
