@@ -41,23 +41,27 @@ void TileScene::buildGrid(Grid::Unit& unit, const Render::Draw::DrawContext& ctx
     viewM.setXY(-pos.x * scale, -pos.y * scale);
     vpM.append(viewM);
 
-    auto& rparams = ctx.drawParam;
+    auto& drawParam = ctx.drawParam;
     auto& vp      = ctx.clearParam.viewport;
 
     mFbo.bindFBO();
     mFbo.bindTextureAt(drawUnit.getTextureAt(0), 0, gridSize, gridSize);
     mFbo.renderBegin(clearParam);
 
-    ctx.drawCall(rparams.viewWBounds, vpM);
+    ctx.drawCall(drawParam.viewWBounds, vpM);
     mFbo.unbindFBO(ctx.clearParam, true);
 
     Test::Gpu::buildTexDrawUnitWithTex(drawUnit, mFbo.getTextureAt(0), true);
 }
 void TileScene::run(const Render::Draw::DrawContext& ctx)
 {
-    auto&       params = ctx.drawParam;
-    Math::Mat33 vpM    = params.projMat;
-    vpM.append(params.viewMat);
+    auto&       drawParam = ctx.drawParam;
+    Math::Mat33 vpM    = drawParam.projMat;
+    vpM.append(drawParam.viewMat);
+
+    // 暂时这样写，以便测试dragging
+    ctx.drawCall(drawParam.viewWBounds, vpM);
+    return;
 
 
     // the default gridSize value is 256
@@ -79,7 +83,7 @@ void TileScene::run(const Render::Draw::DrawContext& ctx)
 
     currGridSize = gridSize * lvScale;
 
-    auto gr      = RC::xyRectToRCRect(params.viewWBounds, currGridSize);
+    auto gr      = RC::xyRectToRCRect(drawParam.viewWBounds, currGridSize);
     auto grDirty = currRCRect.isNotEqual(gr);
 
     auto createFlag = ctx.dirty && viewGridLevel != lv;

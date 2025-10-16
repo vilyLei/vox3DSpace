@@ -146,14 +146,24 @@ int EntityRenderSystem::drawQuery(const Math::VxRect& wbounds, const Math::Mat33
 }
 void EntityRenderSystem::render(const Draw::DrawContext& rctx, const Math::Mat33& vpM, std::vector<Gpu::DrawingUnit> drawingUnits)
 {
+    /// 这里是正确的写法
+    //auto& entities = storage.entities;
+    //auto tot = queriedEIds.size();
+    //for (auto i = 0; i < tot; i++)
+    //{
+    //    auto& et = entities[queriedEIds[i]];
+    //    if (et.boundsId < 0 || et.shadingId < 0 || !et.visible)
+    //        continue;
+    //    drawUnit(et, rctx, vpM, drawingUnits);
+    //}
 
+    
+    // 暂时这样写，以便测试dragging
     auto& entities = storage.entities;
-    auto tot = queriedEIds.size();
+    auto  tot      = entities.size();
     for (auto i = 0; i < tot; i++)
     {
-        //auto& item = bvhItems[queriedEIds[i]];
-        //auto& et   = entities[item.objectId];
-        auto& et = entities[queriedEIds[i]];
+        auto& et = entities[i];
         if (et.boundsId < 0 || et.shadingId < 0 || !et.visible)
             continue;
         drawUnit(et, rctx, vpM, drawingUnits);
