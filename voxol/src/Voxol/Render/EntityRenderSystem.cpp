@@ -36,10 +36,10 @@ void EntityRenderSystem::initalize()
     //    e.id = index++;
     //});
 
-    shaderingEntitiesPool.forEachWithIndex([&](auto& e, int32_t index) {
+    shaderingEntitiesPool.forEach([&](auto& e, int32_t index) {
         e.id = index;
     });
-    shaderingDescPool.forEachWithIndex([&](auto& e, int32_t index) {
+    shaderingDescPool.forEach([&](auto& e, int32_t index) {
         e.id = index;
     });
 

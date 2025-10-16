@@ -13,10 +13,10 @@ template <typename T>
 class CompPool
 {
     static_assert(std::is_trivially_copyable_v<T> && std::is_standard_layout_v<T>,
-              "T must be a trivially copyable, standard layout type");
+                  "T must be a trivially copyable, standard layout type");
 
 public:
-    CompPool() = default;
+    CompPool()  = default;
     ~CompPool() = default;
 
     void initialize(size_t initialCapacity = 512)
@@ -57,7 +57,7 @@ public:
 
         return idx;
     }
-
+    /*
     template <typename Fn>
     void forEach(const Fn& fn) noexcept
     {
@@ -94,11 +94,60 @@ public:
             fn(comps[i], i);
         }
     }
+    //*/
+
+    template <typename Fn>
+    void forEach(Fn&& fn) noexcept
+    {
+        for (int32_t i = 0; i < static_cast<int32_t>(comps.size()); ++i)
+        {
+            if constexpr (std::is_invocable_r_v<bool, Fn, T&, int32_t>)
+            {
+                if (!fn(comps[i], i)) break;
+            }
+            else if constexpr (std::is_invocable_v<Fn, T&, int32_t>)
+            {
+                fn(comps[i], i);
+            }
+            else if constexpr (std::is_invocable_r_v<bool, Fn, T&>)
+            {
+                if (!fn(comps[i])) break;
+            }
+            else
+            {
+                fn(comps[i]);
+            }
+        }
+    }
+
+    template <typename Fn>
+    void forEach(Fn&& fn) const noexcept
+    {
+        for (int32_t i = 0; i < static_cast<int32_t>(comps.size()); ++i)
+        {
+            if constexpr (std::is_invocable_r_v<bool, Fn, const T&, int32_t>)
+            {
+                if (!fn(comps[i], i)) break;
+            }
+            else if constexpr (std::is_invocable_v<Fn, const T&, int32_t>)
+            {
+                fn(comps[i], i);
+            }
+            else if constexpr (std::is_invocable_r_v<bool, Fn, const T&>)
+            {
+                if (!fn(comps[i])) break;
+            }
+            else
+            {
+                fn(comps[i]);
+            }
+        }
+    }
 
     template <typename... Args>
     int32_t emplace(Args&&... args)
     {
-        auto index           = allocate();
+        auto index   = allocate();
         comps[index] = T{std::forward<Args>(args)...};
         return index;
     }
@@ -120,7 +169,8 @@ public:
         return comps[index];
     }
 
-    int32_t acquire() {
+    int32_t acquire()
+    {
 
         if (m_freeList.empty())
             return -1;
@@ -131,7 +181,8 @@ public:
         return idx;
     }
 
-    void release(int32_t index) {
+    void release(int32_t index)
+    {
 
         if (!isValid(index) || !m_usedList[index])
             return;
@@ -165,9 +216,9 @@ public:
 
 private:
     std::vector<T>        comps;
-    std::vector<bool>    m_usedList;
+    std::vector<bool>     m_usedList;
     std::vector<uint32_t> m_freeList;
     size_t                m_activeCount = 0;
 };
-}
+} // namespace Voxol::Render
 #endif
