@@ -5,7 +5,7 @@
 #include "../Math/Mat33.h"
 #include "RenderCmdNode.h"
 #include "RenderCmdBufBuilder.h"
-#include "UIMouseCtrl.h"
+#include "../System/UIMouseCtrl.h"
 #include "RenderNodeScene.h"
 
 namespace Voxol::Motion
@@ -23,7 +23,7 @@ public:
     RenderCmdBufBuilder bufBuilder{};
 
     RenderNodeScene nodeScene{};
-    UIMouseCtrl     mouseCtrl{};
+    System::UIMouseCtrl mouseCtrl{};
 
 public:
     RenderCmdWorld()  = default;
@@ -36,7 +36,7 @@ public:
     bool           isDirty() const;
     void           setGPUCtxSize(int w, int h);
     void           setMouseXY(float x, float y);
-    void           setMouseParams(const UIMouseParam& param);
+    void           setMouseParams(const System::UIMouseParam& param);
     const uint8_t* cmdBuffer() const;
 
 private:

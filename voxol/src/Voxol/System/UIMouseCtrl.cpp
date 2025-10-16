@@ -1,8 +1,8 @@
 
 #include "UIMouseCtrl.h"
-namespace Voxol::Motion
+namespace Voxol::System
 {
-bool UIMouseCtrl::setMouseParams(ViewComponent& view, const UIMouseParam& param)
+bool UIMouseCtrl::setMouseParams(Motion::ViewComponent& view, const UIMouseParam& param)
 {
     auto  viewDirty = false;
     auto& mousePos  = view.mousePos;

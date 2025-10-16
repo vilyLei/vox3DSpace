@@ -6,7 +6,7 @@
 #include "OglResUtils.h"
 #include "OglTestScene.h"
 #include "../Motion/RenderCmdComp.h"
-#include "../Motion/UIMouseCtrl.h"
+#include "../System/UIMouseCtrl.h"
 
 #include <iostream>
 #include <cmath>
@@ -43,7 +43,7 @@ private:
 
     Voxol::Motion::Point2DDesc mousePos{};
     Voxol::Motion::CanvasDesc  canvas{};
-    Voxol::Motion::UIMouseCtrl mouseCtrl{};
+    System::UIMouseCtrl mouseCtrl{};
 
 private:
     static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode);
@@ -58,7 +58,7 @@ private:
 
     void setMouseXY(float x, float y);
 
-    void setMouseParams(const Voxol::Motion::UIMouseParam& param);
+    void setMouseParams(const System::UIMouseParam& param);
 
     OglTestScene mScene{};
     bool         dirty = true;

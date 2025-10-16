@@ -10,7 +10,7 @@
 #include "OglResUtils.h"
 #include "OglImage.h"
 #include "OglText.h"
-#include "../Motion/UIMouseCtrl.h"
+#include "../System/UIMouseCtrl.h"
 
 #include <iostream>
 #include <cmath>
@@ -71,13 +71,13 @@ struct EventManager
 {
     DragEvent            dragEvt{};
     std::vector<int32_t> queryEIds{};
-    void                 upateMouseParam(const Render::Draw::DrawContext& rctx, Render::EntitySysBVH& bvh, Render::EntityCompStorage& storage, const Motion::UIMouseParam& param)
+    void                 upateMouseParam(const Render::Draw::DrawContext& rctx, Render::EntitySysBVH& bvh, Render::EntityCompStorage& storage, const System::UIMouseParam& param)
     {
 
         Math::Vec2 mousePos{param.x, param.y};
         auto&      drawParam = rctx.drawParam;
         auto&&     wpv       = drawParam.invViewMat.mapPoint(mousePos);
-        if (param.type == Motion::UIMouseType::MOUSE_MOVE)
+        if (param.type == System::UIMouseType::MOUSE_MOVE)
         {
             queryEIds.clear();
             if (drawParam.viewVBounds.contains(mousePos))
@@ -94,7 +94,7 @@ struct EventManager
         switch (param.type)
         {
             /// mouse down
-            case Motion::UIMouseType::MOUSE_DOWN:
+            case System::UIMouseType::MOUSE_DOWN:
             {
                 if (topId >= 0)
                 {
@@ -106,13 +106,13 @@ struct EventManager
             }
             break;
             /// mouse up
-            case Motion::UIMouseType::MOUSE_UP:
+            case System::UIMouseType::MOUSE_UP:
             {
                 dragEvt.end();
             }
             break;
             /// mouse move
-            case Motion::UIMouseType::MOUSE_MOVE:
+            case System::UIMouseType::MOUSE_MOVE:
             {
                 if (dragEvt.isBegin() || dragEvt.isDragging())
                 {
@@ -133,12 +133,12 @@ struct EventManager
             }
             break;
             /// mouse scroll
-            case Motion::UIMouseType::MOUSE_SCROLL:
+            case System::UIMouseType::MOUSE_SCROLL:
             {
             }
             break;
             /// mouse click
-            case Motion::UIMouseType::MOUSE_CLICK:
+            case System::UIMouseType::MOUSE_CLICK:
             {
             }
             break;
@@ -166,7 +166,7 @@ public:
 public:
     void                      initScene();
     void                      render(const Voxol::Math::Mat33& vpMat);
-    void                      setMouseParams(const Motion::UIMouseParam& param);
+    void                      setMouseParams(const System::UIMouseParam& param);
     Render::Draw::DrawContext drawCtx{};
     Mouse::EventManager       mouseEvtMana{};
 

@@ -85,7 +85,7 @@ void OglTestScene::render(const Voxol::Math::Mat33& vpMat)
     }
 }
 
-void OglTestScene::setMouseParams(const Voxol::Motion::UIMouseParam& param)
+void OglTestScene::setMouseParams(const System::UIMouseParam& param)
 {
     //auto& ctx    = drawCtx;
     //auto& drawParam = ctx.drawParam;

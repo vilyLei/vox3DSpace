@@ -1,11 +1,10 @@
-#ifndef VOXOL_MOTION_MOUSE_CTRL_H
-#define VOXOL_MOTION_MOUSE_CTRL_H
+#ifndef VOXOL_SYSTEM_MOUSE_CTRL_H
+#define VOXOL_SYSTEM_MOUSE_CTRL_H
 
-#include "RenderCmdComp.h"
-#include "../Math/Mat33.h"
-#include "RenderCmdNode.h"
+#include "../Base/BaseDefine.h"
+#include "../Motion/RenderCmdComp.h"
 
-namespace Voxol::Motion
+namespace Voxol::System
 {
 enum class UIMouseType : unsigned char
 {
@@ -32,7 +31,7 @@ public:
     ~UIMouseCtrl() = default;
 
 public:
-    bool setMouseParams(ViewComponent& view, const UIMouseParam& param);
+    bool setMouseParams(Motion::ViewComponent& view, const UIMouseParam& param);
 };
 
 } // namespace Voxol::Motion

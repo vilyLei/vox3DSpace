@@ -102,7 +102,7 @@ void RenderCmdWorld::setMouseXY(float x, float y)
     canvas.view.mousePos = {x, y};
 }
 
-void RenderCmdWorld::setMouseParams(const UIMouseParam& param)
+void RenderCmdWorld::setMouseParams(const System::UIMouseParam& param)
 {
     //dirty = dirty || mouseCtrl.setMouseParams(canvas.view, param);
 
