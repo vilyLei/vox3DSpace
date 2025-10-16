@@ -186,7 +186,7 @@ public:
 
         if (!isValid(index) || !m_usedList[index])
             return;
-        m_usedList[index] = true;
+        m_usedList[index] = false;
         m_freeList.push_back(index);
     }
     // 清空所有对象
