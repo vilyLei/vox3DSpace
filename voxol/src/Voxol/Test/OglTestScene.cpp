@@ -87,6 +87,13 @@ void OglTestScene::render(const Voxol::Math::Mat33& vpMat)
 
 void OglTestScene::setMouseParams(const Voxol::Motion::UIMouseParam& param)
 {
+    auto& ctx    = drawCtx;
+    auto& drawParam = ctx.drawParam;
+
+    Math::Vec2 wpv = drawParam.invViewMat.mapPoint({param.x, param.y});
+
+    mouseEvtMana.upateMouseParam(ctx, etRenderSys.bvh, etRenderSys.storage, param);
+    /*
     Math::Vec2 pv{param.x, param.y};
 
     auto& ctxParam    = drawCtx.drawParam;
@@ -122,6 +129,7 @@ void OglTestScene::setMouseParams(const Voxol::Motion::UIMouseParam& param)
         default:
             break;
     }
+    //*/
 }
 void  OglTestScene::initVoassScene(){
 
@@ -215,6 +223,9 @@ void OglTestScene::renderVoass(const Math::Mat33& vpMat)
 
     // show mouse picked entity bounds
     boundsUnit.vertex.lineWidth = 1.0f;
+
+    auto& queriedEIds = mouseEvtMana.queryEIds;
+
     for (auto id : queriedEIds)
     {
         auto& vb = etRenderSys.bvhItems[id].bounds;

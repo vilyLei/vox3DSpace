@@ -67,7 +67,7 @@ struct DragEvent
     }
 };
 
-struct MouseEvtManager
+struct EventManager
 {
     DragEvent            dragEvt{};
     std::vector<int32_t> queryEIds{};
@@ -146,7 +146,7 @@ struct MouseEvtManager
     }
 };
 } // namespace Mouse
-//Mouse::MouseEvtManager mouseMana{};
+//Mouse::EventManager mouseMana{};
 //void                   setMouseParams(float x, float y, int type, float value)
 //{
 //    mouseMana.upateMouseParam(rctx, unitScene, {x, y, type, value});
@@ -165,6 +165,7 @@ public:
     void                      render(const Voxol::Math::Mat33& vpMat);
     void                      setMouseParams(const Motion::UIMouseParam& param);
     Render::Draw::DrawContext drawCtx{};
+    Mouse::EventManager       mouseEvtMana{};
 
 private:
     void initVoassScene();
@@ -189,7 +190,7 @@ private:
 
     Gpu::DrawingUnit     tile0Unit{};
     Gpu::DrawingUnit     boundsUnit{};
-    std::vector<int32_t> queriedEIds{};
+    //std::vector<int32_t> queriedEIds{};
 };
 
 

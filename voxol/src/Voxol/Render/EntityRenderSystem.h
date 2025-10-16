@@ -34,10 +34,10 @@ public:
     //std::vector<BVHItem2D> bvhItems;
     std::vector<V1::BVH2D::Item> bvhItems;
     V1::BVH2D                    bvh{};
+    EntityCompStorage            storage{};
 
 private:
     void                 drawUnit(const Component::UnitEntity& entity, const Draw::DrawContext& rctx, const Math::Mat33& vpM, std::vector<Gpu::DrawingUnit> drawingUnits);
-    EntityCompStorage    storage{};
     std::vector<int32_t> queriedEIds{};
 };
 } // namespace Voxol::Render
