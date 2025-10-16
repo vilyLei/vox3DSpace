@@ -1,6 +1,6 @@
 
 #include "VxRect.h"
-
+#include <cstdio>
 namespace Voxol::Math
 {
 
@@ -29,8 +29,7 @@ VxRect VxRect::makeLTRB(float pl, float pt, float pr, float pb)
 
 void VxRect::setXY(float px, float py)
 {
-    fX = px;
-    fY = py;
+    setXYWH(px, py, width(), height());
 }
 
 void VxRect::setWH(float pw, float ph)
@@ -167,6 +166,10 @@ float VxRect::centerAlong(int axis) const
     return (axis == 0) ? c.x : c.y;
 }
 
+void VxRect::print() const
+{
+    printf("VxRect(x=%f,y=%f,w=%f,h=%f)\n", fX, fY, width(), height());
+}
 VxRect VxRect::Union(const VxRect& a, const VxRect& b)
 {
     VxRect c = a;

@@ -49,7 +49,7 @@ public:
     void mat33MapTo(const Mat33& mat3, VxRect& dst);
     void addXY(float px, float py);
 
-    
+
     void setSize(float pw, float ph);
     bool intersects(const VxRect& other) const;
     void outset(float dx, float dy);
@@ -70,8 +70,8 @@ public:
 
     inline float centerX() const { return (fX + fRX) * 0.5f; }
     inline float centerY() const { return (fY + fBY) * 0.5f; }
-    inline Vec2 center() const { return (min + max) * 0.5f; }
-    inline Vec2 extent() const { return max - min; }
+    inline Vec2  center() const { return (min + max) * 0.5f; }
+    inline Vec2  extent() const { return max - min; }
 
     inline void expand(const VxRect& other)
     {
@@ -83,7 +83,8 @@ public:
 
     int   longestAxis() const;
     float centerAlong(int axis) const;
-    
+    void  print() const;
+
     static VxRect Union(const VxRect& a, const VxRect& b);
 };
 using Bounds = VxRect;
