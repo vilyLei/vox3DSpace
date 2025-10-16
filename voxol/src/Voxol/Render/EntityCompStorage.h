@@ -44,17 +44,28 @@ public:
         return pool.get(index);
     }
     template <typename T>
-    const T& operator[](int32_t index) const
+    T& get(int32_t index)
     {
-        const auto& pool = getPool<T>();
-        return pool.get(index);
+        return getPool<T>().get(index);
     }
+
     template <typename T>
-    T& operator[](int32_t index) const
+    const T& get(int32_t index) const
     {
-        auto& pool = getPool<T>();
-        return pool.get(index);
+        return getPool<T>().get(index);
     }
+    //template <typename T>
+    //const T& operator[](int32_t index) const
+    //{
+    //    const auto& pool = getPool<T>();
+    //    return pool.get(index);
+    //}
+    //template <typename T>
+    //T& operator[](int32_t index) const
+    //{
+    //    auto& pool = getPool<T>();
+    //    return pool.get(index);
+    //}
 
 public:
     std::vector<Component::UnitEntity>        entities{};

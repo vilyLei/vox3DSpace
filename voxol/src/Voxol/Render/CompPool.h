@@ -37,12 +37,23 @@ public:
         {
             size_t oldSize = comps.size();
             comps.resize(capacity);
-            m_usedList.resize(capacity);
-            m_freeList.reserve(capacity);
+            m_usedList.resize(capacity, false);
             for (size_t i = oldSize; i < capacity; ++i)
                 m_freeList.push_back(static_cast<uint32_t>(i));
         }
     }
+    //void reserve(size_t capacity)
+    //{
+    //    if (capacity > comps.size())
+    //    {
+    //        size_t oldSize = comps.size();
+    //        comps.resize(capacity);
+    //        m_usedList.resize(capacity);
+    //        m_freeList.reserve(capacity);
+    //        for (size_t i = oldSize; i < capacity; ++i)
+    //            m_freeList.push_back(static_cast<uint32_t>(i));
+    //    }
+    //}
 
     /// 分配对象(未初始化)
     int32_t allocate()
