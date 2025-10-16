@@ -189,7 +189,8 @@ void OglTestScene::renderVoass(const Math::Mat33& vpMat)
 
     for (auto id : queriedEIds)
     {
-        auto& vb = etRenderSys.bvhItems[id].bounds;
+        //auto& vb = etRenderSys.bvhItems[id].bounds;
+        auto& vb = etRenderSys.bvh.getBoundsAt(id);
         boundsUnit.objMat.setTo(vb.x(), vb.y(), vb.width(), vb.height());
         boundsUnit.mvp = vpMat;
         boundsUnit.draw();
