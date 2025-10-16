@@ -56,6 +56,7 @@ public:
     Vec2         mapXY(float x, float y) const;
 
     bool inverseTo(Mat33& lhs) const;
+    bool inverse();
 
     void print() const;
 };

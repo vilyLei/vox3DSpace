@@ -271,6 +271,48 @@ bool Mat33::inverseTo(Mat33& lhs) const
     return true;
 }
 
+bool Mat33::inverse()
+{
+    float det =
+        data[0] * (data[4] * data[8] - data[5] * data[7]) -
+        data[3] * (data[1] * data[8] - data[2] * data[7]) +
+        data[6] * (data[1] * data[5] - data[2] * data[4]);
+
+    if (std::fabs(det) < 1e-8f)
+    {
+        return false;
+    }
+
+    float invDet = 1.0f / det;
+
+    auto d0 = (data[4] * data[8] - data[5] * data[7]) * invDet;
+    auto d1 = -(data[1] * data[8] - data[2] * data[7]) * invDet;
+    auto d2 = (data[1] * data[5] - data[2] * data[4]) * invDet;
+
+    auto d3 = -(data[3] * data[8] - data[5] * data[6]) * invDet;
+    auto d4 = (data[0] * data[8] - data[2] * data[6]) * invDet;
+    auto d5 = -(data[0] * data[5] - data[2] * data[3]) * invDet;
+
+    auto d6 = (data[3] * data[7] - data[4] * data[6]) * invDet;
+    auto d7 = -(data[0] * data[7] - data[1] * data[6]) * invDet;
+    auto d8 = (data[0] * data[4] - data[1] * data[3]) * invDet;
+
+
+    data[0] = d0;
+    data[1] = d1;
+    data[2] = d2;
+
+    data[3] = d3;
+    data[4] = d4;
+    data[5] = d5;
+
+    data[6] = d6;
+    data[7] = d7;
+    data[8] = d8;
+
+    return true;
+}
+
 
 const float* Mat33::ptr() const
 {
@@ -291,8 +333,9 @@ void Mat33::print() const
 
 namespace Mat33Utils
 {
-    
-void makeRotationMat33WithPivot(Mat33& transform, Vec2 localPivot, Vec2 fixCV, float scaleX, float scaleY, float rotation) {
+
+void makeRotationMat33WithPivot(Mat33& transform, Vec2 localPivot, Vec2 fixCV, float scaleX, float scaleY, float rotation)
+{
 
     transform.setTo(scaleX - localPivot.x, scaleY - localPivot.y, scaleX, scaleY, rotation);
     auto&& cv   = transform.mapPoint({localPivot.x / scaleX, localPivot.y / scaleY});
@@ -311,9 +354,9 @@ Mat33 makeRotationMat33WithPivot(Vec2 localPivot, Vec2 fixCV, float scaleX, floa
 }
 Mat33 makeRotationMat33WithCenter(Vec2 fixCV, float scaleX, float scaleY, float rotation)
 {
-    Mat33 mat(scaleX * -0.5f, scaleY * -0.5f, scaleX, scaleY, rotation);
-    auto&&  tempCV = mat.mapPoint({0.5f, 0.5f});
-    auto& data   = mat.data;
+    Mat33  mat(scaleX * -0.5f, scaleY * -0.5f, scaleX, scaleY, rotation);
+    auto&& tempCV = mat.mapPoint({0.5f, 0.5f});
+    auto&  data   = mat.data;
     data[6] += fixCV.x - tempCV.x;
     data[7] += fixCV.y - tempCV.y;
     return mat;
