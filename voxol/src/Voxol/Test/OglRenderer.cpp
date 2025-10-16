@@ -187,6 +187,12 @@ void OglRenderer::setMouseXY(float x, float y)
 void OglRenderer::setMouseParams(const Voxol::Motion::UIMouseParam& param)
 {
     mScene.setMouseParams(param);
+    auto& mouseEvt = mScene.mouseEvtMana.dragEvt;
+    if (!mouseEvt.isEnd())
+    {
+        dirty = true;
+        return;
+    }
     auto flag = mouseCtrl.setMouseParams(canvas.view, param);
     dirty     = dirty || flag;
 }
