@@ -4,6 +4,7 @@
 #include "UIMouseCtrl.h"
 #include "../Render/DrawCtx.h"
 #include "../Render/EntityRenderSystem.h"
+#include "../Tile/TileSystem.h"
 namespace Voxol::System
 {
 
@@ -56,7 +57,7 @@ struct EventManager
 {
     DragEvent            dragEvt{};
     std::vector<int32_t> queryEIds{};
-    void                 upateMouseParam(const Render::Draw::DrawContext& rctx, Render::EntitySysBVH& bvh, Render::EntityCompStorage& storage, const System::UIMouseParam& param);
+    void                 upateMouseParam(Tile::TileSystem& tileSys, const Render::Draw::DrawContext & rctx, Render::EntitySysBVH& bvh, Render::EntityCompStorage& storage, const System::UIMouseParam& param);
     
 };
 } // namespace Mouse
