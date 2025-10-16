@@ -67,6 +67,9 @@ public:
     //    return pool.get(index);
     //}
 
+    Math::Vec2 getEntityXYAt(int32_t id);
+    void setEntityXYAt(const Math::Vec2& pos, int32_t id);
+
 public:
     std::vector<Component::UnitEntity>        entities{};
     CompPool<Component::UnitShadingEntity>     shaderingEntitiesPool{};

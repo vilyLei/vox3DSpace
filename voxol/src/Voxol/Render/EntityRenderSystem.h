@@ -15,6 +15,8 @@ namespace Voxol::Render
 using namespace Voxol::Test;
 using namespace Voxol::Tile;
 
+using EntitySysBVH = V1::BVH2D;
+
 class EntityRenderSystem
 {
 public:
@@ -23,8 +25,8 @@ public:
 
 public:
     void       initalize();
-    Math::Vec2 getEntityXYAt(int32_t id);
-    void       setEntityXYAt(const Math::Vec2& pos, int32_t id);
+    //Math::Vec2 getEntityXYAt(int32_t id);
+    //void       setEntityXYAt(const Math::Vec2& pos, int32_t id);
     int        drawQuery(const Math::VxRect& bounds, const Math::Mat33& vpM);
     void       render(const Draw::DrawContext& rctx, const Math::Mat33& vpM, std::vector<Gpu::DrawingUnit> drawingUnits);
     void       clear();

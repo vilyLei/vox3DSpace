@@ -71,7 +71,7 @@ struct MouseEvtManager
 {
     DragEvent            dragEvt{};
     std::vector<int32_t> queryEIds{};
-    void                 upateMouseParam(const Render::Draw::DrawContext& rctx, Render::EntityRenderSystem& rsys, const Motion::UIMouseParam& param)
+    void                 upateMouseParam(const Render::Draw::DrawContext& rctx, Render::EntitySysBVH& bvh, Render::EntityCompStorage& storage, const Motion::UIMouseParam& param)
     {
 
         Math::Vec2 mousePos{param.x, param.y};
@@ -82,7 +82,7 @@ struct MouseEvtManager
             queryEIds.clear();
             if (drawParam.viewVBounds.contains(mousePos))
             {
-                rsys.bvh.queryPoint(wpv, queryEIds);
+                bvh.queryPoint(wpv, queryEIds);
             }
         }
         //dragEvt
@@ -100,7 +100,7 @@ struct MouseEvtManager
                 {
                     dragEvt.targetId        = topId;
                     dragEvt.mouseOriginPos  = wpv;
-                    dragEvt.entityOriginPos = rsys.getEntityXYAt(topId);
+                    dragEvt.entityOriginPos = storage.getEntityXYAt(topId);
                     dragEvt.begin();
                 }
             }
@@ -125,7 +125,7 @@ struct MouseEvtManager
                     // {wpv.x - dragEvt.mouseOriginPos.x, wpv.y - dragEvt.mouseOriginPos.y};
                     pv.x += dv.x;
                     pv.y += dv.y;
-                    rsys.setEntityXYAt(pv, id);
+                    storage.setEntityXYAt(pv, id);
                 }
             }
             break;
