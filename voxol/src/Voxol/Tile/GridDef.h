@@ -138,8 +138,8 @@ struct Unit
 struct IndexNode
 {
     RC::Pos pos{};
-    int32_t index = 0;
-    bool    dity  = false;
+    int32_t index = -1;
+    bool    dirty  = false;
 };
 }
 } // namespace Voxol::Tile

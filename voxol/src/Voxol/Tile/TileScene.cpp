@@ -29,6 +29,21 @@ void TileScene::initalize()
 void TileScene::addDirtyBounds(const Math::Bounds& bounds)
 {
     auto gr = RC::xyRectToRCRect(bounds, currGridSize);
+    auto lv = viewGridLevel;
+    for (auto r = gr.minR; r <= gr.maxR; r++)
+    {
+        for (auto c = gr.minC; c <= gr.maxC; c++)
+        {
+            RC::Pos pos{r, c, lv};
+            if (viewUnitIndexMap.contains(pos.value))
+            {
+                auto&& node = viewUnitIndexMap[pos.value];
+                node.dirty  = true;
+                continue;
+            }
+            dirtyUnitIndexMap[pos.value] = {pos, -1};
+        }
+    }
 }
 
 void TileScene::buildGrid(Grid::Unit& unit, const Render::Draw::DrawContext& ctx)
@@ -129,11 +144,11 @@ void TileScene::run(const Render::Draw::DrawContext& ctx)
                 RC::Pos pos{r, c, lv};
                 if (viewUnitIndexMap.contains(pos.value))
                 {
+                    auto&& node = viewUnitIndexMap[pos.value];
                     if (toBiggerFlag)
                     {
                         auto&& xy = RC::rcToXY(pos, currGridSize);
                         auto&& vb   = Math::VxRect::makeXYWH(xy.x, xy.y, currGridSize, currGridSize);
-                        auto&& node = viewUnitIndexMap[pos.value];
                         auto&  grid = gridUnits[node.index];
                         if (!ctx.drawQuery(vb, vpM))
                         {
@@ -148,7 +163,11 @@ void TileScene::run(const Render::Draw::DrawContext& ctx)
                         grid.setRCAndAreaSize(pos, currGridSize);
                         buildGrid(grid, ctx);
                     }
-                    continue;
+
+                    if (!node.dirty)
+                    {
+                        continue;
+                    }
                 }
                 auto&& xy = RC::rcToXY(pos, currGridSize);
                 auto&& vb = Math::VxRect::makeXYWH(xy.x, xy.y, currGridSize, currGridSize);
