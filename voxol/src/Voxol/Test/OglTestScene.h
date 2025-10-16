@@ -125,7 +125,11 @@ struct EventManager
                     // {wpv.x - dragEvt.mouseOriginPos.x, wpv.y - dragEvt.mouseOriginPos.y};
                     pv.x += dv.x;
                     pv.y += dv.y;
-                    storage.setEntityXYAt(pv, id);
+                    //storage.setEntityXYAt(pv, id);
+                    auto b = bvh.getBoundsAt(id);
+                    b.setXY(pv.x, pv.y);
+                    bvh.updateItemBoundsByObjectId(id, b);
+                    bvh.updateDirty();
                 }
             }
             break;

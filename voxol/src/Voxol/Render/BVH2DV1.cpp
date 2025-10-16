@@ -16,6 +16,7 @@ void BVH2D::addItem(int32_t objectId, const Math::Bounds& bounds)
     item.objectId = objectId;
     item.bounds   = bounds;
     m_items.push_back(item);
+    m_objectIdToItem[objectId] = static_cast<int32_t>(m_items.size() - 1);
 }
 
 // -----------------------------
