@@ -83,6 +83,8 @@ public:
 
     int   longestAxis() const;
     float centerAlong(int axis) const;
+    
+    static VxRect Union(const VxRect& a, const VxRect& b);
 };
 using Bounds = VxRect;
 

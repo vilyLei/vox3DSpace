@@ -123,7 +123,8 @@ bool VxRect::contains(float px, float py) const
         return false;
     return true;
 }
-bool VxRect::contains(const Vec2& pv) const {
+bool VxRect::contains(const Vec2& pv) const
+{
     return contains(pv.x, pv.y);
 }
 
@@ -164,5 +165,12 @@ float VxRect::centerAlong(int axis) const
 {
     auto&& c = center();
     return (axis == 0) ? c.x : c.y;
+}
+
+VxRect VxRect::Union(const VxRect& a, const VxRect& b)
+{
+    VxRect c = a;
+    c.expand(b);
+    return c;
 }
 } // namespace Voxol::Math

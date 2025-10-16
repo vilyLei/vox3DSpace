@@ -2,7 +2,8 @@
 #define VOXOL_RENDER_ENTITY_RENDER_SYSTEM_H
 
 #include "../Tile/GridDef.h"
-#include "BVH2D.h"
+//#include "BVH2D.h"
+#include "BVH2DV1.h"
 #include "DrawCtx.h"
 #include "CompPool.h"
 #include "EntityComponent.h"
@@ -26,8 +27,9 @@ public:
     void render(const Draw::DrawContext& rctx, const Math::Mat33& vpM, std::vector<Gpu::DrawingUnit> drawingUnits);
     void clear();
 
-    std::vector<BVHItem2D> bvhItems;
-    BVH2D                  bvh{};
+    //std::vector<BVHItem2D> bvhItems;
+    std::vector<V1::BVH2D::Item> bvhItems;
+    V1::BVH2D                    bvh{};
 
 private:
     void                 drawUnit(const Component::UnitEntity& entity, const Draw::DrawContext& rctx, const Math::Mat33& vpM, std::vector<Gpu::DrawingUnit> drawingUnits);

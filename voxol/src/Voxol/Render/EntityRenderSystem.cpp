@@ -113,15 +113,20 @@ void EntityRenderSystem::initalize()
         b.bounds.setXYWH(trans.x, trans.y, trans.sx, trans.sy);
         b.objectId = et.id;
         et.boundsId = boundsIndex;
+
+        bvh.addItem(et.id, b.bounds);
+
         boundsIndex++;
     }
-    bvh.build(bvhItems);
+    //bvh.build(bvhItems);
+    bvh.build();
 }
 
 int EntityRenderSystem::drawQuery(const Math::VxRect& wbounds, const Math::Mat33& vpM)
 {
     queriedEIds.clear();
-    bvh.query(wbounds, queriedEIds);
+    //bvh.query(wbounds, queriedEIds);
+    bvh.queryBounds(wbounds, queriedEIds);
     return static_cast<int>(queriedEIds.size());
 }
 void EntityRenderSystem::render(const Draw::DrawContext& rctx, const Math::Mat33& vpM, std::vector<Gpu::DrawingUnit> drawingUnits)
