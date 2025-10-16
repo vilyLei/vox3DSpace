@@ -87,49 +87,10 @@ void OglTestScene::render(const Voxol::Math::Mat33& vpMat)
 
 void OglTestScene::setMouseParams(const Voxol::Motion::UIMouseParam& param)
 {
-    auto& ctx    = drawCtx;
-    auto& drawParam = ctx.drawParam;
-
-    Math::Vec2 wpv = drawParam.invViewMat.mapPoint({param.x, param.y});
-
-    mouseEvtMana.upateMouseParam(ctx, etRenderSys.bvh, etRenderSys.storage, param);
-    /*
-    Math::Vec2 pv{param.x, param.y};
-
-    auto& ctxParam    = drawCtx.drawParam;
-    using UIMouseType = Motion::UIMouseType;
-    //printf("UIMouseCtrl::setMouseParams(), param.type: %d, param.value: %f\n", param.type, param.value);
-    switch (param.type)
-    {
-        case UIMouseType::MOUSE_DOWN:
-        break;
-        case UIMouseType::MOUSE_UP:
-        break;
-        case UIMouseType::MOUSE_MOVE:
-        {
-        queriedEIds.clear();
-        if (ctxParam.viewVBounds.contains(pv))
-        {
-            auto mat = ctxParam.viewMat;
-            mat.inverse();
-            auto&& wpv = mat.mapPoint(pv);
-            etRenderSys.bvh.queryPoint(wpv, queriedEIds);
-        }
-        }
-        break;
-        case UIMouseType::MOUSE_SCROLL:
-        {
-        }
-        break;
-        case UIMouseType::MOUSE_CLICK:
-        {
-
-        }
-
-        default:
-            break;
-    }
-    //*/
+    //auto& ctx    = drawCtx;
+    //auto& drawParam = ctx.drawParam;
+    //Math::Vec2 wpv = drawParam.invViewMat.mapPoint({param.x, param.y});
+    mouseEvtMana.upateMouseParam(drawCtx, etRenderSys.bvh, etRenderSys.storage, param);
 }
 void  OglTestScene::initVoassScene(){
 
