@@ -151,9 +151,10 @@ void EntityRenderSystem::render(const Draw::DrawContext& rctx, const Math::Mat33
     auto tot = queriedEIds.size();
     for (auto i = 0; i < tot; i++)
     {
-        auto& item = bvhItems[queriedEIds[i]];
-        auto& et   = entities[item.objectId];
-        if (et.shadingId < 0 || !et.visible)
+        //auto& item = bvhItems[queriedEIds[i]];
+        //auto& et   = entities[item.objectId];
+        auto& et = entities[queriedEIds[i]];
+        if (et.boundsId < 0 || et.shadingId < 0 || !et.visible)
             continue;
         drawUnit(et, rctx, vpM, drawingUnits);
     }
