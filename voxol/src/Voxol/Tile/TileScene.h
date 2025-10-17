@@ -34,6 +34,7 @@ private:
 
     int gridSize = 256;
     float currGridSize = 256;
+    bool  gridModifyDirty = false;
 
     std::vector<Grid::Unit> gridUnits{};
     Grid::Unit              outlineUnit{};

@@ -130,23 +130,23 @@ int EntityRenderSystem::drawQuery(const Math::VxRect& wbounds, const Math::Mat33
 void EntityRenderSystem::render(const Draw::DrawContext& rctx, const Math::Mat33& vpM, std::vector<Gpu::DrawingUnit> drawingUnits)
 {
     /// 这里是正确的写法
-    //auto& entities = storage.entities;
-    //auto tot = queriedEIds.size();
-    //for (auto i = 0; i < tot; i++)
-    //{
-    //    auto& et = entities[queriedEIds[i]];
-    //    if (et.boundsId < 0 || et.shadingId < 0 || !et.visible)
-    //        continue;
-    //    drawUnit(et, rctx, vpM, drawingUnits);
-    //}
-
-    
-    // 暂时这样写，以便测试dragging
     auto& entities = storage.entities;
-    auto  tot      = entities.size();
+    auto total = queriedEIds.size();
+    for (auto i = 0; i < total; i++)
+    {
+        auto& et = entities[queriedEIds[i]];
+        if (et.boundsId < 0 || et.shadingId < 0 || !et.visible)
+            continue;
+        drawUnit(et, rctx, vpM, drawingUnits);
+    }
+    return;
+
+    // 暂时这样写，以便测试dragging
+    auto& ets = storage.entities;
+    auto  tot = ets.size();
     for (auto i = 0; i < tot; i++)
     {
-        auto& et = entities[i];
+        auto& et = ets[i];
         if (et.boundsId < 0 || et.shadingId < 0 || !et.visible)
             continue;
         drawUnit(et, rctx, vpM, drawingUnits);

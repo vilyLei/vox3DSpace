@@ -44,6 +44,7 @@ void TileScene::addDirtyBounds(const Math::Bounds& bounds)
             dirtyUnitIndexMap[pos.value] = {pos, -1};
         }
     }
+    gridModifyDirty = true;
 }
 
 void TileScene::buildGrid(Grid::Unit& unit, const Render::Draw::DrawContext& ctx)
@@ -80,8 +81,8 @@ void TileScene::run(const Render::Draw::DrawContext& ctx)
     vpM.append(drawParam.viewMat);
 
     // 暂时这样写，以便测试dragging
-    ctx.drawCall(drawParam.viewWBounds, vpM);
-    return;
+    //ctx.drawCall(drawParam.viewWBounds, vpM);
+    //return;
 
 
     // the default gridSize value is 256
@@ -115,9 +116,9 @@ void TileScene::run(const Render::Draw::DrawContext& ctx)
     preZoom = ctx.zoom;
 
 
-    if (createFlag || adjustFlag)
+    if (createFlag || adjustFlag || gridModifyDirty)
     {
-
+        gridModifyDirty = false;
         for (auto&& it = viewUnitIndexMap.begin(); it != viewUnitIndexMap.end();)
         {
             auto& node = it->second;
@@ -164,9 +165,27 @@ void TileScene::run(const Render::Draw::DrawContext& ctx)
                         buildGrid(grid, ctx);
                     }
 
-                    if (!node.dirty)
+                    if (!node.dirty || node.index < 0)
                     {
                         continue;
+                    }
+                    else {
+                        auto&& xy = RC::rcToXY(pos, currGridSize);
+                        auto&& vb = Math::VxRect::makeXYWH(xy.x, xy.y, currGridSize, currGridSize);
+                        if (!ctx.drawQuery(vb, vpM))
+                        {
+                            continue;
+                        }
+                        auto k = node.index;
+                        node.dirty = true;
+
+                        viewGridsTotal++;
+                        tot++;
+
+                        auto& grid = gridUnits[k];
+                        grid.setRCAndAreaSize(pos, currGridSize);
+                        grid.drawUnit.setTextureAt(texPool.acquire(), 0);
+                        buildGrid(grid, ctx);
                     }
                 }
                 auto&& xy = RC::rcToXY(pos, currGridSize);
@@ -187,7 +206,6 @@ void TileScene::run(const Render::Draw::DrawContext& ctx)
                 auto& grid = gridUnits[k];
                 grid.setRCAndAreaSize(pos, currGridSize);
                 grid.drawUnit.setTextureAt(texPool.acquire(), 0);
-
                 buildGrid(grid, ctx);
                 viewUnitIndexMap[pos.value] = {pos, k};
             }
