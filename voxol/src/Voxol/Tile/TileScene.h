@@ -25,6 +25,8 @@ public:
 public:
     void initalize();
     void addDirtyBounds(const Math::Bounds& bounds);
+    bool updateGrid(const RC::Pos& pos, const Render::Draw::DrawContext& ctx);
+    bool createGrid(const RC::Pos& pos, const Render::Draw::DrawContext& ctx);
     void run(const Render::Draw::DrawContext& ctx);
 
 private:
