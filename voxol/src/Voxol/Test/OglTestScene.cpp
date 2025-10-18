@@ -9,8 +9,7 @@ void OglTestScene::initScene()
 {
     if (entityModeFlag)
     {
-
-        tileSys.initalize();
+        tileSys->initalize();
         etRenderSys.initalize();
         auto drawCall = [this](const Math::VxRect& bounds, const Math::Mat33& vpMat) {
             etRenderSys.render(drawCtx, vpMat, bounds);
@@ -21,6 +20,11 @@ void OglTestScene::initScene()
 
         drawCtx.drawCall  = drawCall;
         drawCtx.drawQuery = queryCall;
+
+        boundsUnit.color = {0.0f, 0.3, 0.3f, 1.f};
+        boundsUnit.vertex.toLine();
+        boundsUnit.vertex.lineWidth = 5;
+        Render::Gpu::buildBaseDrawUnit(boundsUnit);
         return;
     }
     if (voassModeFlag)
@@ -79,7 +83,7 @@ void OglTestScene::render(const Voxol::Math::Mat33& vpMat)
         auto& params   = ctx.drawParam;
         auto& viewport = ctx.clearParam.viewport;
 
-        tileSys.run(ctx);
+        tileSys->run(ctx);
 
         // show mouse picked entity bounds
         boundsUnit.vertex.lineWidth = 1.0f;

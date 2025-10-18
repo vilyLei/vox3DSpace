@@ -4,7 +4,7 @@ namespace Voxol::System
 {
 namespace Mouse
 {
-void EventManager::upateMouseParam(Tile::TileSystem& tileSys, const Render::Draw::DrawContext& rctx, Render::EntitySysBVH::SP bvh, Render::EntityCompStorage::SP storage, const System::UIMouseParam& param)
+void EventManager::upateMouseParam(Tile::TileSystem::SP tileSys, const Render::Draw::DrawContext& rctx, Render::EntitySysBVH::SP bvh, Render::EntityCompStorage::SP storage, const System::UIMouseParam& param)
 {
 
     Math::Vec2 mousePos{param.x, param.y};
@@ -61,10 +61,10 @@ void EventManager::upateMouseParam(Tile::TileSystem& tileSys, const Render::Draw
                 auto b0 = bvh->getBoundsAt(id);
                 auto b1 = b0;
                 // ÒÆ³ö
-                tileSys.addDirtyBounds(b0, 0);
+                tileSys->addDirtyBounds(b0, 0);
                 b1.moveTo(pv.x, pv.y);
                 // ÒÆÈë
-                tileSys.addDirtyBounds(b1, 1);
+                tileSys->addDirtyBounds(b1, 1);
 
                 bvh->updateItemBoundsByObjectId(id, b1);
                 bvh->updateDirty();

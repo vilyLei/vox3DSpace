@@ -46,7 +46,7 @@ private:
     bool entityModeFlag = true;
 
     Render::OglFbo             mFbo{};
-    Tile::TileSystem           tileSys{};
+    Tile::TileSystem::SP       tileSys = Tile::TileSystem::make();
     Render::EntityRenderSystem etRenderSys{};
 
     Render::Gpu::DrawingUnit              baseDrawUnit{};

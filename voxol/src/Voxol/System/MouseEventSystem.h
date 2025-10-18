@@ -57,7 +57,7 @@ struct EventManager
 {
     DragEvent            dragEvt{};
     std::vector<int32_t> queryEIds{};
-    void                 upateMouseParam(Tile::TileSystem& tileSys, const Render::Draw::DrawContext& rctx, Render::EntitySysBVH::SP bvh, Render::EntityCompStorage::SP storage, const System::UIMouseParam& param);
+    void                 upateMouseParam(Tile::TileSystem::SP tileSys, const Render::Draw::DrawContext& rctx, Render::EntitySysBVH::SP bvh, Render::EntityCompStorage::SP storage, const System::UIMouseParam& param);
     
 };
 } // namespace Mouse
