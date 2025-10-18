@@ -25,14 +25,14 @@ public:
 public:
     void initalize();
     int  drawQuery(const Math::VxRect& bounds, int phase);
-    void render(const Draw::DrawContext& rctx, const Math::Mat33& vpM, std::vector<Gpu::DrawingUnit> drawingUnits);
+    void render(const Draw::DrawContext& rctx, const Math::Mat33& vpM, std::vector<Gpu::DrawingUnit> drawingUnits, const Math::Bounds& wbounds);
     void clear();
 
     V1::BVH2D             bvh{};
     EntityCompStorage::SP storage{};
 
 private:
-    void                 drawUnit(const Component::UnitEntity& entity, const Draw::DrawContext& rctx, const Math::Mat33& vpM, std::vector<Gpu::DrawingUnit> drawingUnits);
+    bool                 drawUnit(const Component::UnitEntity& entity, const Draw::DrawContext& rctx, const Math::Mat33& vpM, std::vector<Gpu::DrawingUnit> drawingUnits, const Math::Bounds& wbounds);
     std::vector<int32_t> queriedEIds{};
 };
 } // namespace Voxol::Render

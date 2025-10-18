@@ -66,7 +66,9 @@ void TileScene::buildGridContent(Grid::Unit& unit, const Render::Draw::DrawConte
     mFbo.bindTextureAt(drawUnit.getTextureAt(0), 0, gridSize, gridSize);
     mFbo.renderBegin(clearParam);
 
-    ctx.drawCall(drawParam.viewWBounds, vpM);
+    auto&& xy = RC::rcToXY(unit.rc, currGridSize);
+    auto&& vb = Math::VxRect::makeXYWH(xy.x, xy.y, currGridSize, currGridSize);
+    ctx.drawCall(vb, vpM);
     mFbo.unbindFBO(ctx.clearParam, true);
 
     Test::Gpu::buildTexDrawUnitWithTex(drawUnit, mFbo.getTextureAt(0), true);
@@ -118,7 +120,7 @@ bool TileScene::updateGrid(const RC::Pos& pos, const Render::Draw::DrawContext& 
     auto&  grid = gridUnits[node.index];
     if (ctx.drawQuery(vb, phase))
     {
-        printf("TileScene::updateGrid() build content node(r=%d,c=%d) A, phase: %d\n", node.pos.r, node.pos.c, phase);
+        //printf("TileScene::updateGrid() build content node(r=%d,c=%d) A, phase: %d\n", node.pos.r, node.pos.c, phase);
         grid.setRCAndAreaSize(pos, currGridSize);
         buildGridContent(grid, ctx);
         if (phase == 0)
@@ -130,7 +132,7 @@ bool TileScene::updateGrid(const RC::Pos& pos, const Render::Draw::DrawContext& 
     {
         unitIndexPool.release(node.index);
         auto& unit = grid.drawUnit;
-        printf("TileScene::updateGrid() release node(r=%d, c=%d, level=%d) B, phase: %d\n", node.pos.r, node.pos.c, phase);
+        //printf("TileScene::updateGrid() release node(r=%d, c=%d, level=%d) B, phase: %d\n", node.pos.r, node.pos.c, node.pos.level, phase);
         texPool.release(unit.getTextureAt(0));
         viewUnitIndexMap.erase(pos.value);
     }
@@ -171,7 +173,7 @@ void TileScene::updateDirtyGrid(const Render::Draw::DrawContext& ctx)
         //    continue;
         //}
 
-        printf("TileScene::updateDirtyGrid() node(r=%d,c=%d,phase=%d) A\n", node.pos.r, node.pos.c, node.phase);
+        //printf("TileScene::updateDirtyGrid() node(r=%d,c=%d,phase=%d) A\n", node.pos.r, node.pos.c, node.phase);
         if (viewUnitIndexMap.contains(node.pos.value))
         {
             updateGrid(node.pos, ctx, node.phase);

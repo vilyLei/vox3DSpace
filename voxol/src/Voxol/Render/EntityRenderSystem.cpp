@@ -114,7 +114,7 @@ int EntityRenderSystem::drawQuery(const Math::VxRect& wbounds, int phase)
     }
     return static_cast<int>(queriedEIds.size());
 }
-void EntityRenderSystem::render(const Draw::DrawContext& rctx, const Math::Mat33& vpM, std::vector<Gpu::DrawingUnit> drawingUnits)
+void EntityRenderSystem::render(const Draw::DrawContext& rctx, const Math::Mat33& vpM, std::vector<Gpu::DrawingUnit> drawingUnits, const Math::Bounds& wbounds)
 {
     if (!storage)
         return;
@@ -126,12 +126,18 @@ void EntityRenderSystem::render(const Draw::DrawContext& rctx, const Math::Mat33
 
     auto  total    = queriedEIds.size();
     auto& entities = storage->entities;
+    size_t  drawTotal    = 0;
     for (auto i = 0; i < total; i++)
     {
         auto& et = entities[queriedEIds[i]];
         if (et.shadingId < 0 || !et.visible)
             continue;
-        drawUnit(et, rctx, vpM, drawingUnits);
+        auto flag = drawUnit(et, rctx, vpM, drawingUnits, wbounds);
+        drawTotal += flag ? 1 : 0;
+    }
+    if (drawTotal < total)
+    {
+        printf(">>> >>> >>> EntityRenderSystem::render() , drawTotal: %d, total: %d\n", drawTotal, total);
     }
     return;
 
@@ -143,14 +149,14 @@ void EntityRenderSystem::render(const Draw::DrawContext& rctx, const Math::Mat33
         auto& et = ets[i];
         if (et.shadingId < 0 || !et.visible)
             continue;
-        drawUnit(et, rctx, vpM, drawingUnits);
+        drawUnit(et, rctx, vpM, drawingUnits, wbounds);
     }
 }
 
-void EntityRenderSystem::drawUnit(const Component::UnitEntity& entity, const Draw::DrawContext& rctx, const Math::Mat33& vpM, std::vector<Gpu::DrawingUnit> drawingUnits)
+bool EntityRenderSystem::drawUnit(const Component::UnitEntity& entity, const Draw::DrawContext& rctx, const Math::Mat33& vpM, std::vector<Gpu::DrawingUnit> drawingUnits, const Math::Bounds& wbounds)
 {
     if (!storage)
-        return;
+        return false;
 
     auto& shaderingDescPool = storage->shaderingDescPool;
 
@@ -158,6 +164,10 @@ void EntityRenderSystem::drawUnit(const Component::UnitEntity& entity, const Dra
     auto& drawUnit  = drawingUnits[shadingEt.drawUnitId];
     auto& shdDesc   = shaderingDescPool[shadingEt.shadingDescId];
     auto& trans     = shdDesc.transform;
+    Math::Bounds vb;
+    vb.setXYWH(trans.x, trans.y, trans.sx, trans.sy);
+    if (!wbounds.intersects(vb))
+        return false;
     //printf("trans(x=%f, y=%f)\n", trans.x, trans.y);
     drawUnit.blendMode = 1;
     drawUnit.setColor(shdDesc.color);
@@ -165,6 +175,7 @@ void EntityRenderSystem::drawUnit(const Component::UnitEntity& entity, const Dra
     drawUnit.objMat.setScaleXY(trans.sx, trans.sy);
     drawUnit.mvp = vpM;
     drawUnit.draw();
+    return true;
 }
 void EntityRenderSystem::clear()
 {
