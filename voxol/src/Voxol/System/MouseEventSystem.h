@@ -52,12 +52,17 @@ struct DragEvent
         dirty = false;
     }
 };
-
+struct TargetSysParam
+{
+    Tile::TileSystem::SP tileSys{};
+    Render::EntitySysBVH::SP bvh{};
+    Render::EntityCompStorage::SP storage{};
+};
 struct EventManager
 {
     DragEvent            dragEvt{};
     std::vector<int32_t> queryEIds{};
-    void                 upateMouseParam(Tile::TileSystem::SP tileSys, const Render::Draw::DrawContext& rctx, Render::EntitySysBVH::SP bvh, Render::EntityCompStorage::SP storage, const System::UIMouseParam& param);
+    void                 upateMouseParam(const Render::Draw::DrawContext& rctx, const System::UIMouseParam& param, const TargetSysParam& sys);
     
 };
 } // namespace Mouse

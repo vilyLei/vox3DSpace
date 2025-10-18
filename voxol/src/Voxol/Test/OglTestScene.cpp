@@ -138,7 +138,7 @@ void OglTestScene::setMouseParams(const System::UIMouseParam& param)
     //auto& ctx    = drawCtx;
     //auto& drawParam = ctx.drawParam;
     //Math::Vec2 wpv = drawParam.invViewMat.mapPoint({param.x, param.y});
-    mouseEvtMana.upateMouseParam(tileSys, drawCtx, etRenderSys.bvh, etRenderSys.compStorage, param);
+    mouseEvtMana.upateMouseParam(drawCtx, param, {tileSys, etRenderSys.bvh, etRenderSys.compStorage});
 }
 void  OglTestScene::initVoassScene(){
 
