@@ -208,6 +208,10 @@ void TileScene::run(const Render::Draw::DrawContext& ctx)
     auto         toBiggerFlag = viewGridLevel < lv;
     preZoom                   = ctx.zoom;
 
+    if (viewGridLevel != lv)
+    {
+        printf("XXXXX Curr lv: %d, toBiggerFlag: %s\n", lv, toBiggerFlag ? "true" : "false");
+    }
 
     if (createFlag || adjustFlag || toBiggerFlag)
     {
@@ -231,7 +235,7 @@ void TileScene::run(const Render::Draw::DrawContext& ctx)
                 auto flag = createGrid(pos, ctx);
             }
         }
-        printf("append tot: %d\n", tot);
+        //printf("append tot: %d\n", tot);
     }
     viewGridLevel = lv;
 
