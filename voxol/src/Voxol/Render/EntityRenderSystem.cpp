@@ -21,25 +21,8 @@ void EntityRenderSystem::initalize()
     {
         entities[i].id = i;
     }
-    //for (auto i = 0; i < shaderingEntities.size(); ++i)
-    //for (auto i = 0; i < total; ++i)
-    //{
-    //    shaderingEntitiesPool[i].id = i;
-    //}
-
-    //for (auto i = 0; i < shaderingDescTotal; ++i)
-    //{
-    //    shaderingDescPool[i].id = i;
-    //}
-    //auto index = 0;
-    //shaderingDescPool.forEach([&](auto& e) {
-    //    e.id = index++;
-    //});
 
     shaderingEntitiesPool.forEach([&](auto& e, int32_t index) {
-        e.id = index;
-    });
-    shaderingDescPool.forEach([&](auto& e, int32_t index) {
         e.id = index;
     });
 
@@ -80,50 +63,30 @@ void EntityRenderSystem::initalize()
     /// multi-circles
     entities[3].shadingId = 3;
 
-    // update bounds
-    auto boundsTotal = 0;
+
+    Math::Bounds                           bounds{};
+    std::unordered_map<uint32_t, uint32_t> map{};
     for (auto& et : entities)
     {
         if (et.shadingId < 0)
         {
             continue;
         }
-        boundsTotal++;
-    }
-
-    bvhItems.resize(boundsTotal);
-    auto boundsIndex = 0;
-
-    std::unordered_map<uint32_t, uint32_t> map{};
-    for (auto& et : entities)
-    {
-        if (et.shadingId < 0 || map.contains(et.boundsId))
-        {
-            continue;
-        }
-        map[boundsIndex] = 1;
 
         auto& shadingEt = shaderingEntitiesPool[et.shadingId];
         auto& shdDesc   = shaderingDescPool[shadingEt.shadingDescId];
         auto& trans     = shdDesc.transform;
 
-        auto& b = bvhItems[boundsIndex];
-        b.bounds.setXYWH(trans.x, trans.y, trans.sx, trans.sy);
-        b.objectId = et.id;
-        et.boundsId = boundsIndex;
+        bounds.setXYWH(trans.x, trans.y, trans.sx, trans.sy);
 
-        bvh.addItem(et.id, b.bounds);
-
-        boundsIndex++;
+        bvh.addItem(et.id, bounds);
     }
-    //bvh.build(bvhItems);
     bvh.build();
 }
 
 int EntityRenderSystem::drawQuery(const Math::VxRect& wbounds, const Math::Mat33& vpM)
 {
     queriedEIds.clear();
-    //bvh.query(wbounds, queriedEIds);
     bvh.queryBounds(wbounds, queriedEIds);
     return static_cast<int>(queriedEIds.size());
 }
@@ -135,7 +98,7 @@ void EntityRenderSystem::render(const Draw::DrawContext& rctx, const Math::Mat33
     for (auto i = 0; i < total; i++)
     {
         auto& et = entities[queriedEIds[i]];
-        if (et.boundsId < 0 || et.shadingId < 0 || !et.visible)
+        if (et.shadingId < 0 || !et.visible)
             continue;
         drawUnit(et, rctx, vpM, drawingUnits);
     }
@@ -147,7 +110,7 @@ void EntityRenderSystem::render(const Draw::DrawContext& rctx, const Math::Mat33
     for (auto i = 0; i < tot; i++)
     {
         auto& et = ets[i];
-        if (et.boundsId < 0 || et.shadingId < 0 || !et.visible)
+        if (et.shadingId < 0 || !et.visible)
             continue;
         drawUnit(et, rctx, vpM, drawingUnits);
     }

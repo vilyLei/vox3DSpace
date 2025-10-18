@@ -29,8 +29,6 @@ public:
     void       render(const Draw::DrawContext& rctx, const Math::Mat33& vpM, std::vector<Gpu::DrawingUnit> drawingUnits);
     void       clear();
 
-    //std::vector<BVHItem2D> bvhItems;
-    std::vector<V1::BVH2D::Item> bvhItems;
     V1::BVH2D                    bvh{};
     EntityCompStorage            storage{};
 

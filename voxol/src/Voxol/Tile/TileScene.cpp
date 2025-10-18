@@ -211,19 +211,6 @@ void TileScene::run(const Render::Draw::DrawContext& ctx)
 
     if (createFlag || adjustFlag || toBiggerFlag)
     {
-        //for (auto&& it = viewUnitIndexMap.begin(); it != viewUnitIndexMap.end();)
-        //{
-        //    auto& node = it->second;
-        //    if (gr.contains(node.pos))
-        //    {
-        //        ++it;
-        //    }
-        //    else
-        //    {
-        //        releaseGrid(node);
-        //        it = viewUnitIndexMap.erase(it);
-        //    }
-        //}
 
         testFreeViewGrids();
 
