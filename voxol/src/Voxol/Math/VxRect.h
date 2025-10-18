@@ -37,6 +37,11 @@ public:
     };
 
 public:
+    constexpr VxRect() = default;
+    constexpr VxRect(float x, float y, float right, float bottom) :
+        fX(x), fY(y), fRX(right), fBY{bottom} {}
+
+public:
     static VxRect makeWH(float pw, float ph);
     static VxRect makeXYWH(float px, float py, float pw, float ph);
     static VxRect makeLTRB(float pl, float pt, float pr, float pb);

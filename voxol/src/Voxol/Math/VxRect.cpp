@@ -8,13 +8,13 @@ VxRect VxRect::makeWH(float pw, float ph)
 {
     pw = pw > 0 ? pw : 0;
     ph = ph > 0 ? ph : 0;
-    return VxRect{0, 0, pw, ph};
-}
+    return VxRect(0, 0, pw, ph);
+};
 VxRect VxRect::makeXYWH(float px, float py, float pw, float ph)
 {
     pw = pw > 0 ? pw : 0;
     ph = ph > 0 ? ph : 0;
-    return VxRect{px, py, px + pw, py + ph};
+    return {px, py, px + pw, py + ph};
 }
 VxRect VxRect::makeLTRB(float pl, float pt, float pr, float pb)
 {
