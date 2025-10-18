@@ -235,6 +235,8 @@ void TileScene::run(const Render::Draw::DrawContext& ctx)
     }
     viewGridLevel = lv;
 
+    updateDirtyGrid(ctx);
+
     for (auto&& it = viewUnitIndexMap.begin(); it != viewUnitIndexMap.end(); it++)
     {
         auto& node = it->second;
