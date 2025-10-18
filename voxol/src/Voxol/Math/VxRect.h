@@ -33,11 +33,12 @@ public:
             float fRight;
             float fBottom;
         };
-        float data[4]{};
+        float data[4];
     };
 
 public:
-    constexpr VxRect() = default;
+    constexpr VxRect() noexcept :
+        data{} {}
     constexpr VxRect(float x, float y, float right, float bottom) :
         fX(x), fY(y), fRX(right), fBY{bottom} {}
 

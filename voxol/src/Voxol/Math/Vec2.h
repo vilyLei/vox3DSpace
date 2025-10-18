@@ -22,9 +22,20 @@ namespace Voxol::Math
 
 struct Vec2
 {
-    float x{}, y{};
-
-    constexpr Vec2() = default;
+    union
+    {
+        struct
+        {
+            float x, y;
+        };
+        struct
+        {
+            float width, height;
+        };
+        float data[2];
+    };
+    constexpr Vec2() noexcept :
+        data{} {}
     constexpr Vec2(float x_, float y_) :
         x(x_), y(y_) {}
 
