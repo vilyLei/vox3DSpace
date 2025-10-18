@@ -120,7 +120,7 @@ int EntityRenderSystem::drawQuery(const Math::VxRect& wbounds, int phase)
     }
     return static_cast<int>(queriedEIds.size());
 }
-void EntityRenderSystem::render(const Draw::DrawContext& rctx, const Math::Mat33& vpM, std::vector<Gpu::DrawingUnit> drawingUnits, const Math::Bounds& wbounds)
+void EntityRenderSystem::render(const Draw::DrawContext& rctx, const Math::Mat33& vpM, const Math::Bounds& wbounds)
 {
     if (!compStorage)
         return;
@@ -138,7 +138,7 @@ void EntityRenderSystem::render(const Draw::DrawContext& rctx, const Math::Mat33
         auto& et = entities[queriedEIds[i]];
         if (et.shadingId < 0 || !et.visible)
             continue;
-        auto flag = drawUnit(et, rctx, vpM, drawingUnits, wbounds);
+        auto flag = drawUnit(et, vpM, wbounds);
         drawTotal += flag ? 1 : 0;
     }
     if (drawTotal < total)
@@ -155,11 +155,11 @@ void EntityRenderSystem::render(const Draw::DrawContext& rctx, const Math::Mat33
         auto& et = ets[i];
         if (et.shadingId < 0 || !et.visible)
             continue;
-        drawUnit(et, rctx, vpM, drawingUnits, wbounds);
+        drawUnit(et, vpM, wbounds);
     }
 }
 
-bool EntityRenderSystem::drawUnit(const Component::UnitEntity& entity, const Draw::DrawContext& rctx, const Math::Mat33& vpM, std::vector<Gpu::DrawingUnit> drawingUnits, const Math::Bounds& wbounds)
+bool EntityRenderSystem::drawUnit(const Component::UnitEntity& entity, const Math::Mat33& vpM, const Math::Bounds& wbounds)
 {
     if (!compStorage)
         return false;

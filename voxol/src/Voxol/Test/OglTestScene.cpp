@@ -13,7 +13,7 @@ void OglTestScene::initScene()
         tileSys.initalize();
         etRenderSys.initalize();
         auto drawCall = [this](const Math::VxRect& bounds, const Math::Mat33& vpMat) {
-            etRenderSys.render(drawCtx, vpMat, sdfDrawUnits, bounds);
+            etRenderSys.render(drawCtx, vpMat, bounds);
         };
         auto queryCall = [this](const Math::VxRect& bounds, int phase) -> int {
             return etRenderSys.drawQuery(bounds, phase);
@@ -201,24 +201,14 @@ void OglTestScene::renderVoass(const Math::Mat33& vpMat)
     auto& ctx    = drawCtx;
     auto& params   = ctx.drawParam;
     auto& viewport = ctx.clearParam.viewport;
-
+    /*
     auto drawCall = [this](const Math::VxRect& bounds, const Math::Mat33& vpMat) {
-        etRenderSys.render(drawCtx, vpMat, sdfDrawUnits, bounds);
+        etRenderSys.render(drawCtx, vpMat, bounds);
     };
     auto queryCall = [this](const Math::VxRect& bounds, int phase) -> int {
         return etRenderSys.drawQuery(bounds, phase);
     };
 
-    /*
-    auto drawCall = [this](const Math::VxRect& bounds, const Math::Mat33& vpMat) {
-        renderSdfUnits(vpMat);
-    };
-    auto queryCall = [this](const Math::VxRect& bounds, const Math::Mat33& vpMat) -> int {
-        return 1;
-    };
-    //*/
-    //drawCall({} , vpMat);
-    //return;
     ctx.drawCall  = drawCall;
     ctx.drawQuery = queryCall;
     tileSys.run(ctx);
@@ -243,7 +233,7 @@ void OglTestScene::renderVoass(const Math::Mat33& vpMat)
     boundsUnit.mvp = vpMat;
     boundsUnit.draw();
     return;
-
+    //*/
     mFbo.init(GL_ZERO);
 
     auto useTexSampleDrawig = true;
