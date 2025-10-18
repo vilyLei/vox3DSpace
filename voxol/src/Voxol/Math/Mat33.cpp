@@ -4,47 +4,64 @@
 
 namespace Voxol::Math
 {
-Mat33::Mat33()
-{
-    identity();
-}
+//Mat33::Mat33()
+//{
+//    identity();
+//}
 
-Mat33::Mat33(std::initializer_list<float> list)
-{
-    int i = 0;
-    for (float v : list)
-    {
-        if (i < 9) data[i++] = v;
-    }
-}
+//Mat33::Mat33(std::initializer_list<float> list)
+//{
+//    int i = 0;
+//    for (float v : list)
+//    {
+//        if (i < 9) data[i++] = v;
+//    }
+//}
+//
+//Mat33::Mat33(float tx, float ty, float sx, float sy, float radians)
+//{
+//    setTo(tx, ty, sx, sy, radians);
+//}
 
-Mat33::Mat33(float tx, float ty, float sx, float sy, float radians)
-{
-    setTo(tx, ty, sx, sy, radians);
-}
+constexpr Mat33::Mat33() noexcept
+    :
+    data{1, 0, 0,
+         0, 1, 0,
+         0, 0, 1} {}
+
+constexpr Mat33::Mat33(float a00, float a01, float a02, float a10, float a11, float a12, float a20, float a21, float a22) noexcept
+    :
+    data{a00, a01, a02, a10, a11, a12, a20, a21, a22} {}
 
 void Mat33::identity()
 {
-    data = {
-        1, 0, 0,
-        0, 1, 0,
-        0, 0, 1};
+    float tdata[] = {1, 0, 0,
+                        0, 1, 0,
+                        0, 0, 1};
+    std::copy(std::begin(tdata), std::end(tdata), data);
+}
+
+
+Mat33 Mat33::makeWithTransScaleRot(float tx, float ty, float sx, float sy, float rad) {
+    Mat33 mat;
+    mat.setTo(tx, ty, sx, sy, rad);
+    return mat;
 }
 
 Mat33 Mat33::makeTranslate(float tx, float ty)
 {
-    return {
+    return Mat33(
         1, 0, 0,
         0, 1, 0,
-        tx, ty, 1};
+        tx, ty, 1);
 }
 
 Mat33 Mat33::makeScale(float sx, float sy)
 {
-    return {
+    return Mat33(
         sx, 0, 0,
         0, sy, 0,
-        0, 0, 1};
+        0, 0, 1);
 }
 
 Mat33 Mat33::makeRotate(float rotRadians)
@@ -68,10 +85,11 @@ void Mat33::setTo(float tx, float ty, float sx, float sy, float rotRadians)
         s = sinf(rotRadians);
     }
 
-    data = {
+    float tdata[9] = {
         c * sx, s * sx, 0,
         -s * sy, c * sy, 0,
         tx, ty, 1};
+    std::copy(std::begin(tdata), std::end(tdata), data);
 }
 
 void Mat33::setTranslateAndScale(float tx, float ty, float sx, float sy)
@@ -115,10 +133,11 @@ Vec2 Mat33::getScaleXY() const
 }
 void Mat33::ortho(float width, float height)
 {
-    data = {
+    float tdata[9] = {
         2.0f / width, 0.0f, 0.0f,
         0.0f, -2.0f / height, 0.0f,
         -1.0f, 1.0f, 1.0f};
+    std::copy(std::begin(tdata), std::end(tdata), data);
 }
 
 
@@ -133,8 +152,8 @@ void Mat33::prepend(const Mat33& lhs)
 {
     // 下面用宏处理，是为了在不同的环境下平衡分支预测和cache line命中的效率
 
-    auto       sfs = data.data();
-    const auto lfs = lhs.data.data();
+    auto       sfs = data;
+    const auto lfs = lhs.data;
 
 #ifdef __EMSCRIPTEN__
     float          row[3];
@@ -161,8 +180,8 @@ void Mat33::prepend(const Mat33& lhs)
 // 列主序矩阵的后乘(右乘), 性能略弱
 void Mat33::append(const Mat33& rhs)
 {
-    float*       sfs = data.data();
-    const float* rfs = rhs.data.data();
+    float*       sfs = data;
+    const float* rfs = rhs.data;
     float        result[9];
 
     for (int i = 0; i < 3; ++i)
@@ -314,10 +333,10 @@ bool Mat33::inverse()
 }
 
 
-const float* Mat33::ptr() const
-{
-    return data.data();
-}
+//const float* Mat33::ptr() const
+//{
+//    return data;
+//}
 void Mat33::print() const
 {
     printf("{\n");
@@ -345,7 +364,8 @@ void makeRotationMat33WithPivot(Mat33& transform, Vec2 localPivot, Vec2 fixCV, f
 }
 Mat33 makeRotationMat33WithPivot(Vec2 localPivot, Vec2 fixCV, float scaleX, float scaleY, float rotation)
 {
-    Mat33  mat(scaleX - localPivot.x, scaleY - localPivot.y, scaleX, scaleY, rotation);
+    Mat33  mat;
+    mat.setTo(scaleX - localPivot.x, scaleY - localPivot.y, scaleX, scaleY, rotation);
     auto&& cv   = mat.mapPoint({localPivot.x / scaleX, localPivot.y / scaleY});
     auto&  data = mat.data;
     data[6] += fixCV.x - cv.x;
@@ -354,7 +374,8 @@ Mat33 makeRotationMat33WithPivot(Vec2 localPivot, Vec2 fixCV, float scaleX, floa
 }
 Mat33 makeRotationMat33WithCenter(Vec2 fixCV, float scaleX, float scaleY, float rotation)
 {
-    Mat33  mat(scaleX * -0.5f, scaleY * -0.5f, scaleX, scaleY, rotation);
+    Mat33  mat;
+    mat.setTo(scaleX * -0.5f, scaleY * -0.5f, scaleX, scaleY, rotation);
     auto&& tempCV = mat.mapPoint({0.5f, 0.5f});
     auto&  data   = mat.data;
     data[6] += fixCV.x - tempCV.x;

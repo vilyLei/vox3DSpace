@@ -18,18 +18,39 @@ namespace Voxol::Math
 class Mat33
 {
 public:
-    std::array<float, 9> data;
+    union
+    {
+        float data[9];
+        struct
+        {
+            float m00, m01, m02;
+            float m10, m11, m12;
+            float m20, m21, m22;
+        };
+    };
 
-    Mat33();
-    Mat33(std::initializer_list<float> list);
-    Mat33(float tx, float ty, float sx = 1.0f, float sy = 1.0f, float rotRadians = 0.0f);
+    constexpr Mat33() noexcept;
+    constexpr Mat33(float a00, float a01, float a02, float a10, float a11, float a12, float a20, float a21, float a22) noexcept;
 
-    void identity();
+    static constexpr Mat33 makeIdentity() noexcept
+    {
+        return {1, 0, 0,
+                0, 1, 0,
+                0, 0, 1};
+    }
+    static constexpr Mat33 makeZero() noexcept
+    {
+        return {0, 0, 0,
+                0, 0, 0,
+                0, 0, 0};
+    }
 
+    static Mat33 makeWithTransScaleRot(float tx, float ty, float sx = 1, float sy = 1, float rad = 0);
     static Mat33 makeTranslate(float tx, float ty);
     static Mat33 makeScale(float sx = 1.0f, float sy = 1.0f);
     static Mat33 makeRotate(float radians = 0.0f);
 
+    void identity();
     void ortho(float width, float height);
 
     void setTo(float tx, float ty, float sx = 1.0f, float sy = 1.0f, float rotRadians = 0.0f);
@@ -51,7 +72,19 @@ public:
     Mat33 multiplySimd(const Mat33& rhs) const;
 #endif
 
-    const float* ptr() const;
+    //const float* ptr() const;
+    constexpr const float* ptr() const noexcept { return data; }
+    constexpr float*       ptr() noexcept { return data; }
+    constexpr float&       operator()(size_t row, size_t col) noexcept
+    {
+        return data[row * 3 + col];
+    }
+    constexpr const float& operator()(size_t row, size_t col) const noexcept
+    {
+        return data[row * 3 + col];
+    }
+
+
     Vec2         mapPoint(const Vec2& point) const;
     Vec2         mapXY(float x, float y) const;
 
