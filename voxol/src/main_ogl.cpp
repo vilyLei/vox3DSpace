@@ -90,9 +90,9 @@ void calcProfileTest()
 
     using namespace Voxol::Math;
 
-    Mat33 mat0 = Mat33::makeWithTransScaleRot(10, 20, 33.5f, -8.2f, 0.3f);
-    Mat33 mat1 = Mat33::makeWithTransScaleRot(180, -120, 313.5f, 8.2f, 0.77f);
-    Mat33 mat2 = Mat33::makeWithTransScaleRot(90, -120, 313.5f, 8.2f, 10.77f);
+    auto&& mat0 = Mat33::makeWithTransScaleRot(10, 20, 33.5f, -8.2f, 0.3f);
+    auto&& mat1 = Mat33::makeWithTransScaleRot(180, -120, 313.5f, 8.2f, 0.77f);
+    auto&& mat2 = Mat33::makeWithTransScaleRot(90, -120, 313.5f, 8.2f, 10.77f);
     for (auto i = 0; i < tot; i++)
     {
         mat0.prepend(mat1);
