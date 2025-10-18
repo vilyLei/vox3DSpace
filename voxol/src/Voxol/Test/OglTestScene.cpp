@@ -159,7 +159,6 @@ void OglTestScene::renderVoass(const Math::Mat33& vpMat)
     auto& ctx    = drawCtx;
     auto& params   = ctx.drawParam;
     auto& viewport = ctx.clearParam.viewport;
-    //etRenderSys
 
     auto drawCall = [this](const Math::VxRect& bounds, const Math::Mat33& vpMat) {
         etRenderSys.render(drawCtx, vpMat, sdfDrawUnits);

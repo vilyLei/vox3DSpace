@@ -195,7 +195,7 @@ void TileScene::updateEmptyGrid(const Render::Draw::DrawContext& ctx)
         if (node.index < 0)
             continue;
 
-        printf("TileScene::updateEmptyGrid() node(r=%d,c=%d,phase=%d) A\n", node.pos.r, node.pos.c, node.phase);
+        //printf("TileScene::updateEmptyGrid() node(r=%d,c=%d,phase=%d) A\n", node.pos.r, node.pos.c, node.phase);
         auto&& xy   = RC::rcToXY(node.pos, currGridSize);
         auto&& vb   = Math::VxRect::makeXYWH(xy.x, xy.y, currGridSize, currGridSize);
 
@@ -208,7 +208,7 @@ void TileScene::updateEmptyGrid(const Render::Draw::DrawContext& ctx)
             texPool.release(unit.getTextureAt(0));
             viewUnitIndexMap.erase(node.pos.value);
         }
-        printf("TileScene::updateEmptyGrid() node(r=%d,c=%d,phase=%d) B\n", node.pos.r, node.pos.c, node.phase);
+        //printf("TileScene::updateEmptyGrid() node(r=%d,c=%d,phase=%d) B\n", node.pos.r, node.pos.c, node.phase);
     }
     emptyUnitIndexMap.clear();
 }
