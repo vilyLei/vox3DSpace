@@ -27,9 +27,13 @@ VxRect VxRect::makeLTRB(float pl, float pt, float pr, float pb)
     return VxRect{pl, pt, pl + pw, pt + ph};
 }
 
-void VxRect::setXY(float px, float py)
+void VxRect::moveTo(float px, float py)
 {
-    setXYWH(px, py, width(), height());
+    //setXYWH(px, py, width(), height());
+    fRX += px - fX;
+    fBY += py - fY;
+    fX = px;
+    fY = py;
 }
 
 void VxRect::setWH(float pw, float ph)

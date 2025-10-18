@@ -51,7 +51,7 @@ void RenderNodeScene::initialize()
             desc.color      = 0xff0000aa | ((index % 256) << 16);
             desc.color      = desc.color | (((i * j * 2) % 256) << 16);
             // printf("node.color: %X\n", node.color);
-            node.bounds.setXY(px, py);
+            node.bounds.moveTo(px, py);
             node.bounds.setSize(rsize, rsize);
             desc.bounds = node.bounds;
             desc.mroid = 1;

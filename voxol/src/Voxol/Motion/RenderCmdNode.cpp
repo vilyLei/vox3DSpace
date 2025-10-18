@@ -92,7 +92,7 @@ void DrawingCmdDesc::update()
 
 void DrawCmdTestNode::setXY(float x, float y)
 {
-    drcDesc.bounds.setXY(x, y);
+    drcDesc.bounds.moveTo(x, y);
 }
 void DrawCmdTestNode::setSize(float w, float h)
 {
