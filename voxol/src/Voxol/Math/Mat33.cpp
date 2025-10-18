@@ -4,43 +4,6 @@
 
 namespace Voxol::Math
 {
-//Mat33::Mat33()
-//{
-//    identity();
-//}
-
-//Mat33::Mat33(std::initializer_list<float> list)
-//{
-//    int i = 0;
-//    for (float v : list)
-//    {
-//        if (i < 9) data[i++] = v;
-//    }
-//}
-//
-//Mat33::Mat33(float tx, float ty, float sx, float sy, float radians)
-//{
-//    setTo(tx, ty, sx, sy, radians);
-//}
-
-constexpr Mat33::Mat33() noexcept
-    :
-    data{1, 0, 0,
-         0, 1, 0,
-         0, 0, 1} {}
-
-constexpr Mat33::Mat33(float a00, float a01, float a02, float a10, float a11, float a12, float a20, float a21, float a22) noexcept
-    :
-    data{a00, a01, a02, a10, a11, a12, a20, a21, a22} {}
-
-void Mat33::identity()
-{
-    float tdata[] = {1, 0, 0,
-                        0, 1, 0,
-                        0, 0, 1};
-    std::copy(std::begin(tdata), std::end(tdata), data);
-}
-
 
 Mat33 Mat33::makeWithTransScaleRot(float tx, float ty, float sx, float sy, float rad) {
     Mat33 mat;
@@ -72,6 +35,16 @@ Mat33 Mat33::makeRotate(float rotRadians)
         c, s, 0,
         -s, c, 0,
         0, 0, 1};
+}
+
+
+
+void Mat33::identity()
+{
+    float tdata[] = {1, 0, 0,
+                     0, 1, 0,
+                     0, 0, 1};
+    std::copy(std::begin(tdata), std::end(tdata), data);
 }
 
 

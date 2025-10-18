@@ -29,8 +29,14 @@ public:
         };
     };
 
-    constexpr Mat33() noexcept;
-    constexpr Mat33(float a00, float a01, float a02, float a10, float a11, float a12, float a20, float a21, float a22) noexcept;
+    constexpr Mat33() noexcept
+        :
+        data{1, 0, 0,
+             0, 1, 0,
+             0, 0, 1} {}
+    constexpr Mat33(float a00, float a01, float a02, float a10, float a11, float a12, float a20, float a21, float a22) noexcept
+        :
+        data{a00, a01, a02, a10, a11, a12, a20, a21, a22} {}
 
     static constexpr Mat33 makeIdentity() noexcept
     {
