@@ -139,6 +139,7 @@ struct IndexNode
 {
     RC::Pos pos{};
     int32_t index = -1;
+    int     phase = 0;
     bool    dirty  = false;
 };
 }

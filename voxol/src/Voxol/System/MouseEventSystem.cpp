@@ -59,9 +59,13 @@ void EventManager::upateMouseParam(Tile::TileSystem& tileSys, const Render::Draw
                 pv.y += dv.y;
                 storage.setEntityXYAt(pv, id);
                 auto b = bvh.getBoundsAt(id);
-                tileSys.addDirtyBounds(b);
+
+                // ÒÆ³ö
+                tileSys.addDirtyBounds(b, 0);
                 b.moveTo(pv.x, pv.y);
-                tileSys.addDirtyBounds(b);
+                // ÒÆÈë
+                tileSys.addDirtyBounds(b, 1);
+
                 bvh.updateItemBoundsByObjectId(id, b);
                 bvh.updateDirty();
             }

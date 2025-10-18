@@ -26,16 +26,19 @@ void TileScene::initalize()
     }
 }
 
-void TileScene::addDirtyBounds(const Math::Bounds& bounds)
+void TileScene::addDirtyBounds(const Math::Bounds& bounds, int phase)
 {
+    RC::Pos pos{};
     auto gr = RC::xyRectToRCRect(bounds, currGridSize);
     auto lv = viewGridLevel;
     for (auto r = gr.minR; r <= gr.maxR; r++)
     {
         for (auto c = gr.minC; c <= gr.maxC; c++)
         {
-            RC::Pos pos{r, c, lv};
-            dirtyUnitIndexMap[pos.value] = {pos, -1};
+            pos.r                        = r;
+            pos.c                        = c;
+            pos.level                    = lv;
+            dirtyUnitIndexMap[pos.value] = {pos, -1, phase};
         }
     }
     gridModifyDirty = true;
@@ -107,22 +110,24 @@ void TileScene::testFreeViewGrids()
     }
 }
 
-bool TileScene::updateGrid(const RC::Pos& pos, const Render::Draw::DrawContext& ctx)
+bool TileScene::updateGrid(const RC::Pos& pos, const Render::Draw::DrawContext& ctx, int phase)
 {
     auto&& node = viewUnitIndexMap[pos.value];
     auto&& xy   = RC::rcToXY(pos, currGridSize);
     auto&& vb   = Math::VxRect::makeXYWH(xy.x, xy.y, currGridSize, currGridSize);
     auto&  grid = gridUnits[node.index];
-    if (ctx.drawQuery(vb, {}))
+    if (ctx.drawQuery(vb, phase))
     {
+        printf("TileScene::updateGrid() build content node(r=%d,c=%d) A, phase: %d\n", node.pos.r, node.pos.c, phase);
         grid.setRCAndAreaSize(pos, currGridSize);
         buildGridContent(grid, ctx);
+        emptyUnitIndexMap[node.pos.value] = node;
     }
     else
     {
         unitIndexPool.release(node.index);
         auto& unit = grid.drawUnit;
-        printf("erase a grid node(r=%d, c=%d, level=%d) B.\n", node.pos.r, node.pos.c, node.pos.level);
+        printf("TileScene::updateGrid() release node(r=%d, c=%d, level=%d) B, phase: %d\n", node.pos.r, node.pos.c, phase);
         texPool.release(unit.getTextureAt(0));
         viewUnitIndexMap.erase(pos.value);
     }
@@ -132,7 +137,7 @@ bool TileScene::createGrid(const RC::Pos& pos, const Render::Draw::DrawContext& 
 {
     auto&& xy = RC::rcToXY(pos, currGridSize);
     auto&& vb = Math::VxRect::makeXYWH(xy.x, xy.y, currGridSize, currGridSize);
-    if (!ctx.drawQuery(vb, {}))
+    if (!ctx.drawQuery(vb, 2))
     {
         return false;
     }
@@ -158,12 +163,15 @@ void TileScene::updateDirtyGrid(const Render::Draw::DrawContext& ctx)
     for (auto&& it = dirtyUnitIndexMap.begin(); it != dirtyUnitIndexMap.end(); ++it)
     {
         auto& node = it->second;
-        if (!currRCRect.contains(node.pos))
-            continue;
+        //printf("TileScene::updateDirtyGrid() node(r=%d, c=%d) ...\n", node.pos.r, node.pos.c);
+        //if (!currRCRect.contains(node.pos)) {
+        //    continue;
+        //}
 
+        printf("TileScene::updateDirtyGrid() node(r=%d,c=%d,phase=%d)\n", node.pos.r, node.pos.c, node.phase);
         if (viewUnitIndexMap.contains(node.pos.value))
         {
-            updateGrid(node.pos, ctx);
+            updateGrid(node.pos, ctx, node.phase);
         }
         else
         {
@@ -171,6 +179,50 @@ void TileScene::updateDirtyGrid(const Render::Draw::DrawContext& ctx)
         }
     }
     dirtyUnitIndexMap.clear();
+}
+
+void TileScene::updateEmptyGrid(const Render::Draw::DrawContext& ctx)
+{
+    if (emptyUnitIndexMap.empty())
+        return;
+
+    for (auto&& it = emptyUnitIndexMap.begin(); it != emptyUnitIndexMap.end(); ++it)
+    {
+        auto& node = it->second;
+        if (node.index < 0)
+            continue;
+        //printf("TileScene::updateEmptyGrid() node(r=%d, c=%d) ...\n", node.pos.r, node.pos.c);
+        //if (!currRCRect.contains(node.pos)) {
+        //    continue;
+        //}
+
+        printf("TileScene::updateEmptyGrid() node(r=%d,c=%d,phase=%d)\n", node.pos.r, node.pos.c, node.phase);
+        //if (viewUnitIndexMap.contains(node.pos.value))
+        //{
+        //    //updateGrid(node.pos, ctx, node.phase);
+        //}
+        //else
+        //{
+        //    //createGrid(node.pos, ctx);
+        //}
+        auto&& xy   = RC::rcToXY(node.pos, currGridSize);
+        auto&& vb   = Math::VxRect::makeXYWH(xy.x, xy.y, currGridSize, currGridSize);
+
+        auto&  grid = gridUnits[node.index];
+        if (!ctx.drawQuery(vb, 0))
+        {
+            //printf("TileScene::updateGrid() build content node(r=%d,c=%d) A, phase: %d\n", node.pos.r, node.pos.c, phase);
+            //grid.setRCAndAreaSize(pos, currGridSize);
+            //buildGridContent(grid, ctx);
+            //emptyUnitIndexMap[node.pos.value] = node;
+            unitIndexPool.release(node.index);
+            auto& unit = grid.drawUnit;
+            printf("TileScene::updateEmptyGrid() release node(r=%d, c=%d, level=%d) B, phase: %d\n", node.pos.r, node.pos.c, 0);
+            texPool.release(unit.getTextureAt(0));
+            viewUnitIndexMap.erase(node.pos.value);
+        }
+    }
+    emptyUnitIndexMap.clear();
 }
 void TileScene::run(const Render::Draw::DrawContext& ctx)
 {
@@ -216,6 +268,8 @@ void TileScene::run(const Render::Draw::DrawContext& ctx)
         printf("XXXXX Curr lv: %d, toBiggerFlag: %s\n", lv, toBiggerFlag ? "true" : "false");
     }
 
+    updateEmptyGrid( ctx );
+
     if (createFlag || adjustFlag || toBiggerFlag)
     {
 
@@ -231,7 +285,7 @@ void TileScene::run(const Render::Draw::DrawContext& ctx)
                 {
                     if (toBiggerFlag)
                     {
-                        updateGrid(pos, ctx);
+                        updateGrid(pos, ctx, 2);
                     }
                     continue;
                 }

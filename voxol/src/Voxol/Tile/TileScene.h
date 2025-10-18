@@ -24,17 +24,20 @@ public:
 
 public:
     void initalize();
-    void addDirtyBounds(const Math::Bounds& bounds);
+
+    /// phase: 0 exit, 1 enter, 
+    void addDirtyBounds(const Math::Bounds& bounds, int phase);
     void run(const Render::Draw::DrawContext& ctx);
 
 private:
     bool releaseGrid(const Grid::IndexNode& node);
     bool releaseGrid(const RC::Pos& pos);
-    bool updateGrid(const RC::Pos& pos, const Render::Draw::DrawContext& ctx);
+    bool updateGrid(const RC::Pos& pos, const Render::Draw::DrawContext& ctx, int phase);
     bool createGrid(const RC::Pos& pos, const Render::Draw::DrawContext& ctx);
     void buildGridContent(Grid::Unit& unit, const Render::Draw::DrawContext& ctx);
     void testFreeViewGrids();
     void updateDirtyGrid(const Render::Draw::DrawContext& ctx);
+    void updateEmptyGrid(const Render::Draw::DrawContext& ctx);
 
     Render::OglFbo mFbo{};
 
@@ -53,6 +56,7 @@ private:
     /// all units in the view scope
     std::unordered_map<int64_t, Grid::IndexNode> viewUnitIndexMap{};
     std::unordered_map<int64_t, Grid::IndexNode> dirtyUnitIndexMap{};
+    std::unordered_map<int64_t, Grid::IndexNode> emptyUnitIndexMap{};
 
     Grid::UnitTexPool                            texPool{};
     Grid::UnitIndexPool                          unitIndexPool{};

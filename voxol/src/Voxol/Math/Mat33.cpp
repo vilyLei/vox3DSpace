@@ -37,8 +37,6 @@ Mat33 Mat33::makeRotate(float rotRadians)
         0, 0, 1};
 }
 
-
-
 void Mat33::identity()
 {
     float tdata[] = {1, 0, 0,
@@ -46,7 +44,6 @@ void Mat33::identity()
                      0, 0, 1};
     std::copy(std::begin(tdata), std::end(tdata), data);
 }
-
 
 void Mat33::setTo(float tx, float ty, float sx, float sy, float rotRadians)
 {

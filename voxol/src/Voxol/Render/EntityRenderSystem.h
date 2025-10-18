@@ -24,7 +24,7 @@ public:
 
 public:
     void initalize();
-    int  drawQuery(const Math::VxRect& bounds, const Math::Mat33& vpM);
+    int  drawQuery(const Math::VxRect& bounds, int phase);
     void render(const Draw::DrawContext& rctx, const Math::Mat33& vpM, std::vector<Gpu::DrawingUnit> drawingUnits);
     void clear();
 

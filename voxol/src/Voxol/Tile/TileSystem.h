@@ -13,7 +13,7 @@ public:
 
 public:
     void initalize();
-    void addDirtyBounds(const Math::Bounds& bounds);
+    void addDirtyBounds(const Math::Bounds& bounds, int phase);
     void run(const Render::Draw::DrawContext& ctx);
 
 private:
