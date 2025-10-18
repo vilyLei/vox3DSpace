@@ -163,7 +163,7 @@ void TileScene::run(const Render::Draw::DrawContext& ctx)
     preZoom = ctx.zoom;
 
 
-    if (createFlag || adjustFlag)
+    if (createFlag || adjustFlag || toBiggerFlag)
     {
         gridModifyDirty = false;
         for (auto&& it = viewUnitIndexMap.begin(); it != viewUnitIndexMap.end();)
