@@ -1,4 +1,6 @@
 #include "OglGpuResUtils.h"
+#include <unordered_map>
+
 namespace Voxol::Render
 {
 namespace ResUtils
@@ -664,6 +666,33 @@ void buildSDFDrawUnit(DrawingUnit& unit, Voass::Render::Shader::SDFShapeType typ
     auto& vert = unit.vertex;
     vert.buildTexRes();
 }
+
+
+void buildSDFDrawUnitWithName(DrawingUnit& unit, const std::string& name, bool clip) {
+
+    static std::unordered_map<std::string, std::string> codesMap{};
+    if (!codesMap.contains(name))
+    {
+        codesMap[name] = Voass::Render::Shader::loadShaderCodeFromFile(name);
+    }
+
+    if (clip)
+    {
+        unit.colorClip = true;
+        unit.blendMode = 2;
+    }
+
+    auto& shader = unit.shader;
+    using namespace Voass::Render;
+
+    shader.program   = ResUtils::createSahderProgram(Shader::getSdfVertShdCode(), codesMap[name].c_str());
+    shader.matrixLoc = glGetUniformLocation(shader.program, "u_matrix");
+    shader.colorLoc  = glGetUniformLocation(shader.program, "u_color");
+
+    auto& vert = unit.vertex;
+    vert.buildTexRes();
+}
+
 void buildMSDFTexDrawUnit(DrawingUnit& unit, const RawData::Image2DBytesData& imgData, const RawData::MSDFGlyph& glyph)
 {
     auto& shader = unit.shader;

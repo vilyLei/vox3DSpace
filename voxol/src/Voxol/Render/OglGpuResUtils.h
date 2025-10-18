@@ -138,6 +138,7 @@ void buildTexDrawUnit(DrawingUnit& unit, const RawData::Image2DBytesData& imgDat
 void buildTexDrawUnitWithTex(DrawingUnit& unit, GLuint tex, bool uvFlipY = false);
 void buildTexDrawUnitFromTex(DrawingUnit& unit, GLuint tex, bool uvFlipY = false);
 void buildSDFDrawUnit(DrawingUnit& unit, Voass::Render::Shader::SDFShapeType type = Voass::Render::Shader::SDFShapeType::Circle, bool clip = false);
+void buildSDFDrawUnitWithName(DrawingUnit& unit, const std::string& name, bool clip = false);
 void buildMSDFTexDrawUnit(
     DrawingUnit&                     unit,
     const RawData::Image2DBytesData& imgData,

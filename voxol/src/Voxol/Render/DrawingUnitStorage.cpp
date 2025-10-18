@@ -64,12 +64,25 @@ void DrawingUnitStorage::initalize(int total)
     msdfText.buildText(text, msdfTextDrawUnits, {300, 100}, 50);
 }
 
+int32_t DrawingUnitStorage::getIdWithName(const std::string& name)
+{
+    if (!nameMap.contains(name))
+        return -1;
+    return nameMap[name];
+}
+
+Gpu::DrawingUnit& DrawingUnitStorage::getWithName(const std::string& name)
+{
+    auto id = nameMap[name];
+    return drawingUnits[id];
+}
 
 int32_t DrawingUnitStorage::getIdWithType(DrawingUnitType type) const
 {
     auto id = static_cast<int32_t>(type);
     return id;
 }
+
 bool DrawingUnitStorage::hasType(DrawingUnitType type) const
 {
     return true;
@@ -153,6 +166,13 @@ void DrawingUnitStorage::initVoassScene()
     Render::Gpu::buildSDFDrawUnit(rectUnit, Shader::SDFShapeType::Rect, colorClip);
 
     Render::Gpu::buildSDFDrawUnit(strokeShapeUnit, Shader::SDFShapeType::DefaultShape, colorClip);
+
+    auto        id       = 8;
+    std::string fileName = "ship01.glsl";
+    auto&       unit_8   = drawingUnits[id];
+    Render::Gpu::buildSDFDrawUnitWithName(unit_8, fileName, colorClip);
+    nameMap[fileName] = id;
+
 }
 
 } // namespace Voxol::Render

@@ -56,7 +56,10 @@ void EntityRenderSystem::initalize()
     shaderingDescPool[3].transform = {250, 50, 150, 150, 0};
 
     shaderingDescPool[4].color     = 0xff00aa76;
-    shaderingDescPool[4].transform = {999, 150, 150, 150, 0};
+    shaderingDescPool[4].transform = {600, 150, 200, 200, 0};
+
+    shaderingDescPool[5].color     = 0xff00aa76;
+    shaderingDescPool[5].transform = {509, 350, 200, 200, 0};
 
     /// circle
     shaderingEntitiesPool[0].drawUnitId    = drawingStorage->getIdWithType(DrawingUnitType::Circle);
@@ -75,9 +78,16 @@ void EntityRenderSystem::initalize()
     shaderingEntitiesPool[3].shadingDescId = 3;
         
     /// multi-circles
-    shaderingEntitiesPool[4].drawUnitId    = drawingStorage->getIdWithType(DrawingUnitType::MultiCircle);
+    //shaderingEntitiesPool[4].drawUnitId    = drawingStorage->getIdWithType(DrawingUnitType::MultiCircle);
+    shaderingEntitiesPool[4].drawUnitId    = drawingStorage->getIdWithType(DrawingUnitType::strokeShape);
     shaderingEntitiesPool[4].shadingDescId = 4;
-        
+    auto drawUnitId_4                      = drawingStorage->getIdWithName("ship01.glsl");
+    shaderingEntitiesPool[5].drawUnitId    = drawUnitId_4;
+    shaderingEntitiesPool[5].shadingDescId = 5;
+
+    /// circle
+    //entities[0].shadingId = 4;
+
     /// circle
     entities[0].shadingId = 0;
     ///// circle
@@ -86,9 +96,10 @@ void EntityRenderSystem::initalize()
     entities[2].shadingId = 2;
     /// ring
     entities[3].shadingId = 3;
-
     /// multi-circles
     entities[4].shadingId = 4;
+    /// ship
+    entities[5].shadingId = 5;
 
 
     Math::Bounds                           bounds{};

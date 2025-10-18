@@ -9,21 +9,14 @@
 #include "OglText.h"
 
 #include <iostream>
+#include <unordered_map>
 #include <cmath>
 #include <vector>
+#include <string>
 
 namespace Voxol::Render
 {
-/*
-auto& rectUnit            = drawingUnits[0];
-auto& sdfCircleUnit       = drawingUnits[1];
-auto& sdfMultiCirclesUnit = drawingUnits[2];
-auto& sdfRingUnit         = drawingUnits[3];
-auto& sdfSectorUnit       = drawingUnits[4];
-auto& sdfRoundedRectUnit  = drawingUnits[5];
-auto& sdfTriangleUnit     = drawingUnits[6];
-auto& strokeShapeUnit     = drawingUnits[7];    
-*/
+
 enum class DrawingUnitType : short
 {
     Rect = 0,
@@ -53,6 +46,8 @@ public:
     void initalize(int total);
 
     int32_t getIdWithType(DrawingUnitType type) const;
+    int32_t           getIdWithName(const std::string& name);
+    Gpu::DrawingUnit& getWithName(const std::string& name);
 
     bool                    hasType(DrawingUnitType type) const;
 
@@ -79,6 +74,7 @@ private:
     std::vector<Gpu::DrawingUnit>   msdfTextDrawUnits{};
 
     std::vector<Gpu::DrawingUnit> drawingUnits;
+    std::unordered_map<std::string, int32_t> nameMap{};
 
 };
 
