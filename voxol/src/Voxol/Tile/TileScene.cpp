@@ -88,6 +88,25 @@ bool TileScene::releaseGrid(const RC::Pos& pos)
     texPool.release(unit.getTextureAt(0));
     return true;
 }
+
+void TileScene::testFreeViewGrids()
+{
+    for (auto&& it = viewUnitIndexMap.begin(); it != viewUnitIndexMap.end();)
+    {
+        auto& node = it->second;
+        if (currRCRect.contains(node.pos))
+        {
+            ++it;
+        }
+        else
+        {
+            printf("remove an element from the viewUnitIndexMap ...\n");
+            releaseGrid(node);
+            it = viewUnitIndexMap.erase(it);
+        }
+    }
+}
+
 bool TileScene::updateGrid(const RC::Pos& pos, const Render::Draw::DrawContext& ctx)
 {
     auto&& node = viewUnitIndexMap[pos.value];
@@ -130,22 +149,6 @@ bool TileScene::createGrid(const RC::Pos& pos, const Render::Draw::DrawContext& 
     buildGridContent(grid, ctx);
 }
 
-void TileScene::testFreeViewGrids()
-{
-    for (auto&& it = viewUnitIndexMap.begin(); it != viewUnitIndexMap.end();)
-    {
-        auto& node = it->second;
-        if (currRCRect.contains(node.pos))
-        {
-            ++it;
-        }
-        else
-        {
-            releaseGrid(node);
-            it = viewUnitIndexMap.erase(it);
-        }
-    }
-}
 void TileScene::updateDirtyGrid(const Render::Draw::DrawContext& ctx)
 {
 
@@ -253,13 +256,26 @@ void TileScene::run(const Render::Draw::DrawContext& ctx)
 
     if (ctx.dirty)
     {
-        printf("TileScene::run(), tile grids total: %zu\n", viewUnitIndexMap.size());
+        printf("TileScene::run(), tile grids total: %zu, lv:%d\n", viewUnitIndexMap.size(), lv);
     }
-    return;
+    //return;
     //*
     //ctx.drawCall({}, vpM);
 
+    
+    outlineUnit.drawUnit.vertex.lineWidth = 3.0f;
+    outlineUnit.drawUnit.setColor(0xff005555);
+    for (auto&& it = viewUnitIndexMap.begin(); it != viewUnitIndexMap.end(); it++)
+    {
+        auto& node = it->second;
+        auto& unit = gridUnits[node.index].drawUnit;
 
+        outlineUnit.drawUnit.objMat = unit.objMat;
+        outlineUnit.drawUnit.mvp    = vpM;
+        outlineUnit.drawUnit.draw();
+    }
+
+    outlineUnit.drawUnit.vertex.lineWidth = 1.0f;
     outlineUnit.drawUnit.setColor(0x50550055);
     auto& drawUnit = outlineUnit.drawUnit;
     for (auto r = gr.minR; r <= gr.maxR; r++)
