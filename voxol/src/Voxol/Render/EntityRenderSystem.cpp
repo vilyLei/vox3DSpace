@@ -62,11 +62,11 @@ void EntityRenderSystem::initalize()
     /// circle
     entities[0].shadingId = 0;
     ///// circle
-    //entities[1].shadingId = 1;
-    ///// circle
-    //entities[2].shadingId = 2;
-    ///// multi-circles
-    //entities[3].shadingId = 3;
+    entities[1].shadingId = 1;
+    /// circle
+    entities[2].shadingId = 2;
+    /// multi-circles
+    entities[3].shadingId = 3;
 
 
     Math::Bounds                           bounds{};

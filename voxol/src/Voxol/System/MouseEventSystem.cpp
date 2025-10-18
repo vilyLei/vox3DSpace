@@ -10,7 +10,7 @@ void EventManager::upateMouseParam(Tile::TileSystem& tileSys, const Render::Draw
     Math::Vec2 mousePos{param.x, param.y};
     auto&      drawParam = rctx.drawParam;
     auto&&     wpv       = drawParam.invViewMat.mapPoint(mousePos);
-    if (param.type == System::UIMouseType::MOUSE_MOVE)
+    if (param.type == System::UIMouseType::MOUSE_MOVE || param.type == System::UIMouseType::MOUSE_DOWN)
     {
         queryEIds.clear();
         if (drawParam.viewVBounds.contains(mousePos))
