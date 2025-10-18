@@ -33,7 +33,7 @@ void EntityRenderSystem::initalize()
     });
 
     shaderingDescPool[0].color    = 0xff880077;
-    shaderingDescPool[0].transform = {150, 50, 50, 50, 0};
+    shaderingDescPool[0].transform = {150, 50, 200, 200, 0};
     shaderingDescPool[1].color     = 0xff008855;
     shaderingDescPool[1].transform = {150, 50, 200, 200, 0};
 
@@ -93,8 +93,18 @@ int EntityRenderSystem::drawQuery(const Math::VxRect& wbounds, int phase)
 {
     queriedEIds.clear();
     bvh.queryBounds(wbounds, queriedEIds);
-    if (phase < 2)
-        printf("EntityRenderSystem::drawQuery() A size: %d, phase: %d, bounds total: %d\n", queriedEIds.size(), phase, bvh.getBoundsCapacity());
+    //if (phase < 2)
+    //{
+    //    printf("EntityRenderSystem::drawQuery() A size: %d, phase: %d, bounds total: %d\n", queriedEIds.size(), phase, bvh.getBoundsCapacity());
+    //    if (phase < 2)
+    //    {
+    //        printf("wbounds, ");
+    //        wbounds.print();
+    //        auto b = bvh.getBoundsAt(0);
+    //        printf("b, ");
+    //        b.print();
+    //    }
+    //}
 
     /// for test
     auto flag = false;

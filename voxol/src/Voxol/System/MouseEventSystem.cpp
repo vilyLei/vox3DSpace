@@ -58,15 +58,15 @@ void EventManager::upateMouseParam(Tile::TileSystem& tileSys, const Render::Draw
                 pv.x += dv.x;
                 pv.y += dv.y;
                 storage.setEntityXYAt(pv, id);
-                auto b = bvh.getBoundsAt(id);
-
+                auto b0 = bvh.getBoundsAt(id);
+                auto b1 = b0;
                 // ÒÆ³ö
-                tileSys.addDirtyBounds(b, 0);
-                b.moveTo(pv.x, pv.y);
+                tileSys.addDirtyBounds(b0, 0);
+                b1.moveTo(pv.x, pv.y);
                 // ÒÆÈë
-                tileSys.addDirtyBounds(b, 1);
+                tileSys.addDirtyBounds(b1, 1);
 
-                bvh.updateItemBoundsByObjectId(id, b);
+                bvh.updateItemBoundsByObjectId(id, b1);
                 bvh.updateDirty();
             }
         }
