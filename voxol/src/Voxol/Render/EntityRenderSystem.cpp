@@ -56,29 +56,38 @@ void EntityRenderSystem::initalize()
     shaderingDescPool[3].transform = {250, 50, 150, 150, 0};
 
     /// circle
-    shaderingEntitiesPool[0].drawUnitId    = 0;
+    shaderingEntitiesPool[0].drawUnitId    = drawingStorage->getIdWithType(DrawingUnitType::Circle);
     shaderingEntitiesPool[0].shadingDescId = 0;
 
     /// circle
-    shaderingEntitiesPool[1].drawUnitId = 0;
+    shaderingEntitiesPool[1].drawUnitId    = drawingStorage->getIdWithType(DrawingUnitType::Circle);
     shaderingEntitiesPool[1].shadingDescId = 1;
 
     /// circle
-    shaderingEntitiesPool[2].drawUnitId = 0;
+    shaderingEntitiesPool[2].drawUnitId    = drawingStorage->getIdWithType(DrawingUnitType::Circle);
     shaderingEntitiesPool[2].shadingDescId = 2;
 
-    /// multi-circles
-    shaderingEntitiesPool[3].drawUnitId = 2;
+    /// ring
+    shaderingEntitiesPool[3].drawUnitId    = drawingStorage->getIdWithType(DrawingUnitType::Ring);
     shaderingEntitiesPool[3].shadingDescId = 3;
+        
+    /// multi-circles
+    shaderingEntitiesPool[4].drawUnitId    = drawingStorage->getIdWithType(DrawingUnitType::MultiCircle);
+    shaderingEntitiesPool[4].shadingDescId = 2;
 
+    ///// circle
+    //entities[0].shadingId = 3;
+    
     /// circle
     entities[0].shadingId = 0;
     ///// circle
     entities[1].shadingId = 1;
     /// circle
     entities[2].shadingId = 2;
-    /// multi-circles
+    /// ring
     entities[3].shadingId = 3;
+    ///// multi-circles
+    //entities[4].shadingId = 4;
 
 
     Math::Bounds                           bounds{};
@@ -105,6 +114,7 @@ int EntityRenderSystem::drawQuery(const Math::VxRect& wbounds, int phase)
 {
     queriedEIds.clear();
     bvh->queryBounds(wbounds, queriedEIds);
+
     //if (phase < 2)
     //{
     //    printf("EntityRenderSystem::drawQuery() A size: %d, phase: %d, bounds total: %d\n", queriedEIds.size(), phase, bvh.getBoundsCapacity());

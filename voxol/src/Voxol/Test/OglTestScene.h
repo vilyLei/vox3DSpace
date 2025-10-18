@@ -61,7 +61,6 @@ private:
 
     Render::Gpu::DrawingUnit     tile0Unit{};
     Render::Gpu::DrawingUnit     boundsUnit{};
-    //std::vector<int32_t> queriedEIds{};
 };
 
 

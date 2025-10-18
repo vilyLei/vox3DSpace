@@ -8,6 +8,7 @@ DrawingUnitStorage::SP DrawingUnitStorage::make()
     auto sp = std::make_shared<DrawingUnitStorage>();
     return sp;
 }
+
 void DrawingUnitStorage::initalize(int total)
 {
     if (!drawingUnits.empty())
@@ -63,6 +64,29 @@ void DrawingUnitStorage::initalize(int total)
     msdfText.buildText(text, msdfTextDrawUnits, {300, 100}, 50);
 }
 
+
+int32_t DrawingUnitStorage::getIdWithType(DrawingUnitType type) const
+{
+    auto id = static_cast<int32_t>(type);
+    return id;
+}
+bool DrawingUnitStorage::hasType(DrawingUnitType type) const
+{
+    return true;
+}
+
+Gpu::DrawingUnit& DrawingUnitStorage::getWithType(DrawingUnitType type)
+{
+    auto id = static_cast<int32_t>(type);
+    return drawingUnits[id];
+}
+const Gpu::DrawingUnit& DrawingUnitStorage::getWithType(DrawingUnitType type) const
+{
+    auto id = static_cast<int32_t>(type);
+    return drawingUnits[id];
+}
+
+
 bool DrawingUnitStorage::hasAt(int32_t id) const
 {
     return id >= 0 && id < drawingUnits.size();
@@ -89,13 +113,13 @@ void DrawingUnitStorage::initVoassScene()
 
     using namespace Voass::Render;
 
-    auto& sdfCircleUnit       = drawingUnits[0];
-    auto& sdfMultiCirclesUnit = drawingUnits[1];
-    auto& sdfRingUnit         = drawingUnits[2];
-    auto& sdfSectorUnit       = drawingUnits[3];
-    auto& sdfRoundedRectUnit  = drawingUnits[4];
-    auto& sdfTriangleUnit     = drawingUnits[5];
-    auto& rectUnit            = drawingUnits[6];
+    auto& rectUnit            = drawingUnits[0];
+    auto& sdfCircleUnit       = drawingUnits[1];
+    auto& sdfMultiCirclesUnit = drawingUnits[2];
+    auto& sdfRingUnit         = drawingUnits[3];
+    auto& sdfSectorUnit       = drawingUnits[4];
+    auto& sdfRoundedRectUnit  = drawingUnits[5];
+    auto& sdfTriangleUnit     = drawingUnits[6];
     auto& strokeShapeUnit     = drawingUnits[7];
 
     bool colorClip      = false;

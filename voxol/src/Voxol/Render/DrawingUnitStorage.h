@@ -14,7 +14,27 @@
 
 namespace Voxol::Render
 {
-
+/*
+auto& rectUnit            = drawingUnits[0];
+auto& sdfCircleUnit       = drawingUnits[1];
+auto& sdfMultiCirclesUnit = drawingUnits[2];
+auto& sdfRingUnit         = drawingUnits[3];
+auto& sdfSectorUnit       = drawingUnits[4];
+auto& sdfRoundedRectUnit  = drawingUnits[5];
+auto& sdfTriangleUnit     = drawingUnits[6];
+auto& strokeShapeUnit     = drawingUnits[7];    
+*/
+enum class DrawingUnitType : short
+{
+    Rect = 0,
+    Circle = 1,
+    MultiCircle = 2,
+    Ring = 3,
+    Sector      = 4,
+    RoundedRect = 5,
+    Triangle    = 6,
+    strokeShape = 7
+};
 class DrawingUnitStorage
 {
 public:
@@ -31,6 +51,14 @@ public:
 public:
 
     void initalize(int total);
+
+    int32_t getIdWithType(DrawingUnitType type) const;
+
+    bool                    hasType(DrawingUnitType type) const;
+
+    Gpu::DrawingUnit&       getWithType(DrawingUnitType type);
+    const Gpu::DrawingUnit& getWithType(DrawingUnitType type) const;
+
     bool hasAt(int32_t id) const;
     Gpu::DrawingUnit& getAt(int32_t id);
     Gpu::DrawingUnit& operator[](int32_t id);

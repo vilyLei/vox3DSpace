@@ -1,7 +1,6 @@
 #ifndef VOXOL_RENDER_ENTITY_RENDER_SYSTEM_H
 #define VOXOL_RENDER_ENTITY_RENDER_SYSTEM_H
 
-#include "../Tile/GridDef.h"
 #include "BVH2DV1.h"
 #include "DrawCtx.h"
 #include "CompPool.h"
@@ -11,8 +10,6 @@
 
 namespace Voxol::Render
 {
-
-//using namespace Voxol::Tile;
 
 using EntitySysBVH = V1::BVH2D;
 

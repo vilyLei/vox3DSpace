@@ -142,12 +142,13 @@ void main()
     float d0 = sdfCircle(v_uv - center0, 0.2);
     vec2 center1 = vec2(0.65, 0.45);
     float d1 = sdfCircle(v_uv - center1, 0.3);
-    
-    vec4 c0 = vec4(u_color.xyz, d0);
-    vec4 c1 = vec4(vec3(0.0,0.5, 0.0), d1);
     float d = smoothUnion(d0, d1, 0.02);
-    vec4 cd = smoothUnionVec4(vec4(0.0, 0.5, 0.0, 0.5), u_color, d0, d1, 0.2);
-    fragColor = buildFragColor(cd, d);
+    
+    //vec4 c0 = vec4(u_color.xyz, d0);
+    //vec4 c1 = vec4(vec3(0.0,0.5, 0.0), d1);
+    //vec4 cd = smoothUnionVec4(vec4(0.0, 0.5, 0.0, 0.5), u_color, d0, d1, 0.2);
+    //fragColor = buildFragColor(cd, d);
+    fragColor = buildFragColor(u_color, d);
     fragColor = dithering(fragColor, v_uv);
 }
 )";
