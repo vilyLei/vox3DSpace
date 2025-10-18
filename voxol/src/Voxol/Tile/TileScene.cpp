@@ -35,19 +35,13 @@ void TileScene::addDirtyBounds(const Math::Bounds& bounds)
         for (auto c = gr.minC; c <= gr.maxC; c++)
         {
             RC::Pos pos{r, c, lv};
-            //if (viewUnitIndexMap.contains(pos.value))
-            //{
-            //    auto&& node = viewUnitIndexMap[pos.value];
-            //    node.dirty  = true;
-            //    continue;
-            //}
             dirtyUnitIndexMap[pos.value] = {pos, -1};
         }
     }
     gridModifyDirty = true;
 }
 
-void TileScene::buildGrid(Grid::Unit& unit, const Render::Draw::DrawContext& ctx)
+void TileScene::buildGridContent(Grid::Unit& unit, const Render::Draw::DrawContext& ctx)
 {
 
     auto&  drawUnit = unit.drawUnit;
@@ -77,18 +71,14 @@ void TileScene::buildGrid(Grid::Unit& unit, const Render::Draw::DrawContext& ctx
 
 bool TileScene::updateGrid(const RC::Pos& pos, const Render::Draw::DrawContext& ctx)
 {
-    auto&       drawParam = ctx.drawParam;
-    Math::Mat33 vpM       = drawParam.projMat;
-    vpM.append(drawParam.viewMat);
-
     auto&& node = viewUnitIndexMap[pos.value];
     auto&& xy   = RC::rcToXY(pos, currGridSize);
     auto&& vb   = Math::VxRect::makeXYWH(xy.x, xy.y, currGridSize, currGridSize);
     auto&  grid = gridUnits[node.index];
-    if (ctx.drawQuery(vb, vpM))
+    if (ctx.drawQuery(vb, {}))
     {
         grid.setRCAndAreaSize(pos, currGridSize);
-        buildGrid(grid, ctx);
+        buildGridContent(grid, ctx);
     }
     else
     {
@@ -102,13 +92,9 @@ bool TileScene::updateGrid(const RC::Pos& pos, const Render::Draw::DrawContext& 
 }
 bool TileScene::createGrid(const RC::Pos& pos, const Render::Draw::DrawContext& ctx)
 {
-    auto&       drawParam = ctx.drawParam;
-    Math::Mat33 vpM       = drawParam.projMat;
-    vpM.append(drawParam.viewMat);
-
     auto&& xy = RC::rcToXY(pos, currGridSize);
     auto&& vb = Math::VxRect::makeXYWH(xy.x, xy.y, currGridSize, currGridSize);
-    if (!ctx.drawQuery(vb, vpM))
+    if (!ctx.drawQuery(vb, {}))
     {
         return false;
     }
@@ -122,7 +108,7 @@ bool TileScene::createGrid(const RC::Pos& pos, const Render::Draw::DrawContext& 
     auto& grid = gridUnits[k];
     grid.setRCAndAreaSize(pos, currGridSize);
     grid.drawUnit.setTextureAt(texPool.acquire(), 0);
-    buildGrid(grid, ctx);
+    buildGridContent(grid, ctx);
 }
 void TileScene::run(const Render::Draw::DrawContext& ctx)
 {
@@ -175,7 +161,7 @@ void TileScene::run(const Render::Draw::DrawContext& ctx)
             }
             else
             {
-                // remove an element
+                // remove an element from the viewUnitIndexMap
                 unitIndexPool.release(node.index);
                 auto& unit = gridUnits[node.index].drawUnit;
                 printf("erase a grid node(r=%d, c=%d, level=%d).\n", node.pos.r, node.pos.c, node.pos.level);
@@ -195,54 +181,10 @@ void TileScene::run(const Render::Draw::DrawContext& ctx)
                     if (toBiggerFlag)
                     {
                         updateGrid(pos, ctx);
-                        /*
-                        auto&& node = viewUnitIndexMap[pos.value];
-                        auto&& xy = RC::rcToXY(pos, currGridSize);
-                        auto&& vb   = Math::VxRect::makeXYWH(xy.x, xy.y, currGridSize, currGridSize);
-                        auto&  grid = gridUnits[node.index];
-                        if (ctx.drawQuery(vb, vpM))
-                        {
-                            grid.setRCAndAreaSize(pos, currGridSize);
-                            buildGrid(grid, ctx);
-                        }
-                        else
-                        {
-                            unitIndexPool.release(node.index);
-                            auto& unit = grid.drawUnit;
-                            printf("erase a grid node(r=%d, c=%d, level=%d) B.\n", node.pos.r, node.pos.c, node.pos.level);
-                            texPool.release(unit.getTextureAt(0));
-                            viewUnitIndexMap.erase(pos.value);
-                        }
-                        //*/
                     }
                     continue;
                 }
                 auto flag = createGrid(pos, ctx);
-                //if (flag)
-                //{
-                //}
-                /*
-                auto&& xy = RC::rcToXY(pos, currGridSize);
-                auto&& vb = Math::VxRect::makeXYWH(xy.x, xy.y, currGridSize, currGridSize);
-                if (!ctx.drawQuery(vb, vpM))
-                {
-                    continue;
-                }
-
-                auto k = unitIndexPool.acquire();
-                if (k < 0)
-                {
-                    continue;
-                }
-                viewGridsTotal++;
-                tot++;
-                viewUnitIndexMap[pos.value] = {pos, k};
-
-                auto& grid = gridUnits[k];
-                grid.setRCAndAreaSize(pos, currGridSize);
-                grid.drawUnit.setTextureAt(texPool.acquire(), 0);
-                buildGrid(grid, ctx);
-                //*/
             }
         }
         printf("append tot: %d\n", tot);
