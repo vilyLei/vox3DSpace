@@ -33,6 +33,8 @@ private:
     bool updateGrid(const RC::Pos& pos, const Render::Draw::DrawContext& ctx);
     bool createGrid(const RC::Pos& pos, const Render::Draw::DrawContext& ctx);
     void buildGridContent(Grid::Unit& unit, const Render::Draw::DrawContext& ctx);
+    void testFreeViewGrids();
+    void updateDirtyGrid(const Render::Draw::DrawContext& ctx);
 
     Render::OglFbo mFbo{};
 

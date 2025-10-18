@@ -57,7 +57,7 @@ void TileScene::buildGridContent(Grid::Unit& unit, const Render::Draw::DrawConte
     vpM.append(viewM);
 
     auto& drawParam = ctx.drawParam;
-    auto& vp      = ctx.clearParam.viewport;
+    auto& vp        = ctx.clearParam.viewport;
 
     mFbo.bindFBO();
     mFbo.bindTextureAt(drawUnit.getTextureAt(0), 0, gridSize, gridSize);
@@ -72,7 +72,7 @@ void TileScene::buildGridContent(Grid::Unit& unit, const Render::Draw::DrawConte
 
 bool TileScene::releaseGrid(const Grid::IndexNode& node)
 {
-    return releaseGrid( node );
+    return releaseGrid(node.pos);
 }
 bool TileScene::releaseGrid(const RC::Pos& pos)
 {
@@ -124,15 +124,55 @@ bool TileScene::createGrid(const RC::Pos& pos, const Render::Draw::DrawContext& 
         return false;
     }
     viewUnitIndexMap[pos.value] = {pos, k};
-    auto& grid = gridUnits[k];
+    auto& grid                  = gridUnits[k];
     grid.setRCAndAreaSize(pos, currGridSize);
     grid.drawUnit.setTextureAt(texPool.acquire(), 0);
     buildGridContent(grid, ctx);
 }
+
+void TileScene::testFreeViewGrids()
+{
+    for (auto&& it = viewUnitIndexMap.begin(); it != viewUnitIndexMap.end();)
+    {
+        auto& node = it->second;
+        if (currRCRect.contains(node.pos))
+        {
+            ++it;
+        }
+        else
+        {
+            releaseGrid(node);
+            it = viewUnitIndexMap.erase(it);
+        }
+    }
+}
+void TileScene::updateDirtyGrid(const Render::Draw::DrawContext& ctx)
+{
+
+    if (dirtyUnitIndexMap.empty())
+        return;
+
+    for (auto&& it = dirtyUnitIndexMap.begin(); it != dirtyUnitIndexMap.end(); ++it)
+    {
+        auto& node = it->second;
+        if (!currRCRect.contains(node.pos))
+            continue;
+
+        if (viewUnitIndexMap.contains(node.pos.value))
+        {
+            updateGrid(node.pos, ctx);
+        }
+        else
+        {
+            createGrid(node.pos, ctx);
+        }
+    }
+    dirtyUnitIndexMap.clear();
+}
 void TileScene::run(const Render::Draw::DrawContext& ctx)
 {
     auto&       drawParam = ctx.drawParam;
-    Math::Mat33 vpM    = drawParam.projMat;
+    Math::Mat33 vpM       = drawParam.projMat;
     vpM.append(drawParam.viewMat);
 
     // 暂时这样写，以便测试dragging
@@ -159,30 +199,33 @@ void TileScene::run(const Render::Draw::DrawContext& ctx)
 
     auto gr      = RC::xyRectToRCRect(drawParam.viewWBounds, currGridSize);
     auto grDirty = currRCRect.isNotEqual(gr);
+    currRCRect   = gr;
 
     auto createFlag = ctx.dirty && viewGridLevel != lv;
-    auto adjustFlag   = ctx.dirty && viewGridLevel == lv;
+    auto adjustFlag = ctx.dirty && viewGridLevel == lv;
 
     static float preZoom      = ctx.zoom;
-    auto toBiggerFlag = viewGridLevel < lv;
-    preZoom = ctx.zoom;
+    auto         toBiggerFlag = viewGridLevel < lv;
+    preZoom                   = ctx.zoom;
 
 
     if (createFlag || adjustFlag || toBiggerFlag)
     {
-        for (auto&& it = viewUnitIndexMap.begin(); it != viewUnitIndexMap.end();)
-        {
-            auto& node = it->second;
-            if (gr.contains(node.pos))
-            {
-                ++it;
-            }
-            else
-            {
-                releaseGrid(node);
-                it = viewUnitIndexMap.erase(it);
-            }
-        }
+        //for (auto&& it = viewUnitIndexMap.begin(); it != viewUnitIndexMap.end();)
+        //{
+        //    auto& node = it->second;
+        //    if (gr.contains(node.pos))
+        //    {
+        //        ++it;
+        //    }
+        //    else
+        //    {
+        //        releaseGrid(node);
+        //        it = viewUnitIndexMap.erase(it);
+        //    }
+        //}
+
+        testFreeViewGrids();
 
         auto tot = 0;
         for (auto r = gr.minR; r <= gr.maxR; r++)
