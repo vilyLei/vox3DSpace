@@ -94,7 +94,7 @@ int EntityRenderSystem::drawQuery(const Math::VxRect& wbounds, int phase)
     queriedEIds.clear();
     bvh.queryBounds(wbounds, queriedEIds);
     if (phase < 2)
-        printf("EntityRenderSystem::drawQuery() A size: %d, phase: %d\n", queriedEIds.size(), phase);
+        printf("EntityRenderSystem::drawQuery() A size: %d, phase: %d, bounds total: %d\n", queriedEIds.size(), phase, bvh.getBoundsCapacity());
 
     /// for test
     auto flag = false;

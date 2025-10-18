@@ -121,7 +121,10 @@ bool TileScene::updateGrid(const RC::Pos& pos, const Render::Draw::DrawContext& 
         printf("TileScene::updateGrid() build content node(r=%d,c=%d) A, phase: %d\n", node.pos.r, node.pos.c, phase);
         grid.setRCAndAreaSize(pos, currGridSize);
         buildGridContent(grid, ctx);
-        emptyUnitIndexMap[node.pos.value] = node;
+        if (phase == 0)
+        {
+            emptyUnitIndexMap[node.pos.value] = {node.pos, false, phase};
+        }
     }
     else
     {
@@ -168,7 +171,7 @@ void TileScene::updateDirtyGrid(const Render::Draw::DrawContext& ctx)
         //    continue;
         //}
 
-        printf("TileScene::updateDirtyGrid() node(r=%d,c=%d,phase=%d)\n", node.pos.r, node.pos.c, node.phase);
+        printf("TileScene::updateDirtyGrid() node(r=%d,c=%d,phase=%d) A\n", node.pos.r, node.pos.c, node.phase);
         if (viewUnitIndexMap.contains(node.pos.value))
         {
             updateGrid(node.pos, ctx, node.phase);
@@ -191,36 +194,21 @@ void TileScene::updateEmptyGrid(const Render::Draw::DrawContext& ctx)
         auto& node = it->second;
         if (node.index < 0)
             continue;
-        //printf("TileScene::updateEmptyGrid() node(r=%d, c=%d) ...\n", node.pos.r, node.pos.c);
-        //if (!currRCRect.contains(node.pos)) {
-        //    continue;
-        //}
 
-        printf("TileScene::updateEmptyGrid() node(r=%d,c=%d,phase=%d)\n", node.pos.r, node.pos.c, node.phase);
-        //if (viewUnitIndexMap.contains(node.pos.value))
-        //{
-        //    //updateGrid(node.pos, ctx, node.phase);
-        //}
-        //else
-        //{
-        //    //createGrid(node.pos, ctx);
-        //}
+        printf("TileScene::updateEmptyGrid() node(r=%d,c=%d,phase=%d) A\n", node.pos.r, node.pos.c, node.phase);
         auto&& xy   = RC::rcToXY(node.pos, currGridSize);
         auto&& vb   = Math::VxRect::makeXYWH(xy.x, xy.y, currGridSize, currGridSize);
 
         auto&  grid = gridUnits[node.index];
         if (!ctx.drawQuery(vb, 0))
         {
-            //printf("TileScene::updateGrid() build content node(r=%d,c=%d) A, phase: %d\n", node.pos.r, node.pos.c, phase);
-            //grid.setRCAndAreaSize(pos, currGridSize);
-            //buildGridContent(grid, ctx);
-            //emptyUnitIndexMap[node.pos.value] = node;
             unitIndexPool.release(node.index);
             auto& unit = grid.drawUnit;
             printf("TileScene::updateEmptyGrid() release node(r=%d, c=%d, level=%d) B, phase: %d\n", node.pos.r, node.pos.c, 0);
             texPool.release(unit.getTextureAt(0));
             viewUnitIndexMap.erase(node.pos.value);
         }
+        printf("TileScene::updateEmptyGrid() node(r=%d,c=%d,phase=%d) B\n", node.pos.r, node.pos.c, node.phase);
     }
     emptyUnitIndexMap.clear();
 }
