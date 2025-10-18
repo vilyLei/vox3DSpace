@@ -97,7 +97,7 @@ void TileScene::testFreeViewGrids()
     for (auto&& it = viewUnitIndexMap.begin(); it != viewUnitIndexMap.end();)
     {
         auto& node = it->second;
-        if (currRCRect.contains(node.pos))
+        if (currRCRect.contains(node.pos) && node.pos.level == viewGridLevel)
         {
             ++it;
         }
