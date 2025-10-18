@@ -55,6 +55,9 @@ void EntityRenderSystem::initalize()
     shaderingDescPool[3].color    = 0xff660066;
     shaderingDescPool[3].transform = {250, 50, 150, 150, 0};
 
+    shaderingDescPool[4].color     = 0xff005566;
+    shaderingDescPool[4].transform = {250, 150, 150, 150, 0};
+
     /// circle
     shaderingEntitiesPool[0].drawUnitId    = drawingStorage->getIdWithType(DrawingUnitType::Circle);
     shaderingEntitiesPool[0].shadingDescId = 0;
@@ -73,10 +76,10 @@ void EntityRenderSystem::initalize()
         
     /// multi-circles
     shaderingEntitiesPool[4].drawUnitId    = drawingStorage->getIdWithType(DrawingUnitType::MultiCircle);
-    shaderingEntitiesPool[4].shadingDescId = 2;
+    shaderingEntitiesPool[4].shadingDescId = 4;
 
     ///// circle
-    //entities[0].shadingId = 3;
+    //entities[0].shadingId = 4;
     
     /// circle
     entities[0].shadingId = 0;
@@ -86,8 +89,9 @@ void EntityRenderSystem::initalize()
     entities[2].shadingId = 2;
     /// ring
     entities[3].shadingId = 3;
-    ///// multi-circles
-    //entities[4].shadingId = 4;
+
+    /// multi-circles
+    entities[4].shadingId = 4;
 
 
     Math::Bounds                           bounds{};
@@ -188,11 +192,14 @@ bool EntityRenderSystem::drawUnit(const Component::UnitEntity& entity, const Mat
     auto&        drawUnit  = drs[shadingEt.drawUnitId];
     auto& shdDesc   = shaderingDescPool[shadingEt.shadingDescId];
     auto& trans     = shdDesc.transform;
+
     Math::Bounds vb;
     vb.setXYWH(trans.x, trans.y, trans.sx, trans.sy);
     if (!wbounds.intersects(vb))
         return false;
-    //printf("trans(x=%f, y=%f)\n", trans.x, trans.y);
+
+    //printf("xxx xxx trans(x=%f, y=%f)\n", trans.x, trans.y);
+
     drawUnit.blendMode = 1;
     drawUnit.setColor(shdDesc.color);
     drawUnit.objMat.setXY(trans.x, trans.y);
