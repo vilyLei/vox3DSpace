@@ -28,6 +28,8 @@ public:
     void run(const Render::Draw::DrawContext& ctx);
 
 private:
+    bool releaseGrid(const Grid::IndexNode& node);
+    bool releaseGrid(const RC::Pos& pos);
     bool updateGrid(const RC::Pos& pos, const Render::Draw::DrawContext& ctx);
     bool createGrid(const RC::Pos& pos, const Render::Draw::DrawContext& ctx);
     void buildGridContent(Grid::Unit& unit, const Render::Draw::DrawContext& ctx);

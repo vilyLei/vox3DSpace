@@ -69,6 +69,25 @@ void TileScene::buildGridContent(Grid::Unit& unit, const Render::Draw::DrawConte
     Test::Gpu::buildTexDrawUnitWithTex(drawUnit, mFbo.getTextureAt(0), true);
 }
 
+
+bool TileScene::releaseGrid(const Grid::IndexNode& node)
+{
+    return releaseGrid( node );
+}
+bool TileScene::releaseGrid(const RC::Pos& pos)
+{
+
+    if (!viewUnitIndexMap.contains(pos.value))
+        return false;
+
+    // remove an element from the viewUnitIndexMap
+    auto&& node = viewUnitIndexMap[pos.value];
+    unitIndexPool.release(node.index);
+    auto& unit = gridUnits[node.index].drawUnit;
+    printf("release grid node(r=%d, c=%d, level=%d)\n", node.pos.r, node.pos.c, node.pos.level);
+    texPool.release(unit.getTextureAt(0));
+    return true;
+}
 bool TileScene::updateGrid(const RC::Pos& pos, const Render::Draw::DrawContext& ctx)
 {
     auto&& node = viewUnitIndexMap[pos.value];
@@ -151,7 +170,6 @@ void TileScene::run(const Render::Draw::DrawContext& ctx)
 
     if (createFlag || adjustFlag || toBiggerFlag)
     {
-        gridModifyDirty = false;
         for (auto&& it = viewUnitIndexMap.begin(); it != viewUnitIndexMap.end();)
         {
             auto& node = it->second;
@@ -161,11 +179,7 @@ void TileScene::run(const Render::Draw::DrawContext& ctx)
             }
             else
             {
-                // remove an element from the viewUnitIndexMap
-                unitIndexPool.release(node.index);
-                auto& unit = gridUnits[node.index].drawUnit;
-                printf("erase a grid node(r=%d, c=%d, level=%d).\n", node.pos.r, node.pos.c, node.pos.level);
-                texPool.release(unit.getTextureAt(0));
+                releaseGrid(node);
                 it = viewUnitIndexMap.erase(it);
             }
         }
