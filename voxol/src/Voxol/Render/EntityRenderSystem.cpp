@@ -49,14 +49,14 @@ void EntityRenderSystem::initalize()
     shaderingDescPool[1].color     = 0xff008855;
     shaderingDescPool[1].transform = {150, 50, 200, 200, 0};
 
-    shaderingDescPool[2].color    = 0xff002233;
+    shaderingDescPool[2].color    = 0xff554433;
     shaderingDescPool[2].transform = {510, 150, 100, 100, 0};
 
     shaderingDescPool[3].color    = 0xff660066;
     shaderingDescPool[3].transform = {250, 50, 150, 150, 0};
 
-    shaderingDescPool[4].color     = 0xff005566;
-    shaderingDescPool[4].transform = {250, 150, 150, 150, 0};
+    shaderingDescPool[4].color     = 0xff00aa76;
+    shaderingDescPool[4].transform = {999, 150, 150, 150, 0};
 
     /// circle
     shaderingEntitiesPool[0].drawUnitId    = drawingStorage->getIdWithType(DrawingUnitType::Circle);
@@ -77,10 +77,7 @@ void EntityRenderSystem::initalize()
     /// multi-circles
     shaderingEntitiesPool[4].drawUnitId    = drawingStorage->getIdWithType(DrawingUnitType::MultiCircle);
     shaderingEntitiesPool[4].shadingDescId = 4;
-
-    ///// circle
-    //entities[0].shadingId = 4;
-    
+        
     /// circle
     entities[0].shadingId = 0;
     ///// circle

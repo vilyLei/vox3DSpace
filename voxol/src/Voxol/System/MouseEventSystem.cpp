@@ -13,7 +13,7 @@ void EventManager::upateMouseParam(const Render::Draw::DrawContext& rctx, const 
     if (param.type == System::UIMouseType::MOUSE_MOVE || param.type == System::UIMouseType::MOUSE_DOWN)
     {
         queryEIds.clear();
-        if (drawParam.viewVBounds.contains(mousePos))
+        if (drawParam.viewVBounds.contains(mousePos) && sys.bvh)
         {
             sys.bvh->queryPoint(wpv, queryEIds);
         }
@@ -33,7 +33,8 @@ void EventManager::upateMouseParam(const Render::Draw::DrawContext& rctx, const 
             {
                 dragEvt.targetId        = topId;
                 dragEvt.mouseOriginPos  = wpv;
-                dragEvt.entityOriginPos = sys.storage->getEntityXYAt(topId);
+                if (sys.storage)
+                    dragEvt.entityOriginPos = sys.storage->getEntityXYAt(topId);
                 dragEvt.begin();
             }
         }
@@ -60,14 +61,20 @@ void EventManager::upateMouseParam(const Render::Draw::DrawContext& rctx, const 
                 sys.storage->setEntityXYAt(pv, id);
                 auto b0 = sys.bvh->getBoundsAt(id);
                 auto b1 = b0;
-                // 移出
-                sys.tileSys->addDirtyBounds(b0, 0);
-                b1.moveTo(pv.x, pv.y);
-                // 移入
-                sys.tileSys->addDirtyBounds(b1, 1);
+                if (sys.tileSys)
+                {
+                    // 移出
+                    sys.tileSys->addDirtyBounds(b0, 0);
+                    b1.moveTo(pv.x, pv.y);
+                    // 移入
+                    sys.tileSys->addDirtyBounds(b1, 1);
+                }
 
-                sys.bvh->updateItemBoundsByObjectId(id, b1);
-                sys.bvh->updateDirty();
+                if (sys.bvh)
+                {
+                    sys.bvh->updateItemBoundsByObjectId(id, b1);
+                    sys.bvh->updateDirty();
+                }
             }
         }
         break;
