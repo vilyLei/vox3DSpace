@@ -7,6 +7,7 @@
 #include "CompPool.h"
 #include "EntityComponent.h"
 #include "EntityCompStorage.h"
+#include "DrawingUnitStorage.h"
 
 namespace Voxol::Render
 {
@@ -28,7 +29,8 @@ public:
     void clear();
 
     V1::BVH2D             bvh{};
-    EntityCompStorage::SP storage{};
+    EntityCompStorage::SP compStorage{};
+    DrawingUnitStorage::SP drawingStorage{};
 
 private:
     bool                 drawUnit(const Component::UnitEntity& entity, const Draw::DrawContext& rctx, const Math::Mat33& vpM, std::vector<Gpu::DrawingUnit> drawingUnits, const Math::Bounds& wbounds);

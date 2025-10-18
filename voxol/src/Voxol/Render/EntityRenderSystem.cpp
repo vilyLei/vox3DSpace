@@ -5,13 +5,19 @@ namespace Voxol::Render
 
 void EntityRenderSystem::initalize()
 {
-    if (storage)
+    if (compStorage)
     {
         return;
     }
-    storage = EntityCompStorage::make();
 
-    auto total = 10;
+    compStorage = EntityCompStorage::make();
+    if (!drawingStorage) {
+        drawingStorage = DrawingUnitStorage::make();
+    }
+
+    auto storage = compStorage;
+    auto total = 512;
+    drawingStorage->initalize( total );
 
     auto& entities = storage->entities;
     auto& shaderingEntitiesPool = storage->shaderingEntitiesPool;
@@ -116,7 +122,7 @@ int EntityRenderSystem::drawQuery(const Math::VxRect& wbounds, int phase)
 }
 void EntityRenderSystem::render(const Draw::DrawContext& rctx, const Math::Mat33& vpM, std::vector<Gpu::DrawingUnit> drawingUnits, const Math::Bounds& wbounds)
 {
-    if (!storage)
+    if (!compStorage)
         return;
 
     //printf("EntityRenderSystem::render() B %d\n", queriedEIds.size());
@@ -125,7 +131,7 @@ void EntityRenderSystem::render(const Draw::DrawContext& rctx, const Math::Mat33
         return;
 
     auto  total    = queriedEIds.size();
-    auto& entities = storage->entities;
+    auto&  entities  = compStorage->entities;
     size_t  drawTotal    = 0;
     for (auto i = 0; i < total; i++)
     {
@@ -142,7 +148,7 @@ void EntityRenderSystem::render(const Draw::DrawContext& rctx, const Math::Mat33
     return;
 
     // 暂时这样写，以便测试dragging
-    auto& ets = storage->entities;
+    auto& ets = compStorage->entities;
     auto  tot = ets.size();
     for (auto i = 0; i < tot; i++)
     {
@@ -155,13 +161,15 @@ void EntityRenderSystem::render(const Draw::DrawContext& rctx, const Math::Mat33
 
 bool EntityRenderSystem::drawUnit(const Component::UnitEntity& entity, const Draw::DrawContext& rctx, const Math::Mat33& vpM, std::vector<Gpu::DrawingUnit> drawingUnits, const Math::Bounds& wbounds)
 {
-    if (!storage)
+    if (!compStorage)
         return false;
 
-    auto& shaderingDescPool = storage->shaderingDescPool;
+    auto& shaderingDescPool = compStorage->shaderingDescPool;
 
-    const auto& shadingEt = storage->get<Component::UnitShadingEntity>(entity.shadingId);
-    auto& drawUnit  = drawingUnits[shadingEt.drawUnitId];
+    const auto&  shadingEt = compStorage->get<Component::UnitShadingEntity>(entity.shadingId);
+    //auto& drawUnit  = drawingUnits[shadingEt.drawUnitId];
+    auto& drs  = *drawingStorage;
+    auto&        drawUnit  = drs[shadingEt.drawUnitId];
     auto& shdDesc   = shaderingDescPool[shadingEt.shadingDescId];
     auto& trans     = shdDesc.transform;
     Math::Bounds vb;

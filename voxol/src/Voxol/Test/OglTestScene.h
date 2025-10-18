@@ -43,6 +43,7 @@ private:
     void renderSdfUnits(const Voxol::Math::Mat33& vpMat);
 
     bool voassModeFlag = true;
+    bool entityModeFlag = true;
 
     Render::OglFbo             mFbo{};
     Tile::TileSystem           tileSys{};

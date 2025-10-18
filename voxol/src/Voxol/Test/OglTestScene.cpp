@@ -7,6 +7,22 @@ namespace Voxol::Test
 
 void OglTestScene::initScene()
 {
+    if (entityModeFlag)
+    {
+
+        tileSys.initalize();
+        etRenderSys.initalize();
+        auto drawCall = [this](const Math::VxRect& bounds, const Math::Mat33& vpMat) {
+            etRenderSys.render(drawCtx, vpMat, sdfDrawUnits, bounds);
+        };
+        auto queryCall = [this](const Math::VxRect& bounds, int phase) -> int {
+            return etRenderSys.drawQuery(bounds, phase);
+        };
+
+        drawCtx.drawCall  = drawCall;
+        drawCtx.drawQuery = queryCall;
+        return;
+    }
     if (voassModeFlag)
     {
         initVoassScene();
@@ -57,6 +73,34 @@ void OglTestScene::initScene()
 void OglTestScene::render(const Voxol::Math::Mat33& vpMat)
 {
     drawCtx.clearParam.apply();
+    if (entityModeFlag)
+    {
+        auto& ctx      = drawCtx;
+        auto& params   = ctx.drawParam;
+        auto& viewport = ctx.clearParam.viewport;
+
+        tileSys.run(ctx);
+
+        // show mouse picked entity bounds
+        boundsUnit.vertex.lineWidth = 1.0f;
+
+        auto& queriedEIds = mouseEvtMana.queryEIds;
+
+        for (auto id : queriedEIds)
+        {
+            //auto& vb = etRenderSys.bvhItems[id].bounds;
+            auto& vb = etRenderSys.bvh.getBoundsAt(id);
+            boundsUnit.objMat.setTo(vb.x(), vb.y(), vb.width(), vb.height());
+            boundsUnit.mvp = vpMat;
+            boundsUnit.draw();
+        }
+        boundsUnit.vertex.lineWidth = 5;
+        auto vb                     = params.viewWBounds;
+        boundsUnit.objMat.setTo(vb.x(), vb.y(), vb.width(), vb.height());
+        boundsUnit.mvp = vpMat;
+        boundsUnit.draw();
+        return;
+    }
 
     if (voassModeFlag)
     {
@@ -90,15 +134,13 @@ void OglTestScene::setMouseParams(const System::UIMouseParam& param)
     //auto& ctx    = drawCtx;
     //auto& drawParam = ctx.drawParam;
     //Math::Vec2 wpv = drawParam.invViewMat.mapPoint({param.x, param.y});
-    mouseEvtMana.upateMouseParam(tileSys, drawCtx, etRenderSys.bvh, *etRenderSys.storage, param);
+    mouseEvtMana.upateMouseParam(tileSys, drawCtx, etRenderSys.bvh, *etRenderSys.compStorage, param);
 }
 void  OglTestScene::initVoassScene(){
 
     
     using namespace Voass::Render;
 
-    tileSys.initalize();
-    etRenderSys.initalize();
 
     auto& sdfCircleUnit      = sdfDrawUnits[0];
     auto& sdfMultiCirclesUnit = sdfDrawUnits[1];
