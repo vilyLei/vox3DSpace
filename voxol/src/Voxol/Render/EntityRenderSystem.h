@@ -19,6 +19,14 @@ using EntitySysBVH = V1::BVH2D;
 class EntityRenderSystem
 {
 public:
+    using SP = std::shared_ptr<EntityRenderSystem>;
+    using WP = std::weak_ptr<EntityRenderSystem>;
+    using UP = std::unique_ptr<EntityRenderSystem>;
+public:
+    static EntityRenderSystem::SP make();
+
+
+public:
     EntityRenderSystem()  = default;
     ~EntityRenderSystem() = default;
 
@@ -28,7 +36,7 @@ public:
     void render(const Draw::DrawContext& rctx, const Math::Mat33& vpM, const Math::Bounds& wbounds);
     void clear();
 
-    V1::BVH2D             bvh{};
+    V1::BVH2D::SP          bvh = V1::BVH2D::make();
     EntityCompStorage::SP compStorage{};
     DrawingUnitStorage::SP drawingStorage{};
 

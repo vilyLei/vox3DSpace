@@ -7,6 +7,11 @@ namespace Voxol::Render
 {
 namespace V1 {
 
+BVH2D::SP BVH2D::make()
+{
+    auto sp = std::make_shared<BVH2D>();
+    return sp;
+}
 // -----------------------------
 // 添加 Item
 // -----------------------------

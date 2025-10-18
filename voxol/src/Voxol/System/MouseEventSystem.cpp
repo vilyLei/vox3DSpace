@@ -4,7 +4,7 @@ namespace Voxol::System
 {
 namespace Mouse
 {
-void EventManager::upateMouseParam(Tile::TileSystem& tileSys, const Render::Draw::DrawContext& rctx, Render::EntitySysBVH& bvh, Render::EntityCompStorage& storage, const System::UIMouseParam& param)
+void EventManager::upateMouseParam(Tile::TileSystem& tileSys, const Render::Draw::DrawContext& rctx, Render::EntitySysBVH::SP bvh, Render::EntityCompStorage::SP storage, const System::UIMouseParam& param)
 {
 
     Math::Vec2 mousePos{param.x, param.y};
@@ -15,10 +15,10 @@ void EventManager::upateMouseParam(Tile::TileSystem& tileSys, const Render::Draw
         queryEIds.clear();
         if (drawParam.viewVBounds.contains(mousePos))
         {
-            bvh.queryPoint(wpv, queryEIds);
+            bvh->queryPoint(wpv, queryEIds);
         }
     }
-    //dragEvt
+
     auto topId = queryEIds.empty() ? -1 : queryEIds.back();
     if (dragEvt.isDragging())
     {
@@ -33,7 +33,7 @@ void EventManager::upateMouseParam(Tile::TileSystem& tileSys, const Render::Draw
             {
                 dragEvt.targetId        = topId;
                 dragEvt.mouseOriginPos  = wpv;
-                dragEvt.entityOriginPos = storage.getEntityXYAt(topId);
+                dragEvt.entityOriginPos = storage->getEntityXYAt(topId);
                 dragEvt.begin();
             }
         }
@@ -57,8 +57,8 @@ void EventManager::upateMouseParam(Tile::TileSystem& tileSys, const Render::Draw
                 auto dv = wpv - dragEvt.mouseOriginPos;
                 pv.x += dv.x;
                 pv.y += dv.y;
-                storage.setEntityXYAt(pv, id);
-                auto b0 = bvh.getBoundsAt(id);
+                storage->setEntityXYAt(pv, id);
+                auto b0 = bvh->getBoundsAt(id);
                 auto b1 = b0;
                 // ÒÆ³ö
                 tileSys.addDirtyBounds(b0, 0);
@@ -66,8 +66,8 @@ void EventManager::upateMouseParam(Tile::TileSystem& tileSys, const Render::Draw
                 // ÒÆÈë
                 tileSys.addDirtyBounds(b1, 1);
 
-                bvh.updateItemBoundsByObjectId(id, b1);
-                bvh.updateDirty();
+                bvh->updateItemBoundsByObjectId(id, b1);
+                bvh->updateDirty();
             }
         }
         break;

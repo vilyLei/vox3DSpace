@@ -3,6 +3,12 @@
 namespace Voxol::Tile
 {
 
+TileSystem::SP TileSystem::make()
+{
+    auto sp = std::make_shared<TileSystem>();
+    return sp;
+}
+
 void TileSystem::initalize()
 {
     mScene.initalize();

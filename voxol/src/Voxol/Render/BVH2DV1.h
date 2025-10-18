@@ -3,13 +3,23 @@
 
 #include "../Math/VxRect.h"
 #include <vector>
+#include <memory>
 #include <unordered_map>
 
 namespace Voxol::Render
 {
 namespace V1 {
 
-class BVH2D {
+class BVH2D
+{
+public:
+    using SP = std::shared_ptr<BVH2D>;
+    using WP = std::weak_ptr<BVH2D>;
+    using UP = std::unique_ptr<BVH2D>;
+
+public:
+    static BVH2D::SP make();
+
 public:
     struct Item {
         int32_t objectId = 0;    // entity id

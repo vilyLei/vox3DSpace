@@ -21,7 +21,6 @@ public:
     using SP = std::shared_ptr<DrawingUnitStorage>;
     using WP = std::weak_ptr<DrawingUnitStorage>;
     using UP = std::unique_ptr<DrawingUnitStorage>;
-
 public:
     static DrawingUnitStorage::SP make();
 

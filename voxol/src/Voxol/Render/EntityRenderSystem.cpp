@@ -3,6 +3,12 @@
 namespace Voxol::Render
 {
 
+EntityRenderSystem::SP EntityRenderSystem::make()
+{
+    auto sp = std::make_shared<EntityRenderSystem>();
+    return sp;
+}
+
 void EntityRenderSystem::initalize()
 {
     if (compStorage)
@@ -90,15 +96,15 @@ void EntityRenderSystem::initalize()
 
         bounds.setXYWH(trans.x, trans.y, trans.sx, trans.sy);
 
-        bvh.addItem(et.id, bounds);
+        bvh->addItem(et.id, bounds);
     }
-    bvh.build();
+    bvh->build();
 }
 
 int EntityRenderSystem::drawQuery(const Math::VxRect& wbounds, int phase)
 {
     queriedEIds.clear();
-    bvh.queryBounds(wbounds, queriedEIds);
+    bvh->queryBounds(wbounds, queriedEIds);
     //if (phase < 2)
     //{
     //    printf("EntityRenderSystem::drawQuery() A size: %d, phase: %d, bounds total: %d\n", queriedEIds.size(), phase, bvh.getBoundsCapacity());

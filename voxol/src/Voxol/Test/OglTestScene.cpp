@@ -89,7 +89,7 @@ void OglTestScene::render(const Voxol::Math::Mat33& vpMat)
         for (auto id : queriedEIds)
         {
             //auto& vb = etRenderSys.bvhItems[id].bounds;
-            auto& vb = etRenderSys.bvh.getBoundsAt(id);
+            auto& vb = etRenderSys.bvh->getBoundsAt(id);
             boundsUnit.objMat.setTo(vb.x(), vb.y(), vb.width(), vb.height());
             boundsUnit.mvp = vpMat;
             boundsUnit.draw();
@@ -134,7 +134,7 @@ void OglTestScene::setMouseParams(const System::UIMouseParam& param)
     //auto& ctx    = drawCtx;
     //auto& drawParam = ctx.drawParam;
     //Math::Vec2 wpv = drawParam.invViewMat.mapPoint({param.x, param.y});
-    mouseEvtMana.upateMouseParam(tileSys, drawCtx, etRenderSys.bvh, *etRenderSys.compStorage, param);
+    mouseEvtMana.upateMouseParam(tileSys, drawCtx, etRenderSys.bvh, etRenderSys.compStorage, param);
 }
 void  OglTestScene::initVoassScene(){
 

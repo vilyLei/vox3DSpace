@@ -8,6 +8,13 @@ namespace Voxol::Tile
 class TileSystem
 {
 public:
+    using SP = std::shared_ptr<TileSystem>;
+    using WP = std::weak_ptr<TileSystem>;
+    using UP = std::unique_ptr<TileSystem>;
+public:
+    static TileSystem::SP make();
+
+public:
     TileSystem()  = default;
     ~TileSystem() = default;
 
