@@ -2,7 +2,6 @@
 #define VOXOL_RENDER_ENTITY_RENDER_SYSTEM_H
 
 #include "../Tile/GridDef.h"
-//#include "BVH2D.h"
 #include "BVH2DV1.h"
 #include "DrawCtx.h"
 #include "CompPool.h"
@@ -24,13 +23,13 @@ public:
     ~EntityRenderSystem() = default;
 
 public:
-    void       initalize();
-    int        drawQuery(const Math::VxRect& bounds, const Math::Mat33& vpM);
-    void       render(const Draw::DrawContext& rctx, const Math::Mat33& vpM, std::vector<Gpu::DrawingUnit> drawingUnits);
-    void       clear();
+    void initalize();
+    int  drawQuery(const Math::VxRect& bounds, const Math::Mat33& vpM);
+    void render(const Draw::DrawContext& rctx, const Math::Mat33& vpM, std::vector<Gpu::DrawingUnit> drawingUnits);
+    void clear();
 
-    V1::BVH2D                    bvh{};
-    EntityCompStorage            storage{};
+    V1::BVH2D             bvh{};
+    EntityCompStorage::SP storage{};
 
 private:
     void                 drawUnit(const Component::UnitEntity& entity, const Draw::DrawContext& rctx, const Math::Mat33& vpM, std::vector<Gpu::DrawingUnit> drawingUnits);

@@ -12,6 +12,14 @@ namespace Voxol::Render
 class EntityCompStorage
 {
 public:
+    using SP = std::shared_ptr<EntityCompStorage>;
+    using WP = std::weak_ptr<EntityCompStorage>;
+    using UP = std::unique_ptr<EntityCompStorage>;
+
+public:
+    static EntityCompStorage::SP make();
+
+public:
     EntityCompStorage()   = default;
     ~EntityCompStorage() = default;
 

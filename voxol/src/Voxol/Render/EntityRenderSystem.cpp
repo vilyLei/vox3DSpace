@@ -5,11 +5,17 @@ namespace Voxol::Render
 
 void EntityRenderSystem::initalize()
 {
+    if (storage)
+    {
+        return;
+    }
+    storage = EntityCompStorage::make();
+
     auto total = 10;
 
-    auto& entities = storage.entities;
-    auto& shaderingEntitiesPool = storage.shaderingEntitiesPool;
-    auto& shaderingDescPool     = storage.shaderingDescPool;
+    auto& entities = storage->entities;
+    auto& shaderingEntitiesPool = storage->shaderingEntitiesPool;
+    auto& shaderingDescPool     = storage->shaderingDescPool;
 
     entities.resize(total);
     shaderingEntitiesPool.initialize(total);
@@ -92,8 +98,11 @@ int EntityRenderSystem::drawQuery(const Math::VxRect& wbounds, const Math::Mat33
 }
 void EntityRenderSystem::render(const Draw::DrawContext& rctx, const Math::Mat33& vpM, std::vector<Gpu::DrawingUnit> drawingUnits)
 {
+    if (!storage)
+        return;
+
     /// 这里是正确的写法
-    auto& entities = storage.entities;
+    auto& entities = storage->entities;
     auto total = queriedEIds.size();
     for (auto i = 0; i < total; i++)
     {
@@ -105,7 +114,7 @@ void EntityRenderSystem::render(const Draw::DrawContext& rctx, const Math::Mat33
     return;
 
     // 暂时这样写，以便测试dragging
-    auto& ets = storage.entities;
+    auto& ets = storage->entities;
     auto  tot = ets.size();
     for (auto i = 0; i < tot; i++)
     {
@@ -118,10 +127,12 @@ void EntityRenderSystem::render(const Draw::DrawContext& rctx, const Math::Mat33
 
 void EntityRenderSystem::drawUnit(const Component::UnitEntity& entity, const Draw::DrawContext& rctx, const Math::Mat33& vpM, std::vector<Gpu::DrawingUnit> drawingUnits)
 {
+    if (!storage)
+        return;
 
-    auto& shaderingDescPool = storage.shaderingDescPool;
+    auto& shaderingDescPool = storage->shaderingDescPool;
 
-    const auto& shadingEt = storage.get<Component::UnitShadingEntity>(entity.shadingId);
+    const auto& shadingEt = storage->get<Component::UnitShadingEntity>(entity.shadingId);
     auto& drawUnit  = drawingUnits[shadingEt.drawUnitId];
     auto& shdDesc   = shaderingDescPool[shadingEt.shadingDescId];
     auto& trans     = shdDesc.transform;
