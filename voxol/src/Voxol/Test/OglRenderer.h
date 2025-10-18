@@ -3,7 +3,7 @@
 
 #include "../Base/BaseDefine.h"
 #include "../Math/Mat33.h"
-#include "OglResUtils.h"
+#include "../Render/OglGpuResUtils.h"
 #include "OglTestScene.h"
 #include "../Motion/RenderCmdComp.h"
 #include "../System/UIMouseCtrl.h"

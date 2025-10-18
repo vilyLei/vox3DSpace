@@ -8,7 +8,7 @@
 #include "../Math/VxRect.h"
 #include "../Render/OglFbo.h"
 #include "../System/MouseEventSystem.h"
-#include "OglResUtils.h"
+#include "../Render/OglGpuResUtils.h"
 #include "OglImage.h"
 #include "OglText.h"
 
@@ -48,18 +48,18 @@ private:
     Tile::TileSystem           tileSys{};
     Render::EntityRenderSystem etRenderSys{};
 
-    Gpu::DrawingUnit              baseDrawUnit{};
-    Gpu::DrawingUnit              texDrawUnit{};
-    Gpu::DrawingUnit              redFormatexDrawUnit{};
-    Gpu::DrawingUnit              glyphDrawUnit{};
-    Gpu::DrawingUnit              pngUnit{};
-    MSDFText                      msdfText{};
-    std::vector<Gpu::DrawingUnit> msdfTextDrawUnits{};
+    Render::Gpu::DrawingUnit              baseDrawUnit{};
+    Render::Gpu::DrawingUnit              texDrawUnit{};
+    Render::Gpu::DrawingUnit              redFormatexDrawUnit{};
+    Render::Gpu::DrawingUnit              glyphDrawUnit{};
+    Render::Gpu::DrawingUnit              pngUnit{};
+    Render::MSDFText                      msdfText{};
+    std::vector<Render::Gpu::DrawingUnit>   msdfTextDrawUnits{};
 
-    std::vector<Gpu::DrawingUnit> sdfDrawUnits{8};
+    std::vector<Render::Gpu::DrawingUnit> sdfDrawUnits{8};
 
-    Gpu::DrawingUnit     tile0Unit{};
-    Gpu::DrawingUnit     boundsUnit{};
+    Render::Gpu::DrawingUnit     tile0Unit{};
+    Render::Gpu::DrawingUnit     boundsUnit{};
     //std::vector<int32_t> queriedEIds{};
 };
 

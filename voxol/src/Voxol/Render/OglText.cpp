@@ -3,7 +3,7 @@
 #include <string>
 #include <fstream>
 
-namespace Voxol::Test
+namespace Voxol::Render
 {
 
 OglTextFT ::~OglTextFT()

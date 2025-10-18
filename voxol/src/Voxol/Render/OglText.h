@@ -1,7 +1,7 @@
-#ifndef VOXOL_OGL_TEXT_H
-#define VOXOL_OGL_TEXT_H
+#ifndef VOXOL_RENDER_OGL_TEXT_H
+#define VOXOL_RENDER_OGL_TEXT_H
 
-#include "OglResUtils.h"
+#include "OglGpuResUtils.h"
 #include "OglImage.h"
 #include <vector>
 #include <ft2build.h>
@@ -10,7 +10,7 @@
 #include FT_FREETYPE_H
 #include FT_LCD_FILTER_H
 
-namespace Voxol::Test
+namespace Voxol::Render
 {
 struct OglTextFT
 {

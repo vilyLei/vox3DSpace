@@ -4,7 +4,7 @@
 #include <fstream>
 #include <png.h>
 
-namespace Voxol::Test
+namespace Voxol::Render
 {
 
 void OglImage ::test()

@@ -14,11 +14,11 @@ void OglTestScene::initScene()
     }
     baseDrawUnit.color = {0.1f, 0.6, 0.3f, 1.0f};
     baseDrawUnit.objMat.setTo(100, 100, 200, 80);
-    Gpu::buildBaseDrawUnit(baseDrawUnit);
+    Render::Gpu::buildBaseDrawUnit(baseDrawUnit);
 
     texDrawUnit.color = {0.9f, 0.9, 0.9f, 1.0f};
     texDrawUnit.objMat.setTo(150, 70, 100, 220);
-    Gpu::buildTexDrawUnit(texDrawUnit);
+    Render::Gpu::buildTexDrawUnit(texDrawUnit);
 
 
     static float time        = 0.0f;
@@ -28,9 +28,9 @@ void OglTestScene::initScene()
     redFormatexDrawUnit.color = {0.2f + std::abs(std::cos(time)) * 0.5f, 0.0, 0.3f, 1.0f};
 
     redFormatexDrawUnit.objMat.setTo(220, 220, 70, 70);
-    Gpu::buildRedFormatTexDrawUnit(redFormatexDrawUnit);
+    Render::Gpu::buildRedFormatTexDrawUnit(redFormatexDrawUnit);
 
-    OglTextGlyphBuilder textBuilder{};
+    Render::OglTextGlyphBuilder textBuilder{};
     textBuilder.initFont();
     //auto&& glyData = textBuilder.testBuildGlyph();
 
@@ -41,12 +41,12 @@ void OglTestScene::initScene()
     glyphDrawUnit.objMat.setTo(360, 320, imgData.width, imgData.height);
 
     //Gpu::buildRedFormatTexDrawUnit(glyphDrawUnit, imgData);
-    Gpu::buildGlyphTexDrawUnit(glyphDrawUnit, glyData);
+    Render::Gpu::buildGlyphTexDrawUnit(glyphDrawUnit, glyData);
 
-    OglImage imgObj{};
+    Render::OglImage imgObj{};
     auto&&   pngData = imgObj.loadPNGFromAssets("letterA.png");
     pngUnit.objMat.setTo(360, 150, pngData.width, pngData.height);
-    Gpu::buildTexDrawUnit(pngUnit, pngData);
+    Render::Gpu::buildTexDrawUnit(pngUnit, pngData);
 
     msdfText.initialize("msdf/arial_atlas.png", "msdf/arial_atlas.json");
 
@@ -113,44 +113,44 @@ void  OglTestScene::initVoassScene(){
     bool colorClip      = false;
     sdfCircleUnit.color = {0.9f, 0.0, 0.3f, 1.0f};
     sdfCircleUnit.objMat.setTo(100, 100, 200, 200);
-    Gpu::buildSDFDrawUnit(sdfCircleUnit, Shader::SDFShapeType::Circle, colorClip);
+    Render::Gpu::buildSDFDrawUnit(sdfCircleUnit, Shader::SDFShapeType::Circle, colorClip);
     //Gpu::buildSDFDrawUnit(sdfCircleUnit, Shader::SDFShapeType::MultiCircles);
 
     sdfMultiCirclesUnit.color = {0.6f, 0.0, 0.3f, 1.0f};
     sdfMultiCirclesUnit.objMat.setTo(330, 100, 200, 200);
     //Gpu::buildSDFDrawUnit(sdfCircleUnit, Shader::SDFShapeType::Circle);
-    Gpu::buildSDFDrawUnit(sdfMultiCirclesUnit, Shader::SDFShapeType::MultiCircles, colorClip);
+    Render::Gpu::buildSDFDrawUnit(sdfMultiCirclesUnit, Shader::SDFShapeType::MultiCircles, colorClip);
 
 
     sdfSectorUnit.color = {0.6f, 0.2, 0.5f, 1.f};
     sdfSectorUnit.objMat.setTo(100, 100, 200, 200);
-    Gpu::buildSDFDrawUnit(sdfSectorUnit, Shader::SDFShapeType::Sector, colorClip);
+    Render::Gpu::buildSDFDrawUnit(sdfSectorUnit, Shader::SDFShapeType::Sector, colorClip);
 
     sdfRingUnit.color = {0.6f, 0.2f, 0.6f, 0.5f};
     sdfRingUnit.objMat.setTo(100, 100, 200, 200);
-    Gpu::buildSDFDrawUnit(sdfRingUnit, Shader::SDFShapeType::Ring, colorClip);
+    Render::Gpu::buildSDFDrawUnit(sdfRingUnit, Shader::SDFShapeType::Ring, colorClip);
 
     sdfRoundedRectUnit.color = {0.5f, 0.6, 0.3f, 1.f};
     sdfRoundedRectUnit.objMat.setTo(300, 260, 200, 200);
-    Gpu::buildSDFDrawUnit(sdfRoundedRectUnit, Shader::SDFShapeType::RoundedRect, colorClip);
+    Render::Gpu::buildSDFDrawUnit(sdfRoundedRectUnit, Shader::SDFShapeType::RoundedRect, colorClip);
 
     sdfTriangleUnit.color = {0.7f, 0.2, 0.2f, 1.f};
     sdfTriangleUnit.objMat.setTo(300, 350, 200, 200);
-    Gpu::buildSDFDrawUnit(sdfTriangleUnit, Shader::SDFShapeType::Triangle, colorClip);
+    Render::Gpu::buildSDFDrawUnit(sdfTriangleUnit, Shader::SDFShapeType::Triangle, colorClip);
     
     
     sdfRectUnit.color = {0.1f, 0.6, 0.3f, 1.0f};
     sdfRectUnit.objMat.setTo(100, 100, 200, 80);
-    Gpu::buildSDFDrawUnit(sdfRectUnit, Shader::SDFShapeType::Rect, colorClip);
+    Render::Gpu::buildSDFDrawUnit(sdfRectUnit, Shader::SDFShapeType::Rect, colorClip);
 
-    Gpu::buildSDFDrawUnit(strokeShapeUnit, Shader::SDFShapeType::DefaultShape, colorClip);
+    Render::Gpu::buildSDFDrawUnit(strokeShapeUnit, Shader::SDFShapeType::DefaultShape, colorClip);
 
     
     boundsUnit.color = {0.0f, 0.3, 0.3f, 1.f};
     boundsUnit.objMat.setTo(0, 0, 150, 150);
     boundsUnit.vertex.toLine();
     boundsUnit.vertex.lineWidth = 5;
-    Test::Gpu::buildBaseDrawUnit(boundsUnit);
+    Render::Gpu::buildBaseDrawUnit(boundsUnit);
 }
 
 
@@ -233,12 +233,12 @@ void OglTestScene::renderVoass(const Math::Mat33& vpMat)
         mFbo.bindTextureAt(tile0Unit.getTextureAt(0), fboTexIndex, fboW, fboH);
         //mFbo.renderBegin({0, 0, fboW, fboH}, {0.1, 0.3, 0.1, 1});
         mFbo.renderBegin(clearParam);
-                
+
         renderSdfUnits(fboVPM);
 
         mFbo.unbindFBO(ctx.clearParam);
 
-        Gpu::buildTexDrawUnitWithTex(tile0Unit, mFbo.getTextureAt(fboTexIndex), true);
+        Render::Gpu::buildTexDrawUnitWithTex(tile0Unit, mFbo.getTextureAt(fboTexIndex), true);
 
         fboW = fboH = 256;
         tile0Unit.objMat.setTo(0, 0, fboW, fboH);

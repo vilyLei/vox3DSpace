@@ -7,7 +7,7 @@
 #include "../Base/BaseDefine.h"
 #include "../Math/VxRect.h"
 #include "../Math/Vec2.h"
-#include "../Test/OglResUtils.h"
+#include "../Render/OglGpuResUtils.h"
 
 namespace Voxol::Tile
 {
@@ -130,7 +130,7 @@ namespace Grid
 {
 struct Unit
 {
-    Test::Gpu::DrawingUnit drawUnit{};
+    Render::Gpu::DrawingUnit drawUnit{};
     RC::Pos                rc{};
     float areaSize = 256;
     void setRCAndAreaSize(const RC::Pos& pos, float pareaSize);

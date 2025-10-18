@@ -6,7 +6,7 @@
 #include "../Math/Mat33.h"
 #include "../Math/VxRect.h"
 #include "../Render/DrawCtx.h"
-#include "../Test/OglResUtils.h"
+#include "../Render/OglGpuResUtils.h"
 #include "../Render/OglFbo.h"
 #include <vector>
 

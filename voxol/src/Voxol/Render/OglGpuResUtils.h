@@ -1,5 +1,5 @@
-#ifndef VOXOL_OGL_RENDER_RES_UTILS_H
-#define VOXOL_OGL_RENDER_RES_UTILS_H
+#ifndef VOXOL_OGL_RENDER_GPU_RES_UTILS_H
+#define VOXOL_OGL_RENDER_GPU_RES_UTILS_H
 
 #include "../Base/BaseDefine.h"
 #include "../Math/Mat33.h"
@@ -14,7 +14,7 @@
 #include <GL/glew.h>
 #include <glfw3.h>
 
-namespace Voxol::Test
+namespace Voxol::Render
 {
 namespace ResUtils
 {

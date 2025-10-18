@@ -9,14 +9,14 @@ void TileScene::initalize()
     mFbo.init(GL_ZERO);
 
     outlineUnit.drawUnit.vertex.toLine();
-    Test::Gpu::buildBaseDrawUnit(outlineUnit.drawUnit);
+    Render::Gpu::buildBaseDrawUnit(outlineUnit.drawUnit);
 
     constexpr int UNITS_TOTAL = 256;
     unitIndexPool.init(UNITS_TOTAL);
     gridUnits.resize(UNITS_TOTAL);
 
     auto& srcUnit = gridUnits[0].drawUnit;
-    Test::Gpu::buildTexDrawUnitWithTex(srcUnit, GL_ZERO, true);
+    Render::Gpu::buildTexDrawUnitWithTex(srcUnit, GL_ZERO, true);
 
     for (auto i = 1; i < gridUnits.size(); ++i)
     {
@@ -71,7 +71,7 @@ void TileScene::buildGridContent(Grid::Unit& unit, const Render::Draw::DrawConte
     ctx.drawCall(vb, vpM);
     mFbo.unbindFBO(ctx.clearParam, true);
 
-    Test::Gpu::buildTexDrawUnitWithTex(drawUnit, mFbo.getTextureAt(0), true);
+    Render::Gpu::buildTexDrawUnitWithTex(drawUnit, mFbo.getTextureAt(0), true);
 }
 
 

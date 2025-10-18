@@ -11,8 +11,7 @@
 namespace Voxol::Render
 {
 
-using namespace Voxol::Test;
-using namespace Voxol::Tile;
+//using namespace Voxol::Tile;
 
 using EntitySysBVH = V1::BVH2D;
 

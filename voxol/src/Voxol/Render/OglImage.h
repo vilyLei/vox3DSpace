@@ -1,8 +1,8 @@
-#ifndef VOXOL_OGL_IMAGE_H
-#define VOXOL_OGL_IMAGE_H
+#ifndef VOXOL_RENDER_OGL_IMAGE_H
+#define VOXOL_RENDER_OGL_IMAGE_H
 
 #include "../Base/BaseDefine.h"
-#include "OglResUtils.h"
+#include "OglGpuResUtils.h"
 
 #include <iostream>
 #include <cmath>
@@ -12,7 +12,7 @@
 #include <GL/glew.h>
 #include <glfw3.h>
 
-namespace Voxol::Test
+namespace Voxol::Render
 {
     class OglImage
     {

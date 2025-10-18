@@ -1,5 +1,5 @@
-#include "OglResUtils.h"
-namespace Voxol::Test
+#include "OglGpuResUtils.h"
+namespace Voxol::Render
 {
 namespace ResUtils
 {
