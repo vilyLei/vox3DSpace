@@ -340,11 +340,11 @@ std::unordered_map<int, RawData::MSDFGlyph> MSDFText::loadGlyphs(const std::stri
     }
     return glyphMap;
 }
-void MSDFText::buildText(const std::string&               text,
+void MSDFText::buildText(const std::string&             text,
                          std::vector<Gpu::DrawingUnit>& units,
                          const Voxol::Math::Vec2&       pos,
-                         float                            fontSize,
-                         const std::array<float, 4>&      color)
+                         float                          fontSize,
+                         const std::array<float, 4>&    color)
 {
     if (text.empty()) return;
 
@@ -384,4 +384,28 @@ void MSDFText::buildText(const std::string&               text,
         penX += glyph.advance * scale; // ºáÏòÍÆ½ø
     }
 }
-} // namespace Voxol::Test
+
+void MSDFText::buildDrawingRes() {
+
+    if (mDrawingUnitGlyphA.hasTexture())
+    {
+        return;
+    }
+    char a = 'A';
+    auto& glyph = mMSDFAtlas.glyphs[(int)a];
+    Gpu::buildMSDFTexDrawUnit(mDrawingUnitGlyphA, mAtlasImgData, glyph);
+}
+
+
+void MSDFText::buildDrawingUnitWithGlyph(int32_t glyphChar, Gpu::DrawingUnit& unit)
+{
+    auto& glyph = mMSDFAtlas.glyphs[glyphChar];
+    unit.shader = mDrawingUnitGlyphA.shader;
+    Gpu::buildMSDFTexDrawUnit(unit, glyph);
+}
+
+void MSDFText::destory()
+{
+
+}
+} // namespace Voxol::Render

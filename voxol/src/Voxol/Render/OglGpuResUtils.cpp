@@ -474,6 +474,13 @@ void VertNode::toLine()
     drawMode = GL_LINE_LOOP;
 }
 
+bool DrawingUnit::hasTexture() const
+{
+    if (shader.textures.empty())
+        return false;
+    // 应该检测 textures 里面的元素是否有效
+    return true;
+}
 
 void DrawingUnit::bindGPU()
 {
@@ -696,17 +703,43 @@ void buildSDFDrawUnitWithName(DrawingUnit& unit, const std::string& name, bool c
 void buildMSDFTexDrawUnit(DrawingUnit& unit, const RawData::Image2DBytesData& imgData, const RawData::MSDFGlyph& glyph)
 {
     auto& shader = unit.shader;
+    if (shader.program <= GL_ZERO)
+    {
+        shader.program   = ResUtils::createSahderProgram(ResUtils::vertTexSource, ResUtils::fragMSDFTexSource);
+        shader.matrixLoc = glGetUniformLocation(shader.program, "u_matrix");
+        shader.colorLoc  = glGetUniformLocation(shader.program, "u_color");
+        auto texLoc      = glGetUniformLocation(shader.program, "u_tex0");
+        shader.texLocs.push_back(texLoc);
+    }
 
-    shader.program   = ResUtils::createSahderProgram(ResUtils::vertTexSource, ResUtils::fragMSDFTexSource);
-    shader.matrixLoc = glGetUniformLocation(shader.program, "u_matrix");
-    shader.colorLoc  = glGetUniformLocation(shader.program, "u_color");
-    auto texLoc      = glGetUniformLocation(shader.program, "u_tex0");
-    shader.texLocs.push_back(texLoc);
+    if (shader.textures.empty())
+    {
+        auto tex = imgData.tex > 0 ? imgData.tex : ResUtils::createTextureFromImageBytes(imgData.width, imgData.height, imgData.buffer);
+        shader.textures.push_back(tex);
+    }
+    auto& vert = unit.vertex;
+    if (vert.vao > GL_ZERO)
+        return;
 
-    auto tex = imgData.tex > 0 ? imgData.tex : ResUtils::createTextureFromImageBytes(imgData.width, imgData.height, imgData.buffer);
-    shader.textures.push_back(tex);
+    vert.buildTexResFlipYUvs(glyph.atlasLeft, glyph.atlasTop, glyph.atlasRight, glyph.atlasBottom);
+}
+
+void buildMSDFTexDrawUnit(DrawingUnit& unit, const RawData::MSDFGlyph& glyph)
+{
+    auto& shader = unit.shader;
+    if (shader.program <= GL_ZERO)
+    {
+        shader.program   = ResUtils::createSahderProgram(ResUtils::vertTexSource, ResUtils::fragMSDFTexSource);
+        shader.matrixLoc = glGetUniformLocation(shader.program, "u_matrix");
+        shader.colorLoc  = glGetUniformLocation(shader.program, "u_color");
+        auto texLoc      = glGetUniformLocation(shader.program, "u_tex0");
+        shader.texLocs.push_back(texLoc);
+    }
 
     auto& vert = unit.vertex;
+    if (vert.vao > GL_ZERO)
+        return;
+
     vert.buildTexResFlipYUvs(glyph.atlasLeft, glyph.atlasTop, glyph.atlasRight, glyph.atlasBottom);
 }
 

@@ -59,9 +59,21 @@ void DrawingUnitStorage::initalize(int total)
     Render::Gpu::buildTexDrawUnit(pngUnit, pngData);
 
     msdfText.initialize("msdf/arial_atlas.png", "msdf/arial_atlas.json");
-
     std::string text = "Hello, Cute Boy!";
     msdfText.buildText(text, msdfTextDrawUnits, {300, 100}, 50);
+}
+
+
+int32_t DrawingUnitStorage::getGlyphIdWithChar(int32_t glyphChar)
+{
+    if (glyphDrawingUnitMap.contains(glyphChar))
+        return glyphDrawingUnitMap[glyphChar];
+
+    auto  id   = drawingIDIndex;
+    auto& unit = drawingUnits[drawingIDIndex];
+    msdfText.buildDrawingUnitWithGlyph(glyphChar, unit);
+    drawingIDIndex++;
+    return id;
 }
 
 int32_t DrawingUnitStorage::getIdWithName(const std::string& name)
@@ -160,7 +172,6 @@ void DrawingUnitStorage::initVoassScene()
     sdfTriangleUnit.objMat.setTo(300, 350, 200, 200);
     Render::Gpu::buildSDFDrawUnit(sdfTriangleUnit, Shader::SDFShapeType::Triangle, colorClip);
 
-
     rectUnit.color = {0.1f, 0.6, 0.3f, 1.0f};
     rectUnit.objMat.setTo(100, 100, 200, 80);
     Render::Gpu::buildSDFDrawUnit(rectUnit, Shader::SDFShapeType::Rect, colorClip);
@@ -174,6 +185,12 @@ void DrawingUnitStorage::initVoassScene()
     nameMap[fileName] = id;
 
     drawingIDIndex = id;
+
+    
+    msdfText.initialize("msdf/arial_atlas.png", "msdf/arial_atlas.json");
+    msdfText.buildDrawingRes();
+    //std::string text = "Hello, Cute Boy!";
+    //msdfText.buildText(text, msdfTextDrawUnits, {300, 100}, 50);
 
 }
 

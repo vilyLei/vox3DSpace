@@ -124,7 +124,7 @@ struct DrawingUnit
     Voxol::Math::Mat33   mvp{};
     int                  blendMode = 1;
     bool                 colorClip = false;
-
+    bool                 hasTexture() const;
     void   bindGPU();
     void   setTranslateAndScale(float tx, float ty, float sx = 1.0f, float sy = 1.0f);
     void   setColor(uint32_t argb32);
@@ -139,13 +139,18 @@ void buildTexDrawUnitWithTex(DrawingUnit& unit, GLuint tex, bool uvFlipY = false
 void buildTexDrawUnitFromTex(DrawingUnit& unit, GLuint tex, bool uvFlipY = false);
 void buildSDFDrawUnit(DrawingUnit& unit, Voass::Render::Shader::SDFShapeType type = Voass::Render::Shader::SDFShapeType::Circle, bool clip = false);
 void buildSDFDrawUnitWithName(DrawingUnit& unit, const std::string& name, bool clip = false);
+
 void buildMSDFTexDrawUnit(
     DrawingUnit&                     unit,
     const RawData::Image2DBytesData& imgData,
     const RawData::MSDFGlyph&        glyph);
+void buildMSDFTexDrawUnit(
+    DrawingUnit&              unit,
+    const RawData::MSDFGlyph& glyph);
+
 void buildRedFormatTexDrawUnit(DrawingUnit& unit, const RawData::Image2DBytesData& imgData = {});
 void buildGlyphTexDrawUnit(DrawingUnit& unit, const RawData::TextGlyphData& glyphData = {});
 
 } // namespace Gpu
-} // namespace Voxol::Test
+} // namespace Voxol::Render
 #endif

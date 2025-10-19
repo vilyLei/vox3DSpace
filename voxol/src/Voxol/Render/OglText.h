@@ -65,16 +65,29 @@ public:
 public:
     void                                        initialize(const std::string& atlasImgPath, const std::string& jsonPath);
     std::unordered_map<int, RawData::MSDFGlyph> loadGlyphs(const std::string& jsonFile);
-    void                                        buildText(const std::string&               text,
+    void                                        buildText(const std::string&             text,
                                                           std::vector<Gpu::DrawingUnit>& units,
                                                           const Voxol::Math::Vec2&       pos      = {},
-                                                          float                            fontSize = 20,
-                                                          const std::array<float, 4>&      color    = {0,0,0,1});
+                                                          float                          fontSize = 20,
+                                                          const std::array<float, 4>&    color    = {0, 0, 0, 1});
+    void                                        buildDrawingRes();
+    void                                        buildDrawingUnitWithGlyph(int32_t glyphChar, Gpu::DrawingUnit& unit);
+    void                                        destory();
+
+    inline const RawData::Image2DBytesData& getAtlasImage() const
+    {
+        return mAtlasImgData;
+    }
+    inline const RawData::MSDFAtlas& getAtlas() const
+    {
+        return mMSDFAtlas;
+    }
 
 private:
     RawData::Image2DBytesData mAtlasImgData{};
     RawData::MSDFAtlas        mMSDFAtlas{};
+    Gpu::DrawingUnit          mDrawingUnitGlyphA{};
 };
 
-} // namespace Voxol::Test
+} // namespace Voxol::Render
 #endif

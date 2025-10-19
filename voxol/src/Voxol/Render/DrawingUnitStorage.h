@@ -45,6 +45,8 @@ public:
 
     void initalize(int total);
 
+    int32_t getGlyphIdWithChar(int32_t glyphChar);
+
     int32_t getIdWithType(DrawingUnitType type) const;
     int32_t           getIdWithName(const std::string& name);
     Gpu::DrawingUnit& getWithName(const std::string& name);
@@ -60,6 +62,8 @@ public:
     const Gpu::DrawingUnit& getAt(int32_t id) const;
     const Gpu::DrawingUnit& operator[](int32_t id) const;
 
+    Render::MSDFText        msdfText{};
+
 private:
     void initVoassScene();
 
@@ -70,8 +74,9 @@ private:
     Gpu::DrawingUnit              redFormatexDrawUnit{};
     Gpu::DrawingUnit              glyphDrawUnit{};
     Gpu::DrawingUnit              pngUnit{};
-    Render::MSDFText                      msdfText{};
     std::vector<Gpu::DrawingUnit>   msdfTextDrawUnits{};
+
+    std::unordered_map<int32_t, int32_t> glyphDrawingUnitMap{};
 
     std::vector<Gpu::DrawingUnit> drawingUnits;
     std::unordered_map<std::string, int32_t> nameMap{};
