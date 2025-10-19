@@ -1,6 +1,7 @@
 #ifndef VOXOL_RENDER_ENTITY_COMP_H
 #define VOXOL_RENDER_ENTITY_COMP_H
 
+#include "../Math/VxRect.h"
 #include <vector>
 #include <cstdint>
 #include <type_traits>
@@ -14,16 +15,15 @@ namespace Component
 
 struct UnitTransform
 {
-    float x = 0;
-    float y = 0;
-
+    float x;
+    float y;
     /// x-axis scale
-    float sx = 1;
+    float sx;
     /// y-axis scale
-    float sy = 1;
+    float sy;
 
     ///  rotation radian
-    float rotation = 0;
+    float rotation;
 };
 
 struct UnitShadingBaseDesc

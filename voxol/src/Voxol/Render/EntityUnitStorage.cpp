@@ -64,6 +64,10 @@ void EntityUnitStorage::initalize(int total)
     shaderingDescPool[6].color     = 0xff00aabb;
     shaderingDescPool[6].transform = {350, 350, 200, 200, 0};
 
+    /// letter B glyph
+    auto&& tb                      = drawing->msdfText.getGlyphBounds('B', 70, {350, 350});
+    shaderingDescPool[6].transform = {tb.x(), tb.y(), tb.width(), tb.height()};
+
     /// circle
     shaderingEntitiesPool[0].drawUnitId    = drawing->getIdWithType(DrawingUnitType::Circle);
     shaderingEntitiesPool[0].shadingDescId = 0;
@@ -88,13 +92,14 @@ void EntityUnitStorage::initalize(int total)
     shaderingEntitiesPool[5].drawUnitId    = drawUnitId_5;
     shaderingEntitiesPool[5].shadingDescId = 5;
 
-    
+
     auto drawUnitId_6    = drawing->getGlyphIdWithChar('B');
     shaderingEntitiesPool[6].drawUnitId    = drawUnitId_6;
     shaderingEntitiesPool[6].shadingDescId = 6;
 
     /// circle
-    //entities[0].shadingId = 4;
+    entitiesPool[0].shadingId = 6;
+    return;
 
     /// circle
     entitiesPool[0].shadingId = 0;
