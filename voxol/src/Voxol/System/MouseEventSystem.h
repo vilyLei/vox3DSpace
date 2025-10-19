@@ -16,6 +16,8 @@ struct DragEvent
     // 0: begin, 1: dragging moving, 2: end
     int32_t    phase = 2;
     bool       dirty = false;
+
+    Render::Component::UnitTransform originTransform{};
     Math::Vec2 mouseOriginPos{};
     Math::Vec2 mousePos{};
     Math::Vec2 entityOriginPos{};

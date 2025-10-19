@@ -25,7 +25,6 @@ HistoryItemData EntityHistoryManager::popItem() {
 
 void EntityHistoryManager::pushItem(const HistoryItemData& itemData) {
     mList.emplace_back(itemData);
-    auto sizeTot = mList.size();
 }
 
 } // namespace Voxol::Render

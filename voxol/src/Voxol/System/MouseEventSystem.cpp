@@ -34,7 +34,10 @@ void EventManager::upateMouseParam(const Render::Draw::DrawContext& rctx, const 
                 dragEvt.targetId       = topId;
                 dragEvt.mouseOriginPos = wpv;
                 if (sys.storage)
+                {
+                    dragEvt.originTransform = sys.storage->getEntityTransformAt(topId);
                     dragEvt.entityOriginPos = sys.storage->getEntityXYAt(topId);
+                }
                 dragEvt.begin();
             }
         }
@@ -42,6 +45,15 @@ void EventManager::upateMouseParam(const Render::Draw::DrawContext& rctx, const 
         /// mouse up
         case System::UIMouseType::MOUSE_UP:
         {
+            if (dragEvt.isDragging())
+            {
+                auto id = dragEvt.targetId;
+
+                if (sys.storage)
+                {
+                    sys.storage->historyManager->pushItem({dragEvt.originTransform, id});
+                }
+            }
             dragEvt.end();
         }
         break;
@@ -60,8 +72,8 @@ void EventManager::upateMouseParam(const Render::Draw::DrawContext& rctx, const 
                 pv.y += dv.y;
                 if (sys.storage)
                 {
-                    auto itemTrans = sys.storage->getEntityTransformAt(id);
-                    sys.storage->historyManager->pushItem({itemTrans, id});
+                    //auto itemTrans = sys.storage->getEntityTransformAt(id);
+                    //sys.storage->historyManager->pushItem({itemTrans, id});
 
                     sys.storage->setEntityXYAt(pv, id);
                     auto b0 = sys.bvh->getBoundsAt(id);
