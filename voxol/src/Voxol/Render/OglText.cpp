@@ -403,14 +403,14 @@ std::vector<Math::Bounds> MSDFText::getStringBounds(const std::string& text, flo
     float scale = fontSize / atlas.emSize;
 
     float penX = 0.0f;
-    std::vector<Math::Bounds> bvs{text.size()};
+    bvs.resize(text.size());
     auto                      i = 0;
     for (unsigned char c : text)
     {
         auto it = atlas.glyphs.find((int)c);
         if (it == atlas.glyphs.end()) continue;
 
-        const RawData::MSDFGlyph& glyph = it->second;
+        const auto& glyph = it->second;
 
         float x0 = glyph.planeLeft * scale;
         float y1 = glyph.planeTop * scale;
@@ -418,12 +418,15 @@ std::vector<Math::Bounds> MSDFText::getStringBounds(const std::string& text, flo
         float pw = (glyph.planeRight - glyph.planeLeft) * scale;
         float ph = (glyph.planeTop - glyph.planeBottom) * scale;
 
+        auto px = pos.x + penX + x0;
+        auto py = pos.y - y1;
         // pos.y 就是基线
-        bvs[i]   = {
-            pos.x + x0,
-            pos.y - y1,
-            pos.x + pw,
-            pos.y + ph};
+        bvs[i]  = {
+                px,
+                py,
+                px + pw,
+                py + ph
+        };
         penX += glyph.advance * scale; // 横向推进
         i++;
     }
@@ -445,12 +448,14 @@ Math::Bounds MSDFText::getGlyphBounds(int32_t glyphChar, float fontSize, const M
     float pw = (glyph.planeRight - glyph.planeLeft) * scale;
     float ph = (glyph.planeTop - glyph.planeBottom) * scale;
 
+    auto px = pos.x + x0;
+    auto py = pos.y - y1;
+    // pos.y 就是基线
     return {
-        pos.x + x0,
-        pos.y - y1,
-        pos.x + pw,
-        pos.y + ph
-    };
+        px,
+        py,
+        px + pw,
+        py + ph};
 }
 void MSDFText::buildDrawingUnitWithGlyph(int32_t glyphChar, Gpu::DrawingUnit& unit)
 {

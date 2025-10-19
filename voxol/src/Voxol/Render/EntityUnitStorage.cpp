@@ -63,10 +63,23 @@ void EntityUnitStorage::initalize(int total)
 
     shaderingDescPool[6].color     = 0xff00aabb;
     shaderingDescPool[6].transform = {350, 350, 200, 200, 0};
+    shaderingDescPool[7].color     = 0xff00aabb;
+    shaderingDescPool[7].transform = {350, 350, 200, 200, 0};
+    shaderingDescPool[8].color     = 0xff00aabb;
+    shaderingDescPool[8].transform = {350, 350, 200, 200, 0};
 
     /// letter B glyph
-    auto&& tb                      = drawing->msdfText.getGlyphBounds('B', 70, {350, 350});
+    //auto&& tb                      = drawing->msdfText.getGlyphBounds('D', 70, {350, 350});
+    //shaderingDescPool[6].transform = {tb.x(), tb.y(), tb.width(), tb.height()};
+
+    auto&& vbs = drawing->msdfText.getStringBounds("BcD", 70, {350, 350});
+    auto   tb                      = vbs[0];
     shaderingDescPool[6].transform = {tb.x(), tb.y(), tb.width(), tb.height()};
+    tb                             = vbs[1];
+    shaderingDescPool[7].transform = {tb.x(), tb.y(), tb.width(), tb.height()};
+    tb                             = vbs[2];
+    auto sx                        = tb.width();
+    shaderingDescPool[8].transform = {tb.x(), tb.y(), tb.width(), tb.height()};
 
     /// circle
     shaderingEntitiesPool[0].drawUnitId    = drawing->getIdWithType(DrawingUnitType::Circle);
@@ -97,9 +110,15 @@ void EntityUnitStorage::initalize(int total)
     shaderingEntitiesPool[6].drawUnitId    = drawUnitId_6;
     shaderingEntitiesPool[6].shadingDescId = 6;
 
-    /// circle
-    entitiesPool[0].shadingId = 6;
-    return;
+    shaderingEntitiesPool[7].drawUnitId    = drawing->getGlyphIdWithChar('c');
+    shaderingEntitiesPool[7].shadingDescId = 7;
+
+    shaderingEntitiesPool[8].drawUnitId    = drawing->getGlyphIdWithChar('D');
+    shaderingEntitiesPool[8].shadingDescId = 8;
+
+    ///// circle
+    //entitiesPool[0].shadingId = 6;
+    //return;
 
     /// circle
     entitiesPool[0].shadingId = 0;
@@ -115,6 +134,10 @@ void EntityUnitStorage::initalize(int total)
     entitiesPool[5].shadingId = 5;
     /// B
     entitiesPool[6].shadingId = 6;
+    /// c
+    entitiesPool[7].shadingId = 7;
+    /// D
+    entitiesPool[8].shadingId = 8;
 }
 
 
