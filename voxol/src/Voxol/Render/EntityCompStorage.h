@@ -4,6 +4,7 @@
 #include "../Tile/GridDef.h"
 #include "CompPool.h"
 #include "EntityComponent.h"
+#include "EntityHistoryManager.h"
 #include <vector>
 
 namespace Voxol::Render
@@ -25,6 +26,7 @@ public:
 
 public:
     //void initialize(int total = 512);
+    EntityHistoryManager::SP historyManager = EntityHistoryManager::make();
 
     template <typename T>
     CompPool<T>& getPool()

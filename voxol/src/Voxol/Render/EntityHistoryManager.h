@@ -3,9 +3,16 @@
 
 #include "../Base/BaseDefine.h"
 #include "../Math/Vec2.h"
+#include "EntityComponent.h"
 
 namespace Voxol::Render
 {
+
+struct HistoryItemData
+{
+    Component::UnitTransform trans;
+    int32_t                  id;
+};
 
 class EntityHistoryManager
 {
@@ -23,8 +30,10 @@ public:
 
 public:
     void initalize();
-
+    HistoryItemData popItem();
+    void pushItem(const HistoryItemData& itemData);
 private:
+    std::vector<HistoryItemData> mList;
 };
 }
 #endif
