@@ -15,7 +15,7 @@ void EntityCompStorage::initialize(int total)
 
 Math::Vec2 EntityCompStorage::getEntityXYAt(int32_t id)
 {
-    auto& et        = entities[id];
+    auto& et        = entitiesPool[id];
     auto& shadingEt = get<Component::UnitShadingEntity>(et.shadingId);
     auto& shdDesc   = get<Component::UnitShadingBaseDesc>(shadingEt.shadingDescId);
     auto& trans     = shdDesc.transform;
@@ -23,7 +23,7 @@ Math::Vec2 EntityCompStorage::getEntityXYAt(int32_t id)
 }
 void EntityCompStorage::setEntityXYAt(const Math::Vec2& pos, int32_t id)
 {
-    auto& et        = entities[id];
+    auto& et        = entitiesPool[id];
     auto& shadingEt = get<Component::UnitShadingEntity>(et.shadingId);
     auto& shdDesc   = get<Component::UnitShadingBaseDesc>(shadingEt.shadingDescId);
     auto& trans     = shdDesc.transform;

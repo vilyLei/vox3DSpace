@@ -15,119 +15,39 @@ void EntityRenderSystem::initalize()
         return;
     entityStorage = EntityUnitStorage::make();
     entityStorage->initalize(512);
-    /*
-    if (compStorage)
-    {
-        return;
-    }
-
-    compStorage = EntityCompStorage::make();
-    if (!drawingStorage) {
-        drawingStorage = DrawingUnitStorage::make();
-    }
-
-    auto storage = compStorage;
-    auto total = 512;
-    drawingStorage->initalize( total );
-
-    auto& entities = storage->entities;
-    auto& shaderingEntitiesPool = storage->shaderingEntitiesPool;
-    auto& shaderingDescPool     = storage->shaderingDescPool;
-
-    entities.resize(total);
-    shaderingEntitiesPool.initialize(total);
-
-    auto shaderingDescTotal = total * 2;
-    shaderingDescPool.initialize(shaderingDescTotal);
-
-    for (auto i = 0; i < entities.size(); ++i)
-    {
-        entities[i].id = i;
-    }
-
-    shaderingEntitiesPool.forEach([&](auto& e, int32_t index) {
-        e.id = index;
-    });
-
-    shaderingDescPool[0].color    = 0xff880077;
-    shaderingDescPool[0].transform = {150, 50, 200, 200, 0};
-    shaderingDescPool[1].color     = 0xff008855;
-    shaderingDescPool[1].transform = {150, 50, 200, 200, 0};
-
-    shaderingDescPool[2].color    = 0xff554433;
-    shaderingDescPool[2].transform = {510, 150, 100, 100, 0};
-
-    shaderingDescPool[3].color    = 0xff660066;
-    shaderingDescPool[3].transform = {250, 50, 150, 150, 0};
-
-    shaderingDescPool[4].color     = 0xff00aa76;
-    shaderingDescPool[4].transform = {600, 150, 200, 200, 0};
-
-    shaderingDescPool[5].color     = 0xff00aa76;
-    shaderingDescPool[5].transform = {509, 350, 200, 200, 0};
-
-    /// circle
-    shaderingEntitiesPool[0].drawUnitId    = drawingStorage->getIdWithType(DrawingUnitType::Circle);
-    shaderingEntitiesPool[0].shadingDescId = 0;
-
-    /// circle
-    shaderingEntitiesPool[1].drawUnitId    = drawingStorage->getIdWithType(DrawingUnitType::Circle);
-    shaderingEntitiesPool[1].shadingDescId = 1;
-
-    /// circle
-    shaderingEntitiesPool[2].drawUnitId    = drawingStorage->getIdWithType(DrawingUnitType::Circle);
-    shaderingEntitiesPool[2].shadingDescId = 2;
-
-    /// ring
-    shaderingEntitiesPool[3].drawUnitId    = drawingStorage->getIdWithType(DrawingUnitType::Ring);
-    shaderingEntitiesPool[3].shadingDescId = 3;
-        
-    /// multi-circles
-    //shaderingEntitiesPool[4].drawUnitId    = drawingStorage->getIdWithType(DrawingUnitType::MultiCircle);
-    shaderingEntitiesPool[4].drawUnitId    = drawingStorage->getIdWithType(DrawingUnitType::strokeShape);
-    shaderingEntitiesPool[4].shadingDescId = 4;
-    auto drawUnitId_4                      = drawingStorage->getIdWithName("ship01.glsl");
-    shaderingEntitiesPool[5].drawUnitId    = drawUnitId_4;
-    shaderingEntitiesPool[5].shadingDescId = 5;
-
-    /// circle
-    //entities[0].shadingId = 4;
-
-    /// circle
-    entities[0].shadingId = 0;
-    ///// circle
-    entities[1].shadingId = 1;
-    /// circle
-    entities[2].shadingId = 2;
-    /// ring
-    entities[3].shadingId = 3;
-    /// multi-circles
-    entities[4].shadingId = 4;
-    /// ship
-    entities[5].shadingId = 5;
-    //*/
-
-    auto& entities              = entityStorage->comp->entities;
+    
+    auto& entitiesPool          = entityStorage->comp->entitiesPool;
     auto& shaderingEntitiesPool = entityStorage->comp->shaderingEntitiesPool;
     auto& shaderingDescPool     = entityStorage->comp->shaderingDescPool;
 
     Math::Bounds                           bounds{};
-    std::unordered_map<uint32_t, uint32_t> map{};
-    for (auto& et : entities)
-    {
+    //std::unordered_map<uint32_t, uint32_t> map{};
+
+    entitiesPool.forEach([&](auto& et, int32_t index) {
+
         if (et.shadingId < 0)
-        {
-            continue;
-        }
+            return;
 
         auto& shadingEt = shaderingEntitiesPool[et.shadingId];
         auto& shdDesc   = shaderingDescPool[shadingEt.shadingDescId];
         auto& trans     = shdDesc.transform;
-
         bounds.setXYWH(trans.x, trans.y, trans.sx, trans.sy);
 
         bvh->addItem(et.id, bounds);
-    }
+    });
+
+    //for (auto& et : entitiesPool)
+    //{
+    //    if (et.shadingId < 0)
+    //    {
+    //        continue;
+    //    }
+    //    auto& shadingEt = shaderingEntitiesPool[et.shadingId];
+    //    auto& shdDesc   = shaderingDescPool[shadingEt.shadingDescId];
+    //    auto& trans     = shdDesc.transform;
+    //    bounds.setXYWH(trans.x, trans.y, trans.sx, trans.sy);
+    //    bvh->addItem(et.id, bounds);
+    //}
     bvh->build();
 }
 
@@ -170,11 +90,14 @@ void EntityRenderSystem::render(const Draw::DrawContext& rctx, const Math::Mat33
     auto compStorage = entityStorage->comp;
 
     auto   total     = queriedEIds.size();
-    auto&  entities  = compStorage->entities;
+    auto&  entitiesPool = compStorage->entitiesPool;
     size_t drawTotal = 0;
+
+    /// 注意, 这里要基于渲染顺序排序之后再绘制
+
     for (auto i = 0; i < total; i++)
     {
-        auto& et = entities[queriedEIds[i]];
+        auto& et = entitiesPool[queriedEIds[i]];
         if (et.shadingId < 0 || !et.visible)
             continue;
         auto flag = drawUnit(et, vpM, wbounds);
@@ -187,15 +110,20 @@ void EntityRenderSystem::render(const Draw::DrawContext& rctx, const Math::Mat33
     return;
 
     // 暂时这样写，以便测试dragging
-    auto& ets = compStorage->entities;
-    auto  tot = ets.size();
-    for (auto i = 0; i < tot; i++)
-    {
-        auto& et = ets[i];
+    auto& ets = compStorage->entitiesPool;
+    ets.forEach([&](auto& et) {
         if (et.shadingId < 0 || !et.visible)
-            continue;
+            return;
         drawUnit(et, vpM, wbounds);
-    }
+    });
+    //auto  tot = ets.size();
+    //for (auto i = 0; i < tot; i++)
+    //{
+    //    auto& et = ets[i];
+    //    if (et.shadingId < 0 || !et.visible)
+    //        continue;
+    //    drawUnit(et, vpM, wbounds);
+    //}
 }
 
 bool EntityRenderSystem::drawUnit(const Component::UnitEntity& entity, const Math::Mat33& vpM, const Math::Bounds& wbounds)

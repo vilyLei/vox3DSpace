@@ -81,7 +81,8 @@ public:
     void setEntityXYAt(const Math::Vec2& pos, int32_t id);
 
 public:
-    std::vector<Component::UnitEntity>        entities{};
+    //std::vector<Component::UnitEntity>        entities{};
+    CompPool<Component::UnitEntity>           entitiesPool{};
     CompPool<Component::UnitShadingEntity>     shaderingEntitiesPool{};
     CompPool<Component::UnitShadingBaseDesc>  shaderingDescPool{};
 };

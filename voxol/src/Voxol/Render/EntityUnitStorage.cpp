@@ -26,21 +26,24 @@ void EntityUnitStorage::initalize(int total)
     //auto storage = comp;
     drawing->initalize(total);
 
-    auto& entities              = comp->entities;
+    auto& entitiesPool          = comp->entitiesPool;
     auto& shaderingEntitiesPool = comp->shaderingEntitiesPool;
     auto& shaderingDescPool     = comp->shaderingDescPool;
 
-    entities.resize(total);
+    entitiesPool.initialize(total);
     shaderingEntitiesPool.initialize(total);
 
     auto shaderingDescTotal = total * 2;
     shaderingDescPool.initialize(shaderingDescTotal);
 
-    for (auto i = 0; i < entities.size(); ++i)
-    {
-        entities[i].id = i;
-    }
+    //for (auto i = 0; i < entities.size(); ++i)
+    //{
+    //    entities[i].id = i;
+    //}
 
+    entitiesPool.forEach([&](auto& e, int32_t index) {
+        e.id = index;
+    });
     shaderingEntitiesPool.forEach([&](auto& e, int32_t index) {
         e.id = index;
     });
@@ -77,7 +80,7 @@ void EntityUnitStorage::initalize(int total)
     /// ring
     shaderingEntitiesPool[3].drawUnitId    = drawing->getIdWithType(DrawingUnitType::Ring);
     shaderingEntitiesPool[3].shadingDescId = 3;
-        
+    
     /// multi-circles
     //shaderingEntitiesPool[4].drawUnitId    = drawing->getIdWithType(DrawingUnitType::MultiCircle);
     shaderingEntitiesPool[4].drawUnitId    = drawing->getIdWithType(DrawingUnitType::strokeShape);
@@ -90,17 +93,17 @@ void EntityUnitStorage::initalize(int total)
     //entities[0].shadingId = 4;
 
     /// circle
-    entities[0].shadingId = 0;
+    entitiesPool[0].shadingId = 0;
     ///// circle
-    entities[1].shadingId = 1;
+    entitiesPool[1].shadingId = 1;
     /// circle
-    entities[2].shadingId = 2;
+    entitiesPool[2].shadingId = 2;
     /// ring
-    entities[3].shadingId = 3;
+    entitiesPool[3].shadingId = 3;
     /// multi-circles
-    entities[4].shadingId = 4;
+    entitiesPool[4].shadingId = 4;
     /// ship
-    entities[5].shadingId = 5;
+    entitiesPool[5].shadingId = 5;
 }
 
 
