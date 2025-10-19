@@ -23,7 +23,7 @@ void EntityUnitStorage::initalize(int total)
         drawing = DrawingUnitStorage::make();
     }
 
-    //auto storage = comp;
+
     drawing->initalize(total);
 
     auto& entitiesPool          = comp->entitiesPool;
@@ -36,10 +36,6 @@ void EntityUnitStorage::initalize(int total)
     auto shaderingDescTotal = total * 2;
     shaderingDescPool.initialize(shaderingDescTotal);
 
-    //for (auto i = 0; i < entities.size(); ++i)
-    //{
-    //    entities[i].id = i;
-    //}
 
     entitiesPool.forEach([&](auto& e, int32_t index) {
         e.id = index;
@@ -65,6 +61,9 @@ void EntityUnitStorage::initalize(int total)
     shaderingDescPool[5].color     = 0xff00aa76;
     shaderingDescPool[5].transform = {509, 350, 200, 200, 0};
 
+    shaderingDescPool[6].color     = 0xff00aabb;
+    shaderingDescPool[6].transform = {350, 350, 200, 200, 0};
+
     /// circle
     shaderingEntitiesPool[0].drawUnitId    = drawing->getIdWithType(DrawingUnitType::Circle);
     shaderingEntitiesPool[0].shadingDescId = 0;
@@ -85,9 +84,14 @@ void EntityUnitStorage::initalize(int total)
     //shaderingEntitiesPool[4].drawUnitId    = drawing->getIdWithType(DrawingUnitType::MultiCircle);
     shaderingEntitiesPool[4].drawUnitId    = drawing->getIdWithType(DrawingUnitType::strokeShape);
     shaderingEntitiesPool[4].shadingDescId = 4;
-    auto drawUnitId_4                      = drawing->getIdWithName("ship01.glsl");
-    shaderingEntitiesPool[5].drawUnitId    = drawUnitId_4;
+    auto drawUnitId_5                     = drawing->getIdWithName("ship01.glsl");
+    shaderingEntitiesPool[5].drawUnitId    = drawUnitId_5;
     shaderingEntitiesPool[5].shadingDescId = 5;
+
+    
+    auto drawUnitId_6    = drawing->getGlyphIdWithChar('B');
+    shaderingEntitiesPool[6].drawUnitId    = drawUnitId_6;
+    shaderingEntitiesPool[6].shadingDescId = 6;
 
     /// circle
     //entities[0].shadingId = 4;
@@ -104,6 +108,8 @@ void EntityUnitStorage::initalize(int total)
     entitiesPool[4].shadingId = 4;
     /// ship
     entitiesPool[5].shadingId = 5;
+    /// B
+    entitiesPool[6].shadingId = 6;
 }
 
 

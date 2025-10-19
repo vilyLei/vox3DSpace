@@ -178,13 +178,13 @@ void DrawingUnitStorage::initVoassScene()
 
     Render::Gpu::buildSDFDrawUnit(strokeShapeUnit, Shader::SDFShapeType::DefaultShape, colorClip);
 
-    auto        id       = 8;
+    drawingIDIndex       = 8;
     std::string fileName = "ship01.glsl";
-    auto&       unit_8   = drawingUnits[id];
+    auto&       unit_8   = drawingUnits[drawingIDIndex];
     Render::Gpu::buildSDFDrawUnitWithName(unit_8, fileName, colorClip);
-    nameMap[fileName] = id;
+    nameMap[fileName] = drawingIDIndex;
 
-    drawingIDIndex = id;
+    drawingIDIndex ++;
 
     
     msdfText.initialize("msdf/arial_atlas.png", "msdf/arial_atlas.json");
