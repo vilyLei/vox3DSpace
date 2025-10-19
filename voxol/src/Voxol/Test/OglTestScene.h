@@ -48,7 +48,7 @@ private:
 
     Render::OglFbo             mFbo{};
     Tile::TileSystem::SP       tileSys = Tile::TileSystem::make();
-    Render::EntityRenderSystem etRenderSys{};
+    Render::EntityRenderSystem::SP etRenderSys = Render::EntityRenderSystem::make();
 
     Render::Gpu::DrawingUnit              baseDrawUnit{};
     Render::Gpu::DrawingUnit              texDrawUnit{};

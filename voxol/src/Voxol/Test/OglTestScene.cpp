@@ -10,12 +10,12 @@ void OglTestScene::initScene()
     if (entityModeFlag)
     {
         tileSys->initalize();
-        etRenderSys.initalize();
+        etRenderSys->initalize();
         auto drawCall = [this](const Math::VxRect& bounds, const Math::Mat33& vpMat) {
-            etRenderSys.render(drawCtx, vpMat, bounds);
+            etRenderSys->render(drawCtx, vpMat, bounds);
         };
         auto queryCall = [this](const Math::VxRect& bounds, int phase) -> int {
-            return etRenderSys.drawQuery(bounds, phase);
+            return etRenderSys->drawQuery(bounds, phase);
         };
 
         drawCtx.drawCall  = drawCall;
@@ -93,7 +93,7 @@ void OglTestScene::render(const Voxol::Math::Mat33& vpMat)
         for (auto id : queriedEIds)
         {
             //auto& vb = etRenderSys.bvhItems[id].bounds;
-            auto& vb = etRenderSys.bvh->getBoundsAt(id);
+            auto& vb = etRenderSys->bvh->getBoundsAt(id);
             boundsUnit.objMat.setTo(vb.x(), vb.y(), vb.width(), vb.height());
             boundsUnit.mvp = vpMat;
             boundsUnit.draw();
@@ -137,7 +137,7 @@ void OglTestScene::setKeyParams(int key, int scancode, int action, int mode)
 {
     if (key == 90)
     {
-        auto storage = etRenderSys.entityStorage;
+        auto storage = etRenderSys->entityStorage;
         auto compStorage = storage->comp;
         auto itemData    = compStorage->historyManager->popItem();
         printf("OglTestScene::setKeyParams(), press key z£¬ itemData.id: %d\n", itemData.id);
@@ -154,7 +154,7 @@ void OglTestScene::setKeyParams(int key, int scancode, int action, int mode)
 
         compStorage->setEntityXYAt(pv, itemData.id);
 
-        auto bvh = etRenderSys.bvh;
+        auto bvh = etRenderSys->bvh;
         auto b0 = bvh->getBoundsAt(itemData.id);
         auto b1 = b0;
         if (tileSys)
@@ -177,7 +177,7 @@ void OglTestScene::setMouseParams(const System::UIMouseParam& param)
     //auto& ctx    = drawCtx;
     //auto& drawParam = ctx.drawParam;
     //Math::Vec2 wpv = drawParam.invViewMat.mapPoint({param.x, param.y});
-    mouseEvtMana.upateMouseParam(drawCtx, param, {tileSys, etRenderSys.bvh, etRenderSys.entityStorage->comp});
+    mouseEvtMana.upateMouseParam(drawCtx, param, {tileSys, etRenderSys->bvh, etRenderSys->entityStorage->comp});
 }
 void  OglTestScene::initVoassScene(){
 
