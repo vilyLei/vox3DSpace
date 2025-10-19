@@ -21,7 +21,6 @@ void EntityRenderSystem::initalize()
     auto& shaderingDescPool     = entityStorage->comp->shaderingDescPool;
 
     Math::Bounds                           bounds{};
-    //std::unordered_map<uint32_t, uint32_t> map{};
 
     entitiesPool.forEach([&](auto& et, int32_t index) {
 
@@ -36,18 +35,6 @@ void EntityRenderSystem::initalize()
         bvh->addItem(et.id, bounds);
     });
 
-    //for (auto& et : entitiesPool)
-    //{
-    //    if (et.shadingId < 0)
-    //    {
-    //        continue;
-    //    }
-    //    auto& shadingEt = shaderingEntitiesPool[et.shadingId];
-    //    auto& shdDesc   = shaderingDescPool[shadingEt.shadingDescId];
-    //    auto& trans     = shdDesc.transform;
-    //    bounds.setXYWH(trans.x, trans.y, trans.sx, trans.sy);
-    //    bvh->addItem(et.id, bounds);
-    //}
     bvh->build();
 }
 
@@ -116,14 +103,6 @@ void EntityRenderSystem::render(const Draw::DrawContext& rctx, const Math::Mat33
             return;
         drawUnit(et, vpM, wbounds);
     });
-    //auto  tot = ets.size();
-    //for (auto i = 0; i < tot; i++)
-    //{
-    //    auto& et = ets[i];
-    //    if (et.shadingId < 0 || !et.visible)
-    //        continue;
-    //    drawUnit(et, vpM, wbounds);
-    //}
 }
 
 bool EntityRenderSystem::drawUnit(const Component::UnitEntity& entity, const Math::Mat33& vpM, const Math::Bounds& wbounds)
