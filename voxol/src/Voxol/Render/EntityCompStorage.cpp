@@ -6,6 +6,13 @@ EntityCompStorage::SP EntityCompStorage::make()
     auto sp = std::make_shared<EntityCompStorage>();
     return sp;
 }
+
+
+void EntityCompStorage::initialize(int total)
+{
+
+}
+
 Math::Vec2 EntityCompStorage::getEntityXYAt(int32_t id)
 {
     auto& et        = entities[id];

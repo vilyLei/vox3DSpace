@@ -11,6 +11,11 @@ EntityRenderSystem::SP EntityRenderSystem::make()
 
 void EntityRenderSystem::initalize()
 {
+    if (entityStorage)
+        return;
+    entityStorage = EntityUnitStorage::make();
+    entityStorage->initalize(512);
+    /*
     if (compStorage)
     {
         return;
@@ -100,7 +105,11 @@ void EntityRenderSystem::initalize()
     entities[4].shadingId = 4;
     /// ship
     entities[5].shadingId = 5;
+    //*/
 
+    auto& entities              = entityStorage->comp->entities;
+    auto& shaderingEntitiesPool = entityStorage->comp->shaderingEntitiesPool;
+    auto& shaderingDescPool     = entityStorage->comp->shaderingDescPool;
 
     Math::Bounds                           bounds{};
     std::unordered_map<uint32_t, uint32_t> map{};
@@ -150,7 +159,7 @@ int EntityRenderSystem::drawQuery(const Math::VxRect& wbounds, int phase)
 }
 void EntityRenderSystem::render(const Draw::DrawContext& rctx, const Math::Mat33& vpM, const Math::Bounds& wbounds)
 {
-    if (!compStorage)
+    if (!entityStorage)
         return;
 
     //printf("EntityRenderSystem::render() B %d\n", queriedEIds.size());
@@ -158,9 +167,11 @@ void EntityRenderSystem::render(const Draw::DrawContext& rctx, const Math::Mat33
     if (queriedEIds.empty())
         return;
 
-    auto  total    = queriedEIds.size();
+    auto compStorage = entityStorage->comp;
+
+    auto   total     = queriedEIds.size();
     auto&  entities  = compStorage->entities;
-    size_t  drawTotal    = 0;
+    size_t drawTotal = 0;
     for (auto i = 0; i < total; i++)
     {
         auto& et = entities[queriedEIds[i]];
@@ -189,17 +200,19 @@ void EntityRenderSystem::render(const Draw::DrawContext& rctx, const Math::Mat33
 
 bool EntityRenderSystem::drawUnit(const Component::UnitEntity& entity, const Math::Mat33& vpM, const Math::Bounds& wbounds)
 {
-    if (!compStorage)
+    if (!entityStorage)
         return false;
 
+
+    auto  compStorage       = entityStorage->comp;
     auto& shaderingDescPool = compStorage->shaderingDescPool;
 
-    const auto&  shadingEt = compStorage->get<Component::UnitShadingEntity>(entity.shadingId);
+    const auto& shadingEt = compStorage->get<Component::UnitShadingEntity>(entity.shadingId);
     //auto& drawUnit  = drawingUnits[shadingEt.drawUnitId];
-    auto& drs  = *drawingStorage;
-    auto&        drawUnit  = drs[shadingEt.drawUnitId];
-    auto& shdDesc   = shaderingDescPool[shadingEt.shadingDescId];
-    auto& trans     = shdDesc.transform;
+    auto& drs      = *entityStorage->drawing;
+    auto& drawUnit = drs[shadingEt.drawUnitId];
+    auto& shdDesc  = shaderingDescPool[shadingEt.shadingDescId];
+    auto& trans    = shdDesc.transform;
 
     Math::Bounds vb;
     vb.setXYWH(trans.x, trans.y, trans.sx, trans.sy);

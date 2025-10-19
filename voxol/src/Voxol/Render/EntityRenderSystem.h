@@ -4,9 +4,10 @@
 #include "BVH2DV1.h"
 #include "DrawCtx.h"
 #include "CompPool.h"
-#include "EntityComponent.h"
-#include "EntityCompStorage.h"
-#include "DrawingUnitStorage.h"
+//#include "EntityCompStorage.h"
+//#include "DrawingUnitStorage.h"
+
+#include "EntityUnitStorage.h"
 
 namespace Voxol::Render
 {
@@ -33,9 +34,10 @@ public:
     void render(const Draw::DrawContext& rctx, const Math::Mat33& vpM, const Math::Bounds& wbounds);
     void clear();
 
-    V1::BVH2D::SP          bvh = V1::BVH2D::make();
-    EntityCompStorage::SP compStorage{};
-    DrawingUnitStorage::SP drawingStorage{};
+    EntitySysBVH::SP       bvh = EntitySysBVH::make();
+    //EntityCompStorage::SP compStorage{};
+    //DrawingUnitStorage::SP drawingStorage{};
+    EntityUnitStorage::SP entityStorage{};
 
 private:
     bool                 drawUnit(const Component::UnitEntity& entity, const Math::Mat33& vpM, const Math::Bounds& wbounds);

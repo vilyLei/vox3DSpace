@@ -1,5 +1,5 @@
-#ifndef VOXOL_RENDER_DRAWING_STORAGE_H
-#define VOXOL_RENDER_DRAWING_STORAGE_H
+#ifndef VOXOL_RENDER_DRAWING_UNIT_STORAGE_H
+#define VOXOL_RENDER_DRAWING_UNIT_STORAGE_H
 
 #include "../Base/BaseDefine.h"
 #include "../Math/Mat33.h"

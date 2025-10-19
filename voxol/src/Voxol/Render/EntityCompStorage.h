@@ -24,6 +24,8 @@ public:
     ~EntityCompStorage() = default;
 
 public:
+    void initialize(int total = 512);
+
     template <typename T>
     CompPool<T>& getPool()
     {
