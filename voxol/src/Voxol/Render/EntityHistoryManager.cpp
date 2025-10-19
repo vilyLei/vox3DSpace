@@ -18,7 +18,7 @@ HistoryItemData EntityHistoryManager::popItem() {
         item.id = -1;
         return item;
     }
-    auto&& itemData = std::move(mList.back());
+    auto itemData = std::move(mList.back());
     mList.pop_back();
     return itemData;
 }
