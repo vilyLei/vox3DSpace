@@ -75,6 +75,7 @@ private:
 
     std::vector<Gpu::DrawingUnit> drawingUnits;
     std::unordered_map<std::string, int32_t> nameMap{};
+    int32_t                                  drawingIDIndex = 0;
 
 };
 

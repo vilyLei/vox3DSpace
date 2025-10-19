@@ -173,6 +173,8 @@ void DrawingUnitStorage::initVoassScene()
     Render::Gpu::buildSDFDrawUnitWithName(unit_8, fileName, colorClip);
     nameMap[fileName] = id;
 
+    drawingIDIndex = id;
+
 }
 
 } // namespace Voxol::Render

@@ -8,10 +8,9 @@ EntityCompStorage::SP EntityCompStorage::make()
 }
 
 
-void EntityCompStorage::initialize(int total)
-{
-
-}
+//void EntityCompStorage::initialize(int total)
+//{
+//}
 
 Math::Vec2 EntityCompStorage::getEntityXYAt(int32_t id)
 {
