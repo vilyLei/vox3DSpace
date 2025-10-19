@@ -60,7 +60,7 @@ class MSDFText
 {
 public:
     MSDFText()          = default;
-    virtual ~MSDFText() = default;
+    ~MSDFText() = default;
 
 public:
     void                                        initialize(const std::string& atlasImgPath, const std::string& jsonPath);
