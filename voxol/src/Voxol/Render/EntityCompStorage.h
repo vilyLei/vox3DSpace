@@ -21,11 +21,12 @@ public:
     static EntityCompStorage::SP make();
 
 public:
-    EntityCompStorage()   = default;
+    EntityCompStorage()  = default;
     ~EntityCompStorage() = default;
 
 public:
-    //void initialize(int total = 512);
+
+
     EntityHistoryManager::SP historyManager = EntityHistoryManager::make();
 
     template <typename T>
@@ -79,14 +80,17 @@ public:
     //    return pool.get(index);
     //}
 
+    Component::UnitTransform getEntityTransformAt(int32_t id);
+    void                     setEntityTransformAt(const Component::UnitTransform& trans, int32_t id);
+
     Math::Vec2 getEntityXYAt(int32_t id);
-    void setEntityXYAt(const Math::Vec2& pos, int32_t id);
+    void       setEntityXYAt(const Math::Vec2& pos, int32_t id);
 
 public:
     //std::vector<Component::UnitEntity>        entities{};
-    CompPool<Component::UnitEntity>           entitiesPool{};
-    CompPool<Component::UnitShadingEntity>     shaderingEntitiesPool{};
-    CompPool<Component::UnitShadingBaseDesc>  shaderingDescPool{};
+    CompPool<Component::UnitEntity>          entitiesPool{};
+    CompPool<Component::UnitShadingEntity>   shaderingEntitiesPool{};
+    CompPool<Component::UnitShadingBaseDesc> shaderingDescPool{};
 };
 } // namespace Voxol::Render
 #endif

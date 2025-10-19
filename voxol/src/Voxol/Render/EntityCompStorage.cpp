@@ -7,10 +7,21 @@ EntityCompStorage::SP EntityCompStorage::make()
     return sp;
 }
 
+Component::UnitTransform EntityCompStorage::getEntityTransformAt(int32_t id) {
 
-//void EntityCompStorage::initialize(int total)
-//{
-//}
+    auto& et        = entitiesPool[id];
+    auto& shadingEt = get<Component::UnitShadingEntity>(et.shadingId);
+    auto& shdDesc   = get<Component::UnitShadingBaseDesc>(shadingEt.shadingDescId);
+    auto& trans     = shdDesc.transform;
+    return trans;
+}
+void EntityCompStorage::setEntityTransformAt(const Component::UnitTransform& trans, int32_t id) {
+
+    auto& et        = entitiesPool[id];
+    auto& shadingEt = get<Component::UnitShadingEntity>(et.shadingId);
+    auto& shdDesc   = get<Component::UnitShadingBaseDesc>(shadingEt.shadingDescId);
+    shdDesc.transform = trans;
+}
 
 Math::Vec2 EntityCompStorage::getEntityXYAt(int32_t id)
 {
