@@ -18,12 +18,14 @@ HistoryItemData EntityHistoryManager::popItem() {
         item.id = -1;
         return item;
     }
-    auto item = mList.back();
+    auto&& itemData = std::move(mList.back());
     mList.pop_back();
+    return itemData;
 }
 
 void EntityHistoryManager::pushItem(const HistoryItemData& itemData) {
-    mList.push_back(itemData);
+    mList.emplace_back(itemData);
+    auto sizeTot = mList.size();
 }
 
 } // namespace Voxol::Render

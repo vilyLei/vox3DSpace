@@ -12,6 +12,11 @@ void OglRenderer::key_callback(GLFWwindow* window, int key, int scancode, int ac
     std::cout << "key code: " << key << std::endl;
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
         glfwSetWindowShouldClose(window, GL_TRUE);
+    auto renderer = static_cast<OglRenderer*>(glfwGetWindowUserPointer(window));
+    if (renderer)
+    {
+        renderer->mScene.setKeyParams(key, scancode, action,  mode);
+    }
 }
 void OglRenderer::mouseEnter_callback(GLFWwindow* window, int flag)
 {

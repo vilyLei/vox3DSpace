@@ -133,6 +133,45 @@ void OglTestScene::render(const Voxol::Math::Mat33& vpMat)
     }
 }
 
+void OglTestScene::setKeyParams(int key, int scancode, int action, int mode)
+{
+    if (key == 90)
+    {
+        auto storage = etRenderSys.entityStorage;
+        auto compStorage = storage->comp;
+        auto itemData    = compStorage->historyManager->popItem();
+        printf("OglTestScene::setKeyParams(), press key z£¬ itemData.id: %d\n", itemData.id);
+        if (itemData.id < 0)
+        {
+            return;
+        }
+
+        printf("OglTestScene::setKeyParams(), ready to ctrl-z.\n");
+        auto etrans = compStorage->getEntityTransformAt(itemData.id);
+        //sys.storage->historyManager->pushItem({itemTrans, id});
+
+        Math::Vec2 pv{itemData.trans.x, itemData.trans.y};
+
+        compStorage->setEntityXYAt(pv, itemData.id);
+
+        auto bvh = etRenderSys.bvh;
+        auto b0 = bvh->getBoundsAt(itemData.id);
+        auto b1 = b0;
+        if (tileSys)
+        {
+            // ÒÆ³ö
+            tileSys->addDirtyBounds(b0, 0);
+            b1.moveTo(pv.x, pv.y);
+            // ÒÆÈë
+            tileSys->addDirtyBounds(b1, 1);
+        }
+        if (bvh)
+        {
+            bvh->updateItemBoundsByObjectId(itemData.id, b1);
+            bvh->updateDirty();
+        }
+    }
+}
 void OglTestScene::setMouseParams(const System::UIMouseParam& param)
 {
     //auto& ctx    = drawCtx;

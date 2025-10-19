@@ -31,8 +31,8 @@ void EventManager::upateMouseParam(const Render::Draw::DrawContext& rctx, const 
         {
             if (topId >= 0)
             {
-                dragEvt.targetId        = topId;
-                dragEvt.mouseOriginPos  = wpv;
+                dragEvt.targetId       = topId;
+                dragEvt.mouseOriginPos = wpv;
                 if (sys.storage)
                     dragEvt.entityOriginPos = sys.storage->getEntityXYAt(topId);
                 dragEvt.begin();
@@ -58,22 +58,27 @@ void EventManager::upateMouseParam(const Render::Draw::DrawContext& rctx, const 
                 auto dv = wpv - dragEvt.mouseOriginPos;
                 pv.x += dv.x;
                 pv.y += dv.y;
-                sys.storage->setEntityXYAt(pv, id);
-                auto b0 = sys.bvh->getBoundsAt(id);
-                auto b1 = b0;
-                if (sys.tileSys)
+                if (sys.storage)
                 {
-                    // 移出
-                    sys.tileSys->addDirtyBounds(b0, 0);
-                    b1.moveTo(pv.x, pv.y);
-                    // 移入
-                    sys.tileSys->addDirtyBounds(b1, 1);
-                }
+                    auto itemTrans = sys.storage->getEntityTransformAt(id);
+                    sys.storage->historyManager->pushItem({itemTrans, id});
 
-                if (sys.bvh)
-                {
-                    sys.bvh->updateItemBoundsByObjectId(id, b1);
-                    sys.bvh->updateDirty();
+                    sys.storage->setEntityXYAt(pv, id);
+                    auto b0 = sys.bvh->getBoundsAt(id);
+                    auto b1 = b0;
+                    if (sys.tileSys)
+                    {
+                        // 移出
+                        sys.tileSys->addDirtyBounds(b0, 0);
+                        b1.moveTo(pv.x, pv.y);
+                        // 移入
+                        sys.tileSys->addDirtyBounds(b1, 1);
+                    }
+                    if (sys.bvh)
+                    {
+                        sys.bvh->updateItemBoundsByObjectId(id, b1);
+                        sys.bvh->updateDirty();
+                    }
                 }
             }
         }
@@ -93,5 +98,5 @@ void EventManager::upateMouseParam(const Render::Draw::DrawContext& rctx, const 
             break;
     }
 }
-}
-}
+} // namespace Mouse
+} // namespace Voxol::System
