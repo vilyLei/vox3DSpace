@@ -34,7 +34,7 @@ public:
 public:
     void                      initScene();
     void                      render(const Voxol::Math::Mat33& vpMat);
-    void                      setKeyParams(int key, int scancode, int action, int mode);
+    void                      undo();
     void                      setMouseParams(const System::UIMouseParam& param);
     Render::Draw::DrawContext drawCtx{};
     System::Mouse::EventManager       mouseEvtMana{};

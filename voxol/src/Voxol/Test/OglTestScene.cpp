@@ -27,8 +27,9 @@ void OglTestScene::initScene()
         Render::Gpu::buildBaseDrawUnit(boundsUnit);
 
         shortcutMana.registerShortcut(
-            {GLFW_KEY_LEFT_CONTROL, GLFW_KEY_Z}, [] {
+            {GLFW_KEY_LEFT_CONTROL, GLFW_KEY_Z}, [this] {
                 std::cout << "[Undo] Ctrl + Z pressed\n";
+                undo();
             },
             System::ShortcutManager::TriggerType::Press);
 
@@ -48,7 +49,7 @@ void OglTestScene::initScene()
     Render::Gpu::buildTexDrawUnit(texDrawUnit);
 
 
-    static float time        = 0.0f;
+    static float time = 0.0f;
 
     time += 0.1f;
 
@@ -63,7 +64,7 @@ void OglTestScene::initScene()
 
     char32_t ch         = U'中';
     auto&&   glyData    = textBuilder.createGlyph(ch, 32);
-    auto&   imgData = glyData.image;
+    auto&    imgData    = glyData.image;
     glyphDrawUnit.color = {0.0f, 0.3, 0.3f, 1.0f};
     glyphDrawUnit.objMat.setTo(360, 320, imgData.width, imgData.height);
 
@@ -71,7 +72,7 @@ void OglTestScene::initScene()
     Render::Gpu::buildGlyphTexDrawUnit(glyphDrawUnit, glyData);
 
     Render::OglImage imgObj{};
-    auto&&   pngData = imgObj.loadPNGFromAssets("letterA.png");
+    auto&&           pngData = imgObj.loadPNGFromAssets("letterA.png");
     pngUnit.objMat.setTo(360, 150, pngData.width, pngData.height);
     Render::Gpu::buildTexDrawUnit(pngUnit, pngData);
 
@@ -79,7 +80,6 @@ void OglTestScene::initScene()
 
     std::string text = "Hello, Cute Boy!";
     msdfText.buildText(text, msdfTextDrawUnits, {300, 100}, 50);
-    
 }
 void OglTestScene::render(const Voxol::Math::Mat33& vpMat)
 {
@@ -140,46 +140,42 @@ void OglTestScene::render(const Voxol::Math::Mat33& vpMat)
     }
 }
 
-void OglTestScene::setKeyParams(int key, int scancode, int action, int mode)
+void OglTestScene::undo()
 {
-    /*
-    if (key == 90)
+    ///*
+    auto storage     = etRenderSys->entityStorage;
+    auto compStorage = storage->comp;
+    auto itemData    = compStorage->historyManager->popItem();
+    printf("OglTestScene::setKeyParams(), press key z， itemData.id: %d\n", itemData.id);
+    if (itemData.id < 0)
     {
-        auto storage = etRenderSys->entityStorage;
-        auto compStorage = storage->comp;
-        auto itemData    = compStorage->historyManager->popItem();
-        printf("OglTestScene::setKeyParams(), press key z， itemData.id: %d\n", itemData.id);
-        if (itemData.id < 0)
-        {
-            return;
-        }
-
-        printf("OglTestScene::setKeyParams(), ready to ctrl-z.\n");
-        auto etrans = compStorage->getEntityTransformAt(itemData.id);
-        //sys.storage->historyManager->pushItem({itemTrans, id});
-
-        Math::Vec2 pv{itemData.trans.x, itemData.trans.y};
-
-        compStorage->setEntityXYAt(pv, itemData.id);
-
-        auto bvh = etRenderSys->bvh;
-        auto b0 = bvh->getBoundsAt(itemData.id);
-        auto b1 = b0;
-        if (tileSys)
-        {
-            // 移出
-            tileSys->addDirtyBounds(b0, 0);
-            b1.moveTo(pv.x, pv.y);
-            // 移入
-            tileSys->addDirtyBounds(b1, 1);
-        }
-        if (bvh)
-        {
-            bvh->updateItemBoundsByObjectId(itemData.id, b1);
-            bvh->updateDirty();
-        }
+        return;
     }
-    //*/
+
+    printf("OglTestScene::setKeyParams(), ready to ctrl-z.\n");
+    auto etrans = compStorage->getEntityTransformAt(itemData.id);
+    //sys.storage->historyManager->pushItem({itemTrans, id});
+
+    Math::Vec2 pv{itemData.trans.x, itemData.trans.y};
+
+    compStorage->setEntityXYAt(pv, itemData.id);
+
+    auto bvh = etRenderSys->bvh;
+    auto b0  = bvh->getBoundsAt(itemData.id);
+    auto b1  = b0;
+    if (tileSys)
+    {
+        // 移出
+        tileSys->addDirtyBounds(b0, 0);
+        b1.moveTo(pv.x, pv.y);
+        // 移入
+        tileSys->addDirtyBounds(b1, 1);
+    }
+    if (bvh)
+    {
+        bvh->updateItemBoundsByObjectId(itemData.id, b1);
+        bvh->updateDirty();
+    }
 }
 void OglTestScene::setMouseParams(const System::UIMouseParam& param)
 {
@@ -188,13 +184,14 @@ void OglTestScene::setMouseParams(const System::UIMouseParam& param)
     //Math::Vec2 wpv = drawParam.invViewMat.mapPoint({param.x, param.y});
     mouseEvtMana.upateMouseParam(drawCtx, param, {tileSys, etRenderSys->bvh, etRenderSys->entityStorage->comp});
 }
-void  OglTestScene::initVoassScene(){
+void OglTestScene::initVoassScene()
+{
 
-    
+
     using namespace Voass::Render;
 
 
-    auto& sdfCircleUnit      = sdfDrawUnits[0];
+    auto& sdfCircleUnit       = sdfDrawUnits[0];
     auto& sdfMultiCirclesUnit = sdfDrawUnits[1];
     auto& sdfRingUnit         = sdfDrawUnits[2];
     auto& sdfSectorUnit       = sdfDrawUnits[3];
@@ -231,15 +228,15 @@ void  OglTestScene::initVoassScene(){
     sdfTriangleUnit.color = {0.7f, 0.2, 0.2f, 1.f};
     sdfTriangleUnit.objMat.setTo(300, 350, 200, 200);
     Render::Gpu::buildSDFDrawUnit(sdfTriangleUnit, Shader::SDFShapeType::Triangle, colorClip);
-    
-    
+
+
     sdfRectUnit.color = {0.1f, 0.6, 0.3f, 1.0f};
     sdfRectUnit.objMat.setTo(100, 100, 200, 80);
     Render::Gpu::buildSDFDrawUnit(sdfRectUnit, Shader::SDFShapeType::Rect, colorClip);
 
     Render::Gpu::buildSDFDrawUnit(strokeShapeUnit, Shader::SDFShapeType::DefaultShape, colorClip);
 
-    
+
     boundsUnit.color = {0.0f, 0.3, 0.3f, 1.f};
     boundsUnit.objMat.setTo(0, 0, 150, 150);
     boundsUnit.vertex.toLine();
@@ -250,7 +247,7 @@ void  OglTestScene::initVoassScene(){
 
 void OglTestScene::renderVoass(const Math::Mat33& vpMat)
 {
-    auto& ctx    = drawCtx;
+    auto& ctx      = drawCtx;
     auto& params   = ctx.drawParam;
     auto& viewport = ctx.clearParam.viewport;
     /*
@@ -310,7 +307,7 @@ void OglTestScene::renderVoass(const Math::Mat33& vpMat)
 
         fboVPM.append(vMat);
 
-        clearParam.viewport = {0, 0, fboW, fboH};
+        clearParam.viewport   = {0, 0, fboW, fboH};
         clearParam.clearColor = {0.1, 0.3, 0.1, 1};
 
         mFbo.bindFBO();
@@ -330,7 +327,8 @@ void OglTestScene::renderVoass(const Math::Mat33& vpMat)
         tile0Unit.mvp = params.projMat;
         tile0Unit.draw();
     }
-    else {
+    else
+    {
         renderSdfUnits(vpMat);
     }
 }
@@ -345,13 +343,13 @@ void OglTestScene::renderSdfUnits(const Voxol::Math::Mat33& vpMat)
     auto& sdfTriangleUnit     = sdfDrawUnits[5];
     auto& sdfRectUnit         = sdfDrawUnits[6];
     auto& strokeShapeUnit     = sdfDrawUnits[7];
-    
+
     sdfCircleUnit.color = {0.9f, 0.0, 0.7f, 1.0f};
-    sdfCircleUnit.mvp = vpMat;
+    sdfCircleUnit.mvp   = vpMat;
     sdfCircleUnit.draw();
 
     sdfCircleUnit.color = {0.7f, 0.7, 0.7f, 1.0f};
-    sdfCircleUnit.mvp = vpMat;
+    sdfCircleUnit.mvp   = vpMat;
     sdfCircleUnit.draw();
 
     sdfMultiCirclesUnit.color = {0.6f, 0.0, 0.3f, 1.0f};
@@ -361,7 +359,7 @@ void OglTestScene::renderSdfUnits(const Voxol::Math::Mat33& vpMat)
 
     sdfMultiCirclesUnit.objMat.setTo(360, 130, 200, 200);
     sdfMultiCirclesUnit.color = {0.0, 0.7, 0.7f, 1.0f};
-    sdfMultiCirclesUnit.mvp = vpMat;
+    sdfMultiCirclesUnit.mvp   = vpMat;
     sdfMultiCirclesUnit.draw();
 
     sdfSectorUnit.mvp = vpMat;
@@ -380,7 +378,7 @@ void OglTestScene::renderSdfUnits(const Voxol::Math::Mat33& vpMat)
     sdfRoundedRectUnit.mvp = vpMat;
     sdfRoundedRectUnit.draw();
 
-    
+
     sdfRectUnit.color = {0.1f, 0.6, 0.3f, 1.0f};
     sdfRectUnit.objMat.setTo(100, 300, 300, 30, 3.1415926f / 3);
     sdfRectUnit.mvp = vpMat;
@@ -394,6 +392,5 @@ void OglTestScene::renderSdfUnits(const Voxol::Math::Mat33& vpMat)
     strokeShapeUnit.objMat.setTo(700, 300, 100, 100);
     strokeShapeUnit.mvp = vpMat;
     strokeShapeUnit.draw();
-
 }
 } // namespace Voxol::Test
