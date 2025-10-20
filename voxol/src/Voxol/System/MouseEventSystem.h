@@ -67,6 +67,116 @@ struct EventManager
     void                 upateMouseParam(const Render::Draw::DrawContext& rctx, const System::UIMouseParam& param, const TargetSysParam& sys);
     
 };
+
+using MouseInputParam = System::UIMouseParam;
+
+struct MouseEvent
+{
+    // 0: begin, 1: dragging moving, 2: end
+    UIMouseActionPhase phase = UIMouseActionPhase::End;
+    UIMouseType type  = UIMouseType::MOUSE_MOVE;
+
+    bool       dirty = false;
+    Math::Vec2 originPos{};
+    Math::Vec2 localPos{};
+    Math::Vec2 globalPos{};
+
+    bool isBegin() const
+    {
+        return phase == UIMouseActionPhase::Begin;
+    }
+    bool isEnd() const
+    {
+        return phase == UIMouseActionPhase::End;
+    }
+    bool isDragging() const
+    {
+        return phase == UIMouseActionPhase::Dragging;
+    }
+    void begin()
+    {
+        phase = UIMouseActionPhase::Begin;
+        dirty = false;
+    }
+    void drag()
+    {
+        phase = UIMouseActionPhase::Dragging;
+        dirty = true;
+    }
+    void end()
+    {
+        phase = UIMouseActionPhase::End;
+        dirty = false;
+    }
+    void resetState()
+    {
+        dirty = false;
+    }
+};
+using MouseCallType = std::function<void(const MouseEvent& evt, const Math::Vec2& dv)>;
+struct MouseEvtHandler
+{
+    MouseEvent evt{};
+    void       upateMouseParam(const Render::Draw::DrawContext& rctx, const MouseInputParam& param, const MouseCallType& callback)
+    {
+
+        Math::Vec2 mousePos{param.x, param.y};
+        auto&&     wpv = rctx.drawParam.invViewMat.mapPoint(mousePos);
+        evt.localPos   = mousePos;
+        evt.globalPos  = wpv;
+        evt.type       = param.type;
+        switch (param.type)
+        {
+            /// mouse down
+            case UIMouseType::MOUSE_DOWN:
+            {
+                if (!evt.isBegin())
+                {
+                    evt.begin();
+                    evt.originPos = wpv;
+                    callback(evt, {});
+                }
+            }
+            break;
+            /// mouse up
+            case UIMouseType::MOUSE_UP:
+            {
+                if (evt.isBegin() || evt.isDragging())
+                {
+                    evt.end();
+                    callback(evt, {});
+                }
+            }
+            break;
+            /// mouse move
+            case UIMouseType::MOUSE_MOVE:
+            {
+                if (evt.isBegin() || evt.isDragging())
+                {
+                    evt.drag();
+
+                    auto&& dv = wpv - evt.originPos;
+
+                    callback(evt, dv);
+                }
+            }
+            break;
+            /// mouse scroll
+            case UIMouseType::MOUSE_SCROLL:
+            {
+            }
+            break;
+            /// mouse click
+            case UIMouseType::MOUSE_CLICK:
+            {
+            }
+            break;
+
+            default:
+                break;
+        }
+    }
+};
 } // namespace Mouse
 
 

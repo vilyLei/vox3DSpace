@@ -6,6 +6,12 @@
 
 namespace Voxol::System
 {
+enum class UIMouseActionPhase : unsigned char
+{
+    Begin   = 0,
+    Dragging     = 1,
+    End   = 3
+};
 enum class UIMouseType : unsigned char
 {
     MOUSE_DOWN = 11,
