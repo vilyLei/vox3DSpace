@@ -113,7 +113,7 @@ struct MouseEvent
         dirty = false;
     }
 };
-using MouseCallType = std::function<void(const MouseEvent& evt, const Math::Vec2& dv)>;
+using MouseCallType = std::function<void(const MouseEvent& evt, const Math::Vec2& offset)>;
 struct MouseEvtHandler
 {
     MouseEvent evt{};

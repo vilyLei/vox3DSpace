@@ -37,7 +37,8 @@ public:
     void                      undo();
     void                      setMouseParams(const System::UIMouseParam& param);
     Render::Draw::DrawContext drawCtx{};
-    System::Mouse::EventManager       mouseEvtMana{};
+    //System::Mouse::EventManager       mouseEvtMana{};
+    System::Mouse::MouseEvtHandler       mouseEvtHandler{};
     System::ShortcutManager     shortcutMana{};
 
 private:
@@ -63,7 +64,8 @@ private:
     std::vector<Render::Gpu::DrawingUnit> sdfDrawUnits{8};
 
     Render::Gpu::DrawingUnit     tile0Unit{};
-    Render::Gpu::DrawingUnit     boundsUnit{};
+    Render::Gpu::DrawingUnit boundsUnit{};
+    std::vector<int32_t>     qeIds{};
 };
 
 

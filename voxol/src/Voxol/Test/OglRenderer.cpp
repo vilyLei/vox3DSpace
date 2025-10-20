@@ -193,7 +193,8 @@ void OglRenderer::setMouseXY(float x, float y)
 void OglRenderer::setMouseParams(const System::UIMouseParam& param)
 {
     mScene.setMouseParams(param);
-    auto& mouseEvt = mScene.mouseEvtMana.dragEvt;
+    //auto& mouseEvt = mScene.mouseEvtMana.dragEvt;
+    auto& mouseEvt = mScene.mouseEvtHandler.evt;
     if (!mouseEvt.isEnd())
     {
         dirty = true;
