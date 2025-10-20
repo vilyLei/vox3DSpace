@@ -9,13 +9,14 @@ GLuint OglRenderer::ctxCurrHeight = 800;
 
 void OglRenderer::key_callback(GLFWwindow* window, int key, int scancode, int action, int mode)
 {
-    std::cout << "key code: " << key << std::endl;
+    //std::cout << "key code: " << key << std::endl;
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
         glfwSetWindowShouldClose(window, GL_TRUE);
     auto renderer = static_cast<OglRenderer*>(glfwGetWindowUserPointer(window));
     if (renderer)
     {
-        renderer->mScene.setKeyParams(key, scancode, action,  mode);
+        //renderer->mScene.setKeyParams(key, scancode, action,  mode);
+        renderer->mScene.shortcutMana.handleKeyEvent(key, scancode, action, mode);
     }
 }
 void OglRenderer::mouseEnter_callback(GLFWwindow* window, int flag)

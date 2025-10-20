@@ -25,6 +25,13 @@ void OglTestScene::initScene()
         boundsUnit.vertex.toLine();
         boundsUnit.vertex.lineWidth = 5;
         Render::Gpu::buildBaseDrawUnit(boundsUnit);
+
+        shortcutMana.registerShortcut(
+            {GLFW_KEY_LEFT_CONTROL, GLFW_KEY_Z}, [] {
+                std::cout << "[Undo] Ctrl + Z pressed\n";
+            },
+            System::ShortcutManager::TriggerType::Press);
+
         return;
     }
     if (voassModeFlag)
@@ -135,6 +142,7 @@ void OglTestScene::render(const Voxol::Math::Mat33& vpMat)
 
 void OglTestScene::setKeyParams(int key, int scancode, int action, int mode)
 {
+    /*
     if (key == 90)
     {
         auto storage = etRenderSys->entityStorage;
@@ -171,6 +179,7 @@ void OglTestScene::setKeyParams(int key, int scancode, int action, int mode)
             bvh->updateDirty();
         }
     }
+    //*/
 }
 void OglTestScene::setMouseParams(const System::UIMouseParam& param)
 {

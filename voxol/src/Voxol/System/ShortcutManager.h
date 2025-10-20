@@ -8,106 +8,172 @@
 #include <cstdint>
 #include <iostream>
 #include <algorithm>
+#include <chrono>
+#include <set>
+#include <vector>
 
 namespace Voxol::System
 {
 
-// ------------------------------
-// Key 修饰符位掩码定义
-// ------------------------------
-enum KeyMod : uint32_t {
-    MOD_CTRL  = 1 << 0,
-    MOD_SHIFT = 1 << 1,
-    MOD_ALT   = 1 << 2,
-};
+struct KeyCombo
+{
+    std::vector<int> keys;
 
-// ------------------------------
-// 组合键描述结构
-// ------------------------------
-struct KeyCombo {
-    uint32_t mods = 0; // Ctrl / Shift / Alt
-    int mainKey = 0;   // 主键（GLFW key code）
+    KeyCombo() = default;
+    KeyCombo(std::initializer_list<int> ks) :
+        keys(ks)
+    {
+        std::sort(keys.begin(), keys.end());
+    }
+    KeyCombo(const std::vector<int>& ks) :
+        keys(ks) {}
 
-    bool operator==(const KeyCombo& o) const noexcept {
-        return mods == o.mods && mainKey == o.mainKey;
+    bool operator==(const KeyCombo& other) const noexcept
+    {
+        return keys == other.keys;
     }
 };
 
-// 自定义哈希
-struct KeyComboHash {
-    std::size_t operator()(const KeyCombo& c) const noexcept {
-        return (static_cast<size_t>(c.mainKey) << 3) ^ c.mods;
+struct KeyComboHash
+{
+    std::size_t operator()(const KeyCombo& combo) const noexcept
+    {
+        std::size_t h = 0;
+        for (int k : combo.keys)
+            h ^= std::hash<int>()(k) + 0x9e3779b97f4a7c15ULL + (h << 6) + (h >> 2);
+        return h;
     }
 };
 
-// ------------------------------
-// 快捷键管理器
-// ------------------------------
-class ShortcutManager {
+using Callback = std::function<void()>;
+
+class ShortcutManager
+{
 public:
-    using Callback = std::function<void()>;
+    enum class TriggerType
+    {
+        Press,
+        LongPress,
+        Release
+    };
 
-    void registerShortcut(const std::string& comboStr, Callback cb) {
-        KeyCombo combo = parseCombo(comboStr);
-        m_shortcuts[combo] = std::move(cb);
-        std::cout << "[ShortcutManager] Registered: " << comboStr << " (key=" 
-                  << combo.mainKey << ", mods=" << combo.mods << ")\n";
+    struct Shortcut
+    {
+        KeyCombo                              combo;
+        Callback                              callback;
+        TriggerType                           trigger;
+        bool                                  active = false;
+        std::chrono::steady_clock::time_point pressTime;
+    };
+
+    using Listener = std::function<void(const KeyCombo&, TriggerType)>;
+
+    void registerShortcut(const KeyCombo& combo, Callback cb, TriggerType trigger = TriggerType::Press)
+    {
+        Shortcut s{combo, std::move(cb), trigger};
+        m_shortcuts[combo] = std::move(s);
     }
 
-    // GLFW 事件输入
-    void onKeyEvent(int key, int scancode, int action, int mods) {
-        if (action != GLFW_PRESS) return;
+    void addListener(Listener listener)
+    {
+        m_listeners.push_back(std::move(listener));
+    }
 
-        uint32_t myMods = 0;
-        if (mods & GLFW_MOD_CONTROL) myMods |= MOD_CTRL;
-        if (mods & GLFW_MOD_SHIFT)   myMods |= MOD_SHIFT;
-        if (mods & GLFW_MOD_ALT)     myMods |= MOD_ALT;
+    void handleKeyEvent(int key, int scancode, int action, int mods)
+    {
+        using namespace std::chrono;
 
-        KeyCombo combo{ myMods, key };
+        if (action == GLFW_PRESS)
+        {
+            m_pressed.insert(key);
+            checkPressTrigger();
+        }
+        else if (action == GLFW_RELEASE)
+        {
+            m_pressed.erase(key);
+            checkReleaseTrigger();
+        }
+    }
+
+    void update()
+    {
+        using namespace std::chrono;
+
+        auto now = steady_clock::now();
+
+        for (auto& [combo, shortcut] : m_shortcuts)
+        {
+            if (shortcut.trigger == TriggerType::LongPress && shortcut.active)
+            {
+                auto elapsed = duration_cast<milliseconds>(now - shortcut.pressTime).count();
+                if (elapsed >= m_longPressThreshold && !m_longPressTriggered[combo])
+                {
+                    shortcut.callback();
+                    notify(combo, TriggerType::LongPress);
+                    m_longPressTriggered[combo] = true;
+                }
+            }
+        }
+    }
+
+    void setLongPressThreshold(int ms) { m_longPressThreshold = ms; }
+
+private:
+    void checkPressTrigger()
+    {
+        std::vector<int> sortedKeys(m_pressed.begin(), m_pressed.end());
+        std::sort(sortedKeys.begin(), sortedKeys.end());
+        KeyCombo combo{sortedKeys};
+
         auto it = m_shortcuts.find(combo);
-        if (it != m_shortcuts.end()) {
-            it->second();
+        if (it != m_shortcuts.end())
+        {
+            auto& shortcut              = it->second;
+            shortcut.active             = true;
+            shortcut.pressTime          = std::chrono::steady_clock::now();
+            m_longPressTriggered[combo] = false;
+
+            if (shortcut.trigger == TriggerType::Press)
+            {
+                shortcut.callback();
+                notify(combo, TriggerType::Press);
+            }
+        }
+    }
+
+    void checkReleaseTrigger()
+    {
+        std::vector<int> sortedKeys(m_pressed.begin(), m_pressed.end());
+        std::sort(sortedKeys.begin(), sortedKeys.end());
+        KeyCombo combo{sortedKeys};
+
+        for (auto& [k, shortcut] : m_shortcuts)
+        {
+            if (shortcut.active && shortcut.trigger == TriggerType::Release)
+            {
+                shortcut.active = false;
+                shortcut.callback();
+                notify(k, TriggerType::Release);
+            }
+        }
+    }
+
+    void notify(const KeyCombo& combo, TriggerType type)
+    {
+        for (auto& listener : m_listeners)
+        {
+            listener(combo, type);
         }
     }
 
 private:
-    KeyCombo parseCombo(const std::string& str) {
-        KeyCombo combo{};
-        std::string s = str;
-        std::transform(s.begin(), s.end(), s.begin(), ::toupper);
-        s.erase(std::remove_if(s.begin(), s.end(), ::isspace), s.end());
-
-        if (s.find("CTRL+") != std::string::npos) {
-            combo.mods |= MOD_CTRL;
-            s.erase(s.find("CTRL+"), 5);
-        }
-        if (s.find("SHIFT+") != std::string::npos) {
-            combo.mods |= MOD_SHIFT;
-            s.erase(s.find("SHIFT+"), 6);
-        }
-        if (s.find("ALT+") != std::string::npos) {
-            combo.mods |= MOD_ALT;
-            s.erase(s.find("ALT+"), 4);
-        }
-
-        // 主键
-        if (s.size() == 1 && s[0] >= 'A' && s[0] <= 'Z') {
-            combo.mainKey = GLFW_KEY_A + (s[0] - 'A');
-        } else if (s.size() == 1 && s[0] >= '0' && s[0] <= '9') {
-            combo.mainKey = GLFW_KEY_0 + (s[0] - '0');
-        } else {
-            // 可扩展更多键名
-            if (s == "SPACE") combo.mainKey = GLFW_KEY_SPACE;
-            else if (s == "ENTER") combo.mainKey = GLFW_KEY_ENTER;
-            else if (s == "TAB") combo.mainKey = GLFW_KEY_TAB;
-            else if (s == "ESC" || s == "ESCAPE") combo.mainKey = GLFW_KEY_ESCAPE;
-        }
-        return combo;
-    }
-
-private:
-    std::unordered_map<KeyCombo, Callback, KeyComboHash> m_shortcuts;
+    std::unordered_map<KeyCombo, Shortcut, KeyComboHash> m_shortcuts;
+    std::unordered_map<KeyCombo, bool, KeyComboHash>     m_longPressTriggered;
+    std::vector<Listener>                                m_listeners;
+    std::set<int>                                        m_pressed;
+    int                                                  m_longPressThreshold = 600; // ms
 };
+
 
 }
 #endif

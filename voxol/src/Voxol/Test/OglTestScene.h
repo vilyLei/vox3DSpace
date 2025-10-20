@@ -8,6 +8,7 @@
 #include "../Math/VxRect.h"
 #include "../Render/OglFbo.h"
 #include "../System/MouseEventSystem.h"
+#include "../System/ShortcutManager.h"
 #include "../Render/OglGpuResUtils.h"
 #include "OglImage.h"
 #include "OglText.h"
@@ -37,6 +38,7 @@ public:
     void                      setMouseParams(const System::UIMouseParam& param);
     Render::Draw::DrawContext drawCtx{};
     System::Mouse::EventManager       mouseEvtMana{};
+    System::ShortcutManager     shortcutMana{};
 
 private:
     void initVoassScene();
