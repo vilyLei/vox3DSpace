@@ -197,7 +197,7 @@ void OglTestScene::setMouseParams(const System::UIMouseParam& param)
         if (evt.type == System::UIMouseType::MOUSE_MOVE || evt.type == System::UIMouseType::MOUSE_DOWN)
         {
             qeIds.clear();
-            if (drawParam.viewVBounds.contains(evt.localPos))
+            if (drawParam.viewVBounds.contains(evt.globalPos))
                 sys->bvh->queryPoint(evt.globalPos, qeIds);
         }
 
