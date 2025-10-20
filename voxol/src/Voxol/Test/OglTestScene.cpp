@@ -202,7 +202,7 @@ void OglTestScene::setMouseParams(const System::UIMouseParam& param)
         }
 
         int32_t topId = qeIds.empty() ? -1 : qeIds.back();
-        if (etId < 0 || topId < 0)
+        if (topId < 0)
         {
             return;
         }
@@ -224,7 +224,7 @@ void OglTestScene::setMouseParams(const System::UIMouseParam& param)
             /// mouse up
             case System::UIMouseType::MOUSE_UP:
             {
-                if (evt.isDragging())
+                if (etId >= 0 && evt.isDragging())
                 {
 
                     if (etStorage)
@@ -237,7 +237,7 @@ void OglTestScene::setMouseParams(const System::UIMouseParam& param)
             /// mouse move
             case System::UIMouseType::MOUSE_MOVE:
             {
-                if (evt.isDragging())
+                if (etId >= 0 && evt.isDragging())
                 {
                     //auto id = etId;
                     //auto pv = originEtPos + offset;
