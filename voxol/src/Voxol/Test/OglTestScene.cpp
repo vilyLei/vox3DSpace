@@ -98,7 +98,7 @@ void OglTestScene::render(const Voxol::Math::Mat33& vpMat)
         boundsUnit.vertex.lineWidth = 1.0f;
 
         //auto& queriedEIds = mouseEvtMana.queryEIds;
-        auto& queriedEIds = qeIds;
+        auto& queriedEIds = mouseCtrl.qeIds;
         for (auto id : queriedEIds)
         {
             //auto& vb = etRenderSys.bvhItems[id].bounds;
@@ -179,14 +179,16 @@ void OglTestScene::undo()
         bvh->updateDirty();
     }
 }
-void OglTestScene::setMouseParams(const System::UIMouseParam& param)
+void OglTestScene::setMouseParams(const System::Mouse::MouseInputParam& param)
 {
     auto& ctx    = drawCtx;
-    auto& drawParam = ctx.drawParam;
+    mouseCtrl.targetSys = etRenderSys;
+    mouseCtrl.upateMouseParam(drawCtx, param);
+    //auto& drawParam = ctx.drawParam;
     //Math::Vec2 wpv = drawParam.invViewMat.mapPoint({param.x, param.y});
     //mouseEvtMana.upateMouseParam(drawCtx, param, {tileSys, etRenderSys->bvh, etRenderSys->entityStorage->comp});
     //mouseEvtHandler(drawCtx, param, {tileSys, etRenderSys->bvh, etRenderSys->entityStorage->comp});
-
+    /*
     Render::Component::UnitTransform unitParam{};
     Math::Vec2           originEtPos{};
     int32_t              etId = -1;
@@ -281,6 +283,7 @@ void OglTestScene::setMouseParams(const System::UIMouseParam& param)
                 break;
         }
     });
+    //*/
 }
 void OglTestScene::initVoassScene()
 {

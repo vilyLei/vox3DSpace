@@ -45,7 +45,7 @@ void OglRenderer::scroll_callback(GLFWwindow* window, double xoffset, double yof
     if (renderer)
     {
         auto& mousePos     = renderer->mousePos;
-        System::UIMouseParam param{mousePos.x, mousePos.y, System::UIMouseType::MOUSE_SCROLL, yoffset};
+        System::Mouse::MouseInputParam param{mousePos.x, mousePos.y, System::Mouse::MouseEventType::MouseScroll, yoffset};
         renderer->setMouseParams(param);
     }
 }
@@ -65,12 +65,28 @@ void OglRenderer::mouseButton_callback(GLFWwindow* window, int sign, int flag, i
     auto renderer = static_cast<OglRenderer*>(glfwGetWindowUserPointer(window));
     if (renderer)
     {
+        renderer->mouseButton = sign;
         //auto  btn          = sign + 1;
         //auto  mouseActType = flag > 0 ? btn * 10 + 1 : btn * 10 + 2;
-        auto  mouseActType = flag > 0 ? System::UIMouseType::MOUSE_DOWN : System::UIMouseType::MOUSE_UP;
+        auto  mouseActType = flag > 0 ? System::Mouse::MouseEventType::MouseDown : System::Mouse::MouseEventType::MouseUp;
+        switch (sign)
+        {
+            case 0:
+            {
+                mouseActType = flag > 0 ? System::Mouse::MouseEventType::MouseRightDown : System::Mouse::MouseEventType::MouseRightUp;
+            }
+                break;
+            case 2:
+                {
+                mouseActType = flag > 0 ? System::Mouse::MouseEventType::MouseMiddleDown : System::Mouse::MouseEventType::MouseMiddleUp;
+            }
+                break;
+            default:
+                break;
+        }
         auto& mousePos     = renderer->mousePos;
         //renderer->setMouseParams(mousePos.x, mousePos.y, mouseActType, 0);
-        System::UIMouseParam param{mousePos.x, mousePos.y, mouseActType, 0};
+        System::Mouse::MouseInputParam param{mousePos.x, mousePos.y, mouseActType, 0};
         renderer->setMouseParams(param);
     }
 }
@@ -186,16 +202,27 @@ void OglRenderer::setMouseXY(float x, float y)
     if (!mousePos.isEqual(canvas.view.mousePos))
     {
         canvas.view.mousePos = mousePos;
-            setMouseParams({mousePos.x, mousePos.y, System::UIMouseType::MOUSE_MOVE, 0});
+            auto type            = System::Mouse::MouseEventType::MouseMove;
+            switch (mouseButton)
+            {
+            case 1:
+                type = System::Mouse::MouseEventType::MouseRightMove;
+                break;
+            case 2:
+                type = System::Mouse::MouseEventType::MouseMiddleMove;
+                break;
+            default:
+                break;
+            }
+            setMouseParams({mousePos.x, mousePos.y, type, 0});
     }
 }
 
-void OglRenderer::setMouseParams(const System::UIMouseParam& param)
+void OglRenderer::setMouseParams(const System::Mouse::MouseInputParam& param)
 {
     mScene.setMouseParams(param);
-    //auto& mouseEvt = mScene.mouseEvtMana.dragEvt;
-    auto& mouseEvt = mScene.mouseEvtHandler.evt;
-    if (!mouseEvt.isEnd())
+
+    if (mouseButton != 2)
     {
         dirty = true;
         return;

@@ -23,6 +23,62 @@
 
 namespace Voxol::Test
 {
+enum class SelectType
+{
+    Single,
+    Multiple,
+    Bounds
+};
+struct MouseonCtroller
+{
+    Math::Vec2           originEtPos{};
+    int32_t              etId = -1;
+    std::vector<int32_t> qeIds{};
+
+    Render::EntityRenderSystem::SP targetSys;
+    Math::Bounds                   selectBounds{};
+    SelectType                     selectType = SelectType::Single;
+    System::Mouse::MouseEvtHandler handler{};
+
+    void selectSingle(const System::Mouse::MouseEvent& evt, const Math::Vec2& offset)
+    {
+        if (evt.isMoving() || evt.isBegin())
+        {
+            qeIds.clear();
+            targetSys->bvh->queryPoint(evt.globalPos, qeIds);
+        }
+        auto    storage = targetSys->entityStorage->comp;
+        int32_t topId = qeIds.empty() ? -1 : qeIds.back();
+
+        if (topId >= 0 && evt.isBegin())
+        {
+            etId        = topId;
+            originEtPos = storage->getEntityXYAt(etId);
+        }
+
+        if (etId >= 0 && evt.isDragging())
+        {
+            auto id = etId;
+            auto pv = originEtPos + offset;
+            storage->setEntityXYAt(pv, id);
+
+            auto b0 = targetSys->bvh->getBoundsAt(id);
+            auto b  = b0;
+            b.moveTo(pv.x, pv.y);
+            targetSys->bvh->updateItemBoundsByObjectId(id, b);
+        }
+        if (evt.isEnd())
+        {
+            etId = -1;
+        }
+    }
+    void upateMouseParam(const Render::Draw::DrawContext& rctx, const System::Mouse::MouseInputParam& param)
+    {
+        handler.upateMouseLeftBtnParam(rctx, param, [&, this](const System::Mouse::MouseEvent& evt, const Math::Vec2& offset) {
+            selectSingle(evt, offset);
+        });
+    }
+};
 
 class OglTestScene
 {
@@ -35,10 +91,12 @@ public:
     void                      initScene();
     void                      render(const Voxol::Math::Mat33& vpMat);
     void                      undo();
-    void                      setMouseParams(const System::UIMouseParam& param);
+    void                      setMouseParams(const System::Mouse::MouseInputParam& param);
     Render::Draw::DrawContext drawCtx{};
     //System::Mouse::EventManager       mouseEvtMana{};
-    System::Mouse::MouseEvtHandler       mouseEvtHandler{};
+    //System::Mouse::MouseEvtHandler       mouseEvtHandler{};
+
+    MouseonCtroller         mouseCtrl;
     System::ShortcutManager     shortcutMana{};
 
 private:
@@ -65,7 +123,7 @@ private:
 
     Render::Gpu::DrawingUnit     tile0Unit{};
     Render::Gpu::DrawingUnit boundsUnit{};
-    std::vector<int32_t>     qeIds{};
+    //std::vector<int32_t>     qeIds{};
 };
 
 

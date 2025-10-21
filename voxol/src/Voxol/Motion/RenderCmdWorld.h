@@ -5,7 +5,7 @@
 #include "../Math/Mat33.h"
 #include "RenderCmdNode.h"
 #include "RenderCmdBufBuilder.h"
-#include "../System/UIMouseCtrl.h"
+#include "../System/MouseEventSystem.h"
 #include "RenderNodeScene.h"
 
 namespace Voxol::Motion
@@ -36,7 +36,7 @@ public:
     bool           isDirty() const;
     void           setGPUCtxSize(int w, int h);
     void           setMouseXY(float x, float y);
-    void           setMouseParams(const System::UIMouseParam& param);
+    void           setMouseParams(const System::Mouse::MouseInputParam& param);
     const uint8_t* cmdBuffer() const;
 
 private:

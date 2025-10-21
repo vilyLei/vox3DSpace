@@ -2,7 +2,7 @@
 #include "UIMouseCtrl.h"
 namespace Voxol::System
 {
-bool UIMouseCtrl::setMouseParams(Motion::ViewComponent& view, const UIMouseParam& param)
+bool UIMouseCtrl::setMouseParams(Motion::ViewComponent& view, const Mouse::MouseInputParam& param)
 {
     auto  viewDirty = false;
     auto& mousePos  = view.mousePos;
@@ -10,23 +10,23 @@ bool UIMouseCtrl::setMouseParams(Motion::ViewComponent& view, const UIMouseParam
     //printf("UIMouseCtrl::setMouseParams(), param.type: %d, param.value: %f\n", param.type, param.value);
     switch (param.type)
     {
-        case UIMouseType::MOUSE_DOWN:
+        case Mouse::MouseEventType::MouseDown:
         {
             view.moveBegin(mousePos);
         }
         break;
-        case UIMouseType::MOUSE_UP:
+        case Mouse::MouseEventType::MouseUp:
         {
             view.moveEnd(mousePos);
         }
         break;
-        case UIMouseType::MOUSE_MOVE:
+        case Mouse::MouseEventType::MouseMove:
         {
 
             viewDirty = view.move(mousePos);
         }
         break;
-        case UIMouseType::MOUSE_SCROLL:
+        case Mouse::MouseEventType::MouseScroll:
         {
             //#ifdef _WIN32
             //auto dv   = std::abs(param.value) >= 5 ? param.value * 0.01f : param.value;
@@ -35,7 +35,7 @@ bool UIMouseCtrl::setMouseParams(Motion::ViewComponent& view, const UIMouseParam
             viewDirty = view.updateViewZoom(mousePos, dv, 1.2f);
         }
         break;
-        case UIMouseType::MOUSE_CLICK:
+        case Mouse::MouseEventType::MouseClick:
         {
 
             /*

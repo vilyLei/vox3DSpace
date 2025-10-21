@@ -58,10 +58,11 @@ private:
 
     void setMouseXY(float x, float y);
 
-    void setMouseParams(const System::UIMouseParam& param);
+    void setMouseParams(const System::Mouse::MouseInputParam& param);
 
     OglTestScene mScene{};
     bool         dirty = true;
+    int          mouseButton = 0;
 };
 
 
