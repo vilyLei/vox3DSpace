@@ -221,7 +221,7 @@ void OglRenderer::setMouseParams(const System::Mouse::MouseInputParam& param)
 {
     mScene.setMouseParams(param);
 
-    if (mouseButton != 2)
+    if (mouseButton != 2 && param.type != System::Mouse::MouseEventType::MouseScroll)
     {
         dirty = true;
         return;
