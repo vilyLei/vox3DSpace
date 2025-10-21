@@ -41,7 +41,10 @@ struct MouseonCtroller
     Render::EntityRenderSystem::SP targetSys;
     Math::Bounds                   selectBounds{};
     SelectType                     selectType = SelectType::Single;
+
     System::Mouse::MouseEvtHandler handler{};
+
+    bool dragging = false;
 
     void selectSingle(const System::Mouse::MouseEvent& evt, const Math::Vec2& offset)
     {
@@ -66,43 +69,33 @@ struct MouseonCtroller
 
         if (etId >= 0 && evt.isDragging())
         {
-            /*
-            auto id = etId;
-            auto pv = originEtPos + offset;
-            etStorage->setEntityXYAt(pv, id);
-
-            auto b0 = targetSys->bvh->getBoundsAt(id);
-            auto b  = b0;
-            b.moveTo(pv.x, pv.y);
-            targetSys->bvh->updateItemBoundsByObjectId(id, b);
-            //*/
             auto id = etId;
             auto pv = originEtPos;
 
-            //auto dv = wpv - dragEvt.mouseOriginPos;
             pv += offset;
             etStorage->setEntityXYAt(pv, id);
             auto b0 = bvh->getBoundsAt(id);
             auto b1 = b0;
 
-            // ÒÆ³ö
+            // move out
             tileSys->addDirtyBounds(b0, 0);
             b1.moveTo(pv.x, pv.y);
-            // ÒÆÈë
+            // move in
             tileSys->addDirtyBounds(b1, 1);
 
             bvh->updateItemBoundsByObjectId(id, b1);
             bvh->updateDirty();
-            printf("selectSingle(), A02.\n");
+            dragging = true;
             return;
         }
         if (evt.isEnd())
         {
-            if (etId >= 0 && evt.isDragging())
+            if (etId >= 0 && dragging)
             {
+                dragging = false;
                 etStorage->historyManager->pushItem({unitTransform, etId});
-                printf("selectSingle(), A03.\n");
             }
+            printf("selectSingle(), A02.\n");
             etId = -1;
         }
     }
