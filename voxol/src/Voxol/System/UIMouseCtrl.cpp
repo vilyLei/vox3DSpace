@@ -10,17 +10,17 @@ bool UIMouseCtrl::setMouseParams(Motion::ViewComponent& view, const Mouse::Mouse
     //printf("UIMouseCtrl::setMouseParams(), param.type: %d, param.value: %f\n", param.type, param.value);
     switch (param.type)
     {
-        case Mouse::MouseEventType::MouseDown:
+        case Mouse::MouseEventType::MouseMiddleDown:
         {
             view.moveBegin(mousePos);
         }
         break;
-        case Mouse::MouseEventType::MouseUp:
+        case Mouse::MouseEventType::MouseMiddleUp:
         {
             view.moveEnd(mousePos);
         }
         break;
-        case Mouse::MouseEventType::MouseMove:
+        case Mouse::MouseEventType::MouseMiddleMove:
         {
 
             viewDirty = view.move(mousePos);
@@ -35,7 +35,7 @@ bool UIMouseCtrl::setMouseParams(Motion::ViewComponent& view, const Mouse::Mouse
             viewDirty = view.updateViewZoom(mousePos, dv, 1.2f);
         }
         break;
-        case Mouse::MouseEventType::MouseClick:
+        case Mouse::MouseEventType::MouseMiddleClick:
         {
 
             /*

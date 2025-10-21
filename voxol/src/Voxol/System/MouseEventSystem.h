@@ -20,17 +20,19 @@ enum class MouseEventType : char
     MouseDown,
     MouseUp,
     MouseMove,
+    MouseClick,
 
     MouseMiddleDown,
     MouseMiddleUp,
     MouseMiddleMove,
+    MouseMiddleClick,
 
     MouseRightDown,
     MouseRightUp,
     MouseRightMove,
+    MouseRightClick,
 
     MouseScroll,
-    MouseClick
 };
 
 
