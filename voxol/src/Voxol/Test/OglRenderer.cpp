@@ -71,7 +71,7 @@ void OglRenderer::mouseButton_callback(GLFWwindow* window, int sign, int flag, i
         auto mouseActType = flag > 0 ? System::Mouse::MouseEventType::MouseDown : System::Mouse::MouseEventType::MouseUp;
         switch (sign)
         {
-            case 0:
+            case 1:
             {
                 mouseActType = flag > 0 ? System::Mouse::MouseEventType::MouseRightDown : System::Mouse::MouseEventType::MouseRightUp;
             }
@@ -85,7 +85,6 @@ void OglRenderer::mouseButton_callback(GLFWwindow* window, int sign, int flag, i
                 break;
         }
         auto& mousePos = renderer->mousePos;
-        //renderer->setMouseParams(mousePos.x, mousePos.y, mouseActType, 0);
         System::Mouse::MouseInputParam param{mousePos.x, mousePos.y, mouseActType, 0};
         renderer->setMouseParams(param);
     }

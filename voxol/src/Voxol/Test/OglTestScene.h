@@ -60,6 +60,7 @@ struct MouseonCtroller
             etId        = topId;
             originEtPos   = etStorage->getEntityXYAt(etId);
             unitTransform = etStorage->getEntityTransformAt(etId);
+            printf("selectSingle(), A01.\n");
             return;
         }
 
@@ -92,6 +93,7 @@ struct MouseonCtroller
 
             bvh->updateItemBoundsByObjectId(id, b1);
             bvh->updateDirty();
+            printf("selectSingle(), A02.\n");
             return;
         }
         if (evt.isEnd())
@@ -99,6 +101,7 @@ struct MouseonCtroller
             if (etId >= 0 && evt.isDragging())
             {
                 etStorage->historyManager->pushItem({unitTransform, etId});
+                printf("selectSingle(), A03.\n");
             }
             etId = -1;
         }
