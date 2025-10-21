@@ -11,6 +11,11 @@ void OglTestScene::initScene()
     {
         tileSys->initalize();
         etRenderSys->initalize();
+
+        uiOpLayer.tileSys     = tileSys;
+        uiOpLayer.etRenderSys = etRenderSys;
+        uiOpLayer.initialize();
+
         auto drawCall = [this](const Math::VxRect& bounds, const Math::Mat33& vpMat) {
             etRenderSys->render(drawCtx, vpMat, bounds);
         };
@@ -98,10 +103,9 @@ void OglTestScene::render(const Voxol::Math::Mat33& vpMat)
         boundsUnit.vertex.lineWidth = 1.0f;
 
         //auto& queriedEIds = mouseEvtMana.queryEIds;
-        auto& queriedEIds = mouseCtrl.qeIds;
+        auto& queriedEIds = uiOpLayer.mouseCtrl.qeIds;
         for (auto id : queriedEIds)
         {
-            //auto& vb = etRenderSys.bvhItems[id].bounds;
             auto& vb = etRenderSys->bvh->getBoundsAt(id);
             boundsUnit.objMat.setTo(vb.x(), vb.y(), vb.width(), vb.height());
             boundsUnit.mvp = vpMat;
@@ -179,15 +183,15 @@ void OglTestScene::undo()
         bvh->updateDirty();
     }
 }
-void OglTestScene::setMouseParams(const System::Mouse::MouseInputParam& param)
-{
-    auto& ctx    = drawCtx;
-
-    mouseCtrl.tileSys   = tileSys;
-    mouseCtrl.targetSys = etRenderSys;
-
-    mouseCtrl.upateLeftMouseParam(drawCtx, param);
-}
+//void OglTestScene::setMouseParams(const System::Mouse::MouseInputParam& param)
+//{
+//    auto& ctx    = drawCtx;
+//
+//    mouseCtrl.tileSys   = tileSys;
+//    mouseCtrl.targetSys = etRenderSys;
+//
+//    mouseCtrl.upateLeftMouseParam(drawCtx, param);
+//}
 void OglTestScene::initVoassScene()
 {
 

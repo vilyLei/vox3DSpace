@@ -219,7 +219,8 @@ void OglRenderer::setMouseXY(float x, float y)
 
 void OglRenderer::setMouseParams(const System::Mouse::MouseInputParam& param)
 {
-    mScene.setMouseParams(param);
+
+    mScene.uiOpLayer.updateMouseParams(mScene.drawCtx, param);
 
     if (mouseButton != 2 && param.type != System::Mouse::MouseEventType::MouseScroll)
     {

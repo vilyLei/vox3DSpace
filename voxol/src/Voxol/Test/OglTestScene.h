@@ -1,15 +1,17 @@
 #ifndef VOXOL_OGL_TEST_SCENE_H
 #define VOXOL_OGL_TEST_SCENE_H
 
+#include "../Base/BaseDefine.h"
 #include "../Tile/TileSystem.h"
 #include "../Render/EntityRenderSystem.h"
-#include "../Base/BaseDefine.h"
+#include "../Render/OglGpuResUtils.h"
 #include "../Math/Mat33.h"
 #include "../Math/VxRect.h"
 #include "../Render/OglFbo.h"
 #include "../System/MouseEventSystem.h"
 #include "../System/ShortcutManager.h"
-#include "../Render/OglGpuResUtils.h"
+#include "../System/UIOperationLayer.h"
+
 #include "OglImage.h"
 #include "OglText.h"
 
@@ -23,88 +25,6 @@
 
 namespace Voxol::Test
 {
-enum class SelectType
-{
-    Single,
-    Multiple,
-    Bounds
-};
-struct MouseCtroller
-{
-    Math::Vec2           originEtPos{};
-    int32_t              etId = -1;
-    std::vector<int32_t> qeIds{};
-
-    Render::Component::UnitTransform unitTransform{};
-
-    Tile::TileSystem::SP           tileSys;
-    Render::EntityRenderSystem::SP targetSys;
-    Math::Bounds                   selectBounds{};
-    SelectType                     selectType = SelectType::Single;
-
-    System::Mouse::MouseEvtHandler handler{};
-
-    bool dragging = false;
-
-    void selectSingle(const System::Mouse::MouseEvent& evt, const Math::Vec2& offset)
-    {
-        auto bvh = targetSys->bvh;
-        if (evt.isMoving() || evt.isBegin())
-        {
-            qeIds.clear();
-            bvh->queryPoint(evt.globalPos, qeIds);
-        }
-        auto    etStorage = targetSys->entityStorage->comp;
-
-        int32_t topId = qeIds.empty() ? -1 : qeIds.back();
-
-        if (topId >= 0 && evt.isBegin())
-        {
-            etId        = topId;
-            originEtPos   = etStorage->getEntityXYAt(etId);
-            unitTransform = etStorage->getEntityTransformAt(etId);
-            return;
-        }
-
-        if (etId >= 0 && evt.isDragging())
-        {
-            auto id = etId;
-            auto pv = originEtPos;
-
-            pv += offset;
-            etStorage->setEntityXYAt(pv, id);
-            auto b0 = bvh->getBoundsAt(id);
-            auto b1 = b0;
-
-            // move out
-            tileSys->addDirtyBounds(b0, 0);
-            b1.moveTo(pv.x, pv.y);
-            // move in
-            tileSys->addDirtyBounds(b1, 1);
-
-            bvh->updateItemBoundsByObjectId(id, b1);
-            bvh->updateDirty();
-            dragging = true;
-            return;
-        }
-        if (evt.isEnd())
-        {
-            if (etId >= 0 && dragging)
-            {
-                dragging = false;
-                etStorage->historyManager->pushItem({unitTransform, etId});
-            }
-            etId = -1;
-        }
-    }
-    void upateLeftMouseParam(const Render::Draw::DrawContext& rctx, const System::Mouse::MouseInputParam& param)
-    {
-        handler.upateMouseLeftBtnParam(rctx, param, [&, this](const System::Mouse::MouseEvent& evt, const Math::Vec2& offset) {
-            selectSingle(evt, offset);
-        });
-    }
-};
-
 class OglTestScene
 {
 
@@ -116,12 +36,15 @@ public:
     void                      initScene();
     void                      render(const Voxol::Math::Mat33& vpMat);
     void                      undo();
-    void                      setMouseParams(const System::Mouse::MouseInputParam& param);
+    //void                      setMouseParams(const System::Mouse::MouseInputParam& param);
 
-    Render::Draw::DrawContext drawCtx{};
+    Render::Draw::DrawContext drawCtx;
+    System::UIOperationLayer  uiOpLayer;
 
-    MouseCtroller           mouseCtrl;
-    System::ShortcutManager     shortcutMana{};
+    //MouseCtroller           mouseCtrl;
+    System::ShortcutManager        shortcutMana{};
+    Tile::TileSystem::SP           tileSys     = Tile::TileSystem::make();
+    Render::EntityRenderSystem::SP etRenderSys = Render::EntityRenderSystem::make();
 
 private:
     void initVoassScene();
@@ -132,8 +55,6 @@ private:
     bool entityModeFlag = true;
 
     Render::OglFbo             mFbo{};
-    Tile::TileSystem::SP       tileSys = Tile::TileSystem::make();
-    Render::EntityRenderSystem::SP etRenderSys = Render::EntityRenderSystem::make();
 
     Render::Gpu::DrawingUnit              baseDrawUnit{};
     Render::Gpu::DrawingUnit              texDrawUnit{};
