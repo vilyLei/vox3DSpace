@@ -36,13 +36,10 @@ public:
     void                      initScene();
     void                      render(const Voxol::Math::Mat33& vpMat);
     void                      undo();
-    //void                      setMouseParams(const System::Mouse::MouseInputParam& param);
 
     Render::Draw::DrawContext drawCtx;
     System::UIOperationLayer  uiOpLayer;
 
-    //MouseCtroller           mouseCtrl;
-    //System::ShortcutManager        shortcutMana{};
     Tile::TileSystem::SP           tileSys     = Tile::TileSystem::make();
     Render::EntityRenderSystem::SP etRenderSys = Render::EntityRenderSystem::make();
 

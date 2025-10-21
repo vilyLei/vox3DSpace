@@ -112,6 +112,8 @@ public:
 
 public:
     void initialize();
+
+    void updateKeyboardParams(int key, int scancode, int action, int mods);
     void updateMouseParams(const Render::Draw::DrawContext& ctx, const Mouse::MouseInputParam& param);
 };
 
