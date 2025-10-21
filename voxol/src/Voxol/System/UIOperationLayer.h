@@ -96,6 +96,7 @@ struct MouseCtroller
 };
 } // namespace Mouse
 
+
 class UIOperationLayer
 {
 public:
@@ -107,6 +108,7 @@ public:
     Render::EntityRenderSystem::SP etRenderSys;
 
     Mouse::MouseCtroller           mouseCtrl;
+    ShortcutManager shortcutMana{};
 
 public:
     void initialize();

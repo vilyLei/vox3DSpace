@@ -31,13 +31,13 @@ void OglTestScene::initScene()
         boundsUnit.vertex.lineWidth = 5;
         Render::Gpu::buildBaseDrawUnit(boundsUnit);
 
-        shortcutMana.registerShortcut(
+        uiOpLayer.shortcutMana.registerShortcut(
             {GLFW_KEY_LEFT_CONTROL, GLFW_KEY_Z}, [this] {
                 //std::cout << "[Undo] Ctrl + Z pressed\n";
                 undo();
             },
             System::ShortcutManager::TriggerType::Press);
-        shortcutMana.registerShortcut({GLFW_KEY_LEFT_CONTROL, GLFW_KEY_LEFT_SHIFT, GLFW_KEY_Y}, [] {
+        uiOpLayer.shortcutMana.registerShortcut({GLFW_KEY_LEFT_CONTROL, GLFW_KEY_LEFT_SHIFT, GLFW_KEY_Y}, [] {
             std::cout << "Ctrl + Shift + Y pressed\n";
         });
         return;

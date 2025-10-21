@@ -42,7 +42,7 @@ public:
     System::UIOperationLayer  uiOpLayer;
 
     //MouseCtroller           mouseCtrl;
-    System::ShortcutManager        shortcutMana{};
+    //System::ShortcutManager        shortcutMana{};
     Tile::TileSystem::SP           tileSys     = Tile::TileSystem::make();
     Render::EntityRenderSystem::SP etRenderSys = Render::EntityRenderSystem::make();
 

@@ -16,7 +16,7 @@ void OglRenderer::key_callback(GLFWwindow* window, int key, int scancode, int ac
     if (renderer)
     {
         //renderer->mScene.setKeyParams(key, scancode, action,  mode);
-        renderer->mScene.shortcutMana.handleKeyEvent(key, scancode, action, mode);
+        renderer->mScene.uiOpLayer.shortcutMana.handleKeyEvent(key, scancode, action, mode);
     }
 }
 void OglRenderer::mouseEnter_callback(GLFWwindow* window, int flag)
