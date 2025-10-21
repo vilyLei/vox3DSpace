@@ -143,8 +143,8 @@ struct MouseEvtHandler
                 if (flag || evt.isDragging())
                 {
                     evt.drag();
-                    auto&& dv = evt.globalPos - evt.originPos;
 
+                    auto&& dv = evt.globalPos - evt.originPos;
                     callback(evt, dv);
                 }
                 else

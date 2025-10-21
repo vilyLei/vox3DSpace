@@ -35,6 +35,9 @@ struct MouseonCtroller
     int32_t              etId = -1;
     std::vector<int32_t> qeIds{};
 
+    Render::Component::UnitTransform unitTransform{};
+
+    Tile::TileSystem::SP           tileSys;
     Render::EntityRenderSystem::SP targetSys;
     Math::Bounds                   selectBounds{};
     SelectType                     selectType = SelectType::Single;
@@ -42,37 +45,65 @@ struct MouseonCtroller
 
     void selectSingle(const System::Mouse::MouseEvent& evt, const Math::Vec2& offset)
     {
+        auto bvh = targetSys->bvh;
         if (evt.isMoving() || evt.isBegin())
         {
             qeIds.clear();
-            targetSys->bvh->queryPoint(evt.globalPos, qeIds);
+            bvh->queryPoint(evt.globalPos, qeIds);
         }
-        auto    storage = targetSys->entityStorage->comp;
+        auto    etStorage = targetSys->entityStorage->comp;
+
         int32_t topId = qeIds.empty() ? -1 : qeIds.back();
 
         if (topId >= 0 && evt.isBegin())
         {
             etId        = topId;
-            originEtPos = storage->getEntityXYAt(etId);
+            originEtPos   = etStorage->getEntityXYAt(etId);
+            unitTransform = etStorage->getEntityTransformAt(etId);
+            return;
         }
 
         if (etId >= 0 && evt.isDragging())
         {
+            /*
             auto id = etId;
             auto pv = originEtPos + offset;
-            storage->setEntityXYAt(pv, id);
+            etStorage->setEntityXYAt(pv, id);
 
             auto b0 = targetSys->bvh->getBoundsAt(id);
             auto b  = b0;
             b.moveTo(pv.x, pv.y);
             targetSys->bvh->updateItemBoundsByObjectId(id, b);
+            //*/
+            auto id = etId;
+            auto pv = originEtPos;
+
+            //auto dv = wpv - dragEvt.mouseOriginPos;
+            pv += offset;
+            etStorage->setEntityXYAt(pv, id);
+            auto b0 = bvh->getBoundsAt(id);
+            auto b1 = b0;
+
+            // ÒÆ³ö
+            tileSys->addDirtyBounds(b0, 0);
+            b1.moveTo(pv.x, pv.y);
+            // ÒÆÈë
+            tileSys->addDirtyBounds(b1, 1);
+
+            bvh->updateItemBoundsByObjectId(id, b1);
+            bvh->updateDirty();
+            return;
         }
         if (evt.isEnd())
         {
+            if (etId >= 0 && evt.isDragging())
+            {
+                etStorage->historyManager->pushItem({unitTransform, etId});
+            }
             etId = -1;
         }
     }
-    void upateMouseParam(const Render::Draw::DrawContext& rctx, const System::Mouse::MouseInputParam& param)
+    void upateLeftMouseParam(const Render::Draw::DrawContext& rctx, const System::Mouse::MouseInputParam& param)
     {
         handler.upateMouseLeftBtnParam(rctx, param, [&, this](const System::Mouse::MouseEvent& evt, const Math::Vec2& offset) {
             selectSingle(evt, offset);
@@ -92,9 +123,8 @@ public:
     void                      render(const Voxol::Math::Mat33& vpMat);
     void                      undo();
     void                      setMouseParams(const System::Mouse::MouseInputParam& param);
+
     Render::Draw::DrawContext drawCtx{};
-    //System::Mouse::EventManager       mouseEvtMana{};
-    //System::Mouse::MouseEvtHandler       mouseEvtHandler{};
 
     MouseonCtroller         mouseCtrl;
     System::ShortcutManager     shortcutMana{};
@@ -123,7 +153,6 @@ private:
 
     Render::Gpu::DrawingUnit     tile0Unit{};
     Render::Gpu::DrawingUnit boundsUnit{};
-    //std::vector<int32_t>     qeIds{};
 };
 
 

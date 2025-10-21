@@ -182,8 +182,12 @@ void OglTestScene::undo()
 void OglTestScene::setMouseParams(const System::Mouse::MouseInputParam& param)
 {
     auto& ctx    = drawCtx;
+
+    mouseCtrl.tileSys   = tileSys;
     mouseCtrl.targetSys = etRenderSys;
-    mouseCtrl.upateMouseParam(drawCtx, param);
+
+    mouseCtrl.upateLeftMouseParam(drawCtx, param);
+
     //auto& drawParam = ctx.drawParam;
     //Math::Vec2 wpv = drawParam.invViewMat.mapPoint({param.x, param.y});
     //mouseEvtMana.upateMouseParam(drawCtx, param, {tileSys, etRenderSys->bvh, etRenderSys->entityStorage->comp});
