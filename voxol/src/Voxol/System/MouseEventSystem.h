@@ -107,8 +107,65 @@ using MouseCallType = std::function<void(const MouseEvent& evt, const Math::Vec2
 struct MouseEvtHandler
 {
     MouseEvent evt{};
+
+    template <MouseEventType Down, Mouse::MouseEventType Up, Mouse::MouseEventType Move>
+    void updateMouseButton(const Render::Draw::DrawContext& rctx, const MouseInputParam& param, const MouseCallType& callback)
+    {
+        evt.localPos  = {param.x, param.y};
+        evt.globalPos = rctx.drawParam.invViewMat.mapPoint(evt.localPos);
+        evt.type      = param.type;
+        switch (param.type)
+        {
+            /// mouse down
+            case Down:
+            {
+                if (!evt.isBegin())
+                {
+                    evt.begin();
+                    evt.originPos = evt.globalPos;
+                    callback(evt, {});
+                }
+            }
+            break;
+            /// mouse up
+            case Up:
+            {
+                if (evt.isBegin() || evt.isDragging())
+                {
+                    evt.end();
+                    callback(evt, {});
+                }
+            }
+            break;
+            /// mouse move
+            case Move:
+            {
+                auto flag = evt.isBegin();
+                evt.move();
+                if (flag || evt.isDragging())
+                {
+                    evt.drag();
+
+                    auto&& dv = evt.globalPos - evt.originPos;
+                    callback(evt, dv);
+                }
+                else
+                {
+                    callback(evt, {});
+                }
+            }
+            break;
+            default:
+                break;
+        }
+    }
+    //void updateMouseButton(const Grid::RenderContext& rctx, const Mouse::MouseInputParam& param, const Mouse::MouseCallType& callback)
+    
+
     void       upateMouseLeftBtnParam(const Render::Draw::DrawContext& rctx, const MouseInputParam& param, const MouseCallType& callback)
     {
+        updateMouseButton<MouseEventType::MouseDown, MouseEventType::MouseUp, MouseEventType::MouseMove>(rctx, param, callback);
+        /*
         evt.localPos  = {param.x, param.y};
         evt.globalPos = rctx.drawParam.invViewMat.mapPoint(evt.localPos);
         evt.type      = param.type;
@@ -156,6 +213,7 @@ struct MouseEvtHandler
             default:
                 break;
         }
+        //*/
     }
 
     void upateMouseRightBtnParam(const Render::Draw::DrawContext& rctx, const MouseInputParam& param, const MouseCallType& callback)
