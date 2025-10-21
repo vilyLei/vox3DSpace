@@ -29,7 +29,7 @@ enum class SelectType
     Multiple,
     Bounds
 };
-struct MouseonCtroller
+struct MouseCtroller
 {
     Math::Vec2           originEtPos{};
     int32_t              etId = -1;
@@ -122,7 +122,7 @@ public:
 
     Render::Draw::DrawContext drawCtx{};
 
-    MouseonCtroller         mouseCtrl;
+    MouseCtroller           mouseCtrl;
     System::ShortcutManager     shortcutMana{};
 
 private:
