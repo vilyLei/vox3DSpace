@@ -46,7 +46,6 @@ struct MouseInputParam
 };
 struct MouseEvent
 {
-    // 0: begin, 1: dragging moving, 2: end
     MouseActionPhase phase    = MouseActionPhase::End;
     MouseEventType   type     = MouseEventType::MouseMove;
     bool             dirty    = false;
