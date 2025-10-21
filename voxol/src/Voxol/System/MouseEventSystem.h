@@ -48,13 +48,13 @@ struct MouseEvent
 {
     // 0: begin, 1: dragging moving, 2: end
     MouseActionPhase phase    = MouseActionPhase::End;
-    MouseEventType type     = MouseEventType::MouseMove;
-    bool           dirty    = false;
-    bool           moving   = false;
-    bool           dragging = false;
-    Math::Vec2     originPos{};
-    Math::Vec2     localPos{};
-    Math::Vec2     globalPos{};
+    MouseEventType   type     = MouseEventType::MouseMove;
+    bool             dirty    = false;
+    bool             moving   = false;
+    bool             dragging = false;
+    Math::Vec2       originPos{};
+    Math::Vec2       localPos{};
+    Math::Vec2       globalPos{};
 
     bool isBegin() const
     {
@@ -159,165 +159,21 @@ struct MouseEvtHandler
                 break;
         }
     }
-    //void updateMouseButton(const Grid::RenderContext& rctx, const Mouse::MouseInputParam& param, const Mouse::MouseCallType& callback)
-    
 
-    void       upateMouseLeftBtnParam(const Render::Draw::DrawContext& rctx, const MouseInputParam& param, const MouseCallType& callback)
+    void upateMouseLeftBtnParam(const Render::Draw::DrawContext& rctx, const MouseInputParam& param, const MouseCallType& callback)
     {
         updateMouseButton<MouseEventType::MouseDown, MouseEventType::MouseUp, MouseEventType::MouseMove>(rctx, param, callback);
-        /*
-        evt.localPos  = {param.x, param.y};
-        evt.globalPos = rctx.drawParam.invViewMat.mapPoint(evt.localPos);
-        evt.type      = param.type;
-        switch (param.type)
-        {
-            /// mouse down
-            case Mouse::MouseEventType::MouseDown:
-            {
-                if (!evt.isBegin())
-                {
-                    evt.begin();
-                    evt.originPos = evt.globalPos;
-                    callback(evt, {});
-                }
-            }
-            break;
-            /// mouse up
-            case Mouse::MouseEventType::MouseUp:
-            {
-                if (evt.isBegin() || evt.isDragging())
-                {
-                    evt.end();
-                    callback(evt, {});
-                }
-            }
-            break;
-            /// mouse move
-            case Mouse::MouseEventType::MouseMove:
-            {
-                auto flag = evt.isBegin();
-                evt.move();
-                if (flag || evt.isDragging())
-                {
-                    evt.drag();
-
-                    auto&& dv = evt.globalPos - evt.originPos;
-                    callback(evt, dv);
-                }
-                else
-                {
-                    callback(evt, {});
-                }
-            }
-            break;
-            default:
-                break;
-        }
-        //*/
     }
-
     void upateMouseRightBtnParam(const Render::Draw::DrawContext& rctx, const MouseInputParam& param, const MouseCallType& callback)
     {
-        evt.localPos  = {param.x, param.y};
-        evt.globalPos = rctx.drawParam.invViewMat.mapPoint(evt.localPos);
-        evt.type      = param.type;
-        switch (param.type)
-        {
-            /// mouse down
-            case Mouse::MouseEventType::MouseRightDown:
-            {
-                if (!evt.isBegin())
-                {
-                    evt.begin();
-                    evt.originPos = evt.globalPos;
-                    callback(evt, {});
-                }
-            }
-            break;
-            /// mouse up
-            case Mouse::MouseEventType::MouseRightUp:
-            {
-                if (evt.isBegin() || evt.isDragging())
-                {
-                    evt.end();
-                    callback(evt, {});
-                }
-            }
-            break;
-            /// mouse move
-            case Mouse::MouseEventType::MouseRightMove:
-            {
-                auto flag = evt.isBegin();
-                evt.move();
-                if (flag || evt.isDragging())
-                {
-                    evt.drag();
-                    auto&& dv = evt.globalPos - evt.originPos;
-
-                    callback(evt, dv);
-                }
-                else
-                {
-                    callback(evt, {});
-                }
-            }
-            break;
-            default:
-                break;
-        }
+        updateMouseButton<MouseEventType::MouseRightDown, MouseEventType::MouseRightUp, MouseEventType::MouseRightMove>(rctx, param, callback);
     }
     void upateMouseMiddleBtnParam(const Render::Draw::DrawContext& rctx, const MouseInputParam& param, const MouseCallType& callback)
     {
-        evt.localPos  = {param.x, param.y};
-        evt.globalPos = rctx.drawParam.invViewMat.mapPoint(evt.localPos);
-        evt.type      = param.type;
-        switch (param.type)
-        {
-            /// mouse down
-            case Mouse::MouseEventType::MouseMiddleDown:
-            {
-                if (!evt.isBegin())
-                {
-                    evt.begin();
-                    evt.originPos = evt.globalPos;
-                    callback(evt, {});
-                }
-            }
-            break;
-            /// mouse up
-            case Mouse::MouseEventType::MouseMiddleUp:
-            {
-                if (evt.isBegin() || evt.isDragging())
-                {
-                    evt.end();
-                    callback(evt, {});
-                }
-            }
-            break;
-            /// mouse move
-            case Mouse::MouseEventType::MouseMiddleMove:
-            {
-                auto flag = evt.isBegin();
-                evt.move();
-                if (flag || evt.isDragging())
-                {
-                    evt.drag();
-                    auto&& dv = evt.globalPos - evt.originPos;
-
-                    callback(evt, dv);
-                }
-                else
-                {
-                    callback(evt, {});
-                }
-            }
-            break;
-            default:
-                break;
-        }
+        updateMouseButton<MouseEventType::MouseMiddleDown, MouseEventType::MouseMiddleUp, MouseEventType::MouseMiddleMove>(rctx, param, callback);
     }
 };
 } // namespace Mouse
 
-}
+} // namespace Voxol::System
 #endif
