@@ -4,7 +4,7 @@
 namespace Voxol::Test
 {
 
-GLuint OglRenderer::ctxCurrWidth = 1200;
+GLuint OglRenderer::ctxCurrWidth  = 1200;
 GLuint OglRenderer::ctxCurrHeight = 800;
 
 void OglRenderer::key_callback(GLFWwindow* window, int key, int scancode, int action, int mode)
@@ -44,7 +44,7 @@ void OglRenderer::scroll_callback(GLFWwindow* window, double xoffset, double yof
     auto renderer = static_cast<OglRenderer*>(glfwGetWindowUserPointer(window));
     if (renderer)
     {
-        auto& mousePos     = renderer->mousePos;
+        auto&                          mousePos = renderer->mousePos;
         System::Mouse::MouseInputParam param{mousePos.x, mousePos.y, System::Mouse::MouseEventType::MouseScroll, yoffset};
         renderer->setMouseParams(param);
     }
@@ -61,30 +61,30 @@ void OglRenderer::mousePos_callback(GLFWwindow* window, double posX, double posY
 
 void OglRenderer::mouseButton_callback(GLFWwindow* window, int sign, int flag, int type)
 {
-    //std::cout << "mouse button( sign=" << sign << ", flag=" << flag << ",type=" << type << ")" << std::endl;
+    std::cout << "mouse button( sign=" << sign << ", flag=" << flag << ",type=" << type << ")" << std::endl;
     auto renderer = static_cast<OglRenderer*>(glfwGetWindowUserPointer(window));
     if (renderer)
     {
         renderer->mouseButton = sign;
         //auto  btn          = sign + 1;
         //auto  mouseActType = flag > 0 ? btn * 10 + 1 : btn * 10 + 2;
-        auto  mouseActType = flag > 0 ? System::Mouse::MouseEventType::MouseDown : System::Mouse::MouseEventType::MouseUp;
+        auto mouseActType = flag > 0 ? System::Mouse::MouseEventType::MouseDown : System::Mouse::MouseEventType::MouseUp;
         switch (sign)
         {
             case 0:
             {
                 mouseActType = flag > 0 ? System::Mouse::MouseEventType::MouseRightDown : System::Mouse::MouseEventType::MouseRightUp;
             }
-                break;
+            break;
             case 2:
-                {
+            {
                 mouseActType = flag > 0 ? System::Mouse::MouseEventType::MouseMiddleDown : System::Mouse::MouseEventType::MouseMiddleUp;
             }
-                break;
+            break;
             default:
                 break;
         }
-        auto& mousePos     = renderer->mousePos;
+        auto& mousePos = renderer->mousePos;
         //renderer->setMouseParams(mousePos.x, mousePos.y, mouseActType, 0);
         System::Mouse::MouseInputParam param{mousePos.x, mousePos.y, mouseActType, 0};
         renderer->setMouseParams(param);
@@ -164,7 +164,7 @@ int OglRenderer::initCtx()
     int fw;
     int fh;
     glfwGetFramebufferSize(window, &fw, &fh);
-    ctxCurrWidth = fw;
+    ctxCurrWidth  = fw;
     ctxCurrHeight = fh;
 
     initRenderRes();
@@ -176,18 +176,18 @@ int OglRenderer::initCtx()
         glfwPollEvents();
         //if (dirty) {
 
-            //glViewport(0, 0, ctxCurrWidth, ctxCurrHeight);
-            //// Render
-            //// Clear the colorbuffer
-            //auto& cc = clearParam.clearColor;
-            //glClearColor(cc.r, cc.g, cc.b, cc.a);
-            //glClear(clearParam.clearMask);
+        //glViewport(0, 0, ctxCurrWidth, ctxCurrHeight);
+        //// Render
+        //// Clear the colorbuffer
+        //auto& cc = clearParam.clearColor;
+        //glClearColor(cc.r, cc.g, cc.b, cc.a);
+        //glClear(clearParam.clearMask);
 
-            render();
-            // draw();
+        render();
+        // draw();
 
-            // Swap the screen buffers
-            glfwSwapBuffers(window);
+        // Swap the screen buffers
+        glfwSwapBuffers(window);
         //}
     }
 
@@ -198,13 +198,13 @@ int OglRenderer::initCtx()
 
 void OglRenderer::setMouseXY(float x, float y)
 {
-    mousePos             = {x, y};
+    mousePos = {x, y};
     if (!mousePos.isEqual(canvas.view.mousePos))
     {
         canvas.view.mousePos = mousePos;
-            auto type            = System::Mouse::MouseEventType::MouseMove;
-            switch (mouseButton)
-            {
+        auto type            = System::Mouse::MouseEventType::MouseMove;
+        switch (mouseButton)
+        {
             case 1:
                 type = System::Mouse::MouseEventType::MouseRightMove;
                 break;
@@ -213,8 +213,8 @@ void OglRenderer::setMouseXY(float x, float y)
                 break;
             default:
                 break;
-            }
-            setMouseParams({mousePos.x, mousePos.y, type, 0});
+        }
+        setMouseParams({mousePos.x, mousePos.y, type, 0});
     }
 }
 
@@ -245,7 +245,7 @@ void OglRenderer::render()
     auto& rctx = mScene.drawCtx;
     if (ctxWidth != ctxCurrWidth || ctxHeight != ctxCurrHeight)
     {
-        ctxWidth = ctxCurrWidth;
+        ctxWidth  = ctxCurrWidth;
         ctxHeight = ctxCurrHeight;
 
         rctx.clearParam.viewport = {0, 0, static_cast<int>(ctxWidth), static_cast<int>(ctxHeight)};
@@ -256,7 +256,8 @@ void OglRenderer::render()
     rctx.zoom            = view.desc.zoom;
     mScene.drawCtx.dirty = dirty;
     auto& params         = rctx.drawParam;
-    if (dirty) {
+    if (dirty)
+    {
         auto& vp = rctx.clearParam.viewport;
         params.viewVBounds.setXYWH(vp.x, vp.y, vp.width, vp.height);
         view.viewMat.inverseTo(rctx.drawParam.invViewMat);
@@ -266,8 +267,8 @@ void OglRenderer::render()
     //{
     Mat33 vpMat = view.projMat;
     vpMat.append(view.viewMat);
-    params.projMat       = view.projMat;
-    params.viewMat       = view.viewMat;
+    params.projMat = view.projMat;
+    params.viewMat = view.viewMat;
 
     mScene.render(vpMat);
     //}
