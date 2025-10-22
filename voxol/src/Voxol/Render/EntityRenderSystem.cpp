@@ -11,62 +11,7 @@ EntityRenderSystem::SP EntityRenderSystem::make()
 
 void EntityRenderSystem::initalize()
 {
-    /*
-    if (entityStorage)
-        return;
-    entityStorage = EntityUnitStorage::make();
-    entityStorage->initalize(512);
-    
-    auto& entitiesPool          = entityStorage->comp->entitiesPool;
-    auto& shaderingEntitiesPool = entityStorage->comp->shaderingEntitiesPool;
-    auto& shaderingDescPool     = entityStorage->comp->shaderingDescPool;
-
-    Math::Bounds                           bounds{};
-
-    entitiesPool.forEach([&](auto& et, int32_t index) {
-
-        if (et.shadingId < 0)
-            return;
-
-        auto& shadingEt = shaderingEntitiesPool[et.shadingId];
-        auto& shdDesc   = shaderingDescPool[shadingEt.shadingDescId];
-        auto& trans     = shdDesc.transform;
-        bounds.setXYWH(trans.x, trans.y, trans.sx, trans.sy);
-
-        bvh->addItem(et.id, bounds);
-    });
-
-    bvh->build();
-    //*/
 }
-/*
-int EntityRenderSystem::drawQuery(const Math::VxRect& wbounds, int phase)
-{
-    queriedEIds.clear();
-    bvh->queryBounds(wbounds, queriedEIds);
-
-    //if (phase < 2)
-    //{
-    //    printf("EntityRenderSystem::drawQuery() A size: %d, phase: %d, bounds total: %d\n", queriedEIds.size(), phase, bvh.getBoundsCapacity());
-    //    if (phase < 2)
-    //    {
-    //        printf("wbounds, ");
-    //        wbounds.print();
-    //        auto b = bvh.getBoundsAt(0);
-    //        printf("b, ");
-    //        b.print();
-    //    }
-    //}
-
-    /// for test
-    auto flag = false;
-    if (queriedEIds.empty())
-    {
-        flag = true;
-    }
-    return static_cast<int>(queriedEIds.size());
-}
-//*/
 void EntityRenderSystem::render(const Draw::DrawContext& rctx, const Math::Mat33& vpM, const Math::Bounds& wbounds, const std::vector<int32_t>& queriedEIds)
 {
     if (!entityStorage)

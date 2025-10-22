@@ -3,7 +3,6 @@
 
 #include "BVH2DV1.h"
 #include "DrawCtx.h"
-#include "CompPool.h"
 
 #include "EntityUnitStorage.h"
 
@@ -29,7 +28,6 @@ public:
 public:
     void initalize();
     int  drawQuery(const Math::VxRect& bounds, int phase);
-    //void render(const Draw::DrawContext& rctx, const Math::Mat33& vpM, const Math::Bounds& wbounds);
     void                       clear();
     const std::vector<int32_t> getQueriedEIds() const;
 
@@ -37,7 +35,6 @@ public:
     EntityUnitStorage::SP entityStorage{};
 
 private:
-    //bool                 drawUnit(const Component::UnitEntity& entity, const Math::Mat33& vpM, const Math::Bounds& wbounds);
     std::vector<int32_t> queriedEIds{};
 };
 } // namespace Voxol::Render

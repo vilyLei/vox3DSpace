@@ -4,8 +4,6 @@
 #include "BVH2DV1.h"
 #include "DrawCtx.h"
 #include "CompPool.h"
-//#include "EntityCompStorage.h"
-//#include "DrawingUnitStorage.h"
 
 #include "EntityUnitStorage.h"
 
@@ -30,11 +28,9 @@ public:
 
 public:
     void initalize();
-    //int  drawQuery(const Math::VxRect& bounds, int phase);
     void render(const Draw::DrawContext& rctx, const Math::Mat33& vpM, const Math::Bounds& wbounds, const std::vector<int32_t>& queriedEIds);
     void clear();
 
-    //EntitySysBVH::SP       bvh = EntitySysBVH::make();
     EntityUnitStorage::SP entityStorage{};
 
 private:

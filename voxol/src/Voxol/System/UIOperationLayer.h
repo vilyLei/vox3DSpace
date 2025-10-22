@@ -2,7 +2,6 @@
 #define VOXOL_UI_OPERATION_LAYER_H
 
 #include "../Base/BaseDefine.h"
-#include "../Tile/TileSystem.h"
 #include "../Render/EntitySceneSystem.h"
 #include "../Math/Mat33.h"
 #include "../Math/VxRect.h"
@@ -29,7 +28,6 @@ struct MouseCtroller
 
     Render::Component::UnitTransform unitTransform{};
 
-    //Tile::TileSystem::SP           tileSys;
     InputDirtyCallType             dirtyCall;
     Render::EntitySceneSystem::SP targetSys;
     Math::Bounds                   selectionBounds{};
@@ -63,7 +61,6 @@ public:
     ~UIOperationLayer() = default;
 
 public:
-    //Tile::TileSystem::SP           tileSys;
     Render::EntitySceneSystem::SP etSceneSys;
 
     Mouse::MouseCtroller           mouseCtrl;
