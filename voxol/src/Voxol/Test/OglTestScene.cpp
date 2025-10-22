@@ -183,15 +183,7 @@ void OglTestScene::undo()
         bvh->updateDirty();
     }
 }
-//void OglTestScene::setMouseParams(const System::Mouse::MouseInputParam& param)
-//{
-//    auto& ctx    = drawCtx;
-//
-//    mouseCtrl.tileSys   = tileSys;
-//    mouseCtrl.targetSys = etRenderSys;
-//
-//    mouseCtrl.upateLeftMouseParam(drawCtx, param);
-//}
+
 void OglTestScene::initVoassScene()
 {
 

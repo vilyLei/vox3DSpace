@@ -1,4 +1,6 @@
 #
+Scene-Oriented, Backend-Agnostic Rendering Pipeline.Python as Render IR.Design driven by computing power and AI Thinking.A General Graphic Architecture Model for Computing Power and Semantics.
+#
 Web 端 10 million renderable graphics primitives 规模, PC Native 端 100 million renderable graphics primitives 规模, Mobile 端 1 million renderable graphics primitives 规模
 #
 3D,2D,视频等的混合编辑/展示/交互
@@ -16,7 +18,8 @@ Web 端 10 million renderable graphics primitives 规模, PC Native 端 100 mill
 3. 播放\展示\应用系统。例如可以组合为一个游戏player。
 
 #
-基于协议、数据、命令的分离式的、算力驱动的系统设计。
+基于协议、数据、命令的分离式的、算力驱动的系统设计, Ai逻辑协同。
+FFI 隔离与同步。
 主系统分为两端: 驱动端(生产端), 执行端(消费端)
 驱动端产生命令队列，而执行端则解释并执行这些命令。
 驱动端不会包含具体表现所需要的资源，而执行端则要拥有这些资源的管理能力。这也是分布式机制的设计原则。

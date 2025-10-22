@@ -1,0 +1,1 @@
+Rendering Represention Representation Power, For example, GPU or CPU rendering backend.

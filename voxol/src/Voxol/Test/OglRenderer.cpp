@@ -15,7 +15,6 @@ void OglRenderer::key_callback(GLFWwindow* window, int key, int scancode, int ac
     auto renderer = static_cast<OglRenderer*>(glfwGetWindowUserPointer(window));
     if (renderer)
     {
-        //renderer->mScene.setKeyParams(key, scancode, action,  mode);
         renderer->mScene.uiOpLayer.updateKeyboardParams(key, scancode, action, mode);
     }
 }
