@@ -35,7 +35,8 @@ struct MouseCtroller
     System::Mouse::MouseEvtHandler handler{};
 
     bool dragging = false;
-
+    // the input ctrl task flow is free or block 
+    bool free     = true;
     bool isBoundsSelection() const
     {
         return selectType == SelectType::Bounds;
