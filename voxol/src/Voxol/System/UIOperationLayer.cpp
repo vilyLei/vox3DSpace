@@ -116,7 +116,7 @@ void MouseCtroller::upateLeftMouseParam(const Render::Draw::DrawContext& rctx, c
 void UIOperationLayer::initialize()
 {
     mouseCtrl.tileSys   = tileSys;
-    mouseCtrl.targetSys = etRenderSys;
+    mouseCtrl.targetSys = etSceneSys;
 }
 
 void UIOperationLayer::updateKeyboardParams(int key, int scancode, int action, int mods)

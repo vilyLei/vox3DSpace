@@ -3,7 +3,7 @@
 
 #include "../Base/BaseDefine.h"
 #include "../Tile/TileSystem.h"
-#include "../Render/EntityRenderSystem.h"
+#include "../Render/EntitySceneSystem.h"
 #include "../Math/Mat33.h"
 #include "../Math/VxRect.h"
 #include "../System/MouseEventSystem.h"
@@ -28,7 +28,7 @@ struct MouseCtroller
     Render::Component::UnitTransform unitTransform{};
 
     Tile::TileSystem::SP           tileSys;
-    Render::EntityRenderSystem::SP targetSys;
+    Render::EntitySceneSystem::SP targetSys;
     Math::Bounds                   selectionBounds{};
     SelectType                     selectType = SelectType::Single;
 
@@ -60,7 +60,7 @@ public:
 
 public:
     Tile::TileSystem::SP           tileSys;
-    Render::EntityRenderSystem::SP etRenderSys;
+    Render::EntitySceneSystem::SP etSceneSys;
 
     Mouse::MouseCtroller           mouseCtrl;
     ShortcutManager shortcutMana{};

@@ -15,7 +15,7 @@ void OglTestScene::initScene()
         tileSys->initalize();
 
         uiOpLayer.tileSys     = tileSys;
-        uiOpLayer.etRenderSys = etRenderSys;
+        uiOpLayer.etSceneSys = etSceneSys;
         uiOpLayer.initialize();
 
         auto queryCall = [this](const Math::VxRect& bounds, int phase) -> int {
@@ -106,7 +106,7 @@ void OglTestScene::render(const Voxol::Math::Mat33& vpMat)
         boundsUnit.vertex.lineWidth = 1.0f;
 
 
-        auto bvh = etRenderSys->bvh;
+        auto bvh = etSceneSys->bvh;
         //auto& queriedEIds = mouseEvtMana.queryEIds;
         auto& mouseCtrl   = uiOpLayer.mouseCtrl;
 
@@ -193,7 +193,7 @@ void OglTestScene::undo()
 
     compStorage->setEntityXYAt(pv, itemData.id);
 
-    auto bvh = etRenderSys->bvh;
+    auto bvh = etSceneSys->bvh;
     auto b0  = bvh->getBoundsAt(itemData.id);
     auto b1  = b0;
     if (tileSys)
