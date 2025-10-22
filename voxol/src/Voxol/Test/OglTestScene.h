@@ -40,7 +40,6 @@ public:
 
     Render::Draw::DrawContext drawCtx;
     std::shared_ptr<System::UIOperationLayer> uiOpLayer;
-    // sceneSys -> rendersys -> tileSys
     Render::EntitySceneSystem::SP  etSceneSys  = Render::EntitySceneSystem::make();
     Render::EntityRenderSystem::SP etRenderSys = Render::EntityRenderSystem::make();
     Tile::TileSystem::SP           tileSys     = Tile::TileSystem::make();

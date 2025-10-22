@@ -15,7 +15,10 @@ void OglTestScene::initScene()
         tileSys->initalize();
 
         uiOpLayer = std::make_shared<System::UIOperationLayer>();
-        uiOpLayer->tileSys     = tileSys;
+        //uiOpLayer->tileSys     = tileSys;
+        uiOpLayer->mouseCtrl.dirtyCall = [this](const Math::Bounds& b, int32_t id) {
+            tileSys->addDirtyBounds(b, id);
+        };
         uiOpLayer->etSceneSys = etSceneSys;
         uiOpLayer->initialize();
 
@@ -108,7 +111,6 @@ void OglTestScene::render(const Voxol::Math::Mat33& vpMat)
 
 
         auto bvh = etSceneSys->bvh;
-        //auto& queriedEIds = mouseEvtMana.queryEIds;
         auto& mouseCtrl   = uiOpLayer->mouseCtrl;
 
         boundsUnit.color  = {0.0f, 0.3, 0.3f, 1.f};

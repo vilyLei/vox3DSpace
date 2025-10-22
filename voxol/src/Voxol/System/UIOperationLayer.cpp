@@ -44,10 +44,12 @@ void MouseCtroller::selectWithSingle(const System::Mouse::MouseEvent& evt, const
         auto b1 = b0;
 
         // move out
-        tileSys->addDirtyBounds(b0, 0);
+        //tileSys->addDirtyBounds(b0, 0);
+        dirtyCall(b0, 0);
         b1.moveTo(pv.x, pv.y);
         // move in
-        tileSys->addDirtyBounds(b1, 1);
+        //tileSys->addDirtyBounds(b1, 1);
+        dirtyCall(b1, 1);
 
         bvh->updateItemBoundsByObjectId(id, b1);
         bvh->updateDirty();
@@ -115,7 +117,7 @@ void MouseCtroller::upateLeftMouseParam(const Render::Draw::DrawContext& rctx, c
 }
 void UIOperationLayer::initialize()
 {
-    mouseCtrl.tileSys   = tileSys;
+    //mouseCtrl.tileSys   = tileSys;
     mouseCtrl.targetSys = etSceneSys;
 }
 

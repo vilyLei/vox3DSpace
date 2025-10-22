@@ -8,7 +8,7 @@
 #include "../Math/VxRect.h"
 #include "../System/MouseEventSystem.h"
 #include "../System/ShortcutManager.h"
-
+#include <functional>
 namespace Voxol::System
 {
 namespace Mouse
@@ -19,6 +19,8 @@ enum class SelectType
     Multiple,
     Bounds
 };
+
+using InputDirtyCallType = std::function<void(const Math::Bounds& bounds, int id)>;
 struct MouseCtroller
 {
     Math::Vec2           originEtPos{};
@@ -27,7 +29,8 @@ struct MouseCtroller
 
     Render::Component::UnitTransform unitTransform{};
 
-    Tile::TileSystem::SP           tileSys;
+    //Tile::TileSystem::SP           tileSys;
+    InputDirtyCallType             dirtyCall;
     Render::EntitySceneSystem::SP targetSys;
     Math::Bounds                   selectionBounds{};
     SelectType                     selectType = SelectType::Single;
@@ -60,7 +63,7 @@ public:
     ~UIOperationLayer() = default;
 
 public:
-    Tile::TileSystem::SP           tileSys;
+    //Tile::TileSystem::SP           tileSys;
     Render::EntitySceneSystem::SP etSceneSys;
 
     Mouse::MouseCtroller           mouseCtrl;
