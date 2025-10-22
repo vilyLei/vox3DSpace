@@ -8,6 +8,7 @@
 #include "../Math/VxRect.h"
 #include "../System/MouseEventSystem.h"
 #include "../System/ShortcutManager.h"
+
 namespace Voxol::System
 {
 namespace Mouse
