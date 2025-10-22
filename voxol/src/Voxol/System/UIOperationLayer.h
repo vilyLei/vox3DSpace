@@ -29,7 +29,7 @@ struct MouseCtroller
 
     Tile::TileSystem::SP           tileSys;
     Render::EntityRenderSystem::SP targetSys;
-    Math::Bounds                   selectBounds{};
+    Math::Bounds                   selectionBounds{};
     SelectType                     selectType = SelectType::Single;
 
     System::Mouse::MouseEvtHandler handler{};
@@ -45,6 +45,7 @@ struct MouseCtroller
         return selectType == SelectType::Single;
     }
     void selectSingle(const System::Mouse::MouseEvent& evt, const Math::Vec2& offset);
+    void selectBounds(const System::Mouse::MouseEvent& evt, const Math::Vec2& offset);
 
     void upateLeftMouseParam(const Render::Draw::DrawContext& rctx, const System::Mouse::MouseInputParam& param);
 };

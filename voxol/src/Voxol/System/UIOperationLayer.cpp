@@ -6,6 +6,10 @@ namespace Mouse
 
 void MouseCtroller::selectSingle(const System::Mouse::MouseEvent& evt, const Math::Vec2& offset)
 {
+    if (selectType != SelectType::Single)
+    {
+        return;
+    }
     auto bvh = targetSys->bvh;
     if (evt.isMoving() || evt.isBegin())
     {
@@ -58,13 +62,54 @@ void MouseCtroller::selectSingle(const System::Mouse::MouseEvent& evt, const Mat
             etStorage->historyManager->pushItem({unitTransform, etId});
         }
         etId = -1;
+        return;
+    }
+
+    if (evt.isDragging() && etId < 0)
+    {
+        selectType = SelectType::Bounds;
     }
 }
 
+void MouseCtroller::selectBounds(const System::Mouse::MouseEvent& evt, const Math::Vec2& offset)
+{
+    if (selectType != SelectType::Bounds)
+    {
+        return;
+    }
+
+    selectionBounds.toEmpty();
+    selectionBounds.addXY(evt.originGlobalPos.x, evt.originGlobalPos.y);
+    selectionBounds.addXY(evt.globalPos.x, evt.globalPos.y);
+
+    
+    auto bvh = targetSys->bvh;
+
+    if (evt.isMoving() || evt.isBegin())
+    {
+        qeIds.clear();
+        bvh->queryBounds(selectionBounds, qeIds);
+    }
+    if (evt.isEnd())
+    {
+        printf("MouseCtroller::selectBtnBounds() end().\n");
+        etId       = -1;
+        selectType = SelectType::Single;
+    }
+}
 void MouseCtroller::upateLeftMouseParam(const Render::Draw::DrawContext& rctx, const System::Mouse::MouseInputParam& param)
 {
     handler.upateMouseLeftBtnParam(rctx, param, [&, this](const System::Mouse::MouseEvent& evt, const Math::Vec2& offset) {
-        selectSingle(evt, offset);
+        if (selectType == SelectType::Single)
+        {
+            selectSingle(evt, offset);
+            return;
+        }
+        if (selectType == SelectType::Bounds)
+        {
+            selectBounds(evt, offset);
+            return;
+        }
     });
 }
 }
