@@ -30,18 +30,16 @@ public:
 
 public:
     void initalize();
-    int  drawQuery(const Math::VxRect& bounds, int phase);
-    void render(const Draw::DrawContext& rctx, const Math::Mat33& vpM, const Math::Bounds& wbounds);
+    //int  drawQuery(const Math::VxRect& bounds, int phase);
+    void render(const Draw::DrawContext& rctx, const Math::Mat33& vpM, const Math::Bounds& wbounds, const std::vector<int32_t>& queriedEIds);
     void clear();
 
-    EntitySysBVH::SP       bvh = EntitySysBVH::make();
-    //EntityCompStorage::SP compStorage{};
-    //DrawingUnitStorage::SP drawingStorage{};
+    //EntitySysBVH::SP       bvh = EntitySysBVH::make();
     EntityUnitStorage::SP entityStorage{};
 
 private:
     bool                 drawUnit(const Component::UnitEntity& entity, const Math::Mat33& vpM, const Math::Bounds& wbounds);
-    std::vector<int32_t> queriedEIds{};
+    //std::vector<int32_t> queriedEIds{};
 };
 } // namespace Voxol::Render
 #endif

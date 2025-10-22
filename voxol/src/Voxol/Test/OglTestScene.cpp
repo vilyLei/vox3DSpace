@@ -9,18 +9,21 @@ void OglTestScene::initScene()
 {
     if (entityModeFlag)
     {
-        tileSys->initalize();
+        etSceneSys->initalize();
+        etRenderSys->entityStorage = etSceneSys->entityStorage;
         etRenderSys->initalize();
+        tileSys->initalize();
 
         uiOpLayer.tileSys     = tileSys;
         uiOpLayer.etRenderSys = etRenderSys;
         uiOpLayer.initialize();
 
-        auto drawCall = [this](const Math::VxRect& bounds, const Math::Mat33& vpMat) {
-            etRenderSys->render(drawCtx, vpMat, bounds);
-        };
         auto queryCall = [this](const Math::VxRect& bounds, int phase) -> int {
-            return etRenderSys->drawQuery(bounds, phase);
+            return etSceneSys->drawQuery(bounds, phase);
+        };
+        auto drawCall = [this](const Math::VxRect& bounds, const Math::Mat33& vpMat) {
+            auto&& ids = etSceneSys->getQueriedEIds();
+            etRenderSys->render(drawCtx, vpMat, bounds, ids);
         };
 
         drawCtx.drawCall  = drawCall;

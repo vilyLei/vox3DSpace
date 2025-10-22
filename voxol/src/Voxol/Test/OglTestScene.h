@@ -3,6 +3,7 @@
 
 #include "../Base/BaseDefine.h"
 #include "../Tile/TileSystem.h"
+#include "../Render/EntitySceneSystem.h"
 #include "../Render/EntityRenderSystem.h"
 #include "../Render/OglGpuResUtils.h"
 #include "../Math/Mat33.h"
@@ -39,9 +40,10 @@ public:
 
     Render::Draw::DrawContext drawCtx;
     System::UIOperationLayer  uiOpLayer;
-
-    Tile::TileSystem::SP           tileSys     = Tile::TileSystem::make();
+    // sceneSys -> rendersys -> tileSys
+    Render::EntitySceneSystem::SP  etSceneSys  = Render::EntitySceneSystem::make();
     Render::EntityRenderSystem::SP etRenderSys = Render::EntityRenderSystem::make();
+    Tile::TileSystem::SP           tileSys     = Tile::TileSystem::make();
 
 private:
     void initVoassScene();

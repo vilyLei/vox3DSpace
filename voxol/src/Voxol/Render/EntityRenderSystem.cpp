@@ -11,6 +11,7 @@ EntityRenderSystem::SP EntityRenderSystem::make()
 
 void EntityRenderSystem::initalize()
 {
+    /*
     if (entityStorage)
         return;
     entityStorage = EntityUnitStorage::make();
@@ -36,8 +37,9 @@ void EntityRenderSystem::initalize()
     });
 
     bvh->build();
+    //*/
 }
-
+/*
 int EntityRenderSystem::drawQuery(const Math::VxRect& wbounds, int phase)
 {
     queriedEIds.clear();
@@ -64,7 +66,8 @@ int EntityRenderSystem::drawQuery(const Math::VxRect& wbounds, int phase)
     }
     return static_cast<int>(queriedEIds.size());
 }
-void EntityRenderSystem::render(const Draw::DrawContext& rctx, const Math::Mat33& vpM, const Math::Bounds& wbounds)
+//*/
+void EntityRenderSystem::render(const Draw::DrawContext& rctx, const Math::Mat33& vpM, const Math::Bounds& wbounds, const std::vector<int32_t>& queriedEIds)
 {
     if (!entityStorage)
         return;
