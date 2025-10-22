@@ -121,9 +121,9 @@ struct MouseEvtHandler
             {
                 if (!evt.isBegin())
                 {
-                    evt.begin();
-                    evt.originLocalPos = evt.globalPos;
+                    evt.originLocalPos  = evt.localPos;
                     evt.originGlobalPos = evt.globalPos;
+                    evt.begin();
                     callback(evt, {});
                 }
             }

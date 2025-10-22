@@ -78,8 +78,7 @@ void MouseCtroller::selectWithBounds(const System::Mouse::MouseEvent& evt, const
         return;
     }
 
-    selectionBounds.toEmpty();
-    selectionBounds.addXY(evt.originGlobalPos.x, evt.originGlobalPos.y);
+    selectionBounds.toEmpty(evt.originGlobalPos.x, evt.originGlobalPos.y);
     selectionBounds.addXY(evt.globalPos.x, evt.globalPos.y);
 
     

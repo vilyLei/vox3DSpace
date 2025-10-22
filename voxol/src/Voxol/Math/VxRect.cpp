@@ -93,6 +93,13 @@ void VxRect::addXY(float px, float py)
     if (fTop > py) fTop = py;
     if (fBottom < py) fBottom = py;
 }
+void VxRect::addXY(const Vec2& p)
+{
+    if (fLeft > p.x) fLeft = p.x;
+    if (fRight < p.x) fRight = p.x;
+    if (fTop > p.y) fTop = p.y;
+    if (fBottom < p.y) fBottom = p.y;
+}
 
 void VxRect::setSize(float pw, float ph)
 {
@@ -148,6 +155,11 @@ float VxRect::height() const
     return fBottom - fTop;
 }
 
+void VxRect::toEmpty(const Vec2& p) {
+
+    fX = fRX = p.x;
+    fY = fBY = p.y;
+}
 void VxRect::toEmpty(float px, float py)
 {
     fX = fRX = px;

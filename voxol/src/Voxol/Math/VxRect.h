@@ -54,6 +54,7 @@ public:
 
     void mat33MapTo(const Mat33& mat3, VxRect& dst);
     void addXY(float px, float py);
+    void addXY(const Vec2& p);
 
 
     void setSize(float pw, float ph);
@@ -72,6 +73,7 @@ public:
     float width() const;
     float height() const;
     void  toEmpty(float px = 0, float py = 0);
+    void  toEmpty(const Vec2& p);
     bool  isEmpty() const;
 
     inline float centerX() const { return (fX + fRX) * 0.5f; }
