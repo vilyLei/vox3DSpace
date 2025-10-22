@@ -48,6 +48,10 @@ struct MouseCtroller
 
         int32_t topId = qeIds.empty() ? -1 : qeIds.back();
 
+        if (evt.isBegin()) {
+            dragging = false;
+        }
+
         if (topId >= 0 && evt.isBegin())
         {
             etId          = topId;
