@@ -67,6 +67,7 @@ void MouseCtroller::selectWithSingle(const System::Mouse::MouseEvent& evt, const
 
     if (evt.isDragging() && etId < 0)
     {
+        selectionBounds.toEmpty(evt.originGlobalPos);
         selectType = SelectType::Bounds;
     }
 }
@@ -78,8 +79,8 @@ void MouseCtroller::selectWithBounds(const System::Mouse::MouseEvent& evt, const
         return;
     }
 
-    selectionBounds.toEmpty(evt.originGlobalPos.x, evt.originGlobalPos.y);
-    selectionBounds.addXY(evt.globalPos.x, evt.globalPos.y);
+    selectionBounds.toEmpty(evt.originGlobalPos);
+    selectionBounds.addXY(evt.globalPos);
 
     
     auto bvh = targetSys->bvh;
