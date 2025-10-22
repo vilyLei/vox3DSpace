@@ -14,9 +14,10 @@ void OglTestScene::initScene()
         etRenderSys->initalize();
         tileSys->initalize();
 
-        uiOpLayer.tileSys     = tileSys;
-        uiOpLayer.etSceneSys = etSceneSys;
-        uiOpLayer.initialize();
+        uiOpLayer = std::make_shared<System::UIOperationLayer>();
+        uiOpLayer->tileSys     = tileSys;
+        uiOpLayer->etSceneSys = etSceneSys;
+        uiOpLayer->initialize();
 
         auto queryCall = [this](const Math::VxRect& bounds, int phase) -> int {
             return etSceneSys->drawQuery(bounds, phase);
@@ -34,13 +35,13 @@ void OglTestScene::initScene()
         boundsUnit.vertex.lineWidth = 5;
         Render::Gpu::buildBaseDrawUnit(boundsUnit);
 
-        uiOpLayer.shortcutMana.registerShortcut(
+        uiOpLayer->shortcutMana.registerShortcut(
             {GLFW_KEY_LEFT_CONTROL, GLFW_KEY_Z}, [this] {
                 //std::cout << "[Undo] Ctrl + Z pressed\n";
                 undo();
             },
             System::ShortcutManager::TriggerType::Press);
-        uiOpLayer.shortcutMana.registerShortcut({GLFW_KEY_LEFT_CONTROL, GLFW_KEY_LEFT_SHIFT, GLFW_KEY_Y}, [] {
+        uiOpLayer->shortcutMana.registerShortcut({GLFW_KEY_LEFT_CONTROL, GLFW_KEY_LEFT_SHIFT, GLFW_KEY_Y}, [] {
             std::cout << "Ctrl + Shift + Y pressed\n";
         });
         return;
@@ -108,7 +109,7 @@ void OglTestScene::render(const Voxol::Math::Mat33& vpMat)
 
         auto bvh = etSceneSys->bvh;
         //auto& queriedEIds = mouseEvtMana.queryEIds;
-        auto& mouseCtrl   = uiOpLayer.mouseCtrl;
+        auto& mouseCtrl   = uiOpLayer->mouseCtrl;
 
         boundsUnit.color  = {0.0f, 0.3, 0.3f, 1.f};
         auto& queriedEIds = mouseCtrl.qeIds;

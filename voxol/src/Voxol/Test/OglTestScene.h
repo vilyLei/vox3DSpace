@@ -39,7 +39,7 @@ public:
     void                      undo();
 
     Render::Draw::DrawContext drawCtx;
-    System::UIOperationLayer  uiOpLayer;
+    std::shared_ptr<System::UIOperationLayer> uiOpLayer;
     // sceneSys -> rendersys -> tileSys
     Render::EntitySceneSystem::SP  etSceneSys  = Render::EntitySceneSystem::make();
     Render::EntityRenderSystem::SP etRenderSys = Render::EntityRenderSystem::make();
