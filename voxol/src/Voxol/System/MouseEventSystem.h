@@ -51,7 +51,8 @@ struct MouseEvent
     bool             dirty    = false;
     bool             moving   = false;
     bool             dragging = false;
-    Math::Vec2       originPos{};
+    Math::Vec2       originLocalPos{};
+    Math::Vec2       originGlobalPos{};
     Math::Vec2       localPos{};
     Math::Vec2       globalPos{};
 
@@ -121,7 +122,8 @@ struct MouseEvtHandler
                 if (!evt.isBegin())
                 {
                     evt.begin();
-                    evt.originPos = evt.globalPos;
+                    evt.originLocalPos = evt.globalPos;
+                    evt.originGlobalPos = evt.globalPos;
                     callback(evt, {});
                 }
             }
@@ -145,7 +147,7 @@ struct MouseEvtHandler
                 {
                     evt.drag();
 
-                    auto&& dv = evt.globalPos - evt.originPos;
+                    auto&& dv = evt.globalPos - evt.originGlobalPos;
                     callback(evt, dv);
                 }
                 else
