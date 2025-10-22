@@ -103,15 +103,18 @@ void OglTestScene::render(const Voxol::Math::Mat33& vpMat)
         boundsUnit.vertex.lineWidth = 1.0f;
 
 
-
+        auto bvh = etRenderSys->bvh;
         //auto& queriedEIds = mouseEvtMana.queryEIds;
         auto& mouseCtrl   = uiOpLayer.mouseCtrl;
 
         boundsUnit.color  = {0.0f, 0.3, 0.3f, 1.f};
         auto& queriedEIds = mouseCtrl.qeIds;
+        Math::Bounds bounds;
+        bounds.toLimit();
         for (auto id : queriedEIds)
         {
-            auto& vb = etRenderSys->bvh->getBoundsAt(id);
+            auto& vb = bvh->getBoundsAt(id);
+            bounds.expand(vb);
             boundsUnit.objMat.setTo(vb.x(), vb.y(), vb.width(), vb.height());
             boundsUnit.mvp = vpMat;
             boundsUnit.draw();
@@ -129,6 +132,13 @@ void OglTestScene::render(const Voxol::Math::Mat33& vpMat)
             boundsUnit.objMat.setTo(vb.x(), vb.y(), vb.width(), vb.height());
             boundsUnit.mvp = vpMat;
             boundsUnit.draw();
+
+            boundsUnit.color            = {0.0f, 0.6, 0.6f, 1.f};
+            boundsUnit.vertex.lineWidth = 1;
+            vb                          = bounds;
+            boundsUnit.objMat.setTo(vb.x(), vb.y(), vb.width(), vb.height());
+            boundsUnit.mvp = vpMat;
+            boundsUnit.draw();            
         }
         return;
     }

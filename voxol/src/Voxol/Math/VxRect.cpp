@@ -1,6 +1,8 @@
 
 #include "VxRect.h"
 #include <cstdio>
+#include <limits>
+
 namespace Voxol::Math
 {
 
@@ -169,6 +171,12 @@ void VxRect::toEmpty(float px, float py)
 bool VxRect::isEmpty() const
 {
     return width() <= 0 || height() <= 0;
+}
+
+void VxRect::toLimit()
+{
+    fX = fY = std::numeric_limits<float>::max();
+    fRX = fBY = -fX;
 }
 
 int VxRect::longestAxis() const
