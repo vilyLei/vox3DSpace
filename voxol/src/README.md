@@ -44,5 +44,9 @@ Entity Scene ─> buildRenderIR() ─┼──> [Render Graph Builder]
 #
 分布式交互–渲染拓扑系统
 数据、输入、计算、渲染、反馈都被组织在一张**动态拓扑图（Graph Topology）里
+[Input Node]  ─▶  [Control Node]  ─▶  [Scene Node]  ─▶  [Render Node]  ─▶  [Display Node]
+     ▲                                                        │
+     │                                                        ▼
+ [Feedback Node] ◀─────────────────────────────────────────────┘
 #
 核心机制可直接跨平台迁移/分发/协作
