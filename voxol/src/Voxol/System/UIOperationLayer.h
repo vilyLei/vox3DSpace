@@ -44,8 +44,8 @@ struct MouseCtroller
     {
         return selectType == SelectType::Single;
     }
-    void selectSingle(const System::Mouse::MouseEvent& evt, const Math::Vec2& offset);
-    void selectBounds(const System::Mouse::MouseEvent& evt, const Math::Vec2& offset);
+    void selectWithSingle(const System::Mouse::MouseEvent& evt, const Math::Vec2& offset);
+    void selectWithBounds(const System::Mouse::MouseEvent& evt, const Math::Vec2& offset);
 
     void upateLeftMouseParam(const Render::Draw::DrawContext& rctx, const System::Mouse::MouseInputParam& param);
 };

@@ -4,7 +4,7 @@ namespace Voxol::System
 namespace Mouse
 {
 
-void MouseCtroller::selectSingle(const System::Mouse::MouseEvent& evt, const Math::Vec2& offset)
+void MouseCtroller::selectWithSingle(const System::Mouse::MouseEvent& evt, const Math::Vec2& offset)
 {
     if (selectType != SelectType::Single)
     {
@@ -71,7 +71,7 @@ void MouseCtroller::selectSingle(const System::Mouse::MouseEvent& evt, const Mat
     }
 }
 
-void MouseCtroller::selectBounds(const System::Mouse::MouseEvent& evt, const Math::Vec2& offset)
+void MouseCtroller::selectWithBounds(const System::Mouse::MouseEvent& evt, const Math::Vec2& offset)
 {
     if (selectType != SelectType::Bounds)
     {
@@ -102,12 +102,12 @@ void MouseCtroller::upateLeftMouseParam(const Render::Draw::DrawContext& rctx, c
     handler.upateMouseLeftBtnParam(rctx, param, [&, this](const System::Mouse::MouseEvent& evt, const Math::Vec2& offset) {
         if (selectType == SelectType::Single)
         {
-            selectSingle(evt, offset);
+            selectWithSingle(evt, offset);
             return;
         }
         if (selectType == SelectType::Bounds)
         {
-            selectBounds(evt, offset);
+            selectWithBounds(evt, offset);
             return;
         }
     });

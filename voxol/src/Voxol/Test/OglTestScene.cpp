@@ -102,8 +102,13 @@ void OglTestScene::render(const Voxol::Math::Mat33& vpMat)
         // show mouse picked entity bounds
         boundsUnit.vertex.lineWidth = 1.0f;
 
+
+
         //auto& queriedEIds = mouseEvtMana.queryEIds;
-        auto& queriedEIds = uiOpLayer.mouseCtrl.qeIds;
+        auto& mouseCtrl   = uiOpLayer.mouseCtrl;
+
+        boundsUnit.color  = {0.0f, 0.3, 0.3f, 1.f};
+        auto& queriedEIds = mouseCtrl.qeIds;
         for (auto id : queriedEIds)
         {
             auto& vb = etRenderSys->bvh->getBoundsAt(id);
@@ -116,6 +121,15 @@ void OglTestScene::render(const Voxol::Math::Mat33& vpMat)
         boundsUnit.objMat.setTo(vb.x(), vb.y(), vb.width(), vb.height());
         boundsUnit.mvp = vpMat;
         boundsUnit.draw();
+        if (mouseCtrl.isBoundsSelection())
+        {
+            boundsUnit.color            = {0.6f, 0.0, 0.6f, 1.f};
+            boundsUnit.vertex.lineWidth = 1;
+            vb                          = mouseCtrl.selectionBounds;
+            boundsUnit.objMat.setTo(vb.x(), vb.y(), vb.width(), vb.height());
+            boundsUnit.mvp = vpMat;
+            boundsUnit.draw();
+        }
         return;
     }
 
