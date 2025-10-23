@@ -1,0 +1,94 @@
+{
+    "version": {
+        "major": 0,
+        "minor": 1,
+        "dimension": 2,
+        "coordinate_system": "right-handed",
+        "unit": "pixel"
+    },
+    "shadering": {
+        "models": [
+            {
+                "method": "Sdf",
+                "type": "Circle",
+                "id": 0
+            },
+            {
+                "method": "Mesh",
+                "type": "Rectangle",
+                "id": 1
+            }
+        ],
+        "descriptions": [
+            {
+                "type": "default",
+                "color": "0xff660000"
+            },
+            {
+                "type": "default",
+                "color": "0xff000088"
+            }
+        ],
+        
+        "transforms": [
+            {
+                "position": [
+                    150,
+                    200
+                ]
+            },
+            {
+                "position": [
+                    180,
+                    300
+                ]
+            },
+            {
+                "position": [
+                    320,
+                    300
+                ]
+            }
+        ],
+        "units":[
+            {
+                "description" : 0,
+                "transform" : 0,
+                "model":  {
+                    "id" : 1,
+                    "size" : [300, 150]
+                }
+            },
+            {
+                "description" : 1,
+                "transform" : 1,
+                "model":  {
+                    "id" : 0,
+                    "radius" : 100
+                }
+            },
+            {
+                "description" : 1,
+                "transform" : 2,
+                "model":  {
+                    "id" : 0,
+                    "radius" : 100
+                }
+            }
+        ]
+    },
+    "entities": [
+        {
+            "shadering" : 0,
+            "visible": 1
+        },
+        {
+            "shadering" : 1,
+            "visible": 1
+        },
+        {
+            "shadering" : 2,
+            "visible": 1
+        }
+    ]
+}

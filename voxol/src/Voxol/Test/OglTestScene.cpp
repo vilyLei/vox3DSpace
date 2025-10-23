@@ -15,7 +15,6 @@ void OglTestScene::initScene()
         tileSys->initalize();
 
         uiOpLayer = std::make_shared<System::UIOperationLayer>();
-        //uiOpLayer->tileSys     = tileSys;
         uiOpLayer->mouseCtrl.dirtyCall = [this](const Math::Bounds& b, int32_t id) {
             tileSys->addDirtyBounds(b, id);
         };
