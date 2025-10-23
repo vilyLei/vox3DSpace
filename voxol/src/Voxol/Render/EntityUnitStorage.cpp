@@ -4,6 +4,25 @@
 
 namespace Voxol::Render
 {
+
+/*
+    "id" : 0,
+    "description" : 0,
+    "transform" : 0,
+*/
+
+struct JFShdModel
+{
+    int id;
+    Math::Vec2 size;
+};
+struct JFUnit
+{
+    int id;
+    int description;
+    int transform;
+    JFShdModel model;
+};
 EntityUnitStorage::SP EntityUnitStorage::make()
 {
     auto sp = std::make_shared<EntityUnitStorage>();
