@@ -11,17 +11,36 @@ EntityUnitStorage::SP EntityUnitStorage::make()
 }
 
 void EntityUnitStorage::parse() {
+
     auto& verObj = jf["version"];
     auto  flag   = 0;
+    auto& shadering = jf["shadering"];
+    auto& models    = shadering["models"];
+    auto& descriptions = shadering["descriptions"];
+    auto& transforms   = shadering["transforms"];
+    for (auto& model : models)
+    {
+        std::string type = model["type"];
+        int id = model["id"];
+        auto pid = id;
+    }
+}
+
+void EntityUnitStorage::initalizeFromFile(const std::string& fileName)
+{
+    auto fileNameStr = fileName;
+    if (fileNameStr.empty())
+    {
+        fileNameStr = "IR/scIR01.json";
+    }
+    auto          filePath      = std::filesystem::path(SRC_DIR) / "assets/scene/";
+    std::string   irFilePathStr = filePath.string() + fileNameStr;
+    std::ifstream fs(irFilePathStr);
+    fs >> jf;
+    parse();
 }
 void EntityUnitStorage::initalize(int total)
 {
-    auto           filePath  = std::filesystem::path(SRC_DIR) / "assets/scene/";
-    std::string   irFilePathStr = filePath.string() + "IR/scIR01.json";
-    std::ifstream  fs(irFilePathStr);
-    fs >> jf;
-    parse();
-
     if (comp)
     {
         return;
@@ -33,8 +52,6 @@ void EntityUnitStorage::initalize(int total)
     if (!drawing) {
         drawing = DrawingUnitStorage::make();
     }
-
-
     drawing->initalize(total);
 
     auto& entitiesPool          = comp->entitiesPool;

@@ -25,6 +25,7 @@ public:
     ~EntityUnitStorage() = default;
 
 public:
+    void initalizeFromFile(const std::string& fileName);
     void initalize(int total = 512);
 
     EntityCompStorage::SP  comp{};

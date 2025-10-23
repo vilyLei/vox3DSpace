@@ -13,6 +13,11 @@ void EntitySceneSystem::initalize()
 {
     if (entityStorage)
         return;
+
+    // for test
+    entityStorage01 = EntityUnitStorage::make();
+    entityStorage01->initalizeFromFile("");
+
     entityStorage = EntityUnitStorage::make();
     entityStorage->initalize(512);
     
