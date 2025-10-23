@@ -3,6 +3,8 @@
 
 #include "EntityCompStorage.h"
 #include "DrawingUnitStorage.h"
+#include <nlohmann/json.hpp>
+#include <string>
 
 
 namespace Voxol::Render
@@ -29,6 +31,8 @@ public:
     DrawingUnitStorage::SP drawing{};
 
 private:
+    nlohmann::json jf;
+    void parse();
 };
 
 

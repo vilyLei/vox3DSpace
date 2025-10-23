@@ -1,4 +1,6 @@
 #include "EntityUnitStorage.h"
+#include <filesystem>
+#include <fstream>
 
 namespace Voxol::Render
 {
@@ -8,9 +10,18 @@ EntityUnitStorage::SP EntityUnitStorage::make()
     return sp;
 }
 
+void EntityUnitStorage::parse() {
+    auto& verObj = jf["version"];
+    auto  flag   = 0;
+}
 void EntityUnitStorage::initalize(int total)
 {
-    
+    auto           filePath  = std::filesystem::path(SRC_DIR) / "assets/scene/";
+    std::string   irFilePathStr = filePath.string() + "IR/scIR01.json";
+    std::ifstream  fs(irFilePathStr);
+    fs >> jf;
+    parse();
+
     if (comp)
     {
         return;
