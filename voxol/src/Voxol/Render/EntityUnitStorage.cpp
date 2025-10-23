@@ -1,17 +1,18 @@
 #include "EntityUnitStorage.h"
 #include <filesystem>
 #include <fstream>
+#include <unordered_map>
 
 namespace Voxol::Render
 {
 
-/*
-    "id" : 0,
-    "description" : 0,
-    "transform" : 0,
-*/
-
 struct JFShdModel
+{
+    int id;
+    std::string method;
+    std::string type;
+};
+struct JFUnitModel
 {
     int id;
     Math::Vec2 size;
@@ -21,7 +22,7 @@ struct JFUnit
     int id;
     int description;
     int transform;
-    JFShdModel model;
+    JFUnitModel model;
 };
 EntityUnitStorage::SP EntityUnitStorage::make()
 {
@@ -40,16 +41,22 @@ void EntityUnitStorage::parse() {
     auto& transforms   = shadering["transforms"];
     auto& units        = shadering["units"];
 
+    std::unordered_map<int, JFShdModel> shdModelMap;
     for (auto& model : models)
     {
-        std::string type = model["type"];
-        int id = model["id"];
-        auto pid = id;
+        JFShdModel  m;
+        m.type = model["type"];
+        m.id = model["id"];
+        m.method = model["method"];
+        shdModelMap[m.id] = m;
     }
 
     // entities
     auto total = 128;
     total = total < 128 ? 128 : total;
+
+    
+    comp = EntityCompStorage::make();
     if (!drawing)
     {
         drawing = DrawingUnitStorage::make();
@@ -74,16 +81,30 @@ void EntityUnitStorage::parse() {
         e.id = index;
     });
 
-    shaderingDescPool[0].color     = 0xff880077;
-    shaderingDescPool[0].transform = {150, 50, 200, 200, 0};
-    shaderingDescPool[1].color     = 0xff008855;
-    shaderingDescPool[1].transform = {150, 50, 200, 200, 0};
-    shaderingDescPool[2].color     = 0xff554433;
-    shaderingDescPool[2].transform = {510, 150, 100, 100, 0};
+    //shaderingDescPool[0].color     = 0xff880077;
+    //shaderingDescPool[0].transform = {150, 50, 200, 200, 0};
+    //shaderingDescPool[1].color     = 0xff008855;
+    //shaderingDescPool[1].transform = {150, 50, 200, 200, 0};
+    //shaderingDescPool[2].color     = 0xff554433;
+    //shaderingDescPool[2].transform = {510, 150, 100, 100, 0};
 
+    
+    std::vector<JFUnit> unitVecs;
     for (auto& unit : units)
     {
+        JFUnit u;
+        u.id = unit["id"];
+        u.description = unit["description"];
+        u.transform   = unit["transform"];
+        auto& model   = unit["model"];
+        auto& m       = u.model;
+        m.id          = model["id"];
+        auto& ss          = model["size"];
+        m.size.x      = ss[0];
+        m.size.y      = ss[1];
+        unitVecs.push_back( u );
 
+        //u.transform   = unit["transform"];
     }
     ///// circle
     //shaderingEntitiesPool[0].drawUnitId    = drawing->getIdWithType(DrawingUnitType::Circle);

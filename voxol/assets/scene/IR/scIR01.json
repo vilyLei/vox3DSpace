@@ -9,14 +9,14 @@
     "shadering": {
         "models": [
             {
+                "id": 0,
                 "method": "Sdf",
-                "type": "Circle",
-                "id": 0
+                "type": "Circle"
             },
             {
+                "id": 1,
                 "method": "Mesh",
-                "type": "Rectangle",
-                "id": 1
+                "type": "Rectangle"
             }
         ],
         "descriptions": [
