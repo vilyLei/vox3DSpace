@@ -52,6 +52,7 @@
         ],
         "units":[
             {
+                "id" : 0,
                 "description" : 0,
                 "transform" : 0,
                 "model":  {
@@ -60,6 +61,7 @@
                 }
             },
             {
+                "id" : 1,
                 "description" : 1,
                 "transform" : 1,
                 "model":  {
@@ -68,6 +70,7 @@
                 }
             },
             {
+                "id" : 2,
                 "description" : 1,
                 "transform" : 2,
                 "model":  {
@@ -79,14 +82,17 @@
     },
     "entities": [
         {
+            "id" : 0,
             "shadering" : 0,
             "visible": 1
         },
         {
+            "id" : 1,
             "shadering" : 1,
             "visible": 1
         },
         {
+            "id" : 2,
             "shadering" : 2,
             "visible": 1
         }

@@ -12,18 +12,69 @@ EntityUnitStorage::SP EntityUnitStorage::make()
 
 void EntityUnitStorage::parse() {
 
+
     auto& verObj = jf["version"];
     auto  flag   = 0;
     auto& shadering = jf["shadering"];
     auto& models    = shadering["models"];
     auto& descriptions = shadering["descriptions"];
     auto& transforms   = shadering["transforms"];
+    auto& units        = shadering["units"];
+
     for (auto& model : models)
     {
         std::string type = model["type"];
         int id = model["id"];
         auto pid = id;
     }
+
+    // entities
+    auto total = 128;
+    total = total < 128 ? 128 : total;
+    if (!drawing)
+    {
+        drawing = DrawingUnitStorage::make();
+    }
+    drawing->initalize(total);
+
+
+    auto& entitiesPool          = comp->entitiesPool;
+    auto& shaderingEntitiesPool = comp->shaderingEntitiesPool;
+    auto& shaderingDescPool     = comp->shaderingDescPool;
+
+    entitiesPool.initialize(total);
+    shaderingEntitiesPool.initialize(total);
+    auto shaderingDescTotal = total * 2;
+    shaderingDescPool.initialize(shaderingDescTotal);
+
+    
+    entitiesPool.forEach([&](auto& e, int32_t index) {
+        e.id = index;
+    });
+    shaderingEntitiesPool.forEach([&](auto& e, int32_t index) {
+        e.id = index;
+    });
+
+    shaderingDescPool[0].color     = 0xff880077;
+    shaderingDescPool[0].transform = {150, 50, 200, 200, 0};
+    shaderingDescPool[1].color     = 0xff008855;
+    shaderingDescPool[1].transform = {150, 50, 200, 200, 0};
+    shaderingDescPool[2].color     = 0xff554433;
+    shaderingDescPool[2].transform = {510, 150, 100, 100, 0};
+
+    for (auto& unit : units)
+    {
+
+    }
+    ///// circle
+    //shaderingEntitiesPool[0].drawUnitId    = drawing->getIdWithType(DrawingUnitType::Circle);
+    //shaderingEntitiesPool[0].shadingDescId = 0;
+    ///// circle
+    //shaderingEntitiesPool[1].drawUnitId    = drawing->getIdWithType(DrawingUnitType::Circle);
+    //shaderingEntitiesPool[1].shadingDescId = 1;
+    ///// circle
+    //shaderingEntitiesPool[2].drawUnitId    = drawing->getIdWithType(DrawingUnitType::Circle);
+    //shaderingEntitiesPool[2].shadingDescId = 2;
 }
 
 void EntityUnitStorage::initalizeFromFile(const std::string& fileName)
@@ -60,10 +111,8 @@ void EntityUnitStorage::initalize(int total)
 
     entitiesPool.initialize(total);
     shaderingEntitiesPool.initialize(total);
-
     auto shaderingDescTotal = total * 2;
     shaderingDescPool.initialize(shaderingDescTotal);
-
 
     entitiesPool.forEach([&](auto& e, int32_t index) {
         e.id = index;
@@ -112,11 +161,9 @@ void EntityUnitStorage::initalize(int total)
     /// circle
     shaderingEntitiesPool[0].drawUnitId    = drawing->getIdWithType(DrawingUnitType::Circle);
     shaderingEntitiesPool[0].shadingDescId = 0;
-
     /// circle
     shaderingEntitiesPool[1].drawUnitId    = drawing->getIdWithType(DrawingUnitType::Circle);
     shaderingEntitiesPool[1].shadingDescId = 1;
-
     /// circle
     shaderingEntitiesPool[2].drawUnitId    = drawing->getIdWithType(DrawingUnitType::Circle);
     shaderingEntitiesPool[2].shadingDescId = 2;
