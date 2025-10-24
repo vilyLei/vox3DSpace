@@ -10,14 +10,24 @@ EntityUnitStorage::SP EntityUnitStorage::make()
     return sp;
 }
 
-void EntityUnitStorage::parse() {
 
-
-    // entities
-    auto total = 128;
-    total = total < 128 ? 128 : total;
+void EntityUnitStorage::initalizeFromFile(const std::string& fileName)
+{
+    if (comp)
+    {
+        return;
+    }
+    auto fileNameStr = fileName;
+    if (fileNameStr.empty())
+    {
+        fileNameStr = "IR/scIR01.json";
+    }
 
     
+    auto total = 128;
+    total      = total < 128 ? 128 : total;
+
+
     comp = EntityCompStorage::make();
     if (!drawing)
     {
@@ -35,25 +45,13 @@ void EntityUnitStorage::parse() {
     auto shaderingDescTotal = total * 2;
     shaderingDescPool.initialize(shaderingDescTotal);
 
-    
+
     entitiesPool.forEach([&](auto& e, int32_t index) {
         e.id = index;
     });
     shaderingEntitiesPool.forEach([&](auto& e, int32_t index) {
         e.id = index;
     });
-
-}
-
-void EntityUnitStorage::initalizeFromFile(const std::string& fileName)
-{
-    auto fileNameStr = fileName;
-    if (fileNameStr.empty())
-    {
-        fileNameStr = "IR/scIR01.json";
-    }
-
-    //parse();
 }
 void EntityUnitStorage::initalize(int total)
 {

@@ -31,7 +31,6 @@ public:
     DrawingUnitStorage::SP drawing{};
 
 private:
-    void parse();
 };
 
 
