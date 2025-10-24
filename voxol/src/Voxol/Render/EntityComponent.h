@@ -28,8 +28,8 @@ struct UnitTransform
 
 struct UnitShadingBaseDesc
 {
-    UnitTransform transform{};
     uint32_t      color = 0xff000000;
+    uint32_t      type = 0x0;
 };
 
 struct UnitShadingEntity
@@ -48,6 +48,7 @@ struct UnitEntity
     int32_t id = -1;
     /// UnitShadingEntity vector index value
     int32_t shadingId = -1;
+    int32_t transformId = -1;
     bool    visible   = true;
     bool    dirty   = true;
 };

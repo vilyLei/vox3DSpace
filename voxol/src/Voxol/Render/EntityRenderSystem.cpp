@@ -61,13 +61,14 @@ bool EntityRenderSystem::drawUnit(const Component::UnitEntity& entity, const Mat
 
     auto  compStorage       = entityStorage->comp;
     auto& shaderingDescPool = compStorage->shaderingDescPool;
+    auto& transformPool = compStorage->transformPool;
 
     const auto& shadingEt = compStorage->get<Component::UnitShadingEntity>(entity.shadingId);
     //auto& drawUnit  = drawingUnits[shadingEt.drawUnitId];
     auto& drs      = *entityStorage->drawing;
     auto& drawUnit = drs[shadingEt.drawUnitId];
     auto& shdDesc  = shaderingDescPool[shadingEt.shadingDescId];
-    auto& trans    = shdDesc.transform;
+    auto& trans    = transformPool[entity.transformId];
 
     Math::Bounds vb;
     vb.setXYWH(trans.x, trans.y, trans.sx, trans.sy);

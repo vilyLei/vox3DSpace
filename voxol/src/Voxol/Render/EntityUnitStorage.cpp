@@ -96,11 +96,13 @@ void EntityUnitStorage::initalize(int total)
     auto& entitiesPool          = comp->entitiesPool;
     auto& shaderingEntitiesPool = comp->shaderingEntitiesPool;
     auto& shaderingDescPool     = comp->shaderingDescPool;
+    auto& transformPool     = comp->transformPool;
 
     entitiesPool.initialize(total);
     shaderingEntitiesPool.initialize(total);
     auto shaderingDescTotal = total * 2;
     shaderingDescPool.initialize(shaderingDescTotal);
+    transformPool.initialize(shaderingDescTotal);
 
     entitiesPool.forEach([&](auto& e, int32_t index) {
         e.id = index;
@@ -110,28 +112,28 @@ void EntityUnitStorage::initalize(int total)
     });
 
     shaderingDescPool[0].color    = 0xff880077;
-    shaderingDescPool[0].transform = {150, 50, 200, 200, 0};
+    transformPool[0]     = {150, 50, 200, 200, 0};
     shaderingDescPool[1].color     = 0xff008855;
-    shaderingDescPool[1].transform = {150, 50, 200, 200, 0};
+    transformPool[1]    = {150, 50, 200, 200, 0};
 
     shaderingDescPool[2].color    = 0xff554433;
-    shaderingDescPool[2].transform = {510, 150, 100, 100, 0};
+    transformPool[2] = {510, 150, 100, 100, 0};
 
     shaderingDescPool[3].color    = 0xff660066;
-    shaderingDescPool[3].transform = {250, 50, 150, 150, 0};
+    transformPool[3] = {250, 50, 150, 150, 0};
 
     shaderingDescPool[4].color     = 0xff00aa76;
-    shaderingDescPool[4].transform = {600, 150, 200, 200, 0};
+    transformPool[4] = {600, 150, 200, 200, 0};
 
     shaderingDescPool[5].color     = 0xff00aa76;
-    shaderingDescPool[5].transform = {509, 350, 200, 200, 0};
+    transformPool[5] = {509, 350, 200, 200, 0};
 
     shaderingDescPool[6].color     = 0xff00aabb;
-    shaderingDescPool[6].transform = {350, 350, 200, 200, 0};
+    transformPool[6]     = {350, 350, 200, 200, 0};
     shaderingDescPool[7].color     = 0xff00aabb;
-    shaderingDescPool[7].transform = {350, 350, 200, 200, 0};
+    transformPool[7]     = {350, 350, 200, 200, 0};
     shaderingDescPool[8].color     = 0xff00aabb;
-    shaderingDescPool[8].transform = {350, 350, 200, 200, 0};
+    transformPool[8]     = {350, 350, 200, 200, 0};
 
     /// letter B glyph
     //auto&& tb                      = drawing->msdfText.getGlyphBounds('D', 70, {350, 350});
@@ -139,12 +141,12 @@ void EntityUnitStorage::initalize(int total)
 
     auto&& vbs = drawing->msdfText.getStringBounds("BcD", 70, {350, 350});
     auto   tb                      = vbs[0];
-    shaderingDescPool[6].transform = {tb.x(), tb.y(), tb.width(), tb.height()};
+    transformPool[6]     = {tb.x(), tb.y(), tb.width(), tb.height()};
     tb                             = vbs[1];
-    shaderingDescPool[7].transform = {tb.x(), tb.y(), tb.width(), tb.height()};
+    transformPool[7]     = {tb.x(), tb.y(), tb.width(), tb.height()};
     tb                             = vbs[2];
     auto sx                        = tb.width();
-    shaderingDescPool[8].transform = {tb.x(), tb.y(), tb.width(), tb.height()};
+    transformPool[8]     = {tb.x(), tb.y(), tb.width(), tb.height()};
 
     /// circle
     shaderingEntitiesPool[0].drawUnitId    = drawing->getIdWithType(DrawingUnitType::Circle);
@@ -185,22 +187,31 @@ void EntityUnitStorage::initalize(int total)
 
     /// circle
     entitiesPool[0].shadingId = 0;
+    entitiesPool[0].transformId = 0;
     ///// circle
     entitiesPool[1].shadingId = 1;
+    entitiesPool[1].transformId = 1;
     /// circle
     entitiesPool[2].shadingId = 2;
+    entitiesPool[2].transformId = 2;
     /// ring
     entitiesPool[3].shadingId = 3;
+    entitiesPool[3].transformId = 3;
     /// multi-circles
     entitiesPool[4].shadingId = 4;
+    entitiesPool[4].transformId = 4;
     /// ship
     entitiesPool[5].shadingId = 5;
+    entitiesPool[5].transformId = 5;
     /// B
     entitiesPool[6].shadingId = 6;
+    entitiesPool[6].transformId = 6;
     /// c
     entitiesPool[7].shadingId = 7;
+    entitiesPool[7].transformId = 7;
     /// D
     entitiesPool[8].shadingId = 8;
+    entitiesPool[8].transformId = 8;
 }
 
 
