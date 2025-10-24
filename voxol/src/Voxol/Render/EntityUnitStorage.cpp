@@ -41,11 +41,13 @@ void EntityUnitStorage::initalizeFromFile(const std::string& fileName)
     auto& entitiesPool          = comp->entitiesPool;
     auto& shaderingEntitiesPool = comp->shaderingEntitiesPool;
     auto& shaderingDescPool     = comp->shaderingDescPool;
+    auto& transformPool         = comp->transformPool;
 
     entitiesPool.initialize(total);
     shaderingEntitiesPool.initialize(total);
     auto shaderingDescTotal = total * 2;
     shaderingDescPool.initialize(shaderingDescTotal);
+    transformPool.initialize(shaderingDescTotal);
 
 
     entitiesPool.forEach([&](auto& e, int32_t index) {
@@ -54,6 +56,7 @@ void EntityUnitStorage::initalizeFromFile(const std::string& fileName)
     shaderingEntitiesPool.forEach([&](auto& e, int32_t index) {
         e.id = index;
     });
+
 }
 void EntityUnitStorage::initalize(int total)
 {
