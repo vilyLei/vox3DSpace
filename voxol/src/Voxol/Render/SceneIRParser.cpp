@@ -1,10 +1,94 @@
 #include "SceneIRParser.h"
-#include <nlohmann/json.hpp>
-#include <string>
-#include <algorithm>
-
+#include <fstream>
+#include <filesystem>
+#include <cctype>
 namespace Voxol::Render
 {
+namespace SceneIR
+{
+namespace Shadering
+{
+
+void Description::parse(const JsonType& node)
+{
+    id    = node["id"];
+    type  = node["type"];
+    color = 0x0;
+    if (node.contains("color"))
+    {
+        auto&& vo = node["color"];
+        if (vo.is_number())
+        {
+            color = static_cast<uint32_t>(vo);
+        }
+        else if (vo.is_string())
+        {
+            std::string&& hex_str = vo;
+            std::transform(hex_str.begin(), hex_str.end(), hex_str.begin(),
+                           [](unsigned char c) { return std::tolower(c); });
+            if (hex_str.find('#'))
+            {
+                color = std::stoul(hex_str.substr(2), nullptr, 16);
+            }
+            else if (hex_str.find('x'))
+            {
+                if (hex_str.size() >= 3)
+                {
+                    color = std::stoul(hex_str.substr(2), nullptr, 16);
+                }
+            }
+            else
+            {
+                color = std::stoul(hex_str.substr(2), nullptr, 16);
+            }
+            printf("color: %x\n", color);
+        }
+    }
+}
+
+
+void UnitModel::parse(const JsonType& node)
+{
+    id = node["id"];
+    if (node.contains("radius") && node["radius"].is_number())
+    {
+        auto v = static_cast<float>(node["radius"]);
+        value  = std::isnan(v) ? 0.0f : v;
+        return;
+    }
+    if (node.contains("size") && node["size"].is_array())
+    {
+        auto&& elements = node["size"];
+        if (elements.size() != 2)
+            return;
+
+        std::vector<float> vs;
+        for (const auto& element : elements)
+        {
+            vs.push_back(element);
+        }
+        if (std::isnan(vs[0]) || std::isnan(vs[1]))
+            return;
+        Math::Vec2 v2{vs[0], vs[1]};
+        value = v2;
+    }
+}
+
+} // namespace Shadering
+} // namespace SceneIR
+
+void SceneIRParser::parseFromFile(const std::string& fileName)
+{
+
+    auto           pngPath = std::filesystem::path(SRC_DIR) / "assets/";
+    auto           pathStr = pngPath.string() + fileName;
+    std::ifstream  fs(pathStr);
+    nlohmann::json jsonObj;
+    fs >> jsonObj;
+
+    shaderingModule.parse(jsonObj["shadering"]);
+    sceneModule.parse(jsonObj["scene"]);
+}
 void SceneIRParser::parse()
 {
 }
