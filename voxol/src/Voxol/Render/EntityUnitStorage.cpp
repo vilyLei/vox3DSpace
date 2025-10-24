@@ -24,6 +24,8 @@ void EntityUnitStorage::initalizeFromFile(const std::string& fileName)
     }
     SceneIRParser parser;
     parser.parseFromFile(fileNameStr);
+    auto& shaderingModule = parser.shaderingModule;
+    auto& sceneModule     = parser.sceneModule;
 
     
     auto total = 128;
@@ -57,6 +59,23 @@ void EntityUnitStorage::initalizeFromFile(const std::string& fileName)
         e.id = index;
     });
 
+    
+    auto updateUnitData = [&, this](int i) {
+
+        auto& descMap = shaderingModule.descriptionsMap;
+        auto& unitMap = shaderingModule.unitsMap;
+
+        auto&& unit     = unitMap[i];
+        auto&  descData = descMap[unit.description];
+
+        auto& model = unit.model;
+        auto& desc  = shaderingDescPool[i];
+        desc.color  = descData.color;
+        printf("        desc.color: %x\n", desc.color);
+        auto&& descEt = shaderingEntitiesPool[i];
+        descEt.drawUnitId = model.id;
+        descEt.shadingDescId = unit.description;
+    };
 }
 void EntityUnitStorage::initalize(int total)
 {
