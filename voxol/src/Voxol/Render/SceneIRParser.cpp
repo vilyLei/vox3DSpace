@@ -106,13 +106,13 @@ void SceneIRParser::parseFromFile(const std::string& fileName)
     auto           pngPath = std::filesystem::path(SRC_DIR) / "assets/";
     auto           pathStr = pngPath.string() + fileName;
     std::ifstream  fs(pathStr);
-    nlohmann::json jsonObj;
-    fs >> jsonObj;
-
-    shaderingModule.parse(jsonObj["shadering"]);
-    sceneModule.parse(jsonObj["scene"]);
+    nlohmann::json jo;
+    fs >> jo;
+    parse(jo);
 }
-void SceneIRParser::parse()
+void SceneIRParser::parse(const nlohmann::json& json)
 {
+    shaderingModule.parse(json["shadering"]);
+    sceneModule.parse(json["scene"]);
 }
 } // namespace Voxol::Render

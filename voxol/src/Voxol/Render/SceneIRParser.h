@@ -215,7 +215,7 @@ public:
 
 public:
     void parseFromFile(const std::string& fileName);
-    void parse();
+    void parse(const nlohmann::json& json);
 };
 
 } // namespace Voxol::Render
