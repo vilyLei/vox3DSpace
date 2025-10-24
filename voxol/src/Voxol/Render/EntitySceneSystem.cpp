@@ -18,6 +18,7 @@ void EntitySceneSystem::initalize()
     entityStorage01 = EntityUnitStorage::make();
     entityStorage01->initalizeFromFile("");
 
+
     entityStorage = EntityUnitStorage::make();
     entityStorage->initalize(512);
     

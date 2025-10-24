@@ -3,7 +3,6 @@
 
 #include "EntityCompStorage.h"
 #include "DrawingUnitStorage.h"
-#include <string>
 
 
 namespace Voxol::Render

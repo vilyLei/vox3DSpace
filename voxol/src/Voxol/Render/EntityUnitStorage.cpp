@@ -1,5 +1,5 @@
 #include "EntityUnitStorage.h"
-#include <unordered_map>
+#include "SceneIRParser.h"
 
 namespace Voxol::Render
 {
@@ -20,8 +20,10 @@ void EntityUnitStorage::initalizeFromFile(const std::string& fileName)
     auto fileNameStr = fileName;
     if (fileNameStr.empty())
     {
-        fileNameStr = "IR/scIR01.json";
+        fileNameStr = "scene/IR/scIR01.json";
     }
+    SceneIRParser parser;
+    parser.parseFromFile(fileNameStr);
 
     
     auto total = 128;
