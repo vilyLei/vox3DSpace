@@ -15,13 +15,30 @@ namespace Component
 
 struct UnitTransform
 {
+    //union
+    //{
+    //    struct
+    //    {
+    //        float x;
+    //        float y;
+    //        /// x-axis scale
+    //        float sx;
+    //        /// y-axis scale
+    //        float sy;
+    //    };
+    //    struct
+    //    {
+    //        Math::Vec2 position;
+    //        Math::Vec2 scale;
+    //    };
+    //};
+
     float x;
     float y;
     /// x-axis scale
     float sx;
     /// y-axis scale
     float sy;
-
     ///  rotation radian
     float rotation;
 };

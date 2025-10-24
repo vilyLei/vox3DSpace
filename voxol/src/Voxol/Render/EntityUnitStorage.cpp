@@ -76,6 +76,39 @@ void EntityUnitStorage::initalizeFromFile(const std::string& fileName)
         descEt.drawUnitId = model.id;
         descEt.shadingDescId = unit.description;
     };
+
+    auto updateEntityData = [&, this](int i) {
+
+        auto& dataEt = sceneModule.entitiesMap[i];
+
+        auto&& et       = entitiesPool[dataEt.id];
+        et.shadingId      = dataEt.shadering;
+        et.transformId  = dataEt.transform;
+        et.visible        = dataEt.visible;
+
+        
+        auto& dataTrans = sceneModule.transformsMap[et.transformId];
+
+        auto& unitMap = shaderingModule.unitsMap;
+        auto&& unit    = unitMap[i];
+        auto&  model   = unit.model;
+        auto&& trans   = transformPool[et.transformId];
+
+        trans.x        = dataTrans.position.x;
+        trans.y        = dataTrans.position.y;
+        if (model.hasRadius()) {
+            auto r      = model.getRadius() * 2;
+            trans.sx = r;
+            trans.sy = r;
+        }
+        else if (model.hasSize())
+        {
+            auto&& sv = model.getSize();
+            trans.sx  = sv.x;
+            trans.sy  = sv.y;
+        }
+        printf("        pos(%f,%f), size(%f, %f)\n", trans.x, trans.y, trans.sx, trans.sy);
+    };
 }
 void EntityUnitStorage::initalize(int total)
 {
