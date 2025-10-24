@@ -21,80 +21,92 @@
         ],
         "descriptions": [
             {
+                "id": 0,
                 "type": "default",
                 "color": "0xff660000"
             },
             {
+                "id": 1,
                 "type": "default",
                 "color": "0xff000088"
             }
         ],
-        
-        "transforms": [
+        "units": [
             {
-                "position": [
-                    150,
-                    200
-                ]
-            },
-            {
-                "position": [
-                    180,
-                    300
-                ]
-            },
-            {
-                "position": [
-                    320,
-                    300
-                ]
-            }
-        ],
-        "units":[
-            {
-                "id" : 0,
-                "description" : 0,
-                "transform" : 0,
-                "model":  {
-                    "id" : 1,
-                    "size" : [300, 150]
+                "id": 0,
+                "description": 0,
+                "model": {
+                    "id": 1,
+                    "size": [
+                        300,
+                        150
+                    ]
                 }
             },
             {
-                "id" : 1,
-                "description" : 1,
-                "transform" : 1,
-                "model":  {
-                    "id" : 0,
-                    "radius" : 100
+                "id": 1,
+                "description": 1,
+                "model": {
+                    "id": 0,
+                    "radius": 30
                 }
             },
             {
-                "id" : 2,
-                "description" : 1,
-                "transform" : 2,
-                "model":  {
-                    "id" : 0,
-                    "radius" : 100
+                "id": 2,
+                "description": 1,
+                "model": {
+                    "id": 0,
+                    "radius": 50
                 }
             }
         ]
     },
-    "entities": [
-        {
-            "id" : 0,
-            "shadering" : 0,
-            "visible": 1
+    "scene": {
+        "component": {
+            "transforms": [
+                {
+                    "id": 0,
+                    "position": [
+                        150,
+                        200
+                    ]
+                },
+                {
+                    "id": 1,
+                    "position": [
+                        180,
+                        300
+                    ]
+                },
+                {
+                    "id": 2,
+                    "position": [
+                        320,
+                        300
+                    ]
+                }
+            ],
+            "meshes": ["Rectangle"]
         },
-        {
-            "id" : 1,
-            "shadering" : 1,
-            "visible": 1
-        },
-        {
-            "id" : 2,
-            "shadering" : 2,
-            "visible": 1
-        }
-    ]
+        "entities": [
+            {
+                "id": 0,
+                "transform": 0,
+                "shadering": 0,
+                "visible": 1
+            },
+            {
+                "id": 1,
+                "transform": 1,
+                "shadering": 1,
+                "visible": 1
+            },
+            {
+                "id": 2,
+                "transform": 2,
+                "shadering": 2,
+                "visible": 1
+            }
+        ]
+    }
 }
