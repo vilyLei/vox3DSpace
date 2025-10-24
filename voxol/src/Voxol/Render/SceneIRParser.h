@@ -144,28 +144,7 @@ struct Transform
     int        id;
     Math::Vec2 position;
 
-    void parse(const JsonType& node)
-    {
-        id = node["id"];
-
-
-        if (node.contains("position") && node["position"].is_array())
-        {
-            auto elements = node["position"];
-            if (elements.size() != 2)
-                return;
-
-            std::vector<float> vs;
-            for (const auto& element : elements)
-            {
-                vs.push_back(element);
-            }
-            if (std::isnan(vs[0]) || std::isnan(vs[1]))
-                return;
-            position = {vs[0], vs[1]};
-            return;
-        }
-    }
+    void parse(const JsonType& node);
 };
 
 struct Entity
