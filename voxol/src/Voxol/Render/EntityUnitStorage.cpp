@@ -1,29 +1,9 @@
 #include "EntityUnitStorage.h"
-#include <filesystem>
-#include <fstream>
 #include <unordered_map>
 
 namespace Voxol::Render
 {
 
-struct JFShdModel
-{
-    int id;
-    std::string method;
-    std::string type;
-};
-struct JFUnitModel
-{
-    int id;
-    Math::Vec2 size;
-};
-struct JFUnit
-{
-    int id;
-    int description;
-    int transform;
-    JFUnitModel model;
-};
 EntityUnitStorage::SP EntityUnitStorage::make()
 {
     auto sp = std::make_shared<EntityUnitStorage>();
@@ -72,11 +52,8 @@ void EntityUnitStorage::initalizeFromFile(const std::string& fileName)
     {
         fileNameStr = "IR/scIR01.json";
     }
-    auto          filePath      = std::filesystem::path(SRC_DIR) / "assets/scene/";
-    std::string   irFilePathStr = filePath.string() + fileNameStr;
-    std::ifstream fs(irFilePathStr);
-    fs >> jf;
-    parse();
+
+    //parse();
 }
 void EntityUnitStorage::initalize(int total)
 {

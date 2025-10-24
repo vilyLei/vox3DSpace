@@ -3,7 +3,6 @@
 
 #include "EntityCompStorage.h"
 #include "DrawingUnitStorage.h"
-#include <nlohmann/json.hpp>
 #include <string>
 
 
@@ -32,7 +31,6 @@ public:
     DrawingUnitStorage::SP drawing{};
 
 private:
-    nlohmann::json jf;
     void parse();
 };
 
