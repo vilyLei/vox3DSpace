@@ -112,7 +112,13 @@ void SceneIRParser::parseFromFile(const std::string& fileName)
 }
 void SceneIRParser::parse(const nlohmann::json& json)
 {
-    shaderingModule.parse(json["shadering"]);
-    sceneModule.parse(json["scene"]);
+    if (json.contains("shadering"))
+    {
+        shaderingModule.parse(json["shadering"]);
+    }
+    if (json.contains("scene"))
+    {
+        sceneModule.parse(json["scene"]);
+    }
 }
 } // namespace Voxol::Render
