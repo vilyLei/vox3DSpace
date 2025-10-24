@@ -33,24 +33,6 @@ EntityUnitStorage::SP EntityUnitStorage::make()
 void EntityUnitStorage::parse() {
 
 
-    auto& verObj = jf["version"];
-    auto  flag   = 0;
-    auto& shadering = jf["shadering"];
-    auto& models    = shadering["models"];
-    auto& descriptions = shadering["descriptions"];
-    auto& transforms   = shadering["transforms"];
-    auto& units        = shadering["units"];
-
-    std::unordered_map<int, JFShdModel> shdModelMap;
-    for (auto& model : models)
-    {
-        JFShdModel  m;
-        m.type = model["type"];
-        m.id = model["id"];
-        m.method = model["method"];
-        shdModelMap[m.id] = m;
-    }
-
     // entities
     auto total = 128;
     total = total < 128 ? 128 : total;
@@ -81,40 +63,6 @@ void EntityUnitStorage::parse() {
         e.id = index;
     });
 
-    //shaderingDescPool[0].color     = 0xff880077;
-    //shaderingDescPool[0].transform = {150, 50, 200, 200, 0};
-    //shaderingDescPool[1].color     = 0xff008855;
-    //shaderingDescPool[1].transform = {150, 50, 200, 200, 0};
-    //shaderingDescPool[2].color     = 0xff554433;
-    //shaderingDescPool[2].transform = {510, 150, 100, 100, 0};
-
-    
-    std::vector<JFUnit> unitVecs;
-    for (auto& unit : units)
-    {
-        JFUnit u;
-        u.id = unit["id"];
-        u.description = unit["description"];
-        u.transform   = unit["transform"];
-        auto& model   = unit["model"];
-        auto& m       = u.model;
-        m.id          = model["id"];
-        auto& ss          = model["size"];
-        m.size.x      = ss[0];
-        m.size.y      = ss[1];
-        unitVecs.push_back( u );
-
-        //u.transform   = unit["transform"];
-    }
-    ///// circle
-    //shaderingEntitiesPool[0].drawUnitId    = drawing->getIdWithType(DrawingUnitType::Circle);
-    //shaderingEntitiesPool[0].shadingDescId = 0;
-    ///// circle
-    //shaderingEntitiesPool[1].drawUnitId    = drawing->getIdWithType(DrawingUnitType::Circle);
-    //shaderingEntitiesPool[1].shadingDescId = 1;
-    ///// circle
-    //shaderingEntitiesPool[2].drawUnitId    = drawing->getIdWithType(DrawingUnitType::Circle);
-    //shaderingEntitiesPool[2].shadingDescId = 2;
 }
 
 void EntityUnitStorage::initalizeFromFile(const std::string& fileName)
