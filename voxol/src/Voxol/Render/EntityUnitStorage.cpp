@@ -115,6 +115,7 @@ void EntityUnitStorage::initalizeFromFile(const std::string& fileName)
             trans.sx  = sv.x;
             trans.sy  = sv.y;
         }
+        printf("entity(%d), modelId: %d, drawUnitId: %d\n", i, et.modelId, model.drawUnitId);
         printf("        pos(%f,%f), size(%f, %f)\n", trans.x, trans.y, trans.sx, trans.sy);
     };
 

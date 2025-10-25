@@ -72,18 +72,18 @@
                 
                 {
                     "id": 0,
-                    "method": {"id":0,"type":"Sdf"},
-                    "type": "Circle",
-                    "radius": 50
-                },
-                {
-                    "id": 1,
-                    "method": {"id":1,"type":"Mesh"},
+                    "method": {"id":0,"type":"Mesh"},
                     "type": "Rectangle",
                     "size": [
                         300,
                         150
                     ]
+                },
+                {
+                    "id": 1,
+                    "method": {"id":1,"type":"Sdf"},
+                    "type": "Circle",
+                    "radius": 50
                 }
             ]
         },
@@ -92,21 +92,21 @@
                 "id": 0,
                 "transform": 0,
                 "shadering": 0,
-                "model": 1,
+                "model": 0,
                 "visible": 1
             },
             {
                 "id": 1,
                 "transform": 1,
                 "shadering": 1,
-                "model": 0,
+                "model": 1,
                 "visible": 1
             },
             {
                 "id": 2,
                 "transform": 2,
                 "shadering": 1,
-                "model": 0,
+                "model": 1,
                 "visible": 1
             }
         ]

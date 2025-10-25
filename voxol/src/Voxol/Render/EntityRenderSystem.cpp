@@ -66,8 +66,9 @@ bool EntityRenderSystem::drawUnit(const Component::UnitEntity& entity, const Mat
 
     const auto& shadingEt = compStorage->get<Component::UnitShadingEntity>(entity.shadingId);
     //auto& drawUnit  = drawingUnits[shadingEt.drawUnitId];
+    auto  drawingId = modelsPool[entity.modelId].drawUnitId;
     auto& drs      = *entityStorage->drawing;
-    auto& drawUnit = drs[modelsPool[entity.modelId].drawUnitId];
+    auto& drawUnit  = drs[drawingId];
     auto& shdDesc  = shaderingDescPool[shadingEt.shadingDescId];
     auto& trans    = transformsPool[entity.transformId];
 
