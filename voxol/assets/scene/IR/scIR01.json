@@ -179,8 +179,14 @@
                 "shadering": 1,
                 "model": 1,
                 "visible": 1,
-                "interactions":[0],
-                "tags": ["ui", "interactive", "button"]
+                "interactions": [
+                    0
+                ],
+                "tags": [
+                    "ui",
+                    "interactive",
+                    "button"
+                ]
             },
             {
                 "id": 2,
@@ -188,8 +194,30 @@
                 "shadering": 1,
                 "model": 1,
                 "visible": 1,
-                "interactions":[1],
-                "tags": ["ui", "interactive", "button"]
+                "interactions": [
+                    1
+                ],
+                "tags": [
+                    "ui",
+                    "interactive",
+                    "button"
+                ],
+                "prototype": {
+                    "id": 0,
+                    "override": {
+                        "shadering": false,
+                        "interaction": true
+                    }
+                }
+            }
+        ],
+        "instances": [
+            {
+                "prototype": 1,
+                "transforms": [
+                    3,
+                    4
+                ]
             }
         ]
     }
