@@ -15,28 +15,6 @@ namespace SceneIR
 {
 namespace Shadering
 {
-struct Model
-{
-    int         id;
-    std::string type;
-    std::string method;
-
-    void parse(const JsonType& node)
-    {
-        id     = node["id"];
-        type   = node["type"];
-        method = node["method"];
-    }
-    bool isCircle() const
-    {
-        return type == "Circle";
-    }
-    bool isRectangle() const
-    {
-        return type == "Rectangle";
-    }
-};
-
 struct Description
 {
     int         id;
@@ -45,9 +23,59 @@ struct Description
     void        parse(const JsonType& node);
 };
 
-struct UnitModel
+struct Unit
+{
+    int  id;
+    int  description;
+    int  blendmode;
+    void parse(const JsonType& node)
+    {
+        id          = node["id"];
+        description = node["description"];
+
+        std::string blendmodeStr = node["blendmode"];
+
+        static std::unordered_map<std::string, int> blendmodeMap{};
+
+        if (blendmodeMap.empty())
+        {
+            blendmodeMap["None"]        = 0;
+            blendmodeMap["Transparent"] = 1;
+            blendmodeMap["Add"]         = 2;
+        }
+
+        blendmode = 0;
+        if (blendmodeMap.contains(blendmodeStr))
+        {
+            blendmode = blendmodeMap[blendmodeStr];
+        }
+    }
+};
+struct Module
+{
+    std::unordered_map<int, Description> descriptionsMap;
+    std::unordered_map<int, Unit>        unitsMap;
+    void                                 parse(const JsonType& node);
+};
+
+} // namespace Shadering
+namespace Scene
+{
+struct ModelMethod
+{
+    int         id;
+    std::string type;
+    void        parse(const JsonType& node)
+    {
+        id   = node["id"];
+        type = node["type"];
+    }
+};
+struct Model
 {
     int                             id;
+    std::string                     type;
+    ModelMethod                     method;
     std::variant<float, Math::Vec2> value;
     void                            parse(const JsonType& node);
     template <typename T>
@@ -77,74 +105,11 @@ struct UnitModel
     }
 };
 
-struct Unit
-{
-    int       id;
-    int       description;
-    UnitModel model;
-    void      parse(const JsonType& node)
-    {
-        id          = node["id"];
-        description = node["description"];
-
-        if (node.contains("model"))
-        {
-            model.parse(node["model"]);
-        }
-    }
-};
-struct Module
-{
-    std::unordered_map<int, Model>       modelsMap;
-    std::unordered_map<int, Description> descriptionsMap;
-    std::unordered_map<int, Unit>        unitsMap;
-
-    void parse(const JsonType& node)
-    {
-        if (node.contains("models"))
-        {
-            auto&& models = node["models"];
-            for (auto& node : models)
-            {
-                Model m;
-                m.parse(node);
-                modelsMap[m.id] = m;
-            }
-        }
-        if (node.contains("descriptions"))
-        {
-            auto&& descriptions = node["descriptions"];
-            for (auto& node : descriptions)
-            {
-                Description m;
-                m.parse(node);
-                descriptionsMap[m.id] = m;
-            }
-        }
-
-        if (node.contains("units"))
-        {
-            auto& units = node["units"];
-            for (auto& node : units)
-            {
-                Unit m;
-                m.parse(node);
-                unitsMap[m.id] = m;
-            }
-        }
-    }
-};
-
-} // namespace Shadering
-namespace Scene
-{
-
 struct Transform
 {
     int        id;
     Math::Vec2 position;
-
-    void parse(const JsonType& node);
+    void       parse(const JsonType& node);
 };
 
 struct Entity
@@ -152,6 +117,7 @@ struct Entity
     int  id;
     int  shadering;
     int  transform;
+    int  model;
     bool visible;
 
     void parse(const JsonType& node)
@@ -159,12 +125,14 @@ struct Entity
         id        = node["id"];
         shadering = node["shadering"];
         transform = node["transform"];
+        model     = node["model"];
         visible   = static_cast<int>(node["visible"]) != 0 ? true : false;
     }
 };
 
 struct Module
 {
+    std::unordered_map<int, Model>     modelsMap;
     std::unordered_map<int, Transform> transformsMap;
     std::unordered_map<int, Entity>    entitiesMap;
 
@@ -178,6 +146,16 @@ struct Module
                 Transform m;
                 m.parse(node);
                 transformsMap[m.id] = m;
+            }
+        }
+        if (node.contains("models"))
+        {
+            auto&& models = node["models"];
+            for (auto& node : models)
+            {
+                Model m;
+                m.parse(node);
+                modelsMap[m.id] = m;
             }
         }
     }

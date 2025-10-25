@@ -26,6 +26,7 @@ void Description::parse(const JsonType& node)
             std::string&& hex_str = vo;
             std::transform(hex_str.begin(), hex_str.end(), hex_str.begin(),
                            [](unsigned char c) { return std::tolower(c); });
+
             if (hex_str.find('#') == 0)
             {
                 color = std::stoul(hex_str.substr(1), nullptr, 16);
@@ -45,11 +46,42 @@ void Description::parse(const JsonType& node)
         }
     }
 }
-
-
-void UnitModel::parse(const JsonType& node)
+void Module::parse(const JsonType& node)
 {
-    id = node["id"];
+    if (node.contains("descriptions"))
+    {
+        auto&& descriptions = node["descriptions"];
+        for (auto& node : descriptions)
+        {
+            Description m;
+            m.parse(node);
+            descriptionsMap[m.id] = m;
+        }
+    }
+
+    if (node.contains("units"))
+    {
+        auto& units = node["units"];
+        for (auto& node : units)
+        {
+            Unit m;
+            m.parse(node);
+            unitsMap[m.id] = m;
+        }
+    }
+}
+
+} // namespace Shadering
+namespace Scene
+{
+
+
+void Model::parse(const JsonType& node)
+{
+    id     = node["id"];
+    type   = node["type"];
+    method.parse( node["method"] );
+
     if (node.contains("radius") && node["radius"].is_number())
     {
         auto v = static_cast<float>(node["radius"]);
@@ -74,9 +106,6 @@ void UnitModel::parse(const JsonType& node)
     }
 }
 
-} // namespace Shadering
-namespace Scene
-{
 void Transform::parse(const JsonType& node)
 {
     id = node["id"];

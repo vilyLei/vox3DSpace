@@ -27,7 +27,7 @@ void EntitySceneSystem::initalize()
     auto& entitiesPool          = entityStorage->comp->entitiesPool;
     auto& shaderingEntitiesPool = entityStorage->comp->shaderingEntitiesPool;
     auto& shaderingDescPool     = entityStorage->comp->shaderingDescPool;
-    auto& transformPool         = entityStorage->comp->transformPool;
+    auto& transformsPool         = entityStorage->comp->transformsPool;
 
     Math::Bounds                           bounds{};
 
@@ -36,7 +36,7 @@ void EntitySceneSystem::initalize()
         if (et.shadingId < 0)
             return;
 
-        auto& trans     = transformPool[et.transformId];
+        auto& trans = transformsPool[et.transformId];
         bounds.setXYWH(trans.x, trans.y, trans.sx, trans.sy);
 
         bvh->addItem(et.id, bounds);

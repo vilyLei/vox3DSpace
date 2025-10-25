@@ -51,11 +51,13 @@ struct UnitShadingBaseDesc
 
 struct UnitShadingEntity
 {
-    ///  只有entity才有自身的id
     int32_t id = -1;
     /// UnitShadingBaseDesc vector index value
     int32_t shadingDescId = -1;
-    /// DrawingUnit vector index value
+};
+struct UnitModel
+{
+    int32_t id = -1;
     int32_t drawUnitId = -1;
 };
 
@@ -66,6 +68,7 @@ struct UnitEntity
     /// UnitShadingEntity vector index value
     int32_t shadingId = -1;
     int32_t transformId = -1;
+    int32_t modelId       = -1;
     bool    visible   = true;
     bool    dirty   = true;
 };

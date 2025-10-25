@@ -37,7 +37,9 @@ public:
         else if constexpr (std::is_same_v<T, Component::UnitShadingBaseDesc>)
             return shaderingDescPool;
         else if constexpr (std::is_same_v<T, Component::UnitTransform>)
-            return transformPool;
+            return transformsPool;
+        else if constexpr (std::is_same_v<T, Component::UnitModel>)
+            return modelsPool;
         else
             static_assert(!sizeof(T), "Unsupported pool type");
     }
@@ -49,7 +51,9 @@ public:
         else if constexpr (std::is_same_v<T, Component::UnitShadingBaseDesc>)
             return shaderingDescPool;
         else if constexpr (std::is_same_v<T, Component::UnitTransform>)
-            return transformPool;
+            return transformsPool;
+        else if constexpr (std::is_same_v<T, Component::UnitModel>)
+            return modelsPool;
         else
             static_assert(!sizeof(T), "Unsupported pool type");
     }
@@ -94,7 +98,8 @@ public:
 
     CompPool<Component::UnitEntity>          entitiesPool{};
     CompPool<Component::UnitShadingEntity>   shaderingEntitiesPool{};
-    CompPool<Component::UnitTransform>       transformPool{};
+    CompPool<Component::UnitModel>       modelsPool{};
+    CompPool<Component::UnitTransform>       transformsPool{};
     CompPool<Component::UnitShadingBaseDesc> shaderingDescPool{};
 };
 } // namespace Voxol::Render
