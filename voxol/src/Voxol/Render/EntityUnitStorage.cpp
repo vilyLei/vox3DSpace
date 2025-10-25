@@ -116,6 +116,7 @@ void EntityUnitStorage::initalizeFromFile(const std::string& fileName)
     }
     for (auto& et : sceneModule.entitiesMap)
     {
+        updateEntityData(et.second.id);
     }
 }
 void EntityUnitStorage::initalize(int total)
