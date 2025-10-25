@@ -63,12 +63,6 @@ int EntitySceneSystem::drawQuery(const Math::VxRect& wbounds, int phase)
     //    }
     //}
 
-    /// for test
-    //auto flag = false;
-    //if (queriedEIds.empty())
-    //{
-    //    flag = true;
-    //}
     auto& entitiesPool = entityStorage->comp->entitiesPool;
     if (queriedEIds.empty())
     {

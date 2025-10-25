@@ -33,7 +33,7 @@ public:
 
     EntitySysBVH::SP       bvh = EntitySysBVH::make();
     EntityUnitStorage::SP entityStorage{};
-    EntityUnitStorage::SP entityStorage01{};
+    //EntityUnitStorage::SP entityStorage01{};
 
 private:
     std::vector<int32_t> queriedEIds{};
