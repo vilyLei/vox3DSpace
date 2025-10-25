@@ -1,4 +1,5 @@
 #include "EntitySceneSystem.h"
+#include <algorithm>
 
 namespace Voxol::Render
 {
@@ -63,10 +64,34 @@ int EntitySceneSystem::drawQuery(const Math::VxRect& wbounds, int phase)
     //}
 
     /// for test
-    auto flag = false;
+    //auto flag = false;
+    //if (queriedEIds.empty())
+    //{
+    //    flag = true;
+    //}
+    auto& entitiesPool = entityStorage->comp->entitiesPool;
     if (queriedEIds.empty())
     {
-        flag = true;
+        return 0;
+    }
+    std::vector<int32_t> ids{};
+    auto                 tot = queriedEIds.size();
+    for (auto i = 0; i < tot; ++i)
+    {
+        auto&& et = entitiesPool[queriedEIds[i]];
+        if (!et.visible)
+            continue;
+        ids.push_back(queriedEIds[i]);
+    }
+    if (queriedEIds.size() != ids.size())
+    {
+        queriedEIds = ids;
+    }
+    if (queriedEIds.size() > 1)
+    {
+        std::sort(queriedEIds.begin(), queriedEIds.end(), [&](int32_t a, int32_t b) {
+            return entitiesPool[a].id < entitiesPool[b].id;
+        });
     }
     return static_cast<int>(queriedEIds.size());
 }
