@@ -109,6 +109,14 @@ void EntityUnitStorage::initalizeFromFile(const std::string& fileName)
         }
         printf("        pos(%f,%f), size(%f, %f)\n", trans.x, trans.y, trans.sx, trans.sy);
     };
+
+    for (auto& ut : shaderingModule.unitsMap)
+    {
+        updateUnitData(ut.second.id);
+    }
+    for (auto& et : sceneModule.entitiesMap)
+    {
+    }
 }
 void EntityUnitStorage::initalize(int total)
 {
