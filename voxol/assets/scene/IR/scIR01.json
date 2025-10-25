@@ -6,7 +6,51 @@
         "coordinate_system": "right-handed",
         "unit": "pixel"
     },
+    "resources": [
+        {
+            "textures": [
+                {
+                    "slot": 0,
+                    "name": "albedoTex",
+                    "hash": "0x12345678"
+                }
+            ],
+            "uniforms": [
+                {
+                    "binding": 0,
+                    "name": "u_mvp"
+                },
+                {
+                    "binding": 1,
+                    "name": "u_color"
+                }
+            ]
+        }
+    ],
     "shadering": {
+        "shader_pipelines": [
+            {
+                "id": 0,
+                "name": "BasicPipeline",
+                "graph": "shaders/graph/base_material.json",
+                "resources": [
+                    0
+                ],
+                "stages": {
+                    "vertex": "shaders/basic.vert",
+                    "fragment": "shaders/basic.frag"
+                },
+                "macros": {
+                    "USE_AA": true,
+                    "ENABLE_SHADOW": false
+                },
+                "render_state": {
+                    "blend": "alpha",
+                    "depth_test": false,
+                    "cull_mode": "none"
+                }
+            }
+        ],
         "descriptions": [
             {
                 "id": 0,
@@ -23,20 +67,48 @@
             {
                 "id": 0,
                 "blendmode": "Transparent",
-                "description": 0
+                "description": 0,
+                "shader_pipeline": 0
             },
             {
                 "id": 1,
                 "blendmode": "Transparent",
-                "description": 1
+                "description": 1,
+                "shader_pipeline": 0
             },
             {
                 "id": 2,
                 "blendmode": "Add",
-                "description": 1
+                "description": 1,
+                "shader_pipeline": 0
             }
         ]
     },
+    "interactions": [
+        {
+            "event": "on_click",
+            "actions": [
+                {
+                    "type": "emit_signal",
+                    "signal": "ui.button_pressed",
+                    "target": "base_panel"
+                },
+                {
+                    "type": "play_animation",
+                    "anim": "button_press_animation"
+                }
+            ]
+        },
+        {
+            "event": "on_hover",
+            "actions": [
+                {
+                    "type": "set_state",
+                    "state": "hovered"
+                }
+            ]
+        }
+    ],
     "scene": {
         "component": {
             "transforms": [
@@ -69,10 +141,12 @@
                 }
             ],
             "models": [
-                
                 {
                     "id": 0,
-                    "method": {"id":0,"type":"Mesh"},
+                    "method": {
+                        "id": 0,
+                        "type": "Mesh"
+                    },
                     "type": "Rectangle",
                     "size": [
                         300,
@@ -81,7 +155,10 @@
                 },
                 {
                     "id": 1,
-                    "method": {"id":1,"type":"Sdf"},
+                    "method": {
+                        "id": 1,
+                        "type": "Sdf"
+                    },
                     "type": "Circle",
                     "radius": 50
                 }
@@ -100,14 +177,16 @@
                 "transform": 1,
                 "shadering": 1,
                 "model": 1,
-                "visible": 1
+                "visible": 1,
+                "interactions":[0]
             },
             {
                 "id": 2,
                 "transform": 2,
                 "shadering": 1,
                 "model": 1,
-                "visible": 1
+                "visible": 1,
+                "interactions":[1]
             }
         ]
     }
