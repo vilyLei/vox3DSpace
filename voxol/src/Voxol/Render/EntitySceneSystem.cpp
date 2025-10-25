@@ -15,12 +15,13 @@ void EntitySceneSystem::initalize()
         return;
 
     // for test
-    entityStorage01 = EntityUnitStorage::make();
-    entityStorage01->initalizeFromFile("");
+    //entityStorage01 = EntityUnitStorage::make();
+    //entityStorage01->initalizeFromFile("");
 
 
     entityStorage = EntityUnitStorage::make();
-    entityStorage->initalize(512);
+    //entityStorage->initalize(512);
+    entityStorage->initalizeFromFile("");
     
     auto& entitiesPool          = entityStorage->comp->entitiesPool;
     auto& shaderingEntitiesPool = entityStorage->comp->shaderingEntitiesPool;
