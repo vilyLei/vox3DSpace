@@ -63,7 +63,8 @@ namespace Scene
 {
 struct ModelMethod
 {
-    int         id;
+    int id;
+    // Mesh / SDF / Procedural / Volume / Voxel
     std::string type;
     void        parse(const JsonType& node)
     {
