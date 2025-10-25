@@ -36,7 +36,7 @@
                 "id": 0,
                 "description": 0,
                 "model": {
-                    "id": 1,
+                    "id": 0,
                     "size": [
                         300,
                         150
@@ -47,7 +47,7 @@
                 "id": 1,
                 "description": 1,
                 "model": {
-                    "id": 0,
+                    "id": 1,
                     "radius": 50
                 }
             },
@@ -55,7 +55,7 @@
                 "id": 2,
                 "description": 1,
                 "model": {
-                    "id": 0,
+                    "id": 1,
                     "radius": 50
                 }
             }
