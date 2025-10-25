@@ -8,6 +8,7 @@
     },
     "resources": [
         {
+            "id": 0,
             "textures": [
                 {
                     "slot": 0,
@@ -178,7 +179,8 @@
                 "shadering": 1,
                 "model": 1,
                 "visible": 1,
-                "interactions":[0]
+                "interactions":[0],
+                "tags": ["ui", "interactive", "button"]
             },
             {
                 "id": 2,
@@ -186,7 +188,8 @@
                 "shadering": 1,
                 "model": 1,
                 "visible": 1,
-                "interactions":[1]
+                "interactions":[1],
+                "tags": ["ui", "interactive", "button"]
             }
         ]
     }

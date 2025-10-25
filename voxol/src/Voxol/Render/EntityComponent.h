@@ -68,7 +68,10 @@ struct UnitEntity
     /// UnitShadingEntity vector index value
     int32_t shadingId = -1;
     int32_t transformId = -1;
-    int32_t modelId       = -1;
+    int32_t modelId     = -1;
+    // 表示这个 entity是基于某个entity的instance(实例)
+    int32_t prototype   = -1;
+
     bool    visible   = true;
     bool    dirty   = true;
 };
