@@ -213,6 +213,15 @@ void OglTestScene::undo()
     }
 }
 
+void OglTestScene::updateKeyboardParams(int key, int scancode, int action, int mods)
+{
+    uiOpLayer->updateKeyboardParams(key, scancode, action, mods);
+}
+
+void OglTestScene::updateMouseParams(const System::Mouse::MouseInputParam& param)
+{
+    uiOpLayer->updateMouseParams(drawCtx, param);
+}
 void OglTestScene::initVoassScene()
 {
 

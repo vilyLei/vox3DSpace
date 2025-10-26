@@ -15,7 +15,7 @@ void OglRenderer::key_callback(GLFWwindow* window, int key, int scancode, int ac
     auto renderer = static_cast<OglRenderer*>(glfwGetWindowUserPointer(window));
     if (renderer)
     {
-        renderer->mScene.uiOpLayer->updateKeyboardParams(key, scancode, action, mode);
+        renderer->mScene.updateKeyboardParams(key, scancode, action, mode);
     }
 }
 void OglRenderer::mouseEnter_callback(GLFWwindow* window, int flag)
@@ -219,7 +219,7 @@ void OglRenderer::setMouseXY(float x, float y)
 void OglRenderer::setMouseParams(const System::Mouse::MouseInputParam& param)
 {
 
-    mScene.uiOpLayer->updateMouseParams(mScene.drawCtx, param);
+    mScene.updateMouseParams(param);
 
     if (mouseButton != 2 && param.type != System::Mouse::MouseEventType::MouseScroll)
     {
