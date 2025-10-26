@@ -2,16 +2,18 @@
 #define VOXOL_OGL_TEST_SCENE_H
 
 #include "../Base/BaseDefine.h"
-#include "../Tile/TileSystem.h"
-#include "../Render/EntitySceneSystem.h"
-#include "../Render/EntityRenderSystem.h"
+
 #include "../Render/OglGpuResUtils.h"
 #include "../Math/Mat33.h"
 #include "../Math/VxRect.h"
 #include "../Render/OglFbo.h"
+
+#include "../Render/EntityRenderSystem.h"
+#include "../Tile/TileSystem.h"
 #include "../System/MouseEventSystem.h"
-#include "../System/ShortcutManager.h"
 #include "../System/UIOperationLayer.h"
+
+#include "../System/ShortcutManager.h"
 
 #include "OglImage.h"
 #include "OglText.h"
