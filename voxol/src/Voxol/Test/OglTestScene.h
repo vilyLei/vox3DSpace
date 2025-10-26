@@ -14,6 +14,7 @@
 #include "../System/UIOperationLayer.h"
 
 #include "../System/ShortcutManager.h"
+#include "../System/EntitySystemLayer.h"
 
 #include "OglImage.h"
 #include "OglText.h"
@@ -46,10 +47,13 @@ public:
     Render::Draw::DrawContext drawCtx;
 
 private:
-    std::shared_ptr<System::UIOperationLayer> uiOpLayer;
-    Render::EntitySceneSystem::SP             etSceneSys  = Render::EntitySceneSystem::make();
-    Render::EntityRenderSystem::SP            etRenderSys = Render::EntityRenderSystem::make();
-    Tile::TileSystem::SP                      tileSys     = Tile::TileSystem::make();
+
+    System::EntitySystemLayer::SP etSysLayer = System::EntitySystemLayer::make();
+
+    //std::shared_ptr<System::UIOperationLayer> uiOpLayer;
+    //Render::EntitySceneSystem::SP             etSceneSys  = Render::EntitySceneSystem::make();
+    //Render::EntityRenderSystem::SP            etRenderSys = Render::EntityRenderSystem::make();
+    //Tile::TileSystem::SP                      tileSys     = Tile::TileSystem::make();
 
     void initVoassScene();
     void renderVoass(const Math::Mat33& vpMat);

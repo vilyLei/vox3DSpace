@@ -9,6 +9,14 @@ void OglTestScene::initScene()
 {
     if (entityModeFlag)
     {
+        etSysLayer->initalize();
+
+        boundsUnit.color = {0.0f, 0.3, 0.3f, 1.f};
+        boundsUnit.vertex.toLine();
+        boundsUnit.vertex.lineWidth = 5;
+        Render::Gpu::buildBaseDrawUnit(boundsUnit);
+
+        /*
         etSceneSys->initalize();
         etRenderSys->entityStorage = etSceneSys->entityStorage;
         etRenderSys->initalize();
@@ -46,6 +54,7 @@ void OglTestScene::initScene()
         uiOpLayer->shortcutMana.registerShortcut({GLFW_KEY_LEFT_CONTROL, GLFW_KEY_LEFT_SHIFT, GLFW_KEY_Y}, [] {
             std::cout << "Ctrl + Shift + Y pressed\n";
         });
+        //*/
         return;
     }
     if (voassModeFlag)
@@ -103,7 +112,14 @@ void OglTestScene::render(const Voxol::Math::Mat33& vpMat)
         auto& params   = ctx.drawParam;
         auto& viewport = ctx.clearParam.viewport;
 
-        tileSys->run(ctx);
+        etSysLayer->updateCtx(ctx);
+        etSysLayer->render( vpMat );
+
+        auto& tileSys = etSysLayer->tileSys;
+        auto& etSceneSys = etSysLayer->etSceneSys;
+        auto& uiOpLayer  = etSysLayer->uiOpLayer;
+
+        //tileSys->run(ctx);
 
         // show mouse picked entity bounds
         boundsUnit.vertex.lineWidth = 1.0f;
@@ -177,7 +193,7 @@ void OglTestScene::render(const Voxol::Math::Mat33& vpMat)
 
 void OglTestScene::undo()
 {
-    ///*
+    /*
     auto storage     = etRenderSys->entityStorage;
     auto compStorage = storage->comp;
     auto itemData    = compStorage->historyManager->popItem();
@@ -211,16 +227,19 @@ void OglTestScene::undo()
         bvh->updateItemBoundsByObjectId(itemData.id, b1);
         bvh->updateDirty();
     }
+    //*/
 }
 
 void OglTestScene::updateKeyboardParams(int key, int scancode, int action, int mods)
 {
-    uiOpLayer->updateKeyboardParams(key, scancode, action, mods);
+    //uiOpLayer->updateKeyboardParams(key, scancode, action, mods);
+    etSysLayer->updateKeyboardParams(key, scancode, action, mods);
 }
 
 void OglTestScene::updateMouseParams(const System::Mouse::MouseInputParam& param)
 {
-    uiOpLayer->updateMouseParams(drawCtx, param);
+    //uiOpLayer->updateMouseParams(drawCtx, param);
+    etSysLayer->updateMouseParams(param);
 }
 void OglTestScene::initVoassScene()
 {

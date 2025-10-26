@@ -26,8 +26,11 @@ public:
 
 public:
     void initalize();
+    void updateCtx(const Render::Draw::DrawContext& ctx);
     void render(const Math::Mat33& vpMat);
     void undo();
+    void updateKeyboardParams(int key, int scancode, int action, int mods);
+    void updateMouseParams(const System::Mouse::MouseInputParam& param);
 
 public:
     Render::Draw::DrawContext                 drawCtx;

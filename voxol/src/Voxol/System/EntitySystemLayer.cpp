@@ -42,6 +42,14 @@ void EntitySystemLayer::initalize()
         std::cout << "Ctrl + Shift + Y pressed\n";
     });
 }
+
+
+void EntitySystemLayer::updateCtx(const Render::Draw::DrawContext& ctx) {
+
+    drawCtx.clearParam = ctx.clearParam;
+    drawCtx.drawParam  = ctx.drawParam;
+}
+
 void EntitySystemLayer::undo()
 {
     ///*
@@ -78,7 +86,19 @@ void EntitySystemLayer::undo()
         bvh->updateDirty();
     }
 }
+
 void EntitySystemLayer::render(const Math::Mat33& vpMat) {
 
+    tileSys->run(drawCtx);
+}
+
+void EntitySystemLayer::updateKeyboardParams(int key, int scancode, int action, int mods)
+{
+    uiOpLayer->updateKeyboardParams(key, scancode, action, mods);
+}
+
+void EntitySystemLayer::updateMouseParams(const System::Mouse::MouseInputParam& param)
+{
+    uiOpLayer->updateMouseParams(drawCtx, param);
 }
 } // namespace Voxol::System
