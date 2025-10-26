@@ -83,8 +83,8 @@ void OglTestScene::render(const Voxol::Math::Mat33& vpMat)
             etSysLayers[i]->updateCtx(ctx);
             etSysLayers[i]->render(vpMat);
         }
-        auto buzy0 = !(etSysLayers[0]->uiOpLayer->mouseCtrl.free);
-        auto& etSysLayer = buzy0 ? etSysLayers[0] : etSysLayers[1];
+        auto buzy0 = !(etSysLayers[1]->uiOpLayer->mouseCtrl.free);
+        auto& etSysLayer = buzy0 ? etSysLayers[1] : etSysLayers[0];
 
         auto& tileSys = etSysLayer->tileSys;
         auto& etSceneSys = etSysLayer->etSceneSys;
@@ -168,10 +168,18 @@ void OglTestScene::updateKeyboardParams(int key, int scancode, int action, int m
 
 void OglTestScene::updateMouseParams(const System::Mouse::MouseInputParam& param)
 {
-    auto& etSysLayer = etSysLayers[1];
-    etSysLayer->updateMouseParams(param);
-    auto& mouseCtrl = etSysLayer->uiOpLayer->mouseCtrl;
-    printf("mouseCtrl.free: %d\n", mouseCtrl.free);
+    auto& etSysLayer1 = etSysLayers[1];
+    etSysLayer1->updateMouseParams(param);
+    auto& mouseCtrl1 = etSysLayer1->uiOpLayer->mouseCtrl;
+    printf("mouseCtrl1.free: %d\n", mouseCtrl1.free);
+    if (mouseCtrl1.free)
+    {
+        etSysLayers[0]->updateMouseParams(param);
+    }
+    else
+    {
+        etSysLayers[0]->uiOpLayer->mouseCtrl.free = true;
+    }
     //etSysLayer->updateMouseParams(param);
 }
 void OglTestScene::initVoassScene()
