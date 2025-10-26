@@ -21,8 +21,8 @@ void EntitySceneSystem::initalize()
 
 
     entityStorage = EntityUnitStorage::make();
-    //entityStorage->initalize(512);
-    entityStorage->initalizeFromFile("");
+    entityStorage->initalize(512);
+    //entityStorage->initalizeFromFile("");
     
     auto& entitiesPool          = entityStorage->comp->entitiesPool;
     auto& shaderingEntitiesPool = entityStorage->comp->shaderingEntitiesPool;

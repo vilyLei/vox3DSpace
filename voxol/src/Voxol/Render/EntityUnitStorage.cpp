@@ -162,6 +162,9 @@ void EntityUnitStorage::initalize(int total)
     shaderingEntitiesPool.forEach([&](auto& e, int32_t index) {
         e.id = index;
     });
+    modelsPool.forEach([&](auto& e, int32_t index) {
+        e.id = index;
+    });
 
     shaderingDescPool[0].color    = 0xff880077;
     transformsPool[0]     = {150, 50, 200, 200, 0};
@@ -248,31 +251,31 @@ void EntityUnitStorage::initalize(int total)
     /// circle
     entitiesPool[2].shadingId = 2;
     entitiesPool[2].transformId = 2;
-    entitiesPool[2].transformId = 2;
+    entitiesPool[2].modelId     = 2;
     /// ring
     entitiesPool[3].shadingId = 3;
     entitiesPool[3].transformId = 3;
-    entitiesPool[3].transformId = 3;
+    entitiesPool[3].modelId     = 3;
     /// multi-circles
     entitiesPool[4].shadingId = 4;
     entitiesPool[4].transformId = 4;
-    entitiesPool[4].transformId = 4;
+    entitiesPool[4].modelId     = 4;
     /// ship
     entitiesPool[5].shadingId = 5;
     entitiesPool[5].transformId = 5;
-    entitiesPool[5].transformId = 5;
+    entitiesPool[5].modelId     = 5;
     /// B
     entitiesPool[6].shadingId = 6;
     entitiesPool[6].transformId = 6;
-    entitiesPool[6].transformId = 6;
+    entitiesPool[6].modelId     = 6;
     /// c
     entitiesPool[7].shadingId = 7;
     entitiesPool[7].transformId = 7;
-    entitiesPool[7].transformId = 7;
+    entitiesPool[7].modelId     = 7;
     /// D
     entitiesPool[8].shadingId = 8;
     entitiesPool[8].transformId = 8;
-    entitiesPool[8].transformId = 8;
+    entitiesPool[8].modelId     = 8;
 }
 
 
