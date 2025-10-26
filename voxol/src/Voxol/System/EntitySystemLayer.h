@@ -26,6 +26,8 @@ public:
 
 public:
     void initalize();
+    void render(const Math::Mat33& vpMat);
+    void undo();
 
 public:
     std::shared_ptr<System::UIOperationLayer> uiOpLayer;
