@@ -16,6 +16,9 @@ void MouseCtroller::selectWithSingle(const System::Mouse::MouseEvent& evt, const
         qeIds.clear();
         bvh->queryPoint(evt.globalPos, qeIds);
     }
+
+    free           = qeIds.empty();
+
     auto etStorage = targetSys->entityStorage->comp;
 
     int32_t topId = qeIds.empty() ? -1 : qeIds.back();
@@ -90,6 +93,7 @@ void MouseCtroller::selectWithBounds(const System::Mouse::MouseEvent& evt, const
         qeIds.clear();
         bvh->queryBounds(selectionBounds, qeIds);
     }
+    free = qeIds.empty();
     if (evt.isEnd())
     {
         printf("MouseCtroller::selectBtnBounds() end().\n");

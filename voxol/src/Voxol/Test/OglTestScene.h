@@ -42,7 +42,10 @@ public:
 
 private:
 
-    System::EntitySystemLayer::SP etSysLayer = System::EntitySystemLayer::make();
+    //System::EntitySystemLayer::SP etSysLayer = System::EntitySystemLayer::make();
+    //System::EntitySystemLayer::SP etSysLayer1 = System::EntitySystemLayer::make();
+
+    std::vector<System::EntitySystemLayer::SP> etSysLayers;
 
     void initVoassScene();
     void renderVoass(const Math::Mat33& vpMat);

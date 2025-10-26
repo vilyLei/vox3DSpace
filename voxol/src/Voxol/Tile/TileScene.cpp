@@ -299,10 +299,10 @@ void TileScene::run(const Render::Draw::DrawContext& ctx)
 
     texPool.dispose();
 
-    if (ctx.dirty)
-    {
-        printf("TileScene::run(), tile grids total: %zu, lv:%d\n", viewUnitIndexMap.size(), lv);
-    }
+    //if (ctx.dirty)
+    //{
+    //    printf("TileScene::run(), tile grids total: %zu, lv:%d\n", viewUnitIndexMap.size(), lv);
+    //}
     return;
     //*
     //ctx.drawCall({}, vpM);

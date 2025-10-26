@@ -7,7 +7,14 @@ void OglTestScene::initScene()
 {
     if (entityModeFlag)
     {
-        etSysLayer->initalize("scene/IR/scIR01.json");
+        etSysLayers.resize(2);
+        for (auto i = 0; i < etSysLayers.size(); i++)
+        {
+            etSysLayers[i] = System::EntitySystemLayer::make();
+        }
+
+        etSysLayers[0]->initalize();
+        etSysLayers[1]->initalize("scene/IR/scIR01.json");
 
         boundsUnit.color = {0.0f, 0.3, 0.3f, 1.f};
         boundsUnit.vertex.toLine();
@@ -71,8 +78,16 @@ void OglTestScene::render(const Voxol::Math::Mat33& vpMat)
         auto& params   = ctx.drawParam;
         auto& viewport = ctx.clearParam.viewport;
 
-        etSysLayer->updateCtx(ctx);
-        etSysLayer->render( vpMat );
+        for (auto i = 0; i < etSysLayers.size(); i++)
+        {
+            etSysLayers[i]->updateCtx(ctx);
+            etSysLayers[i]->render(vpMat);
+        }
+        auto& etSysLayer = etSysLayers[0];
+        //etSysLayer->updateCtx(ctx);
+        //etSysLayer->render( vpMat );
+        //etSysLayer1->updateCtx(ctx);
+        //etSysLayer1->render( vpMat );
 
         auto& tileSys = etSysLayer->tileSys;
         auto& etSceneSys = etSysLayer->etSceneSys;
@@ -150,12 +165,18 @@ void OglTestScene::render(const Voxol::Math::Mat33& vpMat)
 
 void OglTestScene::updateKeyboardParams(int key, int scancode, int action, int mods)
 {
+    auto& etSysLayer = etSysLayers[0];
     etSysLayer->updateKeyboardParams(key, scancode, action, mods);
+    //etSysLayer1->updateKeyboardParams(key, scancode, action, mods);
 }
 
 void OglTestScene::updateMouseParams(const System::Mouse::MouseInputParam& param)
 {
+    auto& etSysLayer = etSysLayers[1];
     etSysLayer->updateMouseParams(param);
+    auto& mouseCtrl = etSysLayer->uiOpLayer->mouseCtrl;
+    printf("mouseCtrl.free: %d\n", mouseCtrl.free);
+    //etSysLayer->updateMouseParams(param);
 }
 void OglTestScene::initVoassScene()
 {
