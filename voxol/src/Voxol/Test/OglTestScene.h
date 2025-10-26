@@ -44,12 +44,13 @@ public:
     void updateMouseParams(const System::Mouse::MouseInputParam& param);
 
     Render::Draw::DrawContext drawCtx;
-    std::shared_ptr<System::UIOperationLayer> uiOpLayer;
-    Render::EntitySceneSystem::SP  etSceneSys  = Render::EntitySceneSystem::make();
-    Render::EntityRenderSystem::SP etRenderSys = Render::EntityRenderSystem::make();
-    Tile::TileSystem::SP           tileSys     = Tile::TileSystem::make();
 
 private:
+    std::shared_ptr<System::UIOperationLayer> uiOpLayer;
+    Render::EntitySceneSystem::SP             etSceneSys  = Render::EntitySceneSystem::make();
+    Render::EntityRenderSystem::SP            etRenderSys = Render::EntityRenderSystem::make();
+    Tile::TileSystem::SP                      tileSys     = Tile::TileSystem::make();
+
     void initVoassScene();
     void renderVoass(const Math::Mat33& vpMat);
     void renderSdfUnits(const Voxol::Math::Mat33& vpMat);
