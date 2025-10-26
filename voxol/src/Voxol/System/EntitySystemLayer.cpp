@@ -30,7 +30,7 @@ void EntitySystemLayer::initalize()
     };
 
     drawCtx.drawCall  = drawCall;
-    drawCtx.drawQuery = queryCall;
+    drawCtx.drawQueryCall = queryCall;
 
     uiOpLayer->shortcutMana.registerShortcut(
         {GLFW_KEY_LEFT_CONTROL, GLFW_KEY_Z}, [this] {

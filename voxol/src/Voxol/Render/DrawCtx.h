@@ -44,7 +44,7 @@ struct DrawContext
     ClearParams  clearParam{};
     DrawParams   drawParam{};
     DrawCallType drawCall;
-    DrawQueryType drawQuery;
+    DrawQueryType drawQueryCall;
     float        zoom = 1;
     bool        dirty = 1;
 };

@@ -30,7 +30,7 @@ void OglTestScene::initScene()
         };
 
         drawCtx.drawCall  = drawCall;
-        drawCtx.drawQuery = queryCall;
+        drawCtx.drawQueryCall = queryCall;
 
         boundsUnit.color = {0.0f, 0.3, 0.3f, 1.f};
         boundsUnit.vertex.toLine();

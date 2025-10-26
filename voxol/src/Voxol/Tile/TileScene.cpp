@@ -118,7 +118,7 @@ bool TileScene::updateGrid(const RC::Pos& pos, const Render::Draw::DrawContext& 
     auto&& xy   = RC::rcToXY(pos, currGridSize);
     auto&& vb   = Math::VxRect::makeXYWH(xy.x, xy.y, currGridSize, currGridSize);
     auto&  grid = gridUnits[node.index];
-    if (ctx.drawQuery(vb, phase))
+    if (ctx.drawQueryCall(vb, phase))
     {
         //printf("TileScene::updateGrid() build content node(r=%d,c=%d) A, phase: %d\n", node.pos.r, node.pos.c, phase);
         grid.setRCAndAreaSize(pos, currGridSize);
@@ -142,7 +142,7 @@ bool TileScene::createGrid(const RC::Pos& pos, const Render::Draw::DrawContext& 
 {
     auto&& xy = RC::rcToXY(pos, currGridSize);
     auto&& vb = Math::VxRect::makeXYWH(xy.x, xy.y, currGridSize, currGridSize);
-    if (!ctx.drawQuery(vb, 2))
+    if (!ctx.drawQueryCall(vb, 2))
     {
         return false;
     }
@@ -202,7 +202,7 @@ void TileScene::updateEmptyGrid(const Render::Draw::DrawContext& ctx)
         auto&& vb   = Math::VxRect::makeXYWH(xy.x, xy.y, currGridSize, currGridSize);
 
         auto&  grid = gridUnits[node.index];
-        if (!ctx.drawQuery(vb, 0))
+        if (!ctx.drawQueryCall(vb, 0))
         {
             unitIndexPool.release(node.index);
             auto& unit = grid.drawUnit;
