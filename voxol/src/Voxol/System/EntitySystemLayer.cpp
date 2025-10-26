@@ -9,6 +9,38 @@ EntitySystemLayer::SP EntitySystemLayer::make()
 }
 void EntitySystemLayer::initalize()
 {
+    etSceneSys->initalize();
+    etRenderSys->entityStorage = etSceneSys->entityStorage;
+    etRenderSys->initalize();
+    tileSys->initalize();
+
+    uiOpLayer                      = std::make_shared<System::UIOperationLayer>();
+    uiOpLayer->mouseCtrl.dirtyCall = [this](const Math::Bounds& b, int32_t id) {
+        tileSys->addDirtyBounds(b, id);
+    };
+    uiOpLayer->etSceneSys = etSceneSys;
+    uiOpLayer->initialize();
+
+    auto queryCall = [this](const Math::VxRect& bounds, int phase) -> int {
+        return etSceneSys->drawQuery(bounds, phase);
+    };
+    auto drawCall = [this](const Math::VxRect& bounds, const Math::Mat33& vpMat) {
+        auto&& ids = etSceneSys->getQueriedEIds();
+        etRenderSys->render(drawCtx, vpMat, bounds, ids);
+    };
+
+    drawCtx.drawCall  = drawCall;
+    drawCtx.drawQuery = queryCall;
+
+    uiOpLayer->shortcutMana.registerShortcut(
+        {GLFW_KEY_LEFT_CONTROL, GLFW_KEY_Z}, [this] {
+            //std::cout << "[Undo] Ctrl + Z pressed\n";
+            undo();
+        },
+        System::ShortcutManager::TriggerType::Press);
+    uiOpLayer->shortcutMana.registerShortcut({GLFW_KEY_LEFT_CONTROL, GLFW_KEY_LEFT_SHIFT, GLFW_KEY_Y}, [] {
+        std::cout << "Ctrl + Shift + Y pressed\n";
+    });
 }
 void EntitySystemLayer::undo()
 {

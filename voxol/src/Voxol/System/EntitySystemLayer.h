@@ -30,6 +30,7 @@ public:
     void undo();
 
 public:
+    Render::Draw::DrawContext                 drawCtx;
     std::shared_ptr<System::UIOperationLayer> uiOpLayer;
     Render::EntitySceneSystem::SP             etSceneSys  = Render::EntitySceneSystem::make();
     Render::EntityRenderSystem::SP            etRenderSys = Render::EntityRenderSystem::make();
