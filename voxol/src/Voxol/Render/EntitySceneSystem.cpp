@@ -10,7 +10,7 @@ EntitySceneSystem::SP EntitySceneSystem::make()
     return sp;
 }
 
-void EntitySceneSystem::initalize()
+void EntitySceneSystem::initalize(const std::string& configFileName)
 {
     if (entityStorage)
         return;
@@ -19,10 +19,15 @@ void EntitySceneSystem::initalize()
     //entityStorage01 = EntityUnitStorage::make();
     //entityStorage01->initalizeFromFile("");
 
-
     entityStorage = EntityUnitStorage::make();
-    entityStorage->initalize(512);
-    //entityStorage->initalizeFromFile("");
+    if (configFileName.empty())
+    {
+        entityStorage->initalize(512);
+    }
+    else
+    {
+        entityStorage->initalizeFromFile("");
+    }
     
     auto& entitiesPool          = entityStorage->comp->entitiesPool;
     auto& shaderingEntitiesPool = entityStorage->comp->shaderingEntitiesPool;

@@ -8,11 +8,6 @@
 #include "../Math/VxRect.h"
 #include "../Render/OglFbo.h"
 
-#include "../Render/EntityRenderSystem.h"
-#include "../Tile/TileSystem.h"
-#include "../System/MouseEventSystem.h"
-#include "../System/UIOperationLayer.h"
-
 #include "../System/ShortcutManager.h"
 #include "../System/EntitySystemLayer.h"
 
@@ -39,7 +34,6 @@ public:
 public:
     void                      initScene();
     void                      render(const Voxol::Math::Mat33& vpMat);
-    void                      undo();
 
     void updateKeyboardParams(int key, int scancode, int action, int mods);
     void updateMouseParams(const System::Mouse::MouseInputParam& param);
@@ -49,11 +43,6 @@ public:
 private:
 
     System::EntitySystemLayer::SP etSysLayer = System::EntitySystemLayer::make();
-
-    //std::shared_ptr<System::UIOperationLayer> uiOpLayer;
-    //Render::EntitySceneSystem::SP             etSceneSys  = Render::EntitySceneSystem::make();
-    //Render::EntityRenderSystem::SP            etRenderSys = Render::EntityRenderSystem::make();
-    //Tile::TileSystem::SP                      tileSys     = Tile::TileSystem::make();
 
     void initVoassScene();
     void renderVoass(const Math::Mat33& vpMat);

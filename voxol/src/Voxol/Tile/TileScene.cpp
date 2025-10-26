@@ -138,6 +138,7 @@ bool TileScene::updateGrid(const RC::Pos& pos, const Render::Draw::DrawContext& 
     }
     return true;
 }
+
 bool TileScene::createGrid(const RC::Pos& pos, const Render::Draw::DrawContext& ctx)
 {
     auto&& xy = RC::rcToXY(pos, currGridSize);

@@ -25,7 +25,7 @@ public:
     ~EntitySystemLayer() = default;
 
 public:
-    void initalize();
+    void initalize(const std::string& configFileName = {});
     void updateCtx(const Render::Draw::DrawContext& ctx);
     void render(const Math::Mat33& vpMat);
     void undo();

@@ -7,9 +7,9 @@ EntitySystemLayer::SP EntitySystemLayer::make()
     auto sp = std::make_shared<EntitySystemLayer>();
     return sp;
 }
-void EntitySystemLayer::initalize()
+void EntitySystemLayer::initalize(const std::string& configFileName)
 {
-    etSceneSys->initalize();
+    etSceneSys->initalize(configFileName);
     etRenderSys->entityStorage = etSceneSys->entityStorage;
     etRenderSys->initalize();
     tileSys->initalize();
@@ -52,7 +52,7 @@ void EntitySystemLayer::updateCtx(const Render::Draw::DrawContext& ctx) {
 
 void EntitySystemLayer::undo()
 {
-    ///*
+
     auto storage     = etRenderSys->entityStorage;
     auto compStorage = storage->comp;
     auto itemData    = compStorage->historyManager->popItem();

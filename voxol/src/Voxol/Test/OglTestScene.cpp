@@ -3,58 +3,17 @@
 
 namespace Voxol::Test
 {
-
-
 void OglTestScene::initScene()
 {
     if (entityModeFlag)
     {
-        etSysLayer->initalize();
+        etSysLayer->initalize("scene/IR/scIR01.json");
 
         boundsUnit.color = {0.0f, 0.3, 0.3f, 1.f};
         boundsUnit.vertex.toLine();
         boundsUnit.vertex.lineWidth = 5;
         Render::Gpu::buildBaseDrawUnit(boundsUnit);
 
-        /*
-        etSceneSys->initalize();
-        etRenderSys->entityStorage = etSceneSys->entityStorage;
-        etRenderSys->initalize();
-        tileSys->initalize();
-
-        uiOpLayer = std::make_shared<System::UIOperationLayer>();
-        uiOpLayer->mouseCtrl.dirtyCall = [this](const Math::Bounds& b, int32_t id) {
-            tileSys->addDirtyBounds(b, id);
-        };
-        uiOpLayer->etSceneSys = etSceneSys;
-        uiOpLayer->initialize();
-
-        auto queryCall = [this](const Math::VxRect& bounds, int phase) -> int {
-            return etSceneSys->drawQuery(bounds, phase);
-        };
-        auto drawCall = [this](const Math::VxRect& bounds, const Math::Mat33& vpMat) {
-            auto&& ids = etSceneSys->getQueriedEIds();
-            etRenderSys->render(drawCtx, vpMat, bounds, ids);
-        };
-
-        drawCtx.drawCall  = drawCall;
-        drawCtx.drawQueryCall = queryCall;
-
-        boundsUnit.color = {0.0f, 0.3, 0.3f, 1.f};
-        boundsUnit.vertex.toLine();
-        boundsUnit.vertex.lineWidth = 5;
-        Render::Gpu::buildBaseDrawUnit(boundsUnit);
-
-        uiOpLayer->shortcutMana.registerShortcut(
-            {GLFW_KEY_LEFT_CONTROL, GLFW_KEY_Z}, [this] {
-                //std::cout << "[Undo] Ctrl + Z pressed\n";
-                undo();
-            },
-            System::ShortcutManager::TriggerType::Press);
-        uiOpLayer->shortcutMana.registerShortcut({GLFW_KEY_LEFT_CONTROL, GLFW_KEY_LEFT_SHIFT, GLFW_KEY_Y}, [] {
-            std::cout << "Ctrl + Shift + Y pressed\n";
-        });
-        //*/
         return;
     }
     if (voassModeFlag)
@@ -118,8 +77,6 @@ void OglTestScene::render(const Voxol::Math::Mat33& vpMat)
         auto& tileSys = etSysLayer->tileSys;
         auto& etSceneSys = etSysLayer->etSceneSys;
         auto& uiOpLayer  = etSysLayer->uiOpLayer;
-
-        //tileSys->run(ctx);
 
         // show mouse picked entity bounds
         boundsUnit.vertex.lineWidth = 1.0f;
@@ -191,62 +148,18 @@ void OglTestScene::render(const Voxol::Math::Mat33& vpMat)
     }
 }
 
-void OglTestScene::undo()
-{
-    /*
-    auto storage     = etRenderSys->entityStorage;
-    auto compStorage = storage->comp;
-    auto itemData    = compStorage->historyManager->popItem();
-    printf("OglTestScene::setKeyParams(), press key z£¬ itemData.id: %d\n", itemData.id);
-    if (itemData.id < 0)
-    {
-        return;
-    }
-
-    printf("OglTestScene::setKeyParams(), ready to ctrl-z.\n");
-    auto etrans = compStorage->getEntityTransformAt(itemData.id);
-    //sys.storage->historyManager->pushItem({itemTrans, id});
-
-    Math::Vec2 pv{itemData.trans.x, itemData.trans.y};
-
-    compStorage->setEntityXYAt(pv, itemData.id);
-
-    auto bvh = etSceneSys->bvh;
-    auto b0  = bvh->getBoundsAt(itemData.id);
-    auto b1  = b0;
-    if (tileSys)
-    {
-        // ÒÆ³ö
-        tileSys->addDirtyBounds(b0, 0);
-        b1.moveTo(pv.x, pv.y);
-        // ÒÆÈë
-        tileSys->addDirtyBounds(b1, 1);
-    }
-    if (bvh)
-    {
-        bvh->updateItemBoundsByObjectId(itemData.id, b1);
-        bvh->updateDirty();
-    }
-    //*/
-}
-
 void OglTestScene::updateKeyboardParams(int key, int scancode, int action, int mods)
 {
-    //uiOpLayer->updateKeyboardParams(key, scancode, action, mods);
     etSysLayer->updateKeyboardParams(key, scancode, action, mods);
 }
 
 void OglTestScene::updateMouseParams(const System::Mouse::MouseInputParam& param)
 {
-    //uiOpLayer->updateMouseParams(drawCtx, param);
     etSysLayer->updateMouseParams(param);
 }
 void OglTestScene::initVoassScene()
 {
-
-
     using namespace Voass::Render;
-
 
     auto& sdfCircleUnit       = sdfDrawUnits[0];
     auto& sdfMultiCirclesUnit = sdfDrawUnits[1];
@@ -307,39 +220,7 @@ void OglTestScene::renderVoass(const Math::Mat33& vpMat)
     auto& ctx      = drawCtx;
     auto& params   = ctx.drawParam;
     auto& viewport = ctx.clearParam.viewport;
-    /*
-    auto drawCall = [this](const Math::VxRect& bounds, const Math::Mat33& vpMat) {
-        etRenderSys.render(drawCtx, vpMat, bounds);
-    };
-    auto queryCall = [this](const Math::VxRect& bounds, int phase) -> int {
-        return etRenderSys.drawQuery(bounds, phase);
-    };
 
-    ctx.drawCall  = drawCall;
-    ctx.drawQuery = queryCall;
-    tileSys.run(ctx);
-
-    // show mouse picked entity bounds
-    boundsUnit.vertex.lineWidth = 1.0f;
-
-    auto& queriedEIds = mouseEvtMana.queryEIds;
-
-    for (auto id : queriedEIds)
-    {
-        //auto& vb = etRenderSys.bvhItems[id].bounds;
-        auto& vb = etRenderSys.bvh.getBoundsAt(id);
-        boundsUnit.objMat.setTo(vb.x(), vb.y(), vb.width(), vb.height());
-        boundsUnit.mvp = vpMat;
-        boundsUnit.draw();
-
-    }
-    boundsUnit.vertex.lineWidth = 5;
-    auto vb = params.viewWBounds;
-    boundsUnit.objMat.setTo(vb.x(), vb.y(), vb.width(), vb.height());
-    boundsUnit.mvp = vpMat;
-    boundsUnit.draw();
-    return;
-    //*/
     mFbo.init(GL_ZERO);
 
     auto useTexSampleDrawig = true;
