@@ -83,11 +83,8 @@ void OglTestScene::render(const Voxol::Math::Mat33& vpMat)
             etSysLayers[i]->updateCtx(ctx);
             etSysLayers[i]->render(vpMat);
         }
-        auto& etSysLayer = etSysLayers[0];
-        //etSysLayer->updateCtx(ctx);
-        //etSysLayer->render( vpMat );
-        //etSysLayer1->updateCtx(ctx);
-        //etSysLayer1->render( vpMat );
+        auto buzy0 = !(etSysLayers[0]->uiOpLayer->mouseCtrl.free);
+        auto& etSysLayer = buzy0 ? etSysLayers[0] : etSysLayers[1];
 
         auto& tileSys = etSysLayer->tileSys;
         auto& etSceneSys = etSysLayer->etSceneSys;
@@ -165,9 +162,8 @@ void OglTestScene::render(const Voxol::Math::Mat33& vpMat)
 
 void OglTestScene::updateKeyboardParams(int key, int scancode, int action, int mods)
 {
-    auto& etSysLayer = etSysLayers[0];
-    etSysLayer->updateKeyboardParams(key, scancode, action, mods);
-    //etSysLayer1->updateKeyboardParams(key, scancode, action, mods);
+    etSysLayers[0]->updateKeyboardParams(key, scancode, action, mods);
+    etSysLayers[1]->updateKeyboardParams(key, scancode, action, mods);
 }
 
 void OglTestScene::updateMouseParams(const System::Mouse::MouseInputParam& param)
