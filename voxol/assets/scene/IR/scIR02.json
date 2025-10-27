@@ -1,0 +1,230 @@
+{
+    "version": {
+        "major": 0,
+        "minor": 1,
+        "dimension": 2,
+        "coordinate_system": "right-handed",
+        "unit": "pixel"
+    },
+    "resources": [
+        {
+            "id": 0,
+            "textures": [
+                {
+                    "slot": 0,
+                    "name": "albedoTex",
+                    "hash": "0x12345678"
+                }
+            ],
+            "uniforms": [
+                {
+                    "binding": 0,
+                    "name": "u_mvp"
+                },
+                {
+                    "binding": 1,
+                    "name": "u_color"
+                }
+            ]
+        }
+    ],
+    "shadering": {
+        "shader_pipelines": [
+            {
+                "id": 0,
+                "name": "BasicPipeline",
+                "graph": "shaders/graph/base_material.json",
+                "resources": [
+                    0
+                ],
+                "stages": {
+                    "vertex": "shaders/basic.vert",
+                    "fragment": "shaders/basic.frag"
+                },
+                "macros": {
+                    "USE_AA": true,
+                    "ENABLE_SHADOW": false
+                },
+                "render_state": {
+                    "blend": "alpha",
+                    "depth_test": false,
+                    "cull_mode": "none"
+                }
+            }
+        ],
+        "descriptions": [
+            {
+                "id": 0,
+                "type": "default",
+                "color": "0xff660000"
+            },
+            {
+                "id": 1,
+                "type": "default",
+                "color": "#ff008800"
+            },
+            {
+                "id": 2,
+                "type": "default",
+                "color": "#ff000088"
+            }
+        ],
+        "units": [
+            {
+                "id": 0,
+                "blendmode": "Transparent",
+                "description": 0,
+                "shader_pipeline": 0
+            },
+            {
+                "id": 1,
+                "blendmode": "Transparent",
+                "description": 1,
+                "shader_pipeline": 0
+            },
+            {
+                "id": 2,
+                "blendmode": "Add",
+                "description": 2,
+                "shader_pipeline": 0
+            }
+        ]
+    },
+    "interactions": [
+        {
+            "event": "on_click",
+            "actions": [
+                {
+                    "type": "emit_signal",
+                    "signal": "ui.button_pressed",
+                    "target": "base_panel"
+                },
+                {
+                    "type": "play_animation",
+                    "anim": "button_press_animation"
+                }
+            ]
+        },
+        {
+            "event": "on_hover",
+            "actions": [
+                {
+                    "type": "set_state",
+                    "state": "hovered"
+                }
+            ]
+        }
+    ],
+    "scene": {
+        "component": {
+            "transforms": [
+                {
+                    "id": 0,
+                    "position": [
+                        150,
+                        200
+                    ]
+                },
+                {
+                    "id": 1,
+                    "position": [
+                        35,
+                        100
+                    ]
+                },
+                {
+                    "id": 2,
+                    "position": [
+                        170,
+                        100
+                    ]
+                }
+            ],
+            "meshes": [
+                {
+                    "id": 0,
+                    "type": "Rectangle"
+                }
+            ],
+            "models": [
+                {
+                    "id": 0,
+                    "method": {
+                        "id": 0,
+                        "type": "Mesh"
+                    },
+                    "type": "Rectangle",
+                    "size": [
+                        300,
+                        150
+                    ]
+                },
+                {
+                    "id": 1,
+                    "method": {
+                        "id": 1,
+                        "type": "Sdf"
+                    },
+                    "type": "Circle",
+                    "radius": 50
+                }
+            ]
+        },
+        "hierarchies": [{"id": 0, "firstChild":1}, {"id": 1, "parent":0, "next": 2}, {"id": 2, "parent":0}],
+        "entities": [
+            {
+                "id": 0,
+                "transform": 0,
+                "shadering": 0,
+                "model": 0,
+                "visible": 1
+            },
+            {
+                "id": 1,
+                "transform": 1,
+                "shadering": 1,
+                "model": 1,
+                "visible": 1,
+                "interactions": [
+                    0
+                ],
+                "tags": [
+                    "ui",
+                    "interactive",
+                    "button"
+                ]
+            },
+            {
+                "id": 2,
+                "transform": 2,
+                "shadering": 1,
+                "model": 1,
+                "visible": 1,
+                "interactions": [
+                    1
+                ],
+                "tags": [
+                    "ui",
+                    "interactive",
+                    "button"
+                ],
+                "prototype": {
+                    "id": 0,
+                    "override": {
+                        "shadering": false,
+                        "interaction": true
+                    }
+                }
+            }
+        ],
+        "instances": [
+            {
+                "prototype": 1,
+                "transforms": [
+                    3,
+                    4
+                ]
+            }
+        ]
+    }
+}
