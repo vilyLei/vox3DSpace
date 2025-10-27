@@ -7,14 +7,20 @@ void OglTestScene::initScene()
 {
     if (entityModeFlag)
     {
-        etSysLayers.resize(2);
+        etSysLayers.resize(1);
         for (auto i = 0; i < etSysLayers.size(); i++)
         {
             etSysLayers[i] = System::EntitySystemLayer::make();
         }
-
-        etSysLayers[0]->initalize();
-        etSysLayers[1]->initalize("scene/IR/scIR01.json");
+        if (etSysLayers.size() > 1)
+        {
+            etSysLayers[0]->initalize();
+            etSysLayers[1]->initalize("scene/IR/scIR01.json");
+        }
+        else
+        {
+            etSysLayers[0]->initalize("scene/IR/scIR01.json");
+        }
 
         boundsUnit.color = {0.0f, 0.3, 0.3f, 1.f};
         boundsUnit.vertex.toLine();
@@ -83,7 +89,7 @@ void OglTestScene::render(const Voxol::Math::Mat33& vpMat)
             etSysLayers[i]->updateCtx(ctx);
             etSysLayers[i]->render(vpMat);
         }
-        auto buzy0 = !(etSysLayers[1]->uiOpLayer->mouseCtrl.free);
+        auto  buzy0      = etSysLayers.size() > 1 && !(etSysLayers[1]->uiOpLayer->mouseCtrl.free);
         auto& etSysLayer = buzy0 ? etSysLayers[1] : etSysLayers[0];
 
         auto& tileSys = etSysLayer->tileSys;
@@ -163,11 +169,19 @@ void OglTestScene::render(const Voxol::Math::Mat33& vpMat)
 void OglTestScene::updateKeyboardParams(int key, int scancode, int action, int mods)
 {
     etSysLayers[0]->updateKeyboardParams(key, scancode, action, mods);
-    etSysLayers[1]->updateKeyboardParams(key, scancode, action, mods);
+    if (etSysLayers.size() > 1)
+    {
+        etSysLayers[1]->updateKeyboardParams(key, scancode, action, mods);
+    }
 }
 
 void OglTestScene::updateMouseParams(const System::Mouse::MouseInputParam& param)
 {
+    if (etSysLayers.size() < 2)
+    {
+        etSysLayers[0]->updateMouseParams(param);
+        return;
+    }
     auto& etSysLayer1 = etSysLayers[1];
     etSysLayer1->updateMouseParams(param);
     auto& mouseCtrl1 = etSysLayer1->uiOpLayer->mouseCtrl;
@@ -180,7 +194,6 @@ void OglTestScene::updateMouseParams(const System::Mouse::MouseInputParam& param
     {
         etSysLayers[0]->uiOpLayer->mouseCtrl.free = true;
     }
-    //etSysLayer->updateMouseParams(param);
 }
 void OglTestScene::initVoassScene()
 {
