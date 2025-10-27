@@ -5,6 +5,7 @@
 #include <cstdint>
 #include <type_traits>
 #include <cassert>
+#include "EntityComponent.h"
 
 namespace Voxol::Render
 {
@@ -56,7 +57,7 @@ public:
     //}
 
     /// 分配对象(未初始化)
-    int32_t allocate()
+    uint32_t allocate()
     {
         if (m_freeList.empty())
             reserve(comps.size() * 2 + 1);
@@ -89,7 +90,7 @@ public:
     template <typename Fn>
     void forEachWithIndex(const Fn& fn) noexcept
     {
-        auto tot = static_cast<int32_t>(comps.size());
+        auto tot = static_cast<uint32_t>(comps.size());
         for (auto i = 0; i < tot; ++i)
         {
             fn(comps[i], i);
@@ -99,7 +100,7 @@ public:
     template <typename Fn>
     void forEachWithIndexConst(const Fn& fn) const noexcept
     {
-        auto tot = static_cast<int32_t>(comps.size());
+        auto tot = static_cast<uint32_t>(comps.size());
         for (auto i = 0; i < tot; ++i)
         {
             fn(comps[i], i);
@@ -110,13 +111,13 @@ public:
     template <typename Fn>
     void forEach(Fn&& fn) noexcept
     {
-        for (int32_t i = 0; i < static_cast<int32_t>(comps.size()); ++i)
+        for (uint32_t i = 0; i < static_cast<uint32_t>(comps.size()); ++i)
         {
-            if constexpr (std::is_invocable_r_v<bool, Fn, T&, int32_t>)
+            if constexpr (std::is_invocable_r_v<bool, Fn, T&, uint32_t>)
             {
                 if (!fn(comps[i], i)) break;
             }
-            else if constexpr (std::is_invocable_v<Fn, T&, int32_t>)
+            else if constexpr (std::is_invocable_v<Fn, T&, uint32_t>)
             {
                 fn(comps[i], i);
             }
@@ -134,13 +135,13 @@ public:
     template <typename Fn>
     void forEach(Fn&& fn) const noexcept
     {
-        for (int32_t i = 0; i < static_cast<int32_t>(comps.size()); ++i)
+        for (uint32_t i = 0; i < static_cast<uint32_t>(comps.size()); ++i)
         {
-            if constexpr (std::is_invocable_r_v<bool, Fn, const T&, int32_t>)
+            if constexpr (std::is_invocable_r_v<bool, Fn, const T&, uint32_t>)
             {
                 if (!fn(comps[i], i)) break;
             }
-            else if constexpr (std::is_invocable_v<Fn, const T&, int32_t>)
+            else if constexpr (std::is_invocable_v<Fn, const T&, uint32_t>)
             {
                 fn(comps[i], i);
             }
@@ -156,35 +157,35 @@ public:
     }
 
     template <typename... Args>
-    int32_t emplace(Args&&... args)
+    uint32_t emplace(Args&&... args)
     {
         auto index   = allocate();
         comps[index] = T{std::forward<Args>(args)...};
         return index;
     }
-    T& operator[](int32_t index)
+    T& operator[](uint32_t index)
     {
         return comps[index];
     }
-    const T& operator[](int32_t index) const
+    const T& operator[](uint32_t index) const
     {
         return comps[index];
     }
     // 通过句柄访问对象（返回指针或nullptr）
-    T& get(int32_t index)
+    T& get(uint32_t index)
     {
         return comps[index];
     }
-    const T& get(int32_t index) const
+    const T& get(uint32_t index) const
     {
         return comps[index];
     }
 
-    int32_t acquire()
+    uint32_t acquire()
     {
 
         if (m_freeList.empty())
-            return -1;
+            return Component::INVALID_ID;
 
         uint32_t idx = m_freeList.back();
         m_freeList.pop_back();
@@ -192,7 +193,7 @@ public:
         return idx;
     }
 
-    void release(int32_t index)
+    void release(uint32_t index)
     {
 
         if (!isValid(index) || !m_usedList[index])
@@ -212,14 +213,14 @@ public:
         m_activeCount = 0;
     }
 
-    [[nodiscard]] bool hasFree(int32_t index) const noexcept
+    [[nodiscard]] bool hasFree(uint32_t index) const noexcept
     {
         return !m_freeList.empty();
     }
     // 判断句柄是否有效
-    [[nodiscard]] bool isValid(int32_t index) const noexcept
+    [[nodiscard]] bool isValid(uint32_t index) const noexcept
     {
-        return index >= 0 && index < comps.size();
+        return index < comps.size();
     }
 
     [[nodiscard]] size_t activeCount() const noexcept { return m_activeCount; }

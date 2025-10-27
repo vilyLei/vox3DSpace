@@ -15,7 +15,7 @@ void EntitySystemLayer::initalize(const std::string& configFileName)
     tileSys->initalize();
 
     uiOpLayer                      = std::make_shared<System::UIOperationLayer>();
-    uiOpLayer->mouseCtrl.dirtyCall = [this](const Math::Bounds& b, int32_t id) {
+    uiOpLayer->mouseCtrl.dirtyCall = [this](const Math::Bounds& b, uint32_t id) {
         tileSys->addDirtyBounds(b, id);
     };
     uiOpLayer->etSceneSys = etSceneSys;

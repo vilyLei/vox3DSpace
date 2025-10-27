@@ -59,41 +59,41 @@ public:
     }
 
     template <typename T>
-    const T& getCompAt(int32_t index) const
+    const T& getCompAt(uint32_t index) const
     {
         const auto& pool = getPool<T>();
         return pool.get(index);
     }
     template <typename T>
-    T& get(int32_t index)
+    T& get(uint32_t index)
     {
         return getPool<T>().get(index);
     }
 
     template <typename T>
-    const T& get(int32_t index) const
+    const T& get(uint32_t index) const
     {
         return getPool<T>().get(index);
     }
     //template <typename T>
-    //const T& operator[](int32_t index) const
+    //const T& operator[](uint32_t index) const
     //{
     //    const auto& pool = getPool<T>();
     //    return pool.get(index);
     //}
     //template <typename T>
-    //T& operator[](int32_t index) const
+    //T& operator[](uint32_t index) const
     //{
     //    auto& pool = getPool<T>();
     //    return pool.get(index);
     //}
 
-    Component::UnitTransform getEntityTransformAt(int32_t id);
-    void                     setEntityTransformAt(const Component::UnitTransform& trans, int32_t id);
+    Component::UnitTransform getEntityTransformAt(uint32_t id);
+    void                     setEntityTransformAt(const Component::UnitTransform& trans, uint32_t id);
 
-    Math::Vec2 getEntityXYAt(int32_t id);
-    void       setEntityXYAt(const Math::Vec2& pos, int32_t id);
-    void       checkIds(std::vector<int32_t>& edis);
+    Math::Vec2 getEntityXYAt(uint32_t id);
+    void       setEntityXYAt(const Math::Vec2& pos, uint32_t id);
+    void       checkIds(std::vector<uint32_t>& edis);
 
 public:
 

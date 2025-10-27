@@ -12,7 +12,7 @@ EntityRenderSystem::SP EntityRenderSystem::make()
 void EntityRenderSystem::initalize()
 {
 }
-void EntityRenderSystem::render(const Draw::DrawContext& rctx, const Math::Mat33& vpM, const Math::Bounds& wbounds, const std::vector<int32_t>& queriedEIds)
+void EntityRenderSystem::render(const Draw::DrawContext& rctx, const Math::Mat33& vpM, const Math::Bounds& wbounds, const std::vector<uint32_t>& queriedEIds)
 {
     if (!entityStorage)
         return;

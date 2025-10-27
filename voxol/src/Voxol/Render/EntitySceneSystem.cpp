@@ -36,9 +36,9 @@ void EntitySceneSystem::initalize(const std::string& configFileName)
 
     Math::Bounds                           bounds{};
 
-    entitiesPool.forEach([&](auto& et, int32_t index) {
+    entitiesPool.forEach([&](auto& et, uint32_t index) {
 
-        if (et.shadingId < 0)
+        if (et.shadingId == Component::INVALID_ID)
             return;
 
         auto& trans = transformsPool[et.transformId];
@@ -72,7 +72,7 @@ int EntitySceneSystem::drawQuery(const Math::VxRect& wbounds, int phase)
     return static_cast<int>(queriedEIds.size());
 }
 
-const std::vector<int32_t> EntitySceneSystem::getQueriedEIds() const
+const std::vector<uint32_t> EntitySceneSystem::getQueriedEIds() const
 {
     return queriedEIds;
 }

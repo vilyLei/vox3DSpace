@@ -21,14 +21,14 @@ void MouseCtroller::selectWithSingle(const System::Mouse::MouseEvent& evt, const
 
     auto etStorage = targetSys->entityStorage->comp;
 
-    int32_t topId = qeIds.empty() ? -1 : qeIds.back();
+    auto topId = qeIds.empty() ? Render::Component::INVALID_ID : qeIds.back();
 
     if (evt.isBegin())
     {
         dragging = false;
     }
 
-    if (topId >= 0 && evt.isBegin())
+    if (topId != Render::Component::INVALID_ID && evt.isBegin())
     {
         etId          = topId;
         originEtPos   = etStorage->getEntityXYAt(etId);
@@ -36,7 +36,7 @@ void MouseCtroller::selectWithSingle(const System::Mouse::MouseEvent& evt, const
         return;
     }
 
-    if (etId >= 0 && evt.isDragging())
+    if (etId != Render::Component::INVALID_ID && evt.isDragging())
     {
         auto id = etId;
         auto pv = originEtPos;
@@ -59,16 +59,16 @@ void MouseCtroller::selectWithSingle(const System::Mouse::MouseEvent& evt, const
     }
     if (evt.isEnd())
     {
-        if (etId >= 0 && dragging)
+        if (etId != Render::Component::INVALID_ID && dragging)
         {
             dragging = false;
             etStorage->historyManager->pushItem({unitTransform, etId});
         }
-        etId = -1;
+        etId = Render::Component::INVALID_ID;
         return;
     }
 
-    if (evt.isDragging() && etId < 0)
+    if (evt.isDragging() && etId == Render::Component::INVALID_ID)
     {
         selectionBounds.toEmpty(evt.originGlobalPos);
         selectType = SelectType::Bounds;
@@ -97,7 +97,7 @@ void MouseCtroller::selectWithBounds(const System::Mouse::MouseEvent& evt, const
     if (evt.isEnd())
     {
         printf("MouseCtroller::selectBtnBounds() end().\n");
-        etId       = -1;
+        etId       = Render::Component::INVALID_ID;
         selectType = SelectType::Single;
     }
 }

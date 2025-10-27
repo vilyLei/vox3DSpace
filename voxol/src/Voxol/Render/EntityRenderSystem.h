@@ -18,6 +18,7 @@ public:
     using SP = std::shared_ptr<EntityRenderSystem>;
     using WP = std::weak_ptr<EntityRenderSystem>;
     using UP = std::unique_ptr<EntityRenderSystem>;
+
 public:
     static EntityRenderSystem::SP make();
 
@@ -28,14 +29,13 @@ public:
 
 public:
     void initalize();
-    void render(const Draw::DrawContext& rctx, const Math::Mat33& vpM, const Math::Bounds& wbounds, const std::vector<int32_t>& queriedEIds);
+    void render(const Draw::DrawContext& rctx, const Math::Mat33& vpM, const Math::Bounds& wbounds, const std::vector<uint32_t>& queriedEIds);
     void clear();
 
     EntityUnitStorage::SP entityStorage{};
 
 private:
-    bool                 drawUnit(const Component::UnitEntity& entity, const Math::Mat33& vpM, const Math::Bounds& wbounds);
-    //std::vector<int32_t> queriedEIds{};
+    bool drawUnit(const Component::UnitEntity& entity, const Math::Mat33& vpM, const Math::Bounds& wbounds);
 };
 } // namespace Voxol::Render
 #endif

@@ -17,7 +17,7 @@ namespace Shadering
 {
 struct Description
 {
-    int         id;
+    uint32_t         id;
     std::string type;
     uint32_t    color;
     void        parse(const JsonType& node);
@@ -25,9 +25,9 @@ struct Description
 
 struct Unit
 {
-    int  id;
-    int  description;
-    int  blendmode;
+    uint32_t  id;
+    uint32_t  description;
+    uint32_t  blendmode;
     void parse(const JsonType& node)
     {
         id          = node["id"];
@@ -35,7 +35,7 @@ struct Unit
 
         std::string blendmodeStr = node["blendmode"];
 
-        static std::unordered_map<std::string, int> blendmodeMap{};
+        static std::unordered_map<std::string, uint32_t> blendmodeMap{};
 
         if (blendmodeMap.empty())
         {
@@ -53,8 +53,8 @@ struct Unit
 };
 struct Module
 {
-    std::unordered_map<int, Description> descriptionsMap;
-    std::unordered_map<int, Unit>        unitsMap;
+    std::unordered_map<uint32_t, Description> descriptionsMap;
+    std::unordered_map<uint32_t, Unit>        unitsMap;
     void                                 parse(const JsonType& node);
 };
 
@@ -63,7 +63,7 @@ namespace Scene
 {
 struct ModelMethod
 {
-    int id;
+    uint32_t id;
     // Mesh / SDF / Procedural / Volume / Voxel
     std::string type;
     void        parse(const JsonType& node)
@@ -74,7 +74,7 @@ struct ModelMethod
 };
 struct Model
 {
-    int                             id;
+    uint32_t                             id;
     std::string                     type;
     ModelMethod                     method;
     std::variant<float, Math::Vec2> value;
@@ -108,7 +108,7 @@ struct Model
 
 struct Transform
 {
-    int        id;
+    uint32_t        id;
     Math::Vec2 position;
     void       parse(const JsonType& node);
 };
@@ -134,10 +134,10 @@ struct Hierarchy
 };
 struct Entity
 {
-    int  id;
-    int  shadering;
-    int  transform;
-    int  model;
+    uint32_t  id;
+    uint32_t  shadering;
+    uint32_t  transform;
+    uint32_t  model;
     bool visible;
 
     void parse(const JsonType& node)
@@ -155,16 +155,16 @@ struct Entity
             model = node["model"];
 
         if (node.contains("visible"))
-            visible = static_cast<int>(node["visible"]) != 0 ? true : false;
+            visible = static_cast<uint32_t>(node["visible"]) != 0 ? true : false;
     }
 };
 
 struct Module
 {
-    std::unordered_map<int, Model>     modelsMap;
-    std::unordered_map<int, Hierarchy> hierarchiesMap;
-    std::unordered_map<int, Transform> transformsMap;
-    std::unordered_map<int, Entity>    entitiesMap;
+    std::unordered_map<uint32_t, Model>     modelsMap;
+    std::unordered_map<uint32_t, Hierarchy> hierarchiesMap;
+    std::unordered_map<uint32_t, Transform> transformsMap;
+    std::unordered_map<uint32_t, Entity>    entitiesMap;
 
     void parseComponent(const JsonType& node)
     {

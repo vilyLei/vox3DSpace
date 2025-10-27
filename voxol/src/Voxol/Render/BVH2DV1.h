@@ -8,7 +8,8 @@
 
 namespace Voxol::Render
 {
-namespace V1 {
+namespace V1
+{
 
 class BVH2D
 {
@@ -21,19 +22,21 @@ public:
     static BVH2D::SP make();
 
 public:
-    struct Item {
-        int32_t objectId = 0;    // entity id
-        Math::Bounds bounds;      // world-space bounds
-        bool dirty = false;       // 标记是否需要 refit
+    struct Item
+    {
+        uint32_t     objectId = 0;  // entity id
+        Math::Bounds bounds;        // world-space bounds
+        bool         dirty = false; // 标记是否需要 refit
     };
 
-    struct Node {
+    struct Node
+    {
         Math::Bounds bounds;
-        int left  = -1;
-        int right = -1;
-        int parent = -1;
-        int itemIndex = -1;  // leaf节点对应的item索引
-        bool isLeaf() const { return itemIndex >= 0; }
+        int          left      = -1;
+        int          right     = -1;
+        int          parent    = -1;
+        int          itemIndex = -1; // leaf节点对应的item索引
+        bool         isLeaf() const { return itemIndex >= 0; }
     };
 
     BVH2D() = default;
@@ -41,7 +44,7 @@ public:
     // -----------------------------
     // 添加 Item
     // -----------------------------
-    void addItem(int32_t objectId, const Math::Bounds& bounds);
+    void addItem(uint32_t objectId, const Math::Bounds& bounds);
 
     // -----------------------------
     // 完整构建BVH
@@ -55,7 +58,7 @@ public:
     // -----------------------------
     // 更新单个对象的包围盒 (通过 objectId)
     // -----------------------------
-    bool updateItemBoundsByObjectId(int32_t objectId, const Math::Bounds& newBounds);
+    bool updateItemBoundsByObjectId(uint32_t objectId, const Math::Bounds& newBounds);
     // -----------------------------
     // 更新所有脏节点 (Refit)
     // -----------------------------
@@ -64,25 +67,25 @@ public:
     // -----------------------------
     // 点查询
     // -----------------------------
-    void queryPoint(const Math::Vec2& p, std::vector<int32_t>& outIds) const;
+    void queryPoint(const Math::Vec2& p, std::vector<uint32_t>& outIds) const;
 
     // -----------------------------
     // 范围查询
     // -----------------------------
-    void queryBounds(const Math::Bounds& b, std::vector<int32_t>& outIds) const;
+    void queryBounds(const Math::Bounds& b, std::vector<uint32_t>& outIds) const;
 
     // -----------------------------
     // 获取Item引用
     // -----------------------------
     const Item& getItem(int index) const { return m_items[index]; }
-    Item& getItem(int index) { return m_items[index]; }
+    Item&       getItem(int index) { return m_items[index]; }
 
     // -----------------------------
     // 部分重建 (可选)
     // -----------------------------
     void partialRebuild();
 
-    const Math::Bounds& getBoundsAt(int32_t objId)
+    const Math::Bounds& getBoundsAt(uint32_t objId)
     {
         auto i = m_objectIdToItem[objId];
         return m_items[i].bounds;
@@ -101,30 +104,31 @@ private:
     // -----------------------------
     // 点查询递归
     // -----------------------------
-    void queryPointRecursive(int nodeIndex, const Math::Vec2& p, std::vector<int32_t>& outIds) const;
+    void queryPointRecursive(int nodeIndex, const Math::Vec2& p, std::vector<uint32_t>& outIds) const;
 
     // -----------------------------
     // 范围查询递归
     // -----------------------------
-    void queryBoundsRecursive(int nodeIndex, const Math::Bounds& b, std::vector<int32_t>& outIds) const;
+    void queryBoundsRecursive(int nodeIndex, const Math::Bounds& b, std::vector<uint32_t>& outIds) const;
 
     // -----------------------------
     // 同步 objectId → itemIndex 映射
     // -----------------------------
-    void rebuildObjectMap() {
+    void rebuildObjectMap()
+    {
         m_objectIdToItem.clear();
         for (int i = 0; i < (int)m_items.size(); ++i)
             m_objectIdToItem[m_items[i].objectId] = i;
     }
 
 private:
-    std::vector<Item> m_items;
-    std::vector<Node> m_nodes;
-    std::unordered_map<int32_t, int32_t> m_objectIdToItem;
+    std::vector<Item>                      m_items;
+    std::vector<Node>                      m_nodes;
+    std::unordered_map<uint32_t, uint32_t> m_objectIdToItem;
 
     bool m_dirty = false;
 };
 
-}
-}
+} // namespace V1
+} // namespace Voxol::Render
 #endif
