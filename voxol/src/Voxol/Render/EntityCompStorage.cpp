@@ -58,7 +58,7 @@ void EntityCompStorage::checkIds(std::vector<uint32_t>& edis)
         return;
     }
     std::sort(edis.begin(), edis.end(), [&](uint32_t a, uint32_t b) {
-        return entitiesPool[b].id > entitiesPool[a].id;
+        return entitiesPool[a].id < entitiesPool[b].id;
     });
 }
 } // namespace Voxol::Render
