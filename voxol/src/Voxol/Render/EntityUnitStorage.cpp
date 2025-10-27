@@ -45,9 +45,11 @@ void EntityUnitStorage::initalizeFromFile(const std::string& fileName)
     auto& shaderingDescPool     = comp->shaderingDescPool;
     auto& transformsPool        = comp->transformsPool;
     auto& modelsPool            = comp->modelsPool;
+    auto& hierarchiesPool       = comp->hierarchiesPool;
 
     entitiesPool.initialize(total);
     shaderingEntitiesPool.initialize(total);
+    hierarchiesPool.initialize(total);
     modelsPool.initialize(total);
     auto shaderingDescTotal = total * 2;
     shaderingDescPool.initialize(shaderingDescTotal);
@@ -148,9 +150,11 @@ void EntityUnitStorage::initalize(int total)
     auto& shaderingDescPool     = comp->shaderingDescPool;
     auto& transformsPool     = comp->transformsPool;
     auto& modelsPool            = comp->modelsPool;
+    auto& hierarchiesPool       = comp->hierarchiesPool;
 
     entitiesPool.initialize(total);
     shaderingEntitiesPool.initialize(total);
+    hierarchiesPool.initialize(total);
     modelsPool.initialize(total);
     auto shaderingDescTotal = total * 2;
     shaderingDescPool.initialize(shaderingDescTotal);

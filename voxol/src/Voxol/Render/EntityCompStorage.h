@@ -100,6 +100,7 @@ public:
     CompPool<Component::UnitShadingEntity>   shaderingEntitiesPool{};
     CompPool<Component::UnitModel>       modelsPool{};
     CompPool<Component::UnitTransform>       transformsPool{};
+    CompPool<Component::UnitHierarchy>       hierarchiesPool{};
     CompPool<Component::UnitShadingBaseDesc> shaderingDescPool{};
 };
 } // namespace Voxol::Render
