@@ -165,7 +165,7 @@
                 }
             ]
         },
-        "hierarchies": [],
+        "hierarchies": [{"firstChild":1}],
         "entities": [
             {
                 "id": 0,

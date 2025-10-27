@@ -178,16 +178,6 @@ struct Module
                 transformsMap[m.id] = m;
             }
         }
-        if (node.contains("hierarchies"))
-        {
-            auto&& hierarchies = node["hierarchies"];
-            for (auto& node : hierarchies)
-            {
-                Hierarchy m;
-                m.parse(node);
-                hierarchiesMap[m.id] = m;
-            }
-        }
         if (node.contains("models"))
         {
             auto&& models = node["models"];
@@ -204,6 +194,16 @@ struct Module
         if (node.contains("component"))
         {
             parseComponent(node["component"]);
+        }
+        if (node.contains("hierarchies"))
+        {
+            auto&& hierarchies = node["hierarchies"];
+            for (auto& node : hierarchies)
+            {
+                Hierarchy m;
+                m.parse(node);
+                hierarchiesMap[m.id] = m;
+            }
         }
         if (node.contains("entities"))
         {

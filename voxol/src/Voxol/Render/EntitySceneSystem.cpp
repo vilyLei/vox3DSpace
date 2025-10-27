@@ -26,7 +26,7 @@ void EntitySceneSystem::initalize(const std::string& configFileName)
     }
     else
     {
-        entityStorage->initalizeFromFile("");
+        entityStorage->initalizeFromFile(configFileName);
     }
     
     auto& entitiesPool          = entityStorage->comp->entitiesPool;

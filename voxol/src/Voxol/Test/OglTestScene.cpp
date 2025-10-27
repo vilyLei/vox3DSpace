@@ -15,11 +15,11 @@ void OglTestScene::initScene()
         if (etSysLayers.size() > 1)
         {
             etSysLayers[0]->initalize();
-            etSysLayers[1]->initalize("scene/IR/scIR01.json");
+            etSysLayers[1]->initalize("scene/IR/scIR02.json");
         }
         else
         {
-            etSysLayers[0]->initalize("scene/IR/scIR01.json");
+            etSysLayers[0]->initalize("scene/IR/scIR02.json");
         }
 
         boundsUnit.color = {0.0f, 0.3, 0.3f, 1.f};
