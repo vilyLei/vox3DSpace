@@ -103,6 +103,7 @@ public:
     CompPool<Component::UnitTransform>       transformsPool{};
     CompPool<Component::UnitHierarchy>       hierarchiesPool{};
     CompPool<Component::UnitShadingBaseDesc> shaderingDescPool{};
+    CompPool<Component::UnitMat33>           unitWMat33Pool{};
 };
 } // namespace Voxol::Render
 #endif

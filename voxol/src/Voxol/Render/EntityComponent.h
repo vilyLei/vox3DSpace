@@ -6,6 +6,7 @@
 #include <cstdint>
 #include <type_traits>
 #include <cassert>
+#include <unordered_map>
 
 namespace Voxol::Render
 {
@@ -31,6 +32,11 @@ struct UnitTransform
     inline const Math::Vec2& scale() const { return *reinterpret_cast<const Math::Vec2*>(&sx); }
 };
 
+struct UnitMat33
+{
+    Math::Mat33 mat;
+    uint32_t id = -1;
+};
 struct UnitShadingBaseDesc
 {
     uint32_t color = 0xff000000;
