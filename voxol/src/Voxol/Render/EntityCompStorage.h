@@ -93,6 +93,7 @@ public:
 
     Math::Vec2 getEntityXYAt(int32_t id);
     void       setEntityXYAt(const Math::Vec2& pos, int32_t id);
+    void       checkIds(std::vector<int32_t>& edis);
 
 public:
 

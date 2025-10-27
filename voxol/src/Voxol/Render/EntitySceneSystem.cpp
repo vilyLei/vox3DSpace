@@ -68,6 +68,8 @@ int EntitySceneSystem::drawQuery(const Math::VxRect& wbounds, int phase)
     //    }
     //}
 
+    entityStorage->comp->checkIds(queriedEIds);
+    /*
     auto& entitiesPool = entityStorage->comp->entitiesPool;
     if (queriedEIds.empty())
     {
@@ -92,6 +94,7 @@ int EntitySceneSystem::drawQuery(const Math::VxRect& wbounds, int phase)
             return entitiesPool[a].id < entitiesPool[b].id;
         });
     }
+    //*/
     return static_cast<int>(queriedEIds.size());
 }
 
