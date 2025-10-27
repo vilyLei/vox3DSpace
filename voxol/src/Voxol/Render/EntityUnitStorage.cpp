@@ -57,13 +57,19 @@ void EntityUnitStorage::initalizeFromFile(const std::string& fileName)
 
 
     entitiesPool.forEach([&](auto& e, int32_t index) {
-        e.id = index;
+        e.id         = index;
+        e.shadingId = Component::INVALID_ID;
     });
     shaderingEntitiesPool.forEach([&](auto& e, int32_t index) {
         e.id = index;
     });
     modelsPool.forEach([&](auto& e, int32_t index) {
         e.id = index;
+    });
+    hierarchiesPool.forEach([&](auto& e, uint32_t index) {
+        e.parent     = Component::INVALID_ID;
+        e.next       = Component::INVALID_ID;
+        e.firstChild = Component::INVALID_ID;
     });
 
     
@@ -84,6 +90,12 @@ void EntityUnitStorage::initalizeFromFile(const std::string& fileName)
     };
 
     auto updateEntityData = [&, this](int i) {
+
+        auto& dataHier = sceneModule.hierarchiesMap[i];
+        auto&& dstHier = hierarchiesPool[dataHier.id];
+        dstHier.parent     = dataHier.parent;
+        dstHier.next       = dataHier.next;
+        dstHier.firstChild = dataHier.firstChild;
 
         auto& dataEt = sceneModule.entitiesMap[i];
 
@@ -159,14 +171,20 @@ void EntityUnitStorage::initalize(int total)
     shaderingDescPool.initialize(shaderingDescTotal);
     transformsPool.initialize(shaderingDescTotal);
 
-    entitiesPool.forEach([&](auto& e, int32_t index) {
+    entitiesPool.forEach([&](auto& e, uint32_t index) {
+        e.id = index;
+        e.shadingId = Component::INVALID_ID;
+    });
+    shaderingEntitiesPool.forEach([&](auto& e, uint32_t index) {
         e.id = index;
     });
-    shaderingEntitiesPool.forEach([&](auto& e, int32_t index) {
+    modelsPool.forEach([&](auto& e, uint32_t index) {
         e.id = index;
     });
-    modelsPool.forEach([&](auto& e, int32_t index) {
-        e.id = index;
+    hierarchiesPool.forEach([&](auto& e, uint32_t index) {
+        e.parent = Component::INVALID_ID;
+        e.next = Component::INVALID_ID;
+        e.firstChild = Component::INVALID_ID;
     });
 
     shaderingDescPool[0].color    = 0xff880077;
