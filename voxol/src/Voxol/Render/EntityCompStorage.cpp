@@ -64,4 +64,9 @@ void EntityCompStorage::checkIds(std::vector<uint32_t>& edis)
         return a < b;
     });
 }
+
+void EntityCompStorage::checkWMaps(std::vector<uint32_t>& edis)
+{
+
+}
 } // namespace Voxol::Render

@@ -94,6 +94,7 @@ public:
     Math::Vec2 getEntityXYAt(uint32_t id);
     void       setEntityXYAt(const Math::Vec2& pos, uint32_t id);
     void       checkIds(std::vector<uint32_t>& edis);
+    void       checkWMaps(std::vector<uint32_t>& edis);
 
 public:
 
