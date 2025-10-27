@@ -20,6 +20,7 @@ void MouseCtroller::selectWithSingle(const System::Mouse::MouseEvent& evt, const
     free           = qeIds.empty();
 
     auto etStorage = targetSys->entityStorage->comp;
+    etStorage->checkIds(qeIds);
 
     auto topId = qeIds.empty() ? Render::Component::INVALID_ID : qeIds.back();
 
