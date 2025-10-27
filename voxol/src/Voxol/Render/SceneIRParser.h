@@ -113,6 +113,25 @@ struct Transform
     void       parse(const JsonType& node);
 };
 
+struct Hierarchy
+{
+    uint32_t id;
+    uint32_t parent;
+    uint32_t next;
+    uint32_t firstChild;
+
+    void parse(const JsonType& node)
+    {
+        if (node.contains("id"))
+            id = node["id"];
+        if (node.contains("parent"))
+            parent = node["parent"];
+        if (node.contains("next"))
+            next = node["next"];
+        if (node.contains("firstChild"))
+            firstChild = node["firstChild"];
+    }
+};
 struct Entity
 {
     int  id;
@@ -123,17 +142,27 @@ struct Entity
 
     void parse(const JsonType& node)
     {
-        id        = node["id"];
-        shadering = node["shadering"];
-        transform = node["transform"];
-        model     = node["model"];
-        visible   = static_cast<int>(node["visible"]) != 0 ? true : false;
+        if (node.contains("id"))
+            id = node["id"];
+
+        if (node.contains("shadering"))
+            shadering = node["shadering"];
+
+        if (node.contains("transform"))
+            transform = node["transform"];
+
+        if (node.contains("model"))
+            model = node["model"];
+
+        if (node.contains("visible"))
+            visible = static_cast<int>(node["visible"]) != 0 ? true : false;
     }
 };
 
 struct Module
 {
     std::unordered_map<int, Model>     modelsMap;
+    std::unordered_map<int, Hierarchy> hierarchiesMap;
     std::unordered_map<int, Transform> transformsMap;
     std::unordered_map<int, Entity>    entitiesMap;
 
@@ -147,6 +176,16 @@ struct Module
                 Transform m;
                 m.parse(node);
                 transformsMap[m.id] = m;
+            }
+        }
+        if (node.contains("hierarchies"))
+        {
+            auto&& hierarchies = node["hierarchies"];
+            for (auto& node : hierarchies)
+            {
+                Hierarchy m;
+                m.parse(node);
+                hierarchiesMap[m.id] = m;
             }
         }
         if (node.contains("models"))

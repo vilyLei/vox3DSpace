@@ -61,6 +61,12 @@ struct UnitModel
     int32_t drawUnitId = -1;
 };
 
+struct UnitHierarchy
+{
+    uint32_t parent;
+    uint32_t next;
+    uint32_t firstChild;
+};
 struct UnitEntity
 {
     ///  只有entity才有自身的id

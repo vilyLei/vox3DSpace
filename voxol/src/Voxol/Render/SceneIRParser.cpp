@@ -75,7 +75,6 @@ void Module::parse(const JsonType& node)
 namespace Scene
 {
 
-
 void Model::parse(const JsonType& node)
 {
     id     = node["id"];
