@@ -67,6 +67,11 @@
                 "id": 2,
                 "type": "default",
                 "color": "#ff000088"
+            },
+            {
+                "id": 3,
+                "type": "default",
+                "color": "#ff008888"
             }
         ],
         "units": [
@@ -86,6 +91,12 @@
                 "id": 2,
                 "blendmode": "Add",
                 "description": 2,
+                "shader_pipeline": 0
+            },
+            {
+                "id": 3,
+                "blendmode": "Solid",
+                "description": 3,
                 "shader_pipeline": 0
             }
         ]
@@ -138,6 +149,13 @@
                         170,
                         100
                     ]
+                },
+                {
+                    "id": 3,
+                    "position": [
+                        290,
+                        350
+                    ]
                 }
             ],
             "meshes": [
@@ -167,10 +185,46 @@
                     },
                     "type": "Circle",
                     "radius": 50
+                },
+                {
+                    "id": 2,
+                    "method": {
+                        "id": 0,
+                        "type": "Mesh"
+                    },
+                    "type": "Rectangle",
+                    "size": [
+                        100,
+                        60
+                    ]
                 }
             ]
         },
-        "hierarchies": [{"id": 0, "firstChild":1}, {"id": 1, "parent": 0, "firstChild":2}, {"id": 2, "parent":1, "next": 3}, {"id": 3, "parent":1}],
+        "hierarchies": [
+            {
+                "id": 0,
+                "firstChild": 1
+            },
+            {
+                "id": 1,
+                "parent": 0,
+                "next": 4,
+                "firstChild": 2
+            },
+            {
+                "id": 2,
+                "parent": 1,
+                "next": 3
+            },
+            {
+                "id": 3,
+                "parent": 1
+            },
+            {
+                "id": 4,
+                "parent": 0
+            }
+        ],
         "entities": [
             {
                 "id": 0,
@@ -219,6 +273,13 @@
                         "interaction": true
                     }
                 }
+            },
+            {
+                "id": 4,
+                "transform": 3,
+                "shadering": 3,
+                "model": 2,
+                "visible": 1
             }
         ],
         "instances": [
