@@ -80,9 +80,12 @@ void EntityCompStorage::traverseSortIndexAndBuildWorldMat(uint32_t etId, uint32_
     constexpr auto InvalidID = Component::INVALID_ID;
     auto&& et = entitiesPool[etId];
 
+    printf("traverseSortIndex(), etId: %d, index: %d\n", etId, index);
+    hierarchyIndexMap[etId] = index++;
     if (et.transformId != InvalidID)
     {
         auto& tr = transformsPool[et.transformId];
+        printf("    tr(x=%f,y=%f,sx=%f,sy=%f)\n", tr.x, tr.y, tr.sx, tr.sy);
 
         // 当前节点的本地矩阵
         Math::Mat33 localMat;
@@ -100,8 +103,8 @@ void EntityCompStorage::traverseSortIndexAndBuildWorldMat(uint32_t etId, uint32_
         worldMat.setXY(parentTrans.x + tr.x, parentTrans.y + tr.y);
         worldMat.setScaleXY(tr.sx, tr.sy); // 自身 scale 不受父级影响
 
-        hierarchyIndexMap[etId] = index++;
         entityWorldMat33Map[etId] = worldMat;
+        worldMat.print();
     }
 
     for (auto child = hierarchiesPool[etId].firstChild;
