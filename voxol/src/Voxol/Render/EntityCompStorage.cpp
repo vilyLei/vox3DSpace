@@ -60,8 +60,8 @@ void EntityCompStorage::checkIds(std::vector<uint32_t>& edis)
         return;
     }
     std::sort(edis.begin(), edis.end(), [&](uint32_t a, uint32_t b) {
-        //return entitiesPool[a].id < entitiesPool[b].id;
-        return a < b;
+        return hierarchyIndexMap[a] < hierarchyIndexMap[b];
+        //return a < b;
     });
 }
 
@@ -72,12 +72,13 @@ void EntityCompStorage::checkWMaps(std::vector<uint32_t>& edis)
 void EntityCompStorage::updateHierarchyInfo()
 {
     uint32_t index = 0;
-    traverseSortIndex(0, index);
+    //traverseSortIndex(0, index);
+    traverseSortIndexAndBuildWorldMat(0, index, {});
 }
 void EntityCompStorage::traverseSortIndexAndBuildWorldMat(uint32_t etId, uint32_t& index, const Math::Mat33& parentMat)
 {
     constexpr auto InvalidID = Component::INVALID_ID;
-    auto& et = entitiesPool[etId];
+    auto&& et = entitiesPool[etId];
 
     if (et.transformId != InvalidID)
     {
@@ -103,7 +104,7 @@ void EntityCompStorage::traverseSortIndexAndBuildWorldMat(uint32_t etId, uint32_
         entityWorldMat33Map[etId] = worldMat;
     }
 
-    for (uint32_t child = hierarchiesPool[etId].firstChild;
+    for (auto child = hierarchiesPool[etId].firstChild;
          child != InvalidID;
          child = hierarchiesPool[child].next)
     {
