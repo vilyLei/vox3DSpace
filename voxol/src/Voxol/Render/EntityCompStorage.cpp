@@ -11,25 +11,39 @@ EntityCompStorage::SP EntityCompStorage::make()
 
 Component::UnitTransform EntityCompStorage::getEntityTransformAt(uint32_t id)
 {
+    if (id == Component::INVALID_ID)
+        return {};
 
     auto& et = entitiesPool[id];
     return transformsPool[et.transformId];
 }
 void EntityCompStorage::setEntityTransformAt(const Component::UnitTransform& trans, uint32_t id)
 {
-
+    if (id == Component::INVALID_ID)
+        return;
     auto& et                       = entitiesPool[id];
     transformsPool[et.transformId] = trans;
 }
+Math::Mat33 EntityCompStorage::getEntityMat33At(uint32_t id)
+{
+    if (id == Component::INVALID_ID)
+        return {};
 
+    return entityWorldMat33Map[id];
+}
 Math::Vec2 EntityCompStorage::getEntityXYAt(uint32_t id)
 {
+    if (id == Component::INVALID_ID)
+        return {};
+
     auto&  et    = entitiesPool[id];
     auto&& trans = transformsPool[et.transformId];
     return {trans.x, trans.y};
 }
 void EntityCompStorage::setEntityXYAt(const Math::Vec2& pos, uint32_t id)
 {
+    if (id == Component::INVALID_ID)
+        return;
     auto&  et    = entitiesPool[id];
     auto&& trans = transformsPool[et.transformId];
     trans.x      = pos.x;
