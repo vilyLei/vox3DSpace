@@ -71,7 +71,7 @@ bool EntityRenderSystem::drawUnit(const Component::UnitEntity& entity, const Mat
     auto& drawUnit  = drs[drawingId];
     auto& shdDesc  = shaderingDescPool[shadingEt.shadingDescId];
     //auto& trans    = transformsPool[entity.transformId];
-    auto&&       wmat = compStorage->entityWorldMat33Map[entity.id];
+    auto&&       wmat = compStorage->entityGlobalMat33Map[entity.id];
     Math::Bounds vbUnit{0,0,1,1};
     Math::Bounds vb;
     vbUnit.mat33MapTo(wmat, vb);

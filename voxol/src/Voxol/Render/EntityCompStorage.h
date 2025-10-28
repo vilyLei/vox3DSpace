@@ -90,15 +90,17 @@ public:
     Component::UnitTransform getEntityTransformAt(uint32_t id);
     void                     setEntityTransformAt(const Component::UnitTransform& trans, uint32_t id);
 
-    Math::Mat33 getEntityMat33At(uint32_t id);
+    Math::Mat33 getEntityGlobalMat33At(uint32_t id);
+    Math::Vec2  getEntityGlobalXYAt(uint32_t id);
+    void        setEntityGlobalXYAt(const Math::Vec2& pos, uint32_t id);
     Math::Vec2 getEntityLocalXYAt(uint32_t id);
     void       setEntityLocalXYAt(const Math::Vec2& pos, uint32_t id);
     void       checkIds(std::vector<uint32_t>& edis);
     void       checkWMaps(std::vector<uint32_t>& edis);
     void       updateHierarchyInfo();
     void       traverseSortIndex(uint32_t etId, uint32_t& index);
-    void       traverseSortIndexAndBuildWorldMat(uint32_t etId, uint32_t& index, const Math::Mat33& parentMat);
-    void       traverseBuildWorldMat(uint32_t etId, const Math::Mat33& parentMat);
+    void       traverseSortIndexAndBuildGlobalMat(uint32_t etId, uint32_t& index, const Math::Mat33& parentMat);
+    void       traverseBuildGlobalMat(uint32_t etId, const Math::Mat33& parentMat);
 
 public:
     CompPool<Component::UnitEntity>          entitiesPool{};
@@ -109,7 +111,7 @@ public:
     CompPool<Component::UnitShadingBaseDesc> shaderingDescPool{};
     CompPool<Component::UnitMat33>           unitWMat33Pool{};
     std::unordered_map<uint32_t, uint32_t>   hierarchyIndexMap{};
-    std::unordered_map<uint32_t, Math::Mat33>   entityWorldMat33Map{};
+    std::unordered_map<uint32_t, Math::Mat33>   entityGlobalMat33Map{};
 };
 } // namespace Voxol::Render
 #endif

@@ -45,7 +45,7 @@ void EntitySceneSystem::initalize(const std::string& configFileName)
 
         //auto& trans = transformsPool[et.transformId];
         //bounds.setXYWH(trans.x, trans.y, trans.sx, trans.sy);
-        bounds.mat33MapTo(storage->entityWorldMat33Map[et.id], vb);
+        bounds.mat33MapTo(storage->entityGlobalMat33Map[et.id], vb);
 
         bvh->addItem(et.id, vb);
     });

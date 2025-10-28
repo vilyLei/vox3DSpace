@@ -24,13 +24,32 @@ void EntityCompStorage::setEntityTransformAt(const Component::UnitTransform& tra
     auto& et                       = entitiesPool[id];
     transformsPool[et.transformId] = trans;
 }
-Math::Mat33 EntityCompStorage::getEntityMat33At(uint32_t id)
+Math::Mat33 EntityCompStorage::getEntityGlobalMat33At(uint32_t id)
 {
     if (id == Component::INVALID_ID)
         return {};
 
-    return entityWorldMat33Map[id];
+    return entityGlobalMat33Map[id];
 }
+
+
+Math::Vec2 EntityCompStorage::getEntityGlobalXYAt(uint32_t id) {
+
+    if (id == Component::INVALID_ID)
+        return {};
+
+    auto&  et    = entitiesPool[id];
+    return entityGlobalMat33Map[et.id].getXY();
+}
+void EntityCompStorage::setEntityGlobalXYAt(const Math::Vec2& pos, uint32_t id)
+{
+    if (id == Component::INVALID_ID)
+        return;
+
+    auto& et = entitiesPool[id];
+    entityGlobalMat33Map[et.id].setXY(pos);
+}
+
 Math::Vec2 EntityCompStorage::getEntityLocalXYAt(uint32_t id)
 {
     if (id == Component::INVALID_ID)
@@ -87,14 +106,14 @@ void EntityCompStorage::updateHierarchyInfo()
 {
     uint32_t index = 0;
     //traverseSortIndex(0, index);
-    traverseSortIndexAndBuildWorldMat(0, index, {});
+    traverseSortIndexAndBuildGlobalMat(0, index, {});
 }
-void EntityCompStorage::traverseSortIndexAndBuildWorldMat(uint32_t etId, uint32_t& index, const Math::Mat33& parentMat)
+void EntityCompStorage::traverseSortIndexAndBuildGlobalMat(uint32_t etId, uint32_t& index, const Math::Mat33& parentMat)
 {
     constexpr auto InvalidID = Component::INVALID_ID;
     auto&&         et        = entitiesPool[etId];
 
-    printf("traverseSortIndexAndBuildWorldMat(), etId: %d, index: %d\n", etId, index);
+    printf("traverseSortIndexAndBuildGlobalMat(), etId: %d, index: %d\n", etId, index);
     hierarchyIndexMap[etId] = index++;
     if (et.transformId != InvalidID)
     {
@@ -117,7 +136,7 @@ void EntityCompStorage::traverseSortIndexAndBuildWorldMat(uint32_t etId, uint32_
         worldMat.setXY(parentTrans.x + tr.x, parentTrans.y + tr.y);
         worldMat.setScaleXY(tr.sx, tr.sy); // 自身 scale 不受父级影响
 
-        entityWorldMat33Map[etId] = worldMat;
+        entityGlobalMat33Map[etId] = worldMat;
         worldMat.print();
     }
 
@@ -125,11 +144,11 @@ void EntityCompStorage::traverseSortIndexAndBuildWorldMat(uint32_t etId, uint32_
          child != InvalidID;
          child = hierarchiesPool[child].next)
     {
-        traverseSortIndexAndBuildWorldMat(child, index, entityWorldMat33Map[etId]);
+        traverseSortIndexAndBuildGlobalMat(child, index, entityGlobalMat33Map[etId]);
     }
 }
 
-void EntityCompStorage::traverseBuildWorldMat(uint32_t etId, const Math::Mat33& parentMat)
+void EntityCompStorage::traverseBuildGlobalMat(uint32_t etId, const Math::Mat33& parentMat)
 {
     constexpr auto InvalidID = Component::INVALID_ID;
     auto&&         et        = entitiesPool[etId];
@@ -156,7 +175,7 @@ void EntityCompStorage::traverseBuildWorldMat(uint32_t etId, const Math::Mat33& 
         worldMat.setXY(parentTrans.x + tr.x, parentTrans.y + tr.y);
         worldMat.setScaleXY(tr.sx, tr.sy); // 自身 scale 不受父级影响
 
-        entityWorldMat33Map[etId] = worldMat;
+        entityGlobalMat33Map[etId] = worldMat;
         worldMat.print();
     }
 
@@ -164,7 +183,7 @@ void EntityCompStorage::traverseBuildWorldMat(uint32_t etId, const Math::Mat33& 
          child != InvalidID;
          child = hierarchiesPool[child].next)
     {
-        traverseBuildWorldMat(child, entityWorldMat33Map[etId]);
+        traverseBuildGlobalMat(child, entityGlobalMat33Map[etId]);
     }
 }
 void EntityCompStorage::traverseSortIndex(uint32_t etId, uint32_t& index)
