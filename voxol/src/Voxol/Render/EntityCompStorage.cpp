@@ -31,7 +31,7 @@ Math::Mat33 EntityCompStorage::getEntityMat33At(uint32_t id)
 
     return entityWorldMat33Map[id];
 }
-Math::Vec2 EntityCompStorage::getEntityXYAt(uint32_t id)
+Math::Vec2 EntityCompStorage::getEntityLocalXYAt(uint32_t id)
 {
     if (id == Component::INVALID_ID)
         return {};
@@ -40,7 +40,7 @@ Math::Vec2 EntityCompStorage::getEntityXYAt(uint32_t id)
     auto&& trans = transformsPool[et.transformId];
     return {trans.x, trans.y};
 }
-void EntityCompStorage::setEntityXYAt(const Math::Vec2& pos, uint32_t id)
+void EntityCompStorage::setEntityLocalXYAt(const Math::Vec2& pos, uint32_t id)
 {
     if (id == Component::INVALID_ID)
         return;

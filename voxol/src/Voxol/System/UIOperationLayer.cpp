@@ -10,7 +10,7 @@ void MouseCtroller::selectWithSingle(const System::Mouse::MouseEvent& evt, const
     {
         return;
     }
-    auto bvh = targetSys->bvh;
+    auto& bvh = targetSys->bvh;
     if (evt.isMoving() || evt.isBegin())
     {
         qeIds.clear();
@@ -32,7 +32,7 @@ void MouseCtroller::selectWithSingle(const System::Mouse::MouseEvent& evt, const
     if (topId != Render::Component::INVALID_ID && evt.isBegin())
     {
         etId          = topId;
-        originEtPos   = etStorage->getEntityXYAt(etId);
+        originEtPos   = etStorage->getEntityLocalXYAt(etId);
         unitTransform = etStorage->getEntityTransformAt(etId);
         return;
     }
@@ -43,7 +43,7 @@ void MouseCtroller::selectWithSingle(const System::Mouse::MouseEvent& evt, const
         auto pv = originEtPos;
 
         pv += offset;
-        etStorage->setEntityXYAt(pv, id);
+        etStorage->setEntityLocalXYAt(pv, id);
         auto b0 = bvh->getBoundsAt(id);
         auto b1 = b0;
 

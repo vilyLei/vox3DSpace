@@ -67,7 +67,7 @@ void EntitySystemLayer::undo()
 
     Math::Vec2 pv{itemData.trans.x, itemData.trans.y};
 
-    compStorage->setEntityXYAt(pv, itemData.id);
+    compStorage->setEntityLocalXYAt(pv, itemData.id);
 
     auto bvh = etSceneSys->bvh;
     auto b0  = bvh->getBoundsAt(itemData.id);

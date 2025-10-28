@@ -91,8 +91,8 @@ public:
     void                     setEntityTransformAt(const Component::UnitTransform& trans, uint32_t id);
 
     Math::Mat33 getEntityMat33At(uint32_t id);
-    Math::Vec2 getEntityXYAt(uint32_t id);
-    void       setEntityXYAt(const Math::Vec2& pos, uint32_t id);
+    Math::Vec2 getEntityLocalXYAt(uint32_t id);
+    void       setEntityLocalXYAt(const Math::Vec2& pos, uint32_t id);
     void       checkIds(std::vector<uint32_t>& edis);
     void       checkWMaps(std::vector<uint32_t>& edis);
     void       updateHierarchyInfo();
