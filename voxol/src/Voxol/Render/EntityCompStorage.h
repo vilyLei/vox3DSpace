@@ -96,6 +96,7 @@ public:
     void       checkWMaps(std::vector<uint32_t>& edis);
     void       updateHierarchyInfo();
     void       traverseSortIndex(uint32_t etId, uint32_t& index);
+    void       traverseSortIndexAndBuildWorldMat(uint32_t etId, uint32_t& index, const Math::Mat33& parentMat);
 
 public:
     CompPool<Component::UnitEntity>          entitiesPool{};
@@ -106,6 +107,7 @@ public:
     CompPool<Component::UnitShadingBaseDesc> shaderingDescPool{};
     CompPool<Component::UnitMat33>           unitWMat33Pool{};
     std::unordered_map<uint32_t, uint32_t>   hierarchyIndexMap{};
+    std::unordered_map<uint32_t, Math::Mat33>   entityWorldMat33Map{};
 };
 } // namespace Voxol::Render
 #endif
