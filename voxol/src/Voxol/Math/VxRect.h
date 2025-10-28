@@ -72,7 +72,7 @@ public:
 
     float width() const;
     float height() const;
-    void  toEmpty(float px = 0, float py = 0);
+    void  toEmpty();
     void  toEmpty(const Vec2& p);
     bool  isEmpty() const;
     void  toLimit();
