@@ -59,6 +59,9 @@ void EntityUnitStorage::initalizeFromFile(const std::string& fileName)
     entitiesPool.forEach([&](auto& e, int32_t index) {
         e.id         = index;
         e.shadingId = Component::INVALID_ID;
+        e.transformId = Component::INVALID_ID;
+        e.modelId     = Component::INVALID_ID;
+        e.hierarchyId = Component::INVALID_ID;
     });
     shaderingEntitiesPool.forEach([&](auto& e, int32_t index) {
         e.id = index;
