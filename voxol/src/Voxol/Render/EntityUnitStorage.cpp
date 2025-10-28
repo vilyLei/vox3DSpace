@@ -114,19 +114,15 @@ void EntityUnitStorage::initalizeFromFile(const std::string& fileName)
         auto&& unit    = unitMap[i];
         auto&& trans   = transformsPool[et.transformId];
 
-        trans.x        = dataTrans.position.x;
-        trans.y        = dataTrans.position.y;
+        trans.pos() = dataTrans.position;
         if (dataModel.hasRadius())
         {
-            auto r   = dataModel.getRadius() * 2;
-            trans.sx = r;
-            trans.sy = r;
+            auto w   = dataModel.getRadius() * 2;
+            trans.scale() = {w, w};
         }
         else if (dataModel.hasSize())
         {
-            auto&& sv = dataModel.getSize();
-            trans.sx  = sv.x;
-            trans.sy  = sv.y;
+            trans.scale() = dataModel.getSize();
         }
         printf("entity(%d), modelId: %d, drawUnitId: %d\n", i, et.modelId, model.drawUnitId);
         printf("        pos(%f,%f), size(%f, %f)\n", trans.x, trans.y, trans.sx, trans.sy);
