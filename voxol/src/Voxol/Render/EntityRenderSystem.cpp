@@ -70,10 +70,12 @@ bool EntityRenderSystem::drawUnit(const Component::UnitEntity& entity, const Mat
     auto& drs      = *entityStorage->drawing;
     auto& drawUnit  = drs[drawingId];
     auto& shdDesc  = shaderingDescPool[shadingEt.shadingDescId];
-    auto& trans    = transformsPool[entity.transformId];
-
+    //auto& trans    = transformsPool[entity.transformId];
+    auto&&       wmat = compStorage->entityWorldMat33Map[entity.id];
+    Math::Bounds vbUnit{0,0,1,1};
     Math::Bounds vb;
-    vb.setXYWH(trans.x, trans.y, trans.sx, trans.sy);
+    vbUnit.mat33MapTo(wmat, vb);
+    //vb.setXYWH(trans.x, trans.y, trans.sx, trans.sy);
     if (!wbounds.intersects(vb))
         return false;
 
@@ -81,8 +83,9 @@ bool EntityRenderSystem::drawUnit(const Component::UnitEntity& entity, const Mat
 
     drawUnit.blendMode = 1;
     drawUnit.setColor(shdDesc.color);
-    drawUnit.objMat.setXY(trans.x, trans.y);
-    drawUnit.objMat.setScaleXY(trans.sx, trans.sy);
+    //drawUnit.objMat.setXY(trans.x, trans.y);
+    //drawUnit.objMat.setScaleXY(trans.sx, trans.sy);
+    drawUnit.objMat = wmat;
     drawUnit.mvp = vpM;
     drawUnit.draw();
     return true;
