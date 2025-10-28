@@ -35,7 +35,7 @@ struct UnitTransform
 struct UnitMat33
 {
     Math::Mat33 mat;
-    uint32_t id = -1;
+    uint32_t    id = INVALID_ID;
 };
 struct UnitShadingBaseDesc
 {
@@ -45,14 +45,14 @@ struct UnitShadingBaseDesc
 
 struct UnitShadingEntity
 {
-    uint32_t id = -1;
+    uint32_t id = INVALID_ID;
     /// UnitShadingBaseDesc vector index value
-    uint32_t shadingDescId = -1;
+    uint32_t shadingDescId = INVALID_ID;
 };
 struct UnitModel
 {
-    uint32_t id         = -1;
-    uint32_t drawUnitId = -1;
+    uint32_t id         = INVALID_ID;
+    uint32_t drawUnitId = INVALID_ID;
 };
 
 struct UnitHierarchy
@@ -63,15 +63,15 @@ struct UnitHierarchy
 };
 struct UnitEntity
 {
-    ///  只有entity才有自身的id
-    uint32_t id = -1;
+    /// 只有entity才有自身的id
+    uint32_t id = INVALID_ID;
     /// UnitShadingEntity vector index value
-    uint32_t shadingId   = -1;
-    uint32_t transformId = -1;
-    uint32_t modelId     = -1;
-    uint32_t hierarchyId = -1;
+    uint32_t shadingId   = INVALID_ID;
+    uint32_t transformId = INVALID_ID;
+    uint32_t modelId     = INVALID_ID;
+    uint32_t hierarchyId = INVALID_ID;
     // 表示这个 entity是基于某个entity的instance(实例)
-    uint32_t prototype = -1;
+    uint32_t prototype = INVALID_ID;
 
     bool visible = true;
     bool dirty   = true;
