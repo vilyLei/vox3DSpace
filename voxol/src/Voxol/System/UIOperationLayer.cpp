@@ -17,7 +17,7 @@ void MouseCtroller::selectWithSingle(const System::Mouse::MouseEvent& evt, const
         bvh->queryPoint(evt.globalPos, qeIds);
     }
 
-    free           = qeIds.empty();
+    free = qeIds.empty();
 
     auto etStorage = targetSys->entityStorage->comp;
     etStorage->checkIds(qeIds);
@@ -86,7 +86,7 @@ void MouseCtroller::selectWithBounds(const System::Mouse::MouseEvent& evt, const
     selectionBounds.toEmpty(evt.originGlobalPos);
     selectionBounds.addXY(evt.globalPos);
 
-    
+
     auto bvh = targetSys->bvh;
 
     if (evt.isMoving() || evt.isBegin())
@@ -117,7 +117,7 @@ void MouseCtroller::upateLeftMouseParam(const Render::Draw::DrawContext& rctx, c
         }
     });
 }
-}
+} // namespace Mouse
 void UIOperationLayer::initialize()
 {
     mouseCtrl.targetSys = etSceneSys;
