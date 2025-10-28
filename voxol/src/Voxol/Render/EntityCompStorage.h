@@ -6,6 +6,7 @@
 #include "EntityComponent.h"
 #include "EntityHistoryManager.h"
 #include <vector>
+#include <unordered_map>
 
 namespace Voxol::Render
 {
@@ -25,8 +26,6 @@ public:
     ~EntityCompStorage() = default;
 
 public:
-
-
     EntityHistoryManager::SP historyManager = EntityHistoryManager::make();
 
     template <typename T>
@@ -95,16 +94,18 @@ public:
     void       setEntityXYAt(const Math::Vec2& pos, uint32_t id);
     void       checkIds(std::vector<uint32_t>& edis);
     void       checkWMaps(std::vector<uint32_t>& edis);
+    void       updateHierarchyInfo();
+    void       traverseSortIndex(uint32_t etId, uint32_t& index);
 
 public:
-
     CompPool<Component::UnitEntity>          entitiesPool{};
     CompPool<Component::UnitShadingEntity>   shaderingEntitiesPool{};
-    CompPool<Component::UnitModel>       modelsPool{};
+    CompPool<Component::UnitModel>           modelsPool{};
     CompPool<Component::UnitTransform>       transformsPool{};
     CompPool<Component::UnitHierarchy>       hierarchiesPool{};
     CompPool<Component::UnitShadingBaseDesc> shaderingDescPool{};
     CompPool<Component::UnitMat33>           unitWMat33Pool{};
+    std::unordered_map<uint32_t, uint32_t>   hierarchyIndexMap{};
 };
 } // namespace Voxol::Render
 #endif

@@ -146,6 +146,7 @@ void EntityUnitStorage::initalizeFromFile(const std::string& fileName)
     {
         updateEntityData(et.second.id);
     }
+    comp->updateHierarchyInfo();
 }
 void EntityUnitStorage::initalize(int total)
 {

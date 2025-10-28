@@ -67,6 +67,21 @@ void EntityCompStorage::checkIds(std::vector<uint32_t>& edis)
 
 void EntityCompStorage::checkWMaps(std::vector<uint32_t>& edis)
 {
+}
 
+void EntityCompStorage::updateHierarchyInfo()
+{
+    uint32_t index = 0;
+    traverseSortIndex(0, index);
+}
+void EntityCompStorage::traverseSortIndex(uint32_t etId, uint32_t& index)
+{
+    printf("traverseSortIndex(), etId: %d, index: %d\n", etId, index);
+    hierarchyIndexMap[etId]  = index++;
+    constexpr auto InvalidID = Component::INVALID_ID;
+    for (auto child = hierarchiesPool[etId].firstChild; child != InvalidID; child = hierarchiesPool[child].next)
+    {
+        traverseSortIndex(child, index);
+    }
 }
 } // namespace Voxol::Render
