@@ -98,6 +98,7 @@ public:
     void       updateHierarchyInfo();
     void       traverseSortIndex(uint32_t etId, uint32_t& index);
     void       traverseSortIndexAndBuildWorldMat(uint32_t etId, uint32_t& index, const Math::Mat33& parentMat);
+    void       traverseBuildWorldMat(uint32_t etId, const Math::Mat33& parentMat);
 
 public:
     CompPool<Component::UnitEntity>          entitiesPool{};

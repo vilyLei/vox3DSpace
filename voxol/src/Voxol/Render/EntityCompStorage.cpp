@@ -92,9 +92,9 @@ void EntityCompStorage::updateHierarchyInfo()
 void EntityCompStorage::traverseSortIndexAndBuildWorldMat(uint32_t etId, uint32_t& index, const Math::Mat33& parentMat)
 {
     constexpr auto InvalidID = Component::INVALID_ID;
-    auto&& et = entitiesPool[etId];
+    auto&&         et        = entitiesPool[etId];
 
-    printf("traverseSortIndex(), etId: %d, index: %d\n", etId, index);
+    printf("traverseSortIndexAndBuildWorldMat(), etId: %d, index: %d\n", etId, index);
     hierarchyIndexMap[etId] = index++;
     if (et.transformId != InvalidID)
     {
@@ -129,6 +129,44 @@ void EntityCompStorage::traverseSortIndexAndBuildWorldMat(uint32_t etId, uint32_
     }
 }
 
+void EntityCompStorage::traverseBuildWorldMat(uint32_t etId, const Math::Mat33& parentMat)
+{
+    constexpr auto InvalidID = Component::INVALID_ID;
+    auto&&         et        = entitiesPool[etId];
+
+    printf("traverseSortIndex(), etId: %d\n", etId);
+    if (et.transformId != InvalidID)
+    {
+        auto& tr = transformsPool[et.transformId];
+        printf("    tr(x=%f,y=%f,sx=%f,sy=%f)\n", tr.x, tr.y, tr.sx, tr.sy);
+
+        // 当前节点的本地矩阵
+        Math::Mat33 localMat;
+        localMat.identity();
+        localMat.setScaleXY(tr.sx, tr.sy);
+        //localMat.setRotation(tr.rotation);
+        localMat.setXY(tr.x, tr.y);
+
+        // 仅传递平移：提取父矩阵的 translation
+        auto&& parentTrans = parentMat.getXY();
+
+        // 构造新的 world matrix：仅叠加平移
+        Math::Mat33 worldMat;
+        worldMat.identity();
+        worldMat.setXY(parentTrans.x + tr.x, parentTrans.y + tr.y);
+        worldMat.setScaleXY(tr.sx, tr.sy); // 自身 scale 不受父级影响
+
+        entityWorldMat33Map[etId] = worldMat;
+        worldMat.print();
+    }
+
+    for (auto child = hierarchiesPool[etId].firstChild;
+         child != InvalidID;
+         child = hierarchiesPool[child].next)
+    {
+        traverseBuildWorldMat(child, entityWorldMat33Map[etId]);
+    }
+}
 void EntityCompStorage::traverseSortIndex(uint32_t etId, uint32_t& index)
 {
     printf("traverseSortIndex(), etId: %d, index: %d\n", etId, index);
