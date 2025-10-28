@@ -29,22 +29,25 @@ void EntitySceneSystem::initalize(const std::string& configFileName)
         entityStorage->initalizeFromFile(configFileName);
     }
     
-    auto& entitiesPool          = entityStorage->comp->entitiesPool;
-    auto& shaderingEntitiesPool = entityStorage->comp->shaderingEntitiesPool;
-    auto& shaderingDescPool     = entityStorage->comp->shaderingDescPool;
-    auto& transformsPool         = entityStorage->comp->transformsPool;
+    auto& storage                = entityStorage->comp;
+    auto& entitiesPool           = storage->entitiesPool;
+    auto& shaderingEntitiesPool  = storage->shaderingEntitiesPool;
+    auto& shaderingDescPool      = storage->shaderingDescPool;
+    auto& transformsPool         = storage->transformsPool;
 
-    Math::Bounds                           bounds{};
+    Math::Bounds                           bounds{0,0,1,1};
+    Math::Bounds                           vb{};
 
     entitiesPool.forEach([&](auto& et, uint32_t index) {
 
         if (et.shadingId == Component::INVALID_ID)
             return;
 
-        auto& trans = transformsPool[et.transformId];
-        bounds.setXYWH(trans.x, trans.y, trans.sx, trans.sy);
+        //auto& trans = transformsPool[et.transformId];
+        //bounds.setXYWH(trans.x, trans.y, trans.sx, trans.sy);
+        bounds.mat33MapTo(storage->entityWorldMat33Map[et.id], vb);
 
-        bvh->addItem(et.id, bounds);
+        bvh->addItem(et.id, vb);
     });
 
     bvh->build();
