@@ -105,6 +105,13 @@ void EntityUnitStorage::initalizeFromFile(const std::string& fileName)
         et.modelId  = dataEt.model;
         et.visible        = dataEt.visible;
 
+        if (et.transformId == Component::INVALID_ID)
+            return;
+        if (et.modelId == Component::INVALID_ID)
+            return;
+        if (et.shadingId == Component::INVALID_ID)
+            return;
+
         auto&& dataTrans = sceneModule.transformsMap[et.transformId];
         auto&& dataModel = sceneModule.modelsMap[et.modelId];
         auto&& model = modelsPool[et.modelId];

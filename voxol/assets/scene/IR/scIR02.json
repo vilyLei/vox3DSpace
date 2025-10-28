@@ -170,17 +170,21 @@
                 }
             ]
         },
-        "hierarchies": [{"id": 0, "firstChild":1}, {"id": 1, "parent":0, "next": 2}, {"id": 2, "parent":0}],
+        "hierarchies": [{"id": 0, "firstChild":1}, {"id": 1, "parent": 0, "firstChild":2}, {"id": 2, "parent":1, "next": 3}, {"id": 3, "parent":1}],
         "entities": [
             {
                 "id": 0,
+                "visible": 1
+            },
+            {
+                "id": 1,
                 "transform": 0,
                 "shadering": 0,
                 "model": 0,
                 "visible": 1
             },
             {
-                "id": 1,
+                "id": 2,
                 "transform": 1,
                 "shadering": 1,
                 "model": 1,
@@ -195,7 +199,7 @@
                 ]
             },
             {
-                "id": 2,
+                "id": 3,
                 "transform": 2,
                 "shadering": 2,
                 "model": 1,

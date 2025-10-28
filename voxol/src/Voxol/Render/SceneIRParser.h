@@ -2,6 +2,7 @@
 #define VOXOL_RENDER_SCENE_IR_PARSER_H
 
 #include "../Base/BaseDefine.h"
+#include "EntityComponent.h"
 #include "../Math/Vec2.h"
 #include <nlohmann/json.hpp>
 #include <string>
@@ -17,15 +18,15 @@ namespace Shadering
 {
 struct Description
 {
-    uint32_t         id;
+    uint32_t    id = Component::INVALID_ID;
     std::string type;
-    uint32_t    color;
+    uint32_t    color = 0xff000000;
     void        parse(const JsonType& node);
 };
 
 struct Unit
 {
-    uint32_t  id;
+    uint32_t  id = Component::INVALID_ID;
     uint32_t  description;
     uint32_t  blendmode;
     void parse(const JsonType& node)
@@ -63,7 +64,7 @@ namespace Scene
 {
 struct ModelMethod
 {
-    uint32_t id;
+    uint32_t id = Component::INVALID_ID;
     // Mesh / SDF / Procedural / Volume / Voxel
     std::string type;
     void        parse(const JsonType& node)
@@ -74,7 +75,7 @@ struct ModelMethod
 };
 struct Model
 {
-    uint32_t                             id;
+    uint32_t                        id = Component::INVALID_ID;
     std::string                     type;
     ModelMethod                     method;
     std::variant<float, Math::Vec2> value;
@@ -108,17 +109,17 @@ struct Model
 
 struct Transform
 {
-    uint32_t        id;
+    uint32_t   id = Component::INVALID_ID;
     Math::Vec2 position;
     void       parse(const JsonType& node);
 };
 
 struct Hierarchy
 {
-    uint32_t id;
-    uint32_t parent;
-    uint32_t next;
-    uint32_t firstChild;
+    uint32_t id = Component::INVALID_ID;
+    uint32_t parent = Component::INVALID_ID;
+    uint32_t next   = Component::INVALID_ID;
+    uint32_t firstChild = Component::INVALID_ID;
 
     void parse(const JsonType& node)
     {
@@ -134,11 +135,11 @@ struct Hierarchy
 };
 struct Entity
 {
-    uint32_t  id;
-    uint32_t  shadering;
-    uint32_t  transform;
-    uint32_t  model;
-    bool visible;
+    uint32_t  id = Component::INVALID_ID;
+    uint32_t  shadering = Component::INVALID_ID;
+    uint32_t  transform = Component::INVALID_ID;
+    uint32_t  model     = Component::INVALID_ID;
+    bool      visible   = true;
 
     void parse(const JsonType& node)
     {
