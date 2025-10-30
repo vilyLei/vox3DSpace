@@ -93,4 +93,5 @@ bool EntityRenderSystem::drawUnit(const Component::UnitEntity& entity, const Mat
 void EntityRenderSystem::clear()
 {
 }
+
 } // namespace Voxol::Render

@@ -34,6 +34,7 @@ public:
 
     EntitySysBVH::SP      bvh = EntitySysBVH::make();
     EntityUnitStorage::SP entityStorage{};
+    void                  updateBVHBoundsWithEntityId(uint32_t eId);
 
 private:
     std::vector<uint32_t> queriedEIds{};
