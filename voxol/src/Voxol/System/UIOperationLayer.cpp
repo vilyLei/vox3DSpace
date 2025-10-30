@@ -59,8 +59,9 @@ void MouseController::selectWithSingle(const System::Mouse::MouseEvent& evt, con
         bvh->updateDirty();
 
         //*/
-
-        etStorage->setEntityGlobalXYAt(pv, id);
+        dirtyCall({}, 0, etId);
+        etStorage->setEntityGlobalXYAt(pv, etId);
+        dirtyCall({}, 1, etId);
 
         dragging = true;
         return;
