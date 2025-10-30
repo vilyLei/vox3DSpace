@@ -56,7 +56,6 @@ public:
     void addXY(float px, float py);
     void addXY(const Vec2& p);
 
-
     void setSize(float pw, float ph);
     bool intersects(const VxRect& other) const;
     void outset(float dx, float dy);

@@ -51,7 +51,7 @@ bool EntityCompStorage::getEntityVisibleAt(uint32_t id)
 
 Math::Mat33 EntityCompStorage::getEntityParentGlobalMatAt(uint32_t id)
 {
-    if (id == Component::INVALID_ID)
+    if (Component::isInvalidID(id))
         return {};
 
     auto parentId = getEntityParentIdAt(id);
@@ -60,7 +60,7 @@ Math::Mat33 EntityCompStorage::getEntityParentGlobalMatAt(uint32_t id)
 }
 Math::Mat33 EntityCompStorage::getEntityGlobalMatAt(uint32_t id)
 {
-    if (id == Component::INVALID_ID || id >= hierarchiesPool.capacity() || !entityGlobalMat33Map.contains(id))
+    if (Component::isInvalidID(id) || id >= hierarchiesPool.capacity() || !entityGlobalMat33Map.contains(id))
     {
         Math::Mat33 mat;
         mat.identity();
@@ -71,7 +71,7 @@ Math::Mat33 EntityCompStorage::getEntityGlobalMatAt(uint32_t id)
 
 Math::Bounds EntityCompStorage::getEntityGlobalBoundsAt(uint32_t id)
 {
-    if (id == Component::INVALID_ID || id >= hierarchiesPool.capacity() || !entityGlobalMat33Map.contains(id))
+    if (Component::isInvalidID(id) || id >= hierarchiesPool.capacity() || !entityGlobalMat33Map.contains(id))
     {
         return {};
     }
@@ -94,13 +94,13 @@ uint32_t EntityCompStorage::getEntityParentIdAt(uint32_t id)
 
 Math::Vec2 EntityCompStorage::getEntityGlobalXYAt(uint32_t id)
 {
-    if (id == Component::INVALID_ID)
+    if (Component::isInvalidID(id))
         return {};
     return entityGlobalMat33Map[id].getXY();
 }
 void EntityCompStorage::setEntityGlobalXYAt(const Math::Vec2& pv, uint32_t id)
 {
-    if (id == Component::INVALID_ID)
+    if (Component::isInvalidID(id))
         return;
 
     entityGlobalMat33Map[id].setXY(pv);
