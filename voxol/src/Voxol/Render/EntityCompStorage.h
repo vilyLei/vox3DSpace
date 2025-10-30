@@ -1,7 +1,13 @@
 #ifndef VOXOL_RENDER_ENTITY_COMP_STORAGE_H
 #define VOXOL_RENDER_ENTITY_COMP_STORAGE_H
 
-#include "../Tile/GridDef.h"
+//#include "../Tile/GridDef.h"
+
+#include "../Base/BaseDefine.h"
+#include "../Math/VxRect.h"
+#include "../Math/Vec2.h"
+#include "../Math/Mat33.h"
+
 #include "CompPool.h"
 #include "EntityComponent.h"
 #include "EntityHistoryManager.h"
@@ -91,18 +97,18 @@ public:
     bool                     hasChildAt(uint32_t id) const;
     Component::UnitTransform getEntityLocalTransAt(uint32_t id);
     Component::UnitTransform getEntityParentLocalTransAt(uint32_t id);
-    bool         getEntityVisibleAt(uint32_t id);
-    Math::Mat33  getEntityParentGlobalMatAt(uint32_t id);
-    Math::Mat33  getEntityGlobalMatAt(uint32_t id);
-    Math::Bounds getEntityGlobalBoundsAt(uint32_t id);
-    uint32_t    getEntityParentIdAt(uint32_t id);
-    Math::Vec2  getEntityGlobalXYAt(uint32_t id);
-    void        setEntityGlobalXYAt(const Math::Vec2& pv, uint32_t id);
-    Math::Mat33 getEntityWorldMatWithoutScale(uint32_t id);
-    Math::Mat33 getEntityParentWorldMatWithoutScale(uint32_t id);
-    Math::Vec2 getEntityLocalXYAt(uint32_t id);
-    void setEntityLocalXYAt(const Math::Vec2& pv, uint32_t id);
-    void traverseBuildGlobalMat(uint32_t etId, const Math::Mat33& parentMat);
+    bool                     getEntityVisibleAt(uint32_t id);
+    Math::Mat33              getEntityParentGlobalMatAt(uint32_t id);
+    Math::Mat33              getEntityGlobalMatAt(uint32_t id);
+    Math::Bounds             getEntityGlobalBoundsAt(uint32_t id);
+    uint32_t                 getEntityParentIdAt(uint32_t id);
+    Math::Vec2               getEntityGlobalXYAt(uint32_t id);
+    void                     setEntityGlobalXYAt(const Math::Vec2& pv, uint32_t id);
+    Math::Mat33              getEntityWorldMatWithoutScale(uint32_t id);
+    Math::Mat33              getEntityParentWorldMatWithoutScale(uint32_t id);
+    Math::Vec2               getEntityLocalXYAt(uint32_t id);
+    void                     setEntityLocalXYAt(const Math::Vec2& pv, uint32_t id);
+    void                     traverseBuildGlobalMat(uint32_t etId, const Math::Mat33& parentMat);
 
     void getIdsFromId(uint32_t etId, std::vector<uint32_t>& ids);
 
@@ -111,22 +117,22 @@ public:
     void                     setEntityTransformAt(const Component::UnitTransform& trans, uint32_t id);
 
     Math::Mat33 getEntityGlobalMat33At(uint32_t id);
-    void       checkIds(std::vector<uint32_t>& edis);
+    void        checkIds(std::vector<uint32_t>& edis);
 
-    void       updateHierarchyInfo();
-    void       traverseSortIndex(uint32_t etId, uint32_t& index);
-    void       traverseSortIndexAndBuildGlobalMat(uint32_t etId, uint32_t& index, const Math::Mat33& parentMat);
+    void updateHierarchyInfo();
+    void traverseSortIndex(uint32_t etId, uint32_t& index);
+    void traverseSortIndexAndBuildGlobalMat(uint32_t etId, uint32_t& index, const Math::Mat33& parentMat);
 
 public:
-    CompPool<Component::UnitEntity>          entitiesPool{};
-    CompPool<Component::UnitShadingEntity>   shaderingEntitiesPool{};
-    CompPool<Component::UnitModel>           modelsPool{};
-    CompPool<Component::UnitTransform>       transformsPool{};
-    CompPool<Component::UnitHierarchy>       hierarchiesPool{};
-    CompPool<Component::UnitShadingBaseDesc> shaderingDescPool{};
-    CompPool<Component::UnitMat33>           unitWMat33Pool{};
-    std::unordered_map<uint32_t, uint32_t>   hierarchyIndexMap{};
-    std::unordered_map<uint32_t, Math::Mat33>   entityGlobalMat33Map{};
+    CompPool<Component::UnitEntity>           entitiesPool{};
+    CompPool<Component::UnitShadingEntity>    shaderingEntitiesPool{};
+    CompPool<Component::UnitModel>            modelsPool{};
+    CompPool<Component::UnitTransform>        transformsPool{};
+    CompPool<Component::UnitHierarchy>        hierarchiesPool{};
+    CompPool<Component::UnitShadingBaseDesc>  shaderingDescPool{};
+    CompPool<Component::UnitMat33>            unitWMat33Pool{};
+    std::unordered_map<uint32_t, uint32_t>    hierarchyIndexMap{};
+    std::unordered_map<uint32_t, Math::Mat33> entityGlobalMat33Map{};
     // for debug
     std::unordered_map<Component::EntityId, Math::Mat33, Component::EntityIdHasher, Component::EntityIdEqual> entityIdTypeMatMap{};
 };
