@@ -108,7 +108,6 @@ public:
     Math::Mat33              getEntityParentWorldMatWithoutScale(uint32_t id);
     Math::Vec2               getEntityLocalXYAt(uint32_t id);
     void                     setEntityLocalXYAt(const Math::Vec2& pv, uint32_t id);
-    void                     traverseBuildGlobalMat(uint32_t etId, const Math::Mat33& parentMat);
 
     void getIdsFromId(uint32_t etId, std::vector<uint32_t>& ids);
 
@@ -122,6 +121,7 @@ public:
     void updateHierarchyInfo();
     void traverseSortIndex(uint32_t etId, uint32_t& index);
     void traverseSortIndexAndBuildGlobalMat(uint32_t etId, uint32_t& index, const Math::Mat33& parentMat);
+    void traverseBuildGlobalMat(uint32_t etId, const Math::Mat33& parentMat);
 
 public:
     CompPool<Component::UnitEntity>           entitiesPool{};
