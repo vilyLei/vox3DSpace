@@ -68,7 +68,7 @@ void MouseController::selectWithSingle(const System::Mouse::MouseEvent& evt, con
     }
     if (evt.isEnd())
     {
-        if (etId != Render::Component::INVALID_ID && dragging)
+        if (Render::Component::isValidID(etId) && dragging)
         {
             dragging = false;
             etStorage->historyManager->pushItem({unitTransform, etId});
@@ -77,7 +77,7 @@ void MouseController::selectWithSingle(const System::Mouse::MouseEvent& evt, con
         return;
     }
 
-    if (evt.isDragging() && etId == Render::Component::INVALID_ID)
+    if (evt.isDragging() && Render::Component::isInvalidID(etId))
     {
         selectionBounds.toEmpty(evt.originGlobalPos);
         selectType = SelectType::Bounds;
