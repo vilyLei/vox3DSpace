@@ -44,8 +44,8 @@ void MouseController::selectWithSingle(const System::Mouse::MouseEvent& evt, con
         auto pv = originEtPos;
 
         pv += offset;
-        //etStorage->setEntityLocalXYAt(pv, id);
-        etStorage->setEntityGlobalXYAt(pv, id);
+        /*
+        etStorage->setEntityLocalXYAt(pv, id);        
         auto b0 = bvh->getBoundsAt(id);
         auto b1 = b0;
 
@@ -57,6 +57,11 @@ void MouseController::selectWithSingle(const System::Mouse::MouseEvent& evt, con
 
         bvh->updateItemBoundsByObjectId(id, b1);
         bvh->updateDirty();
+
+        //*/
+
+        etStorage->setEntityGlobalXYAt(pv, id);
+
         dragging = true;
         return;
     }

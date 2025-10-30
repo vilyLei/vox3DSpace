@@ -32,7 +32,10 @@ public:
     void updateKeyboardParams(int key, int scancode, int action, int mods);
     void updateMouseParams(const System::Mouse::MouseInputParam& param);
 
-public:
+    void updateTileWithEntityId(uint32_t eId);
+    void updateBVHAndTileWithEntityId(uint32_t eId);
+
+    public:
     Render::Draw::DrawContext                 drawCtx;
 
     std::shared_ptr<System::UIOperationLayer> uiOpLayer;

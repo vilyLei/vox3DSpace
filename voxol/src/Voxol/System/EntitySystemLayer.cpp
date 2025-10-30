@@ -7,6 +7,43 @@ EntitySystemLayer::SP EntitySystemLayer::make()
     auto sp = std::make_shared<EntitySystemLayer>();
     return sp;
 }
+
+void EntitySystemLayer::updateTileWithEntityId(uint32_t eId)
+{
+    if (eId == Render::Component::INVALID_ID)
+        return;
+
+    auto&                 etCompStorage = etSceneSys->entityStorage->comp;
+    auto&                 bvh           = etSceneSys->bvh;
+    std::vector<uint32_t> ids{};
+    etCompStorage->getIdsFromId(eId, ids);
+    for (auto pid : ids)
+    {
+        //tileSys->addDirtyBounds(etCompStorage->getEntityGlobalBoundsAt(pid), 0);
+        tileSys->addDirtyBounds(bvh->getBoundsAt(pid), 0);
+    }
+}
+void EntitySystemLayer::updateBVHAndTileWithEntityId(uint32_t eId)
+{
+    if (eId == Render::Component::INVALID_ID)
+        return;
+
+    auto&  etCompStorage = etSceneSys->entityStorage->comp;
+    auto& bvh           = etSceneSys->bvh;
+
+    auto&& parentMat = etCompStorage->getEntityParentGlobalMatAt(eId);
+    etCompStorage->traverseBuildGlobalMat(eId, parentMat);
+
+    std::vector<uint32_t> ids{};
+    etCompStorage->getIdsFromId(eId, ids);
+    for (auto pid : ids)
+    {
+        auto&& bv = etCompStorage->getEntityGlobalBoundsAt(pid);
+        tileSys->addDirtyBounds(bv, 1);
+        bvh->updateItemBoundsByObjectId(pid, bv);
+    }
+    bvh->updateDirty();
+}
 void EntitySystemLayer::initalize(const std::string& configFileName)
 {
     etSceneSys->initalize(configFileName);
@@ -14,8 +51,8 @@ void EntitySystemLayer::initalize(const std::string& configFileName)
     etRenderSys->initalize();
     tileSys->initalize();
 
-    auto& etCompStorage          = etSceneSys->entityStorage->comp;
-
+    auto& etCompStorage = etSceneSys->entityStorage->comp;
+    /*
     auto updateTileWithEntityId = [&, this](uint32_t eId) {
         if (eId == Render::Component::INVALID_ID)
             return;
@@ -29,7 +66,6 @@ void EntitySystemLayer::initalize(const std::string& configFileName)
         }
         //etSceneSys->bvh->updateDirty();
     };
-
     auto updateBVHAndTileWithEntityId = [&, this](uint32_t eId) {
         if (eId == Render::Component::INVALID_ID)
             return;
@@ -44,14 +80,17 @@ void EntitySystemLayer::initalize(const std::string& configFileName)
         }
         etSceneSys->bvh->updateDirty();
     };
+    //*/
 
     uiOpLayer                      = std::make_shared<System::UIOperationLayer>();
     uiOpLayer->mouseCtrl.dirtyCall = [&, this](const Math::Bounds& bounds, uint32_t type, uint32_t etId) {
         //tileSys->addDirtyBounds(bounds, type);
-        if (type == 0) {
+        if (type == 0)
+        {
             updateTileWithEntityId(etId);
         }
-        else {
+        else
+        {
             updateBVHAndTileWithEntityId(etId);
         }
     };
@@ -66,7 +105,7 @@ void EntitySystemLayer::initalize(const std::string& configFileName)
         etRenderSys->render(drawCtx, vpMat, bounds, ids);
     };
 
-    drawCtx.drawCall  = drawCall;
+    drawCtx.drawCall      = drawCall;
     drawCtx.drawQueryCall = queryCall;
 
     uiOpLayer->shortcutMana.registerShortcut(
@@ -81,18 +120,17 @@ void EntitySystemLayer::initalize(const std::string& configFileName)
 }
 
 
-void EntitySystemLayer::updateCtx(const Render::Draw::DrawContext& ctx) {
-
+void EntitySystemLayer::updateCtx(const Render::Draw::DrawContext& ctx)
+{
     drawCtx.clearParam = ctx.clearParam;
     drawCtx.drawParam  = ctx.drawParam;
 }
 
 void EntitySystemLayer::undo()
 {
-
-    auto storage     = etRenderSys->entityStorage;
-    auto compStorage = storage->comp;
-    auto itemData    = compStorage->historyManager->popItem();
+    auto& storage     = etRenderSys->entityStorage;
+    auto& compStorage = storage->comp;
+    auto&& itemData    = compStorage->historyManager->popItem();
     printf("EntitySystemLayer::undo()， itemData.id: %d\n", itemData.id);
     if (itemData.id < 0)
     {
@@ -100,13 +138,14 @@ void EntitySystemLayer::undo()
     }
 
     printf("EntitySystemLayer::undo()， update some items.\n");
-    auto etrans = compStorage->getEntityTransformAt(itemData.id);
+    auto&& etrans = compStorage->getEntityTransformAt(itemData.id);
 
     Math::Vec2 pv{itemData.trans.x, itemData.trans.y};
 
     compStorage->setEntityLocalXYAt(pv, itemData.id);
 
-    auto bvh = etSceneSys->bvh;
+    // 下面的代码也要加入层次结构自适配的机制
+    auto& bvh = etSceneSys->bvh;
     auto b0  = bvh->getBoundsAt(itemData.id);
     auto b1  = b0;
     if (tileSys)
@@ -124,8 +163,8 @@ void EntitySystemLayer::undo()
     }
 }
 
-void EntitySystemLayer::render(const Math::Mat33& vpMat) {
-
+void EntitySystemLayer::render(const Math::Mat33& vpMat)
+{
     tileSys->run(drawCtx);
 }
 
