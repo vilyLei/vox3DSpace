@@ -31,6 +31,7 @@ struct UnitTransform
     inline const Math::Vec2& pos() const { return *reinterpret_cast<const Math::Vec2*>(&x); }
     inline const Math::Vec2& scale() const { return *reinterpret_cast<const Math::Vec2*>(&sx); }
 };
+constexpr UnitTransform DefaultTrans{0,0,1,1,0};
 
 struct UnitMat33
 {

@@ -27,13 +27,12 @@ bool EntityCompStorage::hasChildAt(uint32_t id) const
 
 Component::UnitTransform EntityCompStorage::getEntityLocalTransAt(uint32_t id)
 {
-
     if (id == Component::INVALID_ID)
-        return {0, 0, 1, 1, 0};
+        return Component::DefaultTrans;
 
     auto&& et = entitiesPool[id];
     if (et.transformId == Component::INVALID_ID)
-        return {0, 0, 1, 1, 0};
+        return Component::DefaultTrans;
 
     auto&& trans = transformsPool[et.transformId];
     return trans;
