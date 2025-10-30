@@ -23,6 +23,17 @@ constexpr inline bool isInvalidID(uint32_t id) noexcept
 {
     return id == INVALID_ID;
 }
+struct EntityId
+{
+    uint32_t value = INVALID_ID;
+
+    constexpr bool valid() const noexcept { return value != INVALID_ID; }
+
+    constexpr bool operator==(const EntityId& other) const noexcept
+    {
+        return value == other.value;
+    }
+};
 
 struct UnitTransform
 {
@@ -40,7 +51,7 @@ struct UnitTransform
     inline const Math::Vec2& pos() const { return *reinterpret_cast<const Math::Vec2*>(&x); }
     inline const Math::Vec2& scale() const { return *reinterpret_cast<const Math::Vec2*>(&sx); }
 };
-constexpr UnitTransform DefaultTrans{0,0,1,1,0};
+constexpr UnitTransform DefaultTrans{0, 0, 1, 1, 0};
 
 struct UnitMat33
 {
