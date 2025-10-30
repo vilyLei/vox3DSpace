@@ -15,6 +15,15 @@ namespace Component
 {
 constexpr uint32_t INVALID_ID = 0xffffffff;
 
+constexpr inline bool isValidID(uint32_t id) noexcept
+{
+    return id != INVALID_ID;
+}
+constexpr inline bool isInvalidID(uint32_t id) noexcept
+{
+    return id == INVALID_ID;
+}
+
 struct UnitTransform
 {
     float x;

@@ -72,7 +72,7 @@ void EntitySceneSystem::clear()
 
 void EntitySceneSystem::updateBVHBoundsWithEntityId(uint32_t eId)
 {
-    if (eId == Component::INVALID_ID)
+    if (Component::isInvalidID(eId))
         return;
 
     std::vector<uint32_t> ids{};
