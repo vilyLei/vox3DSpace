@@ -176,19 +176,13 @@ void EntityCompStorage::traverseBuildGlobalMat(uint32_t etId, const Math::Mat33&
     {
         auto&& tr = transformsPool[et.transformId];
 
-        Math::Mat33 localMat;
-        localMat.identity();
-        localMat.setScaleXY(tr.sx, tr.sy);
-        localMat.setXY(tr.x, tr.y);
 
         auto&& parentTrans = parentMat.getXY();
 
-        Math::Mat33 worldMat;
+        auto&& worldMat = entityGlobalMat33Map[etId];
         worldMat.identity();
         worldMat.setXY(parentTrans.x + tr.x, parentTrans.y + tr.y);
         worldMat.setScaleXY(tr.sx, tr.sy);
-
-        entityGlobalMat33Map[etId] = worldMat;
     }
     else
     {
@@ -288,13 +282,6 @@ void EntityCompStorage::traverseSortIndexAndBuildGlobalMat(uint32_t etId, uint32
         auto& tr = transformsPool[et.transformId];
         printf("    tr(x=%f,y=%f,sx=%f,sy=%f)\n", tr.x, tr.y, tr.sx, tr.sy);
 
-        // 当前节点的本地矩阵
-        Math::Mat33 localMat;
-        localMat.identity();
-        localMat.setScaleXY(tr.sx, tr.sy);
-        //localMat.setRotation(tr.rotation);
-        localMat.setXY(tr.x, tr.y);
-
         // 仅传递平移：提取父矩阵的 translation
         auto&& parentTrans = parentMat.getXY();
 
@@ -305,7 +292,7 @@ void EntityCompStorage::traverseSortIndexAndBuildGlobalMat(uint32_t etId, uint32
         worldMat.setScaleXY(tr.sx, tr.sy); // 自身 scale 不受父级影响
 
         entityGlobalMat33Map[etId] = worldMat;
-        worldMat.print();
+        //worldMat.print();
     }
 
     for (auto child = hierarchiesPool[etId].firstChild;
