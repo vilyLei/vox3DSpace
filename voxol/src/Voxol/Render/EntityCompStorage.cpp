@@ -11,7 +11,7 @@ EntityCompStorage::SP EntityCompStorage::make()
 
 bool EntityCompStorage::hasParentAt(uint32_t id) const
 {
-    if (id == Component::INVALID_ID || id >= hierarchiesPool.capacity())
+    if (id == Component::INVALID_ID)
         return false;
     auto&& hier = hierarchiesPool[id];
     return hier.parent != Component::INVALID_ID;
@@ -19,7 +19,7 @@ bool EntityCompStorage::hasParentAt(uint32_t id) const
 
 bool EntityCompStorage::hasChildAt(uint32_t id) const
 {
-    if (id == Component::INVALID_ID || id >= hierarchiesPool.capacity())
+    if (Component::isInvalidID(id))
         return false;
     auto& hier = hierarchiesPool[id];
     return hier.firstChild != Component::INVALID_ID;
@@ -27,7 +27,7 @@ bool EntityCompStorage::hasChildAt(uint32_t id) const
 
 Component::UnitTransform EntityCompStorage::getEntityLocalTransAt(uint32_t id)
 {
-    if (id == Component::INVALID_ID)
+    if (Component::isInvalidID(id))
         return Component::defaultTrans;
 
     auto&& et = entitiesPool[id];
