@@ -64,9 +64,7 @@ Math::Mat33 EntityCompStorage::getEntityGlobalMatAt(uint32_t id)
 {
     if (Component::isInvalidID(id) || id >= hierarchiesPool.capacity() || !entityGlobalMat33Map.contains(id))
     {
-        Math::Mat33 mat;
-        mat.identity();
-        return mat;
+        return Math::Mat33::makeIdentity();
     }
     return entityGlobalMat33Map[id];
 }
