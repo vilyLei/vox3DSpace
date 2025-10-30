@@ -179,6 +179,8 @@ void EntityCompStorage::traverseBuildGlobalMat(uint32_t etId, const Math::Mat33&
 
         auto&& parentTrans = parentMat.getXY();
 
+        printf("traverseBuildGlobalMat(), etId:%u, tr(x=%f,y=%f), ptr(x=%f,y=%f)\n", etId, tr.x, tr.y, parentTrans.x, parentTrans.y);
+
         auto&& worldMat = entityGlobalMat33Map[etId];
         worldMat.identity();
         worldMat.setXY(parentTrans.x + tr.x, parentTrans.y + tr.y);
