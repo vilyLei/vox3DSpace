@@ -111,16 +111,11 @@ public:
     void                     setEntityTransformAt(const Component::UnitTransform& trans, uint32_t id);
 
     Math::Mat33 getEntityGlobalMat33At(uint32_t id);
-    //Math::Vec2  getEntityGlobalXYAt(uint32_t id);
-    //void        setEntityGlobalXYAt(const Math::Vec2& pos, uint32_t id);
-    //Math::Vec2 getEntityLocalXYAt(uint32_t id);
-    //void       setEntityLocalXYAt(const Math::Vec2& pos, uint32_t id);
     void       checkIds(std::vector<uint32_t>& edis);
 
     void       updateHierarchyInfo();
     void       traverseSortIndex(uint32_t etId, uint32_t& index);
     void       traverseSortIndexAndBuildGlobalMat(uint32_t etId, uint32_t& index, const Math::Mat33& parentMat);
-    //void       traverseBuildGlobalMat(uint32_t etId, const Math::Mat33& parentMat);
 
 public:
     CompPool<Component::UnitEntity>          entitiesPool{};

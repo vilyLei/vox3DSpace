@@ -163,7 +163,6 @@ void EntityCompStorage::setEntityLocalXYAt(const Math::Vec2& pv, uint32_t id)
     trans.pos() = pv;
 }
 
-///*
 void EntityCompStorage::traverseBuildGlobalMat(uint32_t etId, const Math::Mat33& parentMat)
 {
     if (etId == Component::INVALID_ID)
@@ -204,7 +203,6 @@ void EntityCompStorage::traverseBuildGlobalMat(uint32_t etId, const Math::Mat33&
         traverseBuildGlobalMat(child, entityGlobalMat33Map[etId]);
     }
 }
-//*/
 void EntityCompStorage::getIdsFromId(uint32_t etId, std::vector<uint32_t>& ids)
 {
     if (etId == Component::INVALID_ID)
@@ -242,43 +240,6 @@ Math::Mat33 EntityCompStorage::getEntityGlobalMat33At(uint32_t id)
 
     return entityGlobalMat33Map[id];
 }
-
-
-//Math::Vec2 EntityCompStorage::getEntityGlobalXYAt(uint32_t id) {
-//
-//    if (id == Component::INVALID_ID)
-//        return {};
-//
-//    auto&  et    = entitiesPool[id];
-//    return entityGlobalMat33Map[et.id].getXY();
-//}
-//void EntityCompStorage::setEntityGlobalXYAt(const Math::Vec2& pos, uint32_t id)
-//{
-//    if (id == Component::INVALID_ID)
-//        return;
-//
-//    auto& et = entitiesPool[id];
-//    entityGlobalMat33Map[et.id].setXY(pos);
-//}
-
-//Math::Vec2 EntityCompStorage::getEntityLocalXYAt(uint32_t id)
-//{
-//    if (id == Component::INVALID_ID)
-//        return {};
-//
-//    auto&  et    = entitiesPool[id];
-//    auto&& trans = transformsPool[et.transformId];
-//    return {trans.x, trans.y};
-//}
-//void EntityCompStorage::setEntityLocalXYAt(const Math::Vec2& pos, uint32_t id)
-//{
-//    if (id == Component::INVALID_ID)
-//        return;
-//    auto&  et    = entitiesPool[id];
-//    auto&& trans = transformsPool[et.transformId];
-//    trans.x      = pos.x;
-//    trans.y      = pos.y;
-//}
 
 void EntityCompStorage::checkIds(std::vector<uint32_t>& edis)
 {
@@ -355,47 +316,6 @@ void EntityCompStorage::traverseSortIndexAndBuildGlobalMat(uint32_t etId, uint32
         traverseSortIndexAndBuildGlobalMat(child, index, entityGlobalMat33Map[etId]);
     }
 }
-
-/*
-void EntityCompStorage::traverseBuildGlobalMat(uint32_t etId, const Math::Mat33& parentMat)
-{
-    constexpr auto InvalidID = Component::INVALID_ID;
-    auto&&         et        = entitiesPool[etId];
-
-    printf("traverseBuildGlobalMat(), etId: %d\n", etId);
-    if (et.transformId != InvalidID)
-    {
-        auto& tr = transformsPool[et.transformId];
-        printf("    tr(x=%f,y=%f,sx=%f,sy=%f)\n", tr.x, tr.y, tr.sx, tr.sy);
-
-        // 当前节点的本地矩阵
-        Math::Mat33 localMat;
-        localMat.identity();
-        localMat.setScaleXY(tr.sx, tr.sy);
-        //localMat.setRotation(tr.rotation);
-        localMat.setXY(tr.x, tr.y);
-
-        // 仅传递平移：提取父矩阵的 translation
-        auto&& parentTrans = parentMat.getXY();
-
-        // 构造新的 world matrix：仅叠加平移
-        Math::Mat33 worldMat;
-        worldMat.identity();
-        worldMat.setXY(parentTrans.x + tr.x, parentTrans.y + tr.y);
-        worldMat.setScaleXY(tr.sx, tr.sy); // 自身 scale 不受父级影响
-
-        entityGlobalMat33Map[etId] = worldMat;
-        worldMat.print();
-    }
-
-    for (auto child = hierarchiesPool[etId].firstChild;
-         child != InvalidID;
-         child = hierarchiesPool[child].next)
-    {
-        traverseBuildGlobalMat(child, entityGlobalMat33Map[etId]);
-    }
-}
-//*/
 
 void EntityCompStorage::traverseSortIndex(uint32_t etId, uint32_t& index)
 {
