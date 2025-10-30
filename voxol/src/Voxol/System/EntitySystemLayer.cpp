@@ -19,7 +19,6 @@ void EntitySystemLayer::updateTileWithEntityId(uint32_t eId)
     etCompStorage->getIdsFromId(eId, ids);
     for (auto pid : ids)
     {
-        //tileSys->addDirtyBounds(etCompStorage->getEntityGlobalBoundsAt(pid), 0);
         tileSys->addDirtyBounds(bvh->getBoundsAt(pid), 0);
     }
 }
@@ -52,36 +51,7 @@ void EntitySystemLayer::initalize(const std::string& configFileName)
     tileSys->initalize();
 
     auto& etCompStorage = etSceneSys->entityStorage->comp;
-    /*
-    auto updateTileWithEntityId = [&, this](uint32_t eId) {
-        if (eId == Render::Component::INVALID_ID)
-            return;
-
-        std::vector<uint32_t> ids{};
-        etCompStorage->getIdsFromId(eId, ids);
-        for (auto pid : ids)
-        {
-            //etSceneSys->bvh->updateItemBoundsByObjectId(pid, etCompStorage->getEntityGlobalBoundsAt(pid));
-            tileSys->addDirtyBounds(etCompStorage->getEntityGlobalBoundsAt(pid), 0);
-        }
-        //etSceneSys->bvh->updateDirty();
-    };
-    auto updateBVHAndTileWithEntityId = [&, this](uint32_t eId) {
-        if (eId == Render::Component::INVALID_ID)
-            return;
-
-        std::vector<uint32_t> ids{};
-        etCompStorage->getIdsFromId(eId, ids);
-        for (auto pid : ids)
-        {
-            auto&& bv = etCompStorage->getEntityGlobalBoundsAt(pid);
-            tileSys->addDirtyBounds(bv, 1);
-            etSceneSys->bvh->updateItemBoundsByObjectId(pid, bv);
-        }
-        etSceneSys->bvh->updateDirty();
-    };
-    //*/
-
+    
     uiOpLayer                      = std::make_shared<System::UIOperationLayer>();
     uiOpLayer->mouseCtrl.dirtyCall = [&, this](const Math::Bounds& bounds, uint32_t type, uint32_t etId) {
         //tileSys->addDirtyBounds(bounds, type);
