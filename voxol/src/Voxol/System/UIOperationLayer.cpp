@@ -32,7 +32,8 @@ void MouseController::selectWithSingle(const System::Mouse::MouseEvent& evt, con
     if (topId != Render::Component::INVALID_ID && evt.isBegin())
     {
         etId          = topId;
-        originEtPos   = etStorage->getEntityLocalXYAt(etId);
+        //originEtPos   = etStorage->getEntityLocalXYAt(etId);
+        originEtPos   = etStorage->getEntityGlobalXYAt(etId);
         unitTransform = etStorage->getEntityTransformAt(etId);
         return;
     }
@@ -43,15 +44,16 @@ void MouseController::selectWithSingle(const System::Mouse::MouseEvent& evt, con
         auto pv = originEtPos;
 
         pv += offset;
-        etStorage->setEntityLocalXYAt(pv, id);
+        //etStorage->setEntityLocalXYAt(pv, id);
+        etStorage->setEntityGlobalXYAt(pv, id);
         auto b0 = bvh->getBoundsAt(id);
         auto b1 = b0;
 
         // move out
-        dirtyCall(b0, 0);
+        dirtyCall(b0, 0, etId);
         b1.moveTo(pv.x, pv.y);
         // move in
-        dirtyCall(b1, 1);
+        dirtyCall(b1, 1, etId);
 
         bvh->updateItemBoundsByObjectId(id, b1);
         bvh->updateDirty();
