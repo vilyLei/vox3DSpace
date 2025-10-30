@@ -29,7 +29,7 @@ void MouseController::selectWithSingle(const System::Mouse::MouseEvent& evt, con
         dragging = false;
     }
 
-    if (topId != Render::Component::INVALID_ID && evt.isBegin())
+    if (Render::Component::isValidID(topId) && evt.isBegin())
     {
         etId          = topId;
         //originEtPos   = etStorage->getEntityLocalXYAt(etId);
@@ -38,7 +38,7 @@ void MouseController::selectWithSingle(const System::Mouse::MouseEvent& evt, con
         return;
     }
 
-    if (etId != Render::Component::INVALID_ID && evt.isDragging())
+    if (Render::Component::isValidID(etId) && evt.isDragging())
     {
         /*
         auto id = etId;
