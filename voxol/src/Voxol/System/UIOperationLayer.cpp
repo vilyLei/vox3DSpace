@@ -40,11 +40,11 @@ void MouseController::selectWithSingle(const System::Mouse::MouseEvent& evt, con
 
     if (etId != Render::Component::INVALID_ID && evt.isDragging())
     {
+        /*
         auto id = etId;
         auto pv = originEtPos;
 
         pv += offset;
-        /*
         etStorage->setEntityLocalXYAt(pv, id);        
         auto b0 = bvh->getBoundsAt(id);
         auto b1 = b0;
@@ -60,7 +60,7 @@ void MouseController::selectWithSingle(const System::Mouse::MouseEvent& evt, con
 
         //*/
         dirtyCall({}, 0, etId);
-        etStorage->setEntityGlobalXYAt(pv, etId);
+        etStorage->setEntityGlobalXYAt(originEtPos + offset, etId);
         dirtyCall({}, 1, etId);
 
         dragging = true;
