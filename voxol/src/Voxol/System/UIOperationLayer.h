@@ -20,7 +20,7 @@ enum class SelectType
 };
 
 using InputDirtyCallType = std::function<void(const Math::Bounds& bounds, uint32_t id)>;
-struct MouseCtroller
+struct MouseController
 {
     Math::Vec2           originEtPos{};
     uint32_t             etId = Render::Component::INVALID_ID;
@@ -63,7 +63,7 @@ public:
 public:
     Render::EntitySceneSystem::SP etSceneSys;
 
-    Mouse::MouseCtroller           mouseCtrl;
+    Mouse::MouseController mouseCtrl;
     ShortcutManager shortcutMana{};
 
 public:

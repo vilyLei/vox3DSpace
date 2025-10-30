@@ -21,7 +21,6 @@ public:
 public:
     static EntitySceneSystem::SP make();
 
-
 public:
     EntitySceneSystem()  = default;
     ~EntitySceneSystem() = default;

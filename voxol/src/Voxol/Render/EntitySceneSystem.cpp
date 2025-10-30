@@ -81,5 +81,6 @@ void EntitySceneSystem::updateBVHBoundsWithEntityId(uint32_t eId)
     {
         bvh->updateItemBoundsByObjectId(pid, entityStorage->comp->getEntityGlobalBoundsAt(pid));
     }
+    bvh->updateDirty();
 }
 } // namespace Voxol::Render
