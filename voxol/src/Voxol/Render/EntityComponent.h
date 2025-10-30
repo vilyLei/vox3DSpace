@@ -34,6 +34,20 @@ struct EntityId
         return value == other.value;
     }
 };
+struct EntityIdHasher
+{
+    size_t operator()(const EntityId& id) const noexcept
+    {
+        return std::hash<uint32_t>()(id.value);
+    }
+};
+struct EntityIdEqual
+{
+    bool operator()(const EntityId& a, const EntityId& b) const noexcept
+    {
+        return a.value == b.value;
+    }
+};
 
 struct UnitTransform
 {
