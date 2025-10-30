@@ -146,7 +146,7 @@ Math::Mat33 EntityCompStorage::getEntityParentWorldMatWithoutScale(uint32_t id)
 
 Math::Vec2 EntityCompStorage::getEntityLocalXYAt(uint32_t id)
 {
-    if (id == Component::INVALID_ID)
+    if (Component::isInvalidID(id))
         return {};
 
     auto&& et    = entitiesPool[id];
@@ -156,7 +156,7 @@ Math::Vec2 EntityCompStorage::getEntityLocalXYAt(uint32_t id)
 
 void EntityCompStorage::setEntityLocalXYAt(const Math::Vec2& pv, uint32_t id)
 {
-    if (id == Component::INVALID_ID)
+    if (Component::isInvalidID(id))
         return;
     auto&& et    = entitiesPool[id];
     auto&& trans = transformsPool[et.transformId];
@@ -165,7 +165,7 @@ void EntityCompStorage::setEntityLocalXYAt(const Math::Vec2& pv, uint32_t id)
 
 void EntityCompStorage::getIdsFromId(uint32_t etId, std::vector<uint32_t>& ids)
 {
-    if (etId == Component::INVALID_ID)
+    if (Component::isInvalidID(etId))
         return;
 
     ids.push_back(etId);
@@ -180,7 +180,7 @@ void EntityCompStorage::getIdsFromId(uint32_t etId, std::vector<uint32_t>& ids)
 
 Component::UnitTransform EntityCompStorage::getEntityTransformAt(uint32_t id)
 {
-    if (id == Component::INVALID_ID)
+    if (Component::isInvalidID(id))
         return {};
 
     auto&& et = entitiesPool[id];
@@ -188,14 +188,14 @@ Component::UnitTransform EntityCompStorage::getEntityTransformAt(uint32_t id)
 }
 void EntityCompStorage::setEntityTransformAt(const Component::UnitTransform& trans, uint32_t id)
 {
-    if (id == Component::INVALID_ID)
+    if (Component::isInvalidID(id))
         return;
     auto&& et                      = entitiesPool[id];
     transformsPool[et.transformId] = trans;
 }
 Math::Mat33 EntityCompStorage::getEntityGlobalMat33At(uint32_t id)
 {
-    if (id == Component::INVALID_ID)
+    if (Component::isInvalidID(id))
         return {};
 
     return entityGlobalMat33Map[id];
