@@ -13,7 +13,8 @@ bool EntityCompStorage::hasParentAt(uint32_t id) const
 {
     if (id == Component::INVALID_ID)
         return false;
-    auto&& hier = hierarchiesPool[id];
+    auto&& et   = entitiesPool[id];
+    auto&& hier = hierarchiesPool[et.hierarchyId];
     return hier.parent != Component::INVALID_ID;
 }
 
@@ -21,7 +22,8 @@ bool EntityCompStorage::hasChildAt(uint32_t id) const
 {
     if (Component::isInvalidID(id))
         return false;
-    auto& hier = hierarchiesPool[id];
+    auto&& et   = entitiesPool[id];
+    auto&&  hier = hierarchiesPool[et.hierarchyId];
     return hier.firstChild != Component::INVALID_ID;
 }
 
@@ -113,7 +115,7 @@ void EntityCompStorage::setEntityGlobalXYAt(const Math::Vec2& pv, uint32_t id)
     auto&&      mat = getEntityParentWorldMatWithoutScale(id);
     Math::Mat33 matInv;
     mat.inverseTo(matInv);
-    auto&& lpv                       = matInv.mapPoint(wpv);
+    auto&& lpv                           = matInv.mapPoint(wpv);
     transformsPool[et.transformId].pos() = lpv;
 }
 
@@ -160,7 +162,7 @@ void EntityCompStorage::setEntityLocalXYAt(const Math::Vec2& pv, uint32_t id)
         return;
     auto&& et    = entitiesPool[id];
     auto&& trans = transformsPool[et.transformId];
-    trans.pos() = pv;
+    trans.pos()  = pv;
 }
 
 void EntityCompStorage::getIdsFromId(uint32_t etId, std::vector<uint32_t>& ids)
@@ -190,7 +192,7 @@ void EntityCompStorage::setEntityTransformAt(const Component::UnitTransform& tra
 {
     if (id == Component::INVALID_ID)
         return;
-    auto&& et                       = entitiesPool[id];
+    auto&& et                      = entitiesPool[id];
     transformsPool[et.transformId] = trans;
 }
 Math::Mat33 EntityCompStorage::getEntityGlobalMat33At(uint32_t id)
