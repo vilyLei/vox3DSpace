@@ -53,7 +53,9 @@ Math::Mat33 EntityCompStorage::getEntityParentGlobalMatAt(uint32_t id)
 {
     if (id == Component::INVALID_ID)
         return {};
+
     auto parentId = getEntityParentIdAt(id);
+    // printf("getEntityParentGlobalMatAt(), id: %u, parentId: %u\n", id, parentId);
     return getEntityGlobalMatAt(parentId);
 }
 Math::Mat33 EntityCompStorage::getEntityGlobalMatAt(uint32_t id)
@@ -282,7 +284,7 @@ void EntityCompStorage::traverseSortIndexAndBuildGlobalMat(uint32_t etId, uint32
     if (et.transformId != InvalidID)
     {
         auto& tr = transformsPool[et.transformId];
-        printf("    tr(x=%f,y=%f,sx=%f,sy=%f)\n", tr.x, tr.y, tr.sx, tr.sy);
+        //printf("    tr(x=%f,y=%f,sx=%f,sy=%f)\n", tr.x, tr.y, tr.sx, tr.sy);
 
         // 仅传递平移：提取父矩阵的 translation
         auto&& parentTrans = parentMat.getXY();

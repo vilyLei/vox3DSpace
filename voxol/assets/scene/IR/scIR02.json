@@ -228,10 +228,12 @@
         "entities": [
             {
                 "id": 0,
+                "hierarchy": 0,
                 "visible": 1
             },
             {
                 "id": 1,
+                "hierarchy": 1,
                 "transform": 0,
                 "shadering": 0,
                 "model": 0,
@@ -239,6 +241,7 @@
             },
             {
                 "id": 2,
+                "hierarchy": 2,
                 "transform": 1,
                 "shadering": 1,
                 "model": 1,
@@ -254,6 +257,7 @@
             },
             {
                 "id": 3,
+                "hierarchy": 3,
                 "transform": 2,
                 "shadering": 2,
                 "model": 1,
@@ -276,6 +280,7 @@
             },
             {
                 "id": 4,
+                "hierarchy": 4,
                 "transform": 3,
                 "shadering": 3,
                 "model": 2,

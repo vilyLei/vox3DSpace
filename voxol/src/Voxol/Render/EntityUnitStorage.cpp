@@ -27,7 +27,7 @@ void EntityUnitStorage::initalizeFromFile(const std::string& fileName)
     auto& shaderingModule = parser.shaderingModule;
     auto& sceneModule     = parser.sceneModule;
 
-    
+
     auto total = 128;
     total      = total < 128 ? 128 : total;
 
@@ -57,8 +57,8 @@ void EntityUnitStorage::initalizeFromFile(const std::string& fileName)
 
 
     entitiesPool.forEach([&](auto& e, int32_t index) {
-        e.id         = index;
-        e.shadingId = Component::INVALID_ID;
+        e.id          = index;
+        e.shadingId   = Component::INVALID_ID;
         e.transformId = Component::INVALID_ID;
         e.modelId     = Component::INVALID_ID;
         e.hierarchyId = Component::INVALID_ID;
@@ -75,9 +75,8 @@ void EntityUnitStorage::initalizeFromFile(const std::string& fileName)
         e.firstChild = Component::INVALID_ID;
     });
 
-    
-    auto updateUnitData = [&, this](int i) {
 
+    auto updateUnitData = [&, this](int i) {
         auto& descMap = shaderingModule.descriptionsMap;
         auto& unitMap = shaderingModule.unitsMap;
 
@@ -85,28 +84,22 @@ void EntityUnitStorage::initalizeFromFile(const std::string& fileName)
         auto&  descData = descMap[unit.description];
 
         //auto& model = unit.model;
-        auto& desc  = shaderingDescPool[i];
-        desc.color  = descData.color;
+        auto& desc = shaderingDescPool[i];
+        desc.color = descData.color;
         printf("        desc.color: %x, unit.description: %d\n", desc.color, unit.description);
-        auto&& descEt = shaderingEntitiesPool[i];
+        auto&& descEt        = shaderingEntitiesPool[i];
         descEt.shadingDescId = unit.description;
     };
 
     auto updateEntityData = [&, this](int i) {
-
-        auto& dataHier = sceneModule.hierarchiesMap[i];
-        auto&& dstHier = hierarchiesPool[dataHier.id];
-        dstHier.parent     = dataHier.parent;
-        dstHier.next       = dataHier.next;
-        dstHier.firstChild = dataHier.firstChild;
-
         auto& dataEt = sceneModule.entitiesMap[i];
 
-        auto&& et       = entitiesPool[dataEt.id];
-        et.shadingId      = dataEt.shadering;
-        et.transformId  = dataEt.transform;
-        et.modelId  = dataEt.model;
-        et.visible        = dataEt.visible;
+        auto&& et      = entitiesPool[dataEt.id];
+        et.shadingId   = dataEt.shadering;
+        et.transformId = dataEt.transform;
+        et.modelId     = dataEt.model;
+        et.hierarchyId = dataEt.hierarchy;
+        et.visible     = dataEt.visible;
 
         if (et.transformId == Component::INVALID_ID)
             return;
@@ -117,17 +110,17 @@ void EntityUnitStorage::initalizeFromFile(const std::string& fileName)
 
         auto&& dataTrans = sceneModule.transformsMap[et.transformId];
         auto&& dataModel = sceneModule.modelsMap[et.modelId];
-        auto&& model = modelsPool[et.modelId];
+        auto&& model     = modelsPool[et.modelId];
         model.drawUnitId = dataModel.method.id;
 
-        auto& unitMap = shaderingModule.unitsMap;
+        auto&  unitMap = shaderingModule.unitsMap;
         auto&& unit    = unitMap[i];
         auto&& trans   = transformsPool[et.transformId];
 
         trans.pos() = dataTrans.position;
         if (dataModel.hasRadius())
         {
-            auto w   = dataModel.getRadius() * 2;
+            auto w        = dataModel.getRadius() * 2;
             trans.scale() = {w, w};
         }
         else if (dataModel.hasSize())
@@ -138,10 +131,26 @@ void EntityUnitStorage::initalizeFromFile(const std::string& fileName)
         printf("        pos(%f,%f), size(%f, %f)\n", trans.x, trans.y, trans.sx, trans.sy);
     };
 
+
+    auto updateHierarchyData = [&, this](int i) {
+        auto&  dataHier    = sceneModule.hierarchiesMap[i];
+        auto&& dstHier     = hierarchiesPool[dataHier.id];
+        dstHier.parent     = dataHier.parent;
+        dstHier.next       = dataHier.next;
+        dstHier.firstChild = dataHier.firstChild;
+        printf("dataHier.id: %u, dstHier.parent: %u, dstHier.firstChild: %u, dstHier.next: %u\n", dataHier.id, dstHier.parent, dstHier.firstChild, dstHier.next);
+    };
+
     for (auto& ut : shaderingModule.unitsMap)
     {
         updateUnitData(ut.second.id);
     }
+
+    for (auto& et : sceneModule.hierarchiesMap)
+    {
+        updateHierarchyData(et.second.id);
+    }
+
     for (auto& et : sceneModule.entitiesMap)
     {
         updateEntityData(et.second.id);
@@ -158,7 +167,8 @@ void EntityUnitStorage::initalize(int total)
     total = total < 512 ? 512 : total;
 
     comp = EntityCompStorage::make();
-    if (!drawing) {
+    if (!drawing)
+    {
         drawing = DrawingUnitStorage::make();
     }
     drawing->initalize(total);
@@ -166,7 +176,7 @@ void EntityUnitStorage::initalize(int total)
     auto& entitiesPool          = comp->entitiesPool;
     auto& shaderingEntitiesPool = comp->shaderingEntitiesPool;
     auto& shaderingDescPool     = comp->shaderingDescPool;
-    auto& transformsPool     = comp->transformsPool;
+    auto& transformsPool        = comp->transformsPool;
     auto& modelsPool            = comp->modelsPool;
     auto& hierarchiesPool       = comp->hierarchiesPool;
 
@@ -179,7 +189,7 @@ void EntityUnitStorage::initalize(int total)
     transformsPool.initialize(shaderingDescTotal);
 
     entitiesPool.forEach([&](auto& e, uint32_t index) {
-        e.id = index;
+        e.id        = index;
         e.shadingId = Component::INVALID_ID;
     });
     shaderingEntitiesPool.forEach([&](auto& e, uint32_t index) {
@@ -189,50 +199,50 @@ void EntityUnitStorage::initalize(int total)
         e.id = index;
     });
     hierarchiesPool.forEach([&](auto& e, uint32_t index) {
-        e.parent = Component::INVALID_ID;
-        e.next = Component::INVALID_ID;
+        e.parent     = Component::INVALID_ID;
+        e.next       = Component::INVALID_ID;
         e.firstChild = Component::INVALID_ID;
     });
 
-    shaderingDescPool[0].color    = 0xff880077;
-    transformsPool[0]     = {150, 50, 200, 200, 0};
-    shaderingDescPool[1].color     = 0xff008855;
-    transformsPool[1]    = {150, 50, 200, 200, 0};
+    shaderingDescPool[0].color = 0xff880077;
+    transformsPool[0]          = {150, 50, 200, 200, 0};
+    shaderingDescPool[1].color = 0xff008855;
+    transformsPool[1]          = {150, 50, 200, 200, 0};
 
-    shaderingDescPool[2].color    = 0xff554433;
-    transformsPool[2] = {510, 150, 100, 100, 0};
+    shaderingDescPool[2].color = 0xff554433;
+    transformsPool[2]          = {510, 150, 100, 100, 0};
 
-    shaderingDescPool[3].color    = 0xff660066;
-    transformsPool[3] = {250, 50, 150, 150, 0};
+    shaderingDescPool[3].color = 0xff660066;
+    transformsPool[3]          = {250, 50, 150, 150, 0};
 
-    shaderingDescPool[4].color     = 0xff00aa76;
-    transformsPool[4] = {600, 150, 200, 200, 0};
+    shaderingDescPool[4].color = 0xff00aa76;
+    transformsPool[4]          = {600, 150, 200, 200, 0};
 
-    shaderingDescPool[5].color     = 0xff00aa76;
-    transformsPool[5] = {509, 350, 200, 200, 0};
+    shaderingDescPool[5].color = 0xff00aa76;
+    transformsPool[5]          = {509, 350, 200, 200, 0};
 
-    shaderingDescPool[6].color     = 0xff00aabb;
-    transformsPool[6]     = {350, 350, 200, 200, 0};
-    shaderingDescPool[7].color     = 0xff00aabb;
-    transformsPool[7]     = {350, 350, 200, 200, 0};
-    shaderingDescPool[8].color     = 0xff00aabb;
-    transformsPool[8]     = {350, 350, 200, 200, 0};
+    shaderingDescPool[6].color = 0xff00aabb;
+    transformsPool[6]          = {350, 350, 200, 200, 0};
+    shaderingDescPool[7].color = 0xff00aabb;
+    transformsPool[7]          = {350, 350, 200, 200, 0};
+    shaderingDescPool[8].color = 0xff00aabb;
+    transformsPool[8]          = {350, 350, 200, 200, 0};
 
     /// letter B glyph
     //auto&& tb                      = drawing->msdfText.getGlyphBounds('D', 70, {350, 350});
     //shaderingDescPool[6].transform = {tb.x(), tb.y(), tb.width(), tb.height()};
 
-    auto&& vbs = drawing->msdfText.getStringBounds("BcD", 70, {350, 350});
-    auto   tb                      = vbs[0];
-    transformsPool[6]     = {tb.x(), tb.y(), tb.width(), tb.height()};
-    tb                             = vbs[1];
-    transformsPool[7]     = {tb.x(), tb.y(), tb.width(), tb.height()};
-    tb                             = vbs[2];
-    auto sx                        = tb.width();
-    transformsPool[8]     = {tb.x(), tb.y(), tb.width(), tb.height()};
+    auto&& vbs        = drawing->msdfText.getStringBounds("BcD", 70, {350, 350});
+    auto   tb         = vbs[0];
+    transformsPool[6] = {tb.x(), tb.y(), tb.width(), tb.height()};
+    tb                = vbs[1];
+    transformsPool[7] = {tb.x(), tb.y(), tb.width(), tb.height()};
+    tb                = vbs[2];
+    auto sx           = tb.width();
+    transformsPool[8] = {tb.x(), tb.y(), tb.width(), tb.height()};
 
     /// circle
-    modelsPool[0].drawUnitId    = drawing->getIdWithType(DrawingUnitType::Circle);
+    modelsPool[0].drawUnitId               = drawing->getIdWithType(DrawingUnitType::Circle);
     shaderingEntitiesPool[0].shadingDescId = 0;
     /// circle
     modelsPool[1].drawUnitId               = drawing->getIdWithType(DrawingUnitType::Circle);
@@ -244,17 +254,17 @@ void EntityUnitStorage::initalize(int total)
     /// ring
     modelsPool[3].drawUnitId               = drawing->getIdWithType(DrawingUnitType::Ring);
     shaderingEntitiesPool[3].shadingDescId = 3;
-    
+
     /// multi-circles
     //shaderingEntitiesPool[4].drawUnitId    = drawing->getIdWithType(DrawingUnitType::MultiCircle);
     modelsPool[4].drawUnitId               = drawing->getIdWithType(DrawingUnitType::strokeShape);
     shaderingEntitiesPool[4].shadingDescId = 4;
-    auto drawUnitId_5                     = drawing->getIdWithName("ship01.glsl");
+    auto drawUnitId_5                      = drawing->getIdWithName("ship01.glsl");
     modelsPool[5].drawUnitId               = drawUnitId_5;
     shaderingEntitiesPool[5].shadingDescId = 5;
 
 
-    auto drawUnitId_6    = drawing->getGlyphIdWithChar('B');
+    auto drawUnitId_6                      = drawing->getGlyphIdWithChar('B');
     modelsPool[6].drawUnitId               = drawUnitId_6;
     shaderingEntitiesPool[6].shadingDescId = 6;
 
@@ -269,39 +279,39 @@ void EntityUnitStorage::initalize(int total)
     //return;
 
     /// circle
-    entitiesPool[0].shadingId = 0;
+    entitiesPool[0].shadingId   = 0;
     entitiesPool[0].transformId = 0;
-    entitiesPool[0].modelId = 0;
+    entitiesPool[0].modelId     = 0;
     ///// circle
-    entitiesPool[1].shadingId = 1;
+    entitiesPool[1].shadingId   = 1;
     entitiesPool[1].transformId = 1;
     entitiesPool[1].modelId     = 1;
     /// circle
-    entitiesPool[2].shadingId = 2;
+    entitiesPool[2].shadingId   = 2;
     entitiesPool[2].transformId = 2;
     entitiesPool[2].modelId     = 2;
     /// ring
-    entitiesPool[3].shadingId = 3;
+    entitiesPool[3].shadingId   = 3;
     entitiesPool[3].transformId = 3;
     entitiesPool[3].modelId     = 3;
     /// multi-circles
-    entitiesPool[4].shadingId = 4;
+    entitiesPool[4].shadingId   = 4;
     entitiesPool[4].transformId = 4;
     entitiesPool[4].modelId     = 4;
     /// ship
-    entitiesPool[5].shadingId = 5;
+    entitiesPool[5].shadingId   = 5;
     entitiesPool[5].transformId = 5;
     entitiesPool[5].modelId     = 5;
     /// B
-    entitiesPool[6].shadingId = 6;
+    entitiesPool[6].shadingId   = 6;
     entitiesPool[6].transformId = 6;
     entitiesPool[6].modelId     = 6;
     /// c
-    entitiesPool[7].shadingId = 7;
+    entitiesPool[7].shadingId   = 7;
     entitiesPool[7].transformId = 7;
     entitiesPool[7].modelId     = 7;
     /// D
-    entitiesPool[8].shadingId = 8;
+    entitiesPool[8].shadingId   = 8;
     entitiesPool[8].transformId = 8;
     entitiesPool[8].modelId     = 8;
 }

@@ -139,6 +139,7 @@ struct Entity
     uint32_t  shadering = Component::INVALID_ID;
     uint32_t  transform = Component::INVALID_ID;
     uint32_t  model     = Component::INVALID_ID;
+    uint32_t  hierarchy = Component::INVALID_ID;
     bool      visible   = true;
 
     void parse(const JsonType& node)
@@ -154,6 +155,9 @@ struct Entity
 
         if (node.contains("model"))
             model = node["model"];
+
+        if (node.contains("hierarchy"))
+            hierarchy = node["hierarchy"];
 
         if (node.contains("visible"))
             visible = static_cast<uint32_t>(node["visible"]) != 0 ? true : false;
