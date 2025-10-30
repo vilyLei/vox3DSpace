@@ -87,20 +87,40 @@ public:
     //    return pool.get(index);
     //}
 
+    bool                     hasParentAt(uint32_t id) const;
+    bool                     hasChildAt(uint32_t id) const;
+    Component::UnitTransform getEntityLocalTransAt(uint32_t id);
+    Component::UnitTransform getEntityParentLocalTransAt(uint32_t id);
+    bool         getEntityVisibleAt(uint32_t id);
+    Math::Mat33  getEntityParentGlobalMatAt(uint32_t id);
+    Math::Mat33  getEntityGlobalMatAt(uint32_t id);
+    Math::Bounds getEntityGlobalBoundsAt(uint32_t id);
+    uint32_t    getEntityParentIdAt(uint32_t id);
+    Math::Vec2  getEntityGlobalXYAt(uint32_t id);
+    void        setEntityGlobalXYAt(const Math::Vec2& pv, uint32_t id);
+    Math::Mat33 getEntityWorldMatWithoutScale(uint32_t id);
+    Math::Mat33 getEntityParentWorldMatWithoutScale(uint32_t id);
+    Math::Vec2 getEntityLocalXYAt(uint32_t id);
+    void setEntityLocalXYAt(const Math::Vec2& pv, uint32_t id);
+    void traverseBuildGlobalMat(uint32_t etId, const Math::Mat33& parentMat);
+
+    void getIdsFromId(uint32_t etId, std::vector<uint32_t>& ids);
+
+
     Component::UnitTransform getEntityTransformAt(uint32_t id);
     void                     setEntityTransformAt(const Component::UnitTransform& trans, uint32_t id);
 
     Math::Mat33 getEntityGlobalMat33At(uint32_t id);
-    Math::Vec2  getEntityGlobalXYAt(uint32_t id);
-    void        setEntityGlobalXYAt(const Math::Vec2& pos, uint32_t id);
-    Math::Vec2 getEntityLocalXYAt(uint32_t id);
-    void       setEntityLocalXYAt(const Math::Vec2& pos, uint32_t id);
+    //Math::Vec2  getEntityGlobalXYAt(uint32_t id);
+    //void        setEntityGlobalXYAt(const Math::Vec2& pos, uint32_t id);
+    //Math::Vec2 getEntityLocalXYAt(uint32_t id);
+    //void       setEntityLocalXYAt(const Math::Vec2& pos, uint32_t id);
     void       checkIds(std::vector<uint32_t>& edis);
-    void       checkWMaps(std::vector<uint32_t>& edis);
+
     void       updateHierarchyInfo();
     void       traverseSortIndex(uint32_t etId, uint32_t& index);
     void       traverseSortIndexAndBuildGlobalMat(uint32_t etId, uint32_t& index, const Math::Mat33& parentMat);
-    void       traverseBuildGlobalMat(uint32_t etId, const Math::Mat33& parentMat);
+    //void       traverseBuildGlobalMat(uint32_t etId, const Math::Mat33& parentMat);
 
 public:
     CompPool<Component::UnitEntity>          entitiesPool{};
