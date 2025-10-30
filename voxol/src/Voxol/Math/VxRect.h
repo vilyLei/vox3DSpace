@@ -52,7 +52,7 @@ public:
     void setXYWH(float px, float py, float pw, float ph);
     void setLTRB(float pl, float pt, float pr, float pb);
 
-    void mat33MapTo(const Mat33& mat3, VxRect& dst);
+    void mat33MapTo(const Mat33& mat3, VxRect& dst) const;
     void addXY(float px, float py);
     void addXY(const Vec2& p);
 

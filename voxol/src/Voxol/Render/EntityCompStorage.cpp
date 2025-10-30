@@ -28,11 +28,11 @@ bool EntityCompStorage::hasChildAt(uint32_t id) const
 Component::UnitTransform EntityCompStorage::getEntityLocalTransAt(uint32_t id)
 {
     if (id == Component::INVALID_ID)
-        return Component::DefaultTrans;
+        return Component::defaultTrans;
 
     auto&& et = entitiesPool[id];
     if (et.transformId == Component::INVALID_ID)
-        return Component::DefaultTrans;
+        return Component::defaultTrans;
 
     auto&& trans = transformsPool[et.transformId];
     return trans;
@@ -76,9 +76,8 @@ Math::Bounds EntityCompStorage::getEntityGlobalBoundsAt(uint32_t id)
         return {};
     }
 
-    Math::Bounds bounds = {0, 0, 1, 1};
     Math::Bounds tb;
-    bounds.mat33MapTo(entityGlobalMat33Map[id], tb);
+    Component::defaultRect.mat33MapTo(entityGlobalMat33Map[id], tb);
     return tb;
 }
 
@@ -121,7 +120,7 @@ void EntityCompStorage::setEntityGlobalXYAt(const Math::Vec2& pv, uint32_t id)
 Math::Mat33 EntityCompStorage::getEntityWorldMatWithoutScale(uint32_t id)
 {
     auto&& trans = getEntityLocalTransAt(id);
-    printf("getEntityWorldMatWithoutScale() id: %u, trans(x=%f,y=%f,sx=%f,sy=%f)\n", id, trans.x, trans.y, trans.sx, trans.sy);
+    // printf("getEntityWorldMatWithoutScale() id: %u, trans(x=%f,y=%f,sx=%f,sy=%f)\n", id, trans.x, trans.y, trans.sx, trans.sy);
     auto&& temptMat = Math::Mat33::makeScale(trans.sx, trans.sy);
 
     Math::Mat33 temptMatInv;
@@ -134,7 +133,7 @@ Math::Mat33 EntityCompStorage::getEntityWorldMatWithoutScale(uint32_t id)
 Math::Mat33 EntityCompStorage::getEntityParentWorldMatWithoutScale(uint32_t id)
 {
     auto&& trans = getEntityParentLocalTransAt(id);
-    printf("getEntityParentWorldMatWithoutScale() id: %u, trans(x=%f,y=%f,sx=%f,sy=%f)\n", id, trans.x, trans.y, trans.sx, trans.sy);
+    // printf("getEntityParentWorldMatWithoutScale() id: %u, trans(x=%f,y=%f,sx=%f,sy=%f)\n", id, trans.x, trans.y, trans.sx, trans.sy);
     auto&& temptMat = Math::Mat33::makeScale(trans.sx, trans.sy);
 
     Math::Mat33 temptMatInv;

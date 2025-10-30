@@ -77,7 +77,7 @@ void VxRect::setLTRB(float pl, float pt, float pr, float pb)
 }
 
 
-void VxRect::mat33MapTo(const Mat33& mat3, VxRect& dst)
+void VxRect::mat33MapTo(const Mat33& mat3, VxRect& dst) const
 {
     auto pv = mat3.mapXY(fX, fY);
     dst.toEmpty(pv);
