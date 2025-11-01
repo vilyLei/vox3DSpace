@@ -7,9 +7,7 @@
 #include <type_traits>
 #include <cassert>
 #include <unordered_map>
-#include <string_view>
-#include <sstream>
-#include <iomanip>
+#include <string>
 
 namespace Voxol::Render
 {
@@ -218,27 +216,7 @@ struct KeyUint64
     {
         return (value & CompareMask) < (other.value & CompareMask);
     }
-    std::string toString(bool hex = false) const
-    {
-        std::ostringstream oss;
-        if (hex)
-        {
-            oss << std::hex << std::setfill('0')
-                << "KeyUint64(flags=0x" << std::setw(4) << flags()
-                << " iid=0x" << std::setw(6) << iid()
-                << " proto=0x" << std::setw(6) << protoNodeId()
-                << " [value=0x" << std::setw(16) << value << "])";
-        }
-        else
-        {
-            oss << "KeyUint64(flags=" << flags()
-                << " iid=" << iid()
-                << " proto=" << protoNodeId()
-                << " [value=" << value << "])";
-        }
-        return oss.str();
-    }
-
+    std::string                toString(bool hex = false) const;
     constexpr std::string_view debugView() const noexcept
     {
         return "<Component::KeyUint64>";

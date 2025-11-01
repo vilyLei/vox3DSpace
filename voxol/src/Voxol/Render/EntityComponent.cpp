@@ -1,4 +1,8 @@
 #include "EntityComponent.h"
+#include <string_view>
+#include <sstream>
+#include <iomanip>
+
 
 namespace Voxol::Render
 {
@@ -20,6 +24,27 @@ uint32_t UnitInstanceIdManager::allocate()
 void UnitInstanceIdManager::release(uint32_t id)
 {
     freeList.push_back(id);
+}
+
+std::string KeyUint64::toString(bool hex) const
+{
+    std::ostringstream oss;
+    if (hex)
+    {
+        oss << std::hex << std::setfill('0')
+            << "KeyUint64(flags=0x" << std::setw(4) << flags()
+            << " iid=0x" << std::setw(6) << iid()
+            << " proto=0x" << std::setw(6) << protoNodeId()
+            << " [value=0x" << std::setw(16) << value << "])";
+    }
+    else
+    {
+        oss << "KeyUint64(flags=" << flags()
+            << " iid=" << iid()
+            << " proto=" << protoNodeId()
+            << " [value=" << value << "])";
+    }
+    return oss.str();
 }
 } // namespace Component
 
