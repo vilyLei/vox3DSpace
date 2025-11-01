@@ -343,7 +343,7 @@ void EntityCompStorage::traverseBuildWorldMatInstance(uint32_t instanceRootId, c
 {
     if (instanceRootId == Component::INVALID_ID) return;
 
-    auto&&       et       = entitiesPool[instanceRootId];
+    auto&&      et       = entitiesPool[instanceRootId];
     Math::Mat33 worldMat = parentMat;
 
     if (et.transformId != Component::INVALID_ID)
@@ -375,7 +375,7 @@ void EntityCompStorage::traverseBuildWorldMatPrototypeUnderInstance(uint32_t ins
     // create fresh InsNodeMap
     Component::UnitInstanceMap map;
     map.instanceEntityId = instanceEntityId;
-    map.prototypeRootId = prototypeRootId;
+    map.prototypeRootId  = prototypeRootId;
     map.map.clear();
 
     // for prototype traversal, use the prototype hierarchy nodes
@@ -387,7 +387,7 @@ void EntityCompStorage::traverseBuildWorldMatPrototypeUnderInstance(uint32_t ins
         auto& protoEnt = entitiesPool[protoNodeId];
         if (protoEnt.transformId != Component::INVALID_ID)
         {
-            auto&       tr = transformsPool[protoEnt.transformId];
+            auto&& tr = transformsPool[protoEnt.transformId];
 
             Math::Vec2 parentTrans = parentMat.getXY();
             worldMat.identity();
@@ -411,5 +411,38 @@ void EntityCompStorage::traverseBuildWorldMatPrototypeUnderInstance(uint32_t ins
     // store into insStorage
     insStorage[instanceEntityId] = std::move(map);
 }
+void EntityCompStorage::traverseBuildGlobalMat(uint32_t etId, const Math::Mat33& parentMat)
+{
+    if (etId == Component::INVALID_ID) return;
 
+    auto&&      et       = entitiesPool[etId];
+    Math::Mat33 worldMat = parentMat;
+
+    if (et.transformId != Component::INVALID_ID)
+    {
+        auto&&     tr          = transformsPool[et.transformId];
+        Math::Vec2 parentTrans = parentMat.getXY();
+        worldMat.identity();
+        worldMat.setXY(parentTrans.x + tr.x, parentTrans.y + tr.y);
+        worldMat.setScaleXY(tr.sx, tr.sy);
+    }
+
+    entityGlobalMat33Map[etId] = worldMat;
+
+    // if entity is instance of prototype, build instance map using prototype tree
+    if (et.prototypeId != Component::INVALID_ID)
+    {
+        traverseBuildWorldMatPrototypeUnderInstance(etId, et.prototypeId, worldMat);
+        // 当前entity为instance entity则当前的这个entity不可以再有其他子节点
+        return;
+    }
+
+    // recurse children (entity children, not prototype children)
+    for (uint32_t child = hierarchiesPool[etId].firstChild;
+         child != Component::INVALID_ID;
+         child = hierarchiesPool[child].next)
+    {
+        traverseBuildGlobalMat(child, worldMat);
+    }
+}
 } // namespace Voxol::Render
