@@ -1,5 +1,5 @@
-#ifndef VOXOL_RENDER_ENTITY_COMP_H
-#define VOXOL_RENDER_ENTITY_COMP_H
+#ifndef VOXOL_RENDER_ENTITY_COMPONENT_H
+#define VOXOL_RENDER_ENTITY_COMPONENT_H
 
 #include "../Math/VxRect.h"
 #include <vector>
@@ -66,7 +66,7 @@ struct UnitTransform
     inline const Math::Vec2& scale() const { return *reinterpret_cast<const Math::Vec2*>(&sx); }
 };
 constexpr UnitTransform defaultTrans{0, 0, 1, 1, 0};
-constexpr Math::VxRect defaultRect{0, 0, 1, 1};
+constexpr Math::VxRect  defaultRect{0, 0, 1, 1};
 
 struct UnitMat33
 {
@@ -106,13 +106,35 @@ struct UnitEntity
     uint32_t transformId = INVALID_ID;
     uint32_t modelId     = INVALID_ID;
     uint32_t hierarchyId = INVALID_ID;
-    // 表示这个 entity是基于某个entity的instance(实例)
+    // 表示当前这个entity是基于prototypeId所对应的entity的instance(实例)
     uint32_t prototypeId = INVALID_ID;
 
     bool visible = true;
     bool dirty   = true;
 };
 
+struct UnitInstance
+{
+    uint32_t    protoNodeId = INVALID_ID; // prototype entity id
+    uint32_t    iid         = INVALID_ID; // unique instantiation id
+    Math::Mat33 worldMat;
+};
+struct UnitInstanceMap
+{
+    uint32_t                             instanceEntityId = INVALID_ID; // 场景中的 instance 根实体
+    uint32_t                             prototypeRootId  = INVALID_ID; // 源 prototype 根 id
+    std::vector<UnitInstance>            nodes;                         // 扁平列表，或 unordered_map<iid, UnitInstance>
+    std::unordered_map<uint32_t, size_t> iidToIndexMap;                 // iid -> index in nodes (optional)
+    bool                                 dirty = true;
+};
+struct UnitInstanceIdManager
+{
+    uint32_t              nextId = 1; // 0 reserved/invalid
+    std::vector<uint32_t> freeList;
+
+    uint32_t alloc();
+    void free(uint32_t id);
+};
 } // namespace Component
 
 } // namespace Voxol::Render
