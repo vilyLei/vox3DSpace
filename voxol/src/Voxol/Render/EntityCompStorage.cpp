@@ -339,7 +339,7 @@ void EntityCompStorage::buildTopoOrderFromRoots(const std::vector<uint32_t>& roo
 
     for (auto r : roots) dfs(r);
 }
-void EntityCompStorage::traverseBuildWorldMatInstance(uint32_t instanceRootId, const Math::Mat33& parentMat, Component::UnitInstanceMap& insMap)
+void EntityCompStorage::traverseBuildGlobalMatInstance(uint32_t instanceRootId, const Math::Mat33& parentMat, Component::UnitInstanceMap& insMap)
 {
     if (instanceRootId == Component::INVALID_ID) return;
 
@@ -366,11 +366,11 @@ void EntityCompStorage::traverseBuildWorldMatInstance(uint32_t instanceRootId, c
          child != Component::INVALID_ID;
          child = hierarchiesPool[child].next)
     {
-        traverseBuildWorldMatInstance(child, worldMat, insMap);
+        traverseBuildGlobalMatInstance(child, worldMat, insMap);
     }
 }
 
-void EntityCompStorage::traverseBuildWorldMatPrototypeUnderInstance(uint32_t instanceEntityId, uint32_t prototypeRootId, const Math::Mat33& instanceParentMat)
+void EntityCompStorage::traverseBuildGlobalMatPrototypeUnderInstance(uint32_t instanceEntityId, uint32_t prototypeRootId, const Math::Mat33& instanceParentMat)
 {
     // create fresh InsNodeMap
     Component::UnitInstanceMap map;
@@ -397,7 +397,7 @@ void EntityCompStorage::traverseBuildWorldMatPrototypeUnderInstance(uint32_t ins
 
         map.map[protoNodeId] = {protoNodeId, 0, worldMat};
 
-        for (uint32_t child = hierarchiesPool[protoNodeId].firstChild;
+        for (auto child = hierarchiesPool[protoNodeId].firstChild;
              child != Component::INVALID_ID;
              child = hierarchiesPool[child].next)
         {
@@ -432,13 +432,13 @@ void EntityCompStorage::traverseBuildGlobalMat(uint32_t etId, const Math::Mat33&
     // if entity is instance of prototype, build instance map using prototype tree
     if (et.prototypeId != Component::INVALID_ID)
     {
-        traverseBuildWorldMatPrototypeUnderInstance(etId, et.prototypeId, worldMat);
+        traverseBuildGlobalMatPrototypeUnderInstance(etId, et.prototypeId, worldMat);
         // 当前entity为instance entity则当前的这个entity不可以再有其他子节点
         return;
     }
 
     // recurse children (entity children, not prototype children)
-    for (uint32_t child = hierarchiesPool[etId].firstChild;
+    for (auto child = hierarchiesPool[etId].firstChild;
          child != Component::INVALID_ID;
          child = hierarchiesPool[child].next)
     {
