@@ -119,6 +119,7 @@ struct UnitInstance
     uint32_t    iid         = INVALID_ID; // unique instantiation id
     Math::Mat33 worldMat;
 };
+
 struct UnitInstanceMap
 {
     uint32_t                             instanceEntityId = INVALID_ID; // 场景中的 instance 根实体
@@ -127,13 +128,14 @@ struct UnitInstanceMap
     std::unordered_map<uint32_t, size_t> iidToIndexMap;                 // iid -> index in nodes (optional)
     bool                                 dirty = true;
 };
+
 struct UnitInstanceIdManager
 {
     uint32_t              nextId = 1; // 0 reserved/invalid
     std::vector<uint32_t> freeList;
 
-    uint32_t alloc();
-    void free(uint32_t id);
+    uint32_t allocate();
+    void release(uint32_t id);
 };
 } // namespace Component
 
