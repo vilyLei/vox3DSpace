@@ -234,8 +234,9 @@ void EntityCompStorage::checkIds(std::vector<uint32_t>& edis)
 void EntityCompStorage::updateHierarchyInfo()
 {
     uint32_t index = 0;
-    //traverseSortIndex(0, index);
-    traverseSortIndexAndBuildGlobalMat(0, index, {});
+    traverseSortIndex(0, index);
+    //traverseSortIndexAndBuildGlobalMat(0, index, {});
+    traverseBuildGlobalMat(0, {});
 }
 
 void EntityCompStorage::traverseSortIndex(uint32_t etId, uint32_t& index)
