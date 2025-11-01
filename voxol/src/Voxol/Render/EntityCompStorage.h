@@ -128,6 +128,9 @@ public:
     void traverseBuildGlobalMatPrototypeUnderInstance(uint32_t instanceEntityId, uint32_t prototypeRootId, const Math::Mat33& instanceParentMat);
     void traverseBuildGlobalMat(uint32_t etId, const Math::Mat33& parentMat);
 
+    void markSubtreeDirty(uint32_t rootId);
+    void updateDirtySubtrees(const std::vector<uint32_t>& roots);
+
 public:
     CompPool<Component::UnitEntity>           entitiesPool{};
     CompPool<Component::UnitShadingEntity>    shaderingEntitiesPool{};

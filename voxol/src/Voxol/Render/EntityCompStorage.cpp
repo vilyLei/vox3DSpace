@@ -445,4 +445,46 @@ void EntityCompStorage::traverseBuildGlobalMat(uint32_t etId, const Math::Mat33&
         traverseBuildGlobalMat(child, worldMat);
     }
 }
+
+void EntityCompStorage::markSubtreeDirty(uint32_t rootId)
+{
+    if (rootId == Component::INVALID_ID) return;
+
+    std::vector<uint32_t> stack{rootId};
+    while (!stack.empty())
+    {
+        auto id = stack.back();
+        stack.pop_back();
+        entitiesPool[id].dirty = true;
+        entityGlobalMat33Map.erase(id); // optional: clear old cached matrix
+        for (auto c = hierarchiesPool[id].firstChild; c != Component::INVALID_ID; c = hierarchiesPool[c].next)
+            stack.push_back(c);
+    }
+}
+
+// incremental updating
+void EntityCompStorage::updateDirtySubtrees(const std::vector<uint32_t>& roots)
+{
+    Math::Mat33 idMat;
+    idMat.identity();
+    // For each root, if dirty true, traverse
+    for (auto r : roots)
+    {
+        // if root dirty or no worldMat cached -> rebuild subtree
+        if (entitiesPool[r].dirty || entityGlobalMat33Map.find(r) == entityGlobalMat33Map.end())
+        {
+            traverseBuildGlobalMat(r, idMat);
+            // clear dirty flags for subtree
+            std::vector<uint32_t> stack{r};
+            while (!stack.empty())
+            {
+                auto id = stack.back();
+                stack.pop_back();
+                entitiesPool[id].dirty = false;
+                for (auto c = hierarchiesPool[id].firstChild; c != Component::INVALID_ID; c = hierarchiesPool[c].next)
+                    stack.push_back(c);
+            }
+        }
+    }
+}
 } // namespace Voxol::Render
