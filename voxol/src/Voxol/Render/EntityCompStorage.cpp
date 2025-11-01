@@ -1,5 +1,6 @@
 #include "EntityCompStorage.h"
 #include <algorithm>
+#include <functional>
 
 namespace Voxol::Render
 {
@@ -23,7 +24,7 @@ bool EntityCompStorage::hasChildAt(uint32_t id) const
     if (Component::isInvalidID(id))
         return false;
     auto&& et   = entitiesPool[id];
-    auto&&  hier = hierarchiesPool[et.hierarchyId];
+    auto&& hier = hierarchiesPool[et.hierarchyId];
     return hier.firstChild != Component::INVALID_ID;
 }
 
@@ -315,6 +316,28 @@ void EntityCompStorage::traverseBuildGlobalMat(uint32_t etId, const Math::Mat33&
     {
         traverseBuildGlobalMat(child, entityGlobalMat33Map[etId]);
     }
+}
+
+void EntityCompStorage::buildTopoOrderFromRoots(const std::vector<uint32_t>& roots)
+{
+    topoOrder.clear();
+    topoIndex.clear();
+    topoIndex.reserve(entitiesPool.capacity());
+
+    uint32_t                      index = 0;
+    std::function<void(uint32_t)> dfs   = [&](uint32_t id) {
+        if (Component::isInvalidID(id)) return;
+        topoOrder.push_back(id);
+        topoIndex[id] = index++;
+        for (uint32_t child = hierarchiesPool[id].firstChild;
+             child != Component::INVALID_ID;
+             child = hierarchiesPool[child].next)
+        {
+            dfs(child);
+        }
+    };
+
+    for (auto r : roots) dfs(r);
 }
 
 } // namespace Voxol::Render
