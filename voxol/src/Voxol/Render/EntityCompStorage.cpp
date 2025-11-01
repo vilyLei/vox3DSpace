@@ -431,6 +431,10 @@ void EntityCompStorage::traverseBuildGlobalMat(uint32_t etId, const Math::Mat33&
     // if entity is instance of prototype, build instance map using prototype tree
     if (et.prototypeId != Component::INVALID_ID)
     {
+        if (hierarchiesPool[etId].firstChild != Component::INVALID_ID)
+        {
+            printf("[Warning] entity %u is an instance, but has children in hierarchy — ignored.\n", etId);
+        }
         traverseBuildGlobalMatPrototypeUnderInstance(etId, et.prototypeId, worldMat);
         // 当前entity为instance entity则当前的这个entity不可以再有其他子节点
         return;
