@@ -263,6 +263,7 @@ void EntityCompStorage::traverseSortIndexAndBuildGlobalMat(uint32_t etId, uint32
 
         // 仅传递平移：提取父矩阵的 translation
         auto&& parentTrans = parentMat.getXY();
+        printf("    ins parentTrans pos(x=%f,y=%f)\n", parentTrans.x, parentTrans.y);
 
         // 构造新的 world matrix：仅叠加平移
         auto&& worldMat = Math::Mat33::makeIdentity();

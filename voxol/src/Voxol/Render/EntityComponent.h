@@ -127,6 +127,7 @@ struct UnitInstanceMap
     std::vector<UnitInstance>                  nodes;                         // 扁平列表，或 unordered_map<iid, UnitInstance>
     std::unordered_map<uint32_t, size_t>       iidToIndexMap;                 // iid -> index in nodes (optional)
     bool                                       dirty = true;
+    // for debug
     std::unordered_map<uint32_t, UnitInstance> map;
 };
 
@@ -186,6 +187,52 @@ struct FlatInsStorage
         return it != idToIndex.end() ? &nodes[it->second] : nullptr;
     }
 };
+
+struct KeyUint64
+{
+    uint64_t value;
+
+    static constexpr uint64_t ProtoMask   = (1ull << 24) - 1; // 24-bit
+    static constexpr uint64_t IIDMask     = ProtoMask << 24;  // 24-bit << 24
+    static constexpr uint64_t FlagMask    = 0xFFFFull << 48;  // 16-bit << 48
+    static constexpr uint64_t CompareMask = (1ull << 48) - 1; // lower 48 bits
+
+    static constexpr KeyUint64 make(uint16_t flags, uint32_t protoId, uint32_t iid)
+    {
+        return KeyUint64{(uint64_t(flags) << 48) | (uint64_t(iid) << 24) | uint64_t(protoId)};
+    }
+
+    constexpr uint16_t flags() const noexcept { return value >> 48; }
+    constexpr uint32_t protoNodeId() const noexcept { return value & ProtoMask; }
+    constexpr uint32_t iid() const noexcept { return (value >> 24) & ProtoMask; }
+
+    constexpr bool operator==(const KeyUint64& other) const noexcept
+    {
+        return (value & CompareMask) == (other.value & CompareMask);
+    }
+
+    constexpr bool operator<(const KeyUint64& other) const noexcept
+    {
+        return (value & CompareMask) < (other.value & CompareMask);
+    }
+};
+
+struct KeyUint64Hasher
+{
+    size_t operator()(const KeyUint64& k) const noexcept
+    {
+        return std::hash<uint64_t>()(k.value & KeyUint64::CompareMask);
+    }
+};
+
+struct KeyUint64Equal
+{
+    bool operator()(const KeyUint64& a, const KeyUint64& b) const noexcept
+    {
+        return (KeyUint64::ProtoMask & a.value) == (KeyUint64::ProtoMask & b.value);
+    }
+};
+
 } // namespace Component
 
 } // namespace Voxol::Render
