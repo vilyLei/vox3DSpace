@@ -339,5 +339,77 @@ void EntityCompStorage::buildTopoOrderFromRoots(const std::vector<uint32_t>& roo
 
     for (auto r : roots) dfs(r);
 }
+void EntityCompStorage::traverseBuildWorldMatInstance(uint32_t instanceRootId, const Math::Mat33& parentMat, Component::UnitInstanceMap& insMap)
+{
+    if (instanceRootId == Component::INVALID_ID) return;
+
+    auto&&       et       = entitiesPool[instanceRootId];
+    Math::Mat33 worldMat = parentMat;
+
+    if (et.transformId != Component::INVALID_ID)
+    {
+        auto&& tr = transformsPool[et.transformId];
+
+        // compose: world = parentTranslation + local (translation-only from parent)
+        // extract parent translation:
+        Math::Vec2 parentTrans = parentMat.getXY();
+        worldMat.identity();
+        worldMat.setXY(parentTrans.x + tr.x, parentTrans.y + tr.y);
+        worldMat.setScaleXY(tr.sx, tr.sy);
+    }
+
+    // store in insMap (prototype node id = instanceRootId if called on prototype tree)
+    insMap.map[instanceRootId] = {instanceRootId, 0, worldMat};
+
+    // traverse prototype's children (note: when instancing, we traverse prototype hierarchy)
+    for (uint32_t child = hierarchiesPool[instanceRootId].firstChild;
+         child != Component::INVALID_ID;
+         child = hierarchiesPool[child].next)
+    {
+        traverseBuildWorldMatInstance(child, worldMat, insMap);
+    }
+}
+
+void EntityCompStorage::traverseBuildWorldMatPrototypeUnderInstance(uint32_t instanceEntityId, uint32_t prototypeRootId, const Math::Mat33& instanceParentMat)
+{
+    // create fresh InsNodeMap
+    Component::UnitInstanceMap map;
+    map.instanceEntityId = instanceEntityId;
+    map.prototypeRootId = prototypeRootId;
+    map.map.clear();
+
+    // for prototype traversal, use the prototype hierarchy nodes
+    // but we need to combine prototype-local transform + instanceParentMat
+    std::function<void(uint32_t, const Math::Mat33&)> dfsProto = [&](uint32_t protoNodeId, const Math::Mat33& parentMat) {
+        Math::Mat33 worldMat = parentMat;
+        // get prototype node's local transform if exists
+        // prototype nodes are also stored in entityPool (we assume prototype entities have transforms)
+        auto& protoEnt = entitiesPool[protoNodeId];
+        if (protoEnt.transformId != Component::INVALID_ID)
+        {
+            auto&       tr = transformsPool[protoEnt.transformId];
+
+            Math::Vec2 parentTrans = parentMat.getXY();
+            worldMat.identity();
+            worldMat.setXY(parentTrans.x + tr.x, parentTrans.y + tr.y);
+            worldMat.setScaleXY(tr.sx, tr.sy);
+        }
+
+        map.map[protoNodeId] = {protoNodeId, 0, worldMat};
+
+        for (uint32_t child = hierarchiesPool[protoNodeId].firstChild;
+             child != Component::INVALID_ID;
+             child = hierarchiesPool[child].next)
+        {
+            dfsProto(child, worldMat);
+        }
+    };
+
+    // root prototype node(s) traversal
+    dfsProto(prototypeRootId, instanceParentMat);
+
+    // store into insStorage
+    insStorage[instanceEntityId] = std::move(map);
+}
 
 } // namespace Voxol::Render

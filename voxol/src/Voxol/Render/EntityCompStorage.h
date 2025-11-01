@@ -124,6 +124,8 @@ public:
     void traverseBuildGlobalMat(uint32_t etId, const Math::Mat33& parentMat);
 
     void buildTopoOrderFromRoots(const std::vector<uint32_t>& roots);
+    void traverseBuildWorldMatInstance(uint32_t instanceRootId, const Math::Mat33& parentMat, Component::UnitInstanceMap& insMap);
+    void traverseBuildWorldMatPrototypeUnderInstance(uint32_t instanceEntityId, uint32_t prototypeRootId, const Math::Mat33& instanceParentMat);
 
 public:
     CompPool<Component::UnitEntity>           entitiesPool{};
@@ -141,6 +143,7 @@ public:
 private:
     std::vector<uint32_t> topoOrder;
     std::vector<uint32_t> topoIndex;
+    std::unordered_map<uint32_t, Component::UnitInstanceMap> insStorage;
 };
 } // namespace Voxol::Render
 #endif

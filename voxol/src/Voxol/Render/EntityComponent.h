@@ -122,11 +122,12 @@ struct UnitInstance
 
 struct UnitInstanceMap
 {
-    uint32_t                             instanceEntityId = INVALID_ID; // 场景中的 instance 根实体
-    uint32_t                             prototypeRootId  = INVALID_ID; // 源 prototype 根 id
-    std::vector<UnitInstance>            nodes;                         // 扁平列表，或 unordered_map<iid, UnitInstance>
-    std::unordered_map<uint32_t, size_t> iidToIndexMap;                 // iid -> index in nodes (optional)
-    bool                                 dirty = true;
+    uint32_t                                   instanceEntityId = INVALID_ID; // 场景中的 instance 根实体
+    uint32_t                                   prototypeRootId  = INVALID_ID; // 源 prototype 根 id
+    std::vector<UnitInstance>                  nodes;                         // 扁平列表，或 unordered_map<iid, UnitInstance>
+    std::unordered_map<uint32_t, size_t>       iidToIndexMap;                 // iid -> index in nodes (optional)
+    bool                                       dirty = true;
+    std::unordered_map<uint32_t, UnitInstance> map;
 };
 
 struct UnitInstanceIdManager
@@ -135,7 +136,7 @@ struct UnitInstanceIdManager
     std::vector<uint32_t> freeList;
 
     uint32_t allocate();
-    void release(uint32_t id);
+    void     release(uint32_t id);
 };
 } // namespace Component
 
