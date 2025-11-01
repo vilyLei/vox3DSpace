@@ -99,25 +99,30 @@ void EntityUnitStorage::initalizeFromFile(const std::string& fileName)
         et.transformId = dataEt.transform;
         et.modelId     = dataEt.model;
         et.hierarchyId = dataEt.hierarchy;
+        et.prototypeId = dataEt.prototype;
         et.visible     = dataEt.visible;
 
+        printf("entity(id=%d, prototypeId=%d)\n", et.id, et.prototypeId);
         if (et.transformId == Component::INVALID_ID)
             return;
+
+        auto&& dataTrans = sceneModule.transformsMap[et.transformId];
+        auto&& trans     = transformsPool[et.transformId];
+        trans.pos()      = dataTrans.position;
+        printf("        pos(%f,%f)\n", trans.x, trans.y);
+
         if (et.modelId == Component::INVALID_ID)
             return;
         if (et.shadingId == Component::INVALID_ID)
             return;
 
-        auto&& dataTrans = sceneModule.transformsMap[et.transformId];
         auto&& dataModel = sceneModule.modelsMap[et.modelId];
         auto&& model     = modelsPool[et.modelId];
         model.drawUnitId = dataModel.method.id;
 
         auto&  unitMap = shaderingModule.unitsMap;
         auto&& unit    = unitMap[i];
-        auto&& trans   = transformsPool[et.transformId];
 
-        trans.pos() = dataTrans.position;
         if (dataModel.hasRadius())
         {
             auto w        = dataModel.getRadius() * 2;

@@ -107,7 +107,7 @@ struct UnitEntity
     uint32_t modelId     = INVALID_ID;
     uint32_t hierarchyId = INVALID_ID;
     // 表示这个 entity是基于某个entity的instance(实例)
-    uint32_t prototype = INVALID_ID;
+    uint32_t prototypeId = INVALID_ID;
 
     bool visible = true;
     bool dirty   = true;
