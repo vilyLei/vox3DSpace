@@ -121,7 +121,7 @@ public:
     void updateHierarchyInfo();
     void traverseSortIndex(uint32_t etId, uint32_t& index);
     void traverseSortIndexAndBuildGlobalMat(uint32_t etId, uint32_t& index, const Math::Mat33& parentMat);
-    void traverseBuildGlobalMat(uint32_t etId, const Math::Mat33& parentMat);
+    void traverseBuildGlobalMatA(uint32_t etId, const Math::Mat33& parentMat);
 
     void buildTopoOrderFromRoots(const std::vector<uint32_t>& roots);
     void traverseBuildWorldMatInstance(uint32_t instanceRootId, const Math::Mat33& parentMat, Component::UnitInstanceMap& insMap);

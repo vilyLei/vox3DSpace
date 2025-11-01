@@ -281,7 +281,7 @@ void EntityCompStorage::traverseSortIndexAndBuildGlobalMat(uint32_t etId, uint32
     }
 }
 
-void EntityCompStorage::traverseBuildGlobalMat(uint32_t etId, const Math::Mat33& parentMat)
+void EntityCompStorage::traverseBuildGlobalMatA(uint32_t etId, const Math::Mat33& parentMat)
 {
     if (etId == Component::INVALID_ID)
     {
@@ -314,7 +314,7 @@ void EntityCompStorage::traverseBuildGlobalMat(uint32_t etId, const Math::Mat33&
          child != Component::INVALID_ID;
          child = hierarchiesPool[child].next)
     {
-        traverseBuildGlobalMat(child, entityGlobalMat33Map[etId]);
+        traverseBuildGlobalMatA(child, entityGlobalMat33Map[etId]);
     }
 }
 
