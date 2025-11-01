@@ -264,8 +264,7 @@ void EntityCompStorage::traverseSortIndexAndBuildGlobalMat(uint32_t etId, uint32
         auto&& parentTrans = parentMat.getXY();
 
         // 构造新的 world matrix：仅叠加平移
-        Math::Mat33 worldMat;
-        worldMat.identity();
+        auto&& worldMat = Math::Mat33::makeIdentity();
         worldMat.setXY(parentTrans.x + tr.x, parentTrans.y + tr.y);
         worldMat.setScaleXY(tr.sx, tr.sy); // 自身 scale 不受父级影响
 
@@ -352,7 +351,7 @@ void EntityCompStorage::traverseBuildGlobalMatInstance(uint32_t instanceRootId, 
 
         // compose: world = parentTranslation + local (translation-only from parent)
         // extract parent translation:
-        Math::Vec2 parentTrans = parentMat.getXY();
+        auto&& parentTrans = parentMat.getXY();
         worldMat.identity();
         worldMat.setXY(parentTrans.x + tr.x, parentTrans.y + tr.y);
         worldMat.setScaleXY(tr.sx, tr.sy);
@@ -362,7 +361,7 @@ void EntityCompStorage::traverseBuildGlobalMatInstance(uint32_t instanceRootId, 
     insMap.map[instanceRootId] = {instanceRootId, 0, worldMat};
 
     // traverse prototype's children (note: when instancing, we traverse prototype hierarchy)
-    for (uint32_t child = hierarchiesPool[instanceRootId].firstChild;
+    for (auto child = hierarchiesPool[instanceRootId].firstChild;
          child != Component::INVALID_ID;
          child = hierarchiesPool[child].next)
     {
@@ -389,7 +388,7 @@ void EntityCompStorage::traverseBuildGlobalMatPrototypeUnderInstance(uint32_t in
         {
             auto&& tr = transformsPool[protoEnt.transformId];
 
-            Math::Vec2 parentTrans = parentMat.getXY();
+            auto&& parentTrans = parentMat.getXY();
             worldMat.identity();
             worldMat.setXY(parentTrans.x + tr.x, parentTrans.y + tr.y);
             worldMat.setScaleXY(tr.sx, tr.sy);
@@ -421,7 +420,7 @@ void EntityCompStorage::traverseBuildGlobalMat(uint32_t etId, const Math::Mat33&
     if (et.transformId != Component::INVALID_ID)
     {
         auto&&     tr          = transformsPool[et.transformId];
-        Math::Vec2 parentTrans = parentMat.getXY();
+        auto&& parentTrans = parentMat.getXY();
         worldMat.identity();
         worldMat.setXY(parentTrans.x + tr.x, parentTrans.y + tr.y);
         worldMat.setScaleXY(tr.sx, tr.sy);
