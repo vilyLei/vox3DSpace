@@ -2,6 +2,7 @@
 #define VOXOL_RENDER_BVH2D_V1_H
 
 #include "../Math/VxRect.h"
+#include "CompBaseDef.h"
 #include <vector>
 #include <memory>
 #include <unordered_map>
@@ -125,6 +126,7 @@ private:
     std::vector<Item>                      m_items;
     std::vector<Node>                      m_nodes;
     std::unordered_map<uint32_t, uint32_t> m_objectIdToItem;
+    std::unordered_map<Base::KeyUint64, uint32_t, Base::KeyUint64Hasher,Base::KeyUint64Equal> m_objectIdToItemMap;
 
     bool m_dirty = false;
 };

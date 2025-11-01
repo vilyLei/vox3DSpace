@@ -22,22 +22,22 @@ enum class SelectType
 using InputDirtyCallType = std::function<void(const Math::Bounds& bounds, uint32_t type, uint32_t etId)>;
 struct MouseController
 {
-    Math::Vec2           originEtPos{};
-    uint32_t             etId = Render::Base::INVALID_ID;
+    Math::Vec2            originEtPos{};
+    uint32_t              etId = Render::Base::INVALID_ID;
     std::vector<uint32_t> qeIds{};
 
     Render::Component::UnitTransform unitTransform{};
 
-    InputDirtyCallType             dirtyCall;
+    InputDirtyCallType            dirtyCall;
     Render::EntitySceneSystem::SP targetSys;
-    Math::Bounds                   selectionBounds{};
-    SelectType                     selectType = SelectType::Single;
+    Math::Bounds                  selectionBounds{};
+    SelectType                    selectType = SelectType::Single;
 
     System::Mouse::MouseEvtHandler handler{};
 
     bool dragging = false;
-    // the input ctrl task flow is free or block 
-    bool free     = true;
+    // the input ctrl task flow is free or block
+    bool free = true;
     bool isBoundsSelection() const
     {
         return selectType == SelectType::Bounds;
@@ -64,7 +64,7 @@ public:
     Render::EntitySceneSystem::SP etSceneSys;
 
     Mouse::MouseController mouseCtrl;
-    ShortcutManager shortcutMana{};
+    ShortcutManager        shortcutMana{};
 
 public:
     void initialize();
