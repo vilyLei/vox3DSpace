@@ -185,7 +185,7 @@ public:
     {
 
         if (m_freeList.empty())
-            return Component::INVALID_ID;
+            return Base::INVALID_ID;
 
         uint32_t idx = m_freeList.back();
         m_freeList.pop_back();
@@ -228,7 +228,7 @@ public:
 
 private:
     std::vector<T>        comps;
-    std::vector<uint8_t>     m_usedList;
+    std::vector<uint8_t>  m_usedList;
     std::vector<uint32_t> m_freeList;
     size_t                m_activeCount = 0;
 };

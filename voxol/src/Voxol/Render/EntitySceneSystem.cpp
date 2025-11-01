@@ -40,7 +40,7 @@ void EntitySceneSystem::initalize(const std::string& configFileName)
 
     entitiesPool.forEach([&](auto& et, uint32_t index) {
 
-        if (et.shadingId == Component::INVALID_ID)
+        if (et.shadingId == Base::INVALID_ID)
             return;
 
         //auto& trans = transformsPool[et.transformId];
@@ -72,7 +72,7 @@ void EntitySceneSystem::clear()
 
 void EntitySceneSystem::updateBVHBoundsWithEntityId(uint32_t eId)
 {
-    if (Component::isInvalidID(eId))
+    if (Base::isInvalidID(eId))
         return;
 
     std::vector<uint32_t> ids{};

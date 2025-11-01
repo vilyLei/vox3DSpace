@@ -142,7 +142,7 @@ public:
     std::unordered_map<uint32_t, uint32_t>    hierarchyIndexMap{};
     std::unordered_map<uint32_t, Math::Mat33> entityGlobalMat33Map{};
     // for debug
-    std::unordered_map<Component::EntityId, Math::Mat33, Component::EntityIdHasher, Component::EntityIdEqual> entityIdTypeMatMap{};
+    std::unordered_map<Base::EntityId, Math::Mat33, Base::EntityIdHasher, Base::EntityIdEqual> entityIdTypeMatMap{};
 
 private:
     std::vector<uint32_t> topoOrder;

@@ -15,7 +15,7 @@ HistoryItemData EntityHistoryManager::popItem() {
 
     if (mList.empty())
     {
-        return HistoryItemData{.id = Component::INVALID_ID};
+        return HistoryItemData{.id = Base::INVALID_ID};
     }
     // 下面这句auto会导致debug模式下ide看到的itemData值是错的
     //auto itemData = mList.back();

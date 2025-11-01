@@ -22,14 +22,14 @@ void MouseController::selectWithSingle(const System::Mouse::MouseEvent& evt, con
     auto etStorage = targetSys->entityStorage->comp;
     etStorage->checkIds(qeIds);
 
-    auto topId = qeIds.empty() ? Render::Component::INVALID_ID : qeIds.back();
+    auto topId = qeIds.empty() ? Render::Base::INVALID_ID : qeIds.back();
 
     if (evt.isBegin())
     {
         dragging = false;
     }
 
-    if (Render::Component::isValidID(topId) && evt.isBegin())
+    if (Render::Base::isValidID(topId) && evt.isBegin())
     {
         etId          = topId;
         originEtPos   = etStorage->getEntityGlobalXYAt(etId);
@@ -37,7 +37,7 @@ void MouseController::selectWithSingle(const System::Mouse::MouseEvent& evt, con
         return;
     }
 
-    if (Render::Component::isValidID(etId) && evt.isDragging())
+    if (Render::Base::isValidID(etId) && evt.isDragging())
     {
         dirtyCall({}, 0, etId);
         etStorage->setEntityGlobalXYAt(originEtPos + offset, etId);
@@ -48,16 +48,16 @@ void MouseController::selectWithSingle(const System::Mouse::MouseEvent& evt, con
     }
     if (evt.isEnd())
     {
-        if (Render::Component::isValidID(etId) && dragging)
+        if (Render::Base::isValidID(etId) && dragging)
         {
             dragging = false;
             etStorage->historyManager->pushItem({unitTransform, etId});
         }
-        etId = Render::Component::INVALID_ID;
+        etId = Render::Base::INVALID_ID;
         return;
     }
 
-    if (evt.isDragging() && Render::Component::isInvalidID(etId))
+    if (evt.isDragging() && Render::Base::isInvalidID(etId))
     {
         selectionBounds.toEmpty(evt.originGlobalPos);
         selectType = SelectType::Bounds;
@@ -86,7 +86,7 @@ void MouseController::selectWithBounds(const System::Mouse::MouseEvent& evt, con
     if (evt.isEnd())
     {
         printf("MouseCtroller::selectBtnBounds() end().\n");
-        etId       = Render::Component::INVALID_ID;
+        etId       = Render::Base::INVALID_ID;
         selectType = SelectType::Single;
     }
 }

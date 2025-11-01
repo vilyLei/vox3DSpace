@@ -58,10 +58,10 @@ void EntityUnitStorage::initalizeFromFile(const std::string& fileName)
 
     entitiesPool.forEach([&](auto& e, int32_t index) {
         e.id          = index;
-        e.shadingId   = Component::INVALID_ID;
-        e.transformId = Component::INVALID_ID;
-        e.modelId     = Component::INVALID_ID;
-        e.hierarchyId = Component::INVALID_ID;
+        e.shadingId   = Base::INVALID_ID;
+        e.transformId = Base::INVALID_ID;
+        e.modelId     = Base::INVALID_ID;
+        e.hierarchyId = Base::INVALID_ID;
     });
     shaderingEntitiesPool.forEach([&](auto& e, int32_t index) {
         e.id = index;
@@ -70,9 +70,9 @@ void EntityUnitStorage::initalizeFromFile(const std::string& fileName)
         e.id = index;
     });
     hierarchiesPool.forEach([&](auto& e, uint32_t index) {
-        e.parent     = Component::INVALID_ID;
-        e.next       = Component::INVALID_ID;
-        e.firstChild = Component::INVALID_ID;
+        e.parent     = Base::INVALID_ID;
+        e.next       = Base::INVALID_ID;
+        e.firstChild = Base::INVALID_ID;
     });
 
 
@@ -103,7 +103,7 @@ void EntityUnitStorage::initalizeFromFile(const std::string& fileName)
         et.visible     = dataEt.visible;
 
         printf("entity(id=%d, prototypeId=%d)\n", et.id, et.prototypeId);
-        if (et.transformId == Component::INVALID_ID)
+        if (et.transformId == Base::INVALID_ID)
             return;
 
         auto&& dataTrans = sceneModule.transformsMap[et.transformId];
@@ -111,9 +111,9 @@ void EntityUnitStorage::initalizeFromFile(const std::string& fileName)
         trans.pos()      = dataTrans.position;
         printf("        pos(%f,%f)\n", trans.x, trans.y);
 
-        if (et.modelId == Component::INVALID_ID)
+        if (et.modelId == Base::INVALID_ID)
             return;
-        if (et.shadingId == Component::INVALID_ID)
+        if (et.shadingId == Base::INVALID_ID)
             return;
 
         auto&& dataModel = sceneModule.modelsMap[et.modelId];
@@ -195,7 +195,7 @@ void EntityUnitStorage::initalize(int total)
 
     entitiesPool.forEach([&](auto& e, uint32_t index) {
         e.id        = index;
-        e.shadingId = Component::INVALID_ID;
+        e.shadingId = Base::INVALID_ID;
     });
     shaderingEntitiesPool.forEach([&](auto& e, uint32_t index) {
         e.id = index;
@@ -204,9 +204,9 @@ void EntityUnitStorage::initalize(int total)
         e.id = index;
     });
     hierarchiesPool.forEach([&](auto& e, uint32_t index) {
-        e.parent     = Component::INVALID_ID;
-        e.next       = Component::INVALID_ID;
-        e.firstChild = Component::INVALID_ID;
+        e.parent     = Base::INVALID_ID;
+        e.next       = Base::INVALID_ID;
+        e.firstChild = Base::INVALID_ID;
     });
 
     shaderingDescPool[0].color = 0xff880077;
