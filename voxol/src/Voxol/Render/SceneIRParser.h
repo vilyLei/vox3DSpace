@@ -160,8 +160,15 @@ struct Entity
         if (node.contains("hierarchy"))
             hierarchy = node["hierarchy"];
 
-        if (node.contains("prototype"))
-            prototype = node["prototype"];
+        if (node.contains("prototype")) {
+            if (node["prototype"].is_number())
+            {
+                prototype = node["prototype"];
+            }
+            else {
+                // todo
+            }
+        }
 
         if (node.contains("visible"))
             visible = static_cast<uint32_t>(node["visible"]) != 0 ? true : false;

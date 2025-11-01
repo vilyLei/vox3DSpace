@@ -282,7 +282,7 @@
                     "interactive",
                     "button"
                 ],
-                "prototypeDesc": {
+                "prototype": {
                     "id": 0,
                     "override": {
                         "shadering": false,
