@@ -156,6 +156,13 @@
                         290,
                         350
                     ]
+                },
+                {
+                    "id": 4,
+                    "position": [
+                        390,
+                        550
+                    ]
                 }
             ],
             "meshes": [
@@ -222,6 +229,11 @@
             },
             {
                 "id": 4,
+                "next": 5,
+                "parent": 0
+            },
+            {
+                "id": 5,
                 "parent": 0
             }
         ],
@@ -284,6 +296,13 @@
                 "transform": 3,
                 "shadering": 3,
                 "model": 2,
+                "visible": 1
+            },
+            {
+                "id": 5,
+                "hierarchy": 5,
+                "transform": 4,
+                "prototype": 1,
                 "visible": 1
             }
         ],
