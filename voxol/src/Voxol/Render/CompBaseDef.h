@@ -17,9 +17,9 @@ namespace Base
 // 定义entity id为28bits的uint32_t类型
 
 // 28-bit invalid ID
-constexpr uint32_t INVALID_ID = 0xfffffff;
+constexpr uint32_t INVALID_ID = 0x0FFFFFFF;
 constexpr uint32_t ID_BITS_COUNT = 28;
-constexpr uint32_t ID2_ID_BITS_COUNT = 56;
+constexpr uint32_t ID2_ID_BITS_COUNT = 56; // 28 + 28
 
 struct EntityId
 {
