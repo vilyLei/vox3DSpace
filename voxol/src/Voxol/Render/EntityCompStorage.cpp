@@ -396,9 +396,9 @@ void EntityCompStorage::traverseBuildGlobalMatPrototypeUnderInstance(uint32_t in
         }
 
         auto&& pos = worldMat.getXY();
-        printf("traverseBuildGlobalMatPrototypeUnderInstance() protoNodeId: %d, C pos(x=%f,y=%f)\n", protoNodeId, pos.x, pos.y);
+        printf("traverseBuildGlobalMatPrototypeUnderInstance() protoNodeId: %u, instanceEntityId: %u, C pos(x=%f,y=%f)\n", protoNodeId, instanceEntityId, pos.x, pos.y);
 
-        map.map[protoNodeId] = {protoNodeId, protoNodeId, worldMat};
+        map.map[protoNodeId] = {protoNodeId, instanceEntityId, worldMat};
 
         for (auto child = hierarchiesPool[protoNodeId].firstChild;
              ID::isValidID(child);

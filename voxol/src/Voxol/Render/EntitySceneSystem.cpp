@@ -35,17 +35,21 @@ void EntitySceneSystem::initalize(const std::string& configFileName)
     auto& shaderingDescPool      = storage->shaderingDescPool;
     auto& transformsPool         = storage->transformsPool;
 
-    //Math::Bounds                           bounds{0,0,1,1};
-    //Math::Bounds                           vb{};
 
     entitiesPool.forEach([&](auto& et, uint32_t index) {
 
-        if (et.shadingId == ID::INVALID_ID)
+        if (ID::isInvalidID(et.transformId))
             return;
 
+        if (ID::isValidID(et.prototypeId))
+        {
+
+            return;
+        }
         //auto& trans = transformsPool[et.transformId];
         //bounds.setXYWH(trans.x, trans.y, trans.sx, trans.sy);
         //bounds.mat33MapTo(storage->entityGlobalMat33Map[et.id], vb);
+
         auto&& vb = storage->getEntityGlobalBoundsAt( et.id );
         bvh->addItem(ID::KeyUint64::make(et.id, 0), vb);
     });

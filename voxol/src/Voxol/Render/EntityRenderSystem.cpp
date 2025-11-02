@@ -57,11 +57,13 @@ void EntityRenderSystem::render(const Draw::DrawContext& rctx, const Math::Mat33
 
 bool EntityRenderSystem::drawUnitWithPrototype(const Component::UnitEntity& entity, const Math::Mat33& vpM, const Math::Bounds& wbounds)
 {
+
     return true;
 }
 bool EntityRenderSystem::drawUnit(const Component::UnitEntity& entity, const Math::Mat33& vpM, const Math::Bounds& wbounds)
 {
-    auto  compStorage       = entityStorage->comp;
+
+    auto&  compStorage       = entityStorage->comp;
     auto& shaderingDescPool = compStorage->shaderingDescPool;
     auto& transformsPool = compStorage->transformsPool;
     auto& modelsPool        = compStorage->modelsPool;
