@@ -18,13 +18,16 @@ namespace Base
 
 // 28-bit invalid ID
 constexpr uint32_t INVALID_ID = 0xfffffff;
+constexpr uint32_t ID_BITS_COUNT = 28;
 
 struct EntityId
 {
+    static constexpr uint32_t IDMask = INVALID_ID; // 28-bit
     uint32_t value = INVALID_ID;
 
     constexpr bool isValid() const noexcept { return value < INVALID_ID; }
     constexpr bool isInvalid() const noexcept { return value >= INVALID_ID; }
+    constexpr uint32_t id() const noexcept { return value & IDMask; }
 
     constexpr bool operator==(const EntityId& other) const noexcept
     {
@@ -107,8 +110,8 @@ struct KeyUint64
 {
     uint64_t value;
 
-    static constexpr uint64_t ProtoMask   = (1ull << 28) - 1; // 28-bit
-    static constexpr uint64_t IIDMask     = ProtoMask << 28;  // 28-bit << 24
+    static constexpr uint64_t ProtoMask   = (1ull << ID_BITS_COUNT) - 1; // 28-bit
+    static constexpr uint64_t IIDMask     = ProtoMask << ID_BITS_COUNT; // 28-bit << 24
     static constexpr uint64_t FlagMask    = 0xFFFFull << 56;  // 16-bit << 48
     static constexpr uint64_t CompareMask = (1ull << 56) - 1; // lower 48 bits
 
@@ -116,9 +119,13 @@ struct KeyUint64
     {
         return KeyUint64{0};
     }
+    static constexpr KeyUint64 make(EntityId protoId, EntityId iid, uint16_t flags = 0)
+    {
+        return KeyUint64{(uint64_t(flags) << 56) | (uint64_t(iid.id()) << ID_BITS_COUNT) | uint64_t(protoId.id())};
+    }
     static constexpr KeyUint64 make(uint32_t protoId, uint32_t iid, uint16_t flags = 0)
     {
-        return KeyUint64{(uint64_t(flags) << 56) | (uint64_t(iid) << 28) | uint64_t(protoId)};
+        return KeyUint64{(uint64_t(flags) << 56) | (uint64_t(iid) << ID_BITS_COUNT) | uint64_t(protoId)};
     }
 
     constexpr uint16_t flags() const noexcept { return value >> 56; }
@@ -126,14 +133,14 @@ struct KeyUint64
     constexpr bool     isProtoNodeIdValid() const noexcept { return (value & ProtoMask) < INVALID_ID; }
     constexpr bool     isProtoNodeIdInvalid() const noexcept { return (value & ProtoMask) >= INVALID_ID; }
 
-    constexpr uint32_t iid() const noexcept { return (value >> 28) & ProtoMask; }
+    constexpr uint32_t iid() const noexcept { return (value >> ID_BITS_COUNT) & ProtoMask; }
     constexpr bool     isIIDValid() const noexcept
     {
-        return ((value >> 28) & ProtoMask) < INVALID_ID;
+        return ((value >> ID_BITS_COUNT) & ProtoMask) < INVALID_ID;
     }
     constexpr bool isIIDInvalid() const noexcept
     {
-        return ((value >> 28) & ProtoMask) >= INVALID_ID;
+        return ((value >> ID_BITS_COUNT) & ProtoMask) >= INVALID_ID;
     }
     constexpr uint32_t id() const noexcept { return value & CompareMask; }
     constexpr bool     isIDValid() const noexcept { return isProtoNodeIdValid() && isIIDValid(); }
