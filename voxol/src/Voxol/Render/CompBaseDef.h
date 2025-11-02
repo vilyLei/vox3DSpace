@@ -8,6 +8,7 @@
 #include <cassert>
 #include <unordered_map>
 #include <string>
+#include <format>
 
 namespace Voxol::Render
 {
@@ -186,6 +187,138 @@ constexpr inline bool isValidID(const KeyUint64& id) noexcept
 constexpr inline bool isInvalidID(const KeyUint64& id) noexcept
 {
     return id.isIDInvalid();
+}
+
+
+// ============================================================
+// 1. 通用 IdTraits 模板定义
+// ============================================================
+template <typename T>
+struct IdTraits;
+
+// ============================================================
+// 2. EntityId 特化
+// ============================================================
+template <>
+struct IdTraits<EntityId>
+{
+    using Type   = EntityId;
+    using ValueT = uint32_t;
+
+    static constexpr ValueT InvalidValue = INVALID_ID;
+
+    static constexpr bool isValid(const EntityId& id) noexcept
+    {
+        return id.value < InvalidValue;
+    }
+
+    static constexpr bool isInvalid(const EntityId& id) noexcept
+    {
+        return id.value >= InvalidValue;
+    }
+
+    struct Hasher
+    {
+        size_t operator()(const EntityId& id) const noexcept
+        {
+            return std::hash<ValueT>()(id.value);
+        }
+    };
+
+    struct Equal
+    {
+        bool operator()(const EntityId& a, const EntityId& b) const noexcept
+        {
+            return a.value == b.value;
+        }
+    };
+
+    struct Less
+    {
+        bool operator()(const EntityId& a, const EntityId& b) const noexcept
+        {
+            return a.value < b.value;
+        }
+    };
+
+    static std::string toString(const EntityId& id)
+    {
+        if (isValid(id))
+            return std::format("EntityId({})", id.value);
+        else
+            return "EntityId(INVALID)";
+    }
+};
+
+// ============================================================
+// 3. KeyUint64 特化
+// ============================================================
+template <>
+struct IdTraits<KeyUint64>
+{
+    using Type   = KeyUint64;
+    using ValueT = uint64_t;
+
+    static constexpr bool isValid(const KeyUint64& k) noexcept
+    {
+        return k.isIDValid();
+    }
+
+    static constexpr bool isInvalid(const KeyUint64& k) noexcept
+    {
+        return k.isIDInvalid();
+    }
+
+    struct Hasher
+    {
+        size_t operator()(const KeyUint64& k) const noexcept
+        {
+            return std::hash<ValueT>()(k.value & KeyUint64::CompareMask);
+        }
+    };
+
+    struct Equal
+    {
+        bool operator()(const KeyUint64& a, const KeyUint64& b) const noexcept
+        {
+            return (a.value & KeyUint64::CompareMask) == (b.value & KeyUint64::CompareMask);
+        }
+    };
+
+    struct Less
+    {
+        bool operator()(const KeyUint64& a, const KeyUint64& b) const noexcept
+        {
+            return (a.value & KeyUint64::CompareMask) < (b.value & KeyUint64::CompareMask);
+        }
+    };
+
+    static std::string toString(const KeyUint64& k)
+    {
+        return std::format("KeyUint64(flags={}, proto={}, iid={})",
+                           k.flags(), k.protoNodeId(), k.iid());
+    }
+};
+
+// ============================================================
+// 4. 通用模板接口封装函数
+// ============================================================
+template <typename T>
+constexpr bool isValidID(const T& id) noexcept
+{
+    return IdTraits<T>::isValid(id);
+}
+
+template <typename T>
+constexpr bool isInvalidID(const T& id) noexcept
+{
+    return IdTraits<T>::isInvalid(id);
+}
+
+template <typename T>
+inline std::string idToString(const T& id)
+{
+    return IdTraits<T>::toString(id);
 }
 
 } // namespace Base
