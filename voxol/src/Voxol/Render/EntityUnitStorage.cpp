@@ -103,7 +103,7 @@ void EntityUnitStorage::initalizeFromFile(const std::string& fileName)
         et.visible     = dataEt.visible;
 
         printf("entity(id=%d, prototypeId=%d)\n", et.id, et.prototypeId);
-        if (et.transformId == ID::INVALID_ID)
+        if (ID::isInvalidID(et.transformId))
             return;
 
         auto&& dataTrans = sceneModule.transformsMap[et.transformId];
@@ -111,17 +111,11 @@ void EntityUnitStorage::initalizeFromFile(const std::string& fileName)
         trans.pos()      = dataTrans.position;
         printf("        pos(%f,%f)\n", trans.x, trans.y);
 
-        if (et.modelId == ID::INVALID_ID)
+        if (ID::isInvalidID(et.modelId))
             return;
-        if (et.shadingId == ID::INVALID_ID)
-            return;
-
         auto&& dataModel = sceneModule.modelsMap[et.modelId];
         auto&& model     = modelsPool[et.modelId];
         model.drawUnitId = dataModel.method.id;
-
-        auto&  unitMap = shaderingModule.unitsMap;
-        auto&& unit    = unitMap[i];
 
         if (dataModel.hasRadius())
         {
@@ -134,6 +128,12 @@ void EntityUnitStorage::initalizeFromFile(const std::string& fileName)
         }
         printf("entity(%d), modelId: %d, drawUnitId: %d\n", i, et.modelId, model.drawUnitId);
         printf("        pos(%f,%f), size(%f, %f)\n", trans.x, trans.y, trans.sx, trans.sy);
+
+        //if (et.shadingId == ID::INVALID_ID)
+        //    return;
+        //auto&  unitMap = shaderingModule.unitsMap;
+        //auto&& unit    = unitMap[i];
+
     };
 
 
