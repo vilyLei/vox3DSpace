@@ -72,6 +72,57 @@ struct UnitEntity
     bool dirty   = true;
 };
 
+
+
+struct InsNodeSlot
+{
+    uint32_t    id;
+    Math::Mat33 mat;
+    bool        active;
+};
+
+struct FlatInsStorage
+{
+    std::vector<InsNodeSlot>               nodes;
+    std::unordered_map<uint32_t, uint32_t> idToIndex;
+    std::vector<uint32_t>                  freeList;
+
+    InsNodeSlot& emplace(uint32_t id, const Math::Mat33& mat)
+    {
+        if (!freeList.empty())
+        {
+            auto idx = freeList.back();
+            freeList.pop_back();
+            nodes[idx]    = {id, mat, true};
+            idToIndex[id] = idx;
+            return nodes[idx];
+        }
+        uint32_t idx = nodes.size();
+        nodes.push_back({id, mat, true});
+        idToIndex[id] = idx;
+        return nodes.back();
+    }
+
+    void erase(uint32_t id)
+    {
+        auto it = idToIndex.find(id);
+        if (it != idToIndex.end())
+        {
+            uint32_t idx      = it->second;
+            nodes[idx].active = false;
+            freeList.push_back(idx);
+            idToIndex.erase(it);
+        }
+    }
+
+    InsNodeSlot* find(uint32_t id)
+    {
+        auto it = idToIndex.find(id);
+        return it != idToIndex.end() ? &nodes[it->second] : nullptr;
+    }
+};
+
+
 struct UnitInstance
 {
     uint32_t    protoNodeId = Base::INVALID_ID; // prototype entity id
