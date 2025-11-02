@@ -110,7 +110,7 @@ void EntityCompStorage::setEntityGlobalXYAt(const Math::Vec2& pv, uint32_t id)
         return;
 
     auto wpv = entityGlobalMat33Map[id].getXY();
-    // ��ȡȥ������ֵ֮�󸸼�ȫ�־���
+
     auto&&      mat = getEntityParentWorldMatWithoutScale(id);
     Math::Mat33 matInv;
     mat.inverseTo(matInv);
@@ -260,14 +260,13 @@ void EntityCompStorage::traverseSortIndexAndBuildGlobalMat(uint32_t etId, uint32
         auto& tr = transformsPool[et.transformId];
         //printf("    tr(x=%f,y=%f,sx=%f,sy=%f)\n", tr.x, tr.y, tr.sx, tr.sy);
 
-        // ������ƽ�ƣ���ȡ������� translation
+        // get translation only
         auto&& parentTrans = parentMat.getXY();
         printf("    ins parentTrans pos(x=%f,y=%f)\n", parentTrans.x, parentTrans.y);
 
-        // �����µ� world matrix��������ƽ��
         auto&& worldMat = Math::Mat33::makeIdentity();
         worldMat.setXY(parentTrans.x + tr.x, parentTrans.y + tr.y);
-        worldMat.setScaleXY(tr.sx, tr.sy); // ���� scale ���ܸ���Ӱ��
+        worldMat.setScaleXY(tr.sx, tr.sy);
 
         entityGlobalMat33Map[etId] = worldMat;
         //worldMat.print();
@@ -434,10 +433,9 @@ void EntityCompStorage::traverseBuildGlobalMat(uint32_t etId, const Math::Mat33&
     {
         if (hierarchiesPool[etId].firstChild != ID::INVALID_ID)
         {
-            printf("[Warning] entity %u is an instance, but has children in hierarchy �� ignored.\n", etId);
+            printf("[Warning] entity %u is an instance, but has children in hierarchy ignored.\n", etId);
         }
         traverseBuildGlobalMatPrototypeUnderInstance(etId, et.prototypeId, worldMat);
-        // ��ǰentityΪinstance entity��ǰ�����entity���������������ӽڵ�
         return;
     }
 
