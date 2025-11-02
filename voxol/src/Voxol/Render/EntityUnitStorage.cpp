@@ -102,6 +102,7 @@ void EntityUnitStorage::initalizeFromFile(const std::string& fileName)
         et.prototypeId = dataEt.prototype;
         et.visible     = dataEt.visible;
 
+        auto modelId = et.modelId;
         printf("entity(id=%d, prototypeId=%d)\n", et.id, et.prototypeId);
         if (ID::isInvalidID(et.transformId))
             return;
@@ -111,10 +112,11 @@ void EntityUnitStorage::initalizeFromFile(const std::string& fileName)
         trans.pos()      = dataTrans.position;
         printf("        pos(%f,%f)\n", trans.x, trans.y);
 
-        if (ID::isInvalidID(et.modelId))
+
+        if (ID::isInvalidID(modelId))
             return;
-        auto&& dataModel = sceneModule.modelsMap[et.modelId];
-        auto&& model     = modelsPool[et.modelId];
+        auto&& dataModel = sceneModule.modelsMap[modelId];
+        auto&& model     = modelsPool[modelId];
         model.drawUnitId = dataModel.method.id;
 
         if (dataModel.hasRadius())
