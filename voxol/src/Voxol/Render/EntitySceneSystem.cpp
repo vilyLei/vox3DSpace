@@ -45,6 +45,7 @@ void EntitySceneSystem::initalize(const std::string& configFileName)
         for (auto& item : insMap.map)
         {
             auto& ins = item.second;
+            Component::defaultRect.mat33MapTo(ins.worldMat, vb);
             bvh->addItem(ins.id, vb);
         }
     };
