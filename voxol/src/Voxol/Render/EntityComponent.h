@@ -28,11 +28,7 @@ struct UnitTransform
 constexpr UnitTransform defaultTrans{0, 0, 1, 1, 0};
 constexpr Math::VxRect  defaultRect{0, 0, 1, 1};
 
-struct UnitMat33
-{
-    Math::Mat33 mat;
-    uint32_t    id = ID::INVALID_ID;
-};
+
 struct UnitShadingBaseDesc
 {
     uint32_t color = 0xff000000;
