@@ -1,7 +1,6 @@
 #ifndef VOXOL_RENDER_COMP_BASE_DEF_H
 #define VOXOL_RENDER_COMP_BASE_DEF_H
 
-//#include "../Math/VxRect.h"
 #include "../Base/BaseDefine.h"
 #include <vector>
 #include <cstdint>
@@ -34,6 +33,10 @@ struct EntityId
     constexpr bool operator==(const EntityId& other) const noexcept
     {
         return value == other.value;
+    }
+    constexpr bool operator<(const EntityId& other) const noexcept
+    {
+        return value < other.value;
     }
 };
 struct EntityIdHasher
