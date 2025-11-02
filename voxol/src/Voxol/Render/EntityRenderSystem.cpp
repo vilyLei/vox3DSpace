@@ -30,7 +30,21 @@ void EntityRenderSystem::render(const Draw::DrawContext& rctx, const Math::Mat33
 
     for (auto i = 0; i < total; i++)
     {
+        if (queriedEIds[i].isIDInvalid())
+            continue;
+        auto iid = queriedEIds[i].iid();
+        if (iid > 0)
+        {
+            printf("drawUnit with prototype child rendering process ...\n");
+            continue;
+        }
+
         auto& et = entitiesPool[queriedEIds[i].id()];
+        if (ID::isValidID(et.prototypeId))
+        {
+            printf("drawUnit with prototype root rendering process ...\n");
+            //return;
+        }
         if (et.shadingId < 0 || !et.visible)
             continue;
         auto flag = drawUnit(et, vpM, wbounds);

@@ -101,29 +101,26 @@ void EntitySystemLayer::undo()
     auto& storage     = etRenderSys->entityStorage;
     auto& compStorage = storage->comp;
     auto&& itemData    = compStorage->historyManager->popItem();
-    printf("EntitySystemLayer::undo()�� itemData.id: %d\n", itemData.id);
+    printf("EntitySystemLayer::undo() itemData.id: %u\n", itemData.id.id());
     if (itemData.id.id() < 0)
     {
         return;
     }
 
-    printf("EntitySystemLayer::undo()�� update some items.\n");
+    printf("EntitySystemLayer::undo() update some items.\n");
     auto&& etrans = compStorage->getEntityTransformAt(itemData.id.id());
 
     Math::Vec2 pv{itemData.trans.x, itemData.trans.y};
 
     compStorage->setEntityLocalXYAt(pv, itemData.id.id());
 
-    // ����Ĵ���ҲҪ�����νṹ������Ļ���
     auto& bvh = etSceneSys->bvh;
     auto b0  = bvh->getBoundsAt(itemData.id);
     auto b1  = b0;
     if (tileSys)
     {
-        // �Ƴ�
         tileSys->addDirtyBounds(b0, 0);
         b1.moveTo(pv.x, pv.y);
-        // ����
         tileSys->addDirtyBounds(b1, 1);
     }
     if (bvh)

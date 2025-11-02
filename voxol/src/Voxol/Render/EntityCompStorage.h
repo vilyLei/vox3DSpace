@@ -132,19 +132,19 @@ public:
     void updateDirtySubtrees(const std::vector<uint32_t>& roots);
 
 public:
-    CompPool<Component::UnitEntity>           entitiesPool{};
-    CompPool<Component::UnitShadingEntity>    shaderingEntitiesPool{};
-    CompPool<Component::UnitModel>            modelsPool{};
-    CompPool<Component::UnitTransform>        transformsPool{};
-    CompPool<Component::UnitHierarchy>        hierarchiesPool{};
-    CompPool<Component::UnitShadingBaseDesc>  shaderingDescPool{};
-    std::unordered_map<uint32_t, uint32_t>    hierarchyIndexMap{};
-    std::unordered_map<uint32_t, Math::Mat33> entityGlobalMat33Map{};
+    CompPool<Component::UnitEntity>                          entitiesPool{};
+    CompPool<Component::UnitShadingEntity>                   shaderingEntitiesPool{};
+    CompPool<Component::UnitModel>                           modelsPool{};
+    CompPool<Component::UnitTransform>                       transformsPool{};
+    CompPool<Component::UnitHierarchy>                       hierarchiesPool{};
+    CompPool<Component::UnitShadingBaseDesc>                 shaderingDescPool{};
+    std::unordered_map<uint32_t, uint32_t>                   hierarchyIndexMap{};
+    std::unordered_map<uint32_t, Math::Mat33>                entityGlobalMat33Map{};
+    std::unordered_map<uint32_t, Component::UnitInstanceMap> insStorage;
 
 private:
     std::vector<uint32_t> topoOrder;
     std::vector<uint32_t> topoIndex;
-    std::unordered_map<uint32_t, Component::UnitInstanceMap> insStorage;
 };
 } // namespace Voxol::Render
 #endif

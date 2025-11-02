@@ -35,12 +35,17 @@ void EntitySceneSystem::initalize(const std::string& configFileName)
     auto& shaderingDescPool      = storage->shaderingDescPool;
     auto& transformsPool         = storage->transformsPool;
 
-    auto& entityGlobalMat33Map = storage->entityGlobalMat33Map;
+    auto& insStorage           = storage->insStorage;
     auto updateProtoEtBVHData = [&](auto& et) {
         auto&& vb = storage->getEntityGlobalBoundsAt(et.id);
         bvh->addItem(ID::KeyUint64::make(et.id, 0), vb);
 
-        auto& worldMat = entityGlobalMat33Map[et.id];
+        auto&& insMap = insStorage[et.id];
+        for (auto& item : insMap.map)
+        {
+            auto& ins = item.second;
+            bvh->addItem(ID::KeyUint64::make(ins.protoNodeId, ins.iid), vb);
+        }
 
     };
     entitiesPool.forEach([&](auto& et, uint32_t index) {
