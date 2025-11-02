@@ -29,14 +29,14 @@ public:
     void                       initalize(const std::string& configFileName = {});
     int                        drawQuery(const Math::VxRect& bounds, int phase);
     void                       clear();
-    const std::vector<Base::KeyUint64> getQueriedEIds() const;
+    const std::vector<ID::KeyUint64> getQueriedEIds() const;
 
     EntitySysBVH::SP      bvh = EntitySysBVH::make();
     EntityUnitStorage::SP entityStorage{};
     void                  updateBVHBoundsWithEntityId(uint32_t eId);
 
 private:
-    std::vector<Base::KeyUint64> queriedEIds{};
+    std::vector<ID::KeyUint64> queriedEIds{};
 };
 } // namespace Voxol::Render
 #endif

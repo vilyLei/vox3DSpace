@@ -6,7 +6,7 @@
 namespace Voxol::Render
 {
 
-namespace Base
+namespace ID
 {
 
 uint32_t EntityIdManager::allocate()

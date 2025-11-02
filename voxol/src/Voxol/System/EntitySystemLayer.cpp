@@ -8,21 +8,21 @@ EntitySystemLayer::SP EntitySystemLayer::make()
     return sp;
 }
 
-void EntitySystemLayer::updateTileWithEntityId(const Render::Base::KeyUint64& eId)
+void EntitySystemLayer::updateTileWithEntityId(const Render::ID::KeyUint64& eId)
 {
     if (eId.isIDInvalid())
         return;
 
     auto&                 etCompStorage = etSceneSys->entityStorage->comp;
     auto&                 bvh           = etSceneSys->bvh;
-    std::vector<Render::Base::KeyUint64> ids{};
+    std::vector<Render::ID::KeyUint64> ids{};
     etCompStorage->getIdsFromId(eId.id(), ids);
     for (auto pid : ids)
     {
         tileSys->addDirtyBounds(bvh->getBoundsAt(pid), 0);
     }
 }
-void EntitySystemLayer::updateBVHAndTileWithEntityId(const Render::Base::KeyUint64& eId)
+void EntitySystemLayer::updateBVHAndTileWithEntityId(const Render::ID::KeyUint64& eId)
 {
     if (eId.isIDInvalid())
         return;
@@ -33,7 +33,7 @@ void EntitySystemLayer::updateBVHAndTileWithEntityId(const Render::Base::KeyUint
     auto&& parentMat = etCompStorage->getEntityParentGlobalMatAt(eId.id());
     etCompStorage->traverseBuildGlobalMatA(eId.id(), parentMat);
 
-    std::vector<Render::Base::KeyUint64> ids{};
+    std::vector<Render::ID::KeyUint64> ids{};
     etCompStorage->getIdsFromId(eId.id(), ids);
     for (auto pid : ids)
     {
@@ -53,7 +53,7 @@ void EntitySystemLayer::initalize(const std::string& configFileName)
     auto& etCompStorage = etSceneSys->entityStorage->comp;
     
     uiOpLayer                      = std::make_shared<System::UIOperationLayer>();
-    uiOpLayer->mouseCtrl.dirtyCall = [&, this](const Math::Bounds& bounds, uint32_t type, const Render::Base::KeyUint64& etId) {
+    uiOpLayer->mouseCtrl.dirtyCall = [&, this](const Math::Bounds& bounds, uint32_t type, const Render::ID::KeyUint64& etId) {
         //tileSys->addDirtyBounds(bounds, type);
         if (type == 0)
         {
@@ -101,29 +101,29 @@ void EntitySystemLayer::undo()
     auto& storage     = etRenderSys->entityStorage;
     auto& compStorage = storage->comp;
     auto&& itemData    = compStorage->historyManager->popItem();
-    printf("EntitySystemLayer::undo()£¬ itemData.id: %d\n", itemData.id);
+    printf("EntitySystemLayer::undo()ï¿½ï¿½ itemData.id: %d\n", itemData.id);
     if (itemData.id.id() < 0)
     {
         return;
     }
 
-    printf("EntitySystemLayer::undo()£¬ update some items.\n");
+    printf("EntitySystemLayer::undo()ï¿½ï¿½ update some items.\n");
     auto&& etrans = compStorage->getEntityTransformAt(itemData.id.id());
 
     Math::Vec2 pv{itemData.trans.x, itemData.trans.y};
 
     compStorage->setEntityLocalXYAt(pv, itemData.id.id());
 
-    // ÏÂÃæµÄ´úÂëÒ²Òª¼ÓÈë²ã´Î½á¹¹×ÔÊÊÅäµÄ»úÖÆ
+    // ï¿½ï¿½ï¿½ï¿½Ä´ï¿½ï¿½ï¿½Ò²Òªï¿½ï¿½ï¿½ï¿½ï¿½Î½á¹¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä»ï¿½ï¿½ï¿½
     auto& bvh = etSceneSys->bvh;
     auto b0  = bvh->getBoundsAt(itemData.id);
     auto b1  = b0;
     if (tileSys)
     {
-        // ÒÆ³ö
+        // ï¿½Æ³ï¿½
         tileSys->addDirtyBounds(b0, 0);
         b1.moveTo(pv.x, pv.y);
-        // ÒÆÈë
+        // ï¿½ï¿½ï¿½ï¿½
         tileSys->addDirtyBounds(b1, 1);
     }
     if (bvh)

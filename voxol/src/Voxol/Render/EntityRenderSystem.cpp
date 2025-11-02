@@ -12,13 +12,13 @@ EntityRenderSystem::SP EntityRenderSystem::make()
 void EntityRenderSystem::initalize()
 {
 }
-void EntityRenderSystem::render(const Draw::DrawContext& rctx, const Math::Mat33& vpM, const Math::Bounds& wbounds, const std::vector<Base::KeyUint64>& queriedEIds)
+void EntityRenderSystem::render(const Draw::DrawContext& rctx, const Math::Mat33& vpM, const Math::Bounds& wbounds, const std::vector<ID::KeyUint64>& queriedEIds)
 {
     if (!entityStorage)
         return;
 
     //printf("EntityRenderSystem::render() B %d\n", queriedEIds.size());
-    /// ÕâÀïÊÇÕıÈ·µÄĞ´·¨
+    /// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È·ï¿½ï¿½Ğ´ï¿½ï¿½
     if (queriedEIds.empty())
         return;
 
@@ -28,7 +28,7 @@ void EntityRenderSystem::render(const Draw::DrawContext& rctx, const Math::Mat33
     auto&  entitiesPool = compStorage->entitiesPool;
     size_t drawTotal = 0;
 
-    /// ×¢Òâ, ÕâÀïÒª»ùÓÚäÖÈ¾Ë³ĞòÅÅĞòÖ®ºóÔÙ»æÖÆ
+    /// ×¢ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½Òªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È¾Ë³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö®ï¿½ï¿½ï¿½Ù»ï¿½ï¿½ï¿½
 
     for (auto i = 0; i < total; i++)
     {
@@ -44,7 +44,7 @@ void EntityRenderSystem::render(const Draw::DrawContext& rctx, const Math::Mat33
     }
     return;
 
-    // ÔİÊ±ÕâÑùĞ´£¬ÒÔ±ã²âÊÔdragging
+    // ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½Ğ´ï¿½ï¿½ï¿½Ô±ï¿½ï¿½ï¿½ï¿½dragging
     auto& ets = compStorage->entitiesPool;
     ets.forEach([&](auto& et) {
         if (et.shadingId < 0 || !et.visible)

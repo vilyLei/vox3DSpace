@@ -40,14 +40,14 @@ void EntitySceneSystem::initalize(const std::string& configFileName)
 
     entitiesPool.forEach([&](auto& et, uint32_t index) {
 
-        if (et.shadingId == Base::INVALID_ID)
+        if (et.shadingId == ID::INVALID_ID)
             return;
 
         //auto& trans = transformsPool[et.transformId];
         //bounds.setXYWH(trans.x, trans.y, trans.sx, trans.sy);
         //bounds.mat33MapTo(storage->entityGlobalMat33Map[et.id], vb);
         auto&& vb = storage->getEntityGlobalBoundsAt( et.id );
-        bvh->addItem(Base::KeyUint64::make(et.id, 0), vb);
+        bvh->addItem(ID::KeyUint64::make(et.id, 0), vb);
     });
 
     bvh->build();
@@ -62,7 +62,7 @@ int EntitySceneSystem::drawQuery(const Math::VxRect& wbounds, int phase)
     return static_cast<int>(queriedEIds.size());
 }
 
-const std::vector<Base::KeyUint64> EntitySceneSystem::getQueriedEIds() const
+const std::vector<ID::KeyUint64> EntitySceneSystem::getQueriedEIds() const
 {
     return queriedEIds;
 }
@@ -72,10 +72,10 @@ void EntitySceneSystem::clear()
 
 void EntitySceneSystem::updateBVHBoundsWithEntityId(uint32_t eId)
 {
-    if (Base::isInvalidID(eId))
+    if (ID::isInvalidID(eId))
         return;
 
-    std::vector<Base::KeyUint64> ids{};
+    std::vector<ID::KeyUint64> ids{};
     entityStorage->comp->getIdsFromId(eId, ids);
     for (auto pid : ids)
     {

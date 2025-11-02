@@ -30,7 +30,7 @@ constexpr Math::VxRect  defaultRect{0, 0, 1, 1};
 struct UnitMat33
 {
     Math::Mat33 mat;
-    uint32_t    id = Base::INVALID_ID;
+    uint32_t    id = ID::INVALID_ID;
 };
 struct UnitShadingBaseDesc
 {
@@ -40,33 +40,33 @@ struct UnitShadingBaseDesc
 
 struct UnitShadingEntity
 {
-    uint32_t id = Base::INVALID_ID;
+    uint32_t id = ID::INVALID_ID;
     /// UnitShadingBaseDesc vector index value
-    uint32_t shadingDescId = Base::INVALID_ID;
+    uint32_t shadingDescId = ID::INVALID_ID;
 };
 struct UnitModel
 {
-    uint32_t id         = Base::INVALID_ID;
-    uint32_t drawUnitId = Base::INVALID_ID;
+    uint32_t id         = ID::INVALID_ID;
+    uint32_t drawUnitId = ID::INVALID_ID;
 };
 
 struct UnitHierarchy
 {
-    uint32_t parent     = Base::INVALID_ID;
-    uint32_t next       = Base::INVALID_ID;
-    uint32_t firstChild = Base::INVALID_ID;
+    uint32_t parent     = ID::INVALID_ID;
+    uint32_t next       = ID::INVALID_ID;
+    uint32_t firstChild = ID::INVALID_ID;
 };
 struct UnitEntity
 {
-    /// Ö»ÓÐentity²ÅÓÐ×ÔÉíµÄid
-    uint32_t id = Base::INVALID_ID;
+    /// Ö»ï¿½ï¿½entityï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½id
+    uint32_t id = ID::INVALID_ID;
     /// UnitShadingEntity vector index value
-    uint32_t shadingId   = Base::INVALID_ID;
-    uint32_t transformId = Base::INVALID_ID;
-    uint32_t modelId     = Base::INVALID_ID;
-    uint32_t hierarchyId = Base::INVALID_ID;
-    // ±íÊ¾µ±Ç°Õâ¸öentityÊÇ»ùÓÚprototypeIdËù¶ÔÓ¦µÄentityµÄinstance(ÊµÀý)
-    uint32_t prototypeId = Base::INVALID_ID;
+    uint32_t shadingId   = ID::INVALID_ID;
+    uint32_t transformId = ID::INVALID_ID;
+    uint32_t modelId     = ID::INVALID_ID;
+    uint32_t hierarchyId = ID::INVALID_ID;
+    // ï¿½ï¿½Ê¾ï¿½ï¿½Ç°ï¿½ï¿½ï¿½entityï¿½Ç»ï¿½ï¿½ï¿½prototypeIdï¿½ï¿½ï¿½ï¿½Ó¦ï¿½ï¿½entityï¿½ï¿½instance(Êµï¿½ï¿½)
+    uint32_t prototypeId = ID::INVALID_ID;
 
     bool visible = true;
     bool dirty   = true;
@@ -125,16 +125,16 @@ struct FlatInsStorage
 
 struct UnitInstance
 {
-    uint32_t    protoNodeId = Base::INVALID_ID; // prototype entity id
-    uint32_t    iid         = Base::INVALID_ID; // unique instantiation id
+    uint32_t    protoNodeId = ID::INVALID_ID; // prototype entity id
+    uint32_t    iid         = ID::INVALID_ID; // unique instantiation id
     Math::Mat33 worldMat;
 };
 
 struct UnitInstanceMap
 {
-    uint32_t                             instanceEntityId = Base::INVALID_ID; // ³¡¾°ÖÐµÄ instance ¸ùÊµÌå
-    uint32_t                             prototypeRootId  = Base::INVALID_ID; // Ô´ prototype ¸ù id
-    std::vector<UnitInstance>            nodes;                         // ±âÆ½ÁÐ±í£¬»ò unordered_map<iid, UnitInstance>
+    uint32_t                             instanceEntityId = ID::INVALID_ID; // ï¿½ï¿½ï¿½ï¿½ï¿½Ðµï¿½ instance ï¿½ï¿½Êµï¿½ï¿½
+    uint32_t                             prototypeRootId  = ID::INVALID_ID; // Ô´ prototype ï¿½ï¿½ id
+    std::vector<UnitInstance>            nodes;                         // ï¿½ï¿½Æ½ï¿½Ð±ï¿½ï¿½ï¿½ï¿½ï¿½ unordered_map<iid, UnitInstance>
     std::unordered_map<uint32_t, size_t> iidToIndexMap;                 // iid -> index in nodes (optional)
     bool                                 dirty = true;
     // for debug

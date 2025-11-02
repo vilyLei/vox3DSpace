@@ -109,14 +109,14 @@ public:
     Math::Vec2               getEntityLocalXYAt(uint32_t id);
     void                     setEntityLocalXYAt(const Math::Vec2& pv, uint32_t id);
 
-    void getIdsFromId(uint32_t etId, std::vector<Base::KeyUint64>& ids);
+    void getIdsFromId(uint32_t etId, std::vector<ID::KeyUint64>& ids);
 
 
     Component::UnitTransform getEntityTransformAt(uint32_t id);
     void                     setEntityTransformAt(const Component::UnitTransform& trans, uint32_t id);
 
     Math::Mat33 getEntityGlobalMat33At(uint32_t id);
-    void        checkIds(std::vector<Base::KeyUint64>& edis);
+    void        checkIds(std::vector<ID::KeyUint64>& edis);
 
     void updateHierarchyInfo();
     void traverseSortIndex(uint32_t etId, uint32_t& index);
@@ -142,7 +142,7 @@ public:
     std::unordered_map<uint32_t, uint32_t>    hierarchyIndexMap{};
     std::unordered_map<uint32_t, Math::Mat33> entityGlobalMat33Map{};
     // for debug
-    std::unordered_map<Base::EntityId, Math::Mat33, Base::EntityIdHasher, Base::EntityIdEqual> entityIdTypeMatMap{};
+    std::unordered_map<ID::EntityId, Math::Mat33, ID::EntityIdHasher, ID::EntityIdEqual> entityIdTypeMatMap{};
 
 private:
     std::vector<uint32_t> topoOrder;

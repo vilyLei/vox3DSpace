@@ -22,14 +22,14 @@ void MouseController::selectWithSingle(const System::Mouse::MouseEvent& evt, con
     auto etStorage = targetSys->entityStorage->comp;
     etStorage->checkIds(qeIds);
 
-    auto topId = qeIds.empty() ? Render::Base::INVALID_ID : qeIds.back().id();
+    auto topId = qeIds.empty() ? Render::ID::INVALID_ID : qeIds.back().id();
 
     if (evt.isBegin())
     {
         dragging = false;
     }
 
-    if (Render::Base::isValidID(topId) && evt.isBegin())
+    if (Render::ID::isValidID(topId) && evt.isBegin())
     {
         etId          = topId;
         originEtPos   = etStorage->getEntityGlobalXYAt(etId);
@@ -37,9 +37,9 @@ void MouseController::selectWithSingle(const System::Mouse::MouseEvent& evt, con
         return;
     }
 
-    if (Render::Base::isValidID(etId) && evt.isDragging())
+    if (Render::ID::isValidID(etId) && evt.isDragging())
     {
-        auto keyId = Render::Base::KeyUint64::make(etId, 0);
+        auto keyId = Render::ID::KeyUint64::make(etId, 0);
         dirtyCall({}, 0, keyId);
         etStorage->setEntityGlobalXYAt(originEtPos + offset, etId);
         dirtyCall({}, 1, keyId);
@@ -49,16 +49,16 @@ void MouseController::selectWithSingle(const System::Mouse::MouseEvent& evt, con
     }
     if (evt.isEnd())
     {
-        if (Render::Base::isValidID(etId) && dragging)
+        if (Render::ID::isValidID(etId) && dragging)
         {
             dragging = false;
             etStorage->historyManager->pushItem({unitTransform, etId});
         }
-        etId = Render::Base::INVALID_ID;
+        etId = Render::ID::INVALID_ID;
         return;
     }
 
-    if (evt.isDragging() && Render::Base::isInvalidID(etId))
+    if (evt.isDragging() && Render::ID::isInvalidID(etId))
     {
         selectionBounds.toEmpty(evt.originGlobalPos);
         selectType = SelectType::Bounds;
@@ -87,7 +87,7 @@ void MouseController::selectWithBounds(const System::Mouse::MouseEvent& evt, con
     if (evt.isEnd())
     {
         printf("MouseCtroller::selectBtnBounds() end().\n");
-        etId       = Render::Base::INVALID_ID;
+        etId       = Render::ID::INVALID_ID;
         selectType = SelectType::Single;
     }
 }

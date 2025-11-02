@@ -12,7 +12,7 @@
 
 namespace Voxol::Render
 {
-namespace Base
+namespace ID
 {
 // 定义entity id为28bits的uint32_t类型
 

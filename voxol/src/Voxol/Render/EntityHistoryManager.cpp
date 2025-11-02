@@ -15,11 +15,11 @@ HistoryItemData EntityHistoryManager::popItem() {
 
     if (mList.empty())
     {
-        return HistoryItemData{.id = Base::INVALID_ID};
+        return HistoryItemData{.id = ID::INVALID_ID};
     }
-    // 下面这句auto会导致debug模式下ide看到的itemData值是错的
+    // 锟斤拷锟斤拷锟斤拷锟絘uto锟结导锟斤拷debug模式锟斤拷ide锟斤拷锟斤拷锟斤拷itemData值锟角达拷锟斤拷
     //auto itemData = mList.back();
-    // ，但是下面这样指明类型就是对的了
+    // 锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷指锟斤拷锟斤拷锟酵撅拷锟角对碉拷锟斤拷
     //HistoryItemData itemData = std::move(mList.back());
 
     auto&&          itemData = mList.back();

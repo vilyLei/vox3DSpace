@@ -18,7 +18,7 @@ namespace Shadering
 {
 struct Description
 {
-    uint32_t    id = Base::INVALID_ID;
+    uint32_t    id = ID::INVALID_ID;
     std::string type;
     uint32_t    color = 0xff000000;
     void        parse(const JsonType& node);
@@ -26,7 +26,7 @@ struct Description
 
 struct Unit
 {
-    uint32_t  id = Base::INVALID_ID;
+    uint32_t  id = ID::INVALID_ID;
     uint32_t  description;
     uint32_t  blendmode;
     void parse(const JsonType& node)
@@ -64,7 +64,7 @@ namespace Scene
 {
 struct ModelMethod
 {
-    uint32_t id = Base::INVALID_ID;
+    uint32_t id = ID::INVALID_ID;
     // Mesh / SDF / Procedural / Volume / Voxel
     std::string type;
     void        parse(const JsonType& node)
@@ -75,7 +75,7 @@ struct ModelMethod
 };
 struct Model
 {
-    uint32_t                        id = Base::INVALID_ID;
+    uint32_t                        id = ID::INVALID_ID;
     std::string                     type;
     ModelMethod                     method;
     std::variant<float, Math::Vec2> value;
@@ -109,17 +109,17 @@ struct Model
 
 struct Transform
 {
-    uint32_t   id = Base::INVALID_ID;
+    uint32_t   id = ID::INVALID_ID;
     Math::Vec2 position;
     void       parse(const JsonType& node);
 };
 
 struct Hierarchy
 {
-    uint32_t id = Base::INVALID_ID;
-    uint32_t parent = Base::INVALID_ID;
-    uint32_t next   = Base::INVALID_ID;
-    uint32_t firstChild = Base::INVALID_ID;
+    uint32_t id = ID::INVALID_ID;
+    uint32_t parent = ID::INVALID_ID;
+    uint32_t next   = ID::INVALID_ID;
+    uint32_t firstChild = ID::INVALID_ID;
 
     void parse(const JsonType& node)
     {
@@ -135,12 +135,12 @@ struct Hierarchy
 };
 struct Entity
 {
-    uint32_t  id = Base::INVALID_ID;
-    uint32_t  shadering = Base::INVALID_ID;
-    uint32_t  transform = Base::INVALID_ID;
-    uint32_t  model     = Base::INVALID_ID;
-    uint32_t  hierarchy = Base::INVALID_ID;
-    uint32_t  prototype = Base::INVALID_ID;
+    uint32_t  id = ID::INVALID_ID;
+    uint32_t  shadering = ID::INVALID_ID;
+    uint32_t  transform = ID::INVALID_ID;
+    uint32_t  model     = ID::INVALID_ID;
+    uint32_t  hierarchy = ID::INVALID_ID;
+    uint32_t  prototype = ID::INVALID_ID;
     bool      visible   = true;
 
     void parse(const JsonType& node)

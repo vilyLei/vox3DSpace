@@ -11,7 +11,7 @@ namespace Voxol::Render
 struct HistoryItemData
 {
     Component::UnitTransform trans;
-    Render::Base::KeyUint64  id;
+    Render::ID::KeyUint64  id;
 };
 
 class EntityHistoryManager

@@ -185,7 +185,7 @@ public:
     {
 
         if (m_freeList.empty())
-            return Base::INVALID_ID;
+            return ID::INVALID_ID;
 
         uint32_t idx = m_freeList.back();
         m_freeList.pop_back();

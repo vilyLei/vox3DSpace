@@ -26,7 +26,7 @@ public:
 public:
     struct Item
     {
-        Base::KeyUint64 objectId; // entity id
+        ID::KeyUint64 objectId; // entity id
 
         Math::Bounds bounds;        // world-space bounds
         bool         dirty = false; // 标记是否需要 refit
@@ -47,7 +47,7 @@ public:
     // -----------------------------
     // 添加 Item
     // -----------------------------
-    void addItem(const Base::KeyUint64& objectId, const Math::Bounds& bounds);
+    void addItem(const ID::KeyUint64& objectId, const Math::Bounds& bounds);
 
     // -----------------------------
     // 完整构建BVH
@@ -61,7 +61,7 @@ public:
     // -----------------------------
     // 更新单个对象的包围盒 (通过 objectId)
     // -----------------------------
-    bool updateItemBoundsByObjectId(const Base::KeyUint64& objectId, const Math::Bounds& newBounds);
+    bool updateItemBoundsByObjectId(const ID::KeyUint64& objectId, const Math::Bounds& newBounds);
     // -----------------------------
     // 更新所有脏节点 (Refit)
     // -----------------------------
@@ -70,12 +70,12 @@ public:
     // -----------------------------
     // 点查询
     // -----------------------------
-    void queryPoint(const Math::Vec2& p, std::vector<Base::KeyUint64>& outIds) const;
+    void queryPoint(const Math::Vec2& p, std::vector<ID::KeyUint64>& outIds) const;
 
     // -----------------------------
     // 范围查询
     // -----------------------------
-    void queryBounds(const Math::Bounds& b, std::vector<Base::KeyUint64>& outIds) const;
+    void queryBounds(const Math::Bounds& b, std::vector<ID::KeyUint64>& outIds) const;
 
     // -----------------------------
     // 获取Item引用
@@ -88,7 +88,7 @@ public:
     // -----------------------------
     void partialRebuild();
 
-    const Math::Bounds& getBoundsAt(const Base::KeyUint64& objId)
+    const Math::Bounds& getBoundsAt(const ID::KeyUint64& objId)
     {
         auto i = m_objectIdToItem[objId];
         return m_items[i].bounds;
@@ -107,12 +107,12 @@ private:
     // -----------------------------
     // 点查询递归
     // -----------------------------
-    void queryPointRecursive(int nodeIndex, const Math::Vec2& p, std::vector<Base::KeyUint64>& outIds) const;
+    void queryPointRecursive(int nodeIndex, const Math::Vec2& p, std::vector<ID::KeyUint64>& outIds) const;
 
     // -----------------------------
     // 范围查询递归
     // -----------------------------
-    void queryBoundsRecursive(int nodeIndex, const Math::Bounds& b, std::vector<Base::KeyUint64>& outIds) const;
+    void queryBoundsRecursive(int nodeIndex, const Math::Bounds& b, std::vector<ID::KeyUint64>& outIds) const;
 
     // -----------------------------
     // 同步 objectId → itemIndex 映射
@@ -127,10 +127,10 @@ private:
 private:
     std::vector<Item>                                                                                            m_items;
     std::vector<Node>                                                                                            m_nodes;
-    std::unordered_map<Base::KeyUint64, uint32_t, Base::IdTraits<Base::KeyUint64>::Hasher, Base::KeyUint64Equal> m_objectIdToItem;
-    //std::unordered_map<Base::KeyUint64, uint32_t, Base::KeyUint64Hasher, Base::KeyUint64Equal> m_objectIdToItem;
-    //std::unordered_map<Base::KeyUint64, uint32_t, Base::IdTraits<Base::KeyUint64>::Hasher, Base::KeyUint64Equal> m_objectIdToItemMap;
-    //std::map<Base::KeyUint64, uint32_t, Base::IdTraits<Base::KeyUint64>::Less> m_idMap;
+    std::unordered_map<ID::KeyUint64, uint32_t, ID::IdTraits<ID::KeyUint64>::Hasher, ID::KeyUint64Equal> m_objectIdToItem;
+    //std::unordered_map<ID::KeyUint64, uint32_t, ID::KeyUint64Hasher, ID::KeyUint64Equal> m_objectIdToItem;
+    //std::unordered_map<ID::KeyUint64, uint32_t, Base::IdTraits<ID::KeyUint64>::Hasher, ID::KeyUint64Equal> m_objectIdToItemMap;
+    //std::map<ID::KeyUint64, uint32_t, Base::IdTraits<ID::KeyUint64>::Less> m_idMap;
 
     bool m_dirty = false;
 };
