@@ -22,7 +22,6 @@ public:
 public:
     static EntityRenderSystem::SP make();
 
-
 public:
     EntityRenderSystem()  = default;
     ~EntityRenderSystem() = default;

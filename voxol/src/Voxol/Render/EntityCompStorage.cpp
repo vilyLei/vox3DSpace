@@ -332,7 +332,6 @@ void EntityCompStorage::buildTopoOrderFromRoots(const std::vector<uint32_t>& roo
             dfs(child);
         }
     };
-
     for (auto r : roots) dfs(r);
 }
 void EntityCompStorage::traverseBuildGlobalMatInstance(uint32_t instanceRootId, const Math::Mat33& parentMat, Component::UnitInstanceMap& insMap)
@@ -369,7 +368,6 @@ void EntityCompStorage::traverseBuildGlobalMatInstance(uint32_t instanceRootId, 
 
 void EntityCompStorage::traverseBuildGlobalMatPrototypeUnderInstance(uint32_t instanceEntityId, uint32_t prototypeRootId, const Math::Mat33& instanceParentMat)
 {
-    // create fresh InsNodeMap
     Component::UnitInstanceMap map;
     map.instanceEntityId = instanceEntityId;
     map.prototypeRootId  = prototypeRootId;
@@ -377,13 +375,14 @@ void EntityCompStorage::traverseBuildGlobalMatPrototypeUnderInstance(uint32_t in
 
     // for prototype traversal, use the prototype hierarchy nodes
     // but we need to combine prototype-local transform + instanceParentMat
-    std::function<void(uint32_t, const Math::Mat33&)> dfsProto = [&](uint32_t protoNodeId, const Math::Mat33& parentMat) {
+    std::function<void(uint32_t, const Math::Mat33&, int& index)> dfsProto = [&](uint32_t protoNodeId, const Math::Mat33& parentMat, int& index) {
 
         Math::Mat33 worldMat = parentMat;
         // get prototype node's local transform if exists
         // prototype nodes are also stored in entityPool (we assume prototype entities have transforms)
+        printf("traverseBuildGlobalMatPrototypeUnderInstance() index: %d\n", index);
         auto& protoEt = entitiesPool[protoNodeId];
-        if (ID::isValidID(protoEt.transformId))
+        if (index > 0 && ID::isValidID(protoEt.transformId))
         {
             auto&& tr = transformsPool[protoEt.transformId];
 
@@ -398,23 +397,25 @@ void EntityCompStorage::traverseBuildGlobalMatPrototypeUnderInstance(uint32_t in
 
         auto&& pos = worldMat.getXY();
         printf("traverseBuildGlobalMatPrototypeUnderInstance() protoNodeId: %u, instanceEntityId: %u, C pos(x=%f,y=%f)\n", protoNodeId, instanceEntityId, pos.x, pos.y);
-
-        auto&& key = ID::KeyUint64::make(protoNodeId, instanceEntityId);
-
-        map.map[protoNodeId]         = {key, worldMat};
-        entityInsGlobalMat33Map[key] = worldMat;
+        if (index > 0)
+        {
+            auto&& key                   = ID::KeyUint64::make(protoNodeId, instanceEntityId);
+            map.map[protoNodeId]         = {key, worldMat};
+            entityInsGlobalMat33Map[key] = worldMat;
+        }
+        index++;
 
         for (auto child = hierarchiesPool[protoNodeId].firstChild;
              ID::isValidID(child);
              child = hierarchiesPool[child].next)
         {
-            dfsProto(child, worldMat);
+            dfsProto(child, worldMat, index);
         }
     };
 
+    int index = 0;
     // root prototype node(s) traversal
-    dfsProto(prototypeRootId, instanceParentMat);
-
+    dfsProto(prototypeRootId, instanceParentMat, index);
     // store into insStorage
     insStorage[instanceEntityId] = std::move(map);
 }

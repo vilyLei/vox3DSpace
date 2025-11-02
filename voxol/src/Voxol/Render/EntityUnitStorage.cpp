@@ -77,6 +77,7 @@ void EntityUnitStorage::initalizeFromFile(const std::string& fileName)
 
 
     auto updateUnitData = [&, this](int i) {
+
         auto& descMap = shaderingModule.descriptionsMap;
         auto& unitMap = shaderingModule.unitsMap;
 

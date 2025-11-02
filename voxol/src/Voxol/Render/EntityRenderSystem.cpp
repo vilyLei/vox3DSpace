@@ -38,8 +38,8 @@ void EntityRenderSystem::render(const Draw::DrawContext& rctx, const Math::Mat33
         auto& et    = entitiesPool[proId];
         if (iid > 0)
         {
-            auto&& wmat = compStorage->entityInsGlobalMat33Map[queriedEIds[i]];
-            drawUnitWithPrototype(et, vpM, wbounds, wmat);
+            //auto&& wmat = compStorage->entityInsGlobalMat33Map[queriedEIds[i]];
+            //drawUnitWithPrototype(et, vpM, wbounds, wmat);
             printf("drawUnit with prototype child rendering process ...\n");
             continue;
         }
