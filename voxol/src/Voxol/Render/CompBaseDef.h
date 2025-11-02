@@ -191,13 +191,13 @@ constexpr inline bool isInvalidID(const KeyUint64& id) noexcept
 
 
 // ============================================================
-// 1. 通用 IdTraits 模板定义
+// current IdTraits template
 // ============================================================
 template <typename T>
 struct IdTraits;
 
 // ============================================================
-// 2. EntityId 特化
+// EntityId template specialization
 // ============================================================
 template <>
 struct IdTraits<EntityId>
@@ -251,7 +251,7 @@ struct IdTraits<EntityId>
 };
 
 // ============================================================
-// 3. KeyUint64 特化
+// KeyUint64 template specialization
 // ============================================================
 template <>
 struct IdTraits<KeyUint64>
@@ -301,7 +301,7 @@ struct IdTraits<KeyUint64>
 };
 
 // ============================================================
-// 4. 通用模板接口封装函数
+// general template function defines
 // ============================================================
 template <typename T>
 constexpr bool isValidID(const T& id) noexcept
