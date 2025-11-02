@@ -75,9 +75,8 @@ bool EntityRenderSystem::drawUnit(const Component::UnitEntity& entity, const Mat
     auto& shdDesc  = shaderingDescPool[shadingEt.shadingDescId];
     auto&&       wmat = compStorage->entityGlobalMat33Map[entity.id];
 
-    Math::Bounds vbUnit{0,0,1,1};
     Math::Bounds vb;
-    vbUnit.mat33MapTo(wmat, vb);
+    Component::defaultRect.mat33MapTo(wmat, vb);
     if (!wbounds.intersects(vb))
         return false;
 

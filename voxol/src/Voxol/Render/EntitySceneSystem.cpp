@@ -35,7 +35,11 @@ void EntitySceneSystem::initalize(const std::string& configFileName)
     auto& shaderingDescPool      = storage->shaderingDescPool;
     auto& transformsPool         = storage->transformsPool;
 
+    auto& entityGlobalMat33Map = storage->entityGlobalMat33Map;
+    auto updateProtoEtBVHData = [&](auto& et) {
+        auto& worldMat = entityGlobalMat33Map[et.id];
 
+    };
     entitiesPool.forEach([&](auto& et, uint32_t index) {
 
         if (ID::isInvalidID(et.transformId))
