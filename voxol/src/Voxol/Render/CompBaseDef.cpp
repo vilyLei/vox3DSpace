@@ -17,8 +17,11 @@ uint32_t EntityIdManager::allocate()
         freeList.pop_back();
         return id;
     }
-    if ((nextId+1) >= INVALID_ID)
-        throw std::runtime_error("EntityId overflow: exceeded 28-bit range.");
+    if (nextId >= INVALID_ID)
+    {
+        printf("EntityIdManager::allocate(), EntityId overflow: exceeded 28-bit range.\n");
+        return INVALID_ID;
+    }
     return nextId++;
 }
 
@@ -47,6 +50,86 @@ std::string KeyUint64::toString(bool hex) const
     }
     return oss.str();
 }
-} // namespace Base
+
+
+uint32_t KeyUint64Manager::IIDPool::allocate()
+{
+    if (!freeList.empty())
+    {
+        uint32_t id = freeList.back();
+        freeList.pop_back();
+        return id;
+    }
+    if (nextIID >= INVALID_ID)
+        return INVALID_ID;
+    return nextIID++;
+}
+
+void KeyUint64Manager::IIDPool::release(uint32_t iid)
+{
+    if (iid < INVALID_ID && iid != 0)
+        freeList.push_back(iid);
+}
+
+[[nodiscard]] bool KeyUint64Manager::IIDPool::empty() const noexcept
+{
+    return freeList.empty() && nextIID <= 1;
+}
+
+[[nodiscard]] size_t KeyUint64Manager::IIDPool::freeCount() const noexcept { return freeList.size(); }
+
+
+[[nodiscard]] KeyUint64 KeyUint64Manager::allocate(uint32_t protoId, uint16_t flags)
+{
+    assert(protoId < INVALID_ID && "protoId must be valid");
+    auto&    pool = protoPools[protoId];
+    uint32_t iid  = pool.allocate();
+    return KeyUint64::make(protoId, iid, flags);
+}
+
+[[nodiscard]] KeyUint64 KeyUint64Manager::allocate(EntityId protoId, uint16_t flags)
+{
+    return allocate(protoId.value, flags);
+}
+
+void KeyUint64Manager::release(const KeyUint64& key)
+{
+    if (key.isIDInvalid())
+        return;
+
+    uint32_t protoId = key.protoNodeId();
+    uint32_t iid     = key.iid();
+
+    auto it = protoPools.find(protoId);
+    if (it != protoPools.end())
+    {
+        it->second.release(iid);
+    }
+}
+
+[[nodiscard]] size_t KeyUint64Manager::protoCount() const noexcept
+{
+    return protoPools.size();
+}
+
+[[nodiscard]] size_t KeyUint64Manager::freeCount(uint32_t protoId) const noexcept
+{
+    auto it = protoPools.find(protoId);
+    if (it == protoPools.end())
+        return 0;
+    return it->second.freeCount();
+}
+
+[[nodiscard]] bool KeyUint64Manager::hasProto(uint32_t protoId) const noexcept
+{
+    return protoPools.find(protoId) != protoPools.end();
+}
+
+void KeyUint64Manager::clear()
+{
+    protoPools.clear();
+}
+
+} // namespace ID
 
 } // namespace Voxol::Render
