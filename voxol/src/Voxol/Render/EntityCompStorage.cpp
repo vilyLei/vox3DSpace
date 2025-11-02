@@ -329,7 +329,7 @@ void EntityCompStorage::buildTopoOrderFromRoots(const std::vector<uint32_t>& roo
         topoOrder.push_back(id);
         topoIndex[id] = index++;
         for (uint32_t child = hierarchiesPool[id].firstChild;
-             child != ID::INVALID_ID;
+             ID::isValidID(child);
              child = hierarchiesPool[child].next)
         {
             dfs(child);
@@ -340,7 +340,7 @@ void EntityCompStorage::buildTopoOrderFromRoots(const std::vector<uint32_t>& roo
 }
 void EntityCompStorage::traverseBuildGlobalMatInstance(uint32_t instanceRootId, const Math::Mat33& parentMat, Component::UnitInstanceMap& insMap)
 {
-    if (instanceRootId == ID::INVALID_ID) return;
+    if (ID::isInvalidID(instanceRootId)) return;
 
     auto&&      et       = entitiesPool[instanceRootId];
     Math::Mat33 worldMat = parentMat;
@@ -362,7 +362,7 @@ void EntityCompStorage::traverseBuildGlobalMatInstance(uint32_t instanceRootId, 
 
     // traverse prototype's children (note: when instancing, we traverse prototype hierarchy)
     for (auto child = hierarchiesPool[instanceRootId].firstChild;
-         child != ID::INVALID_ID;
+         ID::isValidID(child);
          child = hierarchiesPool[child].next)
     {
         traverseBuildGlobalMatInstance(child, worldMat, insMap);
@@ -397,7 +397,7 @@ void EntityCompStorage::traverseBuildGlobalMatPrototypeUnderInstance(uint32_t in
         map.map[protoNodeId] = {protoNodeId, 0, worldMat};
 
         for (auto child = hierarchiesPool[protoNodeId].firstChild;
-             child != ID::INVALID_ID;
+             ID::isValidID(child);
              child = hierarchiesPool[child].next)
         {
             dfsProto(child, worldMat);
@@ -412,7 +412,7 @@ void EntityCompStorage::traverseBuildGlobalMatPrototypeUnderInstance(uint32_t in
 }
 void EntityCompStorage::traverseBuildGlobalMat(uint32_t etId, const Math::Mat33& parentMat)
 {
-    if (etId == ID::INVALID_ID) return;
+    if (ID::isInvalidID(etId)) return;
 
     auto&&      et       = entitiesPool[etId];
     Math::Mat33 worldMat = parentMat;
@@ -429,9 +429,10 @@ void EntityCompStorage::traverseBuildGlobalMat(uint32_t etId, const Math::Mat33&
     entityGlobalMat33Map[etId] = worldMat;
 
     // if entity is instance of prototype, build instance map using prototype tree
-    if (et.prototypeId != ID::INVALID_ID)
+    if (ID::isValidID(et.prototypeId))
     {
-        if (hierarchiesPool[etId].firstChild != ID::INVALID_ID)
+        printf("EntityCompStorage::traverseBuildGlobalMat() has prototypeId: %u\n", et.prototypeId);
+        if (ID::isValidID(hierarchiesPool[etId].firstChild))
         {
             printf("[Warning] entity %u is an instance, but has children in hierarchy ignored.\n", etId);
         }
@@ -441,7 +442,7 @@ void EntityCompStorage::traverseBuildGlobalMat(uint32_t etId, const Math::Mat33&
 
     // recurse children (entity children, not prototype children)
     for (auto child = hierarchiesPool[etId].firstChild;
-         child != ID::INVALID_ID;
+         ID::isValidID(child);
          child = hierarchiesPool[child].next)
     {
         traverseBuildGlobalMat(child, worldMat);
@@ -450,7 +451,7 @@ void EntityCompStorage::traverseBuildGlobalMat(uint32_t etId, const Math::Mat33&
 
 void EntityCompStorage::markSubtreeDirty(uint32_t rootId)
 {
-    if (rootId == ID::INVALID_ID) return;
+    if (ID::isInvalidID(rootId)) return;
 
     std::vector<uint32_t> stack{rootId};
     while (!stack.empty())
@@ -459,7 +460,7 @@ void EntityCompStorage::markSubtreeDirty(uint32_t rootId)
         stack.pop_back();
         entitiesPool[id].dirty = true;
         entityGlobalMat33Map.erase(id); // optional: clear old cached matrix
-        for (auto c = hierarchiesPool[id].firstChild; c != ID::INVALID_ID; c = hierarchiesPool[c].next)
+        for (auto c = hierarchiesPool[id].firstChild; ID::isValidID(c); c = hierarchiesPool[c].next)
             stack.push_back(c);
     }
 }
@@ -467,8 +468,7 @@ void EntityCompStorage::markSubtreeDirty(uint32_t rootId)
 // incremental updating
 void EntityCompStorage::updateDirtySubtrees(const std::vector<uint32_t>& roots)
 {
-    Math::Mat33 idMat;
-    idMat.identity();
+    auto&& idMat = Math::Mat33::makeIdentity();
     // For each root, if dirty true, traverse
     for (auto r : roots)
     {
@@ -483,7 +483,7 @@ void EntityCompStorage::updateDirtySubtrees(const std::vector<uint32_t>& roots)
                 auto id = stack.back();
                 stack.pop_back();
                 entitiesPool[id].dirty = false;
-                for (auto c = hierarchiesPool[id].firstChild; c != ID::INVALID_ID; c = hierarchiesPool[c].next)
+                for (auto c = hierarchiesPool[id].firstChild; ID::isValidID(c); c = hierarchiesPool[c].next)
                     stack.push_back(c);
             }
         }
