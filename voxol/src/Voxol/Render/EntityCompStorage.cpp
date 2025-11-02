@@ -208,7 +208,7 @@ void EntityCompStorage::checkIds(std::vector<ID::KeyUint64>& edis)
         return;
 
     std::vector<ID::KeyUint64> ids{};
-    auto                         tot = edis.size();
+    auto                       tot = edis.size();
     for (auto i = 0; i < tot; ++i)
     {
         auto&& et = entitiesPool[edis[i].protoNodeId()];
@@ -241,7 +241,7 @@ void EntityCompStorage::updateHierarchyInfo()
 void EntityCompStorage::traverseSortIndex(uint32_t etId, uint32_t& index)
 {
     printf("traverseSortIndex(), etId: %d, index: %d\n", etId, index);
-    hierarchyIndexMap[etId]  = index++;
+    hierarchyIndexMap[etId] = index++;
 
     for (auto child = hierarchiesPool[etId].firstChild; ID::isValidID(child); child = hierarchiesPool[child].next)
     {
@@ -250,7 +250,7 @@ void EntityCompStorage::traverseSortIndex(uint32_t etId, uint32_t& index)
 }
 void EntityCompStorage::traverseSortIndexAndBuildGlobalMat(uint32_t etId, uint32_t& index, const Math::Mat33& parentMat)
 {
-    auto&&         et        = entitiesPool[etId];
+    auto&& et = entitiesPool[etId];
 
     //printf("traverseSortIndexAndBuildGlobalMat(), etId: %d, index: %d\n", etId, index);
     hierarchyIndexMap[etId] = index++;
@@ -264,7 +264,6 @@ void EntityCompStorage::traverseSortIndexAndBuildGlobalMat(uint32_t etId, uint32
         printf("    ins parentTrans pos(x=%f,y=%f)\n", parentTrans.x, parentTrans.y);
 
         auto&& worldMat = Math::Mat33::makeTranslate(parentTrans.x + tr.x, parentTrans.y + tr.y);
-        //worldMat.setXY(parentTrans.x + tr.x, parentTrans.y + tr.y);
         worldMat.setScaleXY(tr.sx, tr.sy);
 
         entityGlobalMat33Map[etId] = worldMat;
@@ -378,21 +377,28 @@ void EntityCompStorage::traverseBuildGlobalMatPrototypeUnderInstance(uint32_t in
     // for prototype traversal, use the prototype hierarchy nodes
     // but we need to combine prototype-local transform + instanceParentMat
     std::function<void(uint32_t, const Math::Mat33&)> dfsProto = [&](uint32_t protoNodeId, const Math::Mat33& parentMat) {
+
         Math::Mat33 worldMat = parentMat;
         // get prototype node's local transform if exists
         // prototype nodes are also stored in entityPool (we assume prototype entities have transforms)
-        auto& protoEnt = entitiesPool[protoNodeId];
-        if (ID::isValidID(protoEnt.transformId))
+        auto& protoEt = entitiesPool[protoNodeId];
+        if (ID::isValidID(protoEt.transformId))
         {
-            auto&& tr = transformsPool[protoEnt.transformId];
+            auto&& tr = transformsPool[protoEt.transformId];
 
             auto&& parentTrans = parentMat.getXY();
             worldMat.identity();
             worldMat.setXY(parentTrans.x + tr.x, parentTrans.y + tr.y);
             worldMat.setScaleXY(tr.sx, tr.sy);
+
+            printf("traverseBuildGlobalMatPrototypeUnderInstance(), A tr pos(x=%f,y=%f)\n", tr.x, tr.y);
+            printf("traverseBuildGlobalMatPrototypeUnderInstance(), B parentTrans pos(x=%f,y=%f)\n", parentTrans.x, parentTrans.y);
         }
 
-        map.map[protoNodeId] = {protoNodeId, 0, worldMat};
+        auto&& pos = worldMat.getXY();
+        printf("traverseBuildGlobalMatPrototypeUnderInstance() protoNodeId: %d, C pos(x=%f,y=%f)\n", protoNodeId, pos.x, pos.y);
+
+        map.map[protoNodeId] = {protoNodeId, protoNodeId, worldMat};
 
         for (auto child = hierarchiesPool[protoNodeId].firstChild;
              ID::isValidID(child);
