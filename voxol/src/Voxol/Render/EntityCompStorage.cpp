@@ -354,8 +354,9 @@ void EntityCompStorage::traverseBuildGlobalMatInstance(uint32_t instanceRootId, 
         worldMat.setScaleXY(tr.sx, tr.sy);
     }
 
+    auto&& key = ID::KeyUint64::make(instanceRootId, 0);
     // store in insMap (prototype node id = instanceRootId if called on prototype tree)
-    insMap.map[instanceRootId] = {instanceRootId, 0, worldMat};
+    insMap.map[instanceRootId] = {key, worldMat};
 
     // traverse prototype's children (note: when instancing, we traverse prototype hierarchy)
     for (auto child = hierarchiesPool[instanceRootId].firstChild;
@@ -398,7 +399,10 @@ void EntityCompStorage::traverseBuildGlobalMatPrototypeUnderInstance(uint32_t in
         auto&& pos = worldMat.getXY();
         printf("traverseBuildGlobalMatPrototypeUnderInstance() protoNodeId: %u, instanceEntityId: %u, C pos(x=%f,y=%f)\n", protoNodeId, instanceEntityId, pos.x, pos.y);
 
-        map.map[protoNodeId] = {protoNodeId, instanceEntityId, worldMat};
+        auto&& key = ID::KeyUint64::make(protoNodeId, instanceEntityId);
+
+        map.map[protoNodeId]         = {key, worldMat};
+        entityInsGlobalMat33Map[key] = worldMat;
 
         for (auto child = hierarchiesPool[protoNodeId].firstChild;
              ID::isValidID(child);

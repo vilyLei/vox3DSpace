@@ -44,7 +44,7 @@ void EntitySceneSystem::initalize(const std::string& configFileName)
         for (auto& item : insMap.map)
         {
             auto& ins = item.second;
-            bvh->addItem(ID::KeyUint64::make(ins.protoNodeId, ins.iid), vb);
+            bvh->addItem(ins.id, vb);
         }
 
     };

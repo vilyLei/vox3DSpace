@@ -132,15 +132,16 @@ public:
     void updateDirtySubtrees(const std::vector<uint32_t>& roots);
 
 public:
-    CompPool<Component::UnitEntity>                          entitiesPool{};
-    CompPool<Component::UnitShadingEntity>                   shaderingEntitiesPool{};
-    CompPool<Component::UnitModel>                           modelsPool{};
-    CompPool<Component::UnitTransform>                       transformsPool{};
-    CompPool<Component::UnitHierarchy>                       hierarchiesPool{};
-    CompPool<Component::UnitShadingBaseDesc>                 shaderingDescPool{};
-    std::unordered_map<uint32_t, uint32_t>                   hierarchyIndexMap{};
-    std::unordered_map<uint32_t, Math::Mat33>                entityGlobalMat33Map{};
-    std::unordered_map<uint32_t, Component::UnitInstanceMap> insStorage;
+    CompPool<Component::UnitEntity>                                                                         entitiesPool{};
+    CompPool<Component::UnitShadingEntity>                                                                  shaderingEntitiesPool{};
+    CompPool<Component::UnitModel>                                                                          modelsPool{};
+    CompPool<Component::UnitTransform>                                                                      transformsPool{};
+    CompPool<Component::UnitHierarchy>                                                                      hierarchiesPool{};
+    CompPool<Component::UnitShadingBaseDesc>                                                                shaderingDescPool{};
+    std::unordered_map<uint32_t, uint32_t>                                                                  hierarchyIndexMap{};
+    std::unordered_map<uint32_t, Math::Mat33>                                                               entityGlobalMat33Map{};
+    std::unordered_map<ID::KeyUint64, Math::Mat33, ID::IdTraits<ID::KeyUint64>::Hasher, ID::KeyUint64Equal> entityInsGlobalMat33Map{};
+    std::unordered_map<uint32_t, Component::UnitInstanceMap>                                                insStorage;
 
 private:
     std::vector<uint32_t> topoOrder;
