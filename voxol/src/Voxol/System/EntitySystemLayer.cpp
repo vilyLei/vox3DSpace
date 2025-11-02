@@ -10,7 +10,7 @@ EntitySystemLayer::SP EntitySystemLayer::make()
 
 void EntitySystemLayer::updateTileWithEntityId(const Render::Base::KeyUint64& eId)
 {
-    if (Render::Base::isInvalidID(eId.id()))
+    if (eId.isIDInvalid())
         return;
 
     auto&                 etCompStorage = etSceneSys->entityStorage->comp;
@@ -24,7 +24,7 @@ void EntitySystemLayer::updateTileWithEntityId(const Render::Base::KeyUint64& eI
 }
 void EntitySystemLayer::updateBVHAndTileWithEntityId(const Render::Base::KeyUint64& eId)
 {
-    if (Render::Base::isInvalidID(eId.id()))
+    if (eId.isIDInvalid())
         return;
 
     auto&  etCompStorage = etSceneSys->entityStorage->comp;
