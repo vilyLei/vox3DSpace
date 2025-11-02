@@ -138,7 +138,6 @@ public:
     CompPool<Component::UnitTransform>        transformsPool{};
     CompPool<Component::UnitHierarchy>        hierarchiesPool{};
     CompPool<Component::UnitShadingBaseDesc>  shaderingDescPool{};
-    CompPool<Component::UnitMat33>            unitWMat33Pool{};
     std::unordered_map<uint32_t, uint32_t>    hierarchyIndexMap{};
     std::unordered_map<uint32_t, Math::Mat33> entityGlobalMat33Map{};
     // for debug
