@@ -242,20 +242,19 @@ void EntityCompStorage::traverseSortIndex(uint32_t etId, uint32_t& index)
 {
     printf("traverseSortIndex(), etId: %d, index: %d\n", etId, index);
     hierarchyIndexMap[etId]  = index++;
-    constexpr auto InvalidID = ID::INVALID_ID;
-    for (auto child = hierarchiesPool[etId].firstChild; child != InvalidID; child = hierarchiesPool[child].next)
+
+    for (auto child = hierarchiesPool[etId].firstChild; ID::isValidID(child); child = hierarchiesPool[child].next)
     {
         traverseSortIndex(child, index);
     }
 }
 void EntityCompStorage::traverseSortIndexAndBuildGlobalMat(uint32_t etId, uint32_t& index, const Math::Mat33& parentMat)
 {
-    constexpr auto InvalidID = ID::INVALID_ID;
     auto&&         et        = entitiesPool[etId];
 
     //printf("traverseSortIndexAndBuildGlobalMat(), etId: %d, index: %d\n", etId, index);
     hierarchyIndexMap[etId] = index++;
-    if (et.transformId != InvalidID)
+    if (ID::isValidID(et.transformId))
     {
         auto& tr = transformsPool[et.transformId];
         //printf("    tr(x=%f,y=%f,sx=%f,sy=%f)\n", tr.x, tr.y, tr.sx, tr.sy);
@@ -264,8 +263,8 @@ void EntityCompStorage::traverseSortIndexAndBuildGlobalMat(uint32_t etId, uint32
         auto&& parentTrans = parentMat.getXY();
         printf("    ins parentTrans pos(x=%f,y=%f)\n", parentTrans.x, parentTrans.y);
 
-        auto&& worldMat = Math::Mat33::makeIdentity();
-        worldMat.setXY(parentTrans.x + tr.x, parentTrans.y + tr.y);
+        auto&& worldMat = Math::Mat33::makeTranslate(parentTrans.x + tr.x, parentTrans.y + tr.y);
+        //worldMat.setXY(parentTrans.x + tr.x, parentTrans.y + tr.y);
         worldMat.setScaleXY(tr.sx, tr.sy);
 
         entityGlobalMat33Map[etId] = worldMat;
@@ -273,7 +272,7 @@ void EntityCompStorage::traverseSortIndexAndBuildGlobalMat(uint32_t etId, uint32
     }
 
     for (auto child = hierarchiesPool[etId].firstChild;
-         child != InvalidID;
+         ID::isValidID(child);
          child = hierarchiesPool[child].next)
     {
         traverseSortIndexAndBuildGlobalMat(child, index, entityGlobalMat33Map[etId]);
@@ -288,12 +287,11 @@ void EntityCompStorage::traverseBuildGlobalMatA(uint32_t etId, const Math::Mat33
     }
     auto& entities = entitiesPool;
 
-    auto& et = entities[etId];
+    auto&& et = entities[etId];
 
-    if (et.transformId != ID::INVALID_ID)
+    if (ID::isValidID(et.transformId))
     {
         auto&& tr = transformsPool[et.transformId];
-
 
         auto&& parentTrans = parentMat.getXY();
 
@@ -310,7 +308,7 @@ void EntityCompStorage::traverseBuildGlobalMatA(uint32_t etId, const Math::Mat33
     }
 
     for (auto child = hierarchiesPool[etId].firstChild;
-         child != ID::INVALID_ID;
+         ID::isValidID(child);
          child = hierarchiesPool[child].next)
     {
         traverseBuildGlobalMatA(child, entityGlobalMat33Map[etId]);
@@ -345,7 +343,7 @@ void EntityCompStorage::traverseBuildGlobalMatInstance(uint32_t instanceRootId, 
     auto&&      et       = entitiesPool[instanceRootId];
     Math::Mat33 worldMat = parentMat;
 
-    if (et.transformId != ID::INVALID_ID)
+    if (ID::isValidID(et.transformId))
     {
         auto&& tr = transformsPool[et.transformId];
 
@@ -384,7 +382,7 @@ void EntityCompStorage::traverseBuildGlobalMatPrototypeUnderInstance(uint32_t in
         // get prototype node's local transform if exists
         // prototype nodes are also stored in entityPool (we assume prototype entities have transforms)
         auto& protoEnt = entitiesPool[protoNodeId];
-        if (protoEnt.transformId != ID::INVALID_ID)
+        if (ID::isValidID(protoEnt.transformId))
         {
             auto&& tr = transformsPool[protoEnt.transformId];
 
@@ -417,7 +415,7 @@ void EntityCompStorage::traverseBuildGlobalMat(uint32_t etId, const Math::Mat33&
     auto&&      et       = entitiesPool[etId];
     Math::Mat33 worldMat = parentMat;
 
-    if (et.transformId != ID::INVALID_ID)
+    if (ID::isValidID(et.transformId))
     {
         auto&& tr          = transformsPool[et.transformId];
         auto&& parentTrans = parentMat.getXY();
