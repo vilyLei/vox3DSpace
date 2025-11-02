@@ -37,6 +37,9 @@ void EntitySceneSystem::initalize(const std::string& configFileName)
 
     auto& entityGlobalMat33Map = storage->entityGlobalMat33Map;
     auto updateProtoEtBVHData = [&](auto& et) {
+        auto&& vb = storage->getEntityGlobalBoundsAt(et.id);
+        bvh->addItem(ID::KeyUint64::make(et.id, 0), vb);
+
         auto& worldMat = entityGlobalMat33Map[et.id];
 
     };
@@ -47,7 +50,7 @@ void EntitySceneSystem::initalize(const std::string& configFileName)
 
         if (ID::isValidID(et.prototypeId))
         {
-
+            updateProtoEtBVHData(et);
             return;
         }
         //auto& trans = transformsPool[et.transformId];

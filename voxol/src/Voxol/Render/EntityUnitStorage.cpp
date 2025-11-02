@@ -92,7 +92,9 @@ void EntityUnitStorage::initalizeFromFile(const std::string& fileName)
     };
 
     auto updateEntityData = [&, this](int i) {
-        auto& dataEt = sceneModule.entitiesMap[i];
+
+        auto& entitiesMap = sceneModule.entitiesMap;
+        auto& dataEt      = entitiesMap[i];
 
         auto&& et      = entitiesPool[dataEt.id];
         et.shadingId   = dataEt.shadering;
@@ -103,6 +105,13 @@ void EntityUnitStorage::initalizeFromFile(const std::string& fileName)
         et.visible     = dataEt.visible;
 
         auto modelId = et.modelId;
+        if (ID::isValidID(et.prototypeId))
+        {
+            auto&& pdata = entitiesMap[et.prototypeId];
+            modelId      = pdata.model;
+            et.modelId   = modelId;
+            et.shadingId = pdata.shadering;
+        }
         printf("entity(id=%d, prototypeId=%d)\n", et.id, et.prototypeId);
         if (ID::isInvalidID(et.transformId))
             return;
@@ -112,9 +121,9 @@ void EntityUnitStorage::initalizeFromFile(const std::string& fileName)
         trans.pos()      = dataTrans.position;
         printf("        pos(%f,%f)\n", trans.x, trans.y);
 
-
         if (ID::isInvalidID(modelId))
             return;
+
         auto&& dataModel = sceneModule.modelsMap[modelId];
         auto&& model     = modelsPool[modelId];
         model.drawUnitId = dataModel.method.id;
