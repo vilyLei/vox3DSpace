@@ -36,6 +36,7 @@ public:
 
 private:
     bool drawUnit(const Component::UnitEntity& entity, const Math::Mat33& vpM, const Math::Bounds& wbounds);
+    bool drawUnitWithPrototype(const Component::UnitEntity& entity, const Math::Mat33& vpM, const Math::Bounds& wbounds);
 };
 } // namespace Voxol::Render
 #endif
