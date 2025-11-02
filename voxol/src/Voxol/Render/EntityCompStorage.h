@@ -140,8 +140,6 @@ public:
     CompPool<Component::UnitShadingBaseDesc>  shaderingDescPool{};
     std::unordered_map<uint32_t, uint32_t>    hierarchyIndexMap{};
     std::unordered_map<uint32_t, Math::Mat33> entityGlobalMat33Map{};
-    // for debug
-    std::unordered_map<ID::EntityId, Math::Mat33, ID::EntityIdHasher, ID::EntityIdEqual> entityIdTypeMatMap{};
 
 private:
     std::vector<uint32_t> topoOrder;
