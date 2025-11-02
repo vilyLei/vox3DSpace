@@ -115,7 +115,7 @@ struct KeyUint64
     std::string                toString(bool hex = false) const;
     constexpr std::string_view debugView() const noexcept
     {
-        return "<Component::KeyUint64>";
+        return "<ID::KeyUint64>";
     }
 };
 
