@@ -6,6 +6,7 @@
 #include <vector>
 #include <memory>
 #include <unordered_map>
+#include <map>
 
 namespace Voxol::Render
 {
@@ -25,7 +26,7 @@ public:
 public:
     struct Item
     {
-        Base::KeyUint64 objectId;  // entity id
+        Base::KeyUint64 objectId; // entity id
 
         Math::Bounds bounds;        // world-space bounds
         bool         dirty = false; // 标记是否需要 refit
@@ -124,10 +125,12 @@ private:
     }
 
 private:
-    std::vector<Item>                      m_items;
-    std::vector<Node>                      m_nodes;
-    std::unordered_map<Base::KeyUint64, uint32_t, Base::KeyUint64Hasher, Base::KeyUint64Equal> m_objectIdToItem;
-    std::unordered_map<Base::KeyUint64, uint32_t, Base::KeyUint64Hasher,Base::KeyUint64Equal> m_objectIdToItemMap;
+    std::vector<Item>                                                                                            m_items;
+    std::vector<Node>                                                                                            m_nodes;
+    std::unordered_map<Base::KeyUint64, uint32_t, Base::IdTraits<Base::KeyUint64>::Hasher, Base::KeyUint64Equal> m_objectIdToItem;
+    //std::unordered_map<Base::KeyUint64, uint32_t, Base::KeyUint64Hasher, Base::KeyUint64Equal> m_objectIdToItem;
+    //std::unordered_map<Base::KeyUint64, uint32_t, Base::IdTraits<Base::KeyUint64>::Hasher, Base::KeyUint64Equal> m_objectIdToItemMap;
+    //std::map<Base::KeyUint64, uint32_t, Base::IdTraits<Base::KeyUint64>::Less> m_idMap;
 
     bool m_dirty = false;
 };
