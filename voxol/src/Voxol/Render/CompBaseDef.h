@@ -19,6 +19,7 @@ namespace Base
 // 28-bit invalid ID
 constexpr uint32_t INVALID_ID = 0xfffffff;
 constexpr uint32_t ID_BITS_COUNT = 28;
+constexpr uint32_t ID2_ID_BITS_COUNT = 56;
 
 struct EntityId
 {
@@ -63,9 +64,9 @@ struct KeyUint64
     uint64_t value;
 
     static constexpr uint64_t ProtoMask   = (1ull << ID_BITS_COUNT) - 1; // 28-bit
-    static constexpr uint64_t IIDMask     = ProtoMask << ID_BITS_COUNT; // 28-bit << 24
-    static constexpr uint64_t FlagMask    = 0xFFFFull << 56;  // 16-bit << 48
-    static constexpr uint64_t CompareMask = (1ull << 56) - 1; // lower 48 bits
+    static constexpr uint64_t IIDMask     = ProtoMask << ID_BITS_COUNT; // 28-bit << 28
+    static constexpr uint64_t FlagMask    = 0xFFFFull << ID2_ID_BITS_COUNT; // 8-bit << 56
+    static constexpr uint64_t CompareMask = (1ull << ID2_ID_BITS_COUNT) - 1; // lower 56 bits
 
     static constexpr KeyUint64 makeDefault()
     {
@@ -73,14 +74,14 @@ struct KeyUint64
     }
     static constexpr KeyUint64 make(EntityId protoId, EntityId iid, uint16_t flags = 0)
     {
-        return KeyUint64{(uint64_t(flags) << 56) | (uint64_t(iid.id()) << ID_BITS_COUNT) | uint64_t(protoId.id())};
+        return KeyUint64{(uint64_t(flags) << ID2_ID_BITS_COUNT) | (uint64_t(iid.id()) << ID_BITS_COUNT) | uint64_t(protoId.id())};
     }
     static constexpr KeyUint64 make(uint32_t protoId, uint32_t iid, uint16_t flags = 0)
     {
-        return KeyUint64{(uint64_t(flags) << 56) | (uint64_t(iid) << ID_BITS_COUNT) | uint64_t(protoId)};
+        return KeyUint64{(uint64_t(flags) << ID2_ID_BITS_COUNT) | (uint64_t(iid) << ID_BITS_COUNT) | uint64_t(protoId)};
     }
 
-    constexpr uint16_t flags() const noexcept { return value >> 56; }
+    constexpr uint16_t flags() const noexcept { return value >> ID2_ID_BITS_COUNT; }
     constexpr uint32_t protoNodeId() const noexcept { return value & ProtoMask; }
     constexpr bool     isProtoNodeIdValid() const noexcept { return (value & ProtoMask) < INVALID_ID; }
     constexpr bool     isProtoNodeIdInvalid() const noexcept { return (value & ProtoMask) >= INVALID_ID; }
