@@ -109,14 +109,14 @@ public:
     Math::Vec2               getEntityLocalXYAt(uint32_t id);
     void                     setEntityLocalXYAt(const Math::Vec2& pv, uint32_t id);
 
-    void getIdsFromId(uint32_t etId, std::vector<uint32_t>& ids);
+    void getIdsFromId(uint32_t etId, std::vector<Base::KeyUint64>& ids);
 
 
     Component::UnitTransform getEntityTransformAt(uint32_t id);
     void                     setEntityTransformAt(const Component::UnitTransform& trans, uint32_t id);
 
     Math::Mat33 getEntityGlobalMat33At(uint32_t id);
-    void        checkIds(std::vector<uint32_t>& edis);
+    void        checkIds(std::vector<Base::KeyUint64>& edis);
 
     void updateHierarchyInfo();
     void traverseSortIndex(uint32_t etId, uint32_t& index);

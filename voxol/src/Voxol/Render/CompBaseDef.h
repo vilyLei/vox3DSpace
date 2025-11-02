@@ -13,8 +13,10 @@ namespace Voxol::Render
 {
 namespace Base
 {
+// 定义entity id为28bits的uint32_t类型
 
-constexpr uint32_t INVALID_ID = 0xffffffff;
+// 28-bit invalid ID
+constexpr uint32_t INVALID_ID = 0xfffffff;
 
 constexpr inline bool isValidID(uint32_t id) noexcept
 {
@@ -112,19 +114,20 @@ struct KeyUint64
 {
     uint64_t value;
 
-    static constexpr uint64_t ProtoMask   = (1ull << 24) - 1; // 24-bit
-    static constexpr uint64_t IIDMask     = ProtoMask << 24;  // 24-bit << 24
-    static constexpr uint64_t FlagMask    = 0xFFFFull << 48;  // 16-bit << 48
-    static constexpr uint64_t CompareMask = (1ull << 48) - 1; // lower 48 bits
+    static constexpr uint64_t ProtoMask   = (1ull << 28) - 1; // 28-bit
+    static constexpr uint64_t IIDMask     = ProtoMask << 28;  // 28-bit << 24
+    static constexpr uint64_t FlagMask    = 0xFFFFull << 56;  // 16-bit << 48
+    static constexpr uint64_t CompareMask = (1ull << 56) - 1; // lower 48 bits
 
-    static constexpr KeyUint64 make(uint16_t flags, uint32_t protoId, uint32_t iid)
+    static constexpr KeyUint64 make(uint32_t protoId, uint32_t iid, uint16_t flags = 0)
     {
-        return KeyUint64{(uint64_t(flags) << 48) | (uint64_t(iid) << 24) | uint64_t(protoId)};
+        return KeyUint64{(uint64_t(flags) << 56) | (uint64_t(iid) << 28) | uint64_t(protoId)};
     }
 
-    constexpr uint16_t flags() const noexcept { return value >> 48; }
+    constexpr uint16_t flags() const noexcept { return value >> 56; }
     constexpr uint32_t protoNodeId() const noexcept { return value & ProtoMask; }
-    constexpr uint32_t iid() const noexcept { return (value >> 24) & ProtoMask; }
+    constexpr uint32_t iid() const noexcept { return (value >> 28) & ProtoMask; }
+    constexpr uint32_t id() const noexcept { return value & CompareMask; }
 
     constexpr bool operator==(const KeyUint64& other) const noexcept
     {
@@ -154,10 +157,10 @@ struct KeyUint64Equal
 {
     bool operator()(const KeyUint64& a, const KeyUint64& b) const noexcept
     {
-        return (KeyUint64::ProtoMask & a.value) == (KeyUint64::ProtoMask & b.value);
+        return (KeyUint64::CompareMask & a.value) == (KeyUint64::CompareMask & b.value);
     }
 };
-} // namespace Component
+} // namespace Base
 
 } // namespace Voxol::Render
 #endif

@@ -47,7 +47,7 @@ void EntitySceneSystem::initalize(const std::string& configFileName)
         //bounds.setXYWH(trans.x, trans.y, trans.sx, trans.sy);
         //bounds.mat33MapTo(storage->entityGlobalMat33Map[et.id], vb);
         auto&& vb = storage->getEntityGlobalBoundsAt( et.id );
-        bvh->addItem(et.id, vb);
+        bvh->addItem(Base::KeyUint64::make(et.id, 0), vb);
     });
 
     bvh->build();
@@ -62,7 +62,7 @@ int EntitySceneSystem::drawQuery(const Math::VxRect& wbounds, int phase)
     return static_cast<int>(queriedEIds.size());
 }
 
-const std::vector<uint32_t> EntitySceneSystem::getQueriedEIds() const
+const std::vector<Base::KeyUint64> EntitySceneSystem::getQueriedEIds() const
 {
     return queriedEIds;
 }
@@ -75,11 +75,11 @@ void EntitySceneSystem::updateBVHBoundsWithEntityId(uint32_t eId)
     if (Base::isInvalidID(eId))
         return;
 
-    std::vector<uint32_t> ids{};
+    std::vector<Base::KeyUint64> ids{};
     entityStorage->comp->getIdsFromId(eId, ids);
     for (auto pid : ids)
     {
-        bvh->updateItemBoundsByObjectId(pid, entityStorage->comp->getEntityGlobalBoundsAt(pid));
+        bvh->updateItemBoundsByObjectId(pid, entityStorage->comp->getEntityGlobalBoundsAt(pid.id()));
     }
     bvh->updateDirty();
 }

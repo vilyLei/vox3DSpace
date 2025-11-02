@@ -164,12 +164,12 @@ void EntityCompStorage::setEntityLocalXYAt(const Math::Vec2& pv, uint32_t id)
     trans.pos()  = pv;
 }
 
-void EntityCompStorage::getIdsFromId(uint32_t etId, std::vector<uint32_t>& ids)
+void EntityCompStorage::getIdsFromId(uint32_t etId, std::vector<Base::KeyUint64>& ids)
 {
     if (Base::isInvalidID(etId))
         return;
 
-    ids.push_back(etId);
+    ids.push_back(Base::KeyUint64::make(etId, 0));
 
     for (auto child = hierarchiesPool[etId].firstChild;
          child != Base::INVALID_ID;
@@ -202,17 +202,16 @@ Math::Mat33 EntityCompStorage::getEntityGlobalMat33At(uint32_t id)
     return entityGlobalMat33Map[id];
 }
 
-void EntityCompStorage::checkIds(std::vector<uint32_t>& edis)
+void EntityCompStorage::checkIds(std::vector<Base::KeyUint64>& edis)
 {
     if (edis.empty())
-    {
         return;
-    }
-    std::vector<uint32_t> ids{};
-    auto                  tot = edis.size();
+
+    std::vector<Base::KeyUint64> ids{};
+    auto                         tot = edis.size();
     for (auto i = 0; i < tot; ++i)
     {
-        auto&& et = entitiesPool[edis[i]];
+        auto&& et = entitiesPool[edis[i].protoNodeId()];
         if (!et.visible)
             continue;
         ids.push_back(edis[i]);
@@ -225,8 +224,8 @@ void EntityCompStorage::checkIds(std::vector<uint32_t>& edis)
     {
         return;
     }
-    std::sort(edis.begin(), edis.end(), [&](uint32_t a, uint32_t b) {
-        return hierarchyIndexMap[a] < hierarchyIndexMap[b];
+    std::sort(edis.begin(), edis.end(), [&](Base::KeyUint64 a, Base::KeyUint64 b) {
+        return hierarchyIndexMap[a.id()] < hierarchyIndexMap[b.id()];
         //return a < b;
     });
 }
@@ -421,7 +420,7 @@ void EntityCompStorage::traverseBuildGlobalMat(uint32_t etId, const Math::Mat33&
 
     if (et.transformId != Base::INVALID_ID)
     {
-        auto&&     tr          = transformsPool[et.transformId];
+        auto&& tr          = transformsPool[et.transformId];
         auto&& parentTrans = parentMat.getXY();
         worldMat.identity();
         worldMat.setXY(parentTrans.x + tr.x, parentTrans.y + tr.y);

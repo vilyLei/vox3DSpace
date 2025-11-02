@@ -32,8 +32,8 @@ public:
     void updateKeyboardParams(int key, int scancode, int action, int mods);
     void updateMouseParams(const System::Mouse::MouseInputParam& param);
 
-    void updateTileWithEntityId(uint32_t eId);
-    void updateBVHAndTileWithEntityId(uint32_t eId);
+    void updateTileWithEntityId(const Render::Base::KeyUint64& eId);
+    void updateBVHAndTileWithEntityId(const Render::Base::KeyUint64& eId);
 
     public:
     Render::Draw::DrawContext                 drawCtx;

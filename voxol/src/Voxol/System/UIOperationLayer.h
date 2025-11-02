@@ -19,12 +19,12 @@ enum class SelectType
     Bounds
 };
 
-using InputDirtyCallType = std::function<void(const Math::Bounds& bounds, uint32_t type, uint32_t etId)>;
+using InputDirtyCallType = std::function<void(const Math::Bounds& bounds, uint32_t type, const Render::Base::KeyUint64& etId)>;
 struct MouseController
 {
     Math::Vec2            originEtPos{};
     uint32_t              etId = Render::Base::INVALID_ID;
-    std::vector<uint32_t> qeIds{};
+    std::vector<Render::Base::KeyUint64> qeIds{};
 
     Render::Component::UnitTransform unitTransform{};
 

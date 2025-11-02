@@ -15,7 +15,7 @@ BVH2D::SP BVH2D::make()
 // -----------------------------
 // 添加 Item
 // -----------------------------
-void BVH2D::addItem(uint32_t objectId, const Math::Bounds& bounds)
+void BVH2D::addItem(const Base::KeyUint64& objectId, const Math::Bounds& bounds)
 {
     Item item{};
     item.objectId = objectId;
@@ -54,7 +54,7 @@ bool BVH2D::updateItemBounds(int itemIndex, const Math::Bounds& newBounds)
 // -----------------------------
 // 更新单个对象的包围盒 (通过 objectId)
 // -----------------------------
-bool BVH2D::updateItemBoundsByObjectId(uint32_t objectId, const Math::Bounds& newBounds)
+bool BVH2D::updateItemBoundsByObjectId(const Base::KeyUint64& objectId, const Math::Bounds& newBounds)
 {
     auto it = m_objectIdToItem.find(objectId);
     if (it == m_objectIdToItem.end()) return false;
@@ -89,7 +89,7 @@ void BVH2D::updateDirty()
 // -----------------------------
 // 点查询
 // -----------------------------
-void BVH2D::queryPoint(const Math::Vec2& p, std::vector<uint32_t>& outIds) const
+void BVH2D::queryPoint(const Math::Vec2& p, std::vector<Base::KeyUint64>& outIds) const
 {
     if (m_nodes.empty()) return;
     queryPointRecursive(0, p, outIds);
@@ -98,7 +98,7 @@ void BVH2D::queryPoint(const Math::Vec2& p, std::vector<uint32_t>& outIds) const
 // -----------------------------
 // 范围查询
 // -----------------------------
-void BVH2D::queryBounds(const Math::Bounds& b, std::vector<uint32_t>& outIds) const
+void BVH2D::queryBounds(const Math::Bounds& b, std::vector<Base::KeyUint64>& outIds) const
 {
     if (m_nodes.empty()) return;
     queryBoundsRecursive(0, b, outIds);
@@ -192,7 +192,7 @@ int BVH2D::buildRecursive(int begin, int end)
 // -----------------------------
 // 点查询递归
 // -----------------------------
-void BVH2D::queryPointRecursive(int nodeIndex, const Math::Vec2& p, std::vector<uint32_t>& outIds) const
+void BVH2D::queryPointRecursive(int nodeIndex, const Math::Vec2& p, std::vector<Base::KeyUint64>& outIds) const
 {
     const Node& node = m_nodes[nodeIndex];
     if (!node.bounds.contains(p))
@@ -214,7 +214,7 @@ void BVH2D::queryPointRecursive(int nodeIndex, const Math::Vec2& p, std::vector<
 // -----------------------------
 // 范围查询递归
 // -----------------------------
-void BVH2D::queryBoundsRecursive(int nodeIndex, const Math::Bounds& b, std::vector<uint32_t>& outIds) const
+void BVH2D::queryBoundsRecursive(int nodeIndex, const Math::Bounds& b, std::vector<Base::KeyUint64>& outIds) const
 {
     const Node& node = m_nodes[nodeIndex];
     if (!node.bounds.intersects(b))

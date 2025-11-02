@@ -17,6 +17,8 @@ uint32_t EntityIdManager::allocate()
         freeList.pop_back();
         return id;
     }
+    if ((nextId+1) >= INVALID_ID)
+        throw std::runtime_error("EntityId overflow: exceeded 28-bit range.");
     return nextId++;
 }
 
@@ -45,6 +47,6 @@ std::string KeyUint64::toString(bool hex) const
     }
     return oss.str();
 }
-} // namespace Component
+} // namespace Base
 
 } // namespace Voxol::Render

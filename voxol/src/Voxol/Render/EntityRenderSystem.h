@@ -29,7 +29,7 @@ public:
 
 public:
     void initalize();
-    void render(const Draw::DrawContext& rctx, const Math::Mat33& vpM, const Math::Bounds& wbounds, const std::vector<uint32_t>& queriedEIds);
+    void render(const Draw::DrawContext& rctx, const Math::Mat33& vpM, const Math::Bounds& wbounds, const std::vector<Base::KeyUint64>& queriedEIds);
     void clear();
 
     EntityUnitStorage::SP entityStorage{};

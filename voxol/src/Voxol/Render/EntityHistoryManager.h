@@ -11,7 +11,7 @@ namespace Voxol::Render
 struct HistoryItemData
 {
     Component::UnitTransform trans;
-    uint32_t                  id;
+    Render::Base::KeyUint64  id;
 };
 
 class EntityHistoryManager
@@ -29,11 +29,12 @@ public:
     ~EntityHistoryManager() = default;
 
 public:
-    void initalize();
+    void            initalize();
     HistoryItemData popItem();
-    void pushItem(const HistoryItemData& itemData);
+    void            pushItem(const HistoryItemData& itemData);
+
 private:
     std::vector<HistoryItemData> mList;
 };
-}
+} // namespace Voxol::Render
 #endif

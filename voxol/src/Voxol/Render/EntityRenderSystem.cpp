@@ -12,7 +12,7 @@ EntityRenderSystem::SP EntityRenderSystem::make()
 void EntityRenderSystem::initalize()
 {
 }
-void EntityRenderSystem::render(const Draw::DrawContext& rctx, const Math::Mat33& vpM, const Math::Bounds& wbounds, const std::vector<uint32_t>& queriedEIds)
+void EntityRenderSystem::render(const Draw::DrawContext& rctx, const Math::Mat33& vpM, const Math::Bounds& wbounds, const std::vector<Base::KeyUint64>& queriedEIds)
 {
     if (!entityStorage)
         return;
@@ -32,7 +32,7 @@ void EntityRenderSystem::render(const Draw::DrawContext& rctx, const Math::Mat33
 
     for (auto i = 0; i < total; i++)
     {
-        auto& et = entitiesPool[queriedEIds[i]];
+        auto& et = entitiesPool[queriedEIds[i].id()];
         if (et.shadingId < 0 || !et.visible)
             continue;
         auto flag = drawUnit(et, vpM, wbounds);

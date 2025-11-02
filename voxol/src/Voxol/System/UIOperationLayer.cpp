@@ -22,7 +22,7 @@ void MouseController::selectWithSingle(const System::Mouse::MouseEvent& evt, con
     auto etStorage = targetSys->entityStorage->comp;
     etStorage->checkIds(qeIds);
 
-    auto topId = qeIds.empty() ? Render::Base::INVALID_ID : qeIds.back();
+    auto topId = qeIds.empty() ? Render::Base::INVALID_ID : qeIds.back().id();
 
     if (evt.isBegin())
     {
@@ -39,9 +39,10 @@ void MouseController::selectWithSingle(const System::Mouse::MouseEvent& evt, con
 
     if (Render::Base::isValidID(etId) && evt.isDragging())
     {
-        dirtyCall({}, 0, etId);
+        auto keyId = Render::Base::KeyUint64::make(etId, 0);
+        dirtyCall({}, 0, keyId);
         etStorage->setEntityGlobalXYAt(originEtPos + offset, etId);
-        dirtyCall({}, 1, etId);
+        dirtyCall({}, 1, keyId);
 
         dragging = true;
         return;
