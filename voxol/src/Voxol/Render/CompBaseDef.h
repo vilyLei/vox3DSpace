@@ -1,7 +1,8 @@
 #ifndef VOXOL_RENDER_COMP_BASE_DEF_H
 #define VOXOL_RENDER_COMP_BASE_DEF_H
 
-#include "../Math/VxRect.h"
+//#include "../Math/VxRect.h"
+#include "../Base/BaseDefine.h"
 #include <vector>
 #include <cstdint>
 #include <type_traits>

@@ -1,6 +1,7 @@
 #ifndef VOXOL_RENDER_ENTITY_COMPONENT_H
 #define VOXOL_RENDER_ENTITY_COMPONENT_H
 
+#include "../Math/VxRect.h"
 #include "CompBaseDef.h"
 
 
