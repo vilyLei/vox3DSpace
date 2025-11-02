@@ -395,10 +395,10 @@ void EntityCompStorage::traverseBuildGlobalMatPrototypeUnderInstance(uint32_t in
             printf("traverseBuildGlobalMatPrototypeUnderInstance(), B parentTrans pos(x=%f,y=%f)\n", parentTrans.x, parentTrans.y);
         }
 
-        auto&& pos = worldMat.getXY();
-        printf("traverseBuildGlobalMatPrototypeUnderInstance() protoNodeId: %u, instanceEntityId: %u, C pos(x=%f,y=%f)\n", protoNodeId, instanceEntityId, pos.x, pos.y);
         if (index > 0)
         {
+            auto&& pos = worldMat.getXY();
+            printf("traverseBuildGlobalMatPrototypeUnderInstance() protoNodeId: %u, instanceEntityId: %u, C pos(x=%f,y=%f)\n", protoNodeId, instanceEntityId, pos.x, pos.y);
             auto&& key                   = ID::KeyUint64::make(protoNodeId, instanceEntityId);
             map.map[protoNodeId]         = {key, worldMat};
             entityInsGlobalMat33Map[key] = worldMat;
