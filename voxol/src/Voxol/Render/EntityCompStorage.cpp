@@ -239,11 +239,11 @@ void EntityCompStorage::updateHierarchyInfo()
 }
 void EntityCompStorage::traverseSortIndexWithInstance(uint32_t instanceEntityId, uint32_t prototypeId, uint32_t& index)
 {
-    auto&& key        = ID::KeyUint64::make(prototypeId, instanceEntityId);
+    auto&& key             = ID::KeyUint64::make(prototypeId, instanceEntityId);
     hierarchyIndexMap[key] = index++;
 
-    auto&&    et             = entitiesPool[prototypeId];
-    auto effectiveProto = ID::isValidID(et.prototypeId) ? et.prototypeId : prototypeId;
+    auto&& et             = entitiesPool[prototypeId];
+    auto   effectiveProto = ID::isValidID(et.prototypeId) ? et.prototypeId : prototypeId;
 
     for (auto child = hierarchiesPool[effectiveProto].firstChild;
          ID::isValidID(child);
@@ -265,7 +265,7 @@ void EntityCompStorage::traverseSortIndex(uint32_t etId, uint32_t& index)
 {
 
     hierarchyIndexMap[ID::KeyUint64::make(etId)] = index++;
-    auto&& et                                     = entitiesPool[etId];
+    auto&& et                                    = entitiesPool[etId];
     if (ID::isValidID(et.prototypeId))
     {
         auto iid = etId;
@@ -424,7 +424,6 @@ void EntityCompStorage::traverseBuildGlobalMatPrototypeUnderInstance(uint32_t in
     // for prototype traversal, use the prototype hierarchy nodes
     // but we need to combine prototype-local transform + instanceParentMat
     std::function<void(uint32_t, const Math::Mat33&, int& index)> dfsProto = [&](uint32_t protoNodeId, const Math::Mat33& parentMat, int& index) {
-
         Math::Mat33 worldMat = parentMat;
         // get prototype node's local transform if exists
         // prototype nodes are also stored in entityPool (we assume prototype entities have transforms)

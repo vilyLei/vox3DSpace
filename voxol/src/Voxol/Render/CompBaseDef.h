@@ -116,6 +116,7 @@ struct KeyUint64
     {
         return (value & CompareMask) < (other.value & CompareMask);
     }
+    std::string                idToString(bool hex = false) const;
     std::string                toString(bool hex = false) const;
     constexpr std::string_view debugView() const noexcept
     {

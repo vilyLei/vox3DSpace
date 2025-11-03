@@ -30,6 +30,24 @@ void EntityIdManager::release(uint32_t id)
     freeList.push_back(id);
 }
 
+std::string KeyUint64::idToString(bool hex) const
+{
+    std::ostringstream oss;
+    if (hex)
+    {
+        oss << std::hex << std::setfill('0')
+            << "KeyUint64(iid=0x" << std::setw(6) << iid()
+            << ", proto=0x" << std::setw(6) << protoId()
+            << ")";
+    }
+    else
+    {
+        oss << "KeyUint64(iid=" << iid()
+            << ", proto=" << protoId()
+            << ")";
+    }
+    return oss.str();
+}
 std::string KeyUint64::toString(bool hex) const
 {
     std::ostringstream oss;
