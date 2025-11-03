@@ -315,6 +315,11 @@ struct IdTraits<KeyUint64>
     }
 };
 
+
+template <typename ValueType>
+using keyUint64Unordered_map = std::unordered_map<KeyUint64, ValueType, IdTraits<KeyUint64>::Hasher, IdTraits<KeyUint64>::Equal>;
+
+
 // ============================================================
 // general template function defines
 // ============================================================

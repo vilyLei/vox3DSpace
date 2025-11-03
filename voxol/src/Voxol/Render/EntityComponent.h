@@ -121,7 +121,8 @@ struct UnitInstanceMap
 {
     uint32_t                                                                                                                  iid     = ID::INVALID_ID;
     uint32_t                                                                                                                  protoId = ID::INVALID_ID;
-    std::unordered_map<ID::KeyUint64, ID::KeyUint64, ID::IdTraits<ID::KeyUint64>::Hasher, ID::IdTraits<ID::KeyUint64>::Equal> map;
+    //std::unordered_map<ID::KeyUint64, ID::KeyUint64, ID::IdTraits<ID::KeyUint64>::Hasher, ID::IdTraits<ID::KeyUint64>::Equal> map;
+    ID::keyUint64Unordered_map<ID::KeyUint64> map;
     bool dirty = true;
 };
 
