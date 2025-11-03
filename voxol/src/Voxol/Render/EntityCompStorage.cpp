@@ -263,6 +263,30 @@ void EntityCompStorage::traverseSortIndexWithInstance(uint32_t instanceEntityId,
 
 void EntityCompStorage::traverseSortIndex(uint32_t etId, uint32_t& index)
 {
+
+    hierarchyIndexMap[ID::KeyUint64::make(etId)] = index++;
+    auto&& et                                     = entitiesPool[etId];
+    if (ID::isValidID(et.prototypeId))
+    {
+        auto iid = etId;
+        etId     = et.prototypeId;
+
+        for (auto child = hierarchiesPool[etId].firstChild;
+             ID::isValidID(child);
+             child = hierarchiesPool[child].next)
+        {
+            traverseSortIndexWithInstance(iid, child, index);
+        }
+        return;
+    }
+
+    for (auto child = hierarchiesPool[etId].firstChild;
+         ID::isValidID(child);
+         child = hierarchiesPool[child].next)
+    {
+        traverseSortIndex(child, index);
+    }
+    /*
     printf("traverseSortIndex(), etId: %d, index: %d\n", etId, index);
     hierarchyIndexMap[ID::KeyUint64::make(etId)] = index++;
 
@@ -270,6 +294,7 @@ void EntityCompStorage::traverseSortIndex(uint32_t etId, uint32_t& index)
     {
         traverseSortIndex(child, index);
     }
+    //*/
 }
 void EntityCompStorage::traverseSortIndexAndBuildGlobalMat(uint32_t etId, uint32_t& index, const Math::Mat33& parentMat)
 {
