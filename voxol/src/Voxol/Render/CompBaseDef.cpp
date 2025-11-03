@@ -17,7 +17,7 @@ uint32_t EntityIdManager::allocate()
         freeList.pop_back();
         return id;
     }
-    if (nextId >= INVALID_ID)
+    if (ID::isInvalidID(nextId))
     {
         printf("EntityIdManager::allocate(), EntityId overflow: exceeded 28-bit range.\n");
         return INVALID_ID;
