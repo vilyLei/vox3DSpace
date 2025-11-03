@@ -122,22 +122,19 @@ struct FlatInsStorage
 
 struct UnitInstance
 {
-    //uint32_t    protoNodeId = ID::INVALID_ID; // prototype entity id
-    //uint32_t    iid         = ID::INVALID_ID; // unique instantiation id
-
     ID::KeyUint64 id;
     Math::Mat33 worldMat;
 };
 
 struct UnitInstanceMap
 {
-    uint32_t                             instanceEntityId = ID::INVALID_ID;
-    uint32_t                             prototypeRootId  = ID::INVALID_ID;
+    uint32_t                             iid     = ID::INVALID_ID;
+    uint32_t                             protoId  = ID::INVALID_ID;
     std::vector<UnitInstance>            nodes;                         // ��ƽ�б����� unordered_map<iid, UnitInstance>
     std::unordered_map<uint32_t, size_t> iidToIndexMap;                 // iid -> index in nodes (optional)
     bool                                 dirty = true;
     // for debug
-    std::unordered_map<uint32_t, UnitInstance> map;
+    std::unordered_map<ID::KeyUint64, UnitInstance, ID::IdTraits<ID::KeyUint64>::Hasher, ID::IdTraits<ID::KeyUint64>::Equal> map;
 };
 
 } // namespace Component

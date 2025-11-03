@@ -237,9 +237,9 @@ void EntityCompStorage::updateHierarchyInfo()
     //traverseSortIndexAndBuildGlobalMat(0, index, {});
     traverseBuildGlobalMat(0, {});
 }
-void EntityCompStorage::traverseSortIndexWithInstance(uint32_t instanceEntityId, uint32_t prototypeId, uint32_t& index)
+void EntityCompStorage::traverseSortIndexWithInstance(uint32_t iid, uint32_t prototypeId, uint32_t& index)
 {
-    auto&& key             = ID::KeyUint64::make(prototypeId, instanceEntityId);
+    auto&& key             = ID::KeyUint64::make(prototypeId, iid);
     hierarchyIndexMap[key] = index++;
 
     auto&& et             = entitiesPool[prototypeId];
@@ -252,11 +252,11 @@ void EntityCompStorage::traverseSortIndexWithInstance(uint32_t instanceEntityId,
         auto& cet = entitiesPool[child];
         if (ID::isValidID(cet.prototypeId))
         {
-            traverseSortIndexWithInstance(instanceEntityId, cet.prototypeId, index);
+            traverseSortIndexWithInstance(iid, cet.prototypeId, index);
         }
         else
         {
-            traverseSortIndexWithInstance(instanceEntityId, child, index);
+            traverseSortIndexWithInstance(iid, child, index);
         }
     }
 }
@@ -382,11 +382,11 @@ void EntityCompStorage::buildTopoOrderFromRoots(const std::vector<uint32_t>& roo
     };
     for (auto r : roots) dfs(r);
 }
-void EntityCompStorage::traverseBuildGlobalMatInstance(uint32_t instanceRootId, const Math::Mat33& parentMat, Component::UnitInstanceMap& insMap)
+void EntityCompStorage::traverseBuildGlobalMatInstance(uint32_t iid, const Math::Mat33& parentMat, Component::UnitInstanceMap& insMap)
 {
-    if (ID::isInvalidID(instanceRootId)) return;
+    if (ID::isInvalidID(iid)) return;
 
-    auto&&      et       = entitiesPool[instanceRootId];
+    auto&&      et       = entitiesPool[iid];
     Math::Mat33 worldMat = parentMat;
 
     if (ID::isValidID(et.transformId))
@@ -401,12 +401,12 @@ void EntityCompStorage::traverseBuildGlobalMatInstance(uint32_t instanceRootId, 
         worldMat.setScaleXY(tr.sx, tr.sy);
     }
 
-    auto&& key = ID::KeyUint64::make(instanceRootId, 0);
-    // store in insMap (prototype node id = instanceRootId if called on prototype tree)
-    insMap.map[instanceRootId] = {key, worldMat};
+    auto&& key = ID::KeyUint64::make(iid, 0);
+    // store in insMap (prototype node id = iid if called on prototype tree)
+    insMap.map[key] = {key, worldMat};
 
     // traverse prototype's children (note: when instancing, we traverse prototype hierarchy)
-    for (auto child = hierarchiesPool[instanceRootId].firstChild;
+    for (auto child = hierarchiesPool[iid].firstChild;
          ID::isValidID(child);
          child = hierarchiesPool[child].next)
     {
@@ -414,11 +414,11 @@ void EntityCompStorage::traverseBuildGlobalMatInstance(uint32_t instanceRootId, 
     }
 }
 
-void EntityCompStorage::traverseBuildGlobalMatPrototypeUnderInstance(uint32_t instanceEntityId, uint32_t prototypeRootId, const Math::Mat33& instanceParentMat)
+void EntityCompStorage::traverseBuildGlobalMatPrototypeUnderInstance(uint32_t iid, uint32_t protoId, const Math::Mat33& instanceParentMat)
 {
     Component::UnitInstanceMap map;
-    map.instanceEntityId = instanceEntityId;
-    map.prototypeRootId  = prototypeRootId;
+    map.iid             = iid;
+    map.protoId = protoId;
     map.map.clear();
 
     // for prototype traversal, use the prototype hierarchy nodes
@@ -445,9 +445,9 @@ void EntityCompStorage::traverseBuildGlobalMatPrototypeUnderInstance(uint32_t in
         if (index > 0)
         {
             auto&& pos = worldMat.getXY();
-            printf("traverseBuildGlobalMatPrototypeUnderInstance() protoNodeId: %u, instanceEntityId: %u, C pos(x=%f,y=%f)\n", protoNodeId, instanceEntityId, pos.x, pos.y);
-            auto&& key                   = ID::KeyUint64::make(protoNodeId, instanceEntityId);
-            map.map[protoNodeId]         = {key, worldMat};
+            printf("traverseBuildGlobalMatPrototypeUnderInstance() protoNodeId: %u, iid: %u, C pos(x=%f,y=%f)\n", protoNodeId, iid, pos.x, pos.y);
+            auto&& key                   = ID::KeyUint64::make(protoNodeId, iid);
+            map.map[key]                 = {key, worldMat};
             entityInsGlobalMat33Map[key] = worldMat;
         }
         index++;
@@ -462,9 +462,9 @@ void EntityCompStorage::traverseBuildGlobalMatPrototypeUnderInstance(uint32_t in
 
     int index = 0;
     // root prototype node(s) traversal
-    dfsProto(prototypeRootId, instanceParentMat, index);
+    dfsProto(protoId, instanceParentMat, index);
     // store into insStorage
-    insStorage[instanceEntityId] = std::move(map);
+    insStorage[iid] = std::move(map);
 }
 void EntityCompStorage::traverseBuildGlobalMat(uint32_t etId, const Math::Mat33& parentMat)
 {
