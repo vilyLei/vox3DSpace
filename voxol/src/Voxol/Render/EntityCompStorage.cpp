@@ -225,7 +225,7 @@ void EntityCompStorage::checkIds(std::vector<ID::KeyUint64>& edis)
         return;
     }
     std::sort(edis.begin(), edis.end(), [&](ID::KeyUint64 a, ID::KeyUint64 b) {
-        return hierarchyIndexMap[a.id()] < hierarchyIndexMap[b.id()];
+        return hierarchyIndexMap[a] < hierarchyIndexMap[b];
         //return a < b;
     });
 }
@@ -241,7 +241,7 @@ void EntityCompStorage::updateHierarchyInfo()
 void EntityCompStorage::traverseSortIndex(uint32_t etId, uint32_t& index)
 {
     printf("traverseSortIndex(), etId: %d, index: %d\n", etId, index);
-    hierarchyIndexMap[etId] = index++;
+    hierarchyIndexMap[ID::KeyUint64::make(etId)] = index++;
 
     for (auto child = hierarchiesPool[etId].firstChild; ID::isValidID(child); child = hierarchiesPool[child].next)
     {
@@ -253,7 +253,7 @@ void EntityCompStorage::traverseSortIndexAndBuildGlobalMat(uint32_t etId, uint32
     auto&& et = entitiesPool[etId];
 
     //printf("traverseSortIndexAndBuildGlobalMat(), etId: %d, index: %d\n", etId, index);
-    hierarchyIndexMap[etId] = index++;
+    hierarchyIndexMap[ID::KeyUint64::make(etId)] = index++;
     if (ID::isValidID(et.transformId))
     {
         auto& tr = transformsPool[et.transformId];

@@ -84,6 +84,10 @@ struct KeyUint64
     {
         return KeyUint64{(uint64_t(flags) << ID2_ID_BITS_COUNT) | (uint64_t(iid) << ID_BITS_COUNT) | uint64_t(protoId)};
     }
+    static constexpr KeyUint64 make(uint32_t protoId)
+    {
+        return KeyUint64{uint64_t(protoId)};
+    }
 
     constexpr uint16_t flags() const noexcept { return value >> ID2_ID_BITS_COUNT; }
     constexpr uint32_t protoId() const noexcept { return value & ProtoMask; }
