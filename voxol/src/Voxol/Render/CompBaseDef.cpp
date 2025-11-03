@@ -78,7 +78,7 @@ uint32_t KeyUint64Manager::IIDPool::allocate()
         freeList.pop_back();
         return id;
     }
-    if (nextIID >= INVALID_ID)
+    if (ID::isInvalidID(nextIID))
         return INVALID_ID;
     return nextIID++;
 }
