@@ -38,14 +38,14 @@ std::string KeyUint64::toString(bool hex) const
         oss << std::hex << std::setfill('0')
             << "KeyUint64(flags=0x" << std::setw(4) << flags()
             << " iid=0x" << std::setw(6) << iid()
-            << " proto=0x" << std::setw(6) << protoNodeId()
+            << " proto=0x" << std::setw(6) << protoId()
             << " [value=0x" << std::setw(16) << value << "])";
     }
     else
     {
         oss << "KeyUint64(flags=" << flags()
             << " iid=" << iid()
-            << " proto=" << protoNodeId()
+            << " proto=" << protoId()
             << " [value=" << value << "])";
     }
     return oss.str();
@@ -97,7 +97,7 @@ void KeyUint64Manager::release(const KeyUint64& key)
     if (key.isIDInvalid())
         return;
 
-    uint32_t protoId = key.protoNodeId();
+    uint32_t protoId = key.protoId();
     uint32_t iid     = key.iid();
 
     auto it = protoPools.find(protoId);

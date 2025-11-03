@@ -86,12 +86,12 @@ struct KeyUint64
     }
 
     constexpr uint16_t flags() const noexcept { return value >> ID2_ID_BITS_COUNT; }
-    constexpr uint32_t protoNodeId() const noexcept { return value & ProtoMask; }
+    constexpr uint32_t protoId() const noexcept { return value & ProtoMask; }
     constexpr uint32_t iid() const noexcept { return (value >> ID_BITS_COUNT) & ProtoMask; }
     constexpr uint32_t id() const noexcept { return value & CompareMask; }
 
-    constexpr bool     isProtoNodeIdValid() const noexcept { return (value & ProtoMask) < INVALID_ID; }
-    constexpr bool     isProtoNodeIdInvalid() const noexcept { return (value & ProtoMask) >= INVALID_ID; }
+    constexpr bool     isProtoIdValid() const noexcept { return (value & ProtoMask) < INVALID_ID; }
+    constexpr bool     isProtoIdInvalid() const noexcept { return (value & ProtoMask) >= INVALID_ID; }
     constexpr bool     isIIDValid() const noexcept
     {
         return ((value >> ID_BITS_COUNT) & ProtoMask) < INVALID_ID;
@@ -100,8 +100,8 @@ struct KeyUint64
     {
         return ((value >> ID_BITS_COUNT) & ProtoMask) >= INVALID_ID;
     }
-    constexpr bool     isIDValid() const noexcept { return isProtoNodeIdValid() && isIIDValid(); }
-    constexpr bool     isIDInvalid() const noexcept { return isProtoNodeIdInvalid() || isIIDInvalid(); }
+    constexpr bool     isIDValid() const noexcept { return isProtoIdValid() && isIIDValid(); }
+    constexpr bool     isIDInvalid() const noexcept { return isProtoIdInvalid() || isIIDInvalid(); }
 
     constexpr bool operator==(const KeyUint64& other) const noexcept
     {
@@ -306,7 +306,7 @@ struct IdTraits<KeyUint64>
     static std::string toString(const KeyUint64& k)
     {
         return std::format("KeyUint64(flags={}, proto={}, iid={})",
-                           k.flags(), k.protoNodeId(), k.iid());
+                           k.flags(), k.protoId(), k.iid());
     }
 };
 

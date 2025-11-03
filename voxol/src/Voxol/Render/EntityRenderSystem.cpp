@@ -34,7 +34,7 @@ void EntityRenderSystem::render(const Draw::DrawContext& rctx, const Math::Mat33
             continue;
 
         auto iid = queriedEIds[i].iid();
-        auto proId = queriedEIds[i].protoNodeId();
+        auto proId = queriedEIds[i].protoId();
         auto& et    = entitiesPool[proId];
         if (iid > 0)
         {

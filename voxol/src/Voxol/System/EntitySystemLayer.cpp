@@ -37,7 +37,7 @@ void EntitySystemLayer::updateBVHAndTileWithEntityId(const Render::ID::KeyUint64
     etCompStorage->getIdsFromId(eId.id(), ids);
     for (auto pid : ids)
     {
-        auto&& bv = etCompStorage->getEntityGlobalBoundsAt(pid.protoNodeId());
+        auto&& bv = etCompStorage->getEntityGlobalBoundsAt(pid.protoId());
         tileSys->addDirtyBounds(bv, 1);
         bvh->updateItemBoundsByObjectId(pid, bv);
     }
