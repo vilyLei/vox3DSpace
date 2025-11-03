@@ -119,6 +119,7 @@ public:
     void        checkIds(std::vector<ID::KeyUint64>& edis);
 
     void updateHierarchyInfo();
+    void traverseSortIndexWithInstance(uint32_t instanceEntityId, uint32_t prototypeId, uint32_t& index);
     void traverseSortIndex(uint32_t etId, uint32_t& index);
     void traverseSortIndexAndBuildGlobalMat(uint32_t etId, uint32_t& index, const Math::Mat33& parentMat);
     void traverseBuildGlobalMatA(uint32_t etId, const Math::Mat33& parentMat);

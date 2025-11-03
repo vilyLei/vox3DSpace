@@ -237,6 +237,29 @@ void EntityCompStorage::updateHierarchyInfo()
     //traverseSortIndexAndBuildGlobalMat(0, index, {});
     traverseBuildGlobalMat(0, {});
 }
+void EntityCompStorage::traverseSortIndexWithInstance(uint32_t instanceEntityId, uint32_t prototypeId, uint32_t& index)
+{
+    auto&& key        = ID::KeyUint64::make(prototypeId, instanceEntityId);
+    hierarchyIndexMap[key] = index++;
+
+    auto&&    et             = entitiesPool[prototypeId];
+    auto effectiveProto = ID::isValidID(et.prototypeId) ? et.prototypeId : prototypeId;
+
+    for (auto child = hierarchiesPool[effectiveProto].firstChild;
+         ID::isValidID(child);
+         child = hierarchiesPool[child].next)
+    {
+        auto& cet = entitiesPool[child];
+        if (ID::isValidID(cet.prototypeId))
+        {
+            traverseSortIndexWithInstance(instanceEntityId, cet.prototypeId, index);
+        }
+        else
+        {
+            traverseSortIndexWithInstance(instanceEntityId, child, index);
+        }
+    }
+}
 
 void EntityCompStorage::traverseSortIndex(uint32_t etId, uint32_t& index)
 {
