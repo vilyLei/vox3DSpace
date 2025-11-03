@@ -178,28 +178,17 @@ private:
     std::unordered_map<uint32_t, IIDPool> protoPools; // key = protoId
 
 public:
-    // ========================================================
-    // 分配一个 KeyUint64（指定 protoId）
-    // ========================================================
     [[nodiscard]] KeyUint64 allocate(uint32_t protoId, uint16_t flags = 0);
 
-    // ========================================================
-    // 分配一个 KeyUint64（EntityId 版本）
-    // ========================================================
     [[nodiscard]] KeyUint64 allocate(EntityId protoId, uint16_t flags = 0);
 
-    // ========================================================
-    // 释放一个 KeyUint64
-    // ========================================================
     void release(const KeyUint64& key);
 
     // ========================================================
-    // 查询统计信息
+    // Query statistical information
     // ========================================================
     [[nodiscard]] size_t protoCount() const noexcept;
-
     [[nodiscard]] size_t freeCount(uint32_t protoId) const noexcept;
-
     [[nodiscard]] bool hasProto(uint32_t protoId) const noexcept;
 
     void clear();

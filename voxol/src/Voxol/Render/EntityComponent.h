@@ -37,7 +37,7 @@ struct UnitShadingBaseDesc
 
 struct UnitShadingEntity
 {
-    uint32_t id = ID::INVALID_ID;
+    uint32_t id            = ID::INVALID_ID;
     uint32_t shadingDescId = ID::INVALID_ID;
 };
 struct UnitModel
@@ -119,11 +119,10 @@ struct FlatInsStorage
 
 struct UnitInstanceMap
 {
-    uint32_t                                                                                                                  iid     = ID::INVALID_ID;
-    uint32_t                                                                                                                  protoId = ID::INVALID_ID;
-    //std::unordered_map<ID::KeyUint64, ID::KeyUint64, ID::IdTraits<ID::KeyUint64>::Hasher, ID::IdTraits<ID::KeyUint64>::Equal> map;
+    uint32_t                                  iid     = ID::INVALID_ID;
+    uint32_t                                  protoId = ID::INVALID_ID;
     ID::keyUint64Unordered_map<ID::KeyUint64> map;
-    bool dirty = true;
+    bool                                      dirty = true;
 };
 
 } // namespace Component

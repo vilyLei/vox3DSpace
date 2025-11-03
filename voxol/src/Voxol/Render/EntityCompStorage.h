@@ -140,13 +140,11 @@ public:
     CompPool<Component::UnitHierarchy>       hierarchiesPool{};
     CompPool<Component::UnitShadingBaseDesc> shaderingDescPool{};
 
-    //std::unordered_map<ID::KeyUint64, uint32_t, ID::IdTraits<ID::KeyUint64>::Hasher, ID::IdTraits<ID::KeyUint64>::Equal> hierarchyIndexMap{};
     ID::keyUint64Unordered_map<uint32_t> hierarchyIndexMap{};
 
-    std::unordered_map<uint32_t, Math::Mat33>                                                                               entityGlobalMat33Map{};
-    //std::unordered_map<ID::KeyUint64, Math::Mat33, ID::IdTraits<ID::KeyUint64>::Hasher, ID::IdTraits<ID::KeyUint64>::Equal> entityInsGlobalMat33Map{};
-    ID::keyUint64Unordered_map<Math::Mat33> entityInsGlobalMat33Map{};
-    std::unordered_map<uint32_t, Component::UnitInstanceMap>                                                                insStorage;
+    std::unordered_map<uint32_t, Math::Mat33>                entityGlobalMat33Map{};
+    ID::keyUint64Unordered_map<Math::Mat33>                  entityInsGlobalMat33Map{};
+    std::unordered_map<uint32_t, Component::UnitInstanceMap> insStorage;
 
 private:
     std::vector<uint32_t> topoOrder;
