@@ -38,7 +38,6 @@ struct UnitShadingBaseDesc
 struct UnitShadingEntity
 {
     uint32_t id = ID::INVALID_ID;
-    /// UnitShadingBaseDesc vector index value
     uint32_t shadingDescId = ID::INVALID_ID;
 };
 struct UnitModel
@@ -55,14 +54,12 @@ struct UnitHierarchy
 };
 struct UnitEntity
 {
-    /// ֻ��entity����������id
     uint32_t id = ID::INVALID_ID;
     /// UnitShadingEntity vector index value
     uint32_t shadingId   = ID::INVALID_ID;
     uint32_t transformId = ID::INVALID_ID;
     uint32_t modelId     = ID::INVALID_ID;
     uint32_t hierarchyId = ID::INVALID_ID;
-    // ��ʾ��ǰ���entity�ǻ���prototypeId����Ӧ��entity��instance(ʵ��)
     uint32_t prototypeId = ID::INVALID_ID;
 
     bool visible = true;
@@ -120,18 +117,11 @@ struct FlatInsStorage
 };
 
 
-//struct UnitInstance
-//{
-//    ID::KeyUint64 id;
-//};
-
 struct UnitInstanceMap
 {
     uint32_t                                                                                                                  iid     = ID::INVALID_ID;
     uint32_t                                                                                                                  protoId = ID::INVALID_ID;
     std::unordered_map<ID::KeyUint64, ID::KeyUint64, ID::IdTraits<ID::KeyUint64>::Hasher, ID::IdTraits<ID::KeyUint64>::Equal> map;
-    //std::vector<ID::KeyUint64>           nodes;
-    //std::unordered_map<uint32_t, size_t> iidToIndexMap;
     bool dirty = true;
 };
 
