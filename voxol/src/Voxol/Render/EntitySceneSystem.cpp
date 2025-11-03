@@ -40,13 +40,17 @@ void EntitySceneSystem::initalize(const std::string& configFileName)
 
         auto&& vb = storage->getEntityGlobalBoundsAt(et.id);
         bvh->addItem(ID::KeyUint64::make(et.id, 0), vb);
+        auto&  wmats  = storage->entityInsGlobalMat33Map;
 
         auto&& insMap = insStorage[et.id];
         for (auto& item : insMap.map)
         {
-            auto& ins = item.second;
-            Component::defaultRect.mat33MapTo(ins.worldMat, vb);
-            bvh->addItem(ins.id, vb);
+            //auto& ins = item.second;
+            auto&& mat = wmats[item.first];
+            //Component::defaultRect.mat33MapTo(ins.worldMat, vb);
+            Component::defaultRect.mat33MapTo(mat, vb);
+            //bvh->addItem(ins.id, vb);
+            bvh->addItem(item.first, vb);
         }
     };
     entitiesPool.forEach([&](auto& et, uint32_t index) {
