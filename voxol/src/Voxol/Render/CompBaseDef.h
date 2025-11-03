@@ -65,12 +65,13 @@ struct EntityIdManager
 
 struct KeyUint64
 {
+    // a unique iid can ensure a unique KeyUint64 value, total number: 2^56
     uint64_t value;
 
-    static constexpr uint64_t ProtoMask   = (1ull << ID_BITS_COUNT) - 1; // 28-bit
-    static constexpr uint64_t IIDMask     = ProtoMask << ID_BITS_COUNT; // 28-bit << 28
-    static constexpr uint64_t FlagMask    = 0xFFFFull << ID2_ID_BITS_COUNT; // 8-bit << 56
-    static constexpr uint64_t CompareMask = (1ull << ID2_ID_BITS_COUNT) - 1; // lower 56 bits
+    static constexpr uint64_t ProtoMask   = (1ull << ID_BITS_COUNT) - 1;        // 28-bit
+    static constexpr uint64_t IIDMask     = ProtoMask << ID_BITS_COUNT;         // 28-bit << 28
+    static constexpr uint64_t FlagMask    = 0xFFFFull << ID2_ID_BITS_COUNT;     // 8-bit << 56
+    static constexpr uint64_t CompareMask = (1ull << ID2_ID_BITS_COUNT) - 1;    // lower 56 bits
 
     static constexpr KeyUint64 makeDefault()
     {
