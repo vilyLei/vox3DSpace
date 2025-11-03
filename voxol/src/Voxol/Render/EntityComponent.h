@@ -120,21 +120,19 @@ struct FlatInsStorage
 };
 
 
-struct UnitInstance
-{
-    ID::KeyUint64 id;
-    Math::Mat33 worldMat;
-};
+//struct UnitInstance
+//{
+//    ID::KeyUint64 id;
+//};
 
 struct UnitInstanceMap
 {
-    uint32_t                             iid     = ID::INVALID_ID;
-    uint32_t                             protoId  = ID::INVALID_ID;
-    std::vector<UnitInstance>            nodes;                         // ��ƽ�б����� unordered_map<iid, UnitInstance>
-    std::unordered_map<uint32_t, size_t> iidToIndexMap;                 // iid -> index in nodes (optional)
-    bool                                 dirty = true;
-    // for debug
-    std::unordered_map<ID::KeyUint64, UnitInstance, ID::IdTraits<ID::KeyUint64>::Hasher, ID::IdTraits<ID::KeyUint64>::Equal> map;
+    uint32_t                                                                                                                  iid     = ID::INVALID_ID;
+    uint32_t                                                                                                                  protoId = ID::INVALID_ID;
+    std::unordered_map<ID::KeyUint64, ID::KeyUint64, ID::IdTraits<ID::KeyUint64>::Hasher, ID::IdTraits<ID::KeyUint64>::Equal> map;
+    //std::vector<ID::KeyUint64>           nodes;
+    //std::unordered_map<uint32_t, size_t> iidToIndexMap;
+    bool dirty = true;
 };
 
 } // namespace Component

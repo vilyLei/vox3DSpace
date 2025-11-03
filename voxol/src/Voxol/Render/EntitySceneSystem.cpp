@@ -39,7 +39,7 @@ void EntitySceneSystem::initalize(const std::string& configFileName)
     auto updateProtoEtBVHData = [&](auto& et) {
 
         auto&& vb = storage->getEntityGlobalBoundsAt(et.id);
-        bvh->addItem(ID::KeyUint64::make(et.id, 0), vb);
+        bvh->addItem(ID::KeyUint64::make(et.id), vb);
         auto&  wmats  = storage->entityInsGlobalMat33Map;
 
         auto&& insMap = insStorage[et.id];
