@@ -440,12 +440,12 @@ void EntityCompStorage::traverseBuildGlobalMatPrototypeUnderInstance(uint32_t ii
             worldMat.setXY(parentTrans.x + tr.x, parentTrans.y + tr.y);
             worldMat.setScaleXY(tr.sx, tr.sy);
 
-            printf("traverseBuildGlobalMatPrototypeUnderInstance(), A tr pos(x=%f,y=%f)\n", tr.x, tr.y);
-            printf("traverseBuildGlobalMatPrototypeUnderInstance(), B parentTrans pos(x=%f,y=%f)\n", parentTrans.x, parentTrans.y);
+            //printf("traverseBuildGlobalMatPrototypeUnderInstance(), A tr pos(x=%f,y=%f)\n", tr.x, tr.y);
+            //printf("traverseBuildGlobalMatPrototypeUnderInstance(), B parentTrans pos(x=%f,y=%f)\n", parentTrans.x, parentTrans.y);
         }
 
-        auto&& pos = worldMat.getXY();
-        printf("traverseBuildGlobalMatPrototypeUnderInstance() protoId: %u, etIID: %u, C pos(x=%f,y=%f)\n", protoId, etIID, pos.x, pos.y);
+        //auto&& pos = worldMat.getXY();
+        //printf("traverseBuildGlobalMatPrototypeUnderInstance() protoId: %u, etIID: %u, C pos(x=%f,y=%f)\n", protoId, etIID, pos.x, pos.y);
         auto&& key                   = ID::KeyUint64::make(protoId, etIID);
         map.map[key]                 = {key};
         entityInsGlobalMat33Map[key] = worldMat;
@@ -626,6 +626,57 @@ void EntityCompStorage::collectAllEntities(const ID::KeyUint64& etId, std::vecto
          child = hierarchiesPool[child].next)
     {
         collectAllEntities(ID::KeyUint64::make(child), ids);
+    }
+}
+void EntityCompStorage::updateAllInstanceGlobalMats(const ID::KeyUint64& etId)
+{
+    auto protoId = etId.protoId();
+    if (ID::isInvalidID(protoId))
+        return;
+    if (entitiesPool.isInvalid(protoId))
+    {
+        return;
+    }
+    std::function<void(uint32_t iid, uint32_t protoId, const Math::Mat33&)> dfsEntity = [&](uint32_t iid, uint32_t protoId, const Math::Mat33& parentMat) {
+        Math::Mat33 worldMat = parentMat;
+        auto&       protoEnt = entitiesPool[protoId];
+        if (ID::isValidID(protoEnt.transformId))
+        {
+            auto&  tr          = transformsPool[protoEnt.transformId];
+            auto&& parentTrans = parentMat.getXY();
+            worldMat.identity();
+            worldMat.setXY(parentTrans.x + tr.x, parentTrans.y + tr.y);
+            worldMat.setScaleXY(tr.sx, tr.sy);
+        }
+        auto&& key = ID::KeyUint64::make(protoId, iid);
+
+        entityInsGlobalMat33Map[key] = worldMat;
+
+        for (auto child = hierarchiesPool[protoId].firstChild;
+             ID::isValidID(child);
+             child = hierarchiesPool[child].next)
+        {
+            dfsEntity(iid, child, worldMat);
+        }
+    };
+
+    for (auto&& insItem : insStorage)
+    {
+        auto&  ins = insItem.second;
+        auto&& key = ID::KeyUint64::make(protoId, ins.iid);
+        if (ins.map.contains(key))
+        {
+            auto parentProtoId = getEntityParentIdAt(protoId);
+            if (ID::isValidID(parentProtoId))
+            {
+                auto&& parentKey = ID::KeyUint64::make(parentProtoId, ins.iid);
+                if (entityInsGlobalMat33Map.contains(parentKey))
+                {
+                    auto&& parentWMat = entityInsGlobalMat33Map[parentKey];
+                    dfsEntity(ins.iid, protoId, parentWMat);
+                }
+            }
+        }
     }
 }
 } // namespace Voxol::Render

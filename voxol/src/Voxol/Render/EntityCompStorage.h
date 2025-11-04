@@ -134,6 +134,7 @@ public:
 
     void collectAllEntitiesWithInstance(const ID::KeyUint64& etId, std::vector<ID::KeyUint64>& ids);
     void collectAllEntities(const ID::KeyUint64& etId, std::vector<ID::KeyUint64>& ids);
+    void updateAllInstanceGlobalMats(const ID::KeyUint64& etId);
 
 public:
     CompPool<Component::UnitEntity>          entitiesPool{};

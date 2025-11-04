@@ -217,10 +217,15 @@ public:
     {
         return !m_freeList.empty();
     }
-    // 判断句柄是否有效
+    // 判断index是否有效
     [[nodiscard]] bool isValid(uint32_t index) const noexcept
     {
         return index < comps.size();
+    }
+    // 判断index是否无效
+    [[nodiscard]] bool isInvalid(uint32_t index) const noexcept
+    {
+        return index >= comps.size();
     }
 
     [[nodiscard]] size_t activeCount() const noexcept { return m_activeCount; }
