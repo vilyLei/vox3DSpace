@@ -423,11 +423,11 @@ void EntityCompStorage::traverseBuildGlobalMatPrototypeUnderInstance(uint32_t ii
 
     // for prototype traversal, use the prototype hierarchy nodes
     // but we need to combine prototype-local transform + instanceParentMat
-    std::function<void(uint32_t etIID, uint32_t protoId, const Math::Mat33&, int& index)> dfsProto = [&](uint32_t etIID, uint32_t protoId, const Math::Mat33& parentMat, int& index) {
+    std::function<void(uint32_t etIID, uint32_t protoId, const Math::Mat33&)> dfsEntity = [&](uint32_t etIID, uint32_t protoId, const Math::Mat33& parentMat) {
         Math::Mat33 worldMat = parentMat;
         // get prototype node's local transform if exists
         // prototype nodes are also stored in entityPool (we assume prototype entities have transforms)
-        printf("traverseBuildGlobalMatPrototypeUnderInstance() index: %d\n", index);
+
         auto& protoEt = entitiesPool[protoId];
         if (ID::isValidID(protoEt.transformId))
         {
@@ -448,26 +448,22 @@ void EntityCompStorage::traverseBuildGlobalMatPrototypeUnderInstance(uint32_t ii
         map.map[key]                 = {key};
         entityInsGlobalMat33Map[key] = worldMat;
 
-        index++;
-
         for (auto child = hierarchiesPool[protoId].firstChild;
              ID::isValidID(child);
              child = hierarchiesPool[child].next)
         {
-            dfsProto(etIID, child, worldMat, index);
+            dfsEntity(etIID, child, worldMat);
         }
     };
 
     auto&& key                   = ID::KeyUint64::make(protoId, iid);
     entityInsGlobalMat33Map[key] = instanceParentMat;
 
-    int index = 1;
-
     for (auto child = hierarchiesPool[protoId].firstChild;
          ID::isValidID(child);
          child = hierarchiesPool[child].next)
     {
-        dfsProto(iid, child, instanceParentMat, index);
+        dfsEntity(iid, child, instanceParentMat);
     }
     // store into insStorage
     insStorage[iid] = std::move(map);
