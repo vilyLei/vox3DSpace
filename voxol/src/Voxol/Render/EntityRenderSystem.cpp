@@ -93,6 +93,11 @@ bool EntityRenderSystem::drawUnit(const Component::UnitEntity& entity, const Mat
     {
         auto&& effects = compStorage->effectShadowIdMap[shadingEt.shadingDescId];
         auto   tot     = effects.size();
+        // draw shadows
+        for (auto i = 0; i < tot; i++)
+        {
+
+        }
     }
 
     //printf("xxx xxx trans(x=%f, y=%f)\n", trans.x, trans.y);
