@@ -39,7 +39,7 @@ public:
     {
         if constexpr (std::is_same_v<T, Component::UnitShadingEntity>)
             return shaderingEntitiesPool;
-        else if constexpr (std::is_same_v<T, Component::UnitShadingBaseDesc>)
+        else if constexpr (std::is_same_v<T, Component::UnitShadingDesc>)
             return shaderingDescPool;
         else if constexpr (std::is_same_v<T, Component::UnitTransform>)
             return transformsPool;
@@ -53,7 +53,7 @@ public:
     {
         if constexpr (std::is_same_v<T, Component::UnitShadingEntity>)
             return shaderingEntitiesPool;
-        else if constexpr (std::is_same_v<T, Component::UnitShadingBaseDesc>)
+        else if constexpr (std::is_same_v<T, Component::UnitShadingDesc>)
             return shaderingDescPool;
         else if constexpr (std::is_same_v<T, Component::UnitTransform>)
             return transformsPool;
@@ -142,7 +142,7 @@ public:
     CompPool<Component::UnitModel>           modelsPool{};
     CompPool<Component::UnitTransform>       transformsPool{};
     CompPool<Component::UnitHierarchy>       hierarchiesPool{};
-    CompPool<Component::UnitShadingBaseDesc> shaderingDescPool{};
+    CompPool<Component::UnitShadingDesc>     shaderingDescPool{};
 
     ID::keyUint64Unordered_map<uint32_t> hierarchyIndexMap{};
 

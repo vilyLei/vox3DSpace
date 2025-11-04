@@ -36,10 +36,10 @@ struct UnitEffectShadow
     float      blurRadius = 0;
 };
 
-struct UnitShadingBaseDesc
+struct UnitShadingDesc
 {
     uint32_t color = 0xff000000;
-    uint32_t type  = 0x0;
+    uint32_t flags  = 0x0;
 };
 
 struct UnitShadingEntity
