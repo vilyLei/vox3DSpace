@@ -491,7 +491,7 @@ void EntityCompStorage::traverseBuildGlobalMat(uint32_t etId, const Math::Mat33&
     // if entity is instance of prototype, build instance map using prototype tree
     if (ID::isValidID(et.prototypeId))
     {
-        printf("EntityCompStorage::traverseBuildGlobalMat() has prototypeId: %u\n", et.prototypeId);
+        //printf("EntityCompStorage::traverseBuildGlobalMat() has prototypeId: %u\n", et.prototypeId);
         if (ID::isValidID(hierarchiesPool[etId].firstChild))
         {
             printf("[Warning] entity %u is an instance, but has children in hierarchy ignored.\n", etId);

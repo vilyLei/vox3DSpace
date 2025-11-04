@@ -37,8 +37,6 @@ void EntitySystemLayer::updateBVHAndTileWithEntityId(const Render::ID::KeyUint64
     etCompStorage->updateAllInstanceGlobalMats(eId);
     Math::Bounds                       vb;
     std::vector<Render::ID::KeyUint64> ids{};
-    //etCompStorage->getIdsFromId(eId.protoId(), ids);
-    //etCompStorage->collectAllEntities(Render::ID::KeyUint64::make( eId.protoId()), ids);
     etCompStorage->collectAllEntities(eId, ids);
     auto& wInsMats = etCompStorage->entityInsGlobalMat33Map;
     for (auto pid : ids)
@@ -68,7 +66,6 @@ void EntitySystemLayer::initalize(const std::string& configFileName)
     
     uiOpLayer                      = std::make_shared<System::UIOperationLayer>();
     uiOpLayer->mouseCtrl.dirtyCall = [&, this](const Math::Bounds& bounds, uint32_t type, const Render::ID::KeyUint64& etId) {
-        //tileSys->addDirtyBounds(bounds, type);
         if (type == 0)
         {
             updateTileWithEntityId(etId);
