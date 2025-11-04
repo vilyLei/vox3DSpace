@@ -132,6 +132,9 @@ public:
     void markSubtreeDirty(uint32_t rootId);
     void updateDirtySubtrees(const std::vector<uint32_t>& roots);
 
+    void collectAllEntitiesWithInstance(const ID::KeyUint64& etId, std::vector<ID::KeyUint64>& ids);
+    void collectAllEntities(const ID::KeyUint64& etId, std::vector<ID::KeyUint64>& ids);
+
 public:
     CompPool<Component::UnitEntity>          entitiesPool{};
     CompPool<Component::UnitShadingEntity>   shaderingEntitiesPool{};

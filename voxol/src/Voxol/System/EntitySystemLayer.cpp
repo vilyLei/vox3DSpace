@@ -35,7 +35,9 @@ void EntitySystemLayer::updateBVHAndTileWithEntityId(const Render::ID::KeyUint64
 
     Math::Bounds                       vb;
     std::vector<Render::ID::KeyUint64> ids{};
-    etCompStorage->getIdsFromId(eId.protoId(), ids);
+    //etCompStorage->getIdsFromId(eId.protoId(), ids);
+    //etCompStorage->collectAllEntities(Render::ID::KeyUint64::make( eId.protoId()), ids);
+    etCompStorage->collectAllEntities(eId, ids);
     auto& wInsMats = etCompStorage->entityInsGlobalMat33Map;
     for (auto pid : ids)
     {

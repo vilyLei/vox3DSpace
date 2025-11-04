@@ -549,4 +549,83 @@ void EntityCompStorage::updateDirtySubtrees(const std::vector<uint32_t>& roots)
         }
     }
 }
+
+void EntityCompStorage::collectAllEntitiesWithInstance(const ID::KeyUint64& etId, std::vector<ID::KeyUint64>& ids)
+{
+    ids.emplace_back(etId);
+
+    auto protoId = etId.protoId();
+    auto iid     = etId.iid();
+
+    auto&    et             = entitiesPool[protoId];
+    uint32_t effectiveProto = ID::isValidID(et.prototypeId) ? et.prototypeId : protoId;
+
+    for (auto child = hierarchiesPool[effectiveProto].firstChild;
+         ID::isValidID(child);
+         child = hierarchiesPool[child].next)
+    {
+        auto&    cet        = entitiesPool[child];
+        uint32_t childProto = ID::isValidID(cet.prototypeId) ? cet.prototypeId : child;
+
+        collectAllEntitiesWithInstance(ID::KeyUint64::make(childProto, iid), ids);
+    }
+}
+
+void EntityCompStorage::collectAllEntities(const ID::KeyUint64& etId, std::vector<ID::KeyUint64>& ids)
+{
+    if (ID::isInvalidID(etId))
+        return;
+
+
+    ids.emplace_back(etId);
+    auto protoId = etId.protoId();
+    auto iid     = etId.iid();
+    // 找到所有其他相关的实例
+    for (auto&& insItem : insStorage)
+    {
+        auto&  ins = insItem.second;
+        auto&& key = ID::KeyUint64::make(protoId, ins.iid);
+        if (ins.map.contains(key))
+        {
+            collectAllEntitiesWithInstance(key, ids);
+        }
+    }
+
+    if (iid > 0)
+    {
+
+        //printf("traverseBuildIds() has a new instance entity.\n");
+        auto&    protoEntity    = entitiesPool[protoId];
+        uint32_t effectiveProto = ID::isValidID(protoEntity.prototypeId) ? protoEntity.prototypeId : protoId;
+
+        for (auto child = hierarchiesPool[effectiveProto].firstChild;
+             ID::isValidID(child);
+             child = hierarchiesPool[child].next)
+        {
+            auto&    cet        = entitiesPool[child];
+            uint32_t childProto = ID::isValidID(cet.prototypeId) ? cet.prototypeId : child;
+            collectAllEntitiesWithInstance(ID::KeyUint64::make(childProto, iid), ids);
+        }
+        return;
+    }
+    auto& et = entitiesPool[protoId];
+    if (ID::isValidID(et.prototypeId))
+    {
+        for (auto child = hierarchiesPool[et.prototypeId].firstChild;
+             ID::isValidID(child);
+             child = hierarchiesPool[child].next)
+        {
+            auto&    cet        = entitiesPool[child];
+            uint32_t childProto = ID::isValidID(cet.prototypeId) ? cet.prototypeId : child;
+            collectAllEntitiesWithInstance(ID::KeyUint64::make(child, protoId), ids);
+        }
+        return;
+    }
+    for (auto child = hierarchiesPool[protoId].firstChild;
+         ID::isValidID(child);
+         child = hierarchiesPool[child].next)
+    {
+        collectAllEntities(ID::KeyUint64::make(child), ids);
+    }
+}
 } // namespace Voxol::Render
