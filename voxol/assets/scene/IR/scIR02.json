@@ -52,6 +52,20 @@
                 }
             }
         ],
+        "effects": [
+            {
+                "id": 0,
+                "type": "shadow",
+                "color": "0xff333333",
+                "blurRadius": 10,
+                "offset": [20,20]
+            },
+            {
+                "id": 1,
+                "type": "blur",
+                "radius": 20
+            }
+        ],
         "descriptions": [
             {
                 "id": 0,
@@ -61,7 +75,8 @@
             {
                 "id": 1,
                 "type": "default",
-                "color": "#ff008800"
+                "color": "#ff008800",
+                "effects":[0]
             },
             {
                 "id": 2,
