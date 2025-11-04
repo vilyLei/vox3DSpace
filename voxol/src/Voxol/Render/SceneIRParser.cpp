@@ -100,6 +100,20 @@ void Description::parse(const JsonType& node)
 }
 void Module::parse(const JsonType& node)
 {
+    if (node.contains("effects"))
+    {
+        auto&& effects = node["effects"];
+        for (auto& node : effects)
+        {
+            std::string type = node["type"];
+            if (type == "shadow")
+            {
+                EffectShadow m;
+                m.parse(node);
+                shadowsMap[m.id] = m;
+            }
+        }
+    }
     if (node.contains("descriptions"))
     {
         auto&& descriptions = node["descriptions"];

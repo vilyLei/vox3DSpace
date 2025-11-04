@@ -65,6 +65,7 @@ struct Unit
 };
 struct Module
 {
+    std::unordered_map<uint32_t, EffectShadow> shadowsMap;
     std::unordered_map<uint32_t, Description> descriptionsMap;
     std::unordered_map<uint32_t, Unit>        unitsMap;
     void                                      parse(const JsonType& node);
