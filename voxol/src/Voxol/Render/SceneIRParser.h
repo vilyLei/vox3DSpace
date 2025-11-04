@@ -16,6 +16,17 @@ namespace SceneIR
 {
 namespace Shadering
 {
+
+struct EffectShadow
+{
+    uint32_t    id = ID::INVALID_ID;
+    std::string type;
+    uint32_t    color      = 0xff000000;
+    float       blurRadius = 0;
+    Math::Vec2  offset;
+    void        parse(const JsonType& node);
+};
+
 struct Description
 {
     uint32_t    id = ID::INVALID_ID;
@@ -26,10 +37,10 @@ struct Description
 
 struct Unit
 {
-    uint32_t  id = ID::INVALID_ID;
-    uint32_t  description;
-    uint32_t  blendmode;
-    void parse(const JsonType& node)
+    uint32_t id = ID::INVALID_ID;
+    uint32_t description;
+    uint32_t blendmode;
+    void     parse(const JsonType& node)
     {
         id          = node["id"];
         description = node["description"];
@@ -56,7 +67,7 @@ struct Module
 {
     std::unordered_map<uint32_t, Description> descriptionsMap;
     std::unordered_map<uint32_t, Unit>        unitsMap;
-    void                                 parse(const JsonType& node);
+    void                                      parse(const JsonType& node);
 };
 
 } // namespace Shadering
@@ -116,9 +127,9 @@ struct Transform
 
 struct Hierarchy
 {
-    uint32_t id = ID::INVALID_ID;
-    uint32_t parent = ID::INVALID_ID;
-    uint32_t next   = ID::INVALID_ID;
+    uint32_t id         = ID::INVALID_ID;
+    uint32_t parent     = ID::INVALID_ID;
+    uint32_t next       = ID::INVALID_ID;
     uint32_t firstChild = ID::INVALID_ID;
 
     void parse(const JsonType& node)
@@ -135,13 +146,13 @@ struct Hierarchy
 };
 struct Entity
 {
-    uint32_t  id = ID::INVALID_ID;
-    uint32_t  shadering = ID::INVALID_ID;
-    uint32_t  transform = ID::INVALID_ID;
-    uint32_t  model     = ID::INVALID_ID;
-    uint32_t  hierarchy = ID::INVALID_ID;
-    uint32_t  prototype = ID::INVALID_ID;
-    bool      visible   = true;
+    uint32_t id        = ID::INVALID_ID;
+    uint32_t shadering = ID::INVALID_ID;
+    uint32_t transform = ID::INVALID_ID;
+    uint32_t model     = ID::INVALID_ID;
+    uint32_t hierarchy = ID::INVALID_ID;
+    uint32_t prototype = ID::INVALID_ID;
+    bool     visible   = true;
 
     void parse(const JsonType& node)
     {
@@ -160,12 +171,14 @@ struct Entity
         if (node.contains("hierarchy"))
             hierarchy = node["hierarchy"];
 
-        if (node.contains("prototype")) {
+        if (node.contains("prototype"))
+        {
             if (node["prototype"].is_number())
             {
                 prototype = node["prototype"];
             }
-            else {
+            else
+            {
                 // todo
             }
         }

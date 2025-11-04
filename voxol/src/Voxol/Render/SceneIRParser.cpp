@@ -8,7 +8,59 @@ namespace SceneIR
 {
 namespace Shadering
 {
+void EffectShadow::parse(const JsonType& node){
 
+    id   = node["id"];
+    type = node["type"];
+
+    if (node.contains("color"))
+    {
+        auto&& vo = node["color"];
+        if (vo.is_number())
+        {
+            color = static_cast<uint32_t>(vo);
+        }
+        else if (vo.is_string())
+        {
+            std::string&& hex_str = vo;
+            std::transform(hex_str.begin(), hex_str.end(), hex_str.begin(),
+                           [](unsigned char c) { return std::tolower(c); });
+
+            if (hex_str.find('#') == 0)
+            {
+                color = std::stoul(hex_str.substr(1), nullptr, 16);
+            }
+            else if (hex_str.find('x') == 1)
+            {
+                if (hex_str.size() >= 3)
+                {
+                    color = std::stoul(hex_str.substr(2), nullptr, 16);
+                }
+            }
+            else
+            {
+                color = std::stoul(hex_str.substr(2), nullptr, 16);
+            }
+            printf("color: %x\n", color);
+        }
+    }
+
+    if (node.contains("offset") && node["offset"].is_array())
+    {
+        auto&& elements = node["offset"];
+        if (elements.size() != 2)
+            return;
+
+        std::vector<float> vs;
+        for (const auto& element : elements)
+        {
+            vs.push_back(element);
+        }
+        if (std::isnan(vs[0]) || std::isnan(vs[1]))
+            return;
+        offset = {vs[0], vs[1]};
+    }
+};
 void Description::parse(const JsonType& node)
 {
     id    = node["id"];
