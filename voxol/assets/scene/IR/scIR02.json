@@ -56,7 +56,7 @@
             {
                 "id": 0,
                 "type": "shadow",
-                "color": "0xff333333",
+                "color": "0xb0005500",
                 "blurRadius": 10,
                 "offset": [20,20]
             },
