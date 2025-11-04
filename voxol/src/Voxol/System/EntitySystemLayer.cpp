@@ -16,7 +16,7 @@ void EntitySystemLayer::updateTileWithEntityId(const Render::ID::KeyUint64& eId)
     auto&                 etCompStorage = etSceneSys->entityStorage->comp;
     auto&                 bvh           = etSceneSys->bvh;
     std::vector<Render::ID::KeyUint64> ids{};
-    etCompStorage->getIdsFromId(eId.id(), ids);
+    etCompStorage->getIdsFromId(eId.protoId(), ids);
     for (auto pid : ids)
     {
         tileSys->addDirtyBounds(bvh->getBoundsAt(pid), 0);
@@ -30,11 +30,11 @@ void EntitySystemLayer::updateBVHAndTileWithEntityId(const Render::ID::KeyUint64
     auto&  etCompStorage = etSceneSys->entityStorage->comp;
     auto& bvh           = etSceneSys->bvh;
 
-    auto&& parentMat = etCompStorage->getEntityParentGlobalMatAt(eId.id());
-    etCompStorage->traverseBuildGlobalMatA(eId.id(), parentMat);
+    auto&& parentMat = etCompStorage->getEntityParentGlobalMatAt(eId.protoId());
+    etCompStorage->traverseBuildGlobalMatA(eId.protoId(), parentMat);
 
     std::vector<Render::ID::KeyUint64> ids{};
-    etCompStorage->getIdsFromId(eId.id(), ids);
+    etCompStorage->getIdsFromId(eId.protoId(), ids);
     for (auto pid : ids)
     {
         auto&& bv = etCompStorage->getEntityGlobalBoundsAt(pid.protoId());
