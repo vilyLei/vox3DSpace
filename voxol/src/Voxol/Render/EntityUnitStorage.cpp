@@ -158,6 +158,11 @@ void EntityUnitStorage::initalizeFromFile(const std::string& fileName)
         printf("dataHier.id: %u, dstHier.parent: %u, dstHier.firstChild: %u, dstHier.next: %u\n", dataHier.id, dstHier.parent, dstHier.firstChild, dstHier.next);
     };
 
+    for (auto& ut : shaderingModule.shadowsMap)
+    {
+        auto& data = ut.second;
+        comp->effectShadowMap[data.id] = {data.color, data.offset, data.blurRadius};
+    }
     for (auto& ut : shaderingModule.unitsMap)
     {
         updateUnitData(ut.second.id);
