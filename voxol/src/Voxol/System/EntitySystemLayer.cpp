@@ -33,13 +33,23 @@ void EntitySystemLayer::updateBVHAndTileWithEntityId(const Render::ID::KeyUint64
     auto&& parentMat = etCompStorage->getEntityParentGlobalMatAt(eId.protoId());
     etCompStorage->traverseBuildGlobalMat(eId.protoId(), parentMat);
 
+    Math::Bounds                       vb;
     std::vector<Render::ID::KeyUint64> ids{};
     etCompStorage->getIdsFromId(eId.protoId(), ids);
+    auto& wInsMats = etCompStorage->entityInsGlobalMat33Map;
     for (auto pid : ids)
     {
-        auto&& bv = etCompStorage->getEntityGlobalBoundsAt(pid.protoId());
-        tileSys->addDirtyBounds(bv, 1);
-        bvh->updateItemBoundsByObjectId(pid, bv);
+        if (pid.iid() > 0)
+        {
+            Render::Component::defaultRect.mat33MapTo(wInsMats[pid], vb);
+        }
+        else
+        {
+            vb = etCompStorage->getEntityGlobalBoundsAt(pid.protoId());
+        }
+
+        tileSys->addDirtyBounds(vb, 1);
+        bvh->updateItemBoundsByObjectId(pid, vb);
     }
     bvh->updateDirty();
 }
