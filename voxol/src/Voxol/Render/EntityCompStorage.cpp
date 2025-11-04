@@ -419,7 +419,7 @@ void EntityCompStorage::traverseBuildGlobalMatInstance(uint32_t iid, const Math:
 void EntityCompStorage::traverseBuildGlobalMatPrototypeUnderInstance(uint32_t iid, uint32_t protoId, const Math::Mat33& instanceParentMat)
 {
     Component::UnitInstanceMap map;
-    map.iid             = iid;
+    map.iid     = iid;
     map.protoId = protoId;
     map.map.clear();
 
