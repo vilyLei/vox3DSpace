@@ -326,6 +326,7 @@ void EntityCompStorage::traverseSortIndexAndBuildGlobalMat(uint32_t etId, uint32
     }
 }
 
+/*
 void EntityCompStorage::traverseBuildGlobalMatA(uint32_t etId, const Math::Mat33& parentMat)
 {
     if (etId == ID::INVALID_ID)
@@ -361,6 +362,7 @@ void EntityCompStorage::traverseBuildGlobalMatA(uint32_t etId, const Math::Mat33
         traverseBuildGlobalMatA(child, entityGlobalMat33Map[etId]);
     }
 }
+//*/
 
 void EntityCompStorage::buildTopoOrderFromRoots(const std::vector<uint32_t>& roots)
 {

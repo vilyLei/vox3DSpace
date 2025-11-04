@@ -122,7 +122,7 @@ public:
     void traverseSortIndexWithInstance(uint32_t iid, uint32_t prototypeId, uint32_t& index);
     void traverseSortIndex(uint32_t etId, uint32_t& index);
     void traverseSortIndexAndBuildGlobalMat(uint32_t etId, uint32_t& index, const Math::Mat33& parentMat);
-    void traverseBuildGlobalMatA(uint32_t etId, const Math::Mat33& parentMat);
+    //void traverseBuildGlobalMatA(uint32_t etId, const Math::Mat33& parentMat);
 
     void buildTopoOrderFromRoots(const std::vector<uint32_t>& roots);
     void traverseBuildGlobalMatInstance(uint32_t iid, const Math::Mat33& parentMat, Component::UnitInstanceMap& insMap);

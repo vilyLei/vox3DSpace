@@ -31,7 +31,7 @@ void EntitySystemLayer::updateBVHAndTileWithEntityId(const Render::ID::KeyUint64
     auto& bvh           = etSceneSys->bvh;
 
     auto&& parentMat = etCompStorage->getEntityParentGlobalMatAt(eId.protoId());
-    etCompStorage->traverseBuildGlobalMatA(eId.protoId(), parentMat);
+    etCompStorage->traverseBuildGlobalMat(eId.protoId(), parentMat);
 
     std::vector<Render::ID::KeyUint64> ids{};
     etCompStorage->getIdsFromId(eId.protoId(), ids);
