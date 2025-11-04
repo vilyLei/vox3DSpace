@@ -125,6 +125,8 @@ struct KeyUint64
     }
 };
 
+constexpr auto INVALID_KEY = KeyUint64::make(INVALID_ID, INVALID_ID);
+
 struct KeyUint64Hasher
 {
     size_t operator()(const KeyUint64& k) const noexcept
