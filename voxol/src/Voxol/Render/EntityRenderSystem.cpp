@@ -96,7 +96,15 @@ bool EntityRenderSystem::drawUnit(const Component::UnitEntity& entity, const Mat
         // draw shadows
         for (auto i = 0; i < tot; i++)
         {
+            auto&& shd         = compStorage->effectShadowMap[effects[i]];
+            auto mat           = wM;
+            mat.offsetXY(shd.offset);
 
+            drawUnit.blendMode = 1;
+            drawUnit.setColor(shd.color);
+            drawUnit.objMat = mat;
+            drawUnit.mvp    = vpM;
+            drawUnit.draw();
         }
     }
 

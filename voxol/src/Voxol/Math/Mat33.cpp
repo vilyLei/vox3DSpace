@@ -70,6 +70,11 @@ void Mat33::setTranslateAndScale(float tx, float ty, float sx, float sy)
     data[7] = ty;
 }
 
+void Mat33::offsetXY(const Vec2& dv) {
+
+    data[6] = dv.x;
+    data[7] = dv.y;
+}
 void Mat33::setXY(const Vec2& pos)
 {
     data[6] = pos.x;
