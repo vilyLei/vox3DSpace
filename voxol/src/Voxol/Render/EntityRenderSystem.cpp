@@ -89,6 +89,12 @@ bool EntityRenderSystem::drawUnit(const Component::UnitEntity& entity, const Mat
     if (!wbounds.intersects(vb))
         return false;
 
+    if (shdDesc.flags > 0 && compStorage->effectShadowIdMap.contains(shadingEt.shadingDescId))
+    {
+        auto&& effects = compStorage->effectShadowIdMap[shadingEt.shadingDescId];
+        auto   tot     = effects.size();
+    }
+
     //printf("xxx xxx trans(x=%f, y=%f)\n", trans.x, trans.y);
 
     drawUnit.blendMode = 1;
