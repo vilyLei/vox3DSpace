@@ -49,13 +49,6 @@ void EntityRenderSystem::render(const Draw::DrawContext& rctx, const Math::Mat33
             continue;
         }
 
-        //if (ID::isValidID(et.prototypeId))
-        //{
-        //    printf("drawUnit with prototype root rendering process ...\n");
-        //    //return;
-        //}
-        //if (et.shadingId < 0 || !et.visible)
-        //    continue;
         auto flag = drawUnit(et, vpM, wbounds, compStorage->entityGlobalMat33Map[et.id]);
         drawTotal += flag ? 1 : 0;
     }
