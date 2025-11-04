@@ -97,6 +97,22 @@ void Description::parse(const JsonType& node)
             printf("color: %x\n", color);
         }
     }
+    //effects
+
+    if (node.contains("effects") && node["effects"].is_array())
+    {
+        auto elements = node["effects"];
+        if (elements.empty())
+            return;
+
+        effects.clear();
+        for (const auto& element : elements)
+        {
+            if (!element.is_number())
+                continue;
+            effects.push_back(static_cast<uint32_t>(element));
+        }
+    }
 }
 void Module::parse(const JsonType& node)
 {

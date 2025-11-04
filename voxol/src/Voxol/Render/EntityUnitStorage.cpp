@@ -87,6 +87,8 @@ void EntityUnitStorage::initalizeFromFile(const std::string& fileName)
         //auto& model = unit.model;
         auto& desc = shaderingDescPool[i];
         desc.color = descData.color;
+        desc.flags = descData.effects.empty() ? 0 : static_cast<uint32_t>(descData.effects.size());
+
         printf("        desc.color: %x, unit.description: %d\n", desc.color, unit.description);
         auto&& descEt        = shaderingEntitiesPool[i];
         descEt.shadingDescId = unit.description;

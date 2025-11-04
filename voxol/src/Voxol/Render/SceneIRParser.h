@@ -32,6 +32,7 @@ struct Description
     uint32_t    id = ID::INVALID_ID;
     std::string type;
     uint32_t    color = 0xff000000;
+    std::vector<uint32_t> effects;
     void        parse(const JsonType& node);
 };
 
