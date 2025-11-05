@@ -77,11 +77,11 @@ struct KeyUint64
     {
         return KeyUint64{0};
     }
-    static constexpr KeyUint64 make(EntityId protoId, EntityId iid, uint16_t flags = 0)
+    static constexpr KeyUint64 make(EntityId protoId, EntityId iid, uint8_t flags = 0)
     {
         return KeyUint64{(uint64_t(flags) << ID2_ID_BITS_COUNT) | (uint64_t(iid.id()) << ID_BITS_COUNT) | uint64_t(protoId.id())};
     }
-    static constexpr KeyUint64 make(uint32_t protoId, uint32_t iid, uint16_t flags = 0)
+    static constexpr KeyUint64 make(uint32_t protoId, uint32_t iid, uint8_t flags = 0)
     {
         return KeyUint64{(uint64_t(flags) << ID2_ID_BITS_COUNT) | (uint64_t(iid) << ID_BITS_COUNT) | uint64_t(protoId)};
     }
@@ -90,10 +90,10 @@ struct KeyUint64
         return KeyUint64{uint64_t(protoId)};
     }
 
-    constexpr uint16_t flags() const noexcept { return value >> ID2_ID_BITS_COUNT; }
-    constexpr uint32_t protoId() const noexcept { return value & ProtoMask; }
-    constexpr uint32_t iid() const noexcept { return (value >> ID_BITS_COUNT) & ProtoMask; }
-    constexpr uint32_t id() const noexcept { return value & CompareMask; }
+    constexpr uint8_t  flags() const noexcept { return static_cast<uint8_t>(value >> ID2_ID_BITS_COUNT); }
+    constexpr uint32_t protoId() const noexcept { return static_cast<uint32_t>(value & ProtoMask); }
+    constexpr uint32_t iid() const noexcept { return static_cast<uint32_t>((value >> ID_BITS_COUNT) & ProtoMask); }
+    constexpr uint32_t id() const noexcept { return static_cast<uint32_t>(value & CompareMask); }
 
     constexpr bool isProtoIdValid() const noexcept { return (value & ProtoMask) < INVALID_ID; }
     constexpr bool isProtoIdInvalid() const noexcept { return (value & ProtoMask) >= INVALID_ID; }
@@ -183,9 +183,9 @@ private:
     std::unordered_map<uint32_t, IIDPool> protoPools; // key = protoId
 
 public:
-    [[nodiscard]] KeyUint64 allocate(uint32_t protoId, uint16_t flags = 0);
+    [[nodiscard]] KeyUint64 allocate(uint32_t protoId, uint8_t flags = 0);
 
-    [[nodiscard]] KeyUint64 allocate(EntityId protoId, uint16_t flags = 0);
+    [[nodiscard]] KeyUint64 allocate(EntityId protoId, uint8_t flags = 0);
 
     void release(const KeyUint64& key);
 
