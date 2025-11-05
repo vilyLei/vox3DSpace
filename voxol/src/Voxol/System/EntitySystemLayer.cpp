@@ -15,13 +15,14 @@ void EntitySystemLayer::updateTileWithEntityId(const Render::ID::KeyUint64& eId)
 
     auto&                 etCompStorage = etSceneSys->entityStorage->comp;
     auto&                 bvh           = etSceneSys->bvh;
+
     std::vector<Render::ID::KeyUint64> ids{};
-    //etCompStorage->getIdsFromId(eId.protoId(), ids);
-    Math::Bounds vb;
     etCompStorage->collectAllEntities(eId, ids);
+
     for (auto pid : ids)
     {
-        tileSys->addDirtyBounds(bvh->getBoundsAt(pid), 0);
+        auto&& vb   = bvh->getBoundsAt(pid);
+        tileSys->addDirtyBounds(vb, 0);
     }
 }
 void EntitySystemLayer::updateBVHAndTileWithEntityId(const Render::ID::KeyUint64& eId)
@@ -36,33 +37,6 @@ void EntitySystemLayer::updateBVHAndTileWithEntityId(const Render::ID::KeyUint64
     etSceneSys->updateBVHBoundsWithEntityId(eId.protoId(), [this](const Render::ID::KeyUint64& etId, const Math::Bounds& bounds) {
         tileSys->addDirtyBounds(bounds, 1);
     });
-    /*
-    auto&  etCompStorage = etSceneSys->entityStorage->comp;
-    auto& bvh           = etSceneSys->bvh;
-
-    auto&& parentMat = etCompStorage->getEntityParentGlobalMatAt(eId.protoId());
-    etCompStorage->traverseBuildGlobalMat(eId.protoId(), parentMat);
-    etCompStorage->updateAllInstanceGlobalMats(eId);
-    Math::Bounds                       vb;
-    std::vector<Render::ID::KeyUint64> ids{};
-    etCompStorage->collectAllEntities(eId, ids);
-    auto& wInsMats = etCompStorage->entityInsGlobalMat33Map;
-    for (auto pid : ids)
-    {
-        if (pid.iid() > 0)
-        {
-            Render::Component::defaultRect.mat33MapTo(wInsMats[pid], vb);
-        }
-        else
-        {
-            vb = etCompStorage->getEntityGlobalBoundsAt(pid.protoId());
-        }
-
-        tileSys->addDirtyBounds(vb, 1);
-        bvh->updateItemBoundsByObjectId(pid, vb);
-    }
-    bvh->updateDirty();
-    //*/
 }
 void EntitySystemLayer::initalize(const std::string& configFileName)
 {
