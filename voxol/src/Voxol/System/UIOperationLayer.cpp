@@ -23,7 +23,11 @@ void MouseController::selectWithSingle(const System::Mouse::MouseEvent& evt, con
     etStorage->checkIds(qeIds);
 
     auto topId = qeIds.empty() ? Render::ID::INVALID_KEY : qeIds.back();
-
+    if (topId.flags() > 0)
+    {
+        etId = Render::ID::INVALID_KEY;
+        return;
+    }
     if (evt.isBegin())
     {
         dragging = false;
