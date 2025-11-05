@@ -92,6 +92,7 @@ struct KeyUint64
         auto protoId = srcKey.protoId();
         auto iid     = srcKey.iid();
         iid          = iid != 0 ? iid : protoId;
+        // warn: effectBaseID + elId >= INVALID_ID + protoId
         protoId      = effectBaseID + elId + protoId;
 
         return KeyUint64{
