@@ -77,12 +77,11 @@ bool EntityRenderSystem::drawUnit(const Component::UnitEntity& entity, const Mat
     auto& transformsPool    = compStorage->transformsPool;
     auto& modelsPool        = compStorage->modelsPool;
 
-    const auto& shadingEt = compStorage->get<Component::UnitShadingEntity>(entity.shadingId);
+    auto&& shadingEt = compStorage->get<Component::UnitShadingEntity>(entity.shadingId);
     auto        drawingId = modelsPool[entity.modelId].drawUnitId;
     auto&       drs       = *entityStorage->drawing;
-    auto&       drawUnit  = drs[drawingId];
-    auto&       shdDesc   = shaderingDescPool[shadingEt.shadingDescId];
-    //auto&&      wmat      = compStorage->entityGlobalMat33Map[entity.id];
+    auto&&       drawUnit  = drs[drawingId];
+    auto&&       shdDesc   = shaderingDescPool[shadingEt.shadingDescId];
 
     Math::Bounds vb;
     Component::defaultRect.mat33MapTo(wM, vb);
