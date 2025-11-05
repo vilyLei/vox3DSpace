@@ -28,31 +28,54 @@ void EntitySceneSystem::initalize(const std::string& configFileName)
     {
         entityStorage->initalizeFromFile(configFileName);
     }
-    
-    auto& storage                = entityStorage->comp;
-    auto& entitiesPool           = storage->entitiesPool;
-    auto& shaderingEntitiesPool  = storage->shaderingEntitiesPool;
-    auto& shaderingDescPool      = storage->shaderingDescPool;
-    auto& transformsPool         = storage->transformsPool;
-    auto& insStorage           = storage->insStorage;
+
+    auto& storage               = entityStorage->comp;
+    auto& entitiesPool          = storage->entitiesPool;
+    auto& shaderingEntitiesPool = storage->shaderingEntitiesPool;
+    auto& shaderingDescPool     = storage->shaderingDescPool;
+    auto& transformsPool        = storage->transformsPool;
+    auto& insStorage            = storage->insStorage;
+
+
+    auto addShadowEffectBVHData = [&](const ID::KeyUint64& key, const Math::Mat33& wmat) {
+        auto protoId = key.protoId();
+        if (entitiesPool.isInvalid(protoId)) { return; }
+
+        auto&& et        = entitiesPool[protoId];
+        auto&  shadingEt = shaderingEntitiesPool[et.shadingId];
+        auto&  desc      = shaderingDescPool[shadingEt.shadingDescId];
+        if (desc.flags == 0) { return; }
+        auto&& efs = storage->effectShadowIdMap[shadingEt.shadingDescId];
+
+        Math::Bounds vb;
+        for (auto& ef : efs)
+        {
+            auto&& shdData = storage->effectShadowMap[ef];
+            auto   wm      = wmat;
+            wm.offsetXY(shdData.offset);
+            Component::defaultRect.mat33MapTo(wm, vb);
+            bvh->addItem(ID::KeyUint64::makeWithEffectShadow(key, ef), vb);
+        }
+    };
 
     auto updateProtoEtBVHData = [&](auto& et) {
-
         auto&& vb = storage->getEntityGlobalBoundsAt(et.id);
         bvh->addItem(ID::KeyUint64::make(et.id), vb);
-        auto&  wmats  = storage->entityInsGlobalMat33Map;
+        auto& wmats = storage->entityInsGlobalMat33Map;
 
         auto&& insMap = insStorage[et.id];
         for (auto& item : insMap.map)
         {
             //auto& ins = item.second;
             auto&& mat = wmats[item.first];
+            addShadowEffectBVHData(item.first, mat);
             //Component::defaultRect.mat33MapTo(ins.worldMat, vb);
             Component::defaultRect.mat33MapTo(mat, vb);
             //bvh->addItem(ins.id, vb);
             bvh->addItem(item.first, vb);
         }
     };
+
     entitiesPool.forEach([&](auto& et, uint32_t index) {
 
         if (ID::isInvalidID(et.transformId))
@@ -63,12 +86,15 @@ void EntitySceneSystem::initalize(const std::string& configFileName)
             updateProtoEtBVHData(et);
             return;
         }
+
         //auto& trans = transformsPool[et.transformId];
         //bounds.setXYWH(trans.x, trans.y, trans.sx, trans.sy);
         //bounds.mat33MapTo(storage->entityGlobalMat33Map[et.id], vb);
 
-        auto&& vb = storage->getEntityGlobalBoundsAt( et.id );
-        bvh->addItem(ID::KeyUint64::make(et.id, 0), vb);
+        auto&& key = ID::KeyUint64::make(et.id);
+        addShadowEffectBVHData(key, storage->getEntityGlobalMatAt(et.id));
+        auto&& vb = storage->getEntityGlobalBoundsAt(et.id);
+        bvh->addItem(key, vb);
     });
 
     bvh->build();

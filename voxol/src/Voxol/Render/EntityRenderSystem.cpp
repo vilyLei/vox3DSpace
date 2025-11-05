@@ -40,6 +40,10 @@ void EntityRenderSystem::render(const Draw::DrawContext& rctx, const Math::Mat33
         {
             continue;
         }
+        if (entitiesPool.isInvalid(proId))
+        {
+            continue;
+        }
         auto  iid = key.iid();
         auto& et    = entitiesPool[proId];
         if (Render::ID::isInvalidID(et.shadingId) || !et.visible)

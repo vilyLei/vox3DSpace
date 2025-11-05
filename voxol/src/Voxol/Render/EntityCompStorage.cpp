@@ -211,7 +211,13 @@ void EntityCompStorage::checkIds(std::vector<ID::KeyUint64>& edis)
     auto                       tot = edis.size();
     for (auto i = 0; i < tot; ++i)
     {
-        auto&& et = entitiesPool[edis[i].protoId()];
+        auto protoId = edis[i].protoId();
+        if (entitiesPool.isInvalid(protoId))
+        {
+            ids.push_back(edis[i]);
+            continue;
+        }
+        auto&& et = entitiesPool[protoId];
         if (!et.visible)
             continue;
         ids.push_back(edis[i]);
