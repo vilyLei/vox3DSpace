@@ -146,7 +146,8 @@ void EntitySceneSystem::updateBVHBoundsWithEntityId(uint32_t eId)
     };
 
     std::vector<ID::KeyUint64> ids{};
-    compst->getIdsFromId(eId, ids);
+    //compst->getIdsFromId(eId, ids);
+    compst->collectAllEntities(ID::KeyUint64::make(eId), ids);
     for (auto pid : ids)
     {
         bvh->updateItemBoundsByObjectId(pid, entityStorage->comp->getEntityGlobalBoundsAt(pid.id()));

@@ -169,7 +169,7 @@ void EntityCompStorage::getIdsFromId(uint32_t etId, std::vector<ID::KeyUint64>& 
     if (ID::isInvalidID(etId))
         return;
 
-    ids.push_back(ID::KeyUint64::make(etId, 0));
+    ids.push_back(ID::KeyUint64::make(etId));
 
     for (auto child = hierarchiesPool[etId].firstChild;
          child != ID::INVALID_ID;
@@ -579,9 +579,10 @@ void EntityCompStorage::collectAllEntities(const ID::KeyUint64& etId, std::vecto
 
 
     ids.emplace_back(etId);
+
     auto protoId = etId.protoId();
     auto iid     = etId.iid();
-    // 找到所有其他相关的实例
+
     for (auto&& insItem : insStorage)
     {
         auto&  ins = insItem.second;
@@ -594,9 +595,8 @@ void EntityCompStorage::collectAllEntities(const ID::KeyUint64& etId, std::vecto
 
     if (iid > 0)
     {
-
-        //printf("traverseBuildIds() has a new instance entity.\n");
-        auto&    protoEntity    = entitiesPool[protoId];
+        //printf("collectAllEntities() has a new instance entity.\n");
+        auto&&    protoEntity    = entitiesPool[protoId];
         uint32_t effectiveProto = ID::isValidID(protoEntity.prototypeId) ? protoEntity.prototypeId : protoId;
 
         for (auto child = hierarchiesPool[effectiveProto].firstChild;
