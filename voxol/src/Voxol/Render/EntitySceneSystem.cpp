@@ -122,8 +122,31 @@ void EntitySceneSystem::updateBVHBoundsWithEntityId(uint32_t eId)
     if (ID::isInvalidID(eId))
         return;
 
+    auto& compst            = entityStorage->comp;
+
+    auto addShadowEffectBVHData = [&](const ID::KeyUint64& key, const Math::Mat33& wmat) {
+        auto protoId = key.protoId();
+        if (compst->entitiesPool.isInvalid(protoId)) { return; }
+
+        auto&& et        = compst->entitiesPool[protoId];
+        auto&  shadingEt = compst->shaderingEntitiesPool[et.shadingId];
+        auto&  desc      = compst->shaderingDescPool[shadingEt.shadingDescId];
+        if (desc.flags == 0) { return; }
+        auto&& efs = compst->effectShadowIdMap[shadingEt.shadingDescId];
+
+        Math::Bounds vb;
+        for (auto& ef : efs)
+        {
+            auto&& shdData = compst->effectShadowMap[ef];
+            auto   wm      = wmat;
+            wm.offsetXY(shdData.offset);
+            Component::defaultRect.mat33MapTo(wm, vb);
+            bvh->addItem(ID::KeyUint64::makeWithEffectShadow(key, ef), vb);
+        }
+    };
+
     std::vector<ID::KeyUint64> ids{};
-    entityStorage->comp->getIdsFromId(eId, ids);
+    compst->getIdsFromId(eId, ids);
     for (auto pid : ids)
     {
         bvh->updateItemBoundsByObjectId(pid, entityStorage->comp->getEntityGlobalBoundsAt(pid.id()));
