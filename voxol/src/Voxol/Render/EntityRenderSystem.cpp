@@ -30,26 +30,32 @@ void EntityRenderSystem::render(const Draw::DrawContext& rctx, const Math::Mat33
 
     for (auto i = 0; i < total; i++)
     {
-        if (queriedEIds[i].isIDInvalid())
+        auto&& key = queriedEIds[i];
+
+        if (key.isIDInvalid())
             continue;
 
-        auto iid = queriedEIds[i].iid();
-        auto proId = queriedEIds[i].protoId();
+        auto proId = key.protoId();
+        if (ID::isInvalidID(proId))
+        {
+            continue;
+        }
+        auto  iid = key.iid();
         auto& et    = entitiesPool[proId];
         if (Render::ID::isInvalidID(et.shadingId) || !et.visible)
         {
             continue;
         }
-        if (iid > 0)
+        if (key.isIIDValid())
         {
-            auto&& wmat = compStorage->entityInsGlobalMat33Map[queriedEIds[i]];
+            auto&& wmat = compStorage->entityInsGlobalMat33Map[key];
             auto flag = drawUnit(et, vpM, wbounds, wmat);
             drawTotal += flag ? 1 : 0;
             //printf("drawUnit with prototype child rendering process ...\n");
             continue;
         }
 
-        auto flag = drawUnit(et, vpM, wbounds, compStorage->entityGlobalMat33Map[et.id]);
+        auto flag = drawUnit(et, vpM, wbounds, compStorage->entityGlobalMat33Map[proId]);
         drawTotal += flag ? 1 : 0;
     }
     //if (drawTotal < total)
