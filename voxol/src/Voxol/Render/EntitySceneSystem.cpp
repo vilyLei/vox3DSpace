@@ -117,7 +117,7 @@ void EntitySceneSystem::clear()
 {
 }
 
-void EntitySceneSystem::updateBVHBoundsWithEntityId(uint32_t eId)
+void EntitySceneSystem::updateBVHBoundsWithEntityId(uint32_t eId, BoundsUpdateCallType callback)
 {
     if (ID::isInvalidID(eId))
         return;
@@ -142,6 +142,7 @@ void EntitySceneSystem::updateBVHBoundsWithEntityId(uint32_t eId)
             wm.offsetXY(shdData.offset);
             Component::defaultRect.mat33MapTo(wm, vb);
             bvh->addItem(ID::KeyUint64::makeWithEffectShadow(key, ef), vb);
+            callback(key, vb);
         }
     };
 
@@ -162,11 +163,14 @@ void EntitySceneSystem::updateBVHBoundsWithEntityId(uint32_t eId)
 
             Component::defaultRect.mat33MapTo(wm, vb);
             bvh->updateItemBoundsByObjectId(pid, vb);
+            callback(pid, vb);
         }
         else
         {
+            vb = compst->getEntityGlobalBoundsAt(pid.protoId());
             addShadowEffectBVHData(pid, compst->getEntityGlobalMat33At(pid.protoId()));
-            bvh->updateItemBoundsByObjectId(pid, compst->getEntityGlobalBoundsAt(pid.protoId()));
+            bvh->updateItemBoundsByObjectId(pid, vb);
+            callback(pid, vb);
         }
     }
     bvh->updateDirty();

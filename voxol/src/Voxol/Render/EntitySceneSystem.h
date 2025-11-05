@@ -5,12 +5,14 @@
 #include "DrawCtx.h"
 
 #include "EntityUnitStorage.h"
+#include <functional>
 
 namespace Voxol::Render
 {
 
 using EntitySysBVH = V1::BVH2D;
 
+using BoundsUpdateCallType = std::function<void(const Render::ID::KeyUint64& etId, const Math::Bounds& bounds)>;
 class EntitySceneSystem
 {
 public:
@@ -33,7 +35,7 @@ public:
 
     EntitySysBVH::SP      bvh = EntitySysBVH::make();
     EntityUnitStorage::SP entityStorage{};
-    void                  updateBVHBoundsWithEntityId(uint32_t eId);
+    void                  updateBVHBoundsWithEntityId(uint32_t eId, BoundsUpdateCallType callback);
 
 private:
     std::vector<ID::KeyUint64> queriedEIds{};
