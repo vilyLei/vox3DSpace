@@ -141,7 +141,7 @@ void EntitySceneSystem::updateBVHBoundsWithEntityId(uint32_t eId, BoundsUpdateCa
             auto   wm      = wmat;
             wm.offsetXY(shdData.offset);
             Component::defaultRect.mat33MapTo(wm, vb);
-            bvh->addItem(ID::KeyUint64::makeWithEffectShadow(key, ef), vb);
+            bvh->updateItemBoundsByObjectId(ID::KeyUint64::makeWithEffectShadow(key, ef), vb);
             callback(key, vb);
         }
     };
