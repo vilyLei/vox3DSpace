@@ -17,17 +17,17 @@ namespace ID
 // 定义entity id为28bits的uint32_t类型
 
 // 28-bit invalid ID
-constexpr uint32_t INVALID_ID = 0x0FFFFFFF;
-constexpr uint32_t ID_BITS_COUNT = 28;
+constexpr uint32_t INVALID_ID        = 0x0FFFFFFF;
+constexpr uint32_t ID_BITS_COUNT     = 28;
 constexpr uint32_t ID2_ID_BITS_COUNT = 56; // 28 + 28
 
 struct EntityId
 {
     static constexpr uint32_t IDMask = INVALID_ID; // 28-bit
-    uint32_t value = INVALID_ID;
+    uint32_t                  value  = INVALID_ID;
 
-    constexpr bool isValid() const noexcept { return value < INVALID_ID; }
-    constexpr bool isInvalid() const noexcept { return value >= INVALID_ID; }
+    constexpr bool     isValid() const noexcept { return value < INVALID_ID; }
+    constexpr bool     isInvalid() const noexcept { return value >= INVALID_ID; }
     constexpr uint32_t id() const noexcept { return value & IDMask; }
 
     constexpr bool operator==(const EntityId& other) const noexcept
@@ -68,10 +68,10 @@ struct KeyUint64
     // a unique iid can ensure a unique KeyUint64 value, total number: 2^56
     uint64_t value;
 
-    static constexpr uint64_t ProtoMask   = (1ull << ID_BITS_COUNT) - 1;        // 28-bit
-    static constexpr uint64_t IIDMask     = ProtoMask << ID_BITS_COUNT;         // 28-bit << 28
-    static constexpr uint64_t FlagMask    = 0xFFFFull << ID2_ID_BITS_COUNT;     // 8-bit << 56
-    static constexpr uint64_t CompareMask = (1ull << ID2_ID_BITS_COUNT) - 1;    // lower 56 bits
+    static constexpr uint64_t ProtoMask   = (1ull << ID_BITS_COUNT) - 1;     // 28-bit
+    static constexpr uint64_t IIDMask     = ProtoMask << ID_BITS_COUNT;      // 28-bit << 28
+    static constexpr uint64_t FlagMask    = 0xFFFFull << ID2_ID_BITS_COUNT;  // 8-bit << 56
+    static constexpr uint64_t CompareMask = (1ull << ID2_ID_BITS_COUNT) - 1; // lower 56 bits
 
     static constexpr KeyUint64 makeDefault()
     {
@@ -95,18 +95,20 @@ struct KeyUint64
     constexpr uint32_t iid() const noexcept { return (value >> ID_BITS_COUNT) & ProtoMask; }
     constexpr uint32_t id() const noexcept { return value & CompareMask; }
 
-    constexpr bool     isProtoIdValid() const noexcept { return (value & ProtoMask) < INVALID_ID; }
-    constexpr bool     isProtoIdInvalid() const noexcept { return (value & ProtoMask) >= INVALID_ID; }
-    constexpr bool     isIIDValid() const noexcept
+    constexpr bool isProtoIdValid() const noexcept { return (value & ProtoMask) < INVALID_ID; }
+    constexpr bool isProtoIdInvalid() const noexcept { return (value & ProtoMask) >= INVALID_ID; }
+    constexpr bool isIIDValid() const noexcept
     {
-        return ((value >> ID_BITS_COUNT) & ProtoMask) < INVALID_ID;
+        auto v = ((value >> ID_BITS_COUNT) & ProtoMask);
+        return v > 0 && v < INVALID_ID;
     }
     constexpr bool isIIDInvalid() const noexcept
     {
-        return ((value >> ID_BITS_COUNT) & ProtoMask) >= INVALID_ID;
+        auto v = ((value >> ID_BITS_COUNT) & ProtoMask);
+        return v == 0 || v >= INVALID_ID;
     }
-    constexpr bool     isIDValid() const noexcept { return isProtoIdValid() && isIIDValid(); }
-    constexpr bool     isIDInvalid() const noexcept { return isProtoIdInvalid() || isIIDInvalid(); }
+    constexpr bool isIDValid() const noexcept { return isProtoIdValid() && ((value >> ID_BITS_COUNT) & ProtoMask) < INVALID_ID; }
+    constexpr bool isIDInvalid() const noexcept { return isProtoIdInvalid() || ((value >> ID_BITS_COUNT) & ProtoMask) >= INVALID_ID; }
 
     constexpr bool operator==(const KeyUint64& other) const noexcept
     {
@@ -170,7 +172,7 @@ public:
         std::vector<uint32_t> freeList;
 
         uint32_t allocate();
-        void release(uint32_t iid);
+        void     release(uint32_t iid);
 
         [[nodiscard]] bool empty() const noexcept;
 
@@ -192,7 +194,7 @@ public:
     // ========================================================
     [[nodiscard]] size_t protoCount() const noexcept;
     [[nodiscard]] size_t freeCount(uint32_t protoId) const noexcept;
-    [[nodiscard]] bool hasProto(uint32_t protoId) const noexcept;
+    [[nodiscard]] bool   hasProto(uint32_t protoId) const noexcept;
 
     void clear();
 };
@@ -333,7 +335,7 @@ inline std::string idToString(const T& id)
     return IdTraits<T>::toString(id);
 }
 
-} // namespace Base
+} // namespace ID
 
 } // namespace Voxol::Render
 #endif
