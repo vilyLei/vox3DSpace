@@ -320,6 +320,15 @@
                 "prototype": 1,
                 "visible": 1
             }
+        ],
+        "instances": [
+            {
+                "prototype": 1,
+                "transforms": [
+                    3,
+                    4
+                ]
+            }
         ]
     }
 }
