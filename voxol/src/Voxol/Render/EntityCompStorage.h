@@ -133,6 +133,7 @@ public:
     void markSubtreeDirty(uint32_t rootId);
     void updateDirtySubtrees(const std::vector<uint32_t>& roots);
 
+    void collectShadowEffect(const ID::KeyUint64& srcKey, uint32_t protoId, std::vector<ID::KeyUint64>& ids);
     void collectAllEntitiesWithInstance(const ID::KeyUint64& etId, std::vector<ID::KeyUint64>& ids);
     void collectAllEntities(const ID::KeyUint64& etId, std::vector<ID::KeyUint64>& ids);
     void updateAllInstanceGlobalMats(const ID::KeyUint64& etId);

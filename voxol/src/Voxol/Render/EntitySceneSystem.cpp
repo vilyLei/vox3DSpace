@@ -145,12 +145,29 @@ void EntitySceneSystem::updateBVHBoundsWithEntityId(uint32_t eId)
         }
     };
 
+    Math::Bounds vb;
+
     std::vector<ID::KeyUint64> ids{};
     //compst->getIdsFromId(eId, ids);
     compst->collectAllEntities(ID::KeyUint64::make(eId), ids);
     for (auto pid : ids)
     {
-        bvh->updateItemBoundsByObjectId(pid, entityStorage->comp->getEntityGlobalBoundsAt(pid.id()));
+        if (pid.flags() > 0)
+            continue;
+
+        if (pid.isIIDValid())
+        {
+            auto&& wm = compst->entityInsGlobalMat33Map[pid];
+            addShadowEffectBVHData(pid, wm);
+
+            Component::defaultRect.mat33MapTo(wm, vb);
+            bvh->updateItemBoundsByObjectId(pid, vb);
+        }
+        else
+        {
+            addShadowEffectBVHData(pid, compst->getEntityGlobalMat33At(pid.protoId()));
+            bvh->updateItemBoundsByObjectId(pid, compst->getEntityGlobalBoundsAt(pid.protoId()));
+        }
     }
     bvh->updateDirty();
 }

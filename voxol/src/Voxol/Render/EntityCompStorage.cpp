@@ -343,12 +343,12 @@ void EntityCompStorage::traverseSortIndexAndBuildGlobalMat(uint32_t etId, uint32
     hierarchyIndexMap[ID::KeyUint64::make(etId)] = index++;
     if (ID::isValidID(et.transformId))
     {
-        auto& tr = transformsPool[et.transformId];
+        auto&& tr = transformsPool[et.transformId];
         //printf("    tr(x=%f,y=%f,sx=%f,sy=%f)\n", tr.x, tr.y, tr.sx, tr.sy);
 
         // get translation only
         auto&& parentTrans = parentMat.getXY();
-        printf("    ins parentTrans pos(x=%f,y=%f)\n", parentTrans.x, parentTrans.y);
+        //printf("    ins parentTrans pos(x=%f,y=%f)\n", parentTrans.x, parentTrans.y);
 
         auto&& worldMat = Math::Mat33::makeTranslate(parentTrans.x + tr.x, parentTrans.y + tr.y);
         worldMat.setScaleXY(tr.sx, tr.sy);
@@ -551,8 +551,34 @@ void EntityCompStorage::updateDirtySubtrees(const std::vector<uint32_t>& roots)
     }
 }
 
+void EntityCompStorage::collectShadowEffect(const ID::KeyUint64& srcKey, uint32_t protoId, std::vector<ID::KeyUint64>& ids)
+{
+    if (entitiesPool.isValid(protoId))
+    {
+        auto&& et = entitiesPool[protoId];
+        if (ID::isValidID(et.shadingId))
+        {
+            auto&& shadingEt = shaderingEntitiesPool[et.shadingId];
+            auto&& shdDesc   = shaderingDescPool[shadingEt.shadingDescId];
+            if (shdDesc.flags > 0 && effectShadowIdMap.contains(shadingEt.shadingDescId))
+            {
+                auto&& effects = effectShadowIdMap[shadingEt.shadingDescId];
+                for (auto ef : effects)
+                {
+                    auto&& key = ID::KeyUint64::makeWithEffectShadow(srcKey, ef);
+                    ids.emplace_back(key);
+                    //printf("traverseSortWithShadowEffect(), key:%s index: %u\n", key.idToString().c_str(), index);
+                    //hierarchyIndexMap[key] = index++;
+                }
+            }
+        }
+    }
+}
+
 void EntityCompStorage::collectAllEntitiesWithInstance(const ID::KeyUint64& etId, std::vector<ID::KeyUint64>& ids)
 {
+
+    collectShadowEffect(etId, etId.protoId(), ids);
     ids.emplace_back(etId);
 
     auto protoId = etId.protoId();
@@ -577,7 +603,8 @@ void EntityCompStorage::collectAllEntities(const ID::KeyUint64& etId, std::vecto
     if (ID::isInvalidID(etId))
         return;
 
-
+    
+    collectShadowEffect(etId, etId.protoId(), ids);
     ids.emplace_back(etId);
 
     auto protoId = etId.protoId();
