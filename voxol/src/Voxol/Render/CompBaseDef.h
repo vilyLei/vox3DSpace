@@ -85,6 +85,10 @@ struct KeyUint64
                                               uint8_t                    effectFlag,
                                               uint32_t                   effectBaseID) noexcept
     {
+        if (elId >= effectBaseID)
+        {
+            return makeInvalid();
+        }
         auto protoId = srcKey.protoId();
         auto iid     = srcKey.iid();
         iid          = iid != 0 ? iid : protoId;
