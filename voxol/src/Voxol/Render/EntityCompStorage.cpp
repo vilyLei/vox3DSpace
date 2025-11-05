@@ -230,6 +230,7 @@ void EntityCompStorage::checkIds(std::vector<ID::KeyUint64>& edis)
     });
 }
 
+
 void EntityCompStorage::updateHierarchyInfo()
 {
     uint32_t index = 0;
@@ -237,13 +238,41 @@ void EntityCompStorage::updateHierarchyInfo()
     //traverseSortIndexAndBuildGlobalMat(0, index, {});
     traverseBuildGlobalMat(0, {});
 }
-void EntityCompStorage::traverseSortIndexWithInstance(uint32_t iid, uint32_t prototypeId, uint32_t& index)
+
+void EntityCompStorage::traverseSortWithShadowEffect(const ID::KeyUint64& srcKey, uint32_t protoId, uint32_t& index)
 {
-    auto&& key             = ID::KeyUint64::make(prototypeId, iid);
+    if (entitiesPool.isValid(protoId))
+    {
+        auto&& et = entitiesPool[protoId];
+        if (ID::isValidID(et.shadingId))
+        {
+            auto&& shadingEt = shaderingEntitiesPool[et.shadingId];
+            auto&& shdDesc   = shaderingDescPool[shadingEt.shadingDescId];
+            if (shdDesc.flags > 0 && effectShadowIdMap.contains(shadingEt.shadingDescId))
+            {
+                auto&& effects = effectShadowIdMap[shadingEt.shadingDescId];
+                for (auto ef : effects)
+                {
+                    auto&& key = ID::KeyUint64::makeWithEffectShadow(srcKey, ef);
+                    printf("traverseSortWithShadowEffect(), key:%s index: %u\n", key.idToString().c_str(), index);
+                    hierarchyIndexMap[key] = index++;
+                }
+            }
+        }
+    }
+}
+
+
+void EntityCompStorage::traverseSortIndexWithInstance(uint32_t iid, uint32_t protoId, uint32_t& index)
+{
+    auto&& key = ID::KeyUint64::make(protoId, iid);
+
+    traverseSortWithShadowEffect(key, protoId, index);
+
     hierarchyIndexMap[key] = index++;
 
-    auto&& et             = entitiesPool[prototypeId];
-    auto   effectiveProto = ID::isValidID(et.prototypeId) ? et.prototypeId : prototypeId;
+    auto&& et             = entitiesPool[protoId];
+    auto   effectiveProto = ID::isValidID(et.prototypeId) ? et.prototypeId : protoId;
 
     for (auto child = hierarchiesPool[effectiveProto].firstChild;
          ID::isValidID(child);
@@ -261,17 +290,20 @@ void EntityCompStorage::traverseSortIndexWithInstance(uint32_t iid, uint32_t pro
     }
 }
 
-void EntityCompStorage::traverseSortIndex(uint32_t etId, uint32_t& index)
+void EntityCompStorage::traverseSortIndex(uint32_t protoId, uint32_t& index)
 {
 
-    hierarchyIndexMap[ID::KeyUint64::make(etId)] = index++;
-    auto&& et                                    = entitiesPool[etId];
+    auto&& key = ID::KeyUint64::make(protoId);
+    traverseSortWithShadowEffect(key, protoId, index);
+    hierarchyIndexMap[key] = index++;
+
+    auto&& et              = entitiesPool[protoId];
     if (ID::isValidID(et.prototypeId))
     {
-        auto iid = etId;
-        etId     = et.prototypeId;
+        auto iid = protoId;
+        protoId  = et.prototypeId;
 
-        for (auto child = hierarchiesPool[etId].firstChild;
+        for (auto child = hierarchiesPool[protoId].firstChild;
              ID::isValidID(child);
              child = hierarchiesPool[child].next)
         {
@@ -280,7 +312,7 @@ void EntityCompStorage::traverseSortIndex(uint32_t etId, uint32_t& index)
         return;
     }
 
-    for (auto child = hierarchiesPool[etId].firstChild;
+    for (auto child = hierarchiesPool[protoId].firstChild;
          ID::isValidID(child);
          child = hierarchiesPool[child].next)
     {
@@ -296,6 +328,7 @@ void EntityCompStorage::traverseSortIndex(uint32_t etId, uint32_t& index)
     }
     //*/
 }
+
 void EntityCompStorage::traverseSortIndexAndBuildGlobalMat(uint32_t etId, uint32_t& index, const Math::Mat33& parentMat)
 {
     auto&& et = entitiesPool[etId];
@@ -325,44 +358,6 @@ void EntityCompStorage::traverseSortIndexAndBuildGlobalMat(uint32_t etId, uint32
         traverseSortIndexAndBuildGlobalMat(child, index, entityGlobalMat33Map[etId]);
     }
 }
-
-/*
-void EntityCompStorage::traverseBuildGlobalMatA(uint32_t etId, const Math::Mat33& parentMat)
-{
-    if (etId == ID::INVALID_ID)
-    {
-        return;
-    }
-    auto& entities = entitiesPool;
-
-    auto&& et = entities[etId];
-
-    if (ID::isValidID(et.transformId))
-    {
-        auto&& tr = transformsPool[et.transformId];
-
-        auto&& parentTrans = parentMat.getXY();
-
-        //printf("traverseBuildGlobalMat(), etId:%u, tr(x=%f,y=%f), ptr(x=%f,y=%f)\n", etId, tr.x, tr.y, parentTrans.x, parentTrans.y);
-
-        auto&& worldMat = entityGlobalMat33Map[etId];
-        worldMat.identity();
-        worldMat.setXY(parentTrans.x + tr.x, parentTrans.y + tr.y);
-        worldMat.setScaleXY(tr.sx, tr.sy);
-    }
-    else
-    {
-        entityGlobalMat33Map[etId] = parentMat;
-    }
-
-    for (auto child = hierarchiesPool[etId].firstChild;
-         ID::isValidID(child);
-         child = hierarchiesPool[child].next)
-    {
-        traverseBuildGlobalMatA(child, entityGlobalMat33Map[etId]);
-    }
-}
-//*/
 
 void EntityCompStorage::buildTopoOrderFromRoots(const std::vector<uint32_t>& roots)
 {
