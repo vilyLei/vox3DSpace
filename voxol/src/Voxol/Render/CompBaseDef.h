@@ -77,6 +77,10 @@ struct KeyUint64
     {
         return KeyUint64{0};
     }
+    static constexpr KeyUint64 makeInvalid()
+    {
+        return KeyUint64::make(INVALID_ID, INVALID_ID);
+    }
     static constexpr KeyUint64 make(EntityId protoId, EntityId iid, uint8_t flags = 0)
     {
         return KeyUint64{(uint64_t(flags) << ID2_ID_BITS_COUNT) | (uint64_t(iid.id()) << ID_BITS_COUNT) | uint64_t(protoId.id())};
