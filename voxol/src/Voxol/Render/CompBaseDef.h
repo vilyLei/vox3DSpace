@@ -63,6 +63,9 @@ struct EntityIdManager
     void     release(uint32_t id);
 };
 
+static constexpr uint32_t ShadowBaseID = 512 << 12;
+static constexpr uint8_t ShadowIDFlag = 27;
+
 struct KeyUint64
 {
     // a unique iid can ensure a unique KeyUint64 value, total number: 2^56
@@ -73,6 +76,10 @@ struct KeyUint64
     static constexpr uint64_t FlagMask    = 0xFFFFull << ID2_ID_BITS_COUNT;  // 8-bit << 56
     static constexpr uint64_t CompareMask = (1ull << ID2_ID_BITS_COUNT) - 1; // lower 56 bits
 
+    static constexpr KeyUint64 makeWithEffectShadow(const KeyUint64& srcKey, uint32_t elId) noexcept
+    {
+        return makeWithEffect(srcKey, elId, ShadowIDFlag, ShadowBaseID);
+    }
     static constexpr KeyUint64 makeWithEffect(const KeyUint64& srcKey,
                                               uint32_t                   elId,
                                               uint8_t                    effectFlag,
