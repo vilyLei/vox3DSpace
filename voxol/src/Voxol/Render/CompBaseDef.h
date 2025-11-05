@@ -73,6 +73,22 @@ struct KeyUint64
     static constexpr uint64_t FlagMask    = 0xFFFFull << ID2_ID_BITS_COUNT;  // 8-bit << 56
     static constexpr uint64_t CompareMask = (1ull << ID2_ID_BITS_COUNT) - 1; // lower 56 bits
 
+    static constexpr KeyUint64 makeWithEffect(const KeyUint64& srcKey,
+                                              uint32_t                   elId,
+                                              uint8_t                    effectFlag,
+                                              uint32_t                   effectBaseID) noexcept
+    {
+        auto protoId = srcKey.protoId();
+        auto iid     = srcKey.iid();
+        iid          = iid != 0 ? iid : protoId;
+        protoId      = effectBaseID + elId + protoId;
+
+        return KeyUint64{
+            (uint64_t(effectFlag) << ID2_ID_BITS_COUNT) |
+            (uint64_t(iid) << ID_BITS_COUNT) |
+            uint64_t(protoId)};
+    }
+
     static constexpr KeyUint64 makeDefault()
     {
         return KeyUint64{0};
