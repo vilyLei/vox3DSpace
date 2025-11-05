@@ -238,8 +238,20 @@ void EntityCompStorage::checkIds(std::vector<ID::KeyUint64>& edis)
     }
     std::sort(edis.begin(), edis.end(), [&](ID::KeyUint64 a, ID::KeyUint64 b) {
         return hierarchyIndexMap[a] < hierarchyIndexMap[b];
-        //return a < b;
     });
+
+    //static bool flag = true;
+    //if (flag) {
+        //flag = false;
+    printf("checkIds(), Begin >>>>>\n");
+        tot  = edis.size();
+        for (auto i = 0; i < tot; ++i)
+        {
+            auto&& key = edis[i];
+        printf("checkIds(), key: %s, flag: %d, index: %llu\n", key.idToString().c_str(), key.flags(), i);
+        }
+    printf("checkIds(), End >>>>>\n");
+    //}
 }
 
 
