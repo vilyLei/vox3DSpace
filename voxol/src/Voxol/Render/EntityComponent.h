@@ -38,8 +38,8 @@ struct UnitEffectShadowDesc
 
 struct UnitShadowEntity
 {
-    ID::KeyUint64 id{ID::INVALID_ID};
-    ID::KeyUint64 srcId{ID::INVALID_ID};
+    ID::KeyUint64 shadowId{ID::INVALID_ID};
+    ID::KeyUint64 entityId{ID::INVALID_ID};
     uint32_t      effectId = ID::INVALID_ID;
 };
 
