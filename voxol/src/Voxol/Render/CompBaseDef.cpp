@@ -54,17 +54,17 @@ std::string KeyUint64::toString(bool hex) const
     if (hex)
     {
         oss << std::hex << std::setfill('0')
-            << "KeyUint64(flags=0x" << std::setw(4) << flags()
+            << "KeyUint64(flags=0x" << std::setw(4) << std::to_string(flags())
             << " iid=0x" << std::setw(6) << iid()
             << " proto=0x" << std::setw(6) << protoId()
             << " [value=0x" << std::setw(16) << value << "])";
     }
     else
     {
-        oss << "KeyUint64(flags=" << flags()
-            << " iid=" << iid()
-            << " proto=" << protoId()
-            << " [value=" << value << "])";
+        oss << "KeyUint64(flags=" << std::to_string(flags())
+            << ",iid=" << iid()
+            << ",proto=" << protoId()
+            << ",[value=" << value << "])";
     }
     return oss.str();
 }

@@ -36,6 +36,7 @@ void EntityRenderSystem::render(const Draw::DrawContext& rctx, const Math::Mat33
 
         if (key.isIDInvalid())
             continue;
+        printf("key: %s\n", key.toString().c_str());
         if (key.flags() > 0)
         {
             //drawUnitEffect(key, vpM, wbounds);
