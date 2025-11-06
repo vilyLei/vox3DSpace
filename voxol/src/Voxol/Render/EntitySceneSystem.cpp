@@ -54,7 +54,9 @@ void EntitySceneSystem::initalize(const std::string& configFileName)
             auto   wm      = wmat;
             wm.offsetXY(shdData.offset);
             Component::defaultRect.mat33MapTo(wm, vb);
-            bvh->addItem(ID::KeyUint64::makeWithEffectShadow(key, ef), vb);
+            auto shadowKey = ID::KeyUint64::makeWithEffectShadow(key, ef);
+            bvh->addItem(shadowKey, vb);
+            storage->effectShadowEntityMap[shadowKey] = {shadowKey, key, ef};
         }
     };
 
