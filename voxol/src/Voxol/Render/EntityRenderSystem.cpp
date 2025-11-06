@@ -36,7 +36,11 @@ void EntityRenderSystem::render(const Draw::DrawContext& rctx, const Math::Mat33
 
         if (key.isIDInvalid())
             continue;
-
+        if (key.flags() > 0)
+        {
+            //drawUnitEffect(key, vpM, wbounds);
+            return;
+        }
         auto proId = key.protoId();
         if (ID::isInvalidID(proId))
         {
@@ -83,7 +87,7 @@ void EntityRenderSystem::render(const Draw::DrawContext& rctx, const Math::Mat33
     //    drawUnit(et, vpM, wbounds);
     //});
 }
-bool EntityRenderSystem::drawSingleUnitEffect(const Math::Mat33& vpM, const ID::KeyUint64 etKey, const Math::Bounds& wbounds)
+bool EntityRenderSystem::drawUnitEffect(const ID::KeyUint64 etKey, const Math::Mat33& vpM, const Math::Bounds& wbounds)
 {
     auto&  compStorage = entityStorage->comp;
     auto&& srUnit = compStorage->effectShadowEntityMap[etKey];
@@ -164,7 +168,6 @@ bool EntityRenderSystem::drawUnit(const Component::UnitEntity& entity, const Mat
     //        auto&& shd         = compStorage->effectShadowMap[effects[i]];
     //        auto mat           = wM;
     //        mat.offsetXY(shd.offset);
-
     //        drawUnit.blendMode = 1;
     //        drawUnit.setColor(shd.color);
     //        drawUnit.objMat = mat;
