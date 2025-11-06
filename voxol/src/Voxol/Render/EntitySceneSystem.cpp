@@ -101,6 +101,11 @@ int EntitySceneSystem::drawQuery(const Math::VxRect& wbounds, int phase)
     bvh->queryBounds(wbounds, queriedEIds);
 
     entityStorage->comp->checkIds(queriedEIds);
+
+    //for (auto key : queriedEIds)
+    //{
+    //    printf("drawQuery(). key: %s\n", key.toString().c_str());
+    //}
     return static_cast<int>(queriedEIds.size());
 }
 

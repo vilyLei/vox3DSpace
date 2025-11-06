@@ -28,19 +28,20 @@ void EntityRenderSystem::render(const Draw::DrawContext& rctx, const Math::Mat33
     auto&  entitiesPool = compStorage->entitiesPool;
     size_t drawTotal = 0;
 
-    //printf("EntityRenderSystem::render() ...\n");
+    //printf("EntityRenderSystem::render() total: %zu\n", total);
 
     for (auto i = 0; i < total; i++)
     {
         auto&& key = queriedEIds[i];
 
+        //printf("i: %zu, render key: %s\n",i, key.toString().c_str());
+
         if (key.isIDInvalid())
             continue;
-        printf("key: %s\n", key.toString().c_str());
         if (key.flags() > 0)
         {
-            //drawUnitEffect(key, vpM, wbounds);
-            return;
+            drawUnitEffect(key, vpM, wbounds);
+            continue;
         }
         auto proId = key.protoId();
         if (ID::isInvalidID(proId))
