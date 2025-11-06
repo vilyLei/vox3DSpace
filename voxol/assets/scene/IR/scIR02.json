@@ -229,6 +229,26 @@
             },
             {
                 "id": 1,
+                "parent": 0,
+                "next": 4,
+                "firstChild": 2
+            },
+            {
+                "id": 2,
+                "parent": 1,
+                "next": 3
+            },
+            {
+                "id": 3,
+                "parent": 1
+            },
+            {
+                "id": 4,
+                "next": 5,
+                "parent": 0
+            },
+            {
+                "id": 5,
                 "parent": 0
             }
         ],
@@ -241,10 +261,73 @@
             {
                 "id": 1,
                 "hierarchy": 1,
+                "transform": 0,
+                "shadering": 0,
+                "model": 0,
+                "visible": 1
+            },
+            {
+                "id": 2,
+                "hierarchy": 2,
                 "transform": 1,
                 "shadering": 1,
                 "model": 1,
+                "visible": 1,
+                "interactions": [
+                    0
+                ],
+                "tags": [
+                    "ui",
+                    "interactive",
+                    "button"
+                ]
+            },
+            {
+                "id": 3,
+                "hierarchy": 3,
+                "transform": 2,
+                "shadering": 2,
+                "model": 1,
+                "visible": 1,
+                "interactions": [
+                    1
+                ],
+                "tags": [
+                    "ui",
+                    "interactive",
+                    "button"
+                ],
+                "prototype": {
+                    "id": 0,
+                    "override": {
+                        "shadering": false,
+                        "interaction": true
+                    }
+                }
+            },
+            {
+                "id": 4,
+                "hierarchy": 4,
+                "transform": 3,
+                "shadering": 3,
+                "model": 2,
                 "visible": 1
+            },
+            {
+                "id": 5,
+                "hierarchy": 5,
+                "transform": 4,
+                "prototype": 1,
+                "visible": 1
+            }
+        ],
+        "instances": [
+            {
+                "prototype": 1,
+                "transforms": [
+                    3,
+                    4
+                ]
             }
         ]
     }
