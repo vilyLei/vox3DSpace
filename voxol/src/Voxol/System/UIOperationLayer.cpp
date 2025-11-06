@@ -24,7 +24,7 @@ void MouseController::selectWithSingle(const System::Mouse::MouseEvent& evt, con
 
     auto topId = qeIds.empty() ? Render::ID::INVALID_KEY : qeIds.back();
 
-    if (topId.flags() > 0)
+    if (evt.isBegin() && topId.flags() > 0)
     {
         etId = Render::ID::INVALID_KEY;
         return;
