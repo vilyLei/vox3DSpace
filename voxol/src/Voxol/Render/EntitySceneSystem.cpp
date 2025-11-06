@@ -68,12 +68,9 @@ void EntitySceneSystem::initalize(const std::string& configFileName)
         auto&& insMap = insStorage[et.id];
         for (auto& item : insMap.map)
         {
-            //auto& ins = item.second;
             auto&& mat = wmats[item.first];
             addShadowEffectBVHData(item.first, mat);
-            //Component::defaultRect.mat33MapTo(ins.worldMat, vb);
             Component::defaultRect.mat33MapTo(mat, vb);
-            //bvh->addItem(ins.id, vb);
             bvh->addItem(item.first, vb);
         }
     };
@@ -88,10 +85,6 @@ void EntitySceneSystem::initalize(const std::string& configFileName)
             updateProtoEtBVHData(et);
             return;
         }
-
-        //auto& trans = transformsPool[et.transformId];
-        //bounds.setXYWH(trans.x, trans.y, trans.sx, trans.sy);
-        //bounds.mat33MapTo(storage->entityGlobalMat33Map[et.id], vb);
 
         auto&& key = ID::KeyUint64::make(et.id);
         addShadowEffectBVHData(key, storage->getEntityGlobalMatAt(et.id));
