@@ -83,7 +83,59 @@ void EntityRenderSystem::render(const Draw::DrawContext& rctx, const Math::Mat33
     //    drawUnit(et, vpM, wbounds);
     //});
 }
+bool EntityRenderSystem::drawSingleUnitEffect(const Math::Mat33& vpM, const ID::KeyUint64 etKey, const Math::Bounds& wbounds)
+{
+    auto&  compStorage = entityStorage->comp;
+    auto&& srUnit = compStorage->effectShadowEntityMap[etKey];
+    if (!compStorage->effectShadowMap.contains(srUnit.effectId))
+    {
+        return false;
+    }
+    auto&& entityId          = srUnit.entityId;
+    auto&& entity            = compStorage->entitiesPool[entityId.protoId()];
+    auto   etId              = entity.id;
+    auto&  shaderingEntities = compStorage->shaderingEntitiesPool;
+    auto&  shaderingDescVec  = compStorage->shaderingDescPool;
 
+    auto& shadingEt = shaderingEntities[entity.shadingId];
+    auto& shdDesc   = shaderingDescVec[shadingEt.shadingDescId];
+
+    if (shdDesc.flags == 0)
+    {
+        return false;
+    }
+
+    auto&& shdData = compStorage->effectShadowMap[srUnit.effectId];
+
+    Math::Mat33 wm;
+    if (entityId.isIIDValid())
+    {
+        wm = compStorage->entityInsGlobalMat33Map[entityId];
+    }
+    else
+    {
+        wm = compStorage->getEntityGlobalMatAt(entityId.protoId());
+    }
+    // shadow offset in the global space
+    wm.offsetXY(shdData.offset);
+
+    
+    Math::Bounds vb;
+    Component::defaultRect.mat33MapTo(wm, vb);
+    if (!wbounds.intersects(vb))
+        return false;
+
+    auto&  modelsPool = compStorage->modelsPool;
+    auto   drawingId  = modelsPool[entity.modelId].drawUnitId;
+    auto&  drs        = *entityStorage->drawing;
+    auto&& drawUnit   = drs[drawingId];
+
+    drawUnit.blendMode = 1;
+    drawUnit.setColor(shdData.color);
+    drawUnit.objMat = wm;
+    drawUnit.mvp    = vpM;
+    drawUnit.draw();
+}
 bool EntityRenderSystem::drawUnit(const Component::UnitEntity& entity, const Math::Mat33& vpM, const Math::Bounds& wbounds, const Math::Mat33& wM)
 {
     auto& compStorage       = entityStorage->comp;
@@ -102,24 +154,24 @@ bool EntityRenderSystem::drawUnit(const Component::UnitEntity& entity, const Mat
     if (!wbounds.intersects(vb))
         return false;
 
-    if (shdDesc.flags > 0 && compStorage->shadingShadowIdMap.contains(shadingEt.shadingDescId))
-    {
-        auto&& effects = compStorage->shadingShadowIdMap[shadingEt.shadingDescId];
-        auto   tot     = effects.size();
-        // draw shadows
-        for (auto i = 0; i < tot; i++)
-        {
-            auto&& shd         = compStorage->effectShadowMap[effects[i]];
-            auto mat           = wM;
-            mat.offsetXY(shd.offset);
+    //if (shdDesc.flags > 0 && compStorage->shadingShadowIdMap.contains(shadingEt.shadingDescId))
+    //{
+    //    auto&& effects = compStorage->shadingShadowIdMap[shadingEt.shadingDescId];
+    //    auto   tot     = effects.size();
+    //    // draw shadows
+    //    for (auto i = 0; i < tot; i++)
+    //    {
+    //        auto&& shd         = compStorage->effectShadowMap[effects[i]];
+    //        auto mat           = wM;
+    //        mat.offsetXY(shd.offset);
 
-            drawUnit.blendMode = 1;
-            drawUnit.setColor(shd.color);
-            drawUnit.objMat = mat;
-            drawUnit.mvp    = vpM;
-            drawUnit.draw();
-        }
-    }
+    //        drawUnit.blendMode = 1;
+    //        drawUnit.setColor(shd.color);
+    //        drawUnit.objMat = mat;
+    //        drawUnit.mvp    = vpM;
+    //        drawUnit.draw();
+    //    }
+    //}
 
     //printf("xxx xxx trans(x=%f, y=%f)\n", trans.x, trans.y);
 

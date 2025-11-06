@@ -34,6 +34,7 @@ public:
     EntityUnitStorage::SP entityStorage{};
 
 private:
+    bool drawSingleUnitEffect(const Math::Mat33& vpM, const ID::KeyUint64 etKey, const Math::Bounds& wbounds);
     bool drawUnit(const Component::UnitEntity& entity, const Math::Mat33& vpM, const Math::Bounds& wbounds, const Math::Mat33& wM);
     //bool drawUnit(const Component::UnitEntity& entity, const Math::Mat33& vpM, const Math::Bounds& wbounds);
 };
