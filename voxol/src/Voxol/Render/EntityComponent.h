@@ -29,11 +29,18 @@ constexpr UnitTransform defaultTrans{0, 0, 1, 1, 0};
 constexpr Math::VxRect  defaultRect{0, 0, 1, 1};
 
 
-struct UnitEffectShadow
+struct UnitEffectShadowDesc
 {
     uint32_t   color = 0xff000000;
     Math::Vec2 offset;
     float      blurRadius = 0;
+};
+
+struct UnitShadowEntity
+{
+    ID::KeyUint64 id{ID::INVALID_ID};
+    ID::KeyUint64 srcId{ID::INVALID_ID};
+    uint32_t      effectId = ID::INVALID_ID;
 };
 
 struct UnitShadingDesc

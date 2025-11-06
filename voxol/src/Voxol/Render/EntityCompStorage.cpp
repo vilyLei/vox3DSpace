@@ -270,7 +270,7 @@ void EntityCompStorage::traverseSortWithShadowEffect(const ID::KeyUint64& srcKey
         {
             auto&& shadingEt = shaderingEntitiesPool[et.shadingId];
             auto&& shdDesc   = shaderingDescPool[shadingEt.shadingDescId];
-            if (shdDesc.flags > 0 && effectShadowIdMap.contains(shadingEt.shadingDescId))
+            if (shdDesc.flags > 0 && shadingShadowIdMap.contains(shadingEt.shadingDescId))
             {
                 auto&& effects = effectShadowIdMap[shadingEt.shadingDescId];
                 for (auto ef : effects)
@@ -567,9 +567,9 @@ void EntityCompStorage::collectShadowEffect(const ID::KeyUint64& srcKey, uint32_
         {
             auto&& shadingEt = shaderingEntitiesPool[et.shadingId];
             auto&& shdDesc   = shaderingDescPool[shadingEt.shadingDescId];
-            if (shdDesc.flags > 0 && effectShadowIdMap.contains(shadingEt.shadingDescId))
+            if (shdDesc.flags > 0 && shadingShadowIdMap.contains(shadingEt.shadingDescId))
             {
-                auto&& effects = effectShadowIdMap[shadingEt.shadingDescId];
+                auto&& effects = shadingShadowIdMap[shadingEt.shadingDescId];
                 for (auto ef : effects)
                 {
                     auto&& key = ID::KeyUint64::makeWithEffectShadow(srcKey, ef);

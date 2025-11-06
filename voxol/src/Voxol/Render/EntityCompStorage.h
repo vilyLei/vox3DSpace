@@ -139,18 +139,19 @@ public:
     void updateAllInstanceGlobalMats(const ID::KeyUint64& etId);
 
 public:
-    CompPool<Component::UnitEntity>          entitiesPool{};
-    CompPool<Component::UnitShadingEntity>   shaderingEntitiesPool{};
-    CompPool<Component::UnitModel>           modelsPool{};
-    CompPool<Component::UnitTransform>       transformsPool{};
-    CompPool<Component::UnitHierarchy>       hierarchiesPool{};
-    CompPool<Component::UnitShadingDesc>     shaderingDescPool{};
+    CompPool<Component::UnitEntity>        entitiesPool{};
+    CompPool<Component::UnitShadingEntity> shaderingEntitiesPool{};
+    CompPool<Component::UnitModel>         modelsPool{};
+    CompPool<Component::UnitTransform>     transformsPool{};
+    CompPool<Component::UnitHierarchy>     hierarchiesPool{};
+    CompPool<Component::UnitShadingDesc>   shaderingDescPool{};
 
     ID::keyUint64Unordered_map<uint32_t> hierarchyIndexMap{};
 
-    std::unordered_map<uint32_t, Component::UnitEffectShadow> effectShadowMap{};
+    std::unordered_map<uint32_t, Component::UnitEffectShadowDesc> effectShadowMap{};
+    ID::keyUint64Unordered_map<Component::UnitShadowEntity>       effectShadowEntityMap{};
     // key: shadingId, value: effect ids
-    std::unordered_map<uint32_t, std::vector<uint32_t>>       effectShadowIdMap{};
+    std::unordered_map<uint32_t, std::vector<uint32_t>> shadingShadowIdMap{};
 
     std::unordered_map<uint32_t, Math::Mat33>                entityGlobalMat33Map{};
     ID::keyUint64Unordered_map<Math::Mat33>                  entityInsGlobalMat33Map{};

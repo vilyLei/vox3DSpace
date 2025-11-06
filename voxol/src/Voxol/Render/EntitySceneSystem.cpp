@@ -45,7 +45,7 @@ void EntitySceneSystem::initalize(const std::string& configFileName)
         auto&  shadingEt = shaderingEntitiesPool[et.shadingId];
         auto&  desc      = shaderingDescPool[shadingEt.shadingDescId];
         if (desc.flags == 0) { return; }
-        auto&& efs = storage->effectShadowIdMap[shadingEt.shadingDescId];
+        auto&& efs = storage->shadingShadowIdMap[shadingEt.shadingDescId];
 
         Math::Bounds vb;
         for (auto& ef : efs)
@@ -129,10 +129,10 @@ void EntitySceneSystem::updateBVHBoundsWithEntityId(uint32_t eId, BoundsUpdateCa
         if (compst->entitiesPool.isInvalid(protoId)) { return; }
 
         auto&& et        = compst->entitiesPool[protoId];
-        auto&  shadingEt = compst->shaderingEntitiesPool[et.shadingId];
-        auto&  desc      = compst->shaderingDescPool[shadingEt.shadingDescId];
+        auto&&  shadingEt = compst->shaderingEntitiesPool[et.shadingId];
+        auto&&  desc      = compst->shaderingDescPool[shadingEt.shadingDescId];
         if (desc.flags == 0) { return; }
-        auto&& efs = compst->effectShadowIdMap[shadingEt.shadingDescId];
+        auto&& efs = compst->shadingShadowIdMap[shadingEt.shadingDescId];
 
         Math::Bounds vb;
         for (auto& ef : efs)
@@ -141,7 +141,14 @@ void EntitySceneSystem::updateBVHBoundsWithEntityId(uint32_t eId, BoundsUpdateCa
             auto   wm      = wmat;
             wm.offsetXY(shdData.offset);
             Component::defaultRect.mat33MapTo(wm, vb);
-            bvh->updateItemBoundsByObjectId(ID::KeyUint64::makeWithEffectShadow(key, ef), vb);
+
+            auto&& efKey = ID::KeyUint64::makeWithEffectShadow(key, ef);
+            auto pos = wm.getXY();
+            printf("efKey: %s\n", efKey.idToString().c_str());
+            vb.print();
+            printf("        pos(x=%f,y=%f), offset(x=%f,y=%f)\n", pos.x, pos.y, shdData.offset.x, shdData.offset.y);
+
+            bvh->updateItemBoundsByObjectId(efKey, vb);
             callback(key, vb);
         }
     };

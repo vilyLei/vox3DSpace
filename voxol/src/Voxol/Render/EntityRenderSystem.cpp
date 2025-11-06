@@ -28,6 +28,8 @@ void EntityRenderSystem::render(const Draw::DrawContext& rctx, const Math::Mat33
     auto&  entitiesPool = compStorage->entitiesPool;
     size_t drawTotal = 0;
 
+    //printf("EntityRenderSystem::render() ...\n");
+
     for (auto i = 0; i < total; i++)
     {
         auto&& key = queriedEIds[i];
@@ -50,6 +52,8 @@ void EntityRenderSystem::render(const Draw::DrawContext& rctx, const Math::Mat33
         {
             continue;
         }
+
+        //printf("EntityRenderSystem::render() ...\n");
         if (key.isIIDValid())
         {
             auto&& wmat = compStorage->entityInsGlobalMat33Map[key];
@@ -98,9 +102,9 @@ bool EntityRenderSystem::drawUnit(const Component::UnitEntity& entity, const Mat
     if (!wbounds.intersects(vb))
         return false;
 
-    if (shdDesc.flags > 0 && compStorage->effectShadowIdMap.contains(shadingEt.shadingDescId))
+    if (shdDesc.flags > 0 && compStorage->shadingShadowIdMap.contains(shadingEt.shadingDescId))
     {
-        auto&& effects = compStorage->effectShadowIdMap[shadingEt.shadingDescId];
+        auto&& effects = compStorage->shadingShadowIdMap[shadingEt.shadingDescId];
         auto   tot     = effects.size();
         // draw shadows
         for (auto i = 0; i < tot; i++)

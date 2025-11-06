@@ -13,10 +13,11 @@ void EntitySystemLayer::updateTileWithEntityId(const Render::ID::KeyUint64& eId)
     if (eId.isIDInvalid())
         return;
 
-    
+    printf("updateTileWithEntityId() AAAA 0\n");
     etSceneSys->updateBVHBoundsWithEntityId(eId.protoId(), [this](const Render::ID::KeyUint64& etId, const Math::Bounds& bounds) {
         tileSys->addDirtyBounds(bounds, 1);
     });
+    printf("updateTileWithEntityId() AAAA 1\n");
     /*
     auto&                 etCompStorage = etSceneSys->entityStorage->comp;
     auto&                 bvh           = etSceneSys->bvh;
@@ -35,6 +36,8 @@ void EntitySystemLayer::updateBVHAndTileWithEntityId(const Render::ID::KeyUint64
     if (eId.isIDInvalid())
         return;
 
+    printf("updateBVHAndTileWithEntityId() AAAA 0\n");
+
     auto&  etCompStorage = etSceneSys->entityStorage->comp;
     auto&& parentMat     = etCompStorage->getEntityParentGlobalMatAt(eId.protoId());
     etCompStorage->traverseBuildGlobalMat(eId.protoId(), parentMat);
@@ -42,6 +45,7 @@ void EntitySystemLayer::updateBVHAndTileWithEntityId(const Render::ID::KeyUint64
     etSceneSys->updateBVHBoundsWithEntityId(eId.protoId(), [this](const Render::ID::KeyUint64& etId, const Math::Bounds& bounds) {
         tileSys->addDirtyBounds(bounds, 1);
     });
+    printf("updateBVHAndTileWithEntityId() AAAA 1\n");
 }
 void EntitySystemLayer::initalize(const std::string& configFileName)
 {
