@@ -64,8 +64,9 @@ void EntitySceneSystem::initalize(const std::string& configFileName)
         auto&& vb = storage->getEntityGlobalBoundsAt(et.id);
         bvh->addItem(ID::KeyUint64::make(et.id), vb);
         auto& wmats = storage->entityInsGlobalMat33Map;
-        if (instanceStorage.contains(et.id))
+        if (!instanceStorage.contains(et.id))
             return;
+
         auto&& insMap = instanceStorage[et.id];
         for (auto& item : insMap.map)
         {
