@@ -489,8 +489,8 @@ void EntityCompStorage::traverseBuildGlobalMatPrototypeUnderInstance(uint32_t ii
     {
         dfsEntity(iid, child, instanceParentMat);
     }
-    // store into insStorage
-    insStorage[iid] = std::move(map);
+    // store into instanceStorage
+    instanceStorage[iid] = std::move(map);
 }
 void EntityCompStorage::traverseBuildGlobalMat(uint32_t etId, const Math::Mat33& parentMat)
 {
@@ -637,7 +637,7 @@ void EntityCompStorage::collectAllEntities(const ID::KeyUint64& etId, std::vecto
     auto protoId = etId.protoId();
     auto iid     = etId.iid();
 
-    for (auto&& insItem : insStorage)
+    for (auto&& insItem : instanceStorage)
     {
         auto&  ins = insItem.second;
         auto&& key = ID::KeyUint64::make(protoId, ins.iid);
@@ -683,6 +683,7 @@ void EntityCompStorage::collectAllEntities(const ID::KeyUint64& etId, std::vecto
         collectAllEntities(ID::KeyUint64::make(child), ids);
     }
 }
+
 void EntityCompStorage::updateAllInstanceGlobalMats(const ID::KeyUint64& etId)
 {
     auto protoId = etId.protoId();
@@ -715,7 +716,7 @@ void EntityCompStorage::updateAllInstanceGlobalMats(const ID::KeyUint64& etId)
         }
     };
 
-    for (auto&& insItem : insStorage)
+    for (auto&& insItem : instanceStorage)
     {
         auto&  ins = insItem.second;
         auto&& key = ID::KeyUint64::make(protoId, ins.iid);
