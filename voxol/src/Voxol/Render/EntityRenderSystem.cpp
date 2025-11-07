@@ -176,10 +176,14 @@ bool EntityRenderSystem::drawUnit(const Component::UnitEntity& entity, const Mat
     //    }
     //}
 
-    //printf("xxx xxx trans(x=%f, y=%f)\n", trans.x, trans.y);
-
+    //printf(c"xxx xxx trans(x=%f, y=%f)\n", trans.x, trans.y);
+    auto tempColor = shdDesc.color;
+    if (entity.id == 2)
+    {
+        tempColor = 0xffaaaa00;
+    }
     drawUnit.blendMode = 1;
-    drawUnit.setColor(shdDesc.color);
+    drawUnit.setColor(tempColor);
     drawUnit.objMat = wM;
     drawUnit.mvp    = vpM;
     drawUnit.draw();
