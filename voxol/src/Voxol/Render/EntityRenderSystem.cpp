@@ -11,6 +11,9 @@ EntityRenderSystem::SP EntityRenderSystem::make()
 
 void EntityRenderSystem::initalize()
 {
+
+    mFbo.init(GL_ZERO);
+    Render::Gpu::buildTexDrawUnitWithTex(rttUnit, GL_ZERO, true);
 }
 void EntityRenderSystem::render(const Draw::DrawContext& rctx, const Math::Mat33& vpM, const Math::Bounds& wbounds, const std::vector<ID::KeyUint64>& queriedEIds)
 {

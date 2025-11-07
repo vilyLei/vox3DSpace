@@ -36,6 +36,12 @@ public:
 private:
     bool drawUnitEffect(const ID::KeyUint64 etKey, const Math::Mat33& vpM, const Math::Bounds& wbounds);
     bool drawUnit(const Component::UnitEntity& entity, const Math::Mat33& vpM, const Math::Bounds& wbounds, const Math::Mat33& wM);
+
+private:
+    Render::OglFbo           mFbo{};
+    Render::Gpu::DrawingUnit rttUnit{};
+    Render::Gpu::DrawingUnit blurHUnit{};
+    Render::Gpu::DrawingUnit blurVUnit{};
 };
 } // namespace Voxol::Render
 #endif
