@@ -124,7 +124,7 @@ void EntitySceneSystem::updateBVHBoundsWithEntityId(uint32_t eId, BoundsUpdateCa
 
     auto& compst            = entityStorage->comp;
 
-    auto addShadowEffectBVHData = [&](const ID::KeyUint64& key, const Math::Mat33& wmat) {
+    auto addShadowEffectBVHData = [&](const ID::KeyUint64& key) {
         auto protoId = key.protoId();
         if (compst->entitiesPool.isInvalid(protoId)) { return; }
 
@@ -133,6 +133,8 @@ void EntitySceneSystem::updateBVHBoundsWithEntityId(uint32_t eId, BoundsUpdateCa
         auto&&  desc      = compst->shaderingDescPool[shadingEt.shadingDescId];
         if (desc.flags == 0) { return; }
         auto&& efs = compst->shadingShadowIdMap[shadingEt.shadingDescId];
+
+        auto&& wmat = compst->getEntityGlobalMat33At(key);
 
         Math::Bounds vb;
         for (auto& ef : efs)
@@ -156,13 +158,19 @@ void EntitySceneSystem::updateBVHBoundsWithEntityId(uint32_t eId, BoundsUpdateCa
     Math::Bounds vb;
 
     std::vector<ID::KeyUint64> ids{};
-    //compst->getIdsFromId(eId, ids);
     compst->collectAllEntities(ID::KeyUint64::make(eId), ids);
     for (auto pid : ids)
     {
         if (pid.flags() > 0)
             continue;
 
+        auto wm = compst->getEntityGlobalMat33At(pid);
+        addShadowEffectBVHData(pid);
+        Component::defaultRect.mat33MapTo(wm, vb);
+        bvh->updateItemBoundsByObjectId(pid, vb);
+        callback(pid, vb);
+
+        /*
         if (pid.isIIDValid())
         {
             auto&& wm = compst->entityInsGlobalMat33Map[pid];
@@ -179,6 +187,7 @@ void EntitySceneSystem::updateBVHBoundsWithEntityId(uint32_t eId, BoundsUpdateCa
             bvh->updateItemBoundsByObjectId(pid, vb);
             callback(pid, vb);
         }
+        //*/
     }
     bvh->updateDirty();
 }

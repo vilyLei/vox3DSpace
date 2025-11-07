@@ -115,6 +115,7 @@ public:
     Component::UnitTransform getEntityTransformAt(uint32_t id);
     void                     setEntityTransformAt(const Component::UnitTransform& trans, uint32_t id);
 
+    Math::Mat33 getEntityGlobalMat33At(const ID::KeyUint64 id);
     Math::Mat33 getEntityGlobalMat33At(uint32_t id);
     void        checkIds(std::vector<ID::KeyUint64>& edis);
 

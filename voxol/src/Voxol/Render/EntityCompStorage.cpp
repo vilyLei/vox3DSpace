@@ -194,6 +194,20 @@ void EntityCompStorage::setEntityTransformAt(const Component::UnitTransform& tra
     auto&& et                      = entitiesPool[id];
     transformsPool[et.transformId] = trans;
 }
+
+Math::Mat33 EntityCompStorage::getEntityGlobalMat33At(const ID::KeyUint64 id)
+{
+    if (id.isIDInvalid())
+        return Math::Mat33::makeIdentity();
+
+    if (id.isIIDValid() && entityInsGlobalMat33Map.contains(id))
+        return entityInsGlobalMat33Map[id];
+
+    if (entityGlobalMat33Map.contains(id.protoId()))
+        return entityGlobalMat33Map[id.protoId()];
+
+    return Math::Mat33::makeIdentity();
+}
 Math::Mat33 EntityCompStorage::getEntityGlobalMat33At(uint32_t id)
 {
     if (ID::isInvalidID(id))
