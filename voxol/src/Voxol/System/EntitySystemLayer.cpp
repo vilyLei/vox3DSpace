@@ -16,18 +16,6 @@ void EntitySystemLayer::updateTileWithEntityId(const Render::ID::KeyUint64& eId)
     etSceneSys->updateBVHBoundsWithEntityId(eId.protoId(), [this](const Render::ID::KeyUint64& etId, const Math::Bounds& bounds) {
         tileSys->addDirtyBounds(bounds, 1);
     });
-    /*
-    auto&                 etCompStorage = etSceneSys->entityStorage->comp;
-    auto&                 bvh           = etSceneSys->bvh;
-    std::vector<Render::ID::KeyUint64> ids{};
-    etCompStorage->collectAllEntities(eId, ids);
-
-    for (auto pid : ids)
-    {
-        auto&& vb   = bvh->getBoundsAt(pid);
-        tileSys->addDirtyBounds(vb, 0);
-    }
-    //*/
 }
 void EntitySystemLayer::updateBVHAndTileWithEntityId(const Render::ID::KeyUint64& eId)
 {
