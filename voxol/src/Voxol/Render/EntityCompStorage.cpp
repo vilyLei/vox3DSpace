@@ -588,8 +588,6 @@ void EntityCompStorage::collectShadowEffect(const ID::KeyUint64& srcKey, uint32_
                 {
                     auto&& key = ID::KeyUint64::makeWithEffectShadow(srcKey, ef);
                     ids.emplace_back(key);
-                    //printf("traverseSortWithShadowEffect(), key:%s index: %u\n", key.idToString().c_str(), index);
-                    //hierarchyIndexMap[key] = index++;
                 }
             }
         }
