@@ -146,9 +146,9 @@ void EntitySceneSystem::updateBVHBoundsWithEntityId(uint32_t eId, BoundsUpdateCa
 
             auto&& efKey = ID::KeyUint64::makeWithEffectShadow(key, ef);
             auto pos = wm.getXY();
-            printf("efKey: %s\n", efKey.idToString().c_str());
-            vb.print();
-            printf("        pos(x=%f,y=%f), offset(x=%f,y=%f)\n", pos.x, pos.y, shdData.offset.x, shdData.offset.y);
+            //printf("efKey: %s\n", efKey.idToString().c_str());
+            //vb.print();
+            //printf("        pos(x=%f,y=%f), offset(x=%f,y=%f)\n", pos.x, pos.y, shdData.offset.x, shdData.offset.y);
 
             bvh->updateItemBoundsByObjectId(efKey, vb);
             callback(key, vb);
