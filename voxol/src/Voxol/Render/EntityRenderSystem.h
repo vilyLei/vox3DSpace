@@ -40,10 +40,11 @@ private:
     bool drawUnit(const Draw::DrawContext& rctx, const Component::UnitEntity& entity, const Math::Mat33& vpM, const Math::Bounds& wbounds, const Math::Mat33& wM);
 
 private:
-    Render::OglFbo           mFbo{};
-    Render::Gpu::DrawingUnit rttUnit{};
-    Render::Gpu::DrawingUnit blurHUnit{};
-    Render::Gpu::DrawingUnit blurVUnit{};
+    Draw::ClearParams clearParam{};
+    OglFbo           mFbo{};
+    Gpu::DrawingUnit rttUnit{};
+    Gpu::DrawingUnit blurHUnit{};
+    Gpu::DrawingUnit blurVUnit{};
 };
 } // namespace Voxol::Render
 #endif

@@ -188,15 +188,33 @@ bool EntityRenderSystem::drawUnit(const Draw::DrawContext& rctx, const Component
         vb.floatToRound();
         auto        pos      = vb.min;
         auto        gridSize = 256;
-        Math::Mat33 vpM;
+        Math::Mat33 vpMRtt;
 
-        vpM.ortho(gridSize, gridSize);
+        vpMRtt.ortho(gridSize, gridSize);
         auto        scale = 1.0f;
         Math::Mat33 viewM;
         viewM.setScaleXY(scale, scale);
         viewM.setXY(-pos.x * scale, -pos.y * scale);
-        vpM.append(viewM);
+        vpMRtt.append(viewM);
 
+        clearParam.clearColor = {0,0,0,0};
+        auto drawParam = rctx.drawParam;
+        auto vp        = rctx.clearParam.viewport;
+        /*
+        mFbo.bindFBO();
+        mFbo.bindTextureAt(rttUnit.getTextureAt(0), 0, gridSize, gridSize);
+        mFbo.renderBegin(clearParam);
+
+        drawUnit.blendMode = 1;
+        drawUnit.setColor(tempColor);
+        drawUnit.objMat = wM;
+        drawUnit.mvp    = vpMRtt;
+        drawUnit.draw();
+
+        mFbo.unbindFBO(rctx.clearParam, true);
+        Render::Gpu::buildTexDrawUnitWithTex(rttUnit, mFbo.getTextureAt(0), true);
+        //*/
+        return false;
     }
     drawUnit.blendMode = 1;
     drawUnit.setColor(tempColor);
