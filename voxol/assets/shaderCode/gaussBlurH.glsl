@@ -1,4 +1,3 @@
-这个版本基本能满足需求：
 #version 330 core
 precision mediump float;
 
