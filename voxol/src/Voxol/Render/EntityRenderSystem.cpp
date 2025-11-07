@@ -45,7 +45,7 @@ void EntityRenderSystem::render(const Draw::DrawContext& rctx, const Math::Mat33
             continue;
         if (key.flags() > 0)
         {
-            drawUnitEffect(key, vpM, wbounds);
+            drawUnitEffect(rctx, key, vpM, wbounds);
             continue;
         }
         auto proId = key.protoId();
@@ -68,13 +68,13 @@ void EntityRenderSystem::render(const Draw::DrawContext& rctx, const Math::Mat33
         if (key.isIIDValid())
         {
             auto&& wmat = compStorage->entityInsGlobalMat33Map[key];
-            auto   flag = drawUnit(et, vpM, wbounds, wmat);
+            auto   flag = drawUnit(rctx, et, vpM, wbounds, wmat);
             drawTotal += flag ? 1 : 0;
             //printf("drawUnit with prototype child rendering process ...\n");
             continue;
         }
 
-        auto flag = drawUnit(et, vpM, wbounds, compStorage->entityGlobalMat33Map[proId]);
+        auto flag = drawUnit(rctx, et, vpM, wbounds, compStorage->entityGlobalMat33Map[proId]);
         drawTotal += flag ? 1 : 0;
     }
     //if (drawTotal < total)
@@ -196,6 +196,7 @@ bool EntityRenderSystem::drawUnit(const Draw::DrawContext& rctx, const Component
         viewM.setScaleXY(scale, scale);
         viewM.setXY(-pos.x * scale, -pos.y * scale);
         vpM.append(viewM);
+
     }
     drawUnit.blendMode = 1;
     drawUnit.setColor(tempColor);
