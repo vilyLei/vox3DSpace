@@ -36,8 +36,8 @@ public:
     EntityUnitStorage::SP entityStorage{};
 
 private:
-    bool drawUnitEffect(const ID::KeyUint64 etKey, const Math::Mat33& vpM, const Math::Bounds& wbounds);
-    bool drawUnit(const Component::UnitEntity& entity, const Math::Mat33& vpM, const Math::Bounds& wbounds, const Math::Mat33& wM);
+    bool drawUnitEffect(const Draw::DrawContext& rctx, const ID::KeyUint64 etKey, const Math::Mat33& vpM, const Math::Bounds& wbounds);
+    bool drawUnit(const Draw::DrawContext& rctx, const Component::UnitEntity& entity, const Math::Mat33& vpM, const Math::Bounds& wbounds, const Math::Mat33& wM);
 
 private:
     Render::OglFbo           mFbo{};

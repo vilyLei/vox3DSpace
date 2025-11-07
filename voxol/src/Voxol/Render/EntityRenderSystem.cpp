@@ -94,7 +94,7 @@ void EntityRenderSystem::render(const Draw::DrawContext& rctx, const Math::Mat33
     //    drawUnit(et, vpM, wbounds);
     //});
 }
-bool EntityRenderSystem::drawUnitEffect(const ID::KeyUint64 etKey, const Math::Mat33& vpM, const Math::Bounds& wbounds)
+bool EntityRenderSystem::drawUnitEffect(const Draw::DrawContext& rctx, const ID::KeyUint64 etKey, const Math::Mat33& vpM, const Math::Bounds& wbounds)
 {
     auto&  compStorage = entityStorage->comp;
     auto&& srUnit      = compStorage->effectShadowEntityMap[etKey];
@@ -140,7 +140,7 @@ bool EntityRenderSystem::drawUnitEffect(const ID::KeyUint64 etKey, const Math::M
     return true;
 }
 
-bool EntityRenderSystem::drawUnit(const Component::UnitEntity& entity, const Math::Mat33& vpM, const Math::Bounds& wbounds, const Math::Mat33& wM)
+bool EntityRenderSystem::drawUnit(const Draw::DrawContext& rctx, const Component::UnitEntity& entity, const Math::Mat33& vpM, const Math::Bounds& wbounds, const Math::Mat33& wM)
 {
     auto& compStorage       = entityStorage->comp;
     auto& shaderingDescPool = compStorage->shaderingDescPool;
