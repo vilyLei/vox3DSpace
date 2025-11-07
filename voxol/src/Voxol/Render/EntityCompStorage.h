@@ -99,15 +99,15 @@ public:
     Component::UnitTransform getEntityParentLocalTransAt(uint32_t id);
     bool                     getEntityVisibleAt(uint32_t id);
     Math::Mat33              getEntityParentGlobalMatAt(uint32_t id);
-    Math::Mat33              getEntityGlobalMatAt(uint32_t id);
-    Math::Bounds             getEntityGlobalBoundsAt(uint32_t id);
-    uint32_t                 getEntityParentIdAt(uint32_t id);
-    Math::Vec2               getEntityGlobalXYAt(uint32_t id);
-    void                     setEntityGlobalXYAt(const Math::Vec2& pv, uint32_t id);
-    Math::Mat33              getEntityWorldMatWithoutScale(uint32_t id);
-    Math::Mat33              getEntityParentWorldMatWithoutScale(uint32_t id);
-    Math::Vec2               getEntityLocalXYAt(uint32_t id);
-    void                     setEntityLocalXYAt(const Math::Vec2& pv, uint32_t id);
+    //Math::Mat33              getEntityGlobalMatAt(uint32_t id);
+    Math::Bounds getEntityGlobalBoundsAt(uint32_t id);
+    uint32_t     getEntityParentIdAt(uint32_t id);
+    Math::Vec2   getEntityGlobalXYAt(uint32_t id);
+    void         setEntityGlobalXYAt(const Math::Vec2& pv, uint32_t id);
+    Math::Mat33  getEntityWorldMatWithoutScale(uint32_t id);
+    Math::Mat33  getEntityParentWorldMatWithoutScale(uint32_t id);
+    Math::Vec2   getEntityLocalXYAt(uint32_t id);
+    void         setEntityLocalXYAt(const Math::Vec2& pv, uint32_t id);
 
     void getIdsFromId(uint32_t etId, std::vector<ID::KeyUint64>& ids);
 

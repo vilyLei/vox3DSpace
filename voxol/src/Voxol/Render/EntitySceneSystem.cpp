@@ -87,7 +87,7 @@ void EntitySceneSystem::initalize(const std::string& configFileName)
         }
 
         auto&& key = ID::KeyUint64::make(et.id);
-        addShadowEffectBVHData(key, storage->getEntityGlobalMatAt(et.id));
+        addShadowEffectBVHData(key, storage->getEntityGlobalMat33At(et.id));
         auto&& vb = storage->getEntityGlobalBoundsAt(et.id);
         bvh->addItem(key, vb);
     });

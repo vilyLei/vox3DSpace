@@ -113,15 +113,16 @@ bool EntityRenderSystem::drawUnitEffect(const ID::KeyUint64 etKey, const Math::M
 
     auto&& shdData = compStorage->effectShadowMap[srUnit.effectId];
 
-    Math::Mat33 wm;
-    if (entityId.isIIDValid())
-    {
-        wm = compStorage->entityInsGlobalMat33Map[entityId];
-    }
-    else
-    {
-        wm = compStorage->getEntityGlobalMatAt(entityId.protoId());
-    }
+    auto   wm      = compStorage->getEntityGlobalMat33At(entityId);
+    //Math::Mat33 wm;
+    //if (entityId.isIIDValid())
+    //{
+    //    wm = compStorage->entityInsGlobalMat33Map[entityId];
+    //}
+    //else
+    //{
+    //    wm = compStorage->getEntityGlobalMatAt(entityId.protoId());
+    //}
     // shadow offset in the global space
     wm.offsetXY(shdData.offset);
 
