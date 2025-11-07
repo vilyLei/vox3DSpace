@@ -76,7 +76,6 @@ void EntitySceneSystem::initalize(const std::string& configFileName)
     };
 
     entitiesPool.forEach([&](auto& et, uint32_t index) {
-
         if (ID::isInvalidID(et.transformId))
             return;
 
@@ -122,15 +121,15 @@ void EntitySceneSystem::updateBVHBoundsWithEntityId(uint32_t eId, BoundsUpdateCa
     if (ID::isInvalidID(eId))
         return;
 
-    auto& compst            = entityStorage->comp;
+    auto& compst = entityStorage->comp;
 
     auto addShadowEffectBVHData = [&](const ID::KeyUint64& key) {
         auto protoId = key.protoId();
         if (compst->entitiesPool.isInvalid(protoId)) { return; }
 
         auto&& et        = compst->entitiesPool[protoId];
-        auto&&  shadingEt = compst->shaderingEntitiesPool[et.shadingId];
-        auto&&  desc      = compst->shaderingDescPool[shadingEt.shadingDescId];
+        auto&& shadingEt = compst->shaderingEntitiesPool[et.shadingId];
+        auto&& desc      = compst->shaderingDescPool[shadingEt.shadingDescId];
         if (desc.flags == 0) { return; }
         auto&& efs = compst->shadingShadowIdMap[shadingEt.shadingDescId];
 
@@ -145,7 +144,7 @@ void EntitySceneSystem::updateBVHBoundsWithEntityId(uint32_t eId, BoundsUpdateCa
             Component::defaultRect.mat33MapTo(wm, vb);
 
             auto&& efKey = ID::KeyUint64::makeWithEffectShadow(key, ef);
-            auto pos = wm.getXY();
+            auto   pos   = wm.getXY();
             //printf("efKey: %s\n", efKey.idToString().c_str());
             //vb.print();
             //printf("        pos(x=%f,y=%f), offset(x=%f,y=%f)\n", pos.x, pos.y, shdData.offset.x, shdData.offset.y);
