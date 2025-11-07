@@ -7,6 +7,8 @@
 
 #include "EntityUnitStorage.h"
 
+#include "OglFbo.h"
+
 namespace Voxol::Render
 {
 

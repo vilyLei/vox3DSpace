@@ -89,7 +89,7 @@ bool TileScene::releaseGrid(const RC::Pos& pos)
     auto&& node = viewUnitIndexMap[pos.value];
     unitIndexPool.release(node.index);
     auto& unit = gridUnits[node.index].drawUnit;
-    printf("release grid node(r=%d, c=%d, level=%d)\n", node.pos.r, node.pos.c, node.pos.level);
+    printf("release grid node(r=%u, c=%u, level=%u)\n", node.pos.r, node.pos.c, node.pos.level);
     texPool.release(unit.getTextureAt(0));
     return true;
 }
