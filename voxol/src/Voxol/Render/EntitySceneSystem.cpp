@@ -34,7 +34,7 @@ void EntitySceneSystem::initalize(const std::string& configFileName)
     auto& shaderingEntitiesPool = storage->shaderingEntitiesPool;
     auto& shaderingDescPool     = storage->shaderingDescPool;
     auto& transformsPool        = storage->transformsPool;
-    auto& insStorage            = storage->insStorage;
+    auto& instanceStorage       = storage->instanceStorage;
 
 
     auto addShadowEffectBVHData = [&](const ID::KeyUint64& key, const Math::Mat33& wmat) {
@@ -64,8 +64,9 @@ void EntitySceneSystem::initalize(const std::string& configFileName)
         auto&& vb = storage->getEntityGlobalBoundsAt(et.id);
         bvh->addItem(ID::KeyUint64::make(et.id), vb);
         auto& wmats = storage->entityInsGlobalMat33Map;
-
-        auto&& insMap = insStorage[et.id];
+        if (instanceStorage.contains(et.id))
+            return;
+        auto&& insMap = instanceStorage[et.id];
         for (auto& item : insMap.map)
         {
             auto&& mat = wmats[item.first];
