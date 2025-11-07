@@ -225,7 +225,7 @@ void EntityCompStorage::checkIds(std::vector<ID::KeyUint64>& edis)
     auto                       tot = edis.size();
     for (auto i = 0; i < tot; ++i)
     {
-        auto&& key     = edis[i];
+        auto&& key = edis[i];
         if (key.flags() > 0)
         {
             ids.push_back(key);
@@ -333,7 +333,7 @@ void EntityCompStorage::traverseSortIndex(uint32_t protoId, uint32_t& index)
     traverseSortWithShadowEffect(key, protoId, index);
     hierarchyIndexMap[key] = index++;
 
-    auto&& et              = entitiesPool[protoId];
+    auto&& et = entitiesPool[protoId];
     if (ID::isValidID(et.prototypeId))
     {
         auto iid = protoId;
@@ -595,7 +595,7 @@ void EntityCompStorage::collectShadowEffect(const ID::KeyUint64& srcKey, uint32_
         }
     }
 }
-
+/*
 void EntityCompStorage::collectAllEntitiesWithInstance(const ID::KeyUint64& etId, std::vector<ID::KeyUint64>& ids)
 {
 
@@ -618,13 +618,45 @@ void EntityCompStorage::collectAllEntitiesWithInstance(const ID::KeyUint64& etId
         collectAllEntitiesWithInstance(ID::KeyUint64::make(childProto, iid), ids);
     }
 }
+//*/
+
+void EntityCompStorage::collectAllEntitiesWithInstance(const ID::KeyUint64& etId, std::vector<ID::KeyUint64>& ids)
+{
+    auto                       iid = etId.iid();
+    std::vector<ID::KeyUint64> stack;
+    stack.reserve(256);
+    stack.emplace_back(etId);
+
+    while (!stack.empty())
+    {
+        auto id = stack.back();
+        stack.pop_back();
+
+        ids.emplace_back(id);
+
+        auto protoId = id.protoId();
+        if (entitiesPool.isInvalid(protoId))
+            continue;
+
+        auto&&   et             = entitiesPool[protoId];
+        uint32_t currId = ID::isValidID(et.prototypeId) ? et.prototypeId : protoId;
+
+        for (auto child = hierarchiesPool[currId].firstChild;
+             ID::isValidID(child);
+             child = hierarchiesPool[child].next)
+        {
+            stack.push_back(ID::KeyUint64::make(child, iid));
+        }
+    }
+}
+
 
 void EntityCompStorage::collectAllEntities(const ID::KeyUint64& etId, std::vector<ID::KeyUint64>& ids)
 {
     if (ID::isInvalidID(etId))
         return;
 
-    
+
     collectShadowEffect(etId, etId.protoId(), ids);
     ids.emplace_back(etId);
 
@@ -644,7 +676,7 @@ void EntityCompStorage::collectAllEntities(const ID::KeyUint64& etId, std::vecto
     if (iid > 0)
     {
         //printf("collectAllEntities() has a new instance entity.\n");
-        auto&&    protoEntity    = entitiesPool[protoId];
+        auto&&   protoEntity    = entitiesPool[protoId];
         uint32_t effectiveProto = ID::isValidID(protoEntity.prototypeId) ? protoEntity.prototypeId : protoId;
 
         for (auto child = hierarchiesPool[effectiveProto].firstChild;
@@ -728,12 +760,13 @@ void EntityCompStorage::updateAllInstanceGlobalMats(const ID::KeyUint64& etId)
         }
     }
 }
-void EntityCompStorage::setPrototypeEntitiesDirty(uint32_t etId, bool dirty)
+
+void EntityCompStorage::setPrototypeEntitiesDirty(uint32_t etId, bool dirty, uint16_t reserveSize)
 {
     if (ID::isInvalidID(etId) || entitiesPool.isInvalid(etId)) return;
 
     std::vector<uint32_t> stack;
-    stack.reserve(128);
+    stack.reserve(reserveSize);
     stack.emplace_back(etId);
 
     while (!stack.empty())
