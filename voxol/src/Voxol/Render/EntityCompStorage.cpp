@@ -592,26 +592,6 @@ void EntityCompStorage::collectShadowEffect(const ID::KeyUint64& srcKey, uint32_
         auto&& key = ID::KeyUint64::makeWithEffectShadow(srcKey, ef);
         ids.emplace_back(key);
     }
-
-    //return;
-    //if (entitiesPool.isValid(protoId))
-    //{
-    //    auto&& et = entitiesPool[protoId];
-    //    if (ID::isValidID(et.shadingId))
-    //    {
-    //        auto&& shadingEt = shaderingEntitiesPool[et.shadingId];
-    //        auto&& shdDesc   = shaderingDescPool[shadingEt.shadingDescId];
-    //        if (shdDesc.flags > 0 && shadingShadowIdMap.contains(shadingEt.shadingDescId))
-    //        {
-    //            auto&& effects = shadingShadowIdMap[shadingEt.shadingDescId];
-    //            for (auto ef : effects)
-    //            {
-    //                auto&& key = ID::KeyUint64::makeWithEffectShadow(srcKey, ef);
-    //                ids.emplace_back(key);
-    //            }
-    //        }
-    //    }
-    //}
 }
 
 void EntityCompStorage::collectAllEntitiesWithInstance(const ID::KeyUint64& etId, std::vector<ID::KeyUint64>& ids)
