@@ -574,49 +574,45 @@ void EntityCompStorage::updateDirtySubtrees(const std::vector<uint32_t>& roots)
 
 void EntityCompStorage::collectShadowEffect(const ID::KeyUint64& srcKey, uint32_t protoId, std::vector<ID::KeyUint64>& ids)
 {
-    if (entitiesPool.isValid(protoId))
+    if (entitiesPool.isInvalid(protoId))
+        return;
+
+    auto&& et = entitiesPool[protoId];
+    if (ID::isInvalidID(et.shadingId))
+        return;
+
+    auto&& shadingEt = shaderingEntitiesPool[et.shadingId];
+    auto&& shdDesc   = shaderingDescPool[shadingEt.shadingDescId];
+    if (shdDesc.flags == 0 || !shadingShadowIdMap.contains(shadingEt.shadingDescId))
+        return;
+
+    auto&& effects = shadingShadowIdMap[shadingEt.shadingDescId];
+    for (auto ef : effects)
     {
-        auto&& et = entitiesPool[protoId];
-        if (ID::isValidID(et.shadingId))
-        {
-            auto&& shadingEt = shaderingEntitiesPool[et.shadingId];
-            auto&& shdDesc   = shaderingDescPool[shadingEt.shadingDescId];
-            if (shdDesc.flags > 0 && shadingShadowIdMap.contains(shadingEt.shadingDescId))
-            {
-                auto&& effects = shadingShadowIdMap[shadingEt.shadingDescId];
-                for (auto ef : effects)
-                {
-                    auto&& key = ID::KeyUint64::makeWithEffectShadow(srcKey, ef);
-                    ids.emplace_back(key);
-                }
-            }
-        }
+        auto&& key = ID::KeyUint64::makeWithEffectShadow(srcKey, ef);
+        ids.emplace_back(key);
     }
+
+    //return;
+    //if (entitiesPool.isValid(protoId))
+    //{
+    //    auto&& et = entitiesPool[protoId];
+    //    if (ID::isValidID(et.shadingId))
+    //    {
+    //        auto&& shadingEt = shaderingEntitiesPool[et.shadingId];
+    //        auto&& shdDesc   = shaderingDescPool[shadingEt.shadingDescId];
+    //        if (shdDesc.flags > 0 && shadingShadowIdMap.contains(shadingEt.shadingDescId))
+    //        {
+    //            auto&& effects = shadingShadowIdMap[shadingEt.shadingDescId];
+    //            for (auto ef : effects)
+    //            {
+    //                auto&& key = ID::KeyUint64::makeWithEffectShadow(srcKey, ef);
+    //                ids.emplace_back(key);
+    //            }
+    //        }
+    //    }
+    //}
 }
-/*
-void EntityCompStorage::collectAllEntitiesWithInstance(const ID::KeyUint64& etId, std::vector<ID::KeyUint64>& ids)
-{
-
-    collectShadowEffect(etId, etId.protoId(), ids);
-    ids.emplace_back(etId);
-
-    auto protoId = etId.protoId();
-    auto iid     = etId.iid();
-
-    auto&    et             = entitiesPool[protoId];
-    uint32_t effectiveProto = ID::isValidID(et.prototypeId) ? et.prototypeId : protoId;
-
-    for (auto child = hierarchiesPool[effectiveProto].firstChild;
-         ID::isValidID(child);
-         child = hierarchiesPool[child].next)
-    {
-        auto&    cet        = entitiesPool[child];
-        uint32_t childProto = ID::isValidID(cet.prototypeId) ? cet.prototypeId : child;
-
-        collectAllEntitiesWithInstance(ID::KeyUint64::make(childProto, iid), ids);
-    }
-}
-//*/
 
 void EntityCompStorage::collectAllEntitiesWithInstance(const ID::KeyUint64& etId, std::vector<ID::KeyUint64>& ids)
 {
