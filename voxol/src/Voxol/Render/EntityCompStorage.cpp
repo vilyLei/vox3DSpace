@@ -739,6 +739,9 @@ void EntityCompStorage::setPrototypeEntitiesDirty(uint32_t etId, bool dirty, uin
 {
     if (ID::isInvalidID(etId) || entitiesPool.isInvalid(etId)) return;
 
+    if (reserveSize < 32)
+        reserveSize = 32;
+
     std::vector<uint32_t> stack;
     stack.reserve(reserveSize);
     stack.emplace_back(etId);
