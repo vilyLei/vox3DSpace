@@ -14,6 +14,8 @@ void EntityRenderSystem::initalize()
 
     mFbo.init(GL_ZERO);
     Render::Gpu::buildTexDrawUnitWithTex(rttUnit, GL_ZERO, true);
+    Render::Gpu::buildTexDrawUnitWithTexBlur(blurHUnit, GL_ZERO, true, 0);
+    Render::Gpu::buildTexDrawUnitWithTexBlur(blurVUnit, GL_ZERO, true, 1);
 }
 void EntityRenderSystem::render(const Draw::DrawContext& rctx, const Math::Mat33& vpM, const Math::Bounds& wbounds, const std::vector<ID::KeyUint64>& queriedEIds)
 {

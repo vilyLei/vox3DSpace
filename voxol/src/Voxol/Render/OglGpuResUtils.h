@@ -136,6 +136,7 @@ struct DrawingUnit
 void buildBaseDrawUnit(DrawingUnit& unit);
 void buildTexDrawUnit(DrawingUnit& unit, const RawData::Image2DBytesData& imgData = {});
 void buildTexDrawUnitWithTex(DrawingUnit& unit, GLuint tex, bool uvFlipY = false);
+void buildTexDrawUnitWithTexBlur(DrawingUnit& unit, GLuint tex, bool uvFlipY = false, int blurType = 0);
 void buildTexDrawUnitFromTex(DrawingUnit& unit, GLuint tex, bool uvFlipY = false);
 void buildSDFDrawUnit(DrawingUnit& unit, Voass::Render::Shader::SDFShapeType type = Voass::Render::Shader::SDFShapeType::Circle, bool clip = false);
 void buildSDFDrawUnitWithName(DrawingUnit& unit, const std::string& name, bool clip = false);

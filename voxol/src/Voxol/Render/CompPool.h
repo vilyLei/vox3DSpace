@@ -25,13 +25,11 @@ public:
         reserve(initialCapacity);
     }
 
-    // 禁止拷贝，但允许移动
     CompPool(const CompPool&)                = delete;
     CompPool& operator=(const CompPool&)     = delete;
     CompPool(CompPool&&) noexcept            = default;
     CompPool& operator=(CompPool&&) noexcept = default;
 
-    // 预分配空间
     void reserve(size_t capacity)
     {
         if (capacity > comps.size())
@@ -56,7 +54,7 @@ public:
     //    }
     //}
 
-    /// 分配对象(未初始化)
+    /// allocate, but no initialization
     uint32_t allocate()
     {
         if (m_freeList.empty())
@@ -171,7 +169,7 @@ public:
     {
         return comps[index];
     }
-    // 通过句柄访问对象（返回指针或nullptr）
+
     T& get(uint32_t index)
     {
         return comps[index];
@@ -201,7 +199,7 @@ public:
         m_usedList[index] = false;
         m_freeList.push_back(index);
     }
-    // 清空所有对象
+    // clear all
     void reset()
     {
         m_freeList.clear();

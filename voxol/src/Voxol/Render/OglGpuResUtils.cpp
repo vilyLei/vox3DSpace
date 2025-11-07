@@ -632,6 +632,53 @@ void buildTexDrawUnitWithTex(DrawingUnit& unit, GLuint tex, bool uvFlipY)
     }
 }
 
+void buildTexDrawUnitWithTexBlur(DrawingUnit& unit, GLuint tex, bool uvFlipY, int blurType) {
+
+    auto& shader = unit.shader;
+
+    if (shader.program <= GL_ZERO)
+    {
+        using namespace Voass::Render::Shader;
+
+        static std::string blurHShapeStr;
+        static std::string blurVShapeStr;
+
+#ifdef NATIVE_RUNTIME
+        if (blurType == 0 && blurHShapeStr.empty())
+        {
+            blurHShapeStr = loadShaderCodeFromFile("gaussBlurH.glsl");
+        }
+        else if (blurType != 0 && blurVShapeStr.empty())
+        {
+            blurVShapeStr = loadShaderCodeFromFile("gaussBlurV.glsl");
+        }
+#endif
+        shader.program   = ResUtils::createSahderProgram(ResUtils::vertTexSource, blurType == 0 ? blurHShapeStr.c_str() : blurVShapeStr.c_str());
+        shader.matrixLoc = glGetUniformLocation(shader.program, "u_matrix");
+        shader.colorLoc  = glGetUniformLocation(shader.program, "u_color");
+        auto texLoc      = glGetUniformLocation(shader.program, "u_tex0");
+        shader.texLocs.push_back(texLoc);
+    }
+    if (shader.textures.empty() && tex > GL_ZERO)
+    {
+        shader.textures.push_back(tex);
+    }
+    auto& vert = unit.vertex;
+
+    if (vert.vao > GL_ZERO)
+    {
+        return;
+    }
+    if (uvFlipY)
+    {
+        vert.buildTexResFlipYUvs();
+    }
+    else
+    {
+        vert.buildTexRes();
+    }
+}
+
 void buildTexDrawUnitFromTex(DrawingUnit& unit, GLuint tex, bool uvFlipY)
 {
 
