@@ -728,10 +728,14 @@ void EntityCompStorage::updateAllInstanceGlobalMats(const ID::KeyUint64& etId)
         }
     }
 }
-void EntityCompStorage::setEntitiesDirty(uint32_t etId, bool dirty)
+void EntityCompStorage::setPrototypeEntitiesDirty(uint32_t etId, bool dirty)
 {
     if (ID::isInvalidID(etId) || entitiesPool.isInvalid(etId)) return;
-    std::vector<uint32_t> stack{etId};
+
+    std::vector<uint32_t> stack;
+    stack.reserve(128);
+    stack.emplace_back(etId);
+
     while (!stack.empty())
     {
         auto id = stack.back();
