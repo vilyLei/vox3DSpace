@@ -169,25 +169,6 @@ void EntitySceneSystem::updateBVHBoundsWithEntityId(uint32_t eId, BoundsUpdateCa
         Component::defaultRect.mat33MapTo(wm, vb);
         bvh->updateItemBoundsByObjectId(pid, vb);
         callback(pid, vb);
-
-        /*
-        if (pid.isIIDValid())
-        {
-            auto&& wm = compst->entityInsGlobalMat33Map[pid];
-            addShadowEffectBVHData(pid, wm);
-
-            Component::defaultRect.mat33MapTo(wm, vb);
-            bvh->updateItemBoundsByObjectId(pid, vb);
-            callback(pid, vb);
-        }
-        else
-        {
-            vb = compst->getEntityGlobalBoundsAt(pid.protoId());
-            addShadowEffectBVHData(pid, compst->getEntityGlobalMat33At(pid.protoId()));
-            bvh->updateItemBoundsByObjectId(pid, vb);
-            callback(pid, vb);
-        }
-        //*/
     }
     bvh->updateDirty();
 }
