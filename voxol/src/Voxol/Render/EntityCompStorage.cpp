@@ -61,14 +61,6 @@ Math::Mat33 EntityCompStorage::getEntityParentGlobalMatAt(uint32_t id)
     // printf("getEntityParentGlobalMatAt(), id: %u, parentId: %u\n", id, parentId);
     return getEntityGlobalMat33At(parentId);
 }
-//Math::Mat33 EntityCompStorage::getEntityGlobalMatAt(uint32_t id)
-//{
-//    if (ID::isInvalidID(id) || id >= hierarchiesPool.capacity() || !entityGlobalMat33Map.contains(id))
-//    {
-//        return Math::Mat33::makeIdentity();
-//    }
-//    return entityGlobalMat33Map[id];
-//}
 
 Math::Bounds EntityCompStorage::getEntityGlobalBoundsAt(uint32_t id)
 {
