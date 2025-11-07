@@ -9,7 +9,7 @@
 
 namespace Voxol::Render
 {
-// 只需要获取到 index, 外部引用也只能记录对应的index
+// base on Index
 template <typename T>
 class CompPool
 {

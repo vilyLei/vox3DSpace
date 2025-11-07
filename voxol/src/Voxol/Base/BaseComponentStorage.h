@@ -7,7 +7,6 @@
 
 namespace Voxol::Base
 {
-
 struct RemovableStorage
 {
     virtual void removeEntity(VoxolEntity e) = 0;

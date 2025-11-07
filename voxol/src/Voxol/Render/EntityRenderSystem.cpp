@@ -134,6 +134,8 @@ bool EntityRenderSystem::drawUnitEffect(const ID::KeyUint64 etKey, const Math::M
     drawUnit.objMat = wm;
     drawUnit.mvp    = vpM;
     drawUnit.draw();
+
+    return true;
 }
 
 bool EntityRenderSystem::drawUnit(const Component::UnitEntity& entity, const Math::Mat33& vpM, const Math::Bounds& wbounds, const Math::Mat33& wM)
