@@ -187,37 +187,7 @@ bool EntityRenderSystem::drawUnit(const Component::UnitEntity& entity, const Mat
     drawUnit.draw();
     return true;
 }
-/*
-bool EntityRenderSystem::drawUnit(const Component::UnitEntity& entity, const Math::Mat33& vpM, const Math::Bounds& wbounds)
-{
 
-    auto&  compStorage       = entityStorage->comp;
-    auto& shaderingDescPool = compStorage->shaderingDescPool;
-    auto& transformsPool = compStorage->transformsPool;
-    auto& modelsPool        = compStorage->modelsPool;
-
-    const auto& shadingEt = compStorage->get<Component::UnitShadingEntity>(entity.shadingId);
-    auto  drawingId = modelsPool[entity.modelId].drawUnitId;
-    auto& drs      = *entityStorage->drawing;
-    auto& drawUnit  = drs[drawingId];
-    auto& shdDesc  = shaderingDescPool[shadingEt.shadingDescId];
-    auto&&       wmat = compStorage->entityGlobalMat33Map[entity.id];
-
-    Math::Bounds vb;
-    Component::defaultRect.mat33MapTo(wmat, vb);
-    if (!wbounds.intersects(vb))
-        return false;
-
-    //printf("xxx xxx trans(x=%f, y=%f)\n", trans.x, trans.y);
-
-    drawUnit.blendMode = 1;
-    drawUnit.setColor(shdDesc.color);
-    drawUnit.objMat = wmat;
-    drawUnit.mvp = vpM;
-    drawUnit.draw();
-    return true;
-}
-//*/
 void EntityRenderSystem::clear()
 {
 }
