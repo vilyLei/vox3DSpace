@@ -24,9 +24,9 @@ void EntityRenderSystem::render(const Draw::DrawContext& rctx, const Math::Mat33
 
     auto& compStorage = entityStorage->comp;
 
-    auto   total     = queriedEIds.size();
+    auto   total        = queriedEIds.size();
     auto&  entitiesPool = compStorage->entitiesPool;
-    size_t drawTotal = 0;
+    size_t drawTotal    = 0;
 
     //printf("EntityRenderSystem::render() total: %zu\n", total);
 
@@ -53,7 +53,7 @@ void EntityRenderSystem::render(const Draw::DrawContext& rctx, const Math::Mat33
             continue;
         }
         auto  iid = key.iid();
-        auto& et    = entitiesPool[proId];
+        auto& et  = entitiesPool[proId];
         if (Render::ID::isInvalidID(et.shadingId) || !et.visible)
         {
             continue;
@@ -63,7 +63,7 @@ void EntityRenderSystem::render(const Draw::DrawContext& rctx, const Math::Mat33
         if (key.isIIDValid())
         {
             auto&& wmat = compStorage->entityInsGlobalMat33Map[key];
-            auto flag = drawUnit(et, vpM, wbounds, wmat);
+            auto   flag = drawUnit(et, vpM, wbounds, wmat);
             drawTotal += flag ? 1 : 0;
             //printf("drawUnit with prototype child rendering process ...\n");
             continue;
@@ -92,11 +92,11 @@ void EntityRenderSystem::render(const Draw::DrawContext& rctx, const Math::Mat33
 bool EntityRenderSystem::drawUnitEffect(const ID::KeyUint64 etKey, const Math::Mat33& vpM, const Math::Bounds& wbounds)
 {
     auto&  compStorage = entityStorage->comp;
-    auto&& srUnit = compStorage->effectShadowEntityMap[etKey];
+    auto&& srUnit      = compStorage->effectShadowEntityMap[etKey];
+
     if (!compStorage->effectShadowMap.contains(srUnit.effectId))
-    {
         return false;
-    }
+
     auto&& entityId          = srUnit.entityId;
     auto&& entity            = compStorage->entitiesPool[entityId.protoId()];
     auto   etId              = entity.id;
@@ -107,18 +107,15 @@ bool EntityRenderSystem::drawUnitEffect(const ID::KeyUint64 etKey, const Math::M
     auto& shdDesc   = shaderingDescVec[shadingEt.shadingDescId];
 
     if (shdDesc.flags == 0)
-    {
         return false;
-    }
 
     auto&& shdData = compStorage->effectShadowMap[srUnit.effectId];
 
-    auto   wm      = compStorage->getEntityGlobalMat33At(entityId);
+    auto wm = compStorage->getEntityGlobalMat33At(entityId);
 
     // shadow offset in the global space
     wm.offsetXY(shdData.offset);
 
-    
     Math::Bounds vb;
     Component::defaultRect.mat33MapTo(wm, vb);
     if (!wbounds.intersects(vb))
@@ -135,6 +132,7 @@ bool EntityRenderSystem::drawUnitEffect(const ID::KeyUint64 etKey, const Math::M
     drawUnit.mvp    = vpM;
     drawUnit.draw();
 }
+
 bool EntityRenderSystem::drawUnit(const Component::UnitEntity& entity, const Math::Mat33& vpM, const Math::Bounds& wbounds, const Math::Mat33& wM)
 {
     auto& compStorage       = entityStorage->comp;
@@ -143,10 +141,10 @@ bool EntityRenderSystem::drawUnit(const Component::UnitEntity& entity, const Mat
     auto& modelsPool        = compStorage->modelsPool;
 
     auto&& shadingEt = compStorage->get<Component::UnitShadingEntity>(entity.shadingId);
-    auto        drawingId = modelsPool[entity.modelId].drawUnitId;
-    auto&       drs       = *entityStorage->drawing;
-    auto&&       drawUnit  = drs[drawingId];
-    auto&&       shdDesc   = shaderingDescPool[shadingEt.shadingDescId];
+    auto   drawingId = modelsPool[entity.modelId].drawUnitId;
+    auto&  drs       = *entityStorage->drawing;
+    auto&& drawUnit  = drs[drawingId];
+    auto&& shdDesc   = shaderingDescPool[shadingEt.shadingDescId];
 
     Math::Bounds vb;
     Component::defaultRect.mat33MapTo(wM, vb);
