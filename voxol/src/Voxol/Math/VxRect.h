@@ -59,6 +59,7 @@ public:
     void setSize(float pw, float ph);
     bool intersects(const VxRect& other) const;
     void outset(float dx, float dy);
+    void floatToRound();
     bool contains(float px, float py) const;
     bool contains(const Vec2& pv) const;
 

@@ -127,6 +127,14 @@ void VxRect::outset(float dx, float dy)
     fBottom += dy;
 }
 
+void VxRect::floatToRound()
+{
+    fX = std::roundf(fX);
+    fY = std::roundf(fY);
+    fRight = std::roundf(fRight);
+    fBottom = std::roundf(fBottom);
+}
+
 bool VxRect::contains(float px, float py) const
 {
     if (px < fLeft || px > fRight)

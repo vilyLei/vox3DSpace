@@ -181,6 +181,21 @@ bool EntityRenderSystem::drawUnit(const Component::UnitEntity& entity, const Mat
     if (entity.id == 2)
     {
         tempColor = 0xffaaaa00;
+        auto rttBuild = [&]() {
+
+        };
+        vb.outset(30, 30);
+        vb.floatToRound();
+        auto        pos      = vb.min;
+        auto        gridSize = 256;
+        Math::Mat33 vpM;
+
+        vpM.ortho(gridSize, gridSize);
+        auto        scale = 1.0f;
+        Math::Mat33 viewM;
+        viewM.setScaleXY(scale, scale);
+        viewM.setXY(-pos.x * scale, -pos.y * scale);
+        vpM.append(viewM);
     }
     drawUnit.blendMode = 1;
     drawUnit.setColor(tempColor);
