@@ -41,7 +41,7 @@ private:
 
 private:
     Draw::ClearParams clearParam{};
-    Draw::OglFbo::SP  mFbo{};
+    //Draw::OglFbo::SP  mFbo{};
     Gpu::DrawingUnit  rttUnit{};
     Gpu::DrawingUnit  blurHUnit{};
     Gpu::DrawingUnit  blurVUnit{};

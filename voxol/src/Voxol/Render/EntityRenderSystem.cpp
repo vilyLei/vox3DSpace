@@ -11,15 +11,16 @@ EntityRenderSystem::SP EntityRenderSystem::make()
 
 void EntityRenderSystem::initalize()
 {
-    if (mFbo)
-        return;
+    //if (mFbo)
+    //    return;
+    //mFbo = Draw::OglFbo::make();
+    //mFbo->init(GL_ZERO);
 
-    mFbo = Draw::OglFbo::make();
-    mFbo->init(GL_ZERO);
     Render::Gpu::buildTexDrawUnitWithTex(rttUnit, GL_ZERO, true);
     Render::Gpu::buildTexDrawUnitWithTexBlur(blurHUnit, GL_ZERO, true, 0);
     Render::Gpu::buildTexDrawUnitWithTexBlur(blurVUnit, GL_ZERO, true, 1);
 }
+
 void EntityRenderSystem::render(const Draw::DrawContext& rctx, const Math::Mat33& vpM, const Math::Bounds& wbounds, const std::vector<ID::KeyUint64>& queriedEIds)
 {
     if (!entityStorage)
@@ -204,10 +205,16 @@ bool EntityRenderSystem::drawUnit(const Draw::DrawContext& rctx, const Component
         clearParam.clearColor = {0,0,0,0};
         auto drawParam = rctx.drawParam;
         auto vp        = rctx.clearParam.viewport;
-        /*
-        mFbo->bindFBO();
-        mFbo->bindTextureAt(rttUnit.getTextureAt(0), 0, gridSize, gridSize);
-        mFbo->renderBegin(clearParam);
+        ///*
+        //mFbo->bindFBO();
+        //mFbo->bindTextureAt(rttUnit.getTextureAt(0), 0, gridSize, gridSize);
+        //mFbo->renderBegin(clearParam);
+
+        Render::Draw::OglTextureUnit texUnit{0, gridSize, gridSize, rttUnit.getTextureAt(0)};
+        Render::Draw::FBOContext     fboCtx;
+        fboCtx.clearParam = clearParam;
+        fboCtx.texUnits   = {texUnit};
+        rctx.pushFBOCtx(fboCtx);
 
         drawUnit.blendMode = 1;
         drawUnit.setColor(tempColor);
@@ -215,8 +222,12 @@ bool EntityRenderSystem::drawUnit(const Draw::DrawContext& rctx, const Component
         drawUnit.mvp    = vpMRtt;
         drawUnit.draw();
 
-        mFbo->unbindFBO(rctx.clearParam, true);
-        Render::Gpu::buildTexDrawUnitWithTex(rttUnit, mFbo->getTextureAt(0), true);
+        rctx.renderEndWithFBOCtx();
+        rctx.popFBOCtx();
+        Gpu::buildTexDrawUnitWithTex(rttUnit, rctx.getFBOTextureAt(0), true);
+
+        //mFbo->unbindFBO(rctx.clearParam, true);
+        //Render::Gpu::buildTexDrawUnitWithTex(rttUnit, mFbo->getTextureAt(0), true);
         //*/
         return false;
     }
