@@ -216,7 +216,7 @@ bool EntityRenderSystem::drawUnit(const Draw::DrawContext& rctx, const Component
 
         clearParam.clearColor = {0, 0, 0, 0};
 
-        ///*
+        //*
         //mFbo->bindFBO();
         //mFbo->bindTextureAt(rttUnit.getTextureAt(0), 0, gridSize, gridSize);
         //mFbo->renderBegin(clearParam);

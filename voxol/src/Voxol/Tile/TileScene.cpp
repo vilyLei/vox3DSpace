@@ -1,5 +1,6 @@
 #include "TileScene.h"
 #include "../Math/MathDef.h"
+#include "../base/ScopeGuard.h"
 
 namespace Voxol::Tile
 {
@@ -73,6 +74,30 @@ void TileScene::buildGridContent(Grid::Unit& unit, const Render::Draw::DrawConte
     viewM.setXY(-pos.x * scale, -pos.y * scale);
     vpMat.append(viewM);
 
+    
+    auto&& guard = Base::Scope::make_scope_enter_and_exit_guard(
+    [&]() noexcept {
+        printf("Tile rtt make_scope_enter_and_exit_guard exec enter rctx.pushFBOCtx ...\n");
+        
+        Render::Draw::OglTextureUnit texUnit{0, gridSize, gridSize, drawUnit.getTextureAt(0)};
+        Render::Draw::FBOContext     fboCtx;
+        fboCtx.viewMat = viewM;
+        //fboCtx.fbo = mFbo;
+        fboCtx.clearParam = clearParam;
+        fboCtx.texUnits   = {texUnit};
+        ctx.pushFBOCtx(fboCtx);
+        ctx.renderBeginWithFBOCtx();
+    },
+    [&]() noexcept {
+        ctx.popFBOCtx();
+        printf("Tile rtt make_scope_enter_and_exit_guard exec exit rctx.popFBOCtx ...\n");
+    });
+
+    auto&& xy = RC::rcToXY(unit.rc, currGridSize);
+    auto&& vb = Math::VxRect::makeXYWH(xy.x, xy.y, currGridSize, currGridSize);
+    ctx.drawCall(vb, vpMat);
+    Render::Gpu::buildTexDrawUnitWithTex(drawUnit, ctx.getFBOTextureAt(0), true);
+    /*
     Render::Draw::OglTextureUnit texUnit{0, gridSize, gridSize, drawUnit.getTextureAt(0)};
     Render::Draw::FBOContext fboCtx;
     fboCtx.viewMat = viewM;
@@ -107,6 +132,7 @@ void TileScene::buildGridContent(Grid::Unit& unit, const Render::Draw::DrawConte
 
     printf("tile B rctx.hasFBOCtx(): %d\n", ctx.hasFBOCtx());
     printf("Tile BBB RC(%lld, %lld)\n---------------------\n", unit.rc.r, unit.rc.c);
+    //*/
 }
 
 
