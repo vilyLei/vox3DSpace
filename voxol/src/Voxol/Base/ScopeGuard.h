@@ -10,22 +10,22 @@ class ScopeGuardT
 {
 public:
     explicit ScopeGuardT(F&& f) noexcept :
-        func_(std::forward<F>(f)), active_(true) {}
+        targetFunc(std::forward<F>(f)), active(true) {}
     ~ScopeGuardT() noexcept
     {
-        if (active_) func_();
+        if (active) targetFunc();
     }
     ScopeGuardT(const ScopeGuardT&)            = delete;
     ScopeGuardT& operator=(const ScopeGuardT&) = delete;
     ScopeGuardT(ScopeGuardT&& other) noexcept
         :
-        func_(std::move(other.func_)), active_(other.active_) { other.active_ = false; }
+        targetFunc(std::move(other.targetFunc)), active(other.active) { other.active = false; }
 
-    void dismiss() noexcept { active_ = false; }
+    void dismiss() noexcept { active = false; }
 
 private:
-    F    func_;
-    bool active_;
+    F    targetFunc;
+    bool active;
 };
 
 template <class F>

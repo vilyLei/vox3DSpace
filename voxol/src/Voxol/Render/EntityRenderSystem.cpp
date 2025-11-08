@@ -1,4 +1,5 @@
 #include "EntityRenderSystem.h"
+#include "../base/ScopeGuard.h"
 
 namespace Voxol::Render
 {
@@ -224,9 +225,11 @@ bool EntityRenderSystem::drawUnit(const Draw::DrawContext& rctx, const Component
         Render::Draw::FBOContext     fboCtx;
         fboCtx.clearParam = clearParam;
         fboCtx.texUnits   = {texUnit};
+
         rctx.pushFBOCtx(fboCtx);
 
         rctx.renderBeginWithFBOCtx();
+
         auto&& fboCtxB = rctx.topFBOCtx();
         printf("render rtt fboCtxB.fbo->uid(): %d\n", fboCtxB.fbo->uid());
 
@@ -238,7 +241,11 @@ bool EntityRenderSystem::drawUnit(const Draw::DrawContext& rctx, const Component
 
         rctx.renderEndWithFBOCtx();
         Gpu::buildTexDrawUnitWithTex(rttUnit, rctx.getFBOTextureAt(0), true);
-        rctx.popFBOCtx();
+        //rctx.popFBOCtx();
+        Base::Scope::make_scope_guard([&]() {
+            printf("render rtt make_scope_guard exec rctx.popFBOCtx ...\n");
+            rctx.popFBOCtx();
+        });
 
         //mFbo->unbindFBO(rctx.clearParam, true);
         //Render::Gpu::buildTexDrawUnitWithTex(rttUnit, mFbo->getTextureAt(0), true);
