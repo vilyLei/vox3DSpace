@@ -25,16 +25,26 @@ struct PositionKey
         };
     };
 
-    PositionKey(int32_t x, int32_t y, int16_t d)
-    {
-        depth = d;
-        x   = r;
-        y   = c;
-    }
+    constexpr PositionKey() noexcept :
+        value{} {}
+    constexpr PositionKey(int32_t x_, int32_t y_, int32_t depth_) :
+        depth(depth), x(x_), y(y_) {}
 
+    static constexpr PositionKey makeWithXY(int32_t x_, int32_t y_, int32_t depth_)
+    {
+        return PositionKey{depth_, y_, x_};
+    }
+    static constexpr PositionKey makeWithRC(int32_t r_, int32_t c_, int32_t level_)
+    {
+        return PositionKey{level_, r_, c_};
+    }
     constexpr bool operator==(const PositionKey& other) const noexcept
     {
         return value == other.value;
+    }
+    constexpr bool operator!=(const PositionKey& other) const noexcept
+    {
+        return value != other.value;
     }
 
     constexpr bool operator<(const PositionKey& other) const noexcept
