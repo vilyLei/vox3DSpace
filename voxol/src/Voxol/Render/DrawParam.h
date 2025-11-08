@@ -31,7 +31,7 @@ struct ClearParams
     void       apply() const;
 };
 
-struct TextureUnit
+struct OglTextureUnit
 {
     uint32_t index   = 0;
     uint32_t width   = 0;

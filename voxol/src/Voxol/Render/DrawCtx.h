@@ -17,7 +17,9 @@ namespace Draw
 
 struct FBOContext
 {
-
+    OglFbo::SP fbo;
+    ClearParams clearParam{};
+    std::vector<OglTextureUnit> textures;
 };
 struct DrawContext
 {
@@ -25,8 +27,59 @@ struct DrawContext
 
     ClearParams  clearParam{};
     DrawParams   drawParam{};
+
     DrawCallType drawCall;
     DrawQueryType drawQueryCall;
+
+    void bindFBOCtx() {
+        auto fctx = fboCtxStack.back();
+        fctx.fbo->bindFBO();
+    }
+    void renderBeginWithFBOCtx()
+    {
+        auto fctx = fboCtxStack.back();
+        fctx.fbo->bindFBO();
+        auto texIndex = 0;
+        auto& tex      = fctx.textures[0];
+        fctx.fbo->bindTextureAt(tex.texture, tex.index, tex.width, tex.height);
+        fctx.fbo->renderBegin(fctx.clearParam);
+    }
+
+    void renderEndWithFBOCtx()
+    {
+        auto fctx = fboCtxStack.back();
+        fctx.fbo->bindFBO();
+        auto  texIndex = 0;
+        auto& tex      = fctx.textures[0];
+        if (fboCtxStack.size() > 1)
+        {
+            auto&& preFCtx = fboCtxStack[fboCtxStack.size() - 2];
+            fctx.fbo->unbindFBO(preFCtx.clearParam, tex.mipmap);
+            return;
+        }
+        fctx.fbo->unbindFBO(clearParam, tex.mipmap);
+    }
+    bool hasFBOCtx() {
+        return fboCtxStack.empty();
+    }
+    bool hasNotFBOCtx()
+    {
+        return !fboCtxStack.empty();
+    }
+
+    void pushFBOCtx(const FBOContext& fboCtx)
+    {
+        fboCtxStack.emplace_back(fboCtx);
+    }
+    void popFBOCtx()
+    {
+        fboCtxStack.pop_back();
+    }
+    const FBOContext& topFBOCtx()
+    {
+        return fboCtxStack.back();
+    }
+
     float        zoom = 1;
     bool        dirty = 1;
 };
