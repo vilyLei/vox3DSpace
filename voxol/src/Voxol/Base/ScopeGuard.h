@@ -21,6 +21,11 @@ public:
         :
         targetFunc(std::move(other.targetFunc)), active(other.active) { other.active = false; }
 
+    void exec() noexcept
+    {
+        active = false;
+        targetFunc();
+    }
     void dismiss() noexcept { active = false; }
 
 private:
