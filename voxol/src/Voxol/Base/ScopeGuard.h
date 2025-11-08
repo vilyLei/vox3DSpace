@@ -13,7 +13,7 @@ public:
         targetFunc(std::forward<F>(f)), active(true) {}
     ~ScopeGuardT() noexcept
     {
-        if (active) targetFunc();
+        if (active && isCallable()) targetFunc();
     }
     ScopeGuardT(const ScopeGuardT&)            = delete;
     ScopeGuardT& operator=(const ScopeGuardT&) = delete;
@@ -24,13 +24,30 @@ public:
     void exec() noexcept
     {
         active = false;
-        targetFunc();
+        if (isCallable())
+            targetFunc();
+            
     }
     void dismiss() noexcept { active = false; }
 
 private:
     F    targetFunc;
     bool active;
+    constexpr bool isCallable() const noexcept
+    {
+        if constexpr (requires(const F& f) { static_cast<bool>(f); })
+        {
+            return static_cast<bool>(targetFunc);
+        }
+        else if constexpr (std::is_pointer_v<F>)
+        {
+            return targetFunc != nullptr;
+        }
+        else
+        {
+            return true;
+        }
+    }
 };
 
 template <class F>
