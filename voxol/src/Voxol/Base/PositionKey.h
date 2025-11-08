@@ -31,6 +31,16 @@ struct PositionKey
         x   = r;
         y   = c;
     }
+
+    constexpr bool operator==(const PositionKey& other) const noexcept
+    {
+        return value == other.value;
+    }
+
+    constexpr bool operator<(const PositionKey& other) const noexcept
+    {
+        return value < other.value;
+    }
 };
 
 } // namespace Voxol::Base

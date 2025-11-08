@@ -14,7 +14,6 @@ namespace Voxol::Render
 {
 namespace ID
 {
-// 定义entity id为28bits的uint32_t类型
 
 // 28-bit invalid ID
 constexpr uint32_t INVALID_ID        = 0x0FFFFFFF;
