@@ -55,7 +55,12 @@ void TileScene::addDirtyBounds(const Math::Bounds& bounds, int phase)
 
 void TileScene::buildGridContent(Grid::Unit& unit, const Render::Draw::DrawContext& ctx)
 {
-
+    //auto pflag = unit.rc.r == 2 && unit.rc.c == 1;
+    //pflag = pflag || unit.rc.r == 1 && unit.rc.c == 0;
+    //if (!pflag)
+    //{
+    //    return;
+    //}
     auto&  drawUnit = unit.drawUnit;
     auto&& pos      = drawUnit.objMat.getXY();
 
@@ -75,10 +80,10 @@ void TileScene::buildGridContent(Grid::Unit& unit, const Render::Draw::DrawConte
     fboCtx.clearParam = clearParam;
     fboCtx.texUnits   = {texUnit};
 
-    //printf("Tile AAA RC(%lld, %lld)\n", unit.rc.r, unit.rc.c);
+    printf("Tile AAA RC(%lld, %lld)\n", unit.rc.r, unit.rc.c);
+    printf("tile A rctx.hasFBOCtx(): %d\n", ctx.hasFBOCtx());
     ctx.pushFBOCtx(fboCtx);
 
-    //printf("tile rctx.hasFBOCtx(): %d\n", ctx.hasFBOCtx());
     //mFbo->bindFBO();
     //mFbo->bindTextureAt(drawUnit.getTextureAt(0), 0, gridSize, gridSize);
     //mFbo->renderBegin(clearParam);
@@ -99,7 +104,9 @@ void TileScene::buildGridContent(Grid::Unit& unit, const Render::Draw::DrawConte
     //Render::Gpu::buildTexDrawUnitWithTex(drawUnit, mFbo->getTextureAt(0), true);
     Render::Gpu::buildTexDrawUnitWithTex(drawUnit, ctx.getFBOTextureAt(0), true);
     ctx.popFBOCtx();
-    //printf("Tile BBB RC(%lld, %lld)\n---------------------\n", unit.rc.r, unit.rc.c);
+
+    printf("tile B rctx.hasFBOCtx(): %d\n", ctx.hasFBOCtx());
+    printf("Tile BBB RC(%lld, %lld)\n---------------------\n", unit.rc.r, unit.rc.c);
 }
 
 

@@ -185,9 +185,7 @@ bool EntityRenderSystem::drawUnit(const Draw::DrawContext& rctx, const Component
     if (entity.id == 2)
     {
         tempColor = 0xffaaaa00;
-        auto rttBuild = [&]() {
-
-        };
+        //auto rttBuild = [&]() {};
 
         vb.outset(30, 30);
         vb.floatToRound();
@@ -196,24 +194,27 @@ bool EntityRenderSystem::drawUnit(const Draw::DrawContext& rctx, const Component
         Math::Mat33 vpMRtt;
 
         vpMRtt.ortho(gridSize, gridSize);
-        auto        scale = 1.0f;
-        Math::Mat33 viewM;
-        viewM.setScaleXY(scale, scale);
-        viewM.setXY(-pos.x * scale, -pos.y * scale);
+        
         //printf("render rctx.hasFBOCtx(): %d\n", rctx.hasFBOCtx());
         if (rctx.hasFBOCtx())
         {
             auto vm = rctx.topFBOCtx().viewMat;
+
+            Math::Mat33 viewM = Math::Mat33::makeTranslate(-20,0);
+            vm.append(viewM);
             vpMRtt.append(vm);
         }
         else
         {
+            auto        scale = 1.0f;
+            Math::Mat33 viewM;
+            viewM.setScaleXY(scale, scale);
+            viewM.setXY(-pos.x * scale, -pos.y * scale);
             vpMRtt.append(viewM);
         }
 
         clearParam.clearColor = {0,0,0,0};
-        auto drawParam = rctx.drawParam;
-        auto vp        = rctx.clearParam.viewport;
+
         ///*
         //mFbo->bindFBO();
         //mFbo->bindTextureAt(rttUnit.getTextureAt(0), 0, gridSize, gridSize);
@@ -225,6 +226,10 @@ bool EntityRenderSystem::drawUnit(const Draw::DrawContext& rctx, const Component
         fboCtx.texUnits   = {texUnit};
         rctx.pushFBOCtx(fboCtx);
 
+        rctx.renderBeginWithFBOCtx();
+        auto&& fboCtxB = rctx.topFBOCtx();
+        printf("render rtt fboCtxB.fbo->uid(): %d\n", fboCtxB.fbo->uid());
+
         drawUnit.blendMode = 1;
         drawUnit.setColor(tempColor);
         drawUnit.objMat = wM;
@@ -232,14 +237,21 @@ bool EntityRenderSystem::drawUnit(const Draw::DrawContext& rctx, const Component
         drawUnit.draw();
 
         rctx.renderEndWithFBOCtx();
-        rctx.popFBOCtx();
         Gpu::buildTexDrawUnitWithTex(rttUnit, rctx.getFBOTextureAt(0), true);
+        rctx.popFBOCtx();
 
         //mFbo->unbindFBO(rctx.clearParam, true);
         //Render::Gpu::buildTexDrawUnitWithTex(rttUnit, mFbo->getTextureAt(0), true);
         //*/
-        return false;
+
+        //drawUnit.blendMode = 1;
+        //drawUnit.setColor(tempColor);
+        //drawUnit.objMat = wM;
+        //drawUnit.mvp    = vpM;
+        //drawUnit.draw();
+        return true;
     }
+    printf("render curr ...\n");
     drawUnit.blendMode = 1;
     drawUnit.setColor(tempColor);
     drawUnit.objMat = wM;

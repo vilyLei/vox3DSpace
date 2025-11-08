@@ -7,6 +7,7 @@ namespace Draw
 
 void FBOContext::bindFBO(bool onlyChangeViewport) const
 {
+    printf("FBOContext::bindFBO() fbo(%d), onlyChangeViewport: %d\n", fbo->uid(), onlyChangeViewport);
     fbo->bindFBO();
     for (auto& tex : texUnits)
     {
@@ -23,6 +24,7 @@ void FBOContext::bindFBO(bool onlyChangeViewport) const
 }
 void FBOContext::unbindFBO() const
 {
+    printf("FBOContext::unbindFBO() fbo(%d), texUnits.size(): %lld\n", fbo->uid(), texUnits.size());
     if (texUnits.empty())
     {
         auto& tex = texUnits[0];
