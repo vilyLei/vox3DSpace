@@ -79,27 +79,17 @@ void DrawContext::renderEndWithFBOCtx() const
 {
     auto&  stack = fboCtxStack.ctxStack;
     auto&& fctx  = stack.back();
-    //fctx.fbo->bindFBO();
-    //auto  texIndex = 0;
-    //auto& tex      = fctx.textures[texIndex];
+
     if (stack.size() > 1)
     {
         auto&& preFCtx = stack[stack.size() - 2];
 
-        //fctx.fbo->unbindFBOWithViewport(preFCtx.clearParam, tex.mipmap);
-        //fctx.fbo->unbindFBO(tex.mipmap);
-        //preFCtx.fbo->bindFBO();
-        //preFCtx.applyViewport();
         fctx.unbindFBO();
         preFCtx.bindFBO(true);
 
-        //for (auto& tex : preFCtx.textures)
-        //{
-        //    preFCtx.fbo->bindTextureAt(tex.texture, tex.index, tex.width, tex.height);
-        //}
         return;
     }
-    //fctx.fbo->unbindFBOWithViewport(clearParam, tex.mipmap);
+
     fctx.unbindFBO();
     clearParam.applyViewport();
 }
@@ -116,7 +106,26 @@ bool DrawContext::hasNotFBOCtx() const
 void DrawContext::pushFBOCtx(const FBOContext& fboCtx) const
 {
     auto& stack = fboCtxStack.ctxStack;
-    stack.emplace_back(fboCtx);
+    if (fboCtx.fbo)
+    {
+        stack.emplace_back(fboCtx);
+    }
+    else {
+
+        auto&      fboStack = fboCtxStack.fboStack;
+        OglFbo::SP fbo;
+        if (fboStack.empty())
+        {
+            fbo = OglFbo::make();
+            fbo->init(GL_ZERO);
+        }
+        else {
+            fbo = fboStack.back();
+            fboStack.pop_back();
+        }
+        FBOContext ctx = fboCtx;
+        ctx.fbo        = fbo;
+    }
 }
 void DrawContext::popFBOCtx() const
 {

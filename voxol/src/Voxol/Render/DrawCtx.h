@@ -32,6 +32,7 @@ struct FBOContext
 struct FBOCtxStack
 {
     uint32_t                depth = 0;
+    std::vector<OglFbo::SP> fboStack;
     std::vector<FBOContext> ctxStack;
 };
 struct DrawContext
