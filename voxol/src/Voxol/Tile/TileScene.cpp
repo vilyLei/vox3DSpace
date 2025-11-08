@@ -6,13 +6,16 @@ namespace Voxol::Tile
 
 void TileScene::initalize()
 {
-    if (mFbo)
+    if (unitIndexPool.capacity() > 0)
     {
         return;
     }
-
-    mFbo = Render::Draw::OglFbo::make();
-    mFbo->init(GL_ZERO);
+    //if (mFbo)
+    //{
+    //    return;
+    //}
+    //mFbo = Render::Draw::OglFbo::make();
+    //mFbo->init(GL_ZERO);
 
     outlineUnit.drawUnit.vertex.toLine();
     Render::Gpu::buildBaseDrawUnit(outlineUnit.drawUnit);
@@ -70,7 +73,7 @@ void TileScene::buildGridContent(Grid::Unit& unit, const Render::Draw::DrawConte
 
     Render::Draw::OglTextureUnit texUnit{0, gridSize, gridSize, drawUnit.getTextureAt(0)};
     Render::Draw::FBOContext fboCtx;
-    fboCtx.fbo = mFbo;
+    //fboCtx.fbo = mFbo;
     fboCtx.clearParam = clearParam;
     fboCtx.texUnits   = {texUnit};
 

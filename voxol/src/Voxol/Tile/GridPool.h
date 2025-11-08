@@ -20,6 +20,7 @@ public:
     int32_t acquire();
     void    release(int32_t index);
     void    reset();
+    size_t  capacity() const;
 
 private:
     std::vector<int> used{};
@@ -43,6 +44,6 @@ private:
     std::unordered_set<GLuint> freeTextures{};
 };
 
-}
-}
+} // namespace Grid
+} // namespace Voxol::Tile
 #endif

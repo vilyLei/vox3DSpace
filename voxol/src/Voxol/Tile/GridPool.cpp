@@ -61,6 +61,11 @@ void UnitIndexPool::reset()
     }
 }
 
+size_t UnitIndexPool::capacity() const
+{
+    return freeIndices.capacity();
+}
+
 
 GLuint UnitTexPool::acquire()
 {
@@ -139,5 +144,5 @@ void UnitTexPool::dispose()
     glDeleteTextures(DISPOSE_NUM, ts.data());
     printf("UnitTexPool::dispose() call tot: %zu, freeTextures.size(): %zu\n", tot, freeTextures.size());
 }
-}
-}
+} // namespace Grid
+} // namespace Voxol::Tile

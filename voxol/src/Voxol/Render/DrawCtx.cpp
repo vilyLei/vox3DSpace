@@ -125,6 +125,7 @@ void DrawContext::pushFBOCtx(const FBOContext& fboCtx) const
         }
         FBOContext ctx = fboCtx;
         ctx.fbo        = fbo;
+        stack.emplace_back(ctx);
     }
 }
 void DrawContext::popFBOCtx() const
