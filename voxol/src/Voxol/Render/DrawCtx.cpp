@@ -23,8 +23,14 @@ void FBOContext::bindFBO(bool onlyChangeViewport) const
 }
 void FBOContext::unbindFBO() const
 {
-    auto& tex = texUnits[0];
-    fbo->unbindFBO(tex.mipmap);
+    if (texUnits.empty())
+    {
+        auto& tex = texUnits[0];
+        fbo->unbindFBO(tex.mipmap);
+    }
+    else {
+        fbo->unbindFBO(false);
+    }
 }
 void FBOContext::applyViewport() const
 {
