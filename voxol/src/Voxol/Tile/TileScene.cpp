@@ -61,15 +61,12 @@ void TileScene::buildGridContent(Grid::Unit& unit, const Render::Draw::DrawConte
 
     auto scale = gridSize / unit.areaSize;
 
-    Math::Mat33 vpM = gridProjMat;
+    Math::Mat33 vpMat = gridProjMat;
 
     Math::Mat33 viewM;
     viewM.setScaleXY(scale, scale);
     viewM.setXY(-pos.x * scale, -pos.y * scale);
-    vpM.append(viewM);
-
-    auto& drawParam = ctx.drawParam;
-    auto& vp        = ctx.clearParam.viewport;
+    vpMat.append(viewM);
 
     Render::Draw::OglTextureUnit texUnit{0, gridSize, gridSize, drawUnit.getTextureAt(0)};
     Render::Draw::FBOContext fboCtx;
@@ -87,7 +84,7 @@ void TileScene::buildGridContent(Grid::Unit& unit, const Render::Draw::DrawConte
 
     auto&& xy = RC::rcToXY(unit.rc, currGridSize);
     auto&& vb = Math::VxRect::makeXYWH(xy.x, xy.y, currGridSize, currGridSize);
-    ctx.drawCall(vb, vpM);
+    ctx.drawCall(vb, vpMat);
     //mFbo->unbindFBO(ctx.clearParam, true);
     //mFbo->unbindFBOWithViewport(ctx.clearParam, true);
     ctx.renderEndWithFBOCtx();
