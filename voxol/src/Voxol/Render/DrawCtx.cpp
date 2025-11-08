@@ -55,7 +55,7 @@ void FBOContext::buildTexData() const
     if (!texUnits.empty())
     {
         auto&& tex = texUnits[0];
-        fbo->unbindFBO(tex.mipmap);
+        fbo->buildTexData(tex.mipmap);
     }
 }
 
@@ -65,7 +65,9 @@ GLuint FBOContext::getTextureAt(int index) const
         return 0;
 
     buildTexData();
-    return texUnits[index].texture;
+    auto&& tex = texUnits[index];
+    tex.texture = fbo->getTextureAt(index);
+    return tex.texture;
 }
 
 
@@ -184,7 +186,9 @@ GLuint DrawContext::getFBOTextureAt(int index) const
         return 0;
 
     auto& ctx = fboCtxStack.ctxStack.back();
-    return ctx.getTextureAt(index);
+    auto  tex = ctx.getTextureAt(index);
+    printf("DrawContext::getFBOTextureAt() tex: %d\n", tex);
+    return tex;
 }
 } // namespace Draw
 } // namespace Voxol::Render

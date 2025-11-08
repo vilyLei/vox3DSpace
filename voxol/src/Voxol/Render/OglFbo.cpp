@@ -95,6 +95,7 @@ void OglFbo::buildTexData(bool mipmap)
     if (!textureDirty || mColorTex == GL_ZERO)
         return;
 
+    printf("OglFbo::buildTexData(), fbo(%d), handle:(mFbo=%d), mColorTex: %d\n", mUid, mFbo, mColorTex);
     textureDirty = false;
     glBindTexture(GL_TEXTURE_2D, mColorTex);
 

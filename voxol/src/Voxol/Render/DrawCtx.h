@@ -20,7 +20,7 @@ struct FBOContext
     Math::Mat33                 viewMat;
     mutable OglFbo::SP          fbo;
     ClearParams                 clearParam{};
-    std::vector<OglTextureUnit> texUnits;
+    mutable std::vector<OglTextureUnit> texUnits;
 
     void bindFBO(bool onlyChangeViewport) const;
     void unbindFBO() const;
