@@ -242,8 +242,8 @@ bool EntityRenderSystem::drawUnit(const Draw::DrawContext& rctx, const Component
         rctx.renderEndWithFBOCtx();
         Gpu::buildTexDrawUnitWithTex(rttUnit, rctx.getFBOTextureAt(0), true);
         //rctx.popFBOCtx();
-        Base::Scope::make_scope_guard([&]() {
-            printf("render rtt make_scope_guard exec rctx.popFBOCtx ...\n");
+        Base::Scope::make_scope_exit_guard([&]() {
+            printf("render rtt make_scope_exit_guard exec rctx.popFBOCtx ...\n");
             rctx.popFBOCtx();
         });
 

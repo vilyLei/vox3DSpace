@@ -6,42 +6,42 @@ namespace Voxol::Base
 namespace Scope
 {
 template <class F>
-class ScopeGuardT
+class ScopeExitGuardT
 {
 public:
-    explicit ScopeGuardT(F&& f) noexcept :
-        targetFunc(std::forward<F>(f)), active(true) {}
-    ~ScopeGuardT() noexcept
+    explicit ScopeExitGuardT(F&& f) noexcept :
+        exitFunc(std::forward<F>(f)), active(true) {}
+    ~ScopeExitGuardT() noexcept
     {
-        if (active && isCallable()) targetFunc();
+        if (active && isCallable()) exitFunc();
     }
-    ScopeGuardT(const ScopeGuardT&)            = delete;
-    ScopeGuardT& operator=(const ScopeGuardT&) = delete;
-    ScopeGuardT(ScopeGuardT&& other) noexcept
+    ScopeExitGuardT(const ScopeExitGuardT&)            = delete;
+    ScopeExitGuardT& operator=(const ScopeExitGuardT&) = delete;
+    ScopeExitGuardT(ScopeExitGuardT&& other) noexcept
         :
-        targetFunc(std::move(other.targetFunc)), active(other.active) { other.active = false; }
+        exitFunc(std::move(other.exitFunc)), active(other.active) { other.active = false; }
 
     void exec() noexcept
     {
         active = false;
         if (isCallable())
-            targetFunc();
+            exitFunc();
             
     }
     void dismiss() noexcept { active = false; }
 
 private:
-    F    targetFunc;
+    F    exitFunc;
     bool active;
     constexpr bool isCallable() const noexcept
     {
         if constexpr (requires(const F& f) { static_cast<bool>(f); })
         {
-            return static_cast<bool>(targetFunc);
+            return static_cast<bool>(exitFunc);
         }
         else if constexpr (std::is_pointer_v<F>)
         {
-            return targetFunc != nullptr;
+            return exitFunc != nullptr;
         }
         else
         {
@@ -51,9 +51,9 @@ private:
 };
 
 template <class F>
-[[nodiscard]] auto make_scope_guard(F&& f) noexcept
+[[nodiscard]] auto make_scope_exit_guard(F&& f) noexcept
 {
-    return ScopeGuardT<std::decay_t<F>>(std::forward<F>(f));
+    return ScopeExitGuardT<std::decay_t<F>>(std::forward<F>(f));
 }
 } // namespace Scope
 } // namespace Voxol::Base
