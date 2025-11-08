@@ -45,10 +45,17 @@ void OglFbo::renderBegin(const Draw::ClearParams& clearParam)
 {
     clearParam.apply();
 }
+
+//void OglFbo::rebindTextureAt(GLuint fboTex, int index, int width, int height)
+//{
+//    if (mFbo == GL_ZERO)
+//        return;
+//}
+
 void OglFbo::bindTextureAt(GLuint fboTex, int index, int width, int height)
 {
     mColorTex = fboTex;
-    if (mColorTex <= GL_ZERO)
+    if (mColorTex == GL_ZERO || mFbo == GL_ZERO)
     {
         glGenTextures(1, &mColorTex);
     }
@@ -57,7 +64,6 @@ void OglFbo::bindTextureAt(GLuint fboTex, int index, int width, int height)
     {
         glBindTexture(GL_TEXTURE_2D, mColorTex);
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
-        //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mColorTex, 0);
@@ -96,6 +102,11 @@ void OglFbo::unbindFBO(const Draw::ClearParams& clearParam, bool mipmap)
     unbindFBO();
 
     clearParam.apply();
+}
+void OglFbo::unbindFBO(bool mipmap)
+{
+    buildTexData(mipmap);
+    unbindFBO();
 }
 void OglFbo::unbindFBOWithViewport(const Draw::ClearParams& clearParam, bool mipmap)
 {

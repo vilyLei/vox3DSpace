@@ -20,6 +20,10 @@ struct FBOContext
     OglFbo::SP                  fbo;
     ClearParams                 clearParam{};
     std::vector<OglTextureUnit> textures;
+
+    void applyViewport() const;
+    void applyClearColor() const;
+    void applyClearViewport() const;
 };
 struct DrawContext
 {
@@ -30,6 +34,10 @@ struct DrawContext
 
     DrawCallType  drawCall;
     DrawQueryType drawQueryCall;
+
+    void applyViewport() const;
+    void applyClearColor() const;
+    void applyClearViewport() const;
 
     void              bindFBOCtx();
     void              renderBeginWithFBOCtx();

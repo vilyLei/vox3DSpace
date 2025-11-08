@@ -32,14 +32,16 @@ public:
 
 public:
     void   init(GLuint fbo);
+    //void   rebindTextureAt(GLuint fboTex, int index, int width, int height);
     void   bindTextureAt(GLuint fboTex, int index, int width, int height);
     GLuint getTextureAt(int index) const;
-    //void   bindFBOWithHandle(GLuint fboHandle);
+
     void   bindFBO();
     void   buildTexData(bool mipmap);
     void   renderBegin(const Draw::ClearParams& clearParam);
     void   unbindFBO();
     void   unbindFBO(const Draw::ClearParams& clearParam, bool mipmap = true);
+    void   unbindFBO(bool mipmap);
     void   unbindFBOWithViewport(const Draw::ClearParams& clearParam, bool mipmap);
     void   dispose();
 

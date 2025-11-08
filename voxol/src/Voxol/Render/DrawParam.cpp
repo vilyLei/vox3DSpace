@@ -14,6 +14,12 @@ void ClearParams::applyViewport() const
 {
     glViewport(viewport.x, viewport.y, viewport.width, viewport.height);
 }
+
+void ClearParams::applyClearColor() const
+{
+    glClearColor(clearColor.r, clearColor.g, clearColor.b, clearColor.a);
+    glClear(clearMask);
+}
 void ClearParams::apply() const
 {
     glViewport(viewport.x, viewport.y, viewport.width, viewport.height);
