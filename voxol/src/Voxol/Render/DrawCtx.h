@@ -21,7 +21,7 @@ struct FBOContext
     ClearParams                 clearParam{};
     std::vector<OglTextureUnit> textures;
 
-    void bindFBO() const;
+    void bindFBO(bool onlyChangeViewport) const;
     void unbindFBO() const;
     void applyViewport() const;
     void applyClearColor() const;

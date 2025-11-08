@@ -5,14 +5,20 @@ namespace Draw
 {
 
 
-void FBOContext::bindFBO() const
+void FBOContext::bindFBO(bool onlyChangeViewport) const
 {
     fbo->bindFBO();
     for (auto& tex : textures)
     {
         fbo->bindTextureAt(tex.texture, tex.index, tex.width, tex.height);
     }
-    applyViewport();
+    if (onlyChangeViewport)
+    {
+        clearParam.applyViewport();
+    }
+    else {
+        clearParam.apply();
+    }
 }
 void FBOContext::unbindFBO() const
 {
@@ -56,25 +62,26 @@ void DrawContext::bindFBOCtx()
 }
 void DrawContext::renderBeginWithFBOCtx()
 {
-    auto fctx = fboCtxStack.back();
-    fctx.fbo->bindFBO();
-
-    for (auto& tex : fctx.textures)
-    {
-        fctx.fbo->bindTextureAt(tex.texture, tex.index, tex.width, tex.height);
-    }
-    //auto  texIndex = 0;
-    //auto& tex      = fctx.textures[texIndex];
-    //fctx.fbo->bindTextureAt(tex.texture, tex.index, tex.width, tex.height);
-    fctx.fbo->renderBegin(fctx.clearParam);
+    auto&& fctx = fboCtxStack.back();
+    fctx.bindFBO( false );
+    //fctx.fbo->bindFBO();
+    //for (auto& tex : fctx.textures)
+    //{
+    //    fctx.fbo->bindTextureAt(tex.texture, tex.index, tex.width, tex.height);
+    //}
+    ////auto  texIndex = 0;
+    ////auto& tex      = fctx.textures[texIndex];
+    ////fctx.fbo->bindTextureAt(tex.texture, tex.index, tex.width, tex.height);
+    ////fctx.fbo->renderBegin(fctx.clearParam);
+    //fctx.applyClearViewport();
 }
 
 void DrawContext::renderEndWithFBOCtx()
 {
-    auto fctx = fboCtxStack.back();
-    fctx.fbo->bindFBO();
-    auto  texIndex = 0;
-    auto& tex      = fctx.textures[texIndex];
+    auto&& fctx = fboCtxStack.back();
+    //fctx.fbo->bindFBO();
+    //auto  texIndex = 0;
+    //auto& tex      = fctx.textures[texIndex];
     if (fboCtxStack.size() > 1)
     {
         auto&& preFCtx = fboCtxStack[fboCtxStack.size() - 2];
@@ -84,7 +91,7 @@ void DrawContext::renderEndWithFBOCtx()
         //preFCtx.fbo->bindFBO();
         //preFCtx.applyViewport();
         fctx.unbindFBO();
-        preFCtx.bindFBO();
+        preFCtx.bindFBO(true);
 
         //for (auto& tex : preFCtx.textures)
         //{
