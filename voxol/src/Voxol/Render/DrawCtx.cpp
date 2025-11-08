@@ -105,7 +105,10 @@ void DrawContext::renderEndWithFBOCtx() const
 {
     auto&  stack = fboCtxStack.ctxStack;
     auto&& fctx  = stack.back();
+    fctx.unbindFBO();
+    printf("DrawContext::renderEndWithFBOCtx() ...\n");
 
+    /*
     if (stack.size() > 1)
     {
         auto&& preFCtx = stack[stack.size() - 2];
@@ -115,10 +118,10 @@ void DrawContext::renderEndWithFBOCtx() const
         preFCtx.bindFBO(true);
         return;
     }
-
     fctx.unbindFBO();
     clearParam.applyViewport();
     printf("DrawContext::renderEndWithFBOCtx() B ...\n");
+    //*/
 }
 bool DrawContext::hasFBOCtx() const
 {
@@ -172,7 +175,19 @@ void DrawContext::popFBOCtx() const
         fboCtxStack.fboStack.emplace_back(fbo);
     }
     stack.pop_back();
-    printf("DrawContext::popFBOCtx() ...\n");
+
+    printf("DrawContext::popFBOCtx() stack.empty(): %d\n", stack.empty());
+
+    if (stack.empty())
+    {
+        printf("DrawContext::popFBOCtx() switch to background buffer ...\n");
+        clearParam.applyViewport();
+        return;
+    }
+
+    auto&& nextCtx = stack.back();
+    printf("DrawContext::popFBOCtx() switch to orther rtt ...\n");
+    nextCtx.bindFBO(true);
 }
 const FBOContext& DrawContext::topFBOCtx() const
 {
