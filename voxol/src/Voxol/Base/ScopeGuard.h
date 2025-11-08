@@ -55,6 +55,78 @@ template <class F>
 {
     return ScopeExitGuardT<std::decay_t<F>>(std::forward<F>(f));
 }
+
+
+
+template <class F>
+class ScopeEnterAndExitGuardT
+{
+public:
+    explicit ScopeEnterAndExitGuardT(F&& enter_f, F&& exit_f) noexcept :
+        enterFunc(std::forward<F>(enter_f)), exitFunc(std::forward<F>(exit_f)), active(true)
+    {
+        if (isEnterCallable()) {
+            enterFunc();
+        }
+    }
+    ~ScopeEnterAndExitGuardT() noexcept
+    {
+        if (active && isExitCallable()) exitFunc();
+    }
+    ScopeEnterAndExitGuardT(const ScopeEnterAndExitGuardT&) = delete;
+    ScopeEnterAndExitGuardT& operator=(const ScopeEnterAndExitGuardT&) = delete;
+    ScopeEnterAndExitGuardT(ScopeEnterAndExitGuardT&& other) noexcept
+        :
+        exitFunc(std::move(other.exitFunc)), active(other.active) { other.active = false; }
+
+    void execExitFunc() noexcept
+    {
+        active = false;
+        if (isExitCallable())
+            exitFunc();
+    }
+    void dismissExitFunc() noexcept { active = false; }
+
+private:
+    F              enterFunc;
+    F              exitFunc;
+    bool           active;
+    constexpr bool isEnterCallable() const noexcept
+    {
+        if constexpr (requires(const F& f) { static_cast<bool>(f); })
+        {
+            return static_cast<bool>(enterFunc);
+        }
+        else if constexpr (std::is_pointer_v<F>)
+        {
+            return enterFunc != nullptr;
+        }
+        else
+        {
+            return true;
+        }
+    }
+    constexpr bool isExitCallable() const noexcept
+    {
+        if constexpr (requires(const F& f) { static_cast<bool>(f); })
+        {
+            return static_cast<bool>(exitFunc);
+        }
+        else if constexpr (std::is_pointer_v<F>)
+        {
+            return exitFunc != nullptr;
+        }
+        else
+        {
+            return true;
+        }
+    }
+};
+template <class F>
+[[nodiscard]] auto make_scope_enter_and_exit_guard(F&& enter_f, F&& exit_f) noexcept
+{
+    return ScopeEnterAndExitGuardT<std::decay_t<F>>(std::forward<F>(enter_f), std::forward<F>(exit_f));
+}
 } // namespace Scope
 } // namespace Voxol::Base
 #endif
