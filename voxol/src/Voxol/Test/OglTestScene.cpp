@@ -259,7 +259,11 @@ void OglTestScene::renderVoass(const Math::Mat33& vpMat)
     auto& params   = ctx.drawParam;
     auto& viewport = ctx.clearParam.viewport;
 
-    mFbo.init(GL_ZERO);
+    if (mFbo)
+        return;
+
+    mFbo = Render::Draw::OglFbo::make();
+    mFbo->init(GL_ZERO);
 
     auto useTexSampleDrawig = true;
     if (useTexSampleDrawig)
@@ -286,16 +290,16 @@ void OglTestScene::renderVoass(const Math::Mat33& vpMat)
         clearParam.viewport   = {0, 0, fboW, fboH};
         clearParam.clearColor = {0.1, 0.3, 0.1, 1};
 
-        mFbo.bindFBO();
-        mFbo.bindTextureAt(tile0Unit.getTextureAt(0), fboTexIndex, fboW, fboH);
+        mFbo->bindFBO();
+        mFbo->bindTextureAt(tile0Unit.getTextureAt(0), fboTexIndex, fboW, fboH);
         //mFbo.renderBegin({0, 0, fboW, fboH}, {0.1, 0.3, 0.1, 1});
-        mFbo.renderBegin(clearParam);
+        mFbo->renderBegin(clearParam);
 
         renderSdfUnits(fboVPM);
 
-        mFbo.unbindFBO(ctx.clearParam);
+        mFbo->unbindFBO(ctx.clearParam);
 
-        Render::Gpu::buildTexDrawUnitWithTex(tile0Unit, mFbo.getTextureAt(fboTexIndex), true);
+        Render::Gpu::buildTexDrawUnitWithTex(tile0Unit, mFbo->getTextureAt(fboTexIndex), true);
 
         fboW = fboH = 256;
         tile0Unit.objMat.setTo(0, 0, fboW, fboH);

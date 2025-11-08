@@ -19,6 +19,14 @@ namespace Draw
 class OglFbo
 {
 public:
+    using SP = std::shared_ptr<OglFbo>;
+    using WP = std::weak_ptr<OglFbo>;
+    using UP = std::unique_ptr<OglFbo>;
+
+public:
+    static OglFbo::SP make();
+
+public:
     OglFbo() = default;
     virtual ~OglFbo();
 

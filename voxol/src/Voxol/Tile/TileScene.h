@@ -39,7 +39,7 @@ private:
     void updateDirtyGrid(const Render::Draw::DrawContext& ctx);
     void updateEmptyGrid(const Render::Draw::DrawContext& ctx);
 
-    Render::Draw::OglFbo mFbo{};
+    Render::Draw::OglFbo::SP mFbo{};
 
     int gridSize = 256;
     float currGridSize = 256;

@@ -41,10 +41,10 @@ private:
 
 private:
     Draw::ClearParams clearParam{};
-    Draw::OglFbo           mFbo{};
-    Gpu::DrawingUnit rttUnit{};
-    Gpu::DrawingUnit blurHUnit{};
-    Gpu::DrawingUnit blurVUnit{};
+    Draw::OglFbo::SP  mFbo{};
+    Gpu::DrawingUnit  rttUnit{};
+    Gpu::DrawingUnit  blurHUnit{};
+    Gpu::DrawingUnit  blurVUnit{};
 };
 } // namespace Voxol::Render
 #endif

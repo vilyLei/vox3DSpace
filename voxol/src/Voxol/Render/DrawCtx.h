@@ -7,13 +7,22 @@
 #include "DrawParam.h"
 #include <GL/glew.h>
 #include <glfw3.h>
+#include <vector>
+#include "OglFbo.h"
 
 namespace Voxol::Render
 {
 namespace Draw
 {
+
+struct FBOContext
+{
+
+};
 struct DrawContext
 {
+    std::vector<FBOContext> fboCtxStack;
+
     ClearParams  clearParam{};
     DrawParams   drawParam{};
     DrawCallType drawCall;

@@ -11,8 +11,11 @@ EntityRenderSystem::SP EntityRenderSystem::make()
 
 void EntityRenderSystem::initalize()
 {
+    if (mFbo)
+        return;
 
-    mFbo.init(GL_ZERO);
+    mFbo = Draw::OglFbo::make();
+    mFbo->init(GL_ZERO);
     Render::Gpu::buildTexDrawUnitWithTex(rttUnit, GL_ZERO, true);
     Render::Gpu::buildTexDrawUnitWithTexBlur(blurHUnit, GL_ZERO, true, 0);
     Render::Gpu::buildTexDrawUnitWithTexBlur(blurVUnit, GL_ZERO, true, 1);
@@ -184,6 +187,7 @@ bool EntityRenderSystem::drawUnit(const Draw::DrawContext& rctx, const Component
         auto rttBuild = [&]() {
 
         };
+
         vb.outset(30, 30);
         vb.floatToRound();
         auto        pos      = vb.min;
@@ -201,9 +205,9 @@ bool EntityRenderSystem::drawUnit(const Draw::DrawContext& rctx, const Component
         auto drawParam = rctx.drawParam;
         auto vp        = rctx.clearParam.viewport;
         /*
-        mFbo.bindFBO();
-        mFbo.bindTextureAt(rttUnit.getTextureAt(0), 0, gridSize, gridSize);
-        mFbo.renderBegin(clearParam);
+        mFbo->bindFBO();
+        mFbo->bindTextureAt(rttUnit.getTextureAt(0), 0, gridSize, gridSize);
+        mFbo->renderBegin(clearParam);
 
         drawUnit.blendMode = 1;
         drawUnit.setColor(tempColor);
@@ -211,8 +215,8 @@ bool EntityRenderSystem::drawUnit(const Draw::DrawContext& rctx, const Component
         drawUnit.mvp    = vpMRtt;
         drawUnit.draw();
 
-        mFbo.unbindFBO(rctx.clearParam, true);
-        Render::Gpu::buildTexDrawUnitWithTex(rttUnit, mFbo.getTextureAt(0), true);
+        mFbo->unbindFBO(rctx.clearParam, true);
+        Render::Gpu::buildTexDrawUnitWithTex(rttUnit, mFbo->getTextureAt(0), true);
         //*/
         return false;
     }

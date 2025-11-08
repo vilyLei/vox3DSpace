@@ -1,13 +1,21 @@
 #include "OglFbo.h"
+
 namespace Voxol::Render
 {
-
 namespace Draw
 {
+
+OglFbo::SP OglFbo::make()
+{
+    auto sp = std::make_shared<OglFbo>();
+    return sp;
+}
+
 OglFbo::~OglFbo()
 {
     dispose();
 }
+
 void OglFbo::init(GLuint fbo)
 {
     if (fbo < 1)
