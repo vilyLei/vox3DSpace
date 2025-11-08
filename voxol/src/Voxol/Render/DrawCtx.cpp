@@ -27,11 +27,12 @@ void FBOContext::unbindFBO() const
     printf("FBOContext::unbindFBO() fbo(%d), texUnits.size(): %lld\n", fbo->uid(), texUnits.size());
     if (texUnits.empty())
     {
-        auto& tex = texUnits[0];
-        fbo->unbindFBO(tex.mipmap);
-    }
-    else {
         fbo->unbindFBO(false);
+    }
+    else
+    {
+        auto&& tex = texUnits[0];
+        fbo->unbindFBO(tex.mipmap);
     }
 }
 void FBOContext::applyViewport() const
@@ -49,8 +50,21 @@ void FBOContext::applyClearViewport() const
     clearParam.apply();
 }
 
+void FBOContext::buildTexData() const
+{
+    if (!texUnits.empty())
+    {
+        auto&& tex = texUnits[0];
+        fbo->unbindFBO(tex.mipmap);
+    }
+}
+
 GLuint FBOContext::getTextureAt(int index) const
 {
+    if (texUnits.empty() || index < 0 || index >= texUnits.size())
+        return 0;
+
+    buildTexData();
     return texUnits[index].texture;
 }
 
@@ -78,6 +92,8 @@ void DrawContext::bindFBOCtx() const
 }
 void DrawContext::renderBeginWithFBOCtx() const
 {
+    printf("DrawContext::renderBeginWithFBOCtx() ...\n");
+
     auto&  stack = fboCtxStack.ctxStack;
     auto&& fctx  = stack.back();
     fctx.bindFBO(false);
@@ -93,13 +109,14 @@ void DrawContext::renderEndWithFBOCtx() const
         auto&& preFCtx = stack[stack.size() - 2];
 
         fctx.unbindFBO();
+        printf("DrawContext::renderEndWithFBOCtx() A ...\n");
         preFCtx.bindFBO(true);
-
         return;
     }
 
     fctx.unbindFBO();
     clearParam.applyViewport();
+    printf("DrawContext::renderEndWithFBOCtx() B ...\n");
 }
 bool DrawContext::hasFBOCtx() const
 {
@@ -113,6 +130,7 @@ bool DrawContext::hasNotFBOCtx() const
 }
 void DrawContext::pushFBOCtx(const FBOContext& fboCtx) const
 {
+    printf("DrawContext::pushFBOCtx() ...\n");
     auto& stack = fboCtxStack.ctxStack;
     if (fboCtx.fbo)
     {
@@ -139,11 +157,20 @@ void DrawContext::pushFBOCtx(const FBOContext& fboCtx) const
 void DrawContext::popFBOCtx() const
 {
     auto& stack = fboCtxStack.ctxStack;
-    auto&& fbo   = stack.back().fbo;
+    if (stack.empty())
+        return;
+
+    auto&& ctx   = stack.back();
+    auto&& fbo   = ctx.fbo;
+    if (fbo->fboBinding())
+    {
+        renderEndWithFBOCtx();
+    }
     if (fbo) {
         fboCtxStack.fboStack.emplace_back(fbo);
     }
     stack.pop_back();
+    printf("DrawContext::popFBOCtx() ...\n");
 }
 const FBOContext& DrawContext::topFBOCtx() const
 {

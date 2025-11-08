@@ -4,9 +4,9 @@ namespace Voxol::Render
 {
 namespace Draw
 {
-int        OglFbo::sUid = 0;
+int OglFbo::sUid = 0;
 
- OglFbo::SP OglFbo::make()
+OglFbo::SP OglFbo::make()
 {
     auto sp = std::make_shared<OglFbo>();
     return sp;
@@ -42,9 +42,27 @@ GLuint OglFbo::getTextureAt(int index) const
     return mColorTex;
 }
 
+bool OglFbo::fboBinding() const
+{
+    return fboBindingFlag;
+}
 void OglFbo::bindFBO()
 {
+    if (fboBindingFlag)
+        return;
+
+    fboBindingFlag = true;
     glBindFramebuffer(GL_FRAMEBUFFER, mFbo);
+}
+
+void OglFbo::unbindFBO()
+{
+    if (!fboBindingFlag)
+        return;
+
+    fboBindingFlag = false;
+    glBindTexture(GL_TEXTURE_2D, GL_ZERO);
+    glBindFramebuffer(GL_FRAMEBUFFER, GL_ZERO);
 }
 void OglFbo::renderBegin(const Draw::ClearParams& clearParam)
 {
@@ -53,28 +71,31 @@ void OglFbo::renderBegin(const Draw::ClearParams& clearParam)
 
 void OglFbo::bindTextureAt(GLuint fboTex, int index, int width, int height)
 {
+
+    mBindTexTimes++;
     mColorTex = fboTex;
     if (mColorTex == GL_ZERO || mFbo == GL_ZERO)
     {
         glGenTextures(1, &mColorTex);
     }
 
-    if (mColorTex > GL_ZERO)
-    {
-        glBindTexture(GL_TEXTURE_2D, mColorTex);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mColorTex, 0);
-    }
-
-    mBindTexTimes++;
-}
-void OglFbo::buildTexData(bool mipmap)
-{
     if (mColorTex == GL_ZERO)
         return;
 
+    textureDirty = true;
+
+    glBindTexture(GL_TEXTURE_2D, mColorTex);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mColorTex, 0);
+}
+void OglFbo::buildTexData(bool mipmap)
+{
+    if (!textureDirty || mColorTex == GL_ZERO)
+        return;
+
+    textureDirty = false;
     glBindTexture(GL_TEXTURE_2D, mColorTex);
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -89,11 +110,6 @@ void OglFbo::buildTexData(bool mipmap)
     {
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     }
-}
-void OglFbo::unbindFBO()
-{
-    glBindTexture(GL_TEXTURE_2D, GL_ZERO);
-    glBindFramebuffer(GL_FRAMEBUFFER, GL_ZERO);
 }
 void OglFbo::unbindFBO(const Draw::ClearParams& clearParam, bool mipmap)
 {

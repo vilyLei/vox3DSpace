@@ -195,13 +195,13 @@ bool EntityRenderSystem::drawUnit(const Draw::DrawContext& rctx, const Component
         Math::Mat33 vpMRtt;
 
         vpMRtt.ortho(gridSize, gridSize);
-        
+
         //printf("render rctx.hasFBOCtx(): %d\n", rctx.hasFBOCtx());
         if (rctx.hasFBOCtx())
         {
             auto vm = rctx.topFBOCtx().viewMat;
 
-            Math::Mat33 viewM = Math::Mat33::makeTranslate(-20,0);
+            Math::Mat33 viewM = Math::Mat33::makeTranslate(-20, 0);
             vm.append(viewM);
             vpMRtt.append(vm);
         }
@@ -214,30 +214,30 @@ bool EntityRenderSystem::drawUnit(const Draw::DrawContext& rctx, const Component
             vpMRtt.append(viewM);
         }
 
-        clearParam.clearColor = {0,0,0,0};
+        clearParam.clearColor = {0, 0, 0, 0};
 
-        ///*
+        /*
         //mFbo->bindFBO();
         //mFbo->bindTextureAt(rttUnit.getTextureAt(0), 0, gridSize, gridSize);
         //mFbo->renderBegin(clearParam);
 
-        Render::Draw::OglTextureUnit texUnit{0, gridSize, gridSize, rttUnit.getTextureAt(0)};
-        Render::Draw::FBOContext     fboCtx;
-        fboCtx.clearParam = clearParam;
-        fboCtx.texUnits   = {texUnit};
 
         //rctx.pushFBOCtx(fboCtx);
 
         auto&& guard = Base::Scope::make_scope_enter_and_exit_guard(
-            [&]() {
+            [&]() noexcept {
                 printf("render rtt make_scope_enter_and_exit_guard exec enter rctx.pushFBOCtx ...\n");
-                rctx.pushFBOCtx(fboCtx);
+                Render::Draw::OglTextureUnit texUnit{0, gridSize, gridSize, rttUnit.getTextureAt(0)};
+                Render::Draw::FBOContext     fboCtx;
+                fboCtx.clearParam = clearParam;
+                fboCtx.texUnits   = {texUnit};
 
+                rctx.pushFBOCtx(fboCtx);
                 rctx.renderBeginWithFBOCtx();
             },
-            [&]() {
-                printf("render rtt make_scope_enter_and_exit_guard exec exit rctx.popFBOCtx ...\n");
+            [&]() noexcept {
                 rctx.popFBOCtx();
+                printf("render rtt make_scope_enter_and_exit_guard exec exit rctx.popFBOCtx ...\n");
             });
 
         auto&& fboCtxB = rctx.topFBOCtx();
@@ -249,7 +249,7 @@ bool EntityRenderSystem::drawUnit(const Draw::DrawContext& rctx, const Component
         drawUnit.mvp    = vpMRtt;
         drawUnit.draw();
 
-        rctx.renderEndWithFBOCtx();
+        //rctx.renderEndWithFBOCtx();
         Gpu::buildTexDrawUnitWithTex(rttUnit, rctx.getFBOTextureAt(0), true);
         //rctx.popFBOCtx();
         //Base::Scope::make_scope_exit_guard([&]() {
@@ -259,13 +259,15 @@ bool EntityRenderSystem::drawUnit(const Draw::DrawContext& rctx, const Component
 
         //mFbo->unbindFBO(rctx.clearParam, true);
         //Render::Gpu::buildTexDrawUnitWithTex(rttUnit, mFbo->getTextureAt(0), true);
+        guard.execExitFunc();
         //*/
 
-        //drawUnit.blendMode = 1;
-        //drawUnit.setColor(tempColor);
-        //drawUnit.objMat = wM;
-        //drawUnit.mvp    = vpM;
-        //drawUnit.draw();
+        printf("render curr 2 ...\n");
+        drawUnit.blendMode = 1;
+        drawUnit.setColor(tempColor);
+        drawUnit.objMat = wM;
+        drawUnit.mvp    = vpM;
+        drawUnit.draw();
         return true;
     }
     printf("render curr ...\n");

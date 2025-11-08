@@ -18,7 +18,7 @@ namespace Draw
 struct FBOContext
 {
     Math::Mat33                 viewMat;
-    OglFbo::SP                  fbo;
+    mutable OglFbo::SP          fbo;
     ClearParams                 clearParam{};
     std::vector<OglTextureUnit> texUnits;
 
@@ -27,6 +27,7 @@ struct FBOContext
     void applyViewport() const;
     void applyClearColor() const;
     void applyClearViewport() const;
+    void buildTexData() const;
 
     GLuint getTextureAt(int index) const;
 };

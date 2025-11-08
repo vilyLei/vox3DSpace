@@ -88,6 +88,7 @@ public:
         if (isExitCallable())
             exitFunc();
     }
+    void resetExitFunc() noexcept { active = true; }
     void dismissExitFunc() noexcept { active = false; }
 
 private:

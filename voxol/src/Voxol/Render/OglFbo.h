@@ -37,6 +37,7 @@ public:
     void   bindTextureAt(GLuint fboTex, int index, int width, int height);
     GLuint getTextureAt(int index) const;
 
+    bool fboBinding() const;
     void bindFBO();
     void buildTexData(bool mipmap);
     void renderBegin(const Draw::ClearParams& clearParam);
@@ -47,11 +48,15 @@ public:
     void dispose();
 
 private:
-    int        mBindTexTimes = 0;
-    GLuint     mFbo          = GL_ZERO;
-    GLuint     mColorTex     = GL_ZERO;
-    int        mUid          = sUid++;
     static int sUid;
+
+private:
+    int    mBindTexTimes  = 0;
+    GLuint mFbo           = GL_ZERO;
+    GLuint mColorTex      = GL_ZERO;
+    int    mUid           = sUid++;
+    bool   textureDirty   = false;
+    bool   fboBindingFlag = false;
 };
 } // namespace Draw
 } // namespace Voxol::Render
