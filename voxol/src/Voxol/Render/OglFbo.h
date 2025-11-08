@@ -31,24 +31,27 @@ public:
     virtual ~OglFbo();
 
 public:
+    int    uid() const;
+    GLuint fboHandle() const;
     void   init(GLuint fbo);
-    //void   rebindTextureAt(GLuint fboTex, int index, int width, int height);
     void   bindTextureAt(GLuint fboTex, int index, int width, int height);
     GLuint getTextureAt(int index) const;
 
-    void   bindFBO();
-    void   buildTexData(bool mipmap);
-    void   renderBegin(const Draw::ClearParams& clearParam);
-    void   unbindFBO();
-    void   unbindFBO(const Draw::ClearParams& clearParam, bool mipmap = true);
-    void   unbindFBO(bool mipmap);
-    void   unbindFBOWithViewport(const Draw::ClearParams& clearParam, bool mipmap);
-    void   dispose();
+    void bindFBO();
+    void buildTexData(bool mipmap);
+    void renderBegin(const Draw::ClearParams& clearParam);
+    void unbindFBO();
+    void unbindFBO(const Draw::ClearParams& clearParam, bool mipmap = true);
+    void unbindFBO(bool mipmap);
+    void unbindFBOWithViewport(const Draw::ClearParams& clearParam, bool mipmap);
+    void dispose();
 
 private:
-    int    mBindTexTimes = 0;
-    GLuint mFbo          = GL_ZERO;
-    GLuint mColorTex     = GL_ZERO;
+    int        mBindTexTimes = 0;
+    GLuint     mFbo          = GL_ZERO;
+    GLuint     mColorTex     = GL_ZERO;
+    int        mUid          = sUid++;
+    static int sUid;
 };
 } // namespace Draw
 } // namespace Voxol::Render

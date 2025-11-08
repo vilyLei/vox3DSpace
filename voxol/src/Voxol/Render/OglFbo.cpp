@@ -4,8 +4,9 @@ namespace Voxol::Render
 {
 namespace Draw
 {
+int        OglFbo::sUid = 0;
 
-OglFbo::SP OglFbo::make()
+ OglFbo::SP OglFbo::make()
 {
     auto sp = std::make_shared<OglFbo>();
     return sp;
@@ -16,6 +17,14 @@ OglFbo::~OglFbo()
     dispose();
 }
 
+int OglFbo::uid() const
+{
+    return mUid;
+}
+GLuint OglFbo::fboHandle() const
+{
+    return mFbo;
+}
 void OglFbo::init(GLuint fbo)
 {
     if (fbo < 1)
@@ -33,10 +42,6 @@ GLuint OglFbo::getTextureAt(int index) const
     return mColorTex;
 }
 
-//void bindFBOWithHandle(GLuint fboHandle)
-//{
-//    glBindFramebuffer(GL_FRAMEBUFFER, fboHandle);
-//}
 void OglFbo::bindFBO()
 {
     glBindFramebuffer(GL_FRAMEBUFFER, mFbo);
@@ -45,12 +50,6 @@ void OglFbo::renderBegin(const Draw::ClearParams& clearParam)
 {
     clearParam.apply();
 }
-
-//void OglFbo::rebindTextureAt(GLuint fboTex, int index, int width, int height)
-//{
-//    if (mFbo == GL_ZERO)
-//        return;
-//}
 
 void OglFbo::bindTextureAt(GLuint fboTex, int index, int width, int height)
 {
