@@ -77,7 +77,7 @@ void OglTestScene::initScene()
 }
 void OglTestScene::render(const Voxol::Math::Mat33& vpMat)
 {
-    drawCtx.clearParam.apply();
+    drawCtx.clearParam.apply(false);
     if (entityModeFlag)
     {
         auto& ctx      = drawCtx;

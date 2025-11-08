@@ -30,7 +30,7 @@ struct ClearParams
     GLbitfield clearMask = GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT;
     void       applyViewport() const;
     void       applyClearColor() const;
-    void       apply() const;
+    void       apply(bool info = true) const;
 };
 
 struct OglTextureUnit

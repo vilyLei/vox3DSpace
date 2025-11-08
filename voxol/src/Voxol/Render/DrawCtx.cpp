@@ -137,6 +137,11 @@ void DrawContext::pushFBOCtx(const FBOContext& fboCtx) const
 {
     printf("DrawContext::pushFBOCtx() ...\n");
     auto& stack = fboCtxStack.ctxStack;
+    if (!stack.empty())
+    {
+        auto&& preCtx = stack.back();
+        preCtx.fbo->unbindFBO();
+    }
     if (fboCtx.fbo)
     {
         stack.emplace_back(fboCtx);

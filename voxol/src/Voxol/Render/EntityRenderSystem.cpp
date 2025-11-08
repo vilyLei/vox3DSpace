@@ -191,7 +191,7 @@ bool EntityRenderSystem::drawUnit(const Draw::DrawContext& rctx, const Component
         vb.outset(30, 30);
         vb.floatToRound();
         auto        pos      = vb.min;
-        auto        gridSize = 256;
+        uint32_t    gridSize = 256;
         Math::Mat33 vpMRtt;
 
         vpMRtt.ortho(gridSize, gridSize);
@@ -215,6 +215,7 @@ bool EntityRenderSystem::drawUnit(const Draw::DrawContext& rctx, const Component
         }
 
         clearParam.clearColor = {0, 0, 0, 0};
+        clearParam.viewport   = {0, 0, gridSize, gridSize};
 
         //*
         //mFbo->bindFBO();
@@ -223,7 +224,7 @@ bool EntityRenderSystem::drawUnit(const Draw::DrawContext& rctx, const Component
 
         auto&& guard = Base::Scope::make_scope_enter_and_exit_guard(
             [&]() noexcept {
-                printf("render rtt make_scope_enter_and_exit_guard exec enter rctx.pushFBOCtx ...\n");
+                printf("render rtt make_scope_enter_and_exit_guard exec enter rctx.pushFBOCtx rtt: %d\n", rttUnit.getTextureAt(0));
                 Render::Draw::OglTextureUnit texUnit{0, gridSize, gridSize, rttUnit.getTextureAt(0)};
                 Render::Draw::FBOContext     fboCtx;
                 fboCtx.clearParam = clearParam;
@@ -245,9 +246,9 @@ bool EntityRenderSystem::drawUnit(const Draw::DrawContext& rctx, const Component
         drawUnit.objMat = wM;
         drawUnit.mvp    = vpMRtt;
         drawUnit.draw();
-
-        //rctx.renderEndWithFBOCtx();
-        Gpu::buildTexDrawUnitWithTex(rttUnit, rctx.getFBOTextureAt(0), true);
+        auto rttTex = rctx.getFBOTextureAt(0);
+        printf("Render >>> rctx.getFBOTextureAt(0): %d\n", rttTex);
+        Gpu::buildTexDrawUnitWithTex(rttUnit, rttTex, true);
         //rctx.popFBOCtx();
         //Base::Scope::make_scope_exit_guard([&]() {
         //    printf("render rtt make_scope_exit_guard exec rctx.popFBOCtx ...\n");

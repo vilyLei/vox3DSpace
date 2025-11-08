@@ -39,8 +39,8 @@ void TileScene::initalize()
 void TileScene::addDirtyBounds(const Math::Bounds& bounds, int phase)
 {
     RC::Pos pos{};
-    auto gr = RC::xyRectToRCRect(bounds, currGridSize);
-    auto lv = viewGridLevel;
+    auto    gr = RC::xyRectToRCRect(bounds, currGridSize);
+    auto    lv = viewGridLevel;
     for (auto r = gr.minR; r <= gr.maxR; r++)
     {
         for (auto c = gr.minC; c <= gr.maxC; c++)
@@ -74,29 +74,33 @@ void TileScene::buildGridContent(Grid::Unit& unit, const Render::Draw::DrawConte
     viewM.setXY(-pos.x * scale, -pos.y * scale);
     vpMat.append(viewM);
 
-    
+
     auto&& guard = Base::Scope::make_scope_enter_and_exit_guard(
-    [&]() noexcept {
-        printf("Tile rtt make_scope_enter_and_exit_guard exec enter rctx.pushFBOCtx ...\n");
-        
-        Render::Draw::OglTextureUnit texUnit{0, gridSize, gridSize, drawUnit.getTextureAt(0)};
-        Render::Draw::FBOContext     fboCtx;
-        fboCtx.viewMat = viewM;
-        //fboCtx.fbo = mFbo;
-        fboCtx.clearParam = clearParam;
-        fboCtx.texUnits   = {texUnit};
-        ctx.pushFBOCtx(fboCtx);
-        ctx.renderBeginWithFBOCtx();
-    },
-    [&]() noexcept {
-        ctx.popFBOCtx();
-        printf("Tile rtt make_scope_enter_and_exit_guard exec exit rctx.popFBOCtx ...\n");
-    });
+        [&]() noexcept {
+            printf("Tile AAA RC(%lld, %lld)\n", unit.rc.r, unit.rc.c);
+            printf("Tile rtt make_scope_enter_and_exit_guard exec enter rctx.pushFBOCtx rtt: %d\n", drawUnit.getTextureAt(0));
+
+            Render::Draw::OglTextureUnit texUnit{0, gridSize, gridSize, drawUnit.getTextureAt(0)};
+            Render::Draw::FBOContext     fboCtx;
+            fboCtx.viewMat = viewM;
+            //fboCtx.fbo = mFbo;
+            fboCtx.clearParam = clearParam;
+            fboCtx.texUnits   = {texUnit};
+            ctx.pushFBOCtx(fboCtx);
+            ctx.renderBeginWithFBOCtx();
+        },
+        [&]() noexcept {
+            ctx.popFBOCtx();
+            printf("Tile rtt make_scope_enter_and_exit_guard exec exit rctx.popFBOCtx ...\n");
+            printf("Tile BBB RC(%lld, %lld)\n\n", unit.rc.r, unit.rc.c);
+        });
 
     auto&& xy = RC::rcToXY(unit.rc, currGridSize);
     auto&& vb = Math::VxRect::makeXYWH(xy.x, xy.y, currGridSize, currGridSize);
     ctx.drawCall(vb, vpMat);
-    Render::Gpu::buildTexDrawUnitWithTex(drawUnit, ctx.getFBOTextureAt(0), true);
+    auto rttTex = ctx.getFBOTextureAt(0);
+    printf("Tile >>> ctx.getFBOTextureAt(0): %d\n", rttTex);
+    Render::Gpu::buildTexDrawUnitWithTex(drawUnit, rttTex, true);
     /*
     Render::Draw::OglTextureUnit texUnit{0, gridSize, gridSize, drawUnit.getTextureAt(0)};
     Render::Draw::FBOContext fboCtx;
@@ -261,10 +265,10 @@ void TileScene::updateEmptyGrid(const Render::Draw::DrawContext& ctx)
             continue;
 
         //printf("TileScene::updateEmptyGrid() node(r=%d,c=%d,phase=%d) A\n", node.pos.r, node.pos.c, node.phase);
-        auto&& xy   = RC::rcToXY(node.pos, currGridSize);
-        auto&& vb   = Math::VxRect::makeXYWH(xy.x, xy.y, currGridSize, currGridSize);
+        auto&& xy = RC::rcToXY(node.pos, currGridSize);
+        auto&& vb = Math::VxRect::makeXYWH(xy.x, xy.y, currGridSize, currGridSize);
 
-        auto&  grid = gridUnits[node.index];
+        auto& grid = gridUnits[node.index];
         if (!ctx.drawQueryCall(vb, 0))
         {
             unitIndexPool.release(node.index);
@@ -324,7 +328,7 @@ void TileScene::run(const Render::Draw::DrawContext& ctx)
         printf("XXXXX Curr lv: %d, toBiggerFlag: %s\n", lv, toBiggerFlag ? "true" : "false");
     }
 
-    updateEmptyGrid( ctx );
+    updateEmptyGrid(ctx);
 
     if (createFlag || adjustFlag || toBiggerFlag)
     {
@@ -373,7 +377,7 @@ void TileScene::run(const Render::Draw::DrawContext& ctx)
     //*
     //ctx.drawCall({}, vpM);
 
-    
+
     outlineUnit.drawUnit.vertex.lineWidth = 3.0f;
     outlineUnit.drawUnit.setColor(0xff005555);
     for (auto&& it = viewUnitIndexMap.begin(); it != viewUnitIndexMap.end(); it++)

@@ -48,9 +48,11 @@ bool OglFbo::fboBinding() const
 }
 void OglFbo::bindFBO()
 {
+    printf("OglFbo::bindFBO(), fbo(%d), handle:(mFbo=%d), fboBindingFlag: %d\n", mUid, mFbo, fboBindingFlag);
     if (fboBindingFlag)
         return;
 
+    printf("OglFbo::bindFBO(), fbo(%d), handle:(mFbo=%d), mColorTex: %d\n", mUid, mFbo, mColorTex);
     fboBindingFlag = true;
     glBindFramebuffer(GL_FRAMEBUFFER, mFbo);
 }
@@ -60,6 +62,7 @@ void OglFbo::unbindFBO()
     if (!fboBindingFlag)
         return;
 
+    printf("OglFbo::unbindFBO(), fbo(%d), handle:(mFbo=%d), mColorTex: %d\n", mUid, mFbo, mColorTex);
     fboBindingFlag = false;
     glBindTexture(GL_TEXTURE_2D, GL_ZERO);
     glBindFramebuffer(GL_FRAMEBUFFER, GL_ZERO);
@@ -81,6 +84,8 @@ void OglFbo::bindTextureAt(GLuint fboTex, int index, int width, int height)
 
     if (mColorTex == GL_ZERO)
         return;
+
+    printf("OglFbo::bindTextureAt(), fbo(%d), handle:(mFbo=%d), mColorTex: %d\n", mUid, mFbo, mColorTex);
 
     textureDirty = true;
 
