@@ -102,12 +102,12 @@ void DrawContext::renderEndWithFBOCtx() const
 bool DrawContext::hasFBOCtx() const
 {
     auto& stack = fboCtxStack.ctxStack;
-    return stack.empty();
+    return !stack.empty();
 }
 bool DrawContext::hasNotFBOCtx() const
 {
     auto& stack = fboCtxStack.ctxStack;
-    return !stack.empty();
+    return stack.empty();
 }
 void DrawContext::pushFBOCtx(const FBOContext& fboCtx) const
 {

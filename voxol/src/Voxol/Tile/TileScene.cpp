@@ -70,12 +70,15 @@ void TileScene::buildGridContent(Grid::Unit& unit, const Render::Draw::DrawConte
 
     Render::Draw::OglTextureUnit texUnit{0, gridSize, gridSize, drawUnit.getTextureAt(0)};
     Render::Draw::FBOContext fboCtx;
+    fboCtx.viewMat = viewM;
     //fboCtx.fbo = mFbo;
     fboCtx.clearParam = clearParam;
     fboCtx.texUnits   = {texUnit};
 
+    //printf("Tile AAA RC(%lld, %lld)\n", unit.rc.r, unit.rc.c);
     ctx.pushFBOCtx(fboCtx);
 
+    //printf("tile rctx.hasFBOCtx(): %d\n", ctx.hasFBOCtx());
     //mFbo->bindFBO();
     //mFbo->bindTextureAt(drawUnit.getTextureAt(0), 0, gridSize, gridSize);
     //mFbo->renderBegin(clearParam);
@@ -96,6 +99,7 @@ void TileScene::buildGridContent(Grid::Unit& unit, const Render::Draw::DrawConte
     //Render::Gpu::buildTexDrawUnitWithTex(drawUnit, mFbo->getTextureAt(0), true);
     Render::Gpu::buildTexDrawUnitWithTex(drawUnit, ctx.getFBOTextureAt(0), true);
     ctx.popFBOCtx();
+    //printf("Tile BBB RC(%lld, %lld)\n---------------------\n", unit.rc.r, unit.rc.c);
 }
 
 
@@ -332,7 +336,7 @@ void TileScene::run(const Render::Draw::DrawContext& ctx)
     //{
     //    printf("TileScene::run(), tile grids total: %zu, lv:%d\n", viewUnitIndexMap.size(), lv);
     //}
-    return;
+    //return;
     //*
     //ctx.drawCall({}, vpM);
 

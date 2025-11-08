@@ -200,7 +200,16 @@ bool EntityRenderSystem::drawUnit(const Draw::DrawContext& rctx, const Component
         Math::Mat33 viewM;
         viewM.setScaleXY(scale, scale);
         viewM.setXY(-pos.x * scale, -pos.y * scale);
-        vpMRtt.append(viewM);
+        //printf("render rctx.hasFBOCtx(): %d\n", rctx.hasFBOCtx());
+        if (rctx.hasFBOCtx())
+        {
+            auto vm = rctx.topFBOCtx().viewMat;
+            vpMRtt.append(vm);
+        }
+        else
+        {
+            vpMRtt.append(viewM);
+        }
 
         clearParam.clearColor = {0,0,0,0};
         auto drawParam = rctx.drawParam;
