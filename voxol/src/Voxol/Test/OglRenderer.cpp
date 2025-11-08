@@ -174,13 +174,6 @@ int OglRenderer::initCtx()
         glfwPollEvents();
         //if (dirty) {
 
-        //glViewport(0, 0, ctxCurrWidth, ctxCurrHeight);
-        //// Render
-        //// Clear the colorbuffer
-        //auto& cc = clearParam.clearColor;
-        //glClearColor(cc.r, cc.g, cc.b, cc.a);
-        //glClear(clearParam.clearMask);
-
         render();
         // draw();
 

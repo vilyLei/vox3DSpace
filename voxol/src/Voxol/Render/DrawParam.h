@@ -28,6 +28,7 @@ struct ClearParams
     Viewport   viewport{};
     ClearColor clearColor{};
     GLbitfield clearMask = GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT;
+    void       applyViewport() const;
     void       apply() const;
 };
 

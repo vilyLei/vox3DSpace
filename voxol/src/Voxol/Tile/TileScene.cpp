@@ -75,7 +75,8 @@ void TileScene::buildGridContent(Grid::Unit& unit, const Render::Draw::DrawConte
     auto&& xy = RC::rcToXY(unit.rc, currGridSize);
     auto&& vb = Math::VxRect::makeXYWH(xy.x, xy.y, currGridSize, currGridSize);
     ctx.drawCall(vb, vpM);
-    mFbo->unbindFBO(ctx.clearParam, true);
+    //mFbo->unbindFBO(ctx.clearParam, true);
+    mFbo->unbindFBOWithViewport(ctx.clearParam, true);
 
     Render::Gpu::buildTexDrawUnitWithTex(drawUnit, mFbo->getTextureAt(0), true);
 }
@@ -230,6 +231,7 @@ void TileScene::run(const Render::Draw::DrawContext& ctx)
     Math::Mat33 vpM       = drawParam.projMat;
     vpM.append(drawParam.viewMat);
 
+    //ctx.clearParam.apply();
     // 暂时这样写，以便测试dragging
     //ctx.drawCall(drawParam.viewWBounds, vpM);
     //return;
@@ -297,6 +299,7 @@ void TileScene::run(const Render::Draw::DrawContext& ctx)
     viewGridLevel = lv;
 
     updateDirtyGrid(ctx);
+    //ctx.clearParam.apply();
 
     for (auto&& it = viewUnitIndexMap.begin(); it != viewUnitIndexMap.end(); it++)
     {

@@ -97,10 +97,12 @@ void OglFbo::unbindFBO(const Draw::ClearParams& clearParam, bool mipmap)
 
     clearParam.apply();
 }
-void OglFbo::unbindFBO(bool mipmap)
+void OglFbo::unbindFBOWithViewport(const Draw::ClearParams& clearParam, bool mipmap)
 {
     buildTexData(mipmap);
     unbindFBO();
+
+    clearParam.applyViewport();
 }
 
 void OglFbo::dispose()

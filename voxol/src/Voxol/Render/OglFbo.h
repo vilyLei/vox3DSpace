@@ -40,7 +40,7 @@ public:
     void   renderBegin(const Draw::ClearParams& clearParam);
     void   unbindFBO();
     void   unbindFBO(const Draw::ClearParams& clearParam, bool mipmap = true);
-    void   unbindFBO(bool mipmap);
+    void   unbindFBOWithViewport(const Draw::ClearParams& clearParam, bool mipmap);
     void   dispose();
 
 private:

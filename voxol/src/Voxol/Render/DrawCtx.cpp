@@ -4,6 +4,10 @@ namespace Voxol::Render
 namespace Draw
 {
 
+void ClearParams::applyViewport() const
+{
+    glViewport(viewport.x, viewport.y, viewport.width, viewport.height);
+}
 void ClearParams::apply() const
 {
     glViewport(viewport.x, viewport.y, viewport.width, viewport.height);

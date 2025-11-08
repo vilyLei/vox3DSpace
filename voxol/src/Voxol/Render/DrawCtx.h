@@ -55,11 +55,11 @@ struct DrawContext
         {
             auto&& preFCtx = fboCtxStack[fboCtxStack.size() - 2];
             //fctx.fbo->unbindFBO(preFCtx.clearParam, tex.mipmap);
-            fctx.fbo->unbindFBO(tex.mipmap);
+            fctx.fbo->unbindFBOWithViewport(preFCtx.clearParam, tex.mipmap);
             preFCtx.fbo->bindFBO();
             return;
         }
-        fctx.fbo->unbindFBO(tex.mipmap);
+        fctx.fbo->unbindFBOWithViewport(clearParam, tex.mipmap);
     }
     bool hasFBOCtx() {
         return fboCtxStack.empty();
