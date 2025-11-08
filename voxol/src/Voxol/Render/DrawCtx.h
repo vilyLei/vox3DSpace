@@ -57,6 +57,7 @@ struct DrawContext
     void              pushFBOCtx(const FBOContext& fboCtx) const;
     void              popFBOCtx() const;
     const FBOContext& topFBOCtx() const;
+    GLuint            getFBOTextureAt(int index) const;
 
     float zoom  = 1;
     bool  dirty = true;

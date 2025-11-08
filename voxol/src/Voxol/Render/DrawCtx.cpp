@@ -131,12 +131,28 @@ void DrawContext::pushFBOCtx(const FBOContext& fboCtx) const
 void DrawContext::popFBOCtx() const
 {
     auto& stack = fboCtxStack.ctxStack;
+    auto&& fbo   = stack.back().fbo;
+    if (fbo) {
+        fboCtxStack.fboStack.emplace_back(fbo);
+    }
     stack.pop_back();
 }
 const FBOContext& DrawContext::topFBOCtx() const
 {
     auto& stack = fboCtxStack.ctxStack;
     return stack.back();
+}
+
+GLuint DrawContext::getFBOTextureAt(int index) const
+{
+    if (index < 0 || fboCtxStack.ctxStack.empty())
+        return 0;
+
+    auto& ctx = fboCtxStack.ctxStack.back();
+    if (index >= ctx.texUnits.size())
+        return 0;
+
+    return ctx.texUnits[index].texture;
 }
 } // namespace Draw
 } // namespace Voxol::Render

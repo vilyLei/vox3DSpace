@@ -79,10 +79,6 @@ void TileScene::buildGridContent(Grid::Unit& unit, const Render::Draw::DrawConte
 
     ctx.pushFBOCtx(fboCtx);
 
-    auto&& fboCtxObjA = ctx.topFBOCtx();
-    auto   texA       = fboCtxObjA.getTextureAt(0);
-    //auto&& fboCtxObj = ctx.topFBOCtx();
-
     //mFbo->bindFBO();
     //mFbo->bindTextureAt(drawUnit.getTextureAt(0), 0, gridSize, gridSize);
     //mFbo->renderBegin(clearParam);
@@ -96,12 +92,12 @@ void TileScene::buildGridContent(Grid::Unit& unit, const Render::Draw::DrawConte
     //mFbo->unbindFBOWithViewport(ctx.clearParam, true);
     ctx.renderEndWithFBOCtx();
 
-    auto&& fboCtxObj = ctx.topFBOCtx();
-    auto   texB      = fboCtxObj.getTextureAt(0);
+    //auto&& fboCtxObj = ctx.topFBOCtx();
+    //auto   texB      = fboCtxObj.getTextureAt(0);
 
 
     //Render::Gpu::buildTexDrawUnitWithTex(drawUnit, mFbo->getTextureAt(0), true);
-    Render::Gpu::buildTexDrawUnitWithTex(drawUnit, fboCtxObj.getTextureAt(0), true);
+    Render::Gpu::buildTexDrawUnitWithTex(drawUnit, ctx.getFBOTextureAt(0), true);
     ctx.popFBOCtx();
 }
 
