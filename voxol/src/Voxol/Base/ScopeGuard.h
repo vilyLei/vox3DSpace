@@ -58,12 +58,12 @@ template <class F>
 
 
 
-template <class F>
+template <class EnterF, class ExitF>
 class ScopeEnterAndExitGuardT
 {
 public:
-    explicit ScopeEnterAndExitGuardT(F&& enter_f, F&& exit_f) noexcept :
-        enterFunc(std::forward<F>(enter_f)), exitFunc(std::forward<F>(exit_f)), active(true)
+    explicit ScopeEnterAndExitGuardT(EnterF&& enter_f, ExitF&& exit_f) noexcept :
+        enterFunc(std::forward<EnterF>(enter_f)), exitFunc(std::forward<ExitF>(exit_f)), active(true)
     {
         if (isEnterCallable()) {
             enterFunc();
@@ -71,13 +71,16 @@ public:
     }
     ~ScopeEnterAndExitGuardT() noexcept
     {
-        if (active && isExitCallable()) exitFunc();
+        if (active && isExitCallable())
+        {
+            exitFunc();
+        }
     }
     ScopeEnterAndExitGuardT(const ScopeEnterAndExitGuardT&) = delete;
     ScopeEnterAndExitGuardT& operator=(const ScopeEnterAndExitGuardT&) = delete;
     ScopeEnterAndExitGuardT(ScopeEnterAndExitGuardT&& other) noexcept
         :
-        exitFunc(std::move(other.exitFunc)), active(other.active) { other.active = false; }
+        enterFunc(std::move(other.enterFunc)), exitFunc(std::move(other.exitFunc)), active(other.active) { other.active = false; }
 
     void execExitFunc() noexcept
     {
@@ -88,16 +91,16 @@ public:
     void dismissExitFunc() noexcept { active = false; }
 
 private:
-    F              enterFunc;
-    F              exitFunc;
+    EnterF          enterFunc;
+    ExitF          exitFunc;
     bool           active;
     constexpr bool isEnterCallable() const noexcept
     {
-        if constexpr (requires(const F& f) { static_cast<bool>(f); })
+        if constexpr (requires(const EnterF& f) { static_cast<bool>(f); })
         {
             return static_cast<bool>(enterFunc);
         }
-        else if constexpr (std::is_pointer_v<F>)
+        else if constexpr (std::is_pointer_v<EnterF>)
         {
             return enterFunc != nullptr;
         }
@@ -108,11 +111,11 @@ private:
     }
     constexpr bool isExitCallable() const noexcept
     {
-        if constexpr (requires(const F& f) { static_cast<bool>(f); })
+        if constexpr (requires(const ExitF& f) { static_cast<bool>(f); })
         {
             return static_cast<bool>(exitFunc);
         }
-        else if constexpr (std::is_pointer_v<F>)
+        else if constexpr (std::is_pointer_v<ExitF>)
         {
             return exitFunc != nullptr;
         }
@@ -122,10 +125,10 @@ private:
         }
     }
 };
-template <class F>
-[[nodiscard]] auto make_scope_enter_and_exit_guard(F&& enter_f, F&& exit_f) noexcept
+template <class EnterF, class ExitF>
+[[nodiscard]] auto make_scope_enter_and_exit_guard(EnterF&& enter_f, ExitF&& exit_f) noexcept
 {
-    return ScopeEnterAndExitGuardT<std::decay_t<F>>(std::forward<F>(enter_f), std::forward<F>(exit_f));
+    return ScopeEnterAndExitGuardT<std::decay_t<EnterF>, std::decay_t<ExitF>>(std::forward<EnterF>(enter_f), std::forward<ExitF>(exit_f));
 }
 } // namespace Scope
 } // namespace Voxol::Base
