@@ -1,7 +1,7 @@
 #ifndef VOXOL_RENDER_OGL_FBO_H
 #define VOXOL_RENDER_OGL_FBO_H
 
-#include "DrawCtx.h"
+#include "DrawParam.h"
 
 #include <iostream>
 #include <cmath>
@@ -13,6 +13,8 @@
 #include <glfw3.h>
 
 namespace Voxol::Render
+{
+namespace Draw
 {
 class OglFbo
 {
@@ -36,7 +38,6 @@ private:
     GLuint mFbo          = GL_ZERO;
     GLuint mColorTex     = GL_ZERO;
 };
-
-
+} // namespace Draw
 } // namespace Voxol::Render
 #endif

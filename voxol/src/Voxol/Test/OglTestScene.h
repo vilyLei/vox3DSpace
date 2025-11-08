@@ -54,7 +54,7 @@ private:
     bool voassModeFlag = true;
     bool entityModeFlag = true;
 
-    Render::OglFbo             mFbo{};
+    Render::Draw::OglFbo             mFbo{};
 
     Render::Gpu::DrawingUnit              baseDrawUnit{};
     Render::Gpu::DrawingUnit              texDrawUnit{};

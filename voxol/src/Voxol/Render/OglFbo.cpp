@@ -2,6 +2,8 @@
 namespace Voxol::Render
 {
 
+namespace Draw
+{
 OglFbo::~OglFbo()
 {
     dispose();
@@ -91,4 +93,5 @@ void OglFbo::dispose()
         mFbo = GL_ZERO;
     }
 }
+} // namespace Draw
 } // namespace Voxol::Render
