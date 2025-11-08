@@ -184,10 +184,7 @@ GLuint DrawContext::getFBOTextureAt(int index) const
         return 0;
 
     auto& ctx = fboCtxStack.ctxStack.back();
-    if (index >= ctx.texUnits.size())
-        return 0;
-
-    return ctx.texUnits[index].texture;
+    return ctx.getTextureAt(index);
 }
 } // namespace Draw
 } // namespace Voxol::Render
