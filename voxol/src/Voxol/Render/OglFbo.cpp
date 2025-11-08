@@ -32,6 +32,11 @@ GLuint OglFbo::getTextureAt(int index) const
 {
     return mColorTex;
 }
+
+//void bindFBOWithHandle(GLuint fboHandle)
+//{
+//    glBindFramebuffer(GL_FRAMEBUFFER, fboHandle);
+//}
 void OglFbo::bindFBO()
 {
     glBindFramebuffer(GL_FRAMEBUFFER, mFbo);
@@ -91,6 +96,11 @@ void OglFbo::unbindFBO(const Draw::ClearParams& clearParam, bool mipmap)
     unbindFBO();
 
     clearParam.apply();
+}
+void OglFbo::unbindFBO(bool mipmap)
+{
+    buildTexData(mipmap);
+    unbindFBO();
 }
 
 void OglFbo::dispose()

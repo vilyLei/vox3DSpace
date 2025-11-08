@@ -40,7 +40,7 @@ struct DrawContext
         auto fctx = fboCtxStack.back();
         fctx.fbo->bindFBO();
         auto texIndex = 0;
-        auto& tex      = fctx.textures[0];
+        auto& tex      = fctx.textures[texIndex];
         fctx.fbo->bindTextureAt(tex.texture, tex.index, tex.width, tex.height);
         fctx.fbo->renderBegin(fctx.clearParam);
     }
@@ -50,14 +50,16 @@ struct DrawContext
         auto fctx = fboCtxStack.back();
         fctx.fbo->bindFBO();
         auto  texIndex = 0;
-        auto& tex      = fctx.textures[0];
+        auto& tex      = fctx.textures[texIndex];
         if (fboCtxStack.size() > 1)
         {
             auto&& preFCtx = fboCtxStack[fboCtxStack.size() - 2];
-            fctx.fbo->unbindFBO(preFCtx.clearParam, tex.mipmap);
+            //fctx.fbo->unbindFBO(preFCtx.clearParam, tex.mipmap);
+            fctx.fbo->unbindFBO(tex.mipmap);
+            preFCtx.fbo->bindFBO();
             return;
         }
-        fctx.fbo->unbindFBO(clearParam, tex.mipmap);
+        fctx.fbo->unbindFBO(tex.mipmap);
     }
     bool hasFBOCtx() {
         return fboCtxStack.empty();
