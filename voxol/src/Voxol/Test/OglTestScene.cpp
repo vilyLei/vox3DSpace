@@ -270,7 +270,7 @@ void OglTestScene::renderVoass(const Math::Mat33& vpMat)
     {
         Render::Draw::ClearParams clearParam{};
 
-        int  fboSize     = 256 * 2;
+        uint32_t  fboSize     = 256 * 2;
         auto fboW        = fboSize;
         auto fboH        = fboSize;
         auto fboTexIndex = 0;

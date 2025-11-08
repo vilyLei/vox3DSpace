@@ -240,7 +240,7 @@ void OglRenderer::render()
         ctxWidth  = ctxCurrWidth;
         ctxHeight = ctxCurrHeight;
 
-        rctx.clearParam.viewport = {0, 0, static_cast<int>(ctxWidth), static_cast<int>(ctxHeight)};
+        rctx.clearParam.viewport = {0, 0, ctxWidth, ctxHeight};
 
         view.projMat.ortho(ctxWidth, ctxHeight);
         dirty = true;

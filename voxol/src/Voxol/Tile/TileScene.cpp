@@ -68,17 +68,38 @@ void TileScene::buildGridContent(Grid::Unit& unit, const Render::Draw::DrawConte
     auto& drawParam = ctx.drawParam;
     auto& vp        = ctx.clearParam.viewport;
 
-    mFbo->bindFBO();
-    mFbo->bindTextureAt(drawUnit.getTextureAt(0), 0, gridSize, gridSize);
-    mFbo->renderBegin(clearParam);
+    Render::Draw::OglTextureUnit texUnit{0, gridSize, gridSize, drawUnit.getTextureAt(0)};
+    Render::Draw::FBOContext fboCtx;
+    fboCtx.fbo = mFbo;
+    fboCtx.clearParam = clearParam;
+    fboCtx.texUnits   = {texUnit};
+
+    ctx.pushFBOCtx(fboCtx);
+
+    auto&& fboCtxObjA = ctx.topFBOCtx();
+    auto   texA       = fboCtxObjA.getTextureAt(0);
+    //auto&& fboCtxObj = ctx.topFBOCtx();
+
+    //mFbo->bindFBO();
+    //mFbo->bindTextureAt(drawUnit.getTextureAt(0), 0, gridSize, gridSize);
+    //mFbo->renderBegin(clearParam);
+
+    ctx.renderBeginWithFBOCtx();
 
     auto&& xy = RC::rcToXY(unit.rc, currGridSize);
     auto&& vb = Math::VxRect::makeXYWH(xy.x, xy.y, currGridSize, currGridSize);
     ctx.drawCall(vb, vpM);
     //mFbo->unbindFBO(ctx.clearParam, true);
-    mFbo->unbindFBOWithViewport(ctx.clearParam, true);
+    //mFbo->unbindFBOWithViewport(ctx.clearParam, true);
+    ctx.renderEndWithFBOCtx();
 
-    Render::Gpu::buildTexDrawUnitWithTex(drawUnit, mFbo->getTextureAt(0), true);
+    auto&& fboCtxObj = ctx.topFBOCtx();
+    auto   texB      = fboCtxObj.getTextureAt(0);
+
+
+    //Render::Gpu::buildTexDrawUnitWithTex(drawUnit, mFbo->getTextureAt(0), true);
+    Render::Gpu::buildTexDrawUnitWithTex(drawUnit, fboCtxObj.getTextureAt(0), true);
+    ctx.popFBOCtx();
 }
 
 

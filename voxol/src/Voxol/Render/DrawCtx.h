@@ -19,17 +19,24 @@ struct FBOContext
 {
     OglFbo::SP                  fbo;
     ClearParams                 clearParam{};
-    std::vector<OglTextureUnit> textures;
+    std::vector<OglTextureUnit> texUnits;
 
     void bindFBO(bool onlyChangeViewport) const;
     void unbindFBO() const;
     void applyViewport() const;
     void applyClearColor() const;
     void applyClearViewport() const;
+
+    GLuint getTextureAt(int index) const;
+};
+struct FBOCtxStack
+{
+    uint32_t                depth = 0;
+    std::vector<FBOContext> ctxStack;
 };
 struct DrawContext
 {
-    std::vector<FBOContext> fboCtxStack;
+    mutable FBOCtxStack fboCtxStack;
 
     ClearParams clearParam{};
     DrawParams  drawParam{};
@@ -41,14 +48,14 @@ struct DrawContext
     void applyClearColor() const;
     void applyClearViewport() const;
 
-    void              bindFBOCtx();
-    void              renderBeginWithFBOCtx();
-    void              renderEndWithFBOCtx();
-    bool              hasFBOCtx();
-    bool              hasNotFBOCtx();
-    void              pushFBOCtx(const FBOContext& fboCtx);
-    void              popFBOCtx();
-    const FBOContext& topFBOCtx();
+    void              bindFBOCtx() const;
+    void              renderBeginWithFBOCtx() const;
+    void              renderEndWithFBOCtx() const;
+    bool              hasFBOCtx() const;
+    bool              hasNotFBOCtx() const;
+    void              pushFBOCtx(const FBOContext& fboCtx) const;
+    void              popFBOCtx() const;
+    const FBOContext& topFBOCtx() const;
 
     float zoom  = 1;
     bool  dirty = true;

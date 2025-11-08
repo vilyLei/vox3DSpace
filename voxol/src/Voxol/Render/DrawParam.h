@@ -16,7 +16,7 @@ using DrawQueryType = std::function<int(const Math::VxRect& bounds, int phase)>;
 
 struct Viewport
 {
-    int x, y, width, height;
+    uint32_t x, y, width, height;
 };
 struct ClearColor
 {

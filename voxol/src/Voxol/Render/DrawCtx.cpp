@@ -8,7 +8,7 @@ namespace Draw
 void FBOContext::bindFBO(bool onlyChangeViewport) const
 {
     fbo->bindFBO();
-    for (auto& tex : textures)
+    for (auto& tex : texUnits)
     {
         fbo->bindTextureAt(tex.texture, tex.index, tex.width, tex.height);
     }
@@ -16,13 +16,14 @@ void FBOContext::bindFBO(bool onlyChangeViewport) const
     {
         clearParam.applyViewport();
     }
-    else {
+    else
+    {
         clearParam.apply();
     }
 }
 void FBOContext::unbindFBO() const
 {
-    auto& tex = textures[0];
+    auto& tex = texUnits[0];
     fbo->unbindFBO(tex.mipmap);
 }
 void FBOContext::applyViewport() const
@@ -40,6 +41,12 @@ void FBOContext::applyClearViewport() const
     clearParam.apply();
 }
 
+GLuint FBOContext::getTextureAt(int index) const
+{
+    return texUnits[index].texture;
+}
+
+
 void DrawContext::applyViewport() const
 {
     clearParam.applyViewport();
@@ -55,36 +62,29 @@ void DrawContext::applyClearViewport() const
     clearParam.apply();
 }
 
-void DrawContext::bindFBOCtx()
+void DrawContext::bindFBOCtx() const
 {
-    auto fctx = fboCtxStack.back();
+    auto& stack = fboCtxStack.ctxStack;
+    auto  fctx  = stack.back();
     fctx.fbo->bindFBO();
 }
-void DrawContext::renderBeginWithFBOCtx()
+void DrawContext::renderBeginWithFBOCtx() const
 {
-    auto&& fctx = fboCtxStack.back();
-    fctx.bindFBO( false );
-    //fctx.fbo->bindFBO();
-    //for (auto& tex : fctx.textures)
-    //{
-    //    fctx.fbo->bindTextureAt(tex.texture, tex.index, tex.width, tex.height);
-    //}
-    ////auto  texIndex = 0;
-    ////auto& tex      = fctx.textures[texIndex];
-    ////fctx.fbo->bindTextureAt(tex.texture, tex.index, tex.width, tex.height);
-    ////fctx.fbo->renderBegin(fctx.clearParam);
-    //fctx.applyClearViewport();
+    auto&  stack = fboCtxStack.ctxStack;
+    auto&& fctx  = stack.back();
+    fctx.bindFBO(false);
 }
 
-void DrawContext::renderEndWithFBOCtx()
+void DrawContext::renderEndWithFBOCtx() const
 {
-    auto&& fctx = fboCtxStack.back();
+    auto&  stack = fboCtxStack.ctxStack;
+    auto&& fctx  = stack.back();
     //fctx.fbo->bindFBO();
     //auto  texIndex = 0;
     //auto& tex      = fctx.textures[texIndex];
-    if (fboCtxStack.size() > 1)
+    if (stack.size() > 1)
     {
-        auto&& preFCtx = fboCtxStack[fboCtxStack.size() - 2];
+        auto&& preFCtx = stack[stack.size() - 2];
 
         //fctx.fbo->unbindFBOWithViewport(preFCtx.clearParam, tex.mipmap);
         //fctx.fbo->unbindFBO(tex.mipmap);
@@ -103,25 +103,30 @@ void DrawContext::renderEndWithFBOCtx()
     fctx.unbindFBO();
     clearParam.applyViewport();
 }
-bool DrawContext::hasFBOCtx()
+bool DrawContext::hasFBOCtx() const
 {
-    return fboCtxStack.empty();
+    auto& stack = fboCtxStack.ctxStack;
+    return stack.empty();
 }
-bool DrawContext::hasNotFBOCtx()
+bool DrawContext::hasNotFBOCtx() const
 {
-    return !fboCtxStack.empty();
+    auto& stack = fboCtxStack.ctxStack;
+    return !stack.empty();
 }
-void DrawContext::pushFBOCtx(const FBOContext& fboCtx)
+void DrawContext::pushFBOCtx(const FBOContext& fboCtx) const
 {
-    fboCtxStack.emplace_back(fboCtx);
+    auto& stack = fboCtxStack.ctxStack;
+    stack.emplace_back(fboCtx);
 }
-void DrawContext::popFBOCtx()
+void DrawContext::popFBOCtx() const
 {
-    fboCtxStack.pop_back();
+    auto& stack = fboCtxStack.ctxStack;
+    stack.pop_back();
 }
-const FBOContext& DrawContext::topFBOCtx()
+const FBOContext& DrawContext::topFBOCtx() const
 {
-    return fboCtxStack.back();
+    auto& stack = fboCtxStack.ctxStack;
+    return stack.back();
 }
 } // namespace Draw
 } // namespace Voxol::Render

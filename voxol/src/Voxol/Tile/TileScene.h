@@ -41,7 +41,7 @@ private:
 
     Render::Draw::OglFbo::SP mFbo{};
 
-    int gridSize = 256;
+    uint32_t gridSize = 256;
     float currGridSize = 256;
     bool  gridModifyDirty = false;
 
