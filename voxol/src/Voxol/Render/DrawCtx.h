@@ -41,7 +41,7 @@ struct DrawContext
     const FBOContext& topFBOCtx();
 
     float zoom  = 1;
-    bool  dirty = 1;
+    bool  dirty = true;
 };
 } // namespace Draw
 } // namespace Voxol::Render
