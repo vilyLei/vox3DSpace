@@ -60,19 +60,10 @@ struct FBORenderGraph
     GLuint            getRTTextureAt(int index) const;
 };
 
-//struct FBOGraphNodeGuard
-//{
-//    using GuardType = decltype(Base::Scope::make_scope_enter_and_exit_guard(
-//        std::declval<std::function<void() noexcept>>(),
-//        std::declval<std::function<void() noexcept>>()));
-//    GuardType       scopeGuard;
-//    FBORenderGraph& graph;
-//};
-
 template <typename GuardT>
-struct FBOGraphNodeGuard
+struct [[nodiscard]] FBOGraphNodeGuard
 {
-    GuardT scopeGuard;
+    GuardT          scopeGuard;
     FBORenderGraph& graph;
 
     FBOGraphNodeGuard(const FBOGraphNodeGuard&)            = delete;
@@ -81,13 +72,23 @@ struct FBOGraphNodeGuard
     FBOGraphNodeGuard(GuardT&& g, FBORenderGraph& gr) noexcept
         :
         scopeGuard(std::move(g)), graph(gr)
-    {
-    }
+    {}
+
     FBOGraphNodeGuard(FBOGraphNodeGuard&& other) noexcept
         :
         scopeGuard(std::move(other.scopeGuard)), graph(other.graph)
     {}
-    GLuint getRTTextureAt(int index) const {
+
+    ~FBOGraphNodeGuard() = default;
+
+    [[nodiscard]] FBORenderGraph*       operator->() noexcept { return &graph; }
+    [[nodiscard]] const FBORenderGraph* operator->() const noexcept { return &graph; }
+
+    [[nodiscard]] FBORenderGraph&       operator*() noexcept { return graph; }
+    [[nodiscard]] const FBORenderGraph& operator*() const noexcept { return graph; }
+
+    [[nodiscard]] GLuint getRTTextureAt(int index) const noexcept
+    {
         return graph.getRTTextureAt(index);
     }
 };
@@ -104,9 +105,6 @@ struct DrawContext
 
     float zoom  = 1;
     bool  dirty = true;
-
-
-    //[[nodiscard]] auto makeFBOGraphNodeGuard(const Render::Draw::FBOCtxNode& fboCtx, const std::string& debugEnterInfo, const std::string& debugExitInfo) const;
 
     GLuint getRTTextureAt(int index) const;
 
