@@ -57,12 +57,7 @@ void TileScene::addDirtyBounds(const Math::Bounds& bounds, int phase)
 
 void TileScene::buildGridContent(Grid::Unit& unit, const Render::Draw::DrawContext& ctx)
 {
-    //auto pflag = unit.rc.r == 2 && unit.rc.c == 1;
-    //pflag = pflag || unit.rc.r == 1 && unit.rc.c == 0;
-    //if (!pflag)
-    //{
-    //    return;
-    //}
+
     auto&  drawUnit = unit.drawUnit;
     auto&& pos      = drawUnit.objMat.getXY();
 
