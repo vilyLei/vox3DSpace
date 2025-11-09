@@ -74,6 +74,21 @@ GLuint FBOContext::getTextureAt(int index) const
 
 // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< fbo render graph begin
 
+void FBORenderGraph::applyViewport() const
+{
+    backgroundClearParam.applyViewport();
+}
+
+void FBORenderGraph::applyClearColor() const
+{
+    backgroundClearParam.applyClearColor();
+}
+
+void FBORenderGraph::applyClearViewport() const
+{
+    backgroundClearParam.apply();
+}
+
 void FBORenderGraph::bindFBOCtx() const
 {
     auto& stack = fboCtxStack.ctxStack;
@@ -187,27 +202,9 @@ GLuint FBORenderGraph::getFBOTextureAt(int index) const
     printf("FBORenderGraph::getFBOTextureAt() tex: %d\n", tex);
     return tex;
 }
+
 // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> fbo render graph end
 
-
-
-
-
-
-void FBORenderGraph::applyViewport() const
-{
-    backgroundClearParam.applyViewport();
-}
-
-void FBORenderGraph::applyClearColor() const
-{
-    backgroundClearParam.applyClearColor();
-}
-
-void FBORenderGraph::applyClearViewport() const
-{
-    backgroundClearParam.apply();
-}
 
 /*
 

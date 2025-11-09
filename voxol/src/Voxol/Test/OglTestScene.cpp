@@ -77,6 +77,11 @@ void OglTestScene::initScene()
 }
 void OglTestScene::render(const Voxol::Math::Mat33& vpMat)
 {
+    //auto& bcp                                        = drawCtx.fboGraph.backgroundClearParam;
+    //bcp.viewport   = drawCtx.clearParam.viewport;
+    //bcp.clearMask  = drawCtx.clearParam.clearMask;
+    //bcp.clearColor = drawCtx.clearParam.clearColor;
+
     drawCtx.fboGraph.backgroundClearParam = drawCtx.clearParam;
     drawCtx.clearParam.apply(false);
     if (entityModeFlag)

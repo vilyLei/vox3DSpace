@@ -39,7 +39,7 @@ void EntitySystemLayer::initalize(const std::string& configFileName)
     tileSys->initalize();
 
     auto& etCompStorage = etSceneSys->entityStorage->comp;
-    
+
     uiOpLayer                      = std::make_shared<System::UIOperationLayer>();
     uiOpLayer->mouseCtrl.dirtyCall = [&, this](const Math::Bounds& bounds, uint32_t type, const Render::ID::KeyUint64& etId) {
         if (type == 0)
@@ -79,14 +79,16 @@ void EntitySystemLayer::initalize(const std::string& configFileName)
 
 void EntitySystemLayer::updateCtx(const Render::Draw::DrawContext& ctx)
 {
-    drawCtx.clearParam = ctx.clearParam;
-    drawCtx.drawParam  = ctx.drawParam;
+
+    drawCtx.clearParam                    = ctx.clearParam;
+    drawCtx.drawParam                     = ctx.drawParam;
+    drawCtx.fboGraph.backgroundClearParam = drawCtx.clearParam;
 }
 
 void EntitySystemLayer::undo()
 {
-    auto& storage     = etRenderSys->entityStorage;
-    auto& compStorage = storage->comp;
+    auto&  storage     = etRenderSys->entityStorage;
+    auto&  compStorage = storage->comp;
     auto&& itemData    = compStorage->historyManager->popItem();
     printf("EntitySystemLayer::undo() itemData.id: %u\n", itemData.id.id());
     if (itemData.id.id() < 0)
@@ -102,8 +104,8 @@ void EntitySystemLayer::undo()
     compStorage->setEntityLocalXYAt(pv, itemData.id.id());
 
     auto& bvh = etSceneSys->bvh;
-    auto b0  = bvh->getBoundsAt(itemData.id);
-    auto b1  = b0;
+    auto  b0  = bvh->getBoundsAt(itemData.id);
+    auto  b1  = b0;
     if (tileSys)
     {
         tileSys->addDirtyBounds(b0, 0);
