@@ -48,20 +48,19 @@ struct FBORenderGraph
     void              applyClearColor() const;
     void              applyClearViewport() const;
 
-    void              bindFBOCtx() const;
-    void              renderBeginWithFBOCtx() const;
-    void              renderEndWithFBOCtx() const;
-    bool              hasFBOCtx() const;
-    bool              hasNotFBOCtx() const;
-    void              pushFBOCtx(const FBOContext& fboCtx) const;
-    void              popFBOCtx() const;
-    const FBOContext& topFBOCtx() const;
-    GLuint            getFBOTextureAt(int index) const;
+    void              bindNode() const;
+    void              renderBegin() const;
+    void              renderEnd() const;
+    bool              hasNode() const;
+    bool              hasNotNode() const;
+    void              pushNode(const FBOContext& fboCtx) const;
+    void              popNode() const;
+    const FBOContext& topNode() const;
+    GLuint            getRTTextureAt(int index) const;
 };
 
 struct DrawContext
 {
-    //mutable FBOCtxStack fboCtxStack;
     mutable FBORenderGraph fboGraph;
 
     ClearParams clearParam{};
@@ -70,21 +69,6 @@ struct DrawContext
     DrawCallType  drawCall;
     DrawQueryType drawQueryCall;
 
-
-    /*
-    void applyViewport() const;
-    void applyClearColor() const;
-    void applyClearViewport() const;
-    void              bindFBOCtx() const;
-    void              renderBeginWithFBOCtx() const;
-    void              renderEndWithFBOCtx() const;
-    bool              hasFBOCtx() const;
-    bool              hasNotFBOCtx() const;
-    void              pushFBOCtx(const FBOContext& fboCtx) const;
-    void              popFBOCtx() const;
-    const FBOContext& topFBOCtx() const;
-    GLuint            getFBOTextureAt(int index) const;
-    //*/
     float zoom  = 1;
     bool  dirty = true;
 };

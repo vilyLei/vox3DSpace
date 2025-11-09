@@ -87,11 +87,11 @@ void TileScene::buildGridContent(Grid::Unit& unit, const Render::Draw::DrawConte
             //fboCtx.fbo = mFbo;
             fboCtx.clearParam = clearParam;
             fboCtx.texUnits   = {texUnit};
-            graph.pushFBOCtx(fboCtx);
-            graph.renderBeginWithFBOCtx();
+            graph.pushNode(fboCtx);
+            graph.renderBegin();
         },
         [&]() noexcept {
-            graph.popFBOCtx();
+            graph.popNode();
             printf("Tile rtt make_scope_enter_and_exit_guard exec exit rctx.popFBOCtx ...\n");
             printf("Tile BBB RC(%lld, %lld)\n\n", unit.rc.r, unit.rc.c);
         });
@@ -99,8 +99,8 @@ void TileScene::buildGridContent(Grid::Unit& unit, const Render::Draw::DrawConte
     auto&& xy = RC::rcToXY(unit.rc, currGridSize);
     auto&& vb = Math::VxRect::makeXYWH(xy.x, xy.y, currGridSize, currGridSize);
     ctx.drawCall(vb, vpMat);
-    auto rttTex = graph.getFBOTextureAt(0);
-    printf("Tile >>> graph.getFBOTextureAt(0): %d\n", rttTex);
+    auto rttTex = graph.getRTTextureAt(0);
+    printf("Tile >>> graph.getRTTextureAt(0): %d\n", rttTex);
     Render::Gpu::buildTexDrawUnitWithTex(drawUnit, rttTex, true);
     /*
     Render::Draw::OglTextureUnit texUnit{0, gridSize, gridSize, drawUnit.getTextureAt(0)};
