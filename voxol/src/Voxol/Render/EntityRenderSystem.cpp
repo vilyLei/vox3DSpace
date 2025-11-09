@@ -182,34 +182,55 @@ bool EntityRenderSystem::drawUnit(const Draw::DrawContext& rctx, const Component
     //}
 
     //printf(c"xxx xxx trans(x=%f, y=%f)\n", trans.x, trans.y);
+
     auto tempColor = shdDesc.color;
     if (entity.id == 2)
     {
         tempColor = 0xffaaaa00;
-        //auto rttBuild = [&]() {};
+
+        auto pw   = vb.width();
+        auto ph   = vb.height();
 
         vb.outset(30, 30);
         vb.floatToRound();
+        auto        pw2       = vb.width();
+        auto        ph2       = vb.height();
+
         auto        pos      = vb.min;
         uint32_t    gridSize = 256;
         Math::Mat33 vpMRtt;
+
+
 
         vpMRtt.ortho(gridSize, gridSize);
 
         auto& graph = rctx.fboGraph;
 
-        //printf("render rctx.hasFBOCtx(): %d\n", graph.hasFBOCtx());
-        if (graph.hasNode())
+        auto scale = 1.0f;
+        Math::Bounds vb1;
+        auto hasNode = graph.hasNode();
+        Math::Mat33  pvpm;
+        if (hasNode)
         {
             auto vm = graph.topNode().viewMat;
 
-            Math::Mat33 viewM = Math::Mat33::makeTranslate(-20, 0);
+            
+            auto pvwm = vm;
+            pvwm.append(wM);
+            Component::defaultRect.mat33MapTo(pvwm, vb1);
+
+            auto pos3 = vb1.min;
+            auto pw3 = vb1.width();
+            auto ph3 = vb1.height();
+
+            auto&& sv    = vm.getScaleXY();
+
+            auto&& viewM = Math::Mat33::makeTranslate(-20, 0);
             vm.append(viewM);
             vpMRtt.append(vm);
         }
         else
         {
-            auto        scale = 1.0f;
             Math::Mat33 viewM;
             viewM.setScaleXY(scale, scale);
             viewM.setXY(-pos.x * scale, -pos.y * scale);

@@ -21,7 +21,7 @@ struct FBOCtxNode
     Math::Mat33                         viewMat;
     mutable OglFbo::SP                  fbo;
     ClearParams                         clearParam{};
-    mutable std::vector<OglTextureUnit> texUnits;
+    mutable std::vector<TextureParam>   texUnits;
 
     void bindFBO(bool onlyChangeViewport) const;
     void unbindFBO() const;
