@@ -188,19 +188,17 @@ bool EntityRenderSystem::drawUnit(const Draw::DrawContext& rctx, const Component
     {
         tempColor = 0xffaaaa00;
 
-        auto pw   = vb.width();
-        auto ph   = vb.height();
+        //auto pw   = vb.width();
+        //auto ph   = vb.height();
+        //vb.outset(30, 30);
+        //vb.floatToRound();
+        //auto        pw2       = vb.width();
+        //auto        ph2       = vb.height();
+        //auto        pos      = vb.min;
 
-        vb.outset(30, 30);
-        vb.floatToRound();
-        auto        pw2       = vb.width();
-        auto        ph2       = vb.height();
-
-        auto        pos      = vb.min;
         uint32_t    gridSize = 256;
         Math::Mat33 vpMRtt;
         Math::Mat33 projMRtt;
-        //vpMRtt.identity();
 
         projMRtt.ortho(gridSize, gridSize);
         vpMRtt = projMRtt;
@@ -208,33 +206,36 @@ bool EntityRenderSystem::drawUnit(const Draw::DrawContext& rctx, const Component
         auto& graph = rctx.fboGraph;
 
         auto scale = 1.0f;
-        Math::Bounds vb1;
+
         auto hasNode = graph.hasNode();
-        Math::Mat33  projM;
-        Math::Mat33  pvwM;
+
+        Math::Mat33  projM = rctx.drawParam.projMat;
+        Math::Mat33  pvwM = wM;
+
         if (hasNode)
         {
-            auto vm = graph.topNode().viewMat;
-            projM   = graph.topNode().projMat;
-            
-            pvwM = vm;
+            auto&& node = graph.topNode();
+            auto vm = node.viewMat;
+            projM   = node.projMat;
+
+            // model space to rtt view space
+            pvwM = node.viewMat;
             pvwM.append(wM);
-            Component::defaultRect.mat33MapTo(pvwM, vb1);
-            vb1.outset(20,20);
-            vb1.floatToRound();
+            Component::defaultRect.mat33MapTo(pvwM, vb);
 
-            auto pos3 = vb1.min;
-            auto pw3 = vb1.width();
-            auto ph3 = vb1.height();
+            vb.outset(30, 30);
+            vb.floatToRound();
 
-            auto&& viewM = Math::Mat33::makeTranslate(-pos3.x, -pos3.y);
+            auto&& viewM = Math::Mat33::makeTranslate(-vb.min.x, -vb.min.y);
             vpMRtt.append(viewM);
         }
         else
         {
+            vb.outset(30, 30);
+            vb.floatToRound();
             Math::Mat33 viewM;
             viewM.setScaleXY(scale, scale);
-            viewM.setXY(-pos.x * scale, -pos.y * scale);
+            viewM.setXY(-vb.min.x * scale, -vb.min.y * scale);
             vpMRtt.append(viewM);
         }
 
@@ -263,7 +264,7 @@ bool EntityRenderSystem::drawUnit(const Draw::DrawContext& rctx, const Component
         printf("render curr 2 ...\n");
 
         rttUnit.blendMode = 1;
-        rttUnit.objMat.setTranslateAndScale(vb1.min.x, vb1.min.y, gridSize, gridSize);
+        rttUnit.objMat.setTranslateAndScale(vb.min.x, vb.min.y, gridSize, gridSize);
         rttUnit.mvp = projM;
         rttUnit.draw();
 
@@ -276,11 +277,12 @@ bool EntityRenderSystem::drawUnit(const Draw::DrawContext& rctx, const Component
         
         auto&& drawRUnit    = drs[0];
         drawRUnit.blendMode = 1;
+        drawRUnit.vertex.lineWidth = 2.0f;
         drawRUnit.setColor(0xff000000);
         drawRUnit.vertex.toLine();
         drawRUnit.objMat.identity();
-        drawRUnit.objMat.setXY(vb1.min);
-        drawRUnit.objMat.setScaleXY(vb1.width(), vb1.height());
+        drawRUnit.objMat.setXY(vb.min);
+        drawRUnit.objMat.setScaleXY(vb.width(), vb.height());
         drawRUnit.mvp = projM;
         drawRUnit.draw();
         drawRUnit.vertex.toShape();
