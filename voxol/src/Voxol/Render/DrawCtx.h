@@ -15,7 +15,7 @@ namespace Voxol::Render
 namespace Draw
 {
 
-struct FBOContext
+struct FBOCtxNode
 {
     Math::Mat33                 viewMat;
     mutable OglFbo::SP          fbo;
@@ -29,13 +29,13 @@ struct FBOContext
     void applyClearViewport() const;
     void buildTexData() const;
 
-    GLuint getTextureAt(int index) const;
+    GLuint getRTTextureAt(int index) const;
 };
 struct FBOCtxStack
 {
     uint32_t                depth = 0;
-    std::vector<OglFbo::SP> fboStack;
-    std::vector<FBOContext> ctxStack;
+    std::vector<OglFbo::SP> freeFboStack;
+    std::vector<FBOCtxNode> ctxStack;
 };
 
 
@@ -53,9 +53,9 @@ struct FBORenderGraph
     void              renderEnd() const;
     bool              hasNode() const;
     bool              hasNotNode() const;
-    void              pushNode(const FBOContext& fboCtx, bool autoRenderBegin = true) const;
+    void              pushNode(const FBOCtxNode& fboCtx, bool autoRenderBegin = true) const;
     void              popNode() const;
-    const FBOContext& topNode() const;
+    const FBOCtxNode& topNode() const;
     GLuint            getRTTextureAt(int index) const;
 };
 

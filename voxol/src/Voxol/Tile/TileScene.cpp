@@ -81,12 +81,11 @@ void TileScene::buildGridContent(Grid::Unit& unit, const Render::Draw::DrawConte
             printf("Tile AAA RC(%lld, %lld)\n", unit.rc.r, unit.rc.c);
             printf("Tile rtt make_scope_enter_and_exit_guard exec enter rctx.pushFBOCtx rtt: %d\n", drawUnit.getTextureAt(0));
 
-            Render::Draw::OglTextureUnit texUnit{0, gridSize, gridSize, drawUnit.getTextureAt(0)};
-            Render::Draw::FBOContext     fboCtx;
-            fboCtx.viewMat = viewM;
             //fboCtx.fbo = mFbo;
+            Render::Draw::FBOCtxNode fboCtx;
+            fboCtx.viewMat    = viewM;
             fboCtx.clearParam = clearParam;
-            fboCtx.texUnits   = {texUnit};
+            fboCtx.texUnits   = {{0, gridSize, gridSize, drawUnit.getTextureAt(0)}};
             graph.pushNode(fboCtx);
         },
         [&]() noexcept {

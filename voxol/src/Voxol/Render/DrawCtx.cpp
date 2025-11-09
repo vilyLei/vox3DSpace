@@ -5,9 +5,9 @@ namespace Draw
 {
 
 
-void FBOContext::bindFBO(bool onlyChangeViewport) const
+void FBOCtxNode::bindFBO(bool onlyChangeViewport) const
 {
-    printf("FBOContext::bindFBO() fbo(%d), onlyChangeViewport: %d\n", fbo->uid(), onlyChangeViewport);
+    printf("FBOCtxNode::bindFBO() fbo(%d), onlyChangeViewport: %d\n", fbo->uid(), onlyChangeViewport);
 
     fbo->bindFBO();
     for (auto& tex : texUnits)
@@ -23,9 +23,9 @@ void FBOContext::bindFBO(bool onlyChangeViewport) const
         clearParam.apply();
     }
 }
-void FBOContext::unbindFBO() const
+void FBOCtxNode::unbindFBO() const
 {
-    printf("FBOContext::unbindFBO() fbo(%d), texUnits.size(): %lld\n", fbo->uid(), texUnits.size());
+    printf("FBOCtxNode::unbindFBO() fbo(%d), texUnits.size(): %lld\n", fbo->uid(), texUnits.size());
     if (texUnits.empty())
     {
         fbo->unbindFBO(false);
@@ -36,22 +36,22 @@ void FBOContext::unbindFBO() const
         fbo->unbindFBO(tex.mipmap);
     }
 }
-void FBOContext::applyViewport() const
+void FBOCtxNode::applyViewport() const
 {
     clearParam.applyViewport();
 }
 
-void FBOContext::applyClearColor() const
+void FBOCtxNode::applyClearColor() const
 {
     clearParam.applyClearColor();
 }
 
-void FBOContext::applyClearViewport() const
+void FBOCtxNode::applyClearViewport() const
 {
     clearParam.apply();
 }
 
-void FBOContext::buildTexData() const
+void FBOCtxNode::buildTexData() const
 {
     if (!texUnits.empty())
     {
@@ -60,7 +60,7 @@ void FBOContext::buildTexData() const
     }
 }
 
-GLuint FBOContext::getTextureAt(int index) const
+GLuint FBOCtxNode::getRTTextureAt(int index) const
 {
     if (texUnits.empty() || index < 0 || index >= texUnits.size())
         return 0;
@@ -121,7 +121,7 @@ bool FBORenderGraph::hasNotNode() const
     auto& stack = fboCtxStack.ctxStack;
     return stack.empty();
 }
-void FBORenderGraph::pushNode(const FBOContext& fboCtx, bool autoRenderBegin) const
+void FBORenderGraph::pushNode(const FBOCtxNode& fboCtx, bool autoRenderBegin) const
 {
     printf("FBORenderGraph::pushFBOCtx() ...\n");
     auto& stack = fboCtxStack.ctxStack;
@@ -138,7 +138,7 @@ void FBORenderGraph::pushNode(const FBOContext& fboCtx, bool autoRenderBegin) co
     else
     {
 
-        auto&      fboStack = fboCtxStack.fboStack;
+        auto&      fboStack = fboCtxStack.freeFboStack;
         OglFbo::SP fbo;
         if (fboStack.empty())
         {
@@ -150,7 +150,7 @@ void FBORenderGraph::pushNode(const FBOContext& fboCtx, bool autoRenderBegin) co
             fbo = fboStack.back();
             fboStack.pop_back();
         }
-        FBOContext ctx = fboCtx;
+        FBOCtxNode ctx = fboCtx;
         ctx.fbo        = fbo;
         stack.emplace_back(ctx);
     }
@@ -173,7 +173,7 @@ void FBORenderGraph::popNode() const
     }
     if (fbo)
     {
-        fboCtxStack.fboStack.emplace_back(fbo);
+        fboCtxStack.freeFboStack.emplace_back(fbo);
     }
     stack.pop_back();
 
@@ -190,7 +190,7 @@ void FBORenderGraph::popNode() const
     printf("FBORenderGraph::popFBOCtx() switch to orther rtt ...\n");
     nextCtx.bindFBO(true);
 }
-const FBOContext& FBORenderGraph::topNode() const
+const FBOCtxNode& FBORenderGraph::topNode() const
 {
     auto& stack = fboCtxStack.ctxStack;
     return stack.back();
@@ -202,8 +202,8 @@ GLuint FBORenderGraph::getRTTextureAt(int index) const
         return 0;
 
     auto& ctx = fboCtxStack.ctxStack.back();
-    auto  tex = ctx.getTextureAt(index);
-    printf("FBORenderGraph::getFBOTextureAt() tex: %d\n", tex);
+    auto  tex = ctx.getRTTextureAt(index);
+    printf("FBORenderGraph::getRTTextureAt() tex: %d\n", tex);
     return tex;
 }
 

@@ -227,10 +227,9 @@ bool EntityRenderSystem::drawUnit(const Draw::DrawContext& rctx, const Component
         auto&& guard = Base::Scope::make_scope_enter_and_exit_guard(
             [&]() noexcept {
                 printf("render rtt make_scope_enter_and_exit_guard exec enter rctx.pushFBOCtx rtt: %d\n", rttUnit.getTextureAt(0));
-                Render::Draw::OglTextureUnit texUnit{0, gridSize, gridSize, rttUnit.getTextureAt(0)};
-                Render::Draw::FBOContext     fboCtx;
+                Render::Draw::FBOCtxNode     fboCtx;
                 fboCtx.clearParam = clearParam;
-                fboCtx.texUnits   = {texUnit};
+                fboCtx.texUnits   = {{0, gridSize, gridSize, rttUnit.getTextureAt(0)}};
 
                 graph.pushNode(fboCtx);
             },
