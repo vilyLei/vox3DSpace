@@ -71,6 +71,141 @@ GLuint FBOContext::getTextureAt(int index) const
 }
 
 
+// <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< fbo render graph begin
+
+void FBORenderGraph::bindFBOCtx() const
+{
+    auto& stack = fboCtxStack.ctxStack;
+    auto  fctx  = stack.back();
+    fctx.fbo->bindFBO();
+}
+void FBORenderGraph::renderBeginWithFBOCtx() const
+{
+    printf("FBORenderGraph::renderBeginWithFBOCtx() ...\n");
+
+    auto&  stack = fboCtxStack.ctxStack;
+    auto&& fctx  = stack.back();
+    fctx.bindFBO(false);
+}
+
+void FBORenderGraph::renderEndWithFBOCtx() const
+{
+    auto&  stack = fboCtxStack.ctxStack;
+    auto&& fctx  = stack.back();
+    fctx.unbindFBO();
+    printf("FBORenderGraph::renderEndWithFBOCtx() ...\n");
+
+    /*
+    if (stack.size() > 1)
+    {
+        auto&& preFCtx = stack[stack.size() - 2];
+
+        fctx.unbindFBO();
+        printf("DrawContext::renderEndWithFBOCtx() A ...\n");
+        preFCtx.bindFBO(true);
+        return;
+    }
+    fctx.unbindFBO();
+    clearParam.applyViewport();
+    printf("DrawContext::renderEndWithFBOCtx() B ...\n");
+    //*/
+}
+bool FBORenderGraph::hasFBOCtx() const
+{
+    auto& stack = fboCtxStack.ctxStack;
+    return !stack.empty();
+}
+bool FBORenderGraph::hasNotFBOCtx() const
+{
+    auto& stack = fboCtxStack.ctxStack;
+    return stack.empty();
+}
+void FBORenderGraph::pushFBOCtx(const FBOContext& fboCtx) const
+{
+    printf("FBORenderGraph::pushFBOCtx() ...\n");
+    auto& stack = fboCtxStack.ctxStack;
+    if (!stack.empty())
+    {
+        auto&& preCtx = stack.back();
+        preCtx.fbo->unbindFBO();
+    }
+    if (fboCtx.fbo)
+    {
+        stack.emplace_back(fboCtx);
+    }
+    else
+    {
+
+        auto&      fboStack = fboCtxStack.fboStack;
+        OglFbo::SP fbo;
+        if (fboStack.empty())
+        {
+            fbo = OglFbo::make();
+            fbo->init(GL_ZERO);
+        }
+        else
+        {
+            fbo = fboStack.back();
+            fboStack.pop_back();
+        }
+        FBOContext ctx = fboCtx;
+        ctx.fbo        = fbo;
+        stack.emplace_back(ctx);
+    }
+}
+void FBORenderGraph::popFBOCtx() const
+{
+    auto& stack = fboCtxStack.ctxStack;
+    if (stack.empty())
+        return;
+
+    auto&& ctx = stack.back();
+    auto&& fbo = ctx.fbo;
+    if (fbo->fboBinding())
+    {
+        renderEndWithFBOCtx();
+    }
+    if (fbo)
+    {
+        fboCtxStack.fboStack.emplace_back(fbo);
+    }
+    stack.pop_back();
+
+    printf("FBORenderGraph::popFBOCtx() stack.empty(): %d\n", stack.empty());
+
+    if (stack.empty())
+    {
+        printf("FBORenderGraph::popFBOCtx() switch to none ...\n");
+        return;
+    }
+
+    auto&& nextCtx = stack.back();
+    printf("FBORenderGraph::popFBOCtx() switch to orther rtt ...\n");
+    nextCtx.bindFBO(true);
+}
+const FBOContext& FBORenderGraph::topFBOCtx() const
+{
+    auto& stack = fboCtxStack.ctxStack;
+    return stack.back();
+}
+
+GLuint FBORenderGraph::getFBOTextureAt(int index) const
+{
+    if (index < 0 || fboCtxStack.ctxStack.empty())
+        return 0;
+
+    auto& ctx = fboCtxStack.ctxStack.back();
+    auto  tex = ctx.getTextureAt(index);
+    printf("FBORenderGraph::getFBOTextureAt() tex: %d\n", tex);
+    return tex;
+}
+// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> fbo render graph end
+
+
+
+
+
+
 void DrawContext::applyViewport() const
 {
     clearParam.applyViewport();

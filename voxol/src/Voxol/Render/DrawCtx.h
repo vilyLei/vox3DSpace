@@ -37,6 +37,23 @@ struct FBOCtxStack
     std::vector<OglFbo::SP> fboStack;
     std::vector<FBOContext> ctxStack;
 };
+
+
+struct FBORenderGraph
+{
+    mutable FBOCtxStack fboCtxStack;
+
+    void              bindFBOCtx() const;
+    void              renderBeginWithFBOCtx() const;
+    void              renderEndWithFBOCtx() const;
+    bool              hasFBOCtx() const;
+    bool              hasNotFBOCtx() const;
+    void              pushFBOCtx(const FBOContext& fboCtx) const;
+    void              popFBOCtx() const;
+    const FBOContext& topFBOCtx() const;
+    GLuint            getFBOTextureAt(int index) const;
+};
+
 struct DrawContext
 {
     mutable FBOCtxStack fboCtxStack;
