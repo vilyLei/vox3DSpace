@@ -75,8 +75,8 @@ void TileScene::buildGridContent(Grid::Unit& unit, const Render::Draw::DrawConte
     fboCtx.clearParam = clearParam;
     fboCtx.texUnits   = {{0, gridSize, gridSize, drawUnit.getTextureAt(0)}};
 
-    std::string debugEnterInfo = std::format("Tile AAA RC({}, {})", static_cast<int>(unit.rc.r), static_cast<int>(unit.rc.c));
-    std::string debugExitInfo  = std::format("Tile AAA RC({}, {})\n", static_cast<int>(unit.rc.r), static_cast<int>(unit.rc.c));
+    std::string debugEnterInfo = std::format("Tile AAA RC({}, {}) Begin", static_cast<int>(unit.rc.r), static_cast<int>(unit.rc.c));
+    std::string debugExitInfo  = std::format("Tile AAA RC({}, {}) End\n", static_cast<int>(unit.rc.r), static_cast<int>(unit.rc.c));
 
     auto&& nodeGuard      = ctx.makeFBOGraphNodeGuard(fboCtx, debugEnterInfo, debugExitInfo);
 
