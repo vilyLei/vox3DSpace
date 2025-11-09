@@ -77,6 +77,7 @@ void OglTestScene::initScene()
 }
 void OglTestScene::render(const Voxol::Math::Mat33& vpMat)
 {
+    drawCtx.fboGraph.backgroundClearParam = drawCtx.clearParam;
     drawCtx.clearParam.apply(false);
     if (entityModeFlag)
     {

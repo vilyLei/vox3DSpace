@@ -42,6 +42,7 @@ struct FBOCtxStack
 struct FBORenderGraph
 {
     mutable FBOCtxStack fboCtxStack;
+    ClearParams backgroundClearParam;
 
     void              bindFBOCtx() const;
     void              renderBeginWithFBOCtx() const;
@@ -56,7 +57,8 @@ struct FBORenderGraph
 
 struct DrawContext
 {
-    mutable FBOCtxStack fboCtxStack;
+    //mutable FBOCtxStack fboCtxStack;
+    mutable FBORenderGraph fboGraph;
 
     ClearParams clearParam{};
     DrawParams  drawParam{};
@@ -68,6 +70,7 @@ struct DrawContext
     void applyClearColor() const;
     void applyClearViewport() const;
 
+    /*
     void              bindFBOCtx() const;
     void              renderBeginWithFBOCtx() const;
     void              renderEndWithFBOCtx() const;
@@ -77,7 +80,7 @@ struct DrawContext
     void              popFBOCtx() const;
     const FBOContext& topFBOCtx() const;
     GLuint            getFBOTextureAt(int index) const;
-
+    //*/
     float zoom  = 1;
     bool  dirty = true;
 };

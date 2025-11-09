@@ -8,6 +8,7 @@ namespace Draw
 void FBOContext::bindFBO(bool onlyChangeViewport) const
 {
     printf("FBOContext::bindFBO() fbo(%d), onlyChangeViewport: %d\n", fbo->uid(), onlyChangeViewport);
+
     fbo->bindFBO();
     for (auto& tex : texUnits)
     {
@@ -114,6 +115,7 @@ void FBORenderGraph::pushFBOCtx(const FBOContext& fboCtx) const
         auto&& preCtx = stack.back();
         preCtx.fbo->unbindFBO();
     }
+
     if (fboCtx.fbo)
     {
         stack.emplace_back(fboCtx);
@@ -160,7 +162,8 @@ void FBORenderGraph::popFBOCtx() const
 
     if (stack.empty())
     {
-        printf("FBORenderGraph::popFBOCtx() switch to none ...\n");
+        printf("FBORenderGraph::popFBOCtx() switch to background buffer ...\n");
+        backgroundClearParam.applyViewport();
         return;
     }
 
@@ -206,6 +209,7 @@ void DrawContext::applyClearViewport() const
     clearParam.apply();
 }
 
+/*
 void DrawContext::bindFBOCtx() const
 {
     auto& stack = fboCtxStack.ctxStack;
@@ -315,5 +319,6 @@ GLuint DrawContext::getFBOTextureAt(int index) const
     printf("DrawContext::getFBOTextureAt() tex: %d\n", tex);
     return tex;
 }
+//*/
 } // namespace Draw
 } // namespace Voxol::Render

@@ -74,6 +74,7 @@ void TileScene::buildGridContent(Grid::Unit& unit, const Render::Draw::DrawConte
     viewM.setXY(-pos.x * scale, -pos.y * scale);
     vpMat.append(viewM);
 
+    auto& graph = ctx.fboGraph;
 
     auto&& guard = Base::Scope::make_scope_enter_and_exit_guard(
         [&]() noexcept {
@@ -86,11 +87,11 @@ void TileScene::buildGridContent(Grid::Unit& unit, const Render::Draw::DrawConte
             //fboCtx.fbo = mFbo;
             fboCtx.clearParam = clearParam;
             fboCtx.texUnits   = {texUnit};
-            ctx.pushFBOCtx(fboCtx);
-            ctx.renderBeginWithFBOCtx();
+            graph.pushFBOCtx(fboCtx);
+            graph.renderBeginWithFBOCtx();
         },
         [&]() noexcept {
-            ctx.popFBOCtx();
+            graph.popFBOCtx();
             printf("Tile rtt make_scope_enter_and_exit_guard exec exit rctx.popFBOCtx ...\n");
             printf("Tile BBB RC(%lld, %lld)\n\n", unit.rc.r, unit.rc.c);
         });
@@ -98,8 +99,8 @@ void TileScene::buildGridContent(Grid::Unit& unit, const Render::Draw::DrawConte
     auto&& xy = RC::rcToXY(unit.rc, currGridSize);
     auto&& vb = Math::VxRect::makeXYWH(xy.x, xy.y, currGridSize, currGridSize);
     ctx.drawCall(vb, vpMat);
-    auto rttTex = ctx.getFBOTextureAt(0);
-    printf("Tile >>> ctx.getFBOTextureAt(0): %d\n", rttTex);
+    auto rttTex = graph.getFBOTextureAt(0);
+    printf("Tile >>> graph.getFBOTextureAt(0): %d\n", rttTex);
     Render::Gpu::buildTexDrawUnitWithTex(drawUnit, rttTex, true);
     /*
     Render::Draw::OglTextureUnit texUnit{0, gridSize, gridSize, drawUnit.getTextureAt(0)};

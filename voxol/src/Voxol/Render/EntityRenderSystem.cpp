@@ -196,10 +196,12 @@ bool EntityRenderSystem::drawUnit(const Draw::DrawContext& rctx, const Component
 
         vpMRtt.ortho(gridSize, gridSize);
 
-        //printf("render rctx.hasFBOCtx(): %d\n", rctx.hasFBOCtx());
-        if (rctx.hasFBOCtx())
+        auto& graph = rctx.fboGraph;
+
+        //printf("render rctx.hasFBOCtx(): %d\n", graph.hasFBOCtx());
+        if (graph.hasFBOCtx())
         {
-            auto vm = rctx.topFBOCtx().viewMat;
+            auto vm = graph.topFBOCtx().viewMat;
 
             Math::Mat33 viewM = Math::Mat33::makeTranslate(-20, 0);
             vm.append(viewM);
@@ -230,15 +232,15 @@ bool EntityRenderSystem::drawUnit(const Draw::DrawContext& rctx, const Component
                 fboCtx.clearParam = clearParam;
                 fboCtx.texUnits   = {texUnit};
 
-                rctx.pushFBOCtx(fboCtx);
-                rctx.renderBeginWithFBOCtx();
+                graph.pushFBOCtx(fboCtx);
+                graph.renderBeginWithFBOCtx();
             },
             [&]() noexcept {
-                rctx.popFBOCtx();
+                graph.popFBOCtx();
                 printf("render rtt make_scope_enter_and_exit_guard exec exit rctx.popFBOCtx ...\n");
             });
 
-        auto&& fboCtxB = rctx.topFBOCtx();
+        auto&& fboCtxB = graph.topFBOCtx();
         printf("render rtt fboCtxB.fbo->uid(): %d\n", fboCtxB.fbo->uid());
 
         drawUnit.blendMode = 1;
@@ -246,8 +248,8 @@ bool EntityRenderSystem::drawUnit(const Draw::DrawContext& rctx, const Component
         drawUnit.objMat = wM;
         drawUnit.mvp    = vpMRtt;
         drawUnit.draw();
-        auto rttTex = rctx.getFBOTextureAt(0);
-        printf("Render >>> rctx.getFBOTextureAt(0): %d\n", rttTex);
+        auto rttTex = graph.getFBOTextureAt(0);
+        printf("Render >>> graph.getFBOTextureAt(0): %d\n", rttTex);
         Gpu::buildTexDrawUnitWithTex(rttUnit, rttTex, true);
         //rctx.popFBOCtx();
         //Base::Scope::make_scope_exit_guard([&]() {
