@@ -219,37 +219,7 @@ bool EntityRenderSystem::drawUnit(const Draw::DrawContext& rctx, const Component
         clearParam.clearColor = {0, 0, 0, 0};
         clearParam.viewport   = {0, 0, gridSize, gridSize};
 
-        /*
-
-        auto&& guard = Base::Scope::make_scope_enter_and_exit_guard(
-            [&]() noexcept {
-                printf("render rtt make_scope_enter_and_exit_guard exec enter rctx.pushFBOCtx rtt: %d\n", rttUnit.getTextureAt(0));
-                Render::Draw::FBOCtxNode     fboCtx;
-                fboCtx.clearParam = clearParam;
-                fboCtx.texUnits   = {{0, gridSize, gridSize, rttUnit.getTextureAt(0)}};
-
-                graph.pushNode(fboCtx);
-            },
-            [&]() noexcept {
-                graph.popNode();
-                printf("render rtt make_scope_enter_and_exit_guard exec exit rctx.popFBOCtx ...\n");
-            });
-
-        auto&& fboCtxB = graph.topNode();
-        printf("render rtt fboCtxB.fbo->uid(): %d\n", fboCtxB.fbo->uid());
-
-        drawUnit.blendMode = 1;
-        drawUnit.setColor(tempColor);
-        drawUnit.objMat = wM;
-        drawUnit.mvp    = vpMRtt;
-        drawUnit.draw();
-        auto rttTex = graph.getRTTextureAt(0);
-        printf("Render >>> graph.getRTTextureAt(0): %d\n", rttTex);
-        Gpu::buildTexDrawUnitWithTex(rttUnit, rttTex, true);
-
-        guard.execExitFunc();
-        //*/
-
+        // build fbo rendering process
         Render::Draw::FBOCtxNode fboCtx;
         fboCtx.clearParam          = clearParam;
         fboCtx.texUnits            = {{0, gridSize, gridSize, rttUnit.getTextureAt(0)}};
@@ -267,6 +237,7 @@ bool EntityRenderSystem::drawUnit(const Draw::DrawContext& rctx, const Component
         Gpu::buildTexDrawUnitWithTex(rttUnit, rttTex, true);
         nodeGuard.execExitFunc();
 
+        // rendering other content
         printf("render curr 2 ...\n");
         drawUnit.blendMode = 1;
         drawUnit.setColor(tempColor);
