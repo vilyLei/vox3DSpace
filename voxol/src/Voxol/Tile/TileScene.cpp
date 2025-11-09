@@ -84,8 +84,8 @@ void TileScene::buildGridContent(Grid::Unit& unit, const Render::Draw::DrawConte
     auto&& vb = Math::VxRect::makeXYWH(xy.x, xy.y, currGridSize, currGridSize);
     ctx.drawCall(vb, vpMat);
 
-    auto rttTex = ctx.getRTTextureAt(0);
-    printf("Tile >>> graph.getRTTextureAt(0): %d\n", rttTex);
+    auto rttTex = nodeGuard.getRTTextureAt(0);
+    printf("Tile >>> nodeGuard.getRTTextureAt(0): %d\n", rttTex);
     Render::Gpu::buildTexDrawUnitWithTex(drawUnit, rttTex, true);
 }
 

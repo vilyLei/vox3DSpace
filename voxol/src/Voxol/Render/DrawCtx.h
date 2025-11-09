@@ -87,6 +87,9 @@ struct FBOGraphNodeGuard
         :
         scopeGuard(std::move(other.scopeGuard)), graph(other.graph)
     {}
+    GLuint getRTTextureAt(int index) const {
+        return graph.getRTTextureAt(index);
+    }
 };
 
 struct DrawContext
