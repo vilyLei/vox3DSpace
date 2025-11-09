@@ -194,22 +194,35 @@ GLuint FBORenderGraph::getFBOTextureAt(int index) const
 
 
 
+void FBORenderGraph::applyViewport() const
+{
+    backgroundClearParam.applyViewport();
+}
+
+void FBORenderGraph::applyClearColor() const
+{
+    backgroundClearParam.applyClearColor();
+}
+
+void FBORenderGraph::applyClearViewport() const
+{
+    backgroundClearParam.apply();
+}
+
+/*
+
 void DrawContext::applyViewport() const
 {
     clearParam.applyViewport();
 }
-
 void DrawContext::applyClearColor() const
 {
     clearParam.applyClearColor();
 }
-
 void DrawContext::applyClearViewport() const
 {
     clearParam.apply();
 }
-
-/*
 void DrawContext::bindFBOCtx() const
 {
     auto& stack = fboCtxStack.ctxStack;

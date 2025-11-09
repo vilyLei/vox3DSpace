@@ -44,6 +44,10 @@ struct FBORenderGraph
     mutable FBOCtxStack fboCtxStack;
     ClearParams backgroundClearParam;
 
+    void              applyViewport() const;
+    void              applyClearColor() const;
+    void              applyClearViewport() const;
+
     void              bindFBOCtx() const;
     void              renderBeginWithFBOCtx() const;
     void              renderEndWithFBOCtx() const;
@@ -66,11 +70,11 @@ struct DrawContext
     DrawCallType  drawCall;
     DrawQueryType drawQueryCall;
 
+
+    /*
     void applyViewport() const;
     void applyClearColor() const;
     void applyClearViewport() const;
-
-    /*
     void              bindFBOCtx() const;
     void              renderBeginWithFBOCtx() const;
     void              renderEndWithFBOCtx() const;
