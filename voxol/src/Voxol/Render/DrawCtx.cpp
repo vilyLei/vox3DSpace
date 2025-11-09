@@ -94,21 +94,6 @@ void FBORenderGraph::renderEndWithFBOCtx() const
     auto&& fctx  = stack.back();
     fctx.unbindFBO();
     printf("FBORenderGraph::renderEndWithFBOCtx() ...\n");
-
-    /*
-    if (stack.size() > 1)
-    {
-        auto&& preFCtx = stack[stack.size() - 2];
-
-        fctx.unbindFBO();
-        printf("DrawContext::renderEndWithFBOCtx() A ...\n");
-        preFCtx.bindFBO(true);
-        return;
-    }
-    fctx.unbindFBO();
-    clearParam.applyViewport();
-    printf("DrawContext::renderEndWithFBOCtx() B ...\n");
-    //*/
 }
 bool FBORenderGraph::hasFBOCtx() const
 {
@@ -242,21 +227,6 @@ void DrawContext::renderEndWithFBOCtx() const
     auto&& fctx  = stack.back();
     fctx.unbindFBO();
     printf("DrawContext::renderEndWithFBOCtx() ...\n");
-
-    /*
-    if (stack.size() > 1)
-    {
-        auto&& preFCtx = stack[stack.size() - 2];
-
-        fctx.unbindFBO();
-        printf("DrawContext::renderEndWithFBOCtx() A ...\n");
-        preFCtx.bindFBO(true);
-        return;
-    }
-    fctx.unbindFBO();
-    clearParam.applyViewport();
-    printf("DrawContext::renderEndWithFBOCtx() B ...\n");
-    //*/
 }
 bool DrawContext::hasFBOCtx() const
 {
