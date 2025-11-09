@@ -91,6 +91,13 @@ struct [[nodiscard]] FBOGraphNodeGuard
     {
         return graph.getRTTextureAt(index);
     }
+
+    [[nodiscard]] void execExitFunc() noexcept
+    {
+        scopeGuard.execExitFunc();
+    }
+    [[nodiscard]] void resetExitFunc() noexcept { scopeGuard.resetExitFunc(); }
+    [[nodiscard]] void dismissExitFunc() noexcept { scopeGuard.dismissExitFunc(); }
 };
 
 struct DrawContext
