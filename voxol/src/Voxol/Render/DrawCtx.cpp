@@ -209,6 +209,10 @@ GLuint FBORenderGraph::getRTTextureAt(int index) const
 
 // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> fbo render graph end
 
+GLuint DrawContext::getRTTextureAt(int index) const
+{
+    return fboGraph.getRTTextureAt(index);
+}
 
 //[[nodiscard]] auto DrawContext::makeFBOGraphNodeGuard(const Render::Draw::FBOCtxNode& fboCtx, const std::string& debugEnterInfo, const std::string& debugExitInfo) const
 //{

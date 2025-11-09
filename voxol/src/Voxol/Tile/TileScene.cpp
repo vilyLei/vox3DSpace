@@ -80,36 +80,16 @@ void TileScene::buildGridContent(Grid::Unit& unit, const Render::Draw::DrawConte
     fboCtx.clearParam = clearParam;
     fboCtx.texUnits   = {{0, gridSize, gridSize, drawUnit.getTextureAt(0)}};
 
-    std::int64_t large_number = 9876543210123456789LL;
-    std::string  description  = "The large number is: ";
-
-    std::string result         = std::format("{}{}", description, large_number);
-
     std::string debugEnterInfo = std::format("Tile AAA RC({}, {})", static_cast<int>(unit.rc.r), static_cast<int>(unit.rc.c));
     std::string debugExitInfo  = std::format("Tile AAA RC({}, {})\n", static_cast<int>(unit.rc.r), static_cast<int>(unit.rc.c));
     auto& graph = ctx.fboGraph;
     auto&& nodeGuard      = ctx.makeFBOGraphNodeGuard(fboCtx, debugEnterInfo, debugExitInfo);
-    //auto&& guard = Base::Scope::make_scope_enter_and_exit_guard(
-    //    [&]() noexcept {
-    //        printf("Tile AAA RC(%lld, %lld)\n", unit.rc.r, unit.rc.c);
-    //        printf("Tile rtt make_scope_enter_and_exit_guard exec enter rctx.pushFBOCtx rtt: %d\n", drawUnit.getTextureAt(0));
-
-    //        Render::Draw::FBOCtxNode fboCtx;
-    //        fboCtx.viewMat    = viewM;
-    //        fboCtx.clearParam = clearParam;
-    //        fboCtx.texUnits   = {{0, gridSize, gridSize, drawUnit.getTextureAt(0)}};
-    //        graph.pushNode(fboCtx);
-    //    },
-    //    [&]() noexcept {
-    //        graph.popNode();
-    //        printf("Tile rtt make_scope_enter_and_exit_guard exec exit rctx.popFBOCtx ...\n");
-    //        printf("Tile BBB RC(%lld, %lld)\n\n", unit.rc.r, unit.rc.c);
-    //    });
 
     auto&& xy = RC::rcToXY(unit.rc, currGridSize);
     auto&& vb = Math::VxRect::makeXYWH(xy.x, xy.y, currGridSize, currGridSize);
     ctx.drawCall(vb, vpMat);
-    auto rttTex = graph.getRTTextureAt(0);
+
+    auto rttTex = ctx.getRTTextureAt(0);
     printf("Tile >>> graph.getRTTextureAt(0): %d\n", rttTex);
     Render::Gpu::buildTexDrawUnitWithTex(drawUnit, rttTex, true);
 }

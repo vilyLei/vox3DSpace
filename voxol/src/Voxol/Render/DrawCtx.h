@@ -76,6 +76,8 @@ struct DrawContext
 
     //[[nodiscard]] auto makeFBOGraphNodeGuard(const Render::Draw::FBOCtxNode& fboCtx, const std::string& debugEnterInfo, const std::string& debugExitInfo) const;
 
+    GLuint getRTTextureAt(int index) const;
+
     [[nodiscard]] auto makeFBOGraphNodeGuard(const Render::Draw::FBOCtxNode& fboCtx, const std::string& debugEnterInfo, const std::string& debugExitInfo) const
     {
         return Base::Scope::make_scope_enter_and_exit_guard(
