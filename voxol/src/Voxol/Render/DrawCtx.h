@@ -112,34 +112,6 @@ struct DrawContext
 
     [[nodiscard]] auto makeFBOGraphNodeGuard(const Render::Draw::FBOCtxNode& fboCtx, const std::string& debugEnterInfo, const std::string& debugExitInfo) const
     {
-        /*
-        return Base::Scope::make_scope_enter_and_exit_guard(
-            [&, this]() noexcept {
-                printf("%s\n", debugEnterInfo.c_str());
-                printf("makeFBOGraphNode exec enter graph.pushNode() ...\n");
-                fboGraph.pushNode(fboCtx);
-            },
-            [&, this]() noexcept {
-                fboGraph.popNode();
-                printf("makeFBOGraphNode exec exit graph.popNode() ...\n");
-                printf("%s\n", debugExitInfo.c_str());
-            });
-        //*/
-        /*
-        return FBOGraphNodeGuard{ Base::Scope::make_scope_enter_and_exit_guard(
-            [&, this]() noexcept {
-                printf("%s\n", debugEnterInfo.c_str());
-                printf("makeFBOGraphNode exec enter graph.pushNode() ...\n");
-                fboGraph.pushNode(fboCtx);
-            },
-            [&, this]() noexcept {
-                fboGraph.popNode();
-                printf("makeFBOGraphNode exec exit graph.popNode() ...\n");
-                printf("%s\n", debugExitInfo.c_str());
-                                     }),
-                                 fboGraph};
-        //*/
-        // 推断出 Guard 的真实类型
         auto&& guard = Base::Scope::make_scope_enter_and_exit_guard(
             [&, this]() noexcept {
                 printf("%s\n", debugEnterInfo.c_str());
@@ -152,7 +124,6 @@ struct DrawContext
                 printf("%s\n", debugExitInfo.c_str());
             });
 
-        // Guard 的实际类型是 decltype(guard)
         using GuardT = std::decay_t<decltype(guard)>;
 
         return FBOGraphNodeGuard<GuardT>{std::move(guard), fboGraph};
