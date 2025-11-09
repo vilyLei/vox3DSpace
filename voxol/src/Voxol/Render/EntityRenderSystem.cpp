@@ -1,6 +1,6 @@
 #include "EntityRenderSystem.h"
 #include "../base/ScopeGuard.h"
-
+#include <format>
 namespace Voxol::Render
 {
 
@@ -219,7 +219,7 @@ bool EntityRenderSystem::drawUnit(const Draw::DrawContext& rctx, const Component
         clearParam.clearColor = {0, 0, 0, 0};
         clearParam.viewport   = {0, 0, gridSize, gridSize};
 
-        //*
+        /*
 
         auto&& guard = Base::Scope::make_scope_enter_and_exit_guard(
             [&]() noexcept {
@@ -249,6 +249,23 @@ bool EntityRenderSystem::drawUnit(const Draw::DrawContext& rctx, const Component
 
         guard.execExitFunc();
         //*/
+
+        Render::Draw::FBOCtxNode fboCtx;
+        fboCtx.clearParam          = clearParam;
+        fboCtx.texUnits            = {{0, gridSize, gridSize, rttUnit.getTextureAt(0)}};
+        std::string debugEnterInfo = "Render Sys RTT Begin ...";
+        std::string debugExitInfo  = "Render Sys RTT End ...";
+        auto&& nodeGuard = rctx.makeFBOGraphNodeGuard(fboCtx, debugEnterInfo, debugExitInfo);
+
+        drawUnit.blendMode         = 1;
+        drawUnit.setColor(tempColor);
+        drawUnit.objMat = wM;
+        drawUnit.mvp    = vpMRtt;
+        drawUnit.draw();
+        auto rttTex = nodeGuard.getRTTextureAt(0);
+        printf("Render >>> nodeGuard.getRTTextureAt(0): %d\n", rttTex);
+        Gpu::buildTexDrawUnitWithTex(rttUnit, rttTex, true);
+        nodeGuard.execExitFunc();
 
         printf("render curr 2 ...\n");
         drawUnit.blendMode = 1;
