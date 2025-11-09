@@ -199,10 +199,9 @@ bool EntityRenderSystem::drawUnit(const Draw::DrawContext& rctx, const Component
         auto        pos      = vb.min;
         uint32_t    gridSize = 256;
         Math::Mat33 vpMRtt;
+        Math::Mat33 projMRtt;
 
-
-
-        vpMRtt.ortho(gridSize, gridSize);
+        projMRtt.ortho(gridSize, gridSize);
 
         auto& graph = rctx.fboGraph;
 
@@ -215,7 +214,6 @@ bool EntityRenderSystem::drawUnit(const Draw::DrawContext& rctx, const Component
         {
             auto vm = graph.topNode().viewMat;
             projM   = graph.topNode().projMat;
-
             
             pvwM = vm;
             pvwM.append(wM);
@@ -228,10 +226,9 @@ bool EntityRenderSystem::drawUnit(const Draw::DrawContext& rctx, const Component
             auto ph3 = vb1.height();
 
             auto&& sv    = vm.getScaleXY();
-
-            auto&& viewM = Math::Mat33::makeTranslate(-20, 0);
-            vm.append(viewM);
-            vpMRtt.append(vm);
+            auto&& viewM = Math::Mat33::makeTranslate(-pos3.x, -pos3.y);
+            //vpMRtt       = viewM;
+            vpMRtt.append(projMRtt);
         }
         else
         {
@@ -241,7 +238,7 @@ bool EntityRenderSystem::drawUnit(const Draw::DrawContext& rctx, const Component
             vpMRtt.append(viewM);
         }
 
-        clearParam.clearColor = {0, 0, 0, 0};
+        clearParam.clearColor = {0.5f, 0, 0.5f, 0.5f};
         clearParam.viewport   = {0, 0, gridSize, gridSize};
 
         // build fbo rendering process
@@ -254,7 +251,7 @@ bool EntityRenderSystem::drawUnit(const Draw::DrawContext& rctx, const Component
 
         drawUnit.blendMode         = 1;
         drawUnit.setColor(tempColor);
-        drawUnit.objMat = wM;
+        drawUnit.objMat = pvwM;
         drawUnit.mvp    = vpMRtt;
         drawUnit.draw();
         auto rttTex = nodeGuard.getRTTextureAt(0);
@@ -264,11 +261,18 @@ bool EntityRenderSystem::drawUnit(const Draw::DrawContext& rctx, const Component
 
         // rendering other content
         printf("render curr 2 ...\n");
-        drawUnit.blendMode = 1;
-        drawUnit.setColor(tempColor);
-        drawUnit.objMat = wM;
-        drawUnit.mvp    = vpM;
-        drawUnit.draw();
+
+        rttUnit.blendMode = 1;
+        //rttUnit.objMat.setTranslateAndScale(vb1.min.x, vb1.min.y, gridSize, gridSize);
+        rttUnit.objMat.setTranslateAndScale(0,0, gridSize, gridSize);
+        rttUnit.mvp = projM;
+        rttUnit.draw();
+
+        //drawUnit.blendMode = 1;
+        //drawUnit.setColor(0x9000aa00);
+        //drawUnit.objMat = wM;
+        //drawUnit.mvp    = vpM;
+        //drawUnit.draw();
 
         
         auto&& drawRUnit    = drs[0];
