@@ -19,6 +19,7 @@ namespace Draw
 struct FBOCtxNode
 {
     Math::Mat33                         viewMat;
+    Math::Mat33                         projMat;
     mutable OglFbo::SP                  fbo;
     ClearParams                         clearParam{};
     mutable std::vector<TextureParam>   texUnits;

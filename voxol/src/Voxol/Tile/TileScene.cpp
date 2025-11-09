@@ -72,6 +72,7 @@ void TileScene::buildGridContent(Grid::Unit& unit, const Render::Draw::DrawConte
 
     Render::Draw::FBOCtxNode fboCtx;
     fboCtx.viewMat    = viewM;
+    fboCtx.projMat    = gridProjMat;
     fboCtx.clearParam = clearParam;
     fboCtx.texUnits   = {{0, gridSize, gridSize, drawUnit.getTextureAt(0)}};
 

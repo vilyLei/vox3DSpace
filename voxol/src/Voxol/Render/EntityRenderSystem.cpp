@@ -209,15 +209,19 @@ bool EntityRenderSystem::drawUnit(const Draw::DrawContext& rctx, const Component
         auto scale = 1.0f;
         Math::Bounds vb1;
         auto hasNode = graph.hasNode();
-        Math::Mat33  pvpm;
+        Math::Mat33  projM;
+        Math::Mat33  pvwM;
         if (hasNode)
         {
             auto vm = graph.topNode().viewMat;
+            projM   = graph.topNode().projMat;
 
             
-            auto pvwm = vm;
-            pvwm.append(wM);
-            Component::defaultRect.mat33MapTo(pvwm, vb1);
+            pvwM = vm;
+            pvwM.append(wM);
+            Component::defaultRect.mat33MapTo(pvwM, vb1);
+            vb1.outset(20,20);
+            vb1.floatToRound();
 
             auto pos3 = vb1.min;
             auto pw3 = vb1.width();
@@ -265,6 +269,18 @@ bool EntityRenderSystem::drawUnit(const Draw::DrawContext& rctx, const Component
         drawUnit.objMat = wM;
         drawUnit.mvp    = vpM;
         drawUnit.draw();
+
+        
+        auto&& drawRUnit    = drs[0];
+        drawRUnit.blendMode = 1;
+        drawRUnit.setColor(0xff000000);
+        drawRUnit.vertex.toLine();
+        drawRUnit.objMat.identity();
+        drawRUnit.objMat.setXY(vb1.min);
+        drawRUnit.objMat.setScaleXY(vb1.width(), vb1.height());
+        drawRUnit.mvp = projM;
+        drawRUnit.draw();
+        drawRUnit.vertex.toShape();
         return true;
     }
     printf("render curr ...\n");
