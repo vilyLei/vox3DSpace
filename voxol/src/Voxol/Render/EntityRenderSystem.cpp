@@ -200,6 +200,7 @@ bool EntityRenderSystem::drawUnit(const Draw::DrawContext& rctx, const Component
         uint32_t    gridSize = 256;
         Math::Mat33 vpMRtt;
         Math::Mat33 projMRtt;
+        vpMRtt.identity();
 
         projMRtt.ortho(gridSize, gridSize);
 
@@ -227,8 +228,10 @@ bool EntityRenderSystem::drawUnit(const Draw::DrawContext& rctx, const Component
 
             auto&& sv    = vm.getScaleXY();
             auto&& viewM = Math::Mat33::makeTranslate(-pos3.x, -pos3.y);
+            //auto&& viewM = Math::Mat33::makeTranslate(-0.5,0);
             //vpMRtt       = viewM;
-            vpMRtt.append(projMRtt);
+            vpMRtt = projMRtt;
+            vpMRtt.append(viewM);
         }
         else
         {
@@ -263,8 +266,8 @@ bool EntityRenderSystem::drawUnit(const Draw::DrawContext& rctx, const Component
         printf("render curr 2 ...\n");
 
         rttUnit.blendMode = 1;
-        //rttUnit.objMat.setTranslateAndScale(vb1.min.x, vb1.min.y, gridSize, gridSize);
-        rttUnit.objMat.setTranslateAndScale(0,0, gridSize, gridSize);
+        rttUnit.objMat.setTranslateAndScale(vb1.min.x, vb1.min.y, gridSize, gridSize);
+        //rttUnit.objMat.setTranslateAndScale(0,0, gridSize, gridSize);
         rttUnit.mvp = projM;
         rttUnit.draw();
 
