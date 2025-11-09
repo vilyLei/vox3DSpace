@@ -220,9 +220,6 @@ bool EntityRenderSystem::drawUnit(const Draw::DrawContext& rctx, const Component
         clearParam.viewport   = {0, 0, gridSize, gridSize};
 
         //*
-        //mFbo->bindFBO();
-        //mFbo->bindTextureAt(rttUnit.getTextureAt(0), 0, gridSize, gridSize);
-        //mFbo->renderBegin(clearParam);
 
         auto&& guard = Base::Scope::make_scope_enter_and_exit_guard(
             [&]() noexcept {
@@ -249,14 +246,7 @@ bool EntityRenderSystem::drawUnit(const Draw::DrawContext& rctx, const Component
         auto rttTex = graph.getRTTextureAt(0);
         printf("Render >>> graph.getRTTextureAt(0): %d\n", rttTex);
         Gpu::buildTexDrawUnitWithTex(rttUnit, rttTex, true);
-        //rctx.popFBOCtx();
-        //Base::Scope::make_scope_exit_guard([&]() {
-        //    printf("render rtt make_scope_exit_guard exec rctx.popFBOCtx ...\n");
-        //    rctx.popFBOCtx();
-        //});
 
-        //mFbo->unbindFBO(rctx.clearParam, true);
-        //Render::Gpu::buildTexDrawUnitWithTex(rttUnit, mFbo->getTextureAt(0), true);
         guard.execExitFunc();
         //*/
 

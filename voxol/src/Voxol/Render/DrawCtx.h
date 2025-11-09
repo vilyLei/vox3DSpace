@@ -9,6 +9,7 @@
 #include <glfw3.h>
 #include <vector>
 #include "OglFbo.h"
+#include "../base/ScopeGuard.h"
 
 namespace Voxol::Render
 {
@@ -17,9 +18,9 @@ namespace Draw
 
 struct FBOCtxNode
 {
-    Math::Mat33                 viewMat;
-    mutable OglFbo::SP          fbo;
-    ClearParams                 clearParam{};
+    Math::Mat33                         viewMat;
+    mutable OglFbo::SP                  fbo;
+    ClearParams                         clearParam{};
     mutable std::vector<OglTextureUnit> texUnits;
 
     void bindFBO(bool onlyChangeViewport) const;
@@ -42,11 +43,11 @@ struct FBOCtxStack
 struct FBORenderGraph
 {
     mutable FBOCtxStack fboCtxStack;
-    ClearParams backgroundClearParam;
+    ClearParams         backgroundClearParam;
 
-    void              applyViewport() const;
-    void              applyClearColor() const;
-    void              applyClearViewport() const;
+    void applyViewport() const;
+    void applyClearColor() const;
+    void applyClearViewport() const;
 
     void              bindNode() const;
     void              renderBegin() const;
@@ -71,7 +72,40 @@ struct DrawContext
 
     float zoom  = 1;
     bool  dirty = true;
+
+
+    //[[nodiscard]] auto makeFBOGraphNodeGuard(const Render::Draw::FBOCtxNode& fboCtx, const std::string& debugEnterInfo, const std::string& debugExitInfo) const;
+
+    [[nodiscard]] auto makeFBOGraphNodeGuard(const Render::Draw::FBOCtxNode& fboCtx, const std::string& debugEnterInfo, const std::string& debugExitInfo) const
+    {
+        return Base::Scope::make_scope_enter_and_exit_guard(
+            [&, this]() noexcept {
+                printf("%s\n", debugEnterInfo.c_str());
+                printf("makeFBOGraphNode exec enter graph.pushNode() ...\n");
+                fboGraph.pushNode(fboCtx);
+            },
+            [&, this]() noexcept {
+                fboGraph.popNode();
+                printf("makeFBOGraphNode exec exit graph.popNode() ...\n");
+                printf("%s\n", debugExitInfo.c_str());
+            });
+    }
 };
+
+//[[nodiscard]] auto makeFBOGraphNode(const FBORenderGraph& graph, const Render::Draw::FBOCtxNode& fboCtx, const std::string& debugEnterInfo, const std::string& debugExitInfo)
+//{
+//    return Base::Scope::make_scope_enter_and_exit_guard(
+//        [&]() noexcept {
+//            printf("%s\n", debugEnterInfo.c_str());
+//            printf("makeFBOGraphNode exec enter graph.pushNode() ...\n");
+//            graph.pushNode(fboCtx);
+//        },
+//        [&]() noexcept {
+//            graph.popNode();
+//            printf("makeFBOGraphNode exec exit graph.popNode() ...\n");
+//            printf("%s\n", debugExitInfo.c_str());
+//        });
+//}
 } // namespace Draw
 } // namespace Voxol::Render
 #endif

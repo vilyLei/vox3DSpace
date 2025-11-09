@@ -1,6 +1,7 @@
 #include "TileScene.h"
 #include "../Math/MathDef.h"
 #include "../base/ScopeGuard.h"
+#include <format>
 
 namespace Voxol::Tile
 {
@@ -74,25 +75,36 @@ void TileScene::buildGridContent(Grid::Unit& unit, const Render::Draw::DrawConte
     viewM.setXY(-pos.x * scale, -pos.y * scale);
     vpMat.append(viewM);
 
+    Render::Draw::FBOCtxNode fboCtx;
+    fboCtx.viewMat    = viewM;
+    fboCtx.clearParam = clearParam;
+    fboCtx.texUnits   = {{0, gridSize, gridSize, drawUnit.getTextureAt(0)}};
+
+    std::int64_t large_number = 9876543210123456789LL;
+    std::string  description  = "The large number is: ";
+
+    std::string result         = std::format("{}{}", description, large_number);
+
+    std::string debugEnterInfo = std::format("Tile AAA RC({}, {})", static_cast<int>(unit.rc.r), static_cast<int>(unit.rc.c));
+    std::string debugExitInfo  = std::format("Tile AAA RC({}, {})\n", static_cast<int>(unit.rc.r), static_cast<int>(unit.rc.c));
     auto& graph = ctx.fboGraph;
+    auto&& nodeGuard      = ctx.makeFBOGraphNodeGuard(fboCtx, debugEnterInfo, debugExitInfo);
+    //auto&& guard = Base::Scope::make_scope_enter_and_exit_guard(
+    //    [&]() noexcept {
+    //        printf("Tile AAA RC(%lld, %lld)\n", unit.rc.r, unit.rc.c);
+    //        printf("Tile rtt make_scope_enter_and_exit_guard exec enter rctx.pushFBOCtx rtt: %d\n", drawUnit.getTextureAt(0));
 
-    auto&& guard = Base::Scope::make_scope_enter_and_exit_guard(
-        [&]() noexcept {
-            printf("Tile AAA RC(%lld, %lld)\n", unit.rc.r, unit.rc.c);
-            printf("Tile rtt make_scope_enter_and_exit_guard exec enter rctx.pushFBOCtx rtt: %d\n", drawUnit.getTextureAt(0));
-
-            //fboCtx.fbo = mFbo;
-            Render::Draw::FBOCtxNode fboCtx;
-            fboCtx.viewMat    = viewM;
-            fboCtx.clearParam = clearParam;
-            fboCtx.texUnits   = {{0, gridSize, gridSize, drawUnit.getTextureAt(0)}};
-            graph.pushNode(fboCtx);
-        },
-        [&]() noexcept {
-            graph.popNode();
-            printf("Tile rtt make_scope_enter_and_exit_guard exec exit rctx.popFBOCtx ...\n");
-            printf("Tile BBB RC(%lld, %lld)\n\n", unit.rc.r, unit.rc.c);
-        });
+    //        Render::Draw::FBOCtxNode fboCtx;
+    //        fboCtx.viewMat    = viewM;
+    //        fboCtx.clearParam = clearParam;
+    //        fboCtx.texUnits   = {{0, gridSize, gridSize, drawUnit.getTextureAt(0)}};
+    //        graph.pushNode(fboCtx);
+    //    },
+    //    [&]() noexcept {
+    //        graph.popNode();
+    //        printf("Tile rtt make_scope_enter_and_exit_guard exec exit rctx.popFBOCtx ...\n");
+    //        printf("Tile BBB RC(%lld, %lld)\n\n", unit.rc.r, unit.rc.c);
+    //    });
 
     auto&& xy = RC::rcToXY(unit.rc, currGridSize);
     auto&& vb = Math::VxRect::makeXYWH(xy.x, xy.y, currGridSize, currGridSize);
@@ -100,42 +112,6 @@ void TileScene::buildGridContent(Grid::Unit& unit, const Render::Draw::DrawConte
     auto rttTex = graph.getRTTextureAt(0);
     printf("Tile >>> graph.getRTTextureAt(0): %d\n", rttTex);
     Render::Gpu::buildTexDrawUnitWithTex(drawUnit, rttTex, true);
-    /*
-    Render::Draw::OglTextureUnit texUnit{0, gridSize, gridSize, drawUnit.getTextureAt(0)};
-    Render::Draw::FBOContext fboCtx;
-    fboCtx.viewMat = viewM;
-    //fboCtx.fbo = mFbo;
-    fboCtx.clearParam = clearParam;
-    fboCtx.texUnits   = {texUnit};
-
-    printf("Tile AAA RC(%lld, %lld)\n", unit.rc.r, unit.rc.c);
-    printf("tile A rctx.hasFBOCtx(): %d\n", ctx.hasFBOCtx());
-    ctx.pushFBOCtx(fboCtx);
-
-    //mFbo->bindFBO();
-    //mFbo->bindTextureAt(drawUnit.getTextureAt(0), 0, gridSize, gridSize);
-    //mFbo->renderBegin(clearParam);
-
-    ctx.renderBeginWithFBOCtx();
-
-    auto&& xy = RC::rcToXY(unit.rc, currGridSize);
-    auto&& vb = Math::VxRect::makeXYWH(xy.x, xy.y, currGridSize, currGridSize);
-    ctx.drawCall(vb, vpMat);
-    //mFbo->unbindFBO(ctx.clearParam, true);
-    //mFbo->unbindFBOWithViewport(ctx.clearParam, true);
-    ctx.renderEndWithFBOCtx();
-
-    //auto&& fboCtxObj = ctx.topFBOCtx();
-    //auto   texB      = fboCtxObj.getTextureAt(0);
-
-
-    //Render::Gpu::buildTexDrawUnitWithTex(drawUnit, mFbo->getTextureAt(0), true);
-    Render::Gpu::buildTexDrawUnitWithTex(drawUnit, ctx.getFBOTextureAt(0), true);
-    ctx.popFBOCtx();
-
-    printf("tile B rctx.hasFBOCtx(): %d\n", ctx.hasFBOCtx());
-    printf("Tile BBB RC(%lld, %lld)\n---------------------\n", unit.rc.r, unit.rc.c);
-    //*/
 }
 
 

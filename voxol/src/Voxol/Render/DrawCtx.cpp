@@ -209,5 +209,20 @@ GLuint FBORenderGraph::getRTTextureAt(int index) const
 
 // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> fbo render graph end
 
+
+//[[nodiscard]] auto DrawContext::makeFBOGraphNodeGuard(const Render::Draw::FBOCtxNode& fboCtx, const std::string& debugEnterInfo, const std::string& debugExitInfo) const
+//{
+//    return Base::Scope::make_scope_enter_and_exit_guard(
+//        [&, this]() noexcept {
+//            printf("%s\n", debugEnterInfo.c_str());
+//            printf("makeFBOGraphNode exec enter graph.pushNode() ...\n");
+//            fboGraph.pushNode(fboCtx);
+//        },
+//        [&, this]() noexcept {
+//            fboGraph.popNode();
+//            printf("makeFBOGraphNode exec exit graph.popNode() ...\n");
+//            printf("%s\n", debugExitInfo.c_str());
+//        });
+//}
 } // namespace Draw
 } // namespace Voxol::Render
