@@ -64,32 +64,32 @@ template <typename GuardT>
 struct [[nodiscard]] FBOGraphNodeGuard
 {
     GuardT          scopeGuard;
-    FBORenderGraph& graph;
+    FBORenderGraph& fboGraph;
 
     FBOGraphNodeGuard(const FBOGraphNodeGuard&)            = delete;
     FBOGraphNodeGuard& operator=(const FBOGraphNodeGuard&) = delete;
 
     FBOGraphNodeGuard(GuardT&& g, FBORenderGraph& gr) noexcept
         :
-        scopeGuard(std::move(g)), graph(gr)
+        scopeGuard(std::move(g)), fboGraph(gr)
     {}
 
     FBOGraphNodeGuard(FBOGraphNodeGuard&& other) noexcept
         :
-        scopeGuard(std::move(other.scopeGuard)), graph(other.graph)
+        scopeGuard(std::move(other.scopeGuard)), fboGraph(other.graph)
     {}
 
     ~FBOGraphNodeGuard() = default;
 
-    [[nodiscard]] FBORenderGraph*       operator->() noexcept { return &graph; }
-    [[nodiscard]] const FBORenderGraph* operator->() const noexcept { return &graph; }
+    [[nodiscard]] FBORenderGraph*       operator->() noexcept { return &fboGraph; }
+    [[nodiscard]] const FBORenderGraph* operator->() const noexcept { return &fboGraph; }
 
-    [[nodiscard]] FBORenderGraph&       operator*() noexcept { return graph; }
-    [[nodiscard]] const FBORenderGraph& operator*() const noexcept { return graph; }
+    [[nodiscard]] FBORenderGraph&       operator*() noexcept { return fboGraph; }
+    [[nodiscard]] const FBORenderGraph& operator*() const noexcept { return fboGraph; }
 
     [[nodiscard]] GLuint getRTTextureAt(int index) const noexcept
     {
-        return graph.getRTTextureAt(index);
+        return fboGraph.getRTTextureAt(index);
     }
 
     [[nodiscard]] void execExitFunc() noexcept
