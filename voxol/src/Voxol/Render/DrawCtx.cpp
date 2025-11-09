@@ -121,7 +121,7 @@ bool FBORenderGraph::hasNotNode() const
     auto& stack = fboCtxStack.ctxStack;
     return stack.empty();
 }
-void FBORenderGraph::pushNode(const FBOContext& fboCtx) const
+void FBORenderGraph::pushNode(const FBOContext& fboCtx, bool autoRenderBegin) const
 {
     printf("FBORenderGraph::pushFBOCtx() ...\n");
     auto& stack = fboCtxStack.ctxStack;
@@ -153,6 +153,10 @@ void FBORenderGraph::pushNode(const FBOContext& fboCtx) const
         FBOContext ctx = fboCtx;
         ctx.fbo        = fbo;
         stack.emplace_back(ctx);
+    }
+    if (autoRenderBegin)
+    {
+        renderBegin();
     }
 }
 void FBORenderGraph::popNode() const

@@ -88,7 +88,6 @@ void TileScene::buildGridContent(Grid::Unit& unit, const Render::Draw::DrawConte
             fboCtx.clearParam = clearParam;
             fboCtx.texUnits   = {texUnit};
             graph.pushNode(fboCtx);
-            graph.renderBegin();
         },
         [&]() noexcept {
             graph.popNode();

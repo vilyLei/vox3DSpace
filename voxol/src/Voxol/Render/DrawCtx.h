@@ -53,7 +53,7 @@ struct FBORenderGraph
     void              renderEnd() const;
     bool              hasNode() const;
     bool              hasNotNode() const;
-    void              pushNode(const FBOContext& fboCtx) const;
+    void              pushNode(const FBOContext& fboCtx, bool autoRenderBegin = true) const;
     void              popNode() const;
     const FBOContext& topNode() const;
     GLuint            getRTTextureAt(int index) const;

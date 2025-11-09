@@ -233,7 +233,6 @@ bool EntityRenderSystem::drawUnit(const Draw::DrawContext& rctx, const Component
                 fboCtx.texUnits   = {texUnit};
 
                 graph.pushNode(fboCtx);
-                graph.renderBegin();
             },
             [&]() noexcept {
                 graph.popNode();
