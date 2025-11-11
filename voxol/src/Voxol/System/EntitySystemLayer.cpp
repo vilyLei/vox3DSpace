@@ -74,6 +74,9 @@ void EntitySystemLayer::initalize(const std::string& configFileName)
     uiOpLayer->shortcutMana.registerShortcut({GLFW_KEY_LEFT_CONTROL, GLFW_KEY_LEFT_SHIFT, GLFW_KEY_Y}, [] {
         std::cout << "Ctrl + Shift + Y pressed\n";
     });
+    uiOpLayer->shortcutMana.registerShortcut({GLFW_KEY_DELETE}, [] {
+        std::cout << "Press Delete Key ...\n";
+    });
 }
 
 
