@@ -26,17 +26,20 @@ void MouseController::selectWithSingle(const System::Mouse::MouseEvent& evt, con
 
     if (evt.isBegin() && topId.flags() > 0)
     {
+        selectEtId = Render::ID::INVALID_KEY;
         etId = Render::ID::INVALID_KEY;
         return;
     }
     if (evt.isBegin())
     {
+        selectEtId = Render::ID::INVALID_KEY;
         dragging = false;
     }
 
     if (Render::ID::isValidID(topId) && evt.isBegin())
     {
         etId          = topId;
+        selectEtId    = etId;
         originEtPos   = etStorage->getEntityGlobalXYAt(etId.protoId());
         unitTransform = etStorage->getEntityTransformAt(etId.protoId());
         return;

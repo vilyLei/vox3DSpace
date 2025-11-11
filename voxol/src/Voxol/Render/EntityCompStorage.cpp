@@ -73,6 +73,15 @@ Math::Bounds EntityCompStorage::getEntityGlobalBoundsAt(uint32_t id)
     Component::defaultRect.mat33MapTo(entityGlobalMat33Map[id], tb);
     return tb;
 }
+Math::Bounds EntityCompStorage::getEntityGlobalBoundsAt(const ID::KeyUint64& id) {
+
+    if (id.isIDInvalid())
+        return {};
+
+    Math::Bounds tb;
+    Component::defaultRect.mat33MapTo(getEntityGlobalMat33At(id), tb);
+    return tb;
+}
 
 uint32_t EntityCompStorage::getEntityParentIdAt(uint32_t id)
 {

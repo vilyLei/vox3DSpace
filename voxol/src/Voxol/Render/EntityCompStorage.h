@@ -98,6 +98,8 @@ public:
     bool                     getEntityVisibleAt(uint32_t id);
     Math::Mat33              getEntityParentGlobalMatAt(uint32_t id);
     Math::Bounds             getEntityGlobalBoundsAt(uint32_t id);
+    Math::Bounds             getEntityGlobalBoundsAt(const ID::KeyUint64& id);
+
     uint32_t                 getEntityParentIdAt(uint32_t id);
     Math::Vec2               getEntityGlobalXYAt(uint32_t id);
     void                     setEntityGlobalXYAt(const Math::Vec2& pv, uint32_t id);

@@ -23,6 +23,7 @@ using InputDirtyCallType = std::function<void(const Math::Bounds& bounds, uint32
 struct MouseController
 {
     Math::Vec2            originEtPos{};
+    Render::ID::KeyUint64              selectEtId = Render::ID::INVALID_KEY;
     Render::ID::KeyUint64              etId = Render::ID::INVALID_KEY;
     std::vector<Render::ID::KeyUint64> qeIds{};
 

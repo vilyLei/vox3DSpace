@@ -14,7 +14,7 @@ void EntitySystemLayer::updateTileWithEntityId(const Render::ID::KeyUint64& eId)
         return;
 
     etSceneSys->updateBVHBoundsWithEntityId(eId.protoId(), [this](const Render::ID::KeyUint64& etId, const Math::Bounds& bounds) {
-        tileSys->addDirtyBounds(bounds, 1);
+        tileSys->addDirtyBounds(bounds, 0);
     });
 }
 void EntitySystemLayer::updateBVHAndTileWithEntityId(const Render::ID::KeyUint64& eId)
@@ -72,10 +72,14 @@ void EntitySystemLayer::initalize(const std::string& configFileName)
         },
         System::ShortcutManager::TriggerType::Press);
     uiOpLayer->shortcutMana.registerShortcut({GLFW_KEY_LEFT_CONTROL, GLFW_KEY_LEFT_SHIFT, GLFW_KEY_Y}, [] {
-        std::cout << "Ctrl + Shift + Y pressed\n";
+        printf("Ctrl + Shift + Y pressed\n");
     });
-    uiOpLayer->shortcutMana.registerShortcut({GLFW_KEY_DELETE}, [] {
-        std::cout << "Press Delete Key ...\n";
+    uiOpLayer->shortcutMana.registerShortcut({GLFW_KEY_DELETE}, [&, this] {
+        auto et = uiOpLayer->mouseCtrl.selectEtId;        
+        printf("Press Delete Key et: %s\n", et.idToString().c_str());
+        auto&& bv = etCompStorage->getEntityGlobalBoundsAt(et);
+        tileSys->addDirtyBounds(bv, 0);
+        etSceneSys->bvh->removeItemByObjectId(et);
     });
 }
 
