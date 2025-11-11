@@ -75,7 +75,7 @@ void EntitySystemLayer::initalize(const std::string& configFileName)
         printf("Ctrl + Shift + Y pressed\n");
     });
     uiOpLayer->shortcutMana.registerShortcut({GLFW_KEY_DELETE}, [&, this] {
-        auto et = uiOpLayer->mouseCtrl.selectEtId;        
+        auto et = uiOpLayer->mouseCtrl.selectEtId;
         printf("Press Delete Key et: %s\n", et.idToString().c_str());
         auto&& bv = etCompStorage->getEntityGlobalBoundsAt(et);
         tileSys->addDirtyBounds(bv, 0);
@@ -98,7 +98,8 @@ void EntitySystemLayer::undo()
     auto&  compStorage = storage->comp;
     auto&& itemData    = compStorage->historyManager->popItem();
     printf("EntitySystemLayer::undo() itemData.id: %u\n", itemData.id.id());
-    if (itemData.id.id() < 0)
+
+    if (itemData.id.isIDInvalid())
     {
         return;
     }
@@ -108,27 +109,9 @@ void EntitySystemLayer::undo()
 
     Math::Vec2 pv{itemData.trans.x, itemData.trans.y};
 
-    //compStorage->setEntityLocalXYAt(pv, itemData.id.id());
-
-    auto& bvh = etSceneSys->bvh;
-    auto  b0  = bvh->getBoundsAt(itemData.id);
-    auto  b1  = b0;
-    //if (tileSys)
-    //{
-        //tileSys->addDirtyBounds(b0, 0);
-        //b1.moveTo(pv.x, pv.y);
-        //tileSys->addDirtyBounds(b1, 1);
-        //dirtyCall({}, 0, etId);
-     updateTileWithEntityId(itemData.id);
-        //compStorage->setEntityGlobalXYAt(originEtPos + offset, etId.protoId());
-     compStorage->setEntityLocalXYAt(pv, itemData.id.id());
-     updateBVHAndTileWithEntityId(itemData.id);
-    //}
-    //if (bvh)
-    //{
-    //    bvh->updateItemBoundsByObjectId(itemData.id, b1);
-    //    //bvh->updateDirty();
-    //}
+    updateTileWithEntityId(itemData.id);
+    compStorage->setEntityLocalXYAt(pv, itemData.id.id());
+    updateBVHAndTileWithEntityId(itemData.id);
 }
 
 void EntitySystemLayer::render(const Math::Mat33& vpMat)
