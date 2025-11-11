@@ -108,22 +108,27 @@ void EntitySystemLayer::undo()
 
     Math::Vec2 pv{itemData.trans.x, itemData.trans.y};
 
-    compStorage->setEntityLocalXYAt(pv, itemData.id.id());
+    //compStorage->setEntityLocalXYAt(pv, itemData.id.id());
 
     auto& bvh = etSceneSys->bvh;
     auto  b0  = bvh->getBoundsAt(itemData.id);
     auto  b1  = b0;
-    if (tileSys)
-    {
-        tileSys->addDirtyBounds(b0, 0);
-        b1.moveTo(pv.x, pv.y);
-        tileSys->addDirtyBounds(b1, 1);
-    }
-    if (bvh)
-    {
-        bvh->updateItemBoundsByObjectId(itemData.id, b1);
-        //bvh->updateDirty();
-    }
+    //if (tileSys)
+    //{
+        //tileSys->addDirtyBounds(b0, 0);
+        //b1.moveTo(pv.x, pv.y);
+        //tileSys->addDirtyBounds(b1, 1);
+        //dirtyCall({}, 0, etId);
+     updateTileWithEntityId(itemData.id);
+        //compStorage->setEntityGlobalXYAt(originEtPos + offset, etId.protoId());
+     compStorage->setEntityLocalXYAt(pv, itemData.id.id());
+     updateBVHAndTileWithEntityId(itemData.id);
+    //}
+    //if (bvh)
+    //{
+    //    bvh->updateItemBoundsByObjectId(itemData.id, b1);
+    //    //bvh->updateDirty();
+    //}
 }
 
 void EntitySystemLayer::render(const Math::Mat33& vpMat)

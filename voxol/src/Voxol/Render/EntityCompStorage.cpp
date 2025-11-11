@@ -163,6 +163,15 @@ void EntityCompStorage::setEntityLocalXYAt(const Math::Vec2& pv, uint32_t id)
     auto&& et    = entitiesPool[id];
     auto&& trans = transformsPool[et.transformId];
     trans.pos()  = pv;
+
+    auto&& parentMat = getEntityParentGlobalMatAt(id);
+    //auto&& tr          = transformsPool[et.transformId];
+    auto&& parentTrans = parentMat.getXY();
+    auto&& worldMat    = Math::Mat33::makeTranslate(parentTrans.x + trans.x, parentTrans.y + trans.y);
+    //worldMat.setXY(parentTrans.x + trans.x, parentTrans.y + trans.y);
+    worldMat.setScaleXY(trans.sx, trans.sy);
+    //}
+    entityGlobalMat33Map[id] = worldMat;
 }
 
 void EntityCompStorage::getIdsFromId(uint32_t etId, std::vector<ID::KeyUint64>& ids)
