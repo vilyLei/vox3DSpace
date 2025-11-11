@@ -158,7 +158,7 @@ struct KeyUint64
     }
 };
 
-constexpr auto INVALID_KEY = KeyUint64::make(INVALID_ID, INVALID_ID);
+constexpr auto INVALID_KEY = KeyUint64::make(INVALID_ID);
 
 struct KeyUint64Hasher
 {

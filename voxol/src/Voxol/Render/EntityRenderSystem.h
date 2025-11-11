@@ -12,7 +12,7 @@
 namespace Voxol::Render
 {
 
-using EntitySysBVH = V1::BVH2D;
+//using EntitySysBVH = V2::BVH2D;
 
 class EntityRenderSystem
 {

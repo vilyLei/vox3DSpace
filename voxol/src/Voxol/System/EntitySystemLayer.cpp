@@ -115,7 +115,7 @@ void EntitySystemLayer::undo()
     if (bvh)
     {
         bvh->updateItemBoundsByObjectId(itemData.id, b1);
-        bvh->updateDirty();
+        //bvh->updateDirty();
     }
 }
 

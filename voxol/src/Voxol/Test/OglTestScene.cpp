@@ -102,6 +102,9 @@ void OglTestScene::render(const Voxol::Math::Mat33& vpMat)
         auto& etSceneSys = etSysLayer->etSceneSys;
         auto& uiOpLayer  = etSysLayer->uiOpLayer;
 
+        etSceneSys->bvh->updateDirty();
+        etSceneSys->bvh->endFrameCompact();
+
         // show mouse picked entity bounds
         boundsUnit.vertex.lineWidth = 1.0f;
 

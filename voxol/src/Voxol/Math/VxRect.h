@@ -82,6 +82,10 @@ public:
     inline Vec2  center() const { return (min + max) * 0.5f; }
     inline Vec2  extent() const { return max - min; }
 
+    inline VxRect expanded(float dis) const
+    {
+        return {fX - dis, fY - dis, fRight + dis, fBottom + dis};
+    }
     inline void expand(const VxRect& other)
     {
         min.x = std::min(min.x, other.min.x);
