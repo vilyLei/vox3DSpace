@@ -1,14 +1,15 @@
 #ifndef VOXOL_INTENT_INTERACTION_SOURCE_SYSTEM_H
 #define VOXOL_INTENT_INTERACTION_SOURCE_SYSTEM_H
 
-#include "../Base/BaseDefine.h"
+#include "intentPreDef.h"
+#include "EnumFlags.h"
 #include "../Render/CompBaseDef.h"
 
 namespace Voxol::Intent
 {
 namespace Interaction
 {
-enum class MouseStatus : uint8_t
+enum class MouseActionMode : uint8_t
 {
     None  = 0,
     Out  = 1 << 0,
@@ -22,6 +23,8 @@ struct MouseSrcNode
 {
     Render::ID::KeyUint64 id;
     Render::ID::KeyUint64 dstID;
+    Flag::EnumFlags<MouseActionMode> mode;
+
     std::string           action = "out";
 };
 } // namespace Interaction
