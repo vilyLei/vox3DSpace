@@ -8,6 +8,16 @@ namespace Voxol::Intent
 {
 namespace Interaction
 {
+enum class MouseStatus : uint8_t
+{
+    None  = 0,
+    Out  = 1 << 0,
+    Over = 1 << 1,
+    Down   = 1 << 2,
+    Up = 1 << 3,
+    Click = 1 << 4,
+    Move = 1 << 5
+};
 struct MouseSrcNode
 {
     Render::ID::KeyUint64 id;
