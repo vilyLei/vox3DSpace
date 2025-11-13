@@ -35,6 +35,7 @@ set(UTIL_DIR "${VOX_DIR}/Util")
 set(TEST_DIR "${VOX_DIR}/Test")
 set(TASK_DIR "${VOX_DIR}/Task")
 set(TILE_DIR "${VOX_DIR}/Tile")
+set(INTENT_DIR "${VOX_DIR}/Intent")
 
 set(VOASS_DIR "${SRC_DIR}/Voass")
 set(VOASS_RENDER_DIR "${VOASS_DIR}/Render")
@@ -57,6 +58,7 @@ include_directories(
   ${TEST_DIR}
   ${TASK_DIR}
   ${TILE_DIR}
+  ${INTENT_DIR}
 
   ${VOASS_RENDER_DIR}
 
@@ -77,6 +79,7 @@ file(GLOB UTIL_SRC "${UTIL_DIR}/*.cpp" "${UTIL_DIR}/*.h")
 file(GLOB TEST_SRC "${TEST_DIR}/*.cpp" "${TEST_DIR}/*.h")
 file(GLOB TASK_SRC "${TASK_DIR}/*.cpp" "${TASK_DIR}/*.h")
 file(GLOB TILE_SRC "${TILE_DIR}/*.cpp" "${TILE_DIR}/*.h")
+file(GLOB INTENT_SRC "${INTENT_DIR}/*.cpp" "${INTENT_DIR}/*.h")
 
 file(GLOB VOASS_RENDER_SRC "${VOASS_RENDER_DIR}/*.cpp" "${VOASS_RENDER_DIR}/*.h")
 
@@ -92,6 +95,7 @@ set(ALL_SOURCES
   ${TEST_SRC}
   ${TASK_SRC}
   ${TILE_SRC}
+  ${INTENT_SRC}
 
   ${VOASS_RENDER_SRC}
 )
@@ -107,6 +111,7 @@ source_group("Util" FILES ${UTIL_SRC})
 source_group("Test" FILES ${TEST_SRC})
 source_group("Task" FILES ${TASK_SRC})
 source_group("Tile" FILES ${TILE_SRC})
+source_group("Intent" FILES ${INTENT_SRC})
 source_group("VoassRender" FILES ${VOASS_RENDER_SRC})
 
 

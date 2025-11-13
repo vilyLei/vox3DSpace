@@ -1,4 +1,3 @@
-
 #ifndef VOXOL_MATH_MAT33_H
 #define VOXOL_MATH_MAT33_H
 
