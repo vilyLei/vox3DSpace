@@ -2,9 +2,19 @@
 #define VOXOL_INTENT_INTERACTION_SOURCE_SYSTEM_H
 
 #include "../Base/BaseDefine.h"
+#include "../Render/CompBaseDef.h"
 
 namespace Voxol::Intent
 {
+namespace Interaction
+{
+struct MouseSrcNode
+{
+    Render::ID::KeyUint64 id;
+    Render::ID::KeyUint64 dstID;
+    std::string           action = "out";
+};
+} // namespace Interaction
 class InteractionSourceSystem
 {
 public:
@@ -16,7 +26,7 @@ public:
     static InteractionSourceSystem::SP make();
 
 public:
-    InteractionSourceSystem() = default;
+    InteractionSourceSystem()  = default;
     ~InteractionSourceSystem() = default;
 
 public:
@@ -26,5 +36,5 @@ private:
 };
 
 
-}
+} // namespace Voxol::Intent
 #endif
