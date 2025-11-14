@@ -161,6 +161,9 @@ void InteractionSourceSystem::execActToDsiplay(Interaction::InteractionSource& s
         shdDesc.color  = desc.color;
         entity.visible = desc.visible;
         printf("modifyDstFunc() etId: %d, actDesc: %s, color: 0x%x\n", etId, actDesc.c_str(), shdDesc.color);
+        compStorage->foreachBoundsWithEntityId(etId, [this](const Render::ID::KeyUint64& etId, const Math::Bounds& bounds) {
+            tileSys->addDirtyBounds(bounds, 0);
+        });
     };
 
     auto   key = static_cast<uint8_t>(status);
