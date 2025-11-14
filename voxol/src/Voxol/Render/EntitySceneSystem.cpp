@@ -38,10 +38,15 @@ void EntitySceneSystem::initalize(const std::string& configFileName)
 
 
     auto addShadowEffectBVHData = [&](const ID::KeyUint64& key, const Math::Mat33& wmat) {
+
         auto protoId = key.protoId();
+
         if (entitiesPool.isInvalid(protoId)) { return; }
 
-        auto&& et        = entitiesPool[protoId];
+        auto&& et = entitiesPool[protoId];
+
+        if (ID::isInvalidID(et.shadingId)) { return; }
+
         auto&  shadingEt = shaderingEntitiesPool[et.shadingId];
         auto&  desc      = shaderingDescPool[shadingEt.shadingDescId];
         if (desc.flags == 0) { return; }
@@ -90,6 +95,8 @@ void EntitySceneSystem::initalize(const std::string& configFileName)
         auto&& key = ID::KeyUint64::make(et.id);
         addShadowEffectBVHData(key, storage->getEntityGlobalMat33At(et.id));
         auto&& vb = storage->getEntityGlobalBoundsAt(et.id);
+        printf("xxxxxxx bvh vb: \n");
+        vb.print();
         bvh->addItem(key, vb);
     });
 

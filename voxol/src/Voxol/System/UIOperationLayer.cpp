@@ -19,6 +19,7 @@ void MouseController::selectWithSingle(const System::Mouse::MouseEvent& evt, con
 
     free = qeIds.empty();
 
+    //printf("qeIds.size(): %lld\n", qeIds.size());
     auto etStorage = targetSys->entityStorage->comp;
     etStorage->checkIds(qeIds);
 

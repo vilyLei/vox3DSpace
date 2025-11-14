@@ -97,14 +97,14 @@ void EntitySystemLayer::undo()
     auto&  storage     = etRenderSys->entityStorage;
     auto&  compStorage = storage->comp;
     auto&& itemData    = compStorage->historyManager->popItem();
-    printf("EntitySystemLayer::undo() itemData.id: %u\n", itemData.id.id());
+    //printf("EntitySystemLayer::undo() itemData.id: %u\n", itemData.id.id());
 
     if (itemData.id.isIDInvalid())
     {
         return;
     }
 
-    printf("EntitySystemLayer::undo() update some items.\n");
+    //printf("EntitySystemLayer::undo() update some items.\n");
     auto&& etrans = compStorage->getEntityTransformAt(itemData.id.id());
 
     Math::Vec2 pv{itemData.trans.x, itemData.trans.y};
