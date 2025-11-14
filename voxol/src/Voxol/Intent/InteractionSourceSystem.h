@@ -5,6 +5,7 @@
 #include "EnumWrapper.h"
 #include "../Render/CompBaseDef.h"
 #include "../Render/EntityCompStorage.h"
+#include "../Render/BVH2DV2.h"
 #include <functional>
 
 namespace Voxol::Intent
@@ -77,7 +78,8 @@ public:
     ~InteractionSourceSystem() = default;
 
 public:
-    Render::EntityCompStorage::SP compStorage{};
+    Render::EntityCompStorage::SP compStorage;
+    Render::V2::BVH2D::SP              bvh;
 
 public:
     void initialize();

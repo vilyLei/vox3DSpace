@@ -32,8 +32,8 @@ public:
 
 public:
     Intent::InteractionSourceSystem::SP interSrcSys;
-    EntitySysBVH::SP      bvh = EntitySysBVH::make();
-    EntityUnitStorage::SP entityStorage{};
+    EntitySysBVH::SP                    bvh = EntitySysBVH::make();
+    EntityUnitStorage::SP               entityStorage{};
 
 public:
     void                             initalize(const std::string& configFileName = {});
@@ -41,7 +41,8 @@ public:
     int                              drawQuery(const Math::VxRect& bounds, int phase);
     void                             clear();
     const std::vector<ID::KeyUint64> getQueriedEIds() const;
-    void                  updateBVHBoundsWithEntityId(uint32_t eId, BoundsUpdateCallType callback);
+    void                             updateBoundsWithEntityId(uint32_t eId, BoundsUpdateCallType callback);
+    // void                             updateBVHBoundsWithEntityId(uint32_t eId, BoundsUpdateCallType callback);
 
 private:
     std::vector<ID::KeyUint64> queriedEIds{};

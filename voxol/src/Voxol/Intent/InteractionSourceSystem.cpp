@@ -136,11 +136,18 @@ void InteractionSourceSystem::execActToDsiplay(Interaction::InteractionSource& s
 {
 
     auto modifyDstFunc = [this](const Interaction::InteractionTargetDesc& desc, std::string actDesc) {
+
+        if (!compStorage)
+            return;
+
         auto etId = desc.id.protoId();
 
         auto&& entity            = compStorage->entitiesPool[etId];
         auto&  shaderingEntities = compStorage->shaderingEntitiesPool;
         auto&  shaderingDescVec  = compStorage->shaderingDescPool;
+
+        if (Render::ID::isInvalidID(entity.shadingId))
+            return;
 
         auto& shadingEt = shaderingEntities[entity.shadingId];
         if (Render::ID::isInvalidID(shadingEt.shadingDescId))
