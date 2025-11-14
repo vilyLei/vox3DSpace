@@ -9,6 +9,49 @@ InteractionSourceSystem::SP InteractionSourceSystem::make()
 }
 void InteractionSourceSystem::initialize()
 {
+    using namespace Render;
+    using namespace Interaction;
+
+    InteractionSource srcNode;
+    srcNode.id = ID::KeyUint64::make(4);
+
+    // 模拟SDL输入后得到的初始化,
+    // ID::KeyUint64::make(1) 表示的是场景层次节点1模拟按钮, 即 entity(1)
+    // ID::KeyUint64::make(5) 表示的是场景层次节点5模拟一个面板, 即 entity(5)
+
+    bool                 visible = true;
+    InteractionTargetSet outTar;
+    outTar.flag = static_cast<uint8_t>(MouseStatus::Out);
+    outTar.targets.push_back({ID::KeyUint64::make(1), "default", 0xff660000, visible});
+    srcNode.tars[outTar.flag] = outTar;
+
+    InteractionTargetSet overTar;
+    overTar.flag = static_cast<uint8_t>(MouseStatus::Over);
+    overTar.targets.push_back({ID::KeyUint64::make(1), "default", 0xff663300, visible});
+    srcNode.tars[overTar.flag] = overTar;
+
+    InteractionTargetSet moveTar;
+    moveTar.flag = static_cast<uint8_t>(MouseStatus::Move);
+    moveTar.targets.push_back({ID::KeyUint64::make(1), "default", 0xff663300, visible});
+    srcNode.tars[moveTar.flag] = moveTar;
+
+    InteractionTargetSet downTar;
+    downTar.flag = static_cast<uint8_t>(MouseStatus::Down);
+    downTar.targets.push_back({ID::KeyUint64::make(1), "default", 0xff883300, visible});
+    srcNode.tars[downTar.flag] = downTar;
+
+    // mouse up的时候会改变按钮entit(1)的颜色，同时也会关闭 entity(5) 这个面板
+    InteractionTargetSet upTar;
+    upTar.flag = static_cast<uint8_t>(MouseStatus::Up);
+    // only chagne the btn color
+    upTar.targets.push_back({ID::KeyUint64::make(1), "default", 0xff663300, visible});
+    // close the entity(5) displaying when the mouse up action happened.
+    visible = false;
+    upTar.targets.push_back({ID::KeyUint64::make(5), "default", 0xff008888, visible});
+
+    srcNode.tars[upTar.flag] = upTar;
+
+    addSource(srcNode);
 }
 
 

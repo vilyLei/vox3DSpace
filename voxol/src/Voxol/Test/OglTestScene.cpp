@@ -19,7 +19,8 @@ void OglTestScene::initScene()
         }
         else
         {
-            etSysLayers[0]->initalize("scene/IR/scIR04.json");
+            //etSysLayers[0]->initalize("scene/IR/scIR04.json");
+            etSysLayers[0]->initalize("scene/IR/scIR_interaction.json");
         }
 
         boundsUnit.color = {0.0f, 0.3, 0.3f, 1.f};
