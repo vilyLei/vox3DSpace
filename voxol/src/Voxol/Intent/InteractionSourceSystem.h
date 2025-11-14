@@ -23,40 +23,40 @@ enum class MouseStatus : uint8_t
 
 struct InteractionSourceFlag
 {
-    Render::ID::KeyUint64          id;
+    Render::ID::KeyUint64                  id;
     Intent::Flag::EnumWrapper<MouseStatus> flags;
-    bool                   active = false;
-    bool                   hit    = false;
+    bool                                   active = false;
+    bool                                   hit    = false;
 };
 
 struct InteractionTargetDesc
 {
     Render::ID::KeyUint64 id;
-    std::string   type;
-    uint32_t      color   = 0xff000000;
-    bool          visible = true;
+    std::string           type;
+    uint32_t              color   = 0xff000000;
+    bool                  visible = true;
 };
 
 struct InteractionTargetSet
 {
-    uint8_t                 flag = 0;
-    std::string             type = "default";
+    uint8_t                            flag = 0;
+    std::string                        type = "default";
     std::vector<InteractionTargetDesc> targets;
 };
 
 struct InteractionSource
 {
     Render::ID::KeyUint64 id;
-    std::string   type = "default";
+    std::string           type = "default";
 
     Intent::Flag::EnumWrapper<Interaction::MouseStatus> flags = Interaction::MouseStatus::None;
     //for example, some mouse button actions: out, over, moving, down, up
-    std::string                               actDesc    = "out";
-    bool                                      active = false; // mouse hit and mouse down
-    bool                                      hit    = false;
-    bool                                      dirty  = false;
+    std::string actDesc = "out";
+    bool        active  = false; // mouse hit and mouse down
+    bool        hit     = false;
+    bool        dirty   = false;
 
-    std::unordered_map<uint8_t, InteractionTargetSet>    tars;
+    std::unordered_map<uint8_t, InteractionTargetSet> tars;
 };
 
 using SourceCallbackType = std::function<void(InteractionSource& srcNode)>;
@@ -92,7 +92,6 @@ public:
 
 private:
     Render::ID::keyUint64Unordered_map<Interaction::InteractionSource> srcMap;
-
 };
 
 

@@ -204,4 +204,4 @@ void InteractionSourceSystem::update()
 }
 
 
-}
+} // namespace Voxol::Intent

@@ -108,7 +108,11 @@ bool EntityRenderSystem::drawUnitEffect(const Draw::DrawContext& rctx, const ID:
         return false;
 
     auto&& entityId          = srUnit.entityId;
-    auto&& entity            = compStorage->entitiesPool[entityId.protoId()];
+    auto&& entity   = compStorage->entitiesPool[entityId.protoId()];
+
+    if (ID::isInvalidID(entity.shadingId))
+        return false;
+
     auto   etId              = entity.id;
     auto&  shaderingEntities = compStorage->shaderingEntitiesPool;
     auto&  shaderingDescVec  = compStorage->shaderingDescPool;
@@ -147,6 +151,10 @@ bool EntityRenderSystem::drawUnitEffect(const Draw::DrawContext& rctx, const ID:
 
 bool EntityRenderSystem::drawUnit(const Draw::DrawContext& rctx, const Component::UnitEntity& entity, const Math::Mat33& vpM, const Math::Bounds& wbounds, const Math::Mat33& wM)
 {
+
+    if (ID::isInvalidID(entity.shadingId))
+        return false;
+
     auto& compStorage       = entityStorage->comp;
     auto& shaderingDescPool = compStorage->shaderingDescPool;
     auto& transformsPool    = compStorage->transformsPool;
