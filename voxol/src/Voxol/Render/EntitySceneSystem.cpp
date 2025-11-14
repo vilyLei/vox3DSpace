@@ -167,12 +167,6 @@ void EntitySceneSystem::updateBoundsWithEntityId(uint32_t eId, BoundsUpdateCallT
             Component::defaultRect.mat33MapTo(wm, vb);
 
             auto&& efKey = ID::KeyUint64::makeWithEffectShadow(key, ef);
-            auto   pos   = wm.getXY();
-            //printf("efKey: %s\n", efKey.idToString().c_str());
-            //vb.print();
-            //printf("        pos(x=%f,y=%f), offset(x=%f,y=%f)\n", pos.x, pos.y, shdData.offset.x, shdData.offset.y);
-
-            //bvh->updateItemBoundsByObjectId(efKey, vb);
             callback(key, vb);
         }
     };
@@ -189,7 +183,6 @@ void EntitySceneSystem::updateBoundsWithEntityId(uint32_t eId, BoundsUpdateCallT
         auto wm = compst->getEntityGlobalMat33At(pid);
         addShadowEffectBVHData(pid);
         Component::defaultRect.mat33MapTo(wm, vb);
-        //bvh->updateItemBoundsByObjectId(pid, vb);
         callback(pid, vb);
     }
 }
