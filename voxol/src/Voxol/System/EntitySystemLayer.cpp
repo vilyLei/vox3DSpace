@@ -22,7 +22,6 @@ void EntitySystemLayer::updateBVHAndTileWithEntityId(const Render::ID::KeyUint64
     if (eId.isIDInvalid())
         return;
 
-
     auto&  etCompStorage = etSceneSys->entityStorage->comp;
     auto&& parentMat     = etCompStorage->getEntityParentGlobalMatAt(eId.protoId());
     etCompStorage->traverseBuildGlobalMat(eId.protoId(), parentMat);
@@ -41,7 +40,7 @@ void EntitySystemLayer::initalize(const std::string& configFileName)
     etRenderSys->entityStorage = etSceneSys->entityStorage;
     etRenderSys->initalize();
     tileSys->initalize();
-
+    etSceneSys->interSrcSys->tileSys = tileSys;
 
     auto& etCompStorage = etSceneSys->entityStorage->comp;
 

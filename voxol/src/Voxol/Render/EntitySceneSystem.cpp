@@ -107,7 +107,6 @@ void EntitySceneSystem::initalize(const std::string& configFileName)
     {
         interSrcSys = Intent::InteractionSourceSystem::make();
         interSrcSys->compStorage = entityStorage->comp;
-        interSrcSys->bvh = bvh;
         interSrcSys->initialize();
     }
 }
