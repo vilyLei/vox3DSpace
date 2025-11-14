@@ -124,7 +124,7 @@ void InteractionSourceSystem::singalParse(Interaction::InteractionSource& srcNod
     }
 }
 // 由其他交互事件响应逻辑产生触发信号
-void InteractionSourceSystem::updateSrcAct(const Render::ID::KeyUint64& srcId, const std::string& actDesc)
+void InteractionSourceSystem::updateSourceAct(const Render::ID::KeyUint64& srcId, const std::string& actDesc)
 {
     for (auto& item : srcMap)
     {

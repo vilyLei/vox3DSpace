@@ -37,14 +37,26 @@ void MouseController::selectWithSingle(const System::Mouse::MouseEvent& evt, con
         dragging = false;
     }
 
+    if (evt.isMoving())
+    {
+        targetSys->interSrcSys->updateSourceAct(topId, "move");
+    }
+    else if (evt.isEnd())
+    {
+        targetSys->interSrcSys->updateSourceAct(topId, "up");
+    }
+
     if (Render::ID::isValidID(topId) && evt.isBegin())
     {
         etId          = topId;
         selectEtId    = etId;
         originEtPos   = etStorage->getEntityGlobalXYAt(etId.protoId());
         unitTransform = etStorage->getEntityTransformAt(etId.protoId());
+
+        targetSys->interSrcSys->updateSourceAct(etId, "down");
         return;
     }
+
 
     if (Render::ID::isValidID(etId) && evt.isDragging())
     {
@@ -97,6 +109,7 @@ void MouseController::selectWithBounds(const System::Mouse::MouseEvent& evt, con
         printf("MouseCtroller::selectBtnBounds() end().\n");
         etId       = Render::ID::INVALID_KEY;
         selectType = SelectType::Single;
+        targetSys->interSrcSys->updateSourceAct(etId, "up");
     }
 }
 void MouseController::upateLeftMouseParam(const Render::Draw::DrawContext& rctx, const System::Mouse::MouseInputParam& param)

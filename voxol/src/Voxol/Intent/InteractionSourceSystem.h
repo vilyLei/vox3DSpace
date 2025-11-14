@@ -83,7 +83,7 @@ public:
     void initialize();
     void addSource(const Interaction::InteractionSource& srcNode);
     void singalParse(Interaction::InteractionSource& srcNode, bool selectionFlag, const std::string& actDesc);
-    void updateSrcAct(const Render::ID::KeyUint64& srcId, const std::string& actDesc);
+    void updateSourceAct(const Render::ID::KeyUint64& srcId, const std::string& actDesc);
     void foreachSrcNode(const Interaction::SourceCallbackType& callback);
 
     void execActToDsiplay(Interaction::InteractionSource& srcNode, Interaction::MouseStatus status, std::string actDesc);
