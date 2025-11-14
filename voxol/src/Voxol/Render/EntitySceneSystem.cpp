@@ -140,54 +140,6 @@ void EntitySceneSystem::clear()
 void EntitySceneSystem::updateBoundsWithEntityId(uint32_t eId, EntityBoundsResponseCallType callback)
 {
     entityStorage->comp->foreachBoundsWithEntityId(eId, callback);
-    /*
-    if (ID::isInvalidID(eId))
-        return;
-
-    auto& compst = entityStorage->comp;
-
-    auto addShadowEffectBVHData = [&](const ID::KeyUint64& key) {
-        auto protoId = key.protoId();
-        if (compst->entitiesPool.isInvalid(protoId)) { return; }
-
-        auto&& et = compst->entitiesPool[protoId];
-        if (ID::isInvalidID(et.shadingId)) { return; }
-
-        auto&& shadingEt = compst->shaderingEntitiesPool[et.shadingId];
-        auto&& desc      = compst->shaderingDescPool[shadingEt.shadingDescId];
-        if (desc.flags == 0) { return; }
-        auto&& efs = compst->shadingShadowIdMap[shadingEt.shadingDescId];
-
-        auto&& wmat = compst->getEntityGlobalMat33At(key);
-
-        Math::Bounds vb;
-        for (auto& ef : efs)
-        {
-            auto&& shdData = compst->effectShadowMap[ef];
-            auto   wm      = wmat;
-            wm.offsetXY(shdData.offset);
-            Component::defaultRect.mat33MapTo(wm, vb);
-
-            auto&& efKey = ID::KeyUint64::makeWithEffectShadow(key, ef);
-            callback(key, vb);
-        }
-    };
-
-    Math::Bounds vb;
-
-    std::vector<ID::KeyUint64> ids{};
-    compst->collectAllEntities(ID::KeyUint64::make(eId), ids);
-    for (auto pid : ids)
-    {
-        if (pid.flags() > 0)
-            continue;
-
-        auto wm = compst->getEntityGlobalMat33At(pid);
-        addShadowEffectBVHData(pid);
-        Component::defaultRect.mat33MapTo(wm, vb);
-        callback(pid, vb);
-    }
-    //*/
 }
 /*
 void EntitySceneSystem::updateBVHBoundsWithEntityId(uint32_t eId, BoundsUpdateCallType callback)
