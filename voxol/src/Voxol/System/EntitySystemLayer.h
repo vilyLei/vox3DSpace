@@ -6,6 +6,7 @@
 #include "../Render/EntityRenderSystem.h"
 #include "../Tile/TileSystem.h"
 #include "../System/UIOperationLayer.h"
+#include "../Intent/InteractionSourceSystem.h"
 
 namespace Voxol::System
 {
@@ -16,6 +17,7 @@ public:
     using SP = std::shared_ptr<EntitySystemLayer>;
     using WP = std::weak_ptr<EntitySystemLayer>;
     using UP = std::unique_ptr<EntitySystemLayer>;
+
 public:
     static EntitySystemLayer::SP make();
 
@@ -35,15 +37,16 @@ public:
     void updateTileWithEntityId(const Render::ID::KeyUint64& eId);
     void updateBVHAndTileWithEntityId(const Render::ID::KeyUint64& eId);
 
-    public:
-    Render::Draw::DrawContext                 drawCtx;
+public:
+    Render::Draw::DrawContext drawCtx;
 
     std::shared_ptr<System::UIOperationLayer> uiOpLayer;
+    Intent::InteractionSourceSystem::SP       interSrcSys;
     Render::EntitySceneSystem::SP             etSceneSys  = Render::EntitySceneSystem::make();
     Render::EntityRenderSystem::SP            etRenderSys = Render::EntityRenderSystem::make();
     Tile::TileSystem::SP                      tileSys     = Tile::TileSystem::make();
 
 private:
 };
-} // namespace Voxol::Render
+} // namespace Voxol::System
 #endif
