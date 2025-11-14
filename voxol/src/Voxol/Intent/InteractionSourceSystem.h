@@ -4,30 +4,63 @@
 #include "intentPreDef.h"
 #include "EnumWrapper.h"
 #include "../Render/CompBaseDef.h"
+#include <functional>
 
 namespace Voxol::Intent
 {
 namespace Interaction
 {
-enum class MouseActionMode : uint8_t
+enum class MouseStatus : uint8_t
 {
-    None  = 0,
+    None = 0,
     Out  = 1 << 0,
     Over = 1 << 1,
-    Down   = 1 << 2,
-    Up = 1 << 3,
-    Click = 1 << 4,
-    Move = 1 << 5
+    Down = 1 << 2,
+    Up   = 1 << 3,
+    Move = 1 << 4
 };
-struct MouseSrcNode
+
+struct InteractionSourceFlag
+{
+    Render::ID::KeyUint64          id;
+    Intent::Flag::EnumWrapper<MouseStatus> flags;
+    bool                   active = false;
+    bool                   hit    = false;
+};
+
+struct InteractionTargetDesc
 {
     Render::ID::KeyUint64 id;
-    Render::ID::KeyUint64 dstID;
-    Flag::EnumWrapper<MouseActionMode> flags;
-
-    std::string           action = "out";
+    std::string   type;
+    uint32_t      color   = 0xff000000;
+    bool          visible = true;
 };
+
+struct InteractionTargetSet
+{
+    uint8_t                 flag = 0;
+    std::string             type = "default";
+    std::vector<InteractionTargetDesc> targets;
+};
+
+struct InteractionSource
+{
+    Render::ID::KeyUint64 id;
+    std::string   type = "default";
+
+    Intent::Flag::EnumWrapper<MouseStatus> flags;
+    //for example, some mouse button actions: out, over, moving, down, up
+    std::string                               actDesc    = "out";
+    bool                                      active = false; // mouse hit and mouse down
+    bool                                      hit    = false;
+    bool                                      dirty  = false;
+
+    std::unordered_map<uint8_t, InteractionTargetSet>    tars;
+};
+
+using SourceCallbackType = std::function<void(InteractionSource& srcNode)>;
 } // namespace Interaction
+
 class InteractionSourceSystem
 {
 public:
@@ -44,8 +77,18 @@ public:
 
 public:
     void initialize();
+    void addSource(const Interaction::InteractionSource& srcNode);
+    void singalParse(Interaction::InteractionSource& srcNode, bool selectionFlag, const std::string& actDesc);
+    void updateSrcAct(const Render::ID::KeyUint64& srcId, const std::string& actDesc);
+    void foreachSrcNode(const Interaction::SourceCallbackType& callback);
+
+    void execActToDsiplay(Interaction::InteractionSource& srcNode, Interaction::MouseStatus status, std::string actDesc);
+    void singalToBehavior(Interaction::InteractionSource& srcNode);
+    void update();
 
 private:
+    Render::ID::keyUint64Unordered_map<Interaction::InteractionSource> srcMap;
+
 };
 
 
