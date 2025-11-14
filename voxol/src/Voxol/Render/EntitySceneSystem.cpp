@@ -137,8 +137,10 @@ void EntitySceneSystem::clear()
 {
 }
 
-void EntitySceneSystem::updateBoundsWithEntityId(uint32_t eId, BoundsUpdateCallType callback)
+void EntitySceneSystem::updateBoundsWithEntityId(uint32_t eId, EntityBoundsResponseCallType callback)
 {
+    entityStorage->comp->foreachBoundsWithEntityId(eId, callback);
+    /*
     if (ID::isInvalidID(eId))
         return;
 
@@ -185,6 +187,7 @@ void EntitySceneSystem::updateBoundsWithEntityId(uint32_t eId, BoundsUpdateCallT
         Component::defaultRect.mat33MapTo(wm, vb);
         callback(pid, vb);
     }
+    //*/
 }
 /*
 void EntitySceneSystem::updateBVHBoundsWithEntityId(uint32_t eId, BoundsUpdateCallType callback)

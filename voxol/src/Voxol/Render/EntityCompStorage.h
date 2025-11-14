@@ -11,9 +11,12 @@
 #include "EntityHistoryManager.h"
 #include <vector>
 #include <unordered_map>
+#include <functional>
 
 namespace Voxol::Render
 {
+    
+using EntityBoundsResponseCallType = std::function<void(const Render::ID::KeyUint64& etId, const Math::Bounds& bounds)>;
 
 class EntityCompStorage
 {
@@ -138,6 +141,7 @@ public:
     void collectAllEntities(const ID::KeyUint64& etId, std::vector<ID::KeyUint64>& ids);
     void updateAllInstanceGlobalMats(const ID::KeyUint64& etId);
     void setPrototypeEntitiesDirty(uint32_t etId, bool dirty, uint16_t reserveSize = 128);
+    void foreachBoundsWithEntityId(uint32_t eId, EntityBoundsResponseCallType callback);
 
 public:
     CompPool<Component::UnitEntity>        entitiesPool{};

@@ -15,7 +15,6 @@ namespace Voxol::Render
 //using EntitySysBVH = V1::BVH2D;
 using EntitySysBVH = V2::BVH2D;
 
-using BoundsUpdateCallType = std::function<void(const Render::ID::KeyUint64& etId, const Math::Bounds& bounds)>;
 class EntitySceneSystem
 {
 public:
@@ -41,7 +40,7 @@ public:
     int                              drawQuery(const Math::VxRect& bounds, int phase);
     void                             clear();
     const std::vector<ID::KeyUint64> getQueriedEIds() const;
-    void                             updateBoundsWithEntityId(uint32_t eId, BoundsUpdateCallType callback);
+    void                             updateBoundsWithEntityId(uint32_t eId, EntityBoundsResponseCallType callback);
     // void                             updateBVHBoundsWithEntityId(uint32_t eId, BoundsUpdateCallType callback);
 
 private:

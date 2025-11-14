@@ -762,4 +762,52 @@ void EntityCompStorage::setPrototypeEntitiesDirty(uint32_t etId, bool dirty, uin
         for (auto c = hierarchiesPool[id].firstChild; ID::isValidID(c); c = hierarchiesPool[c].next) stack.push_back(c);
     }
 }
+
+void EntityCompStorage::foreachBoundsWithEntityId(uint32_t eId, EntityBoundsResponseCallType callback)
+{
+    if (ID::isInvalidID(eId))
+        return;
+
+    auto addShadowEffectBVHData = [&](const ID::KeyUint64& key) {
+        auto protoId = key.protoId();
+        if (entitiesPool.isInvalid(protoId)) { return; }
+
+        auto&& et = entitiesPool[protoId];
+        if (ID::isInvalidID(et.shadingId)) { return; }
+
+        auto&& shadingEt = shaderingEntitiesPool[et.shadingId];
+        auto&& desc      = shaderingDescPool[shadingEt.shadingDescId];
+        if (desc.flags == 0) { return; }
+        auto&& efs = shadingShadowIdMap[shadingEt.shadingDescId];
+
+        auto&& wmat = getEntityGlobalMat33At(key);
+
+        Math::Bounds vb;
+        for (auto& ef : efs)
+        {
+            auto&& shdData = effectShadowMap[ef];
+            auto   wm      = wmat;
+            wm.offsetXY(shdData.offset);
+            Component::defaultRect.mat33MapTo(wm, vb);
+
+            auto&& efKey = ID::KeyUint64::makeWithEffectShadow(key, ef);
+            callback(key, vb);
+        }
+    };
+
+    Math::Bounds vb;
+
+    std::vector<ID::KeyUint64> ids{};
+    collectAllEntities(ID::KeyUint64::make(eId), ids);
+    for (auto pid : ids)
+    {
+        if (pid.flags() > 0)
+            continue;
+
+        auto wm = getEntityGlobalMat33At(pid);
+        addShadowEffectBVHData(pid);
+        Component::defaultRect.mat33MapTo(wm, vb);
+        callback(pid, vb);
+    }
+}
 } // namespace Voxol::Render
