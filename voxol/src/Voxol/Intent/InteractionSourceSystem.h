@@ -2,7 +2,7 @@
 #define VOXOL_INTENT_INTERACTION_SOURCE_SYSTEM_H
 
 #include "intentPreDef.h"
-#include "EnumFlags.h"
+#include "EnumWrapper.h"
 #include "../Render/CompBaseDef.h"
 
 namespace Voxol::Intent
@@ -23,7 +23,7 @@ struct MouseSrcNode
 {
     Render::ID::KeyUint64 id;
     Render::ID::KeyUint64 dstID;
-    Flag::EnumFlags<MouseActionMode> mode;
+    Flag::EnumWrapper<MouseActionMode> flags;
 
     std::string           action = "out";
 };
