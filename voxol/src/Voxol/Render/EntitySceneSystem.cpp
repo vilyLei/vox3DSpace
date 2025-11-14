@@ -101,8 +101,20 @@ void EntitySceneSystem::initalize(const std::string& configFileName)
     });
 
     bvh->build();
+
+    
+    if (!interSrcSys)
+    {
+        interSrcSys = Intent::InteractionSourceSystem::make();
+        interSrcSys->compStorage = entityStorage->comp;
+        interSrcSys->initialize();
+    }
 }
 
+void EntitySceneSystem::update()
+{
+    interSrcSys->update();
+}
 int EntitySceneSystem::drawQuery(const Math::VxRect& wbounds, int phase)
 {
     queriedEIds.clear();

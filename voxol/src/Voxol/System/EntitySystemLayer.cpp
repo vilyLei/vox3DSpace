@@ -41,12 +41,6 @@ void EntitySystemLayer::initalize(const std::string& configFileName)
 
     auto& etCompStorage = etSceneSys->entityStorage->comp;
 
-    if (!interSrcSys)
-    {
-        interSrcSys = Intent::InteractionSourceSystem::make();
-        interSrcSys->initialize();
-    }
-
     uiOpLayer                      = std::make_shared<System::UIOperationLayer>();
     uiOpLayer->mouseCtrl.dirtyCall = [&, this](const Math::Bounds& bounds, uint32_t type, const Render::ID::KeyUint64& etId) {
         if (type == 0)
@@ -123,7 +117,7 @@ void EntitySystemLayer::undo()
 
 void EntitySystemLayer::render(const Math::Mat33& vpMat)
 {
-    interSrcSys->update();
+    etSceneSys->update();
     tileSys->run(drawCtx);
 }
 
