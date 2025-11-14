@@ -4,6 +4,7 @@
 #include "intentPreDef.h"
 #include "EnumWrapper.h"
 #include "../Render/CompBaseDef.h"
+#include "../Render/EntityCompStorage.h"
 #include <functional>
 
 namespace Voxol::Intent
@@ -48,7 +49,7 @@ struct InteractionSource
     Render::ID::KeyUint64 id;
     std::string   type = "default";
 
-    Intent::Flag::EnumWrapper<MouseStatus> flags;
+    Intent::Flag::EnumWrapper<Interaction::MouseStatus> flags = Interaction::MouseStatus::None;
     //for example, some mouse button actions: out, over, moving, down, up
     std::string                               actDesc    = "out";
     bool                                      active = false; // mouse hit and mouse down
@@ -74,6 +75,9 @@ public:
 public:
     InteractionSourceSystem()  = default;
     ~InteractionSourceSystem() = default;
+
+public:
+    Render::EntityCompStorage::SP compStorage{};
 
 public:
     void initialize();
