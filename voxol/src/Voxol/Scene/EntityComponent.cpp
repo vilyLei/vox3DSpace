@@ -1,8 +1,8 @@
 #include "EntityComponent.h"
 
-namespace Voxol::Render
+namespace Voxol::Scene
 {
 namespace Component
 {
 } // namespace Component
-} // namespace Voxol::Render
+} // namespace Voxol::Scene

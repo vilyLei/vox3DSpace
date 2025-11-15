@@ -1,5 +1,5 @@
-#ifndef VOXOL_RENDER_COMP_POOL_H
-#define VOXOL_RENDER_COMP_POOL_H
+#ifndef VOXOL_SCENE_COMP_POOL_H
+#define VOXOL_SCENE_COMP_POOL_H
 
 #include <vector>
 #include <cstdint>
@@ -7,7 +7,7 @@
 #include <cassert>
 #include "EntityComponent.h"
 
-namespace Voxol::Render
+namespace Voxol::Scene
 {
 
 // base on Index
@@ -235,5 +235,5 @@ private:
     std::vector<uint32_t> m_freeList;
     size_t                m_activeCount = 0;
 };
-} // namespace Voxol::Render
+} // namespace Voxol::Scene
 #endif

@@ -131,7 +131,7 @@ bool EntityRenderSystem::drawUnitEffect(const Draw::DrawContext& rctx, const Bas
     wm.offsetXY(shdData.offset);
 
     Math::Bounds vb;
-    Component::defaultRect.mat33MapTo(wm, vb);
+    Scene::Component::defaultRect.mat33MapTo(wm, vb);
     if (!wbounds.intersects(vb))
         return false;
 
@@ -149,7 +149,7 @@ bool EntityRenderSystem::drawUnitEffect(const Draw::DrawContext& rctx, const Bas
     return true;
 }
 
-bool EntityRenderSystem::drawUnit(const Draw::DrawContext& rctx, const Component::UnitEntity& entity, const Math::Mat33& vpM, const Math::Bounds& wbounds, const Math::Mat33& wM)
+bool EntityRenderSystem::drawUnit(const Draw::DrawContext& rctx, const Scene::Component::UnitEntity& entity, const Math::Mat33& vpM, const Math::Bounds& wbounds, const Math::Mat33& wM)
 {
 
     if (Base::ID::isInvalidID(entity.shadingId))
@@ -160,14 +160,14 @@ bool EntityRenderSystem::drawUnit(const Draw::DrawContext& rctx, const Component
     auto& transformsPool    = compStorage->transformsPool;
     auto& modelsPool        = compStorage->modelsPool;
 
-    auto&& shadingEt = compStorage->get<Component::UnitShadingEntity>(entity.shadingId);
+    auto&& shadingEt = compStorage->get<Scene::Component::UnitShadingEntity>(entity.shadingId);
     auto   drawingId = modelsPool[entity.modelId].drawUnitId;
     auto&  drs       = *entityStorage->drawing;
     auto&& drawUnit  = drs[drawingId];
     auto&& shdDesc   = shaderingDescPool[shadingEt.shadingDescId];
 
     Math::Bounds vb;
-    Component::defaultRect.mat33MapTo(wM, vb);
+    Scene::Component::defaultRect.mat33MapTo(wM, vb);
     if (!wbounds.intersects(vb))
         return false;
 
@@ -229,7 +229,7 @@ bool EntityRenderSystem::drawUnit(const Draw::DrawContext& rctx, const Component
             // model space to rtt view space
             pvwM = node.viewMat;
             pvwM.append(wM);
-            Component::defaultRect.mat33MapTo(pvwM, vb);
+            Scene::Component::defaultRect.mat33MapTo(pvwM, vb);
 
             vb.outset(30, 30);
             vb.floatToRound();

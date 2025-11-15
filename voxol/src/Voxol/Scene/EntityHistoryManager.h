@@ -1,11 +1,11 @@
-#ifndef VOXOL_RENDER_ENTITY_HISTORY_MANAGER_H
-#define VOXOL_RENDER_ENTITY_HISTORY_MANAGER_H
+#ifndef VOXOL_SCENE_ENTITY_HISTORY_MANAGER_H
+#define VOXOL_SCENE_ENTITY_HISTORY_MANAGER_H
 
 #include "../Base/BaseDefine.h"
 #include "../Math/Vec2.h"
 #include "EntityComponent.h"
 
-namespace Voxol::Render
+namespace Voxol::Scene
 {
 
 struct HistoryItemData
@@ -36,5 +36,5 @@ public:
 private:
     std::vector<HistoryItemData> mList;
 };
-} // namespace Voxol::Render
+} // namespace Voxol::Scene
 #endif

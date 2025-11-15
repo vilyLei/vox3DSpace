@@ -1,5 +1,5 @@
-#ifndef VOXOL_RENDER_BVH2D_V1_H
-#define VOXOL_RENDER_BVH2D_V1_H
+#ifndef VOXOL_SCENE_BVH2D_V1_H
+#define VOXOL_SCENE_BVH2D_V1_H
 
 #include "../Math/VxRect.h"
 #include "../Base/IDDef.h"
@@ -8,7 +8,7 @@
 #include <unordered_map>
 #include <map>
 
-namespace Voxol::Render
+namespace Voxol::Scene
 {
 namespace V1
 {
@@ -26,10 +26,10 @@ public:
 public:
     struct Item
     {
-        Base::ID::KeyUint64 objectId; // entity id
+        Base::ID::KeyUint64 objectId;
 
-        Math::Bounds bounds;        // world-space bounds
-        bool         dirty = false; // 标记是否需要 refit
+        Math::Bounds bounds; 
+        bool         dirty = false;
     };
 
     struct Node
@@ -38,54 +38,29 @@ public:
         int          left      = -1;
         int          right     = -1;
         int          parent    = -1;
-        int          itemIndex = -1; // leaf节点对应的item索引
+        int          itemIndex = -1; 
         bool         isLeaf() const { return itemIndex >= 0; }
     };
 
     BVH2D() = default;
 
-    // -----------------------------
-    // 添加 Item
-    // -----------------------------
     void addItem(const Base::ID::KeyUint64& objectId, const Math::Bounds& bounds);
 
-    // -----------------------------
-    // 完整构建BVH
-    // -----------------------------
     void build();
-    // -----------------------------
-    // 更新单个对象的包围盒 (通过 index)
-    // -----------------------------
+
     bool updateItemBounds(int itemIndex, const Math::Bounds& newBounds);
 
-    // -----------------------------
-    // 更新单个对象的包围盒 (通过 objectId)
-    // -----------------------------
     bool updateItemBoundsByObjectId(const Base::ID::KeyUint64& objectId, const Math::Bounds& newBounds);
-    // -----------------------------
-    // 更新所有脏节点 (Refit)
-    // -----------------------------
+
     void updateDirty();
 
-    // -----------------------------
-    // 点查询
-    // -----------------------------
     void queryPoint(const Math::Vec2& p, std::vector<Base::ID::KeyUint64>& outIds) const;
 
-    // -----------------------------
-    // 范围查询
-    // -----------------------------
     void queryBounds(const Math::Bounds& b, std::vector<Base::ID::KeyUint64>& outIds) const;
 
-    // -----------------------------
-    // 获取Item引用
-    // -----------------------------
     const Item& getItem(int index) const { return m_items[index]; }
     Item&       getItem(int index) { return m_items[index]; }
 
-    // -----------------------------
-    // 部分重建 (可选)
-    // -----------------------------
     void partialRebuild();
 
     const Math::Bounds& getBoundsAt(const Base::ID::KeyUint64& objId)
@@ -99,24 +74,13 @@ public:
     }
 
 private:
-    // -----------------------------
-    // 递归构建
-    // -----------------------------
+
     int buildRecursive(int begin, int end);
 
-    // -----------------------------
-    // 点查询递归
-    // -----------------------------
     void queryPointRecursive(int nodeIndex, const Math::Vec2& p, std::vector<Base::ID::KeyUint64>& outIds) const;
 
-    // -----------------------------
-    // 范围查询递归
-    // -----------------------------
     void queryBoundsRecursive(int nodeIndex, const Math::Bounds& b, std::vector<Base::ID::KeyUint64>& outIds) const;
 
-    // -----------------------------
-    // 同步 objectId → itemIndex 映射
-    // -----------------------------
     void rebuildObjectMap()
     {
         m_objectIdToItem.clear();
@@ -133,5 +97,5 @@ private:
 };
 
 } // namespace V1
-} // namespace Voxol::Render
+} // namespace Voxol::Scene
 #endif

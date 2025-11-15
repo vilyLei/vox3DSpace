@@ -2,7 +2,7 @@
 #include <algorithm>
 #include <functional>
 
-namespace Voxol::Render
+namespace Voxol::Scene
 {
 EntityCompStorage::SP EntityCompStorage::make()
 {

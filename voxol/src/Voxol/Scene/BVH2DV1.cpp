@@ -3,7 +3,7 @@
 #include <stack>
 #include <algorithm>
 
-namespace Voxol::Render
+namespace Voxol::Scene
 {
 namespace V1 {
 
@@ -12,9 +12,7 @@ BVH2D::SP BVH2D::make()
     auto sp = std::make_shared<BVH2D>();
     return sp;
 }
-// -----------------------------
-// 添加 Item
-// -----------------------------
+
 void BVH2D::addItem(const Base::ID::KeyUint64& objectId, const Math::Bounds& bounds)
 {
     Item item{};
@@ -24,24 +22,18 @@ void BVH2D::addItem(const Base::ID::KeyUint64& objectId, const Math::Bounds& bou
     m_objectIdToItem[objectId] = static_cast<uint32_t>(m_items.size() - 1);
 }
 
-// -----------------------------
-// 完整构建BVH
-// -----------------------------
+
 void BVH2D::build()
 {
     m_nodes.clear();
     if (m_items.empty()) return;
 
-    // 建树
     buildRecursive(0, (int)m_items.size());
 
-    // 重建映射表
     rebuildObjectMap();
 }
 
-// -----------------------------
-// 更新单个对象的包围盒 (通过 index)
-// -----------------------------
+
 bool BVH2D::updateItemBounds(int itemIndex, const Math::Bounds& newBounds)
 {
     if (itemIndex < 0 || itemIndex >= (int)m_items.size()) return false;
@@ -61,14 +53,10 @@ bool BVH2D::updateItemBoundsByObjectId(const Base::ID::KeyUint64& objectId, cons
     return updateItemBounds(it->second, newBounds);
 }
 
-// -----------------------------
-// 更新所有脏节点 (Refit)
-// -----------------------------
 void BVH2D::updateDirty()
 {
     if (!m_dirty) return;
 
-    // 自底向上更新所有父节点的包围盒
     for (int i = (int)m_nodes.size() - 1; i >= 0; --i)
     {
         Node& node = m_nodes[i];
@@ -86,57 +74,42 @@ void BVH2D::updateDirty()
     m_dirty = false;
 }
 
-// -----------------------------
-// 点查询
-// -----------------------------
 void BVH2D::queryPoint(const Math::Vec2& p, std::vector<Base::ID::KeyUint64>& outIds) const
 {
     if (m_nodes.empty()) return;
     queryPointRecursive(0, p, outIds);
 }
 
-// -----------------------------
-// 范围查询
-// -----------------------------
 void BVH2D::queryBounds(const Math::Bounds& b, std::vector<Base::ID::KeyUint64>& outIds) const
 {
     if (m_nodes.empty()) return;
     queryBoundsRecursive(0, b, outIds);
 }
 
-// -----------------------------
-// 部分重建 (可选)
-// -----------------------------
 void BVH2D::partialRebuild()
 {
-    // 可根据脏节点比例决定是否重新构建部分子树
     const size_t dirtyCount = std::count_if(m_items.begin(), m_items.end(),
                                             [](auto& i) { return i.dirty; });
     float        dirtyRatio = (float)dirtyCount / (float)m_items.size();
 
     if (dirtyRatio > 0.4f)
     {
-        build(); // 直接重建
+        build();
     }
     else
     {
-        updateDirty(); // 否则只refit
+        updateDirty();
     }
 
-    // 重建映射表
     rebuildObjectMap();
 }
 
-// -----------------------------
-// 递归构建
-// -----------------------------
 int BVH2D::buildRecursive(int begin, int end)
 {
     Node node{};
     int  nodeIndex = (int)m_nodes.size();
     m_nodes.push_back(node);
 
-    // 计算当前范围的整体bounds
     Math::Bounds bounds{};
     //bounds.invalidate();
     bounds.toEmpty();
@@ -151,7 +124,6 @@ int BVH2D::buildRecursive(int begin, int end)
         return nodeIndex;
     }
 
-    // 按最长轴分割
     auto extent = bounds.extent();
     int  axis   = 0;
     if (extent.y > extent.x)
@@ -189,9 +161,6 @@ int BVH2D::buildRecursive(int begin, int end)
     return nodeIndex;
 }
 
-// -----------------------------
-// 点查询递归
-// -----------------------------
 void BVH2D::queryPointRecursive(int nodeIndex, const Math::Vec2& p, std::vector<Base::ID::KeyUint64>& outIds) const
 {
     const Node& node = m_nodes[nodeIndex];
@@ -211,9 +180,6 @@ void BVH2D::queryPointRecursive(int nodeIndex, const Math::Vec2& p, std::vector<
     }
 }
 
-// -----------------------------
-// 范围查询递归
-// -----------------------------
 void BVH2D::queryBoundsRecursive(int nodeIndex, const Math::Bounds& b, std::vector<Base::ID::KeyUint64>& outIds) const
 {
     const Node& node = m_nodes[nodeIndex];

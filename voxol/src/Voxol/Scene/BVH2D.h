@@ -1,10 +1,10 @@
-#ifndef VOXOL_RENDER_BVH2D_H
-#define VOXOL_RENDER_BVH2D_H
+#ifndef VOXOL_SCENE_BVH2D_H
+#define VOXOL_SCENE_BVH2D_H
 
 #include "../Math/VxRect.h"
 #include <vector>
 
-namespace Voxol::Render
+namespace Voxol::Scene
 {
 
 struct BVHNode2D {

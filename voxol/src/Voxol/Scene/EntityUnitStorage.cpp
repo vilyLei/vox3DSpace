@@ -1,7 +1,7 @@
 #include "EntityUnitStorage.h"
 #include "SceneIRParser.h"
 
-namespace Voxol::Render
+namespace Voxol::Scene
 {
 
 EntityUnitStorage::SP EntityUnitStorage::make()
@@ -35,7 +35,7 @@ void EntityUnitStorage::initalizeFromFile(const std::string& fileName)
     comp = EntityCompStorage::make();
     if (!drawing)
     {
-        drawing = DrawingUnitStorage::make();
+        drawing = Render::DrawingUnitStorage::make();
     }
     drawing->initalize(total);
 
@@ -191,7 +191,7 @@ void EntityUnitStorage::initalize(int total)
     comp = EntityCompStorage::make();
     if (!drawing)
     {
-        drawing = DrawingUnitStorage::make();
+        drawing = Render::DrawingUnitStorage::make();
     }
     drawing->initalize(total);
 
@@ -264,22 +264,22 @@ void EntityUnitStorage::initalize(int total)
     transformsPool[8] = {tb.x(), tb.y(), tb.width(), tb.height()};
 
     /// circle
-    modelsPool[0].drawUnitId               = drawing->getIdWithType(DrawingUnitType::Circle);
+    modelsPool[0].drawUnitId               = drawing->getIdWithType(Render::DrawingUnitType::Circle);
     shaderingEntitiesPool[0].shadingDescId = 0;
     /// circle
-    modelsPool[1].drawUnitId               = drawing->getIdWithType(DrawingUnitType::Circle);
+    modelsPool[1].drawUnitId               = drawing->getIdWithType(Render::DrawingUnitType::Circle);
     shaderingEntitiesPool[1].shadingDescId = 1;
     /// circle
-    modelsPool[2].drawUnitId               = drawing->getIdWithType(DrawingUnitType::Circle);
+    modelsPool[2].drawUnitId               = drawing->getIdWithType(Render::DrawingUnitType::Circle);
     shaderingEntitiesPool[2].shadingDescId = 2;
 
     /// ring
-    modelsPool[3].drawUnitId               = drawing->getIdWithType(DrawingUnitType::Ring);
+    modelsPool[3].drawUnitId               = drawing->getIdWithType(Render::DrawingUnitType::Ring);
     shaderingEntitiesPool[3].shadingDescId = 3;
 
     /// multi-circles
-    //shaderingEntitiesPool[4].drawUnitId    = drawing->getIdWithType(DrawingUnitType::MultiCircle);
-    modelsPool[4].drawUnitId               = drawing->getIdWithType(DrawingUnitType::strokeShape);
+    //shaderingEntitiesPool[4].drawUnitId    = drawing->getIdWithType(Render::DrawingUnitType::MultiCircle);
+    modelsPool[4].drawUnitId               = drawing->getIdWithType(Render::DrawingUnitType::strokeShape);
     shaderingEntitiesPool[4].shadingDescId = 4;
     auto drawUnitId_5                      = drawing->getIdWithName("ship01.glsl");
     modelsPool[5].drawUnitId               = drawUnitId_5;
@@ -339,4 +339,4 @@ void EntityUnitStorage::initalize(int total)
 }
 
 
-} // namespace Voxol::Render
+} // namespace Voxol::Scene

@@ -3,7 +3,7 @@
 #include <stack>
 #include <algorithm>
 
-namespace Voxol::Render
+namespace Voxol::Scene
 {
 namespace V2 {
 

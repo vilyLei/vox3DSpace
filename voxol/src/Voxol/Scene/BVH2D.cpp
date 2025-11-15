@@ -2,7 +2,7 @@
 #include <stack>
 #include <algorithm>
 
-namespace Voxol::Render
+namespace Voxol::Scene
 {
     
 int BVH2D::longestAxis(const Math::Bounds& b)

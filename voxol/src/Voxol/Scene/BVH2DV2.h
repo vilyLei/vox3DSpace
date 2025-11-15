@@ -1,5 +1,5 @@
-#ifndef VOXOL_RENDER_BVH2D_V2_H
-#define VOXOL_RENDER_BVH2D_V2_H
+#ifndef VOXOL_SCENE_BVH2D_V2_H
+#define VOXOL_SCENE_BVH2D_V2_H
 
 #include "../Math/VxRect.h"
 #include "../Base/IDDef.h"
@@ -9,7 +9,7 @@
 #include <unordered_set>
 #include <stack>
 
-namespace Voxol::Render
+namespace Voxol::Scene
 {
 namespace V2
 {
@@ -791,5 +791,5 @@ private:
 using BVH2D = BVH2D_LazyGC;
 
 } // namespace V2
-} // namespace Voxol::Render
+} // namespace Voxol::Scene
 #endif

@@ -4,7 +4,7 @@
 #include "intentPreDef.h"
 #include "EnumWrapper.h"
 #include "../Base/IDDef.h"
-#include "../Render/EntityCompStorage.h"
+#include "../Scene/EntityCompStorage.h"
 #include "../Tile/TileSystem.h"
 #include <functional>
 
@@ -78,7 +78,7 @@ public:
     ~InteractionSourceSystem() = default;
 
 public:
-    Render::EntityCompStorage::SP compStorage;
+    Scene::EntityCompStorage::SP compStorage;
     Tile::TileSystem::SP          tileSys;
 
 public:

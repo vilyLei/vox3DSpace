@@ -2,7 +2,8 @@
 #include <fstream>
 #include <filesystem>
 #include <cctype>
-namespace Voxol::Render
+
+namespace Voxol::Scene
 {
 namespace SceneIR
 {
@@ -231,4 +232,4 @@ void SceneIRParser::parse(const nlohmann::json& json)
         sceneModule.parse(json["scene"]);
     }
 }
-} // namespace Voxol::Render
+} // namespace Voxol::Scene

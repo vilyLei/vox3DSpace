@@ -2,7 +2,7 @@
 #define VOXOL_SYSTEM_ENTITY_SYSTEM_LAYER_H
 
 
-#include "../Render/EntitySceneSystem.h"
+#include "../Scene/EntitySceneSystem.h"
 #include "../Render/EntityRenderSystem.h"
 #include "../Tile/TileSystem.h"
 #include "../System/UIOperationLayer.h"
@@ -40,7 +40,7 @@ public:
     Render::Draw::DrawContext drawCtx;
 
     std::shared_ptr<System::UIOperationLayer> uiOpLayer;
-    Render::EntitySceneSystem::SP             etSceneSys  = Render::EntitySceneSystem::make();
+    Scene::EntitySceneSystem::SP              etSceneSys  = Scene::EntitySceneSystem::make();
     Render::EntityRenderSystem::SP            etRenderSys = Render::EntityRenderSystem::make();
     Tile::TileSystem::SP                      tileSys     = Tile::TileSystem::make();
 

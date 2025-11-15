@@ -1,5 +1,5 @@
-#ifndef VOXOL_RENDER_ENTITY_SCENE_SYSTEM_H
-#define VOXOL_RENDER_ENTITY_SCENE_SYSTEM_H
+#ifndef VOXOL_SCENE_ENTITY_SCENE_SYSTEM_H
+#define VOXOL_SCENE_ENTITY_SCENE_SYSTEM_H
 
 //#include "BVH2DV1.h"
 #include "BVH2DV2.h"
@@ -9,7 +9,7 @@
 #include "../Intent/InteractionSourceSystem.h"
 #include <functional>
 
-namespace Voxol::Render
+namespace Voxol::Scene
 {
 
 //using EntitySysBVH = V1::BVH2D;
@@ -46,5 +46,5 @@ public:
 private:
     std::vector<Base::ID::KeyUint64> queriedEIds{};
 };
-} // namespace Voxol::Render
+} // namespace Voxol::Scene
 #endif

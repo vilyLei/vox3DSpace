@@ -1,7 +1,7 @@
 #include "EntitySceneSystem.h"
 #include <algorithm>
 
-namespace Voxol::Render
+namespace Voxol::Scene
 {
 
 EntitySceneSystem::SP EntitySceneSystem::make()

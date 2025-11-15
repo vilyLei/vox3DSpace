@@ -5,14 +5,12 @@
 #include "DrawCtx.h"
 #include "CompPool.h"
 
-#include "EntityUnitStorage.h"
+#include "../Scene/EntityUnitStorage.h"
 
 #include "OglFbo.h"
 
 namespace Voxol::Render
 {
-
-//using EntitySysBVH = V2::BVH2D;
 
 class EntityRenderSystem
 {
@@ -33,11 +31,11 @@ public:
     void render(const Draw::DrawContext& rctx, const Math::Mat33& vpM, const Math::Bounds& wbounds, const std::vector<Base::ID::KeyUint64>& queriedEIds);
     void clear();
 
-    EntityUnitStorage::SP entityStorage{};
+    Scene::EntityUnitStorage::SP entityStorage{};
 
 private:
     bool drawUnitEffect(const Draw::DrawContext& rctx, const Base::ID::KeyUint64 etKey, const Math::Mat33& vpM, const Math::Bounds& wbounds);
-    bool drawUnit(const Draw::DrawContext& rctx, const Component::UnitEntity& entity, const Math::Mat33& vpM, const Math::Bounds& wbounds, const Math::Mat33& wM);
+    bool drawUnit(const Draw::DrawContext& rctx, const Scene::Component::UnitEntity& entity, const Math::Mat33& vpM, const Math::Bounds& wbounds, const Math::Mat33& wM);
 
 private:
     Draw::ClearParams clearParam{};

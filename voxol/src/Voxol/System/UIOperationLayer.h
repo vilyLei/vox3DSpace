@@ -2,7 +2,7 @@
 #define VOXOL_UI_OPERATION_LAYER_H
 
 #include "../Base/BaseDefine.h"
-#include "../Render/EntitySceneSystem.h"
+#include "../Scene/EntitySceneSystem.h"
 #include "../Math/Mat33.h"
 #include "../Math/VxRect.h"
 #include "../System/MouseEventSystem.h"
@@ -27,10 +27,10 @@ struct MouseController
     Base::ID::KeyUint64              etId       = Base::ID::INVALID_KEY;
     std::vector<Base::ID::KeyUint64> qeIds{};
 
-    Render::Component::UnitTransform unitTransform{};
+    Scene::Component::UnitTransform unitTransform{};
 
     InputDirtyCallType            dirtyCall;
-    Render::EntitySceneSystem::SP targetSys;
+    Scene::EntitySceneSystem::SP  targetSys;
     Math::Bounds                  selectionBounds{};
     SelectType                    selectType = SelectType::Single;
 
@@ -62,7 +62,7 @@ public:
     ~UIOperationLayer() = default;
 
 public:
-    Render::EntitySceneSystem::SP etSceneSys;
+    Scene::EntitySceneSystem::SP etSceneSys;
 
     Mouse::MouseController mouseCtrl;
     ShortcutManager        shortcutMana{};

@@ -1,11 +1,11 @@
-#ifndef VOXOL_RENDER_ENTITY_COMPONENT_H
-#define VOXOL_RENDER_ENTITY_COMPONENT_H
+#ifndef VOXOL_SCENE_ENTITY_COMPONENT_H
+#define VOXOL_SCENE_ENTITY_COMPONENT_H
 
 #include "../Math/VxRect.h"
 #include "../Base/IDDef.h"
 
 
-namespace Voxol::Render
+namespace Voxol::Scene
 {
 namespace Component
 {
@@ -141,5 +141,5 @@ struct UnitInstanceMap
 
 } // namespace Component
 
-} // namespace Voxol::Render
+} // namespace Voxol::Scene
 #endif

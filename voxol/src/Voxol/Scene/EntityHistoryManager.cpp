@@ -1,6 +1,6 @@
 #include "EntityHistoryManager.h"
 
-namespace Voxol::Render
+namespace Voxol::Scene
 {
     
 EntityHistoryManager::SP EntityHistoryManager::make() {
@@ -27,4 +27,4 @@ void EntityHistoryManager::pushItem(const HistoryItemData& itemData) {
     mList.emplace_back(itemData);
 }
 
-} // namespace Voxol::Render
+} // namespace Voxol::Scene

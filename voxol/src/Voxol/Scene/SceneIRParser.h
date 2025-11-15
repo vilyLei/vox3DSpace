@@ -1,5 +1,5 @@
-#ifndef VOXOL_RENDER_SCENE_IR_PARSER_H
-#define VOXOL_RENDER_SCENE_IR_PARSER_H
+#ifndef VOXOL_SCENE_SCENE_IR_PARSER_H
+#define VOXOL_SCENE_SCENE_IR_PARSER_H
 
 #include "../Base/BaseDefine.h"
 #include "EntityComponent.h"
@@ -9,7 +9,7 @@
 #include <algorithm>
 #include <variant>
 
-namespace Voxol::Render
+namespace Voxol::Scene
 {
 using JsonType = nlohmann::json;
 namespace SceneIR
@@ -267,5 +267,5 @@ public:
     void parse(const nlohmann::json& json);
 };
 
-} // namespace Voxol::Render
+} // namespace Voxol::Scene
 #endif

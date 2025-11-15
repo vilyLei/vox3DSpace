@@ -1,5 +1,5 @@
-#ifndef VOXOL_RENDER_ENTITY_COMP_STORAGE_H
-#define VOXOL_RENDER_ENTITY_COMP_STORAGE_H
+#ifndef VOXOL_SCENE_ENTITY_COMP_STORAGE_H
+#define VOXOL_SCENE_ENTITY_COMP_STORAGE_H
 
 #include "../Base/BaseDefine.h"
 #include "../Math/VxRect.h"
@@ -13,7 +13,7 @@
 #include <unordered_map>
 #include <functional>
 
-namespace Voxol::Render
+namespace Voxol::Scene
 {
     
 using EntityBoundsResponseCallType = std::function<void(const Base::ID::KeyUint64& etId, const Math::Bounds& bounds)>;

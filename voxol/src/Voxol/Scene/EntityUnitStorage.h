@@ -1,11 +1,11 @@
-#ifndef VOXOL_RENDER_ENTITY_UNIT_STORAGE_H
-#define VOXOL_RENDER_ENTITY_UNIT_STORAGE_H
+#ifndef VOXOL_SCENE_ENTITY_UNIT_STORAGE_H
+#define VOXOL_SCENE_ENTITY_UNIT_STORAGE_H
 
 #include "EntityCompStorage.h"
-#include "DrawingUnitStorage.h"
+#include "../Render/DrawingUnitStorage.h"
 
 
-namespace Voxol::Render
+namespace Voxol::Scene
 {
 
 class EntityUnitStorage
@@ -27,11 +27,11 @@ public:
     void initalize(int total = 512);
 
     EntityCompStorage::SP  comp{};
-    DrawingUnitStorage::SP drawing{};
+    Render::DrawingUnitStorage::SP drawing{};
 
 private:
 };
 
 
-} // namespace Voxol::Render
+} // namespace Voxol::Scene
 #endif
