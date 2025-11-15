@@ -22,7 +22,7 @@ void EntityRenderSystem::initalize()
     Render::Gpu::buildTexDrawUnitWithTexBlur(blurVUnit, GL_ZERO, true, 1);
 }
 
-void EntityRenderSystem::render(const Draw::DrawContext& rctx, const Math::Mat33& vpM, const Math::Bounds& wbounds, const std::vector<ID::KeyUint64>& queriedEIds)
+void EntityRenderSystem::render(const Draw::DrawContext& rctx, const Math::Mat33& vpM, const Math::Bounds& wbounds, const std::vector<Base::ID::KeyUint64>& queriedEIds)
 {
     if (!entityStorage)
         return;
@@ -54,7 +54,7 @@ void EntityRenderSystem::render(const Draw::DrawContext& rctx, const Math::Mat33
             continue;
         }
         auto proId = key.protoId();
-        if (ID::isInvalidID(proId))
+        if (Base::ID::isInvalidID(proId))
         {
             continue;
         }
@@ -64,7 +64,7 @@ void EntityRenderSystem::render(const Draw::DrawContext& rctx, const Math::Mat33
         }
         auto  iid = key.iid();
         auto& et  = entitiesPool[proId];
-        if (Render::ID::isInvalidID(et.shadingId) || !et.visible)
+        if (Base::ID::isInvalidID(et.shadingId) || !et.visible)
         {
             continue;
         }
@@ -99,7 +99,7 @@ void EntityRenderSystem::render(const Draw::DrawContext& rctx, const Math::Mat33
     //    drawUnit(et, vpM, wbounds);
     //});
 }
-bool EntityRenderSystem::drawUnitEffect(const Draw::DrawContext& rctx, const ID::KeyUint64 etKey, const Math::Mat33& vpM, const Math::Bounds& wbounds)
+bool EntityRenderSystem::drawUnitEffect(const Draw::DrawContext& rctx, const Base::ID::KeyUint64 etKey, const Math::Mat33& vpM, const Math::Bounds& wbounds)
 {
     auto&  compStorage = entityStorage->comp;
     auto&& srUnit      = compStorage->effectShadowEntityMap[etKey];
@@ -110,7 +110,7 @@ bool EntityRenderSystem::drawUnitEffect(const Draw::DrawContext& rctx, const ID:
     auto&& entityId          = srUnit.entityId;
     auto&& entity   = compStorage->entitiesPool[entityId.protoId()];
 
-    if (ID::isInvalidID(entity.shadingId))
+    if (Base::ID::isInvalidID(entity.shadingId))
         return false;
 
     auto   etId              = entity.id;
@@ -152,7 +152,7 @@ bool EntityRenderSystem::drawUnitEffect(const Draw::DrawContext& rctx, const ID:
 bool EntityRenderSystem::drawUnit(const Draw::DrawContext& rctx, const Component::UnitEntity& entity, const Math::Mat33& vpM, const Math::Bounds& wbounds, const Math::Mat33& wM)
 {
 
-    if (ID::isInvalidID(entity.shadingId))
+    if (Base::ID::isInvalidID(entity.shadingId))
         return false;
 
     auto& compStorage       = entityStorage->comp;

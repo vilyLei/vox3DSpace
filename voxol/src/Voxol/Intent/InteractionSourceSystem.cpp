@@ -9,18 +9,17 @@ InteractionSourceSystem::SP InteractionSourceSystem::make()
 }
 void InteractionSourceSystem::initialize()
 {
-    using namespace Render;
     using namespace Interaction;
 
     InteractionSource srcNode;
-    srcNode.id = ID::KeyUint64::make(4);
+    srcNode.id = Base::ID::KeyUint64::make(4);
 
     // 模拟SDL输入后得到的初始化,
     // ID::KeyUint64::make(1) 表示的是场景层次节点1模拟按钮, 即 entity(1)
     // ID::KeyUint64::make(5) 表示的是场景层次节点5模拟一个面板, 即 entity(5)
 
-    auto             btnID   = ID::KeyUint64::make(3);
-    auto             panelID   = ID::KeyUint64::make(5);
+    auto btnID   = Base::ID::KeyUint64::make(3);
+    auto panelID = Base::ID::KeyUint64::make(5);
 
     bool                 visible = true;
     InteractionTargetSet outTar;
@@ -127,7 +126,7 @@ void InteractionSourceSystem::singalParse(Interaction::InteractionSource& srcNod
     }
 }
 // 由其他交互事件响应逻辑产生触发信号
-void InteractionSourceSystem::updateSourceAct(const Render::ID::KeyUint64& srcId, const std::string& actDesc)
+void InteractionSourceSystem::updateSourceAct(const Base::ID::KeyUint64& srcId, const std::string& actDesc)
 {
     for (auto& item : srcMap)
     {
@@ -149,11 +148,11 @@ void InteractionSourceSystem::execActToDsiplay(Interaction::InteractionSource& s
         auto&  shaderingEntities = compStorage->shaderingEntitiesPool;
         auto&  shaderingDescVec  = compStorage->shaderingDescPool;
 
-        if (Render::ID::isInvalidID(entity.shadingId))
+        if (Base::ID::isInvalidID(entity.shadingId))
             return;
 
         auto& shadingEt = shaderingEntities[entity.shadingId];
-        if (Render::ID::isInvalidID(shadingEt.shadingDescId))
+        if (Base::ID::isInvalidID(shadingEt.shadingDescId))
         {
             return;
         }
@@ -161,7 +160,7 @@ void InteractionSourceSystem::execActToDsiplay(Interaction::InteractionSource& s
         shdDesc.color  = desc.color;
         entity.visible = desc.visible;
         printf("modifyDstFunc() etId: %d, actDesc: %s, color: 0x%x\n", etId, actDesc.c_str(), shdDesc.color);
-        compStorage->foreachBoundsWithEntityId(etId, [this](const Render::ID::KeyUint64& etId, const Math::Bounds& bounds) {
+        compStorage->foreachBoundsWithEntityId(etId, [this](const Base::ID::KeyUint64& etId, const Math::Bounds& bounds) {
             tileSys->addDirtyBounds(bounds, 0);
         });
     };

@@ -37,7 +37,7 @@ void EntitySceneSystem::initalize(const std::string& configFileName)
     auto& instanceStorage       = storage->instanceStorage;
 
 
-    auto addShadowEffectBVHData = [&](const ID::KeyUint64& key, const Math::Mat33& wmat) {
+    auto addShadowEffectBVHData = [&](const Base::ID::KeyUint64& key, const Math::Mat33& wmat) {
 
         auto protoId = key.protoId();
 
@@ -45,7 +45,7 @@ void EntitySceneSystem::initalize(const std::string& configFileName)
 
         auto&& et = entitiesPool[protoId];
 
-        if (ID::isInvalidID(et.shadingId)) { return; }
+        if (Base::ID::isInvalidID(et.shadingId)) { return; }
 
         auto&  shadingEt = shaderingEntitiesPool[et.shadingId];
         auto&  desc      = shaderingDescPool[shadingEt.shadingDescId];
@@ -59,7 +59,7 @@ void EntitySceneSystem::initalize(const std::string& configFileName)
             auto   wm      = wmat;
             wm.offsetXY(shdData.offset);
             Component::defaultRect.mat33MapTo(wm, vb);
-            auto shadowKey = ID::KeyUint64::makeWithEffectShadow(key, ef);
+            auto shadowKey = Base::ID::KeyUint64::makeWithEffectShadow(key, ef);
             bvh->addItem(shadowKey, vb);
             storage->effectShadowEntityMap[shadowKey] = {shadowKey, key, ef};
         }
@@ -67,7 +67,7 @@ void EntitySceneSystem::initalize(const std::string& configFileName)
 
     auto updateProtoEtBVHData = [&](auto& et) {
         auto&& vb = storage->getEntityGlobalBoundsAt(et.id);
-        bvh->addItem(ID::KeyUint64::make(et.id), vb);
+        bvh->addItem(Base::ID::KeyUint64::make(et.id), vb);
         auto& wmats = storage->entityInsGlobalMat33Map;
         if (!instanceStorage.contains(et.id))
             return;
@@ -83,16 +83,16 @@ void EntitySceneSystem::initalize(const std::string& configFileName)
     };
 
     entitiesPool.forEach([&](auto& et, uint32_t index) {
-        if (ID::isInvalidID(et.transformId))
+        if (Base::ID::isInvalidID(et.transformId))
             return;
 
-        if (ID::isValidID(et.prototypeId))
+        if (Base::ID::isValidID(et.prototypeId))
         {
             updateProtoEtBVHData(et);
             return;
         }
 
-        auto&& key = ID::KeyUint64::make(et.id);
+        auto&& key = Base::ID::KeyUint64::make(et.id);
         addShadowEffectBVHData(key, storage->getEntityGlobalMat33At(et.id));
         auto&& vb = storage->getEntityGlobalBoundsAt(et.id);
         //printf("add bvh vb: \n");
@@ -129,7 +129,7 @@ int EntitySceneSystem::drawQuery(const Math::VxRect& wbounds, int phase)
     return static_cast<int>(queriedEIds.size());
 }
 
-const std::vector<ID::KeyUint64> EntitySceneSystem::getQueriedEIds() const
+const std::vector<Base::ID::KeyUint64> EntitySceneSystem::getQueriedEIds() const
 {
     return queriedEIds;
 }

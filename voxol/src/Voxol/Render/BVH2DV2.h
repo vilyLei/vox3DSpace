@@ -2,7 +2,7 @@
 #define VOXOL_RENDER_BVH2D_V2_H
 
 #include "../Math/VxRect.h"
-#include "CompBaseDef.h"
+#include "../Base/IDDef.h"
 #include <vector>
 #include <memory>
 #include <unordered_map>
@@ -41,11 +41,11 @@ public:
 public:
     struct Node
     {
-        Math::Bounds  bounds;
-        int32_t       left     = -1;
-        int32_t       right    = -1;
-        int32_t       parent   = -1;
-        ID::KeyUint64 objectId = ID::INVALID_KEY; // >=0 for leaf, -1 for internal or deleted slot
+        Math::Bounds        bounds;
+        int32_t             left     = -1;
+        int32_t             right    = -1;
+        int32_t             parent   = -1;
+        Base::ID::KeyUint64 objectId = Base::ID::INVALID_KEY; // >=0 for leaf, -1 for internal or deleted slot
     };
 
     BVH2D_LazyGC()  = default;
@@ -59,7 +59,7 @@ public:
     void setCompactFactor(size_t f) { m_compactFactor = f; }
 
     // ---------- Add / Build ----------
-    void addItem(const ID::KeyUint64& objectId, const Math::Bounds& bounds)
+    void addItem(const Base::ID::KeyUint64& objectId, const Math::Bounds& bounds)
     {
         LeafTemp lt;
         lt.objectId = objectId;
@@ -106,7 +106,7 @@ public:
 
     // ---------- Update (with fat bounds) ----------
     // Update bounds by object id; returns true if updated.
-    bool updateItemBoundsByObjectId(const ID::KeyUint64& objectId, const Math::Bounds& newBounds)
+    bool updateItemBoundsByObjectId(const Base::ID::KeyUint64& objectId, const Math::Bounds& newBounds)
     {
         auto mit = m_objectToLeaf.find(objectId);
         if (mit == m_objectToLeaf.end()) return false;
@@ -147,7 +147,7 @@ public:
     // ---------- Remove (lazy) ----------
     // Mark object as removed. Removal is lazy; node remains in m_nodes until compact.
     // Returns true if removed.
-    bool removeItemByObjectId(const ID::KeyUint64& objectId)
+    bool removeItemByObjectId(const Base::ID::KeyUint64& objectId)
     {
         auto it = m_objectToLeaf.find(objectId);
         if (it == m_objectToLeaf.end()) return false;
@@ -160,7 +160,7 @@ public:
 
         Node& leaf = m_nodes[leafIdx];
         // mark as deleted (logical delete)
-        leaf.objectId = ID::INVALID_KEY;
+        leaf.objectId = Base::ID::INVALID_KEY;
 
         // remove object mapping and fat bound entry if exist
         m_objectToLeaf.erase(it);
@@ -184,7 +184,7 @@ public:
             {
                 // collapse parent to an empty leaf slot
                 p.left = p.right = -1;
-                p.objectId       = ID::INVALID_KEY;
+                p.objectId       = Base::ID::INVALID_KEY;
                 cur              = p.parent;
             }
             else
@@ -384,7 +384,7 @@ public:
     }
 
     // ---------- Queries ----------
-    void queryPoint(const Math::Vec2& p, std::vector<ID::KeyUint64>& outIds) const
+    void queryPoint(const Math::Vec2& p, std::vector<Base::ID::KeyUint64>& outIds) const
     {
         if (m_nodes.empty()) return;
         std::stack<int> st;
@@ -408,7 +408,7 @@ public:
         }
     }
 
-    void queryBounds(const Math::Bounds& b, std::vector<ID::KeyUint64>& outIds) const
+    void queryBounds(const Math::Bounds& b, std::vector<Base::ID::KeyUint64>& outIds) const
     {
         if (m_nodes.empty()) return;
         std::stack<int> st;
@@ -455,14 +455,14 @@ public:
             }
         }
 
-        flag       = false;
+        flag = false;
     }
 
     // ---------- Utilities / debug ----------
-    size_t                nodeCount() const { return m_nodes.size(); }
-    size_t                leafCount() const { return m_objectToLeaf.size(); }
-    size_t                deletedCount() const { return m_deletedCount; }
-    const Math::Bounds& getBoundsAt(const ID::KeyUint64& objId)
+    size_t              nodeCount() const { return m_nodes.size(); }
+    size_t              leafCount() const { return m_objectToLeaf.size(); }
+    size_t              deletedCount() const { return m_deletedCount; }
+    const Math::Bounds& getBoundsAt(const Base::ID::KeyUint64& objId)
     {
         if (m_objectToLeaf.empty())
             return defaultBounds;
@@ -478,8 +478,8 @@ private:
     Math::Bounds defaultBounds{0, 0, 1, 1};
     struct LeafTemp
     {
-        ID::KeyUint64 objectId = ID::INVALID_KEY;
-        Math::Bounds  bounds;
+        Base::ID::KeyUint64 objectId = Base::ID::INVALID_KEY;
+        Math::Bounds        bounds;
     };
 
     inline bool validNodeIndex(int idx) const
@@ -553,7 +553,7 @@ private:
 
         node.left     = leftIdx;
         node.right    = rightIdx;
-        node.objectId = ID::INVALID_KEY;
+        node.objectId = Base::ID::INVALID_KEY;
         printf("v2 buildRecursiveFromLeaves() D, indices[l]:%d, node.objectId: %s, node(l=%d, r=%d), nodeIndex: %d\n", indices[l], node.objectId.idToString().c_str(), node.left, node.right, nodeIndex);
         node.bounds = Math::Bounds::Union(m_nodes[leftIdx].bounds, m_nodes[rightIdx].bounds);
         return nodeIndex;
@@ -771,14 +771,14 @@ private:
     }
 
 private:
-    std::vector<LeafTemp>                    m_leafTemps;            // temps before build
-    std::vector<Node>                        m_nodes;                // compact storage of tree
-    ID::keyUint64Unordered_map<int32_t>      m_objectToLeaf;         // objectId -> leaf node idx
-    ID::keyUint64Unordered_map<Math::Bounds> m_fatBounds;            // fat bounds per objectId
-    std::unordered_set<int>                  m_dirtyLeaves;          // leaf node indices needing relocation
-    size_t                                   m_deletedCount = 0;     // approx deleted count (for heuristics)
-    bool                                     m_needsCompact = false; // mark that compaction may be beneficial
-    bool                                     m_dirty        = false; // needs refit/partial rebuild
+    std::vector<LeafTemp>                          m_leafTemps;            // temps before build
+    std::vector<Node>                              m_nodes;                // compact storage of tree
+    Base::ID::keyUint64Unordered_map<int32_t>      m_objectToLeaf;         // objectId -> leaf node idx
+    Base::ID::keyUint64Unordered_map<Math::Bounds> m_fatBounds;            // fat bounds per objectId
+    std::unordered_set<int>                        m_dirtyLeaves;          // leaf node indices needing relocation
+    size_t                                         m_deletedCount = 0;     // approx deleted count (for heuristics)
+    bool                                           m_needsCompact = false; // mark that compaction may be beneficial
+    bool                                           m_dirty        = false; // needs refit/partial rebuild
 
     // configs:
     float  m_fatPad             = 2.0f;

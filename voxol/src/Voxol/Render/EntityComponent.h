@@ -2,7 +2,7 @@
 #define VOXOL_RENDER_ENTITY_COMPONENT_H
 
 #include "../Math/VxRect.h"
-#include "CompBaseDef.h"
+#include "../Base/IDDef.h"
 
 
 namespace Voxol::Render
@@ -38,9 +38,9 @@ struct UnitEffectShadowDesc
 
 struct UnitShadowEntity
 {
-    ID::KeyUint64 shadowId{ID::INVALID_ID};
-    ID::KeyUint64 entityId{ID::INVALID_ID};
-    uint32_t      effectId = ID::INVALID_ID;
+    Base::ID::KeyUint64 shadowId = Base::ID::INVALID_KEY;
+    Base::ID::KeyUint64 entityId = Base::ID::INVALID_KEY;
+    uint32_t      effectId = Base::ID::INVALID_ID;
 };
 
 struct UnitShadingDesc
@@ -51,30 +51,30 @@ struct UnitShadingDesc
 
 struct UnitShadingEntity
 {
-    uint32_t id            = ID::INVALID_ID;
-    uint32_t shadingDescId = ID::INVALID_ID;
+    uint32_t id            = Base::ID::INVALID_ID;
+    uint32_t shadingDescId = Base::ID::INVALID_ID;
 };
 struct UnitModel
 {
-    uint32_t id         = ID::INVALID_ID;
-    uint32_t drawUnitId = ID::INVALID_ID;
+    uint32_t id         = Base::ID::INVALID_ID;
+    uint32_t drawUnitId = Base::ID::INVALID_ID;
 };
 
 struct UnitHierarchy
 {
-    uint32_t parent     = ID::INVALID_ID;
-    uint32_t next       = ID::INVALID_ID;
-    uint32_t firstChild = ID::INVALID_ID;
+    uint32_t parent     = Base::ID::INVALID_ID;
+    uint32_t next       = Base::ID::INVALID_ID;
+    uint32_t firstChild = Base::ID::INVALID_ID;
 };
 struct UnitEntity
 {
-    uint32_t id = ID::INVALID_ID;
+    uint32_t id = Base::ID::INVALID_ID;
     /// UnitShadingEntity vector index value
-    uint32_t shadingId   = ID::INVALID_ID;
-    uint32_t transformId = ID::INVALID_ID;
-    uint32_t modelId     = ID::INVALID_ID;
-    uint32_t hierarchyId = ID::INVALID_ID;
-    uint32_t prototypeId = ID::INVALID_ID;
+    uint32_t shadingId   = Base::ID::INVALID_ID;
+    uint32_t transformId = Base::ID::INVALID_ID;
+    uint32_t modelId     = Base::ID::INVALID_ID;
+    uint32_t hierarchyId = Base::ID::INVALID_ID;
+    uint32_t prototypeId = Base::ID::INVALID_ID;
 
     bool visible = true;
     bool dirty   = true;
@@ -133,9 +133,9 @@ struct FlatInsStorage
 
 struct UnitInstanceMap
 {
-    uint32_t                                  iid     = ID::INVALID_ID;
-    uint32_t                                  protoId = ID::INVALID_ID;
-    ID::keyUint64Unordered_map<ID::KeyUint64> map;
+    uint32_t                                  iid     = Base::ID::INVALID_ID;
+    uint32_t                                  protoId = Base::ID::INVALID_ID;
+    Base::ID::keyUint64Unordered_map<Base::ID::KeyUint64> map;
     bool                                      dirty = true;
 };
 

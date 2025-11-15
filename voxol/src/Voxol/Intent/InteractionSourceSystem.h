@@ -3,7 +3,7 @@
 
 #include "intentPreDef.h"
 #include "EnumWrapper.h"
-#include "../Render/CompBaseDef.h"
+#include "../Base/IDDef.h"
 #include "../Render/EntityCompStorage.h"
 #include "../Tile/TileSystem.h"
 #include <functional>
@@ -24,7 +24,7 @@ enum class MouseStatus : uint8_t
 
 struct InteractionSourceFlag
 {
-    Render::ID::KeyUint64                  id;
+    Base::ID::KeyUint64                  id;
     Intent::Flag::EnumWrapper<MouseStatus> flags;
     bool                                   active = false;
     bool                                   hit    = false;
@@ -32,7 +32,7 @@ struct InteractionSourceFlag
 
 struct InteractionTargetDesc
 {
-    Render::ID::KeyUint64 id;
+    Base::ID::KeyUint64   id;
     std::string           type;
     uint32_t              color   = 0xff000000;
     bool                  visible = true;
@@ -47,7 +47,7 @@ struct InteractionTargetSet
 
 struct InteractionSource
 {
-    Render::ID::KeyUint64 id;
+    Base::ID::KeyUint64 id;
     std::string           type = "default";
 
     Intent::Flag::EnumWrapper<Interaction::MouseStatus> flags = Interaction::MouseStatus::None;
@@ -85,7 +85,7 @@ public:
     void initialize();
     void addSource(const Interaction::InteractionSource& srcNode);
     void singalParse(Interaction::InteractionSource& srcNode, bool selectionFlag, const std::string& actDesc);
-    void updateSourceAct(const Render::ID::KeyUint64& srcId, const std::string& actDesc);
+    void updateSourceAct(const Base::ID::KeyUint64& srcId, const std::string& actDesc);
     void foreachSrcNode(const Interaction::SourceCallbackType& callback);
 
     void execActToDsiplay(Interaction::InteractionSource& srcNode, Interaction::MouseStatus status, std::string actDesc);
@@ -93,7 +93,7 @@ public:
     void update();
 
 private:
-    Render::ID::keyUint64Unordered_map<Interaction::InteractionSource> srcMap;
+    Base::ID::keyUint64Unordered_map<Interaction::InteractionSource> srcMap;
 };
 
 

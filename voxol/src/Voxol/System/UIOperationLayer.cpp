@@ -23,17 +23,17 @@ void MouseController::selectWithSingle(const System::Mouse::MouseEvent& evt, con
     auto etStorage = targetSys->entityStorage->comp;
     etStorage->checkIds(qeIds);
 
-    auto topId = qeIds.empty() ? Render::ID::INVALID_KEY : qeIds.back();
+    auto topId = qeIds.empty() ? Base::ID::INVALID_KEY : qeIds.back();
 
     if (evt.isBegin() && topId.flags() > 0)
     {
-        selectEtId = Render::ID::INVALID_KEY;
-        etId = Render::ID::INVALID_KEY;
+        selectEtId = Base::ID::INVALID_KEY;
+        etId       = Base::ID::INVALID_KEY;
         return;
     }
     if (evt.isBegin())
     {
-        selectEtId = Render::ID::INVALID_KEY;
+        selectEtId = Base::ID::INVALID_KEY;
         dragging = false;
     }
 
@@ -46,7 +46,7 @@ void MouseController::selectWithSingle(const System::Mouse::MouseEvent& evt, con
         targetSys->interSrcSys->updateSourceAct(topId, "up");
     }
 
-    if (Render::ID::isValidID(topId) && evt.isBegin())
+    if (Base::ID::isValidID(topId) && evt.isBegin())
     {
         etId          = topId;
         selectEtId    = etId;
@@ -58,7 +58,7 @@ void MouseController::selectWithSingle(const System::Mouse::MouseEvent& evt, con
     }
 
 
-    if (Render::ID::isValidID(etId) && evt.isDragging())
+    if (Base::ID::isValidID(etId) && evt.isDragging())
     {
         dirtyCall({}, 0, etId);
         etStorage->setEntityGlobalXYAt(originEtPos + offset, etId.protoId());
@@ -69,16 +69,16 @@ void MouseController::selectWithSingle(const System::Mouse::MouseEvent& evt, con
     }
     if (evt.isEnd())
     {
-        if (Render::ID::isValidID(etId) && dragging)
+        if (Base::ID::isValidID(etId) && dragging)
         {
             dragging = false;
             etStorage->historyManager->pushItem({unitTransform, etId});
         }
-        etId = Render::ID::INVALID_KEY;
+        etId = Base::ID::INVALID_KEY;
         return;
     }
 
-    if (evt.isDragging() && Render::ID::isInvalidID(etId))
+    if (evt.isDragging() && Base::ID::isInvalidID(etId))
     {
         selectionBounds.toEmpty(evt.originGlobalPos);
         selectType = SelectType::Bounds;
@@ -107,7 +107,7 @@ void MouseController::selectWithBounds(const System::Mouse::MouseEvent& evt, con
     if (evt.isEnd())
     {
         printf("MouseCtroller::selectBtnBounds() end().\n");
-        etId       = Render::ID::INVALID_KEY;
+        etId       = Base::ID::INVALID_KEY;
         selectType = SelectType::Single;
         targetSys->interSrcSys->updateSourceAct(etId, "up");
     }

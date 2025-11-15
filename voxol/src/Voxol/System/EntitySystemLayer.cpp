@@ -8,16 +8,16 @@ EntitySystemLayer::SP EntitySystemLayer::make()
     return sp;
 }
 
-void EntitySystemLayer::updateTileWithEntityId(const Render::ID::KeyUint64& eId)
+void EntitySystemLayer::updateTileWithEntityId(const Base::ID::KeyUint64& eId)
 {
     if (eId.isIDInvalid())
         return;
 
-    etSceneSys->updateBoundsWithEntityId(eId.protoId(), [this](const Render::ID::KeyUint64& etId, const Math::Bounds& bounds) {
+    etSceneSys->updateBoundsWithEntityId(eId.protoId(), [this](const Base::ID::KeyUint64& etId, const Math::Bounds& bounds) {
         tileSys->addDirtyBounds(bounds, 0);
     });
 }
-void EntitySystemLayer::updateBVHAndTileWithEntityId(const Render::ID::KeyUint64& eId)
+void EntitySystemLayer::updateBVHAndTileWithEntityId(const Base::ID::KeyUint64& eId)
 {
     if (eId.isIDInvalid())
         return;
@@ -26,10 +26,8 @@ void EntitySystemLayer::updateBVHAndTileWithEntityId(const Render::ID::KeyUint64
     auto&& parentMat     = etCompStorage->getEntityParentGlobalMatAt(eId.protoId());
     etCompStorage->traverseBuildGlobalMat(eId.protoId(), parentMat);
     etCompStorage->updateAllInstanceGlobalMats(eId);
-    //etSceneSys->updateBVHBoundsWithEntityId(eId.protoId(), [this](const Render::ID::KeyUint64& etId, const Math::Bounds& bounds) {
-    //    tileSys->addDirtyBounds(bounds, 1);
-    //});
-    etSceneSys->updateBoundsWithEntityId(eId.protoId(), [this](const Render::ID::KeyUint64& etId, const Math::Bounds& bounds) {
+
+    etSceneSys->updateBoundsWithEntityId(eId.protoId(), [this](const Base::ID::KeyUint64& etId, const Math::Bounds& bounds) {
         tileSys->addDirtyBounds(bounds, 1);
         etSceneSys->bvh->updateItemBoundsByObjectId(etId, bounds);
     });
@@ -45,7 +43,7 @@ void EntitySystemLayer::initalize(const std::string& configFileName)
     auto& etCompStorage = etSceneSys->entityStorage->comp;
 
     uiOpLayer                      = std::make_shared<System::UIOperationLayer>();
-    uiOpLayer->mouseCtrl.dirtyCall = [&, this](const Math::Bounds& bounds, uint32_t type, const Render::ID::KeyUint64& etId) {
+    uiOpLayer->mouseCtrl.dirtyCall = [&, this](const Math::Bounds& bounds, uint32_t type, const Base::ID::KeyUint64& etId) {
         if (type == 0)
         {
             updateTileWithEntityId(etId);

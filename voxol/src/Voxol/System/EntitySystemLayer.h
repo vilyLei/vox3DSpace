@@ -33,8 +33,8 @@ public:
     void updateKeyboardParams(int key, int scancode, int action, int mods);
     void updateMouseParams(const System::Mouse::MouseInputParam& param);
 
-    void updateTileWithEntityId(const Render::ID::KeyUint64& eId);
-    void updateBVHAndTileWithEntityId(const Render::ID::KeyUint64& eId);
+    void updateTileWithEntityId(const Base::ID::KeyUint64& eId);
+    void updateBVHAndTileWithEntityId(const Base::ID::KeyUint64& eId);
 
 public:
     Render::Draw::DrawContext drawCtx;

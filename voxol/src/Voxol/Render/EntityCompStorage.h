@@ -16,7 +16,7 @@
 namespace Voxol::Render
 {
     
-using EntityBoundsResponseCallType = std::function<void(const Render::ID::KeyUint64& etId, const Math::Bounds& bounds)>;
+using EntityBoundsResponseCallType = std::function<void(const Base::ID::KeyUint64& etId, const Math::Bounds& bounds)>;
 
 class EntityCompStorage
 {
@@ -101,7 +101,7 @@ public:
     bool                     getEntityVisibleAt(uint32_t id);
     Math::Mat33              getEntityParentGlobalMatAt(uint32_t id);
     Math::Bounds             getEntityGlobalBoundsAt(uint32_t id);
-    Math::Bounds             getEntityGlobalBoundsAt(const ID::KeyUint64& id);
+    Math::Bounds             getEntityGlobalBoundsAt(const Base::ID::KeyUint64& id);
 
     uint32_t                 getEntityParentIdAt(uint32_t id);
     Math::Vec2               getEntityGlobalXYAt(uint32_t id);
@@ -111,17 +111,17 @@ public:
     Math::Vec2               getEntityLocalXYAt(uint32_t id);
     void                     setEntityLocalXYAt(const Math::Vec2& pv, uint32_t id);
 
-    void getIdsFromId(uint32_t etId, std::vector<ID::KeyUint64>& ids);
+    void getIdsFromId(uint32_t etId, std::vector<Base::ID::KeyUint64>& ids);
 
 
     Component::UnitTransform getEntityTransformAt(uint32_t id);
     void                     setEntityTransformAt(const Component::UnitTransform& trans, uint32_t id);
 
-    Math::Mat33 getEntityGlobalMat33At(const ID::KeyUint64 id);
+    Math::Mat33 getEntityGlobalMat33At(const Base::ID::KeyUint64 id);
     Math::Mat33 getEntityGlobalMat33At(uint32_t id);
-    void        checkIds(std::vector<ID::KeyUint64>& edis);
+    void        checkIds(std::vector<Base::ID::KeyUint64>& edis);
 
-    void traverseSortWithShadowEffect(const ID::KeyUint64& srcKey, uint32_t nodeId, uint32_t& index);
+    void traverseSortWithShadowEffect(const Base::ID::KeyUint64& srcKey, uint32_t nodeId, uint32_t& index);
 
     void updateHierarchyInfo();
     void traverseSortIndexWithInstance(uint32_t iid, uint32_t prototypeId, uint32_t& index);
@@ -136,10 +136,10 @@ public:
     void markSubtreeDirty(uint32_t rootId);
     void updateDirtySubtrees(const std::vector<uint32_t>& roots);
 
-    void collectShadowEffect(const ID::KeyUint64& srcKey, uint32_t protoId, std::vector<ID::KeyUint64>& ids);
-    void collectAllEntitiesWithInstance(const ID::KeyUint64& etId, std::vector<ID::KeyUint64>& ids);
-    void collectAllEntities(const ID::KeyUint64& etId, std::vector<ID::KeyUint64>& ids);
-    void updateAllInstanceGlobalMats(const ID::KeyUint64& etId);
+    void collectShadowEffect(const Base::ID::KeyUint64& srcKey, uint32_t protoId, std::vector<Base::ID::KeyUint64>& ids);
+    void collectAllEntitiesWithInstance(const Base::ID::KeyUint64& etId, std::vector<Base::ID::KeyUint64>& ids);
+    void collectAllEntities(const Base::ID::KeyUint64& etId, std::vector<Base::ID::KeyUint64>& ids);
+    void updateAllInstanceGlobalMats(const Base::ID::KeyUint64& etId);
     void setPrototypeEntitiesDirty(uint32_t etId, bool dirty, uint16_t reserveSize = 128);
     void foreachBoundsWithEntityId(uint32_t eId, EntityBoundsResponseCallType callback);
 
@@ -151,15 +151,15 @@ public:
     CompPool<Component::UnitHierarchy>     hierarchiesPool{};
     CompPool<Component::UnitShadingDesc>   shaderingDescPool{};
 
-    ID::keyUint64Unordered_map<uint32_t> hierarchyIndexMap{};
+    Base::ID::keyUint64Unordered_map<uint32_t> hierarchyIndexMap{};
 
     std::unordered_map<uint32_t, Component::UnitEffectShadowDesc> effectShadowMap{};
-    ID::keyUint64Unordered_map<Component::UnitShadowEntity>       effectShadowEntityMap{};
+    Base::ID::keyUint64Unordered_map<Component::UnitShadowEntity> effectShadowEntityMap{};
     // key: shadingId, value: effect ids
     std::unordered_map<uint32_t, std::vector<uint32_t>> shadingShadowIdMap{};
 
     std::unordered_map<uint32_t, Math::Mat33>                entityGlobalMat33Map{};
-    ID::keyUint64Unordered_map<Math::Mat33>                  entityInsGlobalMat33Map{};
+    Base::ID::keyUint64Unordered_map<Math::Mat33>            entityInsGlobalMat33Map{};
     std::unordered_map<uint32_t, Component::UnitInstanceMap> instanceStorage;
 
 private:

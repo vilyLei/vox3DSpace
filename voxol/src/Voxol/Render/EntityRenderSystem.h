@@ -30,13 +30,13 @@ public:
 
 public:
     void initalize();
-    void render(const Draw::DrawContext& rctx, const Math::Mat33& vpM, const Math::Bounds& wbounds, const std::vector<ID::KeyUint64>& queriedEIds);
+    void render(const Draw::DrawContext& rctx, const Math::Mat33& vpM, const Math::Bounds& wbounds, const std::vector<Base::ID::KeyUint64>& queriedEIds);
     void clear();
 
     EntityUnitStorage::SP entityStorage{};
 
 private:
-    bool drawUnitEffect(const Draw::DrawContext& rctx, const ID::KeyUint64 etKey, const Math::Mat33& vpM, const Math::Bounds& wbounds);
+    bool drawUnitEffect(const Draw::DrawContext& rctx, const Base::ID::KeyUint64 etKey, const Math::Mat33& vpM, const Math::Bounds& wbounds);
     bool drawUnit(const Draw::DrawContext& rctx, const Component::UnitEntity& entity, const Math::Mat33& vpM, const Math::Bounds& wbounds, const Math::Mat33& wM);
 
 private:

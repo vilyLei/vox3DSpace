@@ -15,12 +15,8 @@ HistoryItemData EntityHistoryManager::popItem() {
 
     if (mList.empty())
     {
-        return HistoryItemData{.id = ID::INVALID_ID};
+        return HistoryItemData{.id = Base::ID::INVALID_ID};
     }
-    // �������auto�ᵼ��debugģʽ��ide������itemDataֵ�Ǵ���
-    //auto itemData = mList.back();
-    // ��������������ָ�����;��ǶԵ���
-    //HistoryItemData itemData = std::move(mList.back());
 
     auto&&          itemData = mList.back();
     mList.pop_back();

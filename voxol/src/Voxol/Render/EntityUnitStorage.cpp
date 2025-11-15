@@ -58,10 +58,10 @@ void EntityUnitStorage::initalizeFromFile(const std::string& fileName)
 
     entitiesPool.forEach([&](auto& e, int32_t index) {
         e.id          = index;
-        e.shadingId   = ID::INVALID_ID;
-        e.transformId = ID::INVALID_ID;
-        e.modelId     = ID::INVALID_ID;
-        e.hierarchyId = ID::INVALID_ID;
+        e.shadingId   = Base::ID::INVALID_ID;
+        e.transformId = Base::ID::INVALID_ID;
+        e.modelId     = Base::ID::INVALID_ID;
+        e.hierarchyId = Base::ID::INVALID_ID;
     });
     shaderingEntitiesPool.forEach([&](auto& e, int32_t index) {
         e.id = index;
@@ -70,9 +70,9 @@ void EntityUnitStorage::initalizeFromFile(const std::string& fileName)
         e.id = index;
     });
     hierarchiesPool.forEach([&](auto& e, uint32_t index) {
-        e.parent     = ID::INVALID_ID;
-        e.next       = ID::INVALID_ID;
-        e.firstChild = ID::INVALID_ID;
+        e.parent     = Base::ID::INVALID_ID;
+        e.next       = Base::ID::INVALID_ID;
+        e.firstChild = Base::ID::INVALID_ID;
     });
 
 
@@ -107,7 +107,7 @@ void EntityUnitStorage::initalizeFromFile(const std::string& fileName)
         et.visible     = dataEt.visible;
 
         auto modelId = et.modelId;
-        if (ID::isValidID(et.prototypeId))
+        if (Base::ID::isValidID(et.prototypeId))
         {
             auto&& pdata = entitiesMap[et.prototypeId];
             modelId      = pdata.model;
@@ -115,7 +115,7 @@ void EntityUnitStorage::initalizeFromFile(const std::string& fileName)
             et.shadingId = pdata.shadering;
         }
         printf("entity(id=%d, prototypeId=%d)\n", et.id, et.prototypeId);
-        if (ID::isInvalidID(et.transformId))
+        if (Base::ID::isInvalidID(et.transformId))
             return;
 
         auto&& dataTrans = sceneModule.transformsMap[et.transformId];
@@ -123,7 +123,7 @@ void EntityUnitStorage::initalizeFromFile(const std::string& fileName)
         trans.pos()      = dataTrans.position;
         printf("        pos(%f,%f)\n", trans.x, trans.y);
 
-        if (ID::isInvalidID(modelId))
+        if (Base::ID::isInvalidID(modelId))
             return;
 
         auto&& dataModel = sceneModule.modelsMap[modelId];
@@ -212,7 +212,7 @@ void EntityUnitStorage::initalize(int total)
 
     entitiesPool.forEach([&](auto& e, uint32_t index) {
         e.id        = index;
-        e.shadingId = ID::INVALID_ID;
+        e.shadingId = Base::ID::INVALID_ID;
     });
     shaderingEntitiesPool.forEach([&](auto& e, uint32_t index) {
         e.id = index;
@@ -221,9 +221,9 @@ void EntityUnitStorage::initalize(int total)
         e.id = index;
     });
     hierarchiesPool.forEach([&](auto& e, uint32_t index) {
-        e.parent     = ID::INVALID_ID;
-        e.next       = ID::INVALID_ID;
-        e.firstChild = ID::INVALID_ID;
+        e.parent     = Base::ID::INVALID_ID;
+        e.next       = Base::ID::INVALID_ID;
+        e.firstChild = Base::ID::INVALID_ID;
     });
 
     shaderingDescPool[0].color = 0xff880077;

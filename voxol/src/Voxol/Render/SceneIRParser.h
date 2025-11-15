@@ -19,7 +19,7 @@ namespace Shadering
 
 struct EffectShadow
 {
-    uint32_t    id = ID::INVALID_ID;
+    uint32_t    id = Base::ID::INVALID_ID;
     std::string type;
     uint32_t    color      = 0xff000000;
     float       blurRadius = 0;
@@ -29,16 +29,16 @@ struct EffectShadow
 
 struct Description
 {
-    uint32_t    id = ID::INVALID_ID;
-    std::string type;
-    uint32_t    color = 0xff000000;
+    uint32_t              id = Base::ID::INVALID_ID;
+    std::string           type;
+    uint32_t              color = 0xff000000;
     std::vector<uint32_t> effects;
-    void        parse(const JsonType& node);
+    void                  parse(const JsonType& node);
 };
 
 struct Unit
 {
-    uint32_t id = ID::INVALID_ID;
+    uint32_t id = Base::ID::INVALID_ID;
     uint32_t description;
     uint32_t blendmode;
     void     parse(const JsonType& node)
@@ -67,9 +67,9 @@ struct Unit
 struct Module
 {
     std::unordered_map<uint32_t, EffectShadow> shadowsMap;
-    std::unordered_map<uint32_t, Description> descriptionsMap;
-    std::unordered_map<uint32_t, Unit>        unitsMap;
-    void                                      parse(const JsonType& node);
+    std::unordered_map<uint32_t, Description>  descriptionsMap;
+    std::unordered_map<uint32_t, Unit>         unitsMap;
+    void                                       parse(const JsonType& node);
 };
 
 } // namespace Shadering
@@ -77,7 +77,7 @@ namespace Scene
 {
 struct ModelMethod
 {
-    uint32_t id = ID::INVALID_ID;
+    uint32_t id = Base::ID::INVALID_ID;
     // Mesh / SDF / Procedural / Volume / Voxel
     std::string type;
     void        parse(const JsonType& node)
@@ -88,7 +88,7 @@ struct ModelMethod
 };
 struct Model
 {
-    uint32_t                        id = ID::INVALID_ID;
+    uint32_t                        id = Base::ID::INVALID_ID;
     std::string                     type;
     ModelMethod                     method;
     std::variant<float, Math::Vec2> value;
@@ -122,17 +122,17 @@ struct Model
 
 struct Transform
 {
-    uint32_t   id = ID::INVALID_ID;
+    uint32_t   id = Base::ID::INVALID_ID;
     Math::Vec2 position;
     void       parse(const JsonType& node);
 };
 
 struct Hierarchy
 {
-    uint32_t id         = ID::INVALID_ID;
-    uint32_t parent     = ID::INVALID_ID;
-    uint32_t next       = ID::INVALID_ID;
-    uint32_t firstChild = ID::INVALID_ID;
+    uint32_t id         = Base::ID::INVALID_ID;
+    uint32_t parent     = Base::ID::INVALID_ID;
+    uint32_t next       = Base::ID::INVALID_ID;
+    uint32_t firstChild = Base::ID::INVALID_ID;
 
     void parse(const JsonType& node)
     {
@@ -148,12 +148,12 @@ struct Hierarchy
 };
 struct Entity
 {
-    uint32_t id        = ID::INVALID_ID;
-    uint32_t shadering = ID::INVALID_ID;
-    uint32_t transform = ID::INVALID_ID;
-    uint32_t model     = ID::INVALID_ID;
-    uint32_t hierarchy = ID::INVALID_ID;
-    uint32_t prototype = ID::INVALID_ID;
+    uint32_t id        = Base::ID::INVALID_ID;
+    uint32_t shadering = Base::ID::INVALID_ID;
+    uint32_t transform = Base::ID::INVALID_ID;
+    uint32_t model     = Base::ID::INVALID_ID;
+    uint32_t hierarchy = Base::ID::INVALID_ID;
+    uint32_t prototype = Base::ID::INVALID_ID;
     bool     visible   = true;
 
     void parse(const JsonType& node)

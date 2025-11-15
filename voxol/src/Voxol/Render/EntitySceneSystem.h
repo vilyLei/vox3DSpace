@@ -39,12 +39,12 @@ public:
     void                             update();
     int                              drawQuery(const Math::VxRect& bounds, int phase);
     void                             clear();
-    const std::vector<ID::KeyUint64> getQueriedEIds() const;
+    const std::vector<Base::ID::KeyUint64> getQueriedEIds() const;
     void                             updateBoundsWithEntityId(uint32_t eId, EntityBoundsResponseCallType callback);
     // void                             updateBVHBoundsWithEntityId(uint32_t eId, BoundsUpdateCallType callback);
 
 private:
-    std::vector<ID::KeyUint64> queriedEIds{};
+    std::vector<Base::ID::KeyUint64> queriedEIds{};
 };
 } // namespace Voxol::Render
 #endif
