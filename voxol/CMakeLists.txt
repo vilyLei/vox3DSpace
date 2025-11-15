@@ -1,20 +1,4 @@
 
-# # WebAssembly 编译配置
-# if(EMSCRIPTEN)
-
-#     set_target_properties(voxolModule PROPERTIES
-#         COMPILE_FLAGS "-msimd128"
-#         LINK_FLAGS "-O3 -msimd128 --bind -s WASM=1 \
-#             -s ALLOW_MEMORY_GROWTH=1 \
-#             -s USE_WEBGL2=1 \
-#             -s FULL_ES3=1 \
-#             -s MODULARIZE=1 \
-#             -s EXPORTED_FUNCTIONS=['_getCmds','_getCmdsTotal','_get_heap_size_bytes','_get_buffer_ptr','_set_buffer_value','_startup','_setMouseParams'] \
-#             -s EXPORT_NAME='VoxModule' \
-#             -s EXPORTED_RUNTIME_METHODS=['cwrap','HEAPU8']"
-#     )
-# endif()
-
 cmake_minimum_required(VERSION 3.17)
 project(voxolModule)
 
@@ -27,6 +11,7 @@ set(VOX_DIR "${SRC_DIR}/Voxol")
 set(RENDER_DIR "${VOX_DIR}/Render")
 set(MATH_DIR "${VOX_DIR}/Math")
 set(BASE_DIR "${VOX_DIR}/Base")
+set(SCENE_DIR "${VOX_DIR}/Scene")
 set(SYSTEM_DIR "${VOX_DIR}/System")
 set(CORE_DIR "${VOX_DIR}/Core")
 set(MOTION_DIR "${VOX_DIR}/Motion")
@@ -50,6 +35,7 @@ include_directories(
   ${RENDER_DIR}
   ${MATH_DIR}
   ${BASE_DIR}
+  ${SCENE_DIR}
   ${SYSTEM_DIR}
   ${CORE_DIR}
   ${MOTION_DIR}
@@ -71,6 +57,7 @@ include_directories(
 file(GLOB RENDER_SRC "${RENDER_DIR}/*.cpp" "${RENDER_DIR}/*.h")
 file(GLOB MATH_SRC "${MATH_DIR}/*.cpp" "${MATH_DIR}/*.h")
 file(GLOB BASE_SRC "${BASE_DIR}/*.cpp" "${BASE_DIR}/*.h")
+file(GLOB SCENE_SRC "${SCENE_DIR}/*.cpp" "${SCENE_DIR}/*.h")
 file(GLOB SYSTEM_SRC "${SYSTEM_DIR}/*.cpp" "${SYSTEM_DIR}/*.h")
 file(GLOB CORE_SRC "${CORE_DIR}/*.cpp" "${CORE_DIR}/*.h")
 file(GLOB MOTION_SRC "${MOTION_DIR}/*.cpp" "${MOTION_DIR}/*.h")
@@ -87,6 +74,7 @@ set(ALL_SOURCES
   ${RENDER_SRC}
   ${MATH_SRC}
   ${BASE_SRC}
+  ${SCENE_SRC}
   ${SYSTEM_SRC}
   ${CORE_SRC}
   ${MOTION_SRC}
@@ -103,6 +91,7 @@ set(ALL_SOURCES
 source_group("Render" FILES ${RENDER_SRC})
 source_group("Math" FILES ${MATH_SRC})
 source_group("Base" FILES ${BASE_SRC})
+source_group("Scene" FILES ${SCENE_SRC})
 source_group("System" FILES ${SYSTEM_SRC})
 source_group("Core" FILES ${CORE_SRC})
 source_group("Motion" FILES ${MOTION_SRC})
