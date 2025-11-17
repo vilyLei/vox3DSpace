@@ -40,13 +40,13 @@ struct UnitShadowEntity
 {
     Base::ID::KeyUint64 shadowId = Base::ID::INVALID_KEY;
     Base::ID::KeyUint64 entityId = Base::ID::INVALID_KEY;
-    uint32_t      effectId = Base::ID::INVALID_ID;
+    uint32_t            effectId = Base::ID::INVALID_ID;
 };
 
 struct UnitShadingDesc
 {
     uint32_t color = 0xff000000;
-    uint32_t flags  = 0x0;
+    uint32_t flags = 0x0;
 };
 
 struct UnitShadingEntity
@@ -54,10 +54,20 @@ struct UnitShadingEntity
     uint32_t id            = Base::ID::INVALID_ID;
     uint32_t shadingDescId = Base::ID::INVALID_ID;
 };
+
+enum class UnitModelType : uint32_t
+{
+    Default = 0,
+    Mesh    = 0,
+    Text    = 1 << 1
+};
+
 struct UnitModel
 {
-    uint32_t id         = Base::ID::INVALID_ID;
-    uint32_t drawUnitId = Base::ID::INVALID_ID;
+    uint32_t      id         = Base::ID::INVALID_ID;
+    uint32_t      drawUnitId = Base::ID::INVALID_ID;
+    UnitModelType type       = UnitModelType::Mesh;
+    std::string   content;
 };
 
 struct UnitHierarchy
@@ -133,10 +143,10 @@ struct FlatInsStorage
 
 struct UnitInstanceMap
 {
-    uint32_t                                  iid     = Base::ID::INVALID_ID;
-    uint32_t                                  protoId = Base::ID::INVALID_ID;
+    uint32_t                                              iid     = Base::ID::INVALID_ID;
+    uint32_t                                              protoId = Base::ID::INVALID_ID;
     Base::ID::keyUint64Unordered_map<Base::ID::KeyUint64> map;
-    bool                                      dirty = true;
+    bool                                                  dirty = true;
 };
 
 } // namespace Component

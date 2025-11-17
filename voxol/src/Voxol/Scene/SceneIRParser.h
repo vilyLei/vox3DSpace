@@ -90,6 +90,7 @@ struct Model
 {
     uint32_t                        id = Base::ID::INVALID_ID;
     std::string                     type;
+    std::string                     content;
     ModelMethod                     method;
     std::variant<float, Math::Vec2> value;
     void                            parse(const JsonType& node);
@@ -97,6 +98,14 @@ struct Model
     T getValue()
     {
         return std::get<T>(value);
+    }
+    bool isText() const
+    {
+        return type == "Text";
+    }
+    bool hasFontSize() const
+    {
+        return std::holds_alternative<float>(value);
     }
     bool hasRadius() const
     {
@@ -108,11 +117,11 @@ struct Model
     }
     float getRadius()
     {
-        if (hasRadius())
-        {
-            return hasRadius() ? getValue<float>() : 0;
-        }
-        return 0;
+        return hasRadius() ? getValue<float>() : 0;
+    }
+    float getFontSize()
+    {
+        return hasFontSize() ? getValue<float>() : 0;
     }
     Math::Vec2 getSize()
     {

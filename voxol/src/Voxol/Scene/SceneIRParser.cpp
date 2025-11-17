@@ -9,7 +9,8 @@ namespace SceneIR
 {
 namespace Shadering
 {
-void EffectShadow::parse(const JsonType& node){
+void EffectShadow::parse(const JsonType& node)
+{
 
     id   = node["id"];
     type = node["type"];
@@ -160,9 +161,15 @@ namespace Scene
 
 void Model::parse(const JsonType& node)
 {
-    id     = node["id"];
-    type   = node["type"];
-    method.parse( node["method"] );
+    id = node["id"];
+
+    if (node.contains("content"))
+        type = node["content"];
+
+    if (node.contains("type"))
+        type = node["type"];
+
+    method.parse(node["method"]);
 
     if (node.contains("radius") && node["radius"].is_number())
     {
@@ -170,6 +177,13 @@ void Model::parse(const JsonType& node)
         value  = std::isnan(v) ? 0.0f : v;
         return;
     }
+    if (node.contains("fontSize") && node["fontSize"].is_number())
+    {
+        auto v = static_cast<float>(node["fontSize"]);
+        value  = std::isnan(v) ? 0.0f : v;
+        return;
+    }
+
     if (node.contains("size") && node["size"].is_array())
     {
         auto&& elements = node["size"];

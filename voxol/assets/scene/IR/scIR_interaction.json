@@ -91,6 +91,11 @@
                 "id": 4,
                 "type": "default",
                 "color": "#ff005555"
+            },
+            {
+                "id": 5,
+                "type": "default",
+                "color": "#ff333333"
             }
         ],
         "units": [
@@ -122,6 +127,12 @@
                 "id": 4,
                 "blendmode": "Solid",
                 "description": 4,
+                "shader_pipeline": 0
+            },
+            {
+                "id": 5,
+                "blendmode": "Solid",
+                "description": 5,
                 "shader_pipeline": 0
             }
         ]
@@ -202,6 +213,13 @@
                         350,
                         100
                     ]
+                },
+                {
+                    "id": 7,
+                    "position": [
+                        300,
+                        170
+                    ]
                 }
             ],
             "meshes": [
@@ -267,6 +285,16 @@
                         150,
                         110
                     ]
+                },
+                {
+                    "id": 5,
+                    "method": {
+                        "id": 0,
+                        "type": "Mesh"
+                    },
+                    "type": "Text",
+                    "content": "Hello",
+                    "fontSize": 20
                 }
             ]
         },
@@ -297,6 +325,11 @@
             },
             {
                 "id": 5,
+                "next": 6,
+                "parent": 0
+            },
+            {
+                "id": 6,
                 "parent": 0
             }
         ],
@@ -343,6 +376,14 @@
                 "transform": 6,
                 "shadering": 4,
                 "model": 4,
+                "visible": 1
+            },
+            {
+                "id": 6,
+                "hierarchy": 6,
+                "transform": 7,
+                "shadering": 5,
+                "model": 5,
                 "visible": 1
             }
         ]

@@ -94,6 +94,8 @@ void EntityUnitStorage::initalizeFromFile(const std::string& fileName)
         descEt.shadingDescId = unit.description;
     };
 
+    using UnitModelType = Scene::Component::UnitModelType;
+
     auto updateEntityData = [&, this](int i) {
         auto& entitiesMap = sceneModule.entitiesMap;
         auto& dataEt      = entitiesMap[i];
@@ -129,6 +131,10 @@ void EntityUnitStorage::initalizeFromFile(const std::string& fileName)
         auto&& dataModel = sceneModule.modelsMap[modelId];
         auto&& model     = modelsPool[modelId];
         model.drawUnitId = dataModel.method.id;
+        if (dataModel.type == "Text")
+        {
+            model.type = UnitModelType::Text;
+        }
 
         if (dataModel.hasRadius())
         {
@@ -142,10 +148,6 @@ void EntityUnitStorage::initalizeFromFile(const std::string& fileName)
         printf("entity(%d), modelId: %d, drawUnitId: %d\n", i, et.modelId, model.drawUnitId);
         printf("        pos(%f,%f), size(%f, %f)\n", trans.x, trans.y, trans.sx, trans.sy);
 
-        //if (et.shadingId == ID::INVALID_ID)
-        //    return;
-        //auto&  unitMap = shaderingModule.unitsMap;
-        //auto&& unit    = unitMap[i];
     };
 
 
