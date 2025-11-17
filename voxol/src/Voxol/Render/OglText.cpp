@@ -278,7 +278,7 @@ void OglTextField::render(const Voxol::Math::Mat33& projM)
 /// thanks: https://github.com/Chlumsky/msdf-atlas-gen/releases
 /// msdf-atlas-gen.exe -font "C:\Windows\Fonts\arial.ttf" -imageout "atlas.png" -json "atlas.json" -type msdf
 ///
-MSDFText::SP make()
+MSDFText::SP MSDFText::make()
 {
     auto sp = std::make_shared<MSDFText>();
     return sp;
