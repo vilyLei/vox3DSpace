@@ -161,7 +161,7 @@ public:
     std::unordered_map<uint32_t, Math::Mat33>                    entityGlobalMat33Map;
     Base::ID::keyUint64Unordered_map<Math::Mat33>                entityInsGlobalMat33Map;
     std::unordered_map<uint32_t, Component::UnitInstanceMap>     instanceStorage;
-    Base::ID::keyUint64Unordered_map<Component::UnitStringModel> entityStringModelMap;
+    std::unordered_map<uint32_t, Component::UnitStringModel>     entityStringModelMap;
 
 private:
     std::vector<uint32_t> topoOrder;

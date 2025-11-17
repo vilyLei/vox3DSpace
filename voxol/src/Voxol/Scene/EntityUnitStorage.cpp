@@ -135,13 +135,12 @@ void EntityUnitStorage::initalizeFromFile(const std::string& fileName)
         {
             model.type = UnitModelType::Text;
 
-            auto&& key                      = Base::ID::KeyUint64::make(et.id);
             Scene::Component::UnitStringModel strModel{
                 et.id,
                 dataModel.getFontSize(),
                 dataModel.content
             };
-            comp->entityStringModelMap[key] = strModel;
+            comp->entityStringModelMap[et.id] = strModel;
 
             auto&& vb = drawing->msdfText->calcStringBounds(strModel.content, strModel.fontSize, trans.pos());
             trans.scale() = {vb.width(), vb.height()};

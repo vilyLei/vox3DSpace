@@ -172,6 +172,15 @@ bool EntityRenderSystem::drawUnit(const Draw::DrawContext& rctx, const Scene::Co
     if (!wbounds.intersects(vb))
         return false;
 
+    if (model.type == Scene::Component::UnitModelType::Text)
+    {
+        auto&& strModel = compStorage->entityStringModelMap[entity.id];
+        auto&  str      = strModel.content;
+        if (!str.empty()) {
+
+        }
+    }
+
     //if (shdDesc.flags > 0 && compStorage->shadingShadowIdMap.contains(shadingEt.shadingDescId))
     //{
     //    auto&& effects = compStorage->shadingShadowIdMap[shadingEt.shadingDescId];
