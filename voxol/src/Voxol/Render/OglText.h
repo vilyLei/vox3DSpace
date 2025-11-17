@@ -100,6 +100,7 @@ private:
     RawData::Image2DBytesData mAtlasImgData{};
     RawData::MSDFAtlas        mMSDFAtlas{};
     Gpu::DrawingUnit          mDrawingUnitGlyphA{};
+    std::vector<Gpu::DrawingUnit> mDrawingUnitGlyphs{};
     std::vector<Math::Bounds> bvs;
 };
 

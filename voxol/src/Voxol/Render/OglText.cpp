@@ -302,6 +302,7 @@ std::unordered_map<int, RawData::MSDFGlyph> MSDFText::loadGlyphs(const std::stri
     nlohmann::json j;
     f >> j;
 
+    mDrawingUnitGlyphs.reserve(256);
     mMSDFAtlas.reset();
 
     auto& atlas         = mMSDFAtlas;
