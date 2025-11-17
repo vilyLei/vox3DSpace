@@ -404,6 +404,7 @@ std::vector<Math::Bounds> MSDFText::getStringBounds(const std::string& text, flo
 
     float penX = 0.0f;
     bvs.resize(text.size());
+    // pos.y is baseline
     auto                      i = 0;
     for (unsigned char c : text)
     {
@@ -420,14 +421,12 @@ std::vector<Math::Bounds> MSDFText::getStringBounds(const std::string& text, flo
 
         auto px = pos.x + penX + x0;
         auto py = pos.y - y1;
-        // pos.y 就是基线
+
         bvs[i]  = {
-                px,
-                py,
-                px + pw,
-                py + ph
+            px,      py,
+            px + pw, py + ph
         };
-        penX += glyph.advance * scale; // 横向推进
+        penX += glyph.advance * scale;
         i++;
     }
     return bvs;
@@ -463,7 +462,7 @@ Math::Bounds MSDFText::calcStringBounds(const std::string& text, float fontSize,
         bv.addXY(px, py);
         bv.addXY(px + pw, py + ph);
 
-        penX += glyph.advance * scale; // 横向推进
+        penX += glyph.advance * scale;
         i++;
     }
     return bv;
