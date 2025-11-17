@@ -515,7 +515,7 @@ Gpu::DrawingUnit& MSDFText::getDrawingUnitWithGlyphAt(int32_t glyphChar)
     if (unit.vertex.vao != GL_ZERO)
         return unit;
     if (!mMSDFAtlas.glyphs.contains(glyphChar))
-        return;
+        return mDrawingUnitGlyphA;
 
     auto& glyph = mMSDFAtlas.glyphs[glyphChar];
     unit.shader = mDrawingUnitGlyphA.shader;
