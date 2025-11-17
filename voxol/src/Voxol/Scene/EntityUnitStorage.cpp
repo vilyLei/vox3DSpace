@@ -84,9 +84,9 @@ void EntityUnitStorage::initalizeFromFile(const std::string& fileName)
         auto&  descData = descMap[unit.description];
 
         //auto& model = unit.model;
-        auto& desc = shaderingDescPool[i];
-        desc.color = descData.color;
-        desc.flags = descData.effects.empty() ? 0 : static_cast<uint32_t>(descData.effects.size());
+        auto& desc                  = shaderingDescPool[i];
+        desc.color                  = descData.color;
+        desc.flags                  = descData.effects.empty() ? 0 : static_cast<uint32_t>(descData.effects.size());
         comp->shadingShadowIdMap[i] = descData.effects;
 
         printf("        desc.color: %x, unit.description: %d\n", desc.color, unit.description);
@@ -134,8 +134,15 @@ void EntityUnitStorage::initalizeFromFile(const std::string& fileName)
         if (dataModel.type == "Text")
         {
             model.type = UnitModelType::Text;
+
+            auto&& key                      = Base::ID::KeyUint64::make(et.id);
+            Scene::Component::UnitStringModel strModel{
+                et.id,
+                dataModel.getFontSize(),
+                dataModel.content
+            };
+            comp->entityStringModelMap[key] = strModel;
         }
-        comp->entityStringMap[Base::ID::KeyUint64::make(et.id)] = dataModel.content;
 
         if (dataModel.hasRadius())
         {
@@ -148,7 +155,6 @@ void EntityUnitStorage::initalizeFromFile(const std::string& fileName)
         }
         printf("entity(%d), modelId: %d, drawUnitId: %d\n", i, et.modelId, model.drawUnitId);
         printf("        pos(%f,%f), size(%f, %f)\n", trans.x, trans.y, trans.sx, trans.sy);
-
     };
 
 
@@ -163,7 +169,7 @@ void EntityUnitStorage::initalizeFromFile(const std::string& fileName)
 
     for (auto& ut : shaderingModule.shadowsMap)
     {
-        auto& data = ut.second;
+        auto& data                     = ut.second;
         comp->effectShadowMap[data.id] = {data.color, data.offset, data.blurRadius};
     }
     for (auto& ut : shaderingModule.unitsMap)

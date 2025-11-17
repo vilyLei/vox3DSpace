@@ -15,7 +15,7 @@
 
 namespace Voxol::Scene
 {
-    
+
 using EntityBoundsResponseCallType = std::function<void(const Base::ID::KeyUint64& etId, const Math::Bounds& bounds)>;
 
 class EntityCompStorage
@@ -103,13 +103,13 @@ public:
     Math::Bounds             getEntityGlobalBoundsAt(uint32_t id);
     Math::Bounds             getEntityGlobalBoundsAt(const Base::ID::KeyUint64& id);
 
-    uint32_t                 getEntityParentIdAt(uint32_t id);
-    Math::Vec2               getEntityGlobalXYAt(uint32_t id);
-    void                     setEntityGlobalXYAt(const Math::Vec2& pv, uint32_t id);
-    Math::Mat33              getEntityWorldMatWithoutScale(uint32_t id);
-    Math::Mat33              getEntityParentWorldMatWithoutScale(uint32_t id);
-    Math::Vec2               getEntityLocalXYAt(uint32_t id);
-    void                     setEntityLocalXYAt(const Math::Vec2& pv, uint32_t id);
+    uint32_t    getEntityParentIdAt(uint32_t id);
+    Math::Vec2  getEntityGlobalXYAt(uint32_t id);
+    void        setEntityGlobalXYAt(const Math::Vec2& pv, uint32_t id);
+    Math::Mat33 getEntityWorldMatWithoutScale(uint32_t id);
+    Math::Mat33 getEntityParentWorldMatWithoutScale(uint32_t id);
+    Math::Vec2  getEntityLocalXYAt(uint32_t id);
+    void        setEntityLocalXYAt(const Math::Vec2& pv, uint32_t id);
 
     void getIdsFromId(uint32_t etId, std::vector<Base::ID::KeyUint64>& ids);
 
@@ -158,14 +158,14 @@ public:
     // key: shadingId, value: effect ids
     std::unordered_map<uint32_t, std::vector<uint32_t>> shadingShadowIdMap;
 
-    std::unordered_map<uint32_t, Math::Mat33>                entityGlobalMat33Map;
-    Base::ID::keyUint64Unordered_map<Math::Mat33>            entityInsGlobalMat33Map;
-    std::unordered_map<uint32_t, Component::UnitInstanceMap> instanceStorage;
-    Base::ID::keyUint64Unordered_map<std::string>            entityStringMap;
+    std::unordered_map<uint32_t, Math::Mat33>                    entityGlobalMat33Map;
+    Base::ID::keyUint64Unordered_map<Math::Mat33>                entityInsGlobalMat33Map;
+    std::unordered_map<uint32_t, Component::UnitInstanceMap>     instanceStorage;
+    Base::ID::keyUint64Unordered_map<Component::UnitStringModel> entityStringModelMap;
 
 private:
     std::vector<uint32_t> topoOrder;
     std::vector<uint32_t> topoIndex;
 };
-} // namespace Voxol::Render
+} // namespace Voxol::Scene
 #endif
