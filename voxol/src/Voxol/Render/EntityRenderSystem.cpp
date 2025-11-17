@@ -161,7 +161,8 @@ bool EntityRenderSystem::drawUnit(const Draw::DrawContext& rctx, const Scene::Co
     auto& modelsPool        = compStorage->modelsPool;
 
     auto&& shadingEt = compStorage->get<Scene::Component::UnitShadingEntity>(entity.shadingId);
-    auto   drawingId = modelsPool[entity.modelId].drawUnitId;
+    auto&& model     = modelsPool[entity.modelId];
+    auto   drawingId = model.drawUnitId;
     auto&  drs       = *entityStorage->drawing;
     auto&& drawUnit  = drs[drawingId];
     auto&& shdDesc   = shaderingDescPool[shadingEt.shadingDescId];
