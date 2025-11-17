@@ -135,6 +135,7 @@ void EntityUnitStorage::initalizeFromFile(const std::string& fileName)
         {
             model.type = UnitModelType::Text;
         }
+        comp->entityStringMap[Base::ID::KeyUint64::make(et.id)] = dataModel.content;
 
         if (dataModel.hasRadius())
         {

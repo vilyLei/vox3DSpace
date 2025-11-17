@@ -67,7 +67,6 @@ struct UnitModel
     uint32_t      id         = Base::ID::INVALID_ID;
     uint32_t      drawUnitId = Base::ID::INVALID_ID;
     UnitModelType type       = UnitModelType::Mesh;
-    std::string   content;
 };
 
 struct UnitHierarchy

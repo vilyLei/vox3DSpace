@@ -164,7 +164,7 @@ void Model::parse(const JsonType& node)
     id = node["id"];
 
     if (node.contains("content"))
-        type = node["content"];
+        content = node["content"];
 
     if (node.contains("type"))
         type = node["type"];

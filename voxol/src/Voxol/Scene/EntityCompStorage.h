@@ -153,14 +153,15 @@ public:
 
     Base::ID::keyUint64Unordered_map<uint32_t> hierarchyIndexMap{};
 
-    std::unordered_map<uint32_t, Component::UnitEffectShadowDesc> effectShadowMap{};
-    Base::ID::keyUint64Unordered_map<Component::UnitShadowEntity> effectShadowEntityMap{};
+    std::unordered_map<uint32_t, Component::UnitEffectShadowDesc> effectShadowMap;
+    Base::ID::keyUint64Unordered_map<Component::UnitShadowEntity> effectShadowEntityMap;
     // key: shadingId, value: effect ids
-    std::unordered_map<uint32_t, std::vector<uint32_t>> shadingShadowIdMap{};
+    std::unordered_map<uint32_t, std::vector<uint32_t>> shadingShadowIdMap;
 
-    std::unordered_map<uint32_t, Math::Mat33>                entityGlobalMat33Map{};
-    Base::ID::keyUint64Unordered_map<Math::Mat33>            entityInsGlobalMat33Map{};
+    std::unordered_map<uint32_t, Math::Mat33>                entityGlobalMat33Map;
+    Base::ID::keyUint64Unordered_map<Math::Mat33>            entityInsGlobalMat33Map;
     std::unordered_map<uint32_t, Component::UnitInstanceMap> instanceStorage;
+    Base::ID::keyUint64Unordered_map<std::string>            entityStringMap;
 
 private:
     std::vector<uint32_t> topoOrder;
