@@ -62,7 +62,7 @@ public:
     const Gpu::DrawingUnit& getAt(int32_t id) const;
     const Gpu::DrawingUnit& operator[](int32_t id) const;
 
-    Render::MSDFText        msdfText{};
+    Render::MSDFText::SP        msdfText{};
 
 private:
     void initVoassScene();

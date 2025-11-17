@@ -278,6 +278,11 @@ void OglTextField::render(const Voxol::Math::Mat33& projM)
 /// thanks: https://github.com/Chlumsky/msdf-atlas-gen/releases
 /// msdf-atlas-gen.exe -font "C:\Windows\Fonts\arial.ttf" -imageout "atlas.png" -json "atlas.json" -type msdf
 ///
+MSDFText::SP make()
+{
+    auto sp = std::make_shared<MSDFText>();
+    return sp;
+}
 
 void MSDFText::initialize(const std::string& atlasImgPath, const std::string& jsonPath)
 {

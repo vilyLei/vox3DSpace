@@ -61,6 +61,14 @@ private:
 class MSDFText
 {
 public:
+    using SP = std::shared_ptr<MSDFText>;
+    using WP = std::weak_ptr<MSDFText>;
+    using UP = std::unique_ptr<MSDFText>;
+
+public:
+    static MSDFText::SP make();
+
+public:
     MSDFText()          = default;
     ~MSDFText() = default;
 

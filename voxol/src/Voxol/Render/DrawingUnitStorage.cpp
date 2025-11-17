@@ -14,6 +14,8 @@ void DrawingUnitStorage::initalize(int total)
     if (!drawingUnits.empty())
         return;
 
+    msdfText = Render::MSDFText::make();
+
     total = total < 128 ? 128 : total;
     drawingUnits.resize(total);
 
@@ -58,9 +60,9 @@ void DrawingUnitStorage::initalize(int total)
     pngUnit.objMat.setTo(360, 150, pngData.width, pngData.height);
     Render::Gpu::buildTexDrawUnit(pngUnit, pngData);
 
-    msdfText.initialize("msdf/arial_atlas.png", "msdf/arial_atlas.json");
+    msdfText->initialize("msdf/arial_atlas.png", "msdf/arial_atlas.json");
     std::string text = "Hello, Cute Boy!";
-    msdfText.buildText(text, msdfTextDrawUnits, {300, 100}, 50);
+    msdfText->buildText(text, msdfTextDrawUnits, {300, 100}, 50);
 }
 
 
@@ -71,7 +73,7 @@ int32_t DrawingUnitStorage::getGlyphIdWithChar(int32_t glyphChar)
 
     auto  id   = drawingIDIndex;
     auto& unit = drawingUnits[drawingIDIndex];
-    msdfText.buildDrawingUnitWithGlyph(glyphChar, unit);
+    msdfText->buildDrawingUnitWithGlyph(glyphChar, unit);
     drawingIDIndex++;
     return id;
 }
@@ -185,12 +187,11 @@ void DrawingUnitStorage::initVoassScene()
     nameMap[fileName] = drawingIDIndex;
 
     drawingIDIndex ++;
-
-    
-    msdfText.initialize("msdf/arial_atlas.png", "msdf/arial_atlas.json");
-    msdfText.buildDrawingRes();
+        
+    msdfText->initialize("msdf/arial_atlas.png", "msdf/arial_atlas.json");
+    msdfText->buildDrawingRes();
     //std::string text = "Hello, Cute Boy!";
-    //msdfText.buildText(text, msdfTextDrawUnits, {300, 100}, 50);
+    //msdfText->buildText(text, msdfTextDrawUnits, {300, 100}, 50);
 
 }
 
