@@ -74,6 +74,7 @@ public:
                                                           const std::array<float, 4>&    color    = {0, 0, 0, 1});
     void                                        buildDrawingRes();
     std::vector<Math::Bounds>                   getStringBounds(const std::string& text, float fontSize, const Math::Vec2& pos);
+    Math::Bounds calcStringBounds(const std::string& text, float fontSize, const Math::Vec2& pos);
     Math::Bounds                                getGlyphBounds(int32_t glyphChar, float fontSize, const Math::Vec2& pos);
     void                                        buildDrawingUnitWithGlyph(int32_t glyphChar, Gpu::DrawingUnit& unit);
     void                                        destory();

@@ -432,6 +432,43 @@ std::vector<Math::Bounds> MSDFText::getStringBounds(const std::string& text, flo
     }
     return bvs;
 }
+
+
+Math::Bounds MSDFText::calcStringBounds(const std::string& text, float fontSize, const Math::Vec2& pos)
+{
+    auto& atlas = mMSDFAtlas;
+    float scale = fontSize / atlas.emSize;
+
+    float penX = 0.0f;
+    auto i = 0;
+    Math::Bounds bv;
+    bv.toEmpty();
+
+    for (unsigned char c : text)
+    {
+        auto it = atlas.glyphs.find((int)c);
+        if (it == atlas.glyphs.end()) continue;
+
+        const auto& glyph = it->second;
+
+        float x0 = glyph.planeLeft * scale;
+        float y1 = glyph.planeTop * scale;
+
+        float pw = (glyph.planeRight - glyph.planeLeft) * scale;
+        float ph = (glyph.planeTop - glyph.planeBottom) * scale;
+
+        auto px = pos.x + penX + x0;
+        auto py = pos.y - y1;
+
+        bv.addXY(px, py);
+        bv.addXY(px + pw, py + ph);
+
+        penX += glyph.advance * scale; // ºáÏòÍÆ½ø
+        i++;
+    }
+    return bv;
+}
+
 Math::Bounds MSDFText::getGlyphBounds(int32_t glyphChar, float fontSize, const Math::Vec2& pos)
 {
 

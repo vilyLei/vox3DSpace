@@ -6,7 +6,6 @@
 #include "CompPool.h"
 
 #include "../Scene/EntityUnitStorage.h"
-
 #include "OglFbo.h"
 
 namespace Voxol::Render
