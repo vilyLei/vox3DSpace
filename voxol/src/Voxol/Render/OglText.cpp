@@ -303,6 +303,7 @@ std::unordered_map<int, RawData::MSDFGlyph> MSDFText::loadGlyphs(const std::stri
     f >> j;
 
     mDrawingUnitGlyphs.reserve(256);
+    mDrawingUnitGlyphs.resize(256);
     mMSDFAtlas.reset();
 
     auto& atlas         = mMSDFAtlas;
@@ -507,6 +508,19 @@ void MSDFText::buildDrawingUnitWithGlyph(int32_t glyphChar, Gpu::DrawingUnit& un
     auto& glyph = mMSDFAtlas.glyphs[glyphChar];
     unit.shader = mDrawingUnitGlyphA.shader;
     Gpu::buildMSDFTexDrawUnit(unit, glyph);
+}
+Gpu::DrawingUnit& MSDFText::getDrawingUnitWithGlyphAt(int32_t glyphChar)
+{
+    auto&& unit = mDrawingUnitGlyphs[glyphChar];
+    if (unit.vertex.vao != GL_ZERO)
+        return unit;
+    if (!mMSDFAtlas.glyphs.contains(glyphChar))
+        return;
+
+    auto& glyph = mMSDFAtlas.glyphs[glyphChar];
+    unit.shader = mDrawingUnitGlyphA.shader;
+    Gpu::buildMSDFTexDrawUnit(unit, glyph);
+    return unit;
 }
 
 void MSDFText::destory()
