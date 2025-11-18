@@ -103,6 +103,14 @@ void VxRect::addXY(const Vec2& p)
     if (fBottom < p.y) fBottom = p.y;
 }
 
+Vec2 VxRect::size() const
+{
+    return {fRight - fLeft, fBottom - fTop};
+}
+void VxRect::setSize(const Vec2& vsize)
+{
+    setSize(vsize.x, vsize.y);
+}
 void VxRect::setSize(float pw, float ph)
 {
     pw = pw > 0 ? pw : 0;
