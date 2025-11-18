@@ -477,7 +477,6 @@ Math::Bounds MSDFText::calcStringBounds(const std::string& text, float fontSize,
 
 Math::Bounds MSDFText::getGlyphBounds(int32_t glyphChar, float fontSize, const Math::Vec2& pos)
 {
-
     auto& glyphs = mMSDFAtlas.glyphs;
     if (!glyphs.contains(glyphChar))
         return {};

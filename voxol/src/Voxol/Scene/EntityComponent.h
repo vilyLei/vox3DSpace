@@ -67,6 +67,7 @@ struct UnitStringModel
     uint32_t    id       = Base::ID::INVALID_ID;
     float       fontSize = 12;
     std::string content;
+    Math::Bounds bounds;
 };
 
 struct UnitModel

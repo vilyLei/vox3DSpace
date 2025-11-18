@@ -143,6 +143,7 @@ void EntityUnitStorage::initalizeFromFile(const std::string& fileName)
             comp->entityStringModelMap[et.id] = strModel;
 
             auto&& vb = drawing->msdfText->calcStringBounds(strModel.content, strModel.fontSize, trans.pos());
+            strModel.bounds = vb;
             trans.scale() = {vb.width(), vb.height()};
         }
         else
