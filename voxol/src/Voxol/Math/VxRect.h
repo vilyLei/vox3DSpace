@@ -48,6 +48,7 @@ public:
     static VxRect makeLTRB(float pl, float pt, float pr, float pb);
 
     void moveTo(float px, float py);
+    void offset(float dx, float dy);
     void setWH(float pw, float ph);
     void setXYWH(float px, float py, float pw, float ph);
     void setLTRB(float pl, float pt, float pr, float pb);

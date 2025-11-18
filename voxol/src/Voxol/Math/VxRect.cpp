@@ -37,6 +37,14 @@ void VxRect::moveTo(float px, float py)
     fX = px;
     fY = py;
 }
+void VxRect::offset(float dx, float dy)
+{
+    //setXYWH(px, py, width(), height());
+    fRX += dx;
+    fBY += dy;
+    fX += dx;
+    fY += dy;
+}
 
 void VxRect::setWH(float pw, float ph)
 {

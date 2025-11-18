@@ -141,8 +141,10 @@ void EntityUnitStorage::initalizeFromFile(const std::string& fileName)
                 dataModel.content
             };
 
-            auto&& vb = drawing->msdfText->calcStringBounds(strModel.content, strModel.fontSize, trans.pos());
+            auto&& vb       = drawing->msdfText->calcStringBounds(strModel.content, strModel.fontSize, {});
             strModel.bounds = vb;
+            //printf("text, ");
+            //vb.print();
             trans.scale()                     = vb.size();
             comp->entityStringModelMap[et.id] = strModel;
         }
