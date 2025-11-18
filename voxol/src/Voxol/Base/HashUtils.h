@@ -8,7 +8,7 @@ namespace Voxol::Base
 namespace Hash
 {
 
-// 组合哈希值（用于std::hash特化）
+// std::hash specialization
 template <typename T>
 void hashCombine(size_t& seed, const T& value)
 {
@@ -17,7 +17,7 @@ void hashCombine(size_t& seed, const T& value)
     seed = hasher.finalize();
 }
 
-// 范围哈希
+// range hash
 template <typename Iterator>
 auto hashRange(Iterator begin, Iterator end)
 {
@@ -29,7 +29,7 @@ auto hashRange(Iterator begin, Iterator end)
     return hasher.finalize();
 }
 
-// 对有序容器的哈希（不考虑顺序）
+// ordered container hash(order-independent)
 template <typename Container>
 auto hashOrderedContainer(const Container& container)
 {
