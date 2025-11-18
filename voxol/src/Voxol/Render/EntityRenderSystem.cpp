@@ -177,8 +177,9 @@ bool EntityRenderSystem::drawUnit(const Draw::DrawContext& rctx, const Scene::Co
         auto&& strModel = compStorage->entityStringModelMap[entity.id];
         auto&  str      = strModel.content;
         if (!str.empty()) {
-            auto&& pos        = wM.getXY();
-            pos.y -= strModel.bounds.height();
+            auto pos        = wM.getXY();
+            auto ph  = strModel.bounds.height();
+            pos.y += ph;
             auto&& glyphUnits = entityStorage->getDrawUnitsFromText(str, strModel.fontSize, pos);
             for (auto& unit : glyphUnits)
             {
