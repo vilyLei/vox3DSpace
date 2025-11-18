@@ -177,8 +177,19 @@ bool EntityRenderSystem::drawUnit(const Draw::DrawContext& rctx, const Scene::Co
         auto&& strModel = compStorage->entityStringModelMap[entity.id];
         auto&  str      = strModel.content;
         if (!str.empty()) {
-
+            auto&& pos        = wM.getXY();
+            pos.y -= strModel.bounds.height();
+            auto&& glyphUnits = entityStorage->getDrawUnitsFromText(str, strModel.fontSize, pos);
+            for (auto& unit : glyphUnits)
+            {
+                unit.blendMode = 1;
+                unit.setColor(shdDesc.color);
+                //unit.objMat  = wM;
+                unit.mvp    = vpM;
+                unit.draw();
+            }
         }
+        return true;
     }
 
     //if (shdDesc.flags > 0 && compStorage->shadingShadowIdMap.contains(shadingEt.shadingDescId))
