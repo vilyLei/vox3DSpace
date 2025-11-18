@@ -107,11 +107,11 @@ Vec2 VxRect::size() const
 {
     return {fRight - fLeft, fBottom - fTop};
 }
-void VxRect::setSize(const Vec2& vsize)
+void VxRect::size(const Vec2& vsize)
 {
-    setSize(vsize.x, vsize.y);
+    size(vsize.x, vsize.y);
 }
-void VxRect::setSize(float pw, float ph)
+void VxRect::size(float pw, float ph)
 {
     pw = pw > 0 ? pw : 0;
     ph = ph > 0 ? ph : 0;

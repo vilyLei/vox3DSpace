@@ -57,8 +57,8 @@ public:
     void addXY(const Vec2& p);
 
     Vec2 size() const;
-    void setSize(const Vec2& vsize);
-    void setSize(float pw, float ph);
+    void size(const Vec2& vsize);
+    void size(float pw, float ph);
     bool intersects(const VxRect& other) const;
     void outset(float dx, float dy);
     void floatToRound();

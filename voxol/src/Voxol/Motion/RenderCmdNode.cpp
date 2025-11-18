@@ -96,7 +96,7 @@ void DrawCmdTestNode::setXY(float x, float y)
 }
 void DrawCmdTestNode::setSize(float w, float h)
 {
-    drcDesc.bounds.setSize(w, h);
+    drcDesc.bounds.size(w, h);
 }
 
 void DrawCmdTestNode::init()
