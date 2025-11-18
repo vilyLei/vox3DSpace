@@ -80,6 +80,10 @@ public:
                                                           const Voxol::Math::Vec2&       pos      = {},
                                                           float                          fontSize = 20,
                                                           const std::array<float, 4>&    color    = {0, 0, 0, 1});
+    void                                        createDrawUnitsFromText(const std::string&             text,
+                                                                     std::vector<Gpu::DrawingUnit>& units,
+                                                                     const Voxol::Math::Vec2&       pos      = {},
+                                                                     float                          fontSize = 20);
     void                                        buildDrawingRes();
     std::vector<Math::Bounds>                   getStringBounds(const std::string& text, float fontSize, const Math::Vec2& pos);
     Math::Bounds                                calcStringBounds(const std::string& text, float fontSize, const Math::Vec2& pos);

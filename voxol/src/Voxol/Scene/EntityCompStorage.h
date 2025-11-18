@@ -143,6 +143,7 @@ public:
     void setPrototypeEntitiesDirty(uint32_t etId, bool dirty, uint16_t reserveSize = 128);
     void foreachBoundsWithEntityId(uint32_t eId, EntityBoundsResponseCallType callback);
 
+
 public:
     CompPool<Component::UnitEntity>        entitiesPool{};
     CompPool<Component::UnitShadingEntity> shaderingEntitiesPool{};

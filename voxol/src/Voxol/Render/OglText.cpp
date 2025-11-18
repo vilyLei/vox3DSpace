@@ -302,8 +302,8 @@ std::unordered_map<int, RawData::MSDFGlyph> MSDFText::loadGlyphs(const std::stri
     nlohmann::json j;
     f >> j;
 
-    mDrawingUnitGlyphs.reserve(256);
-    mDrawingUnitGlyphs.resize(256);
+    mDrawingUnitGlyphs.reserve(288);
+    mDrawingUnitGlyphs.resize(288);
     mMSDFAtlas.reset();
 
     auto& atlas         = mMSDFAtlas;
@@ -392,13 +392,64 @@ void MSDFText::buildText(const std::string&             text,
     }
 }
 
-void MSDFText::buildDrawingRes() {
+void MSDFText::createDrawUnitsFromText(const std::string&             text,
+                                       std::vector<Gpu::DrawingUnit>& units,
+                                       const Voxol::Math::Vec2&       pos,
+                                       float                          fontSize)
+{
+    if (text.empty()) return;
+
+    units.clear();
+    units.resize(text.size());
+
+    auto& atlas = mMSDFAtlas;
+    float scale = fontSize / atlas.emSize;
+
+    float penX = 0.0f;
+    auto  i    = 0;
+    for (unsigned char c : text)
+    {
+        auto it = atlas.glyphs.find((int)c);
+        if (it == atlas.glyphs.end()) continue;
+
+        const RawData::MSDFGlyph& glyph = it->second;
+
+        auto&& unit = units[i];
+
+        float x0 = glyph.planeLeft * scale;
+        float y1 = glyph.planeTop * scale;
+
+        float pw = (glyph.planeRight - glyph.planeLeft) * scale;
+        float ph = (glyph.planeTop - glyph.planeBottom) * scale;
+
+        // pos.y 就是基线
+        unit.objMat.setTo(pos.x + penX + x0,
+                          pos.y - y1,
+                          pw, ph);
+
+        auto&& srcUnit = mDrawingUnitGlyphs[int(c)];
+        if (srcUnit.vertex.veo == GL_ZERO)
+        {
+            srcUnit.shader = mDrawingUnitGlyphA.shader;
+            srcUnit.vertex.buildTexResFlipYUvs(glyph.atlasLeft, glyph.atlasTop, glyph.atlasRight, glyph.atlasBottom);
+        }
+        unit.shader = srcUnit.shader;
+        unit.vertex = srcUnit.vertex;
+        //Gpu::buildMSDFTexDrawUnit(unit, mAtlasImgData, glyph);
+        //units.push_back(unit);
+
+        penX += glyph.advance * scale; // 横向推进
+        i++;
+    }
+}
+void MSDFText::buildDrawingRes()
+{
 
     if (mDrawingUnitGlyphA.hasTexture())
     {
         return;
     }
-    char a = 'A';
+    char  a     = 'A';
     auto& glyph = mMSDFAtlas.glyphs[(int)a];
     Gpu::buildMSDFTexDrawUnit(mDrawingUnitGlyphA, mAtlasImgData, glyph);
 }
@@ -412,7 +463,7 @@ std::vector<Math::Bounds> MSDFText::getStringBounds(const std::string& text, flo
     float penX = 0.0f;
     bvs.resize(text.size());
     // pos.y is baseline
-    auto                      i = 0;
+    auto i = 0;
     for (unsigned char c : text)
     {
         auto it = atlas.glyphs.find((int)c);
@@ -429,10 +480,9 @@ std::vector<Math::Bounds> MSDFText::getStringBounds(const std::string& text, flo
         auto px = pos.x + penX + x0;
         auto py = pos.y - y1;
 
-        bvs[i]  = {
-            px,      py,
-            px + pw, py + ph
-        };
+        bvs[i] = {
+            px, py,
+            px + pw, py + ph};
         penX += glyph.advance * scale;
         i++;
     }
@@ -445,8 +495,8 @@ Math::Bounds MSDFText::calcStringBounds(const std::string& text, float fontSize,
     auto& atlas = mMSDFAtlas;
     float scale = fontSize / atlas.emSize;
 
-    float penX = 0.0f;
-    auto i = 0;
+    float        penX = 0.0f;
+    auto         i    = 0;
     Math::Bounds bv;
     bv.toEmpty();
 
@@ -524,6 +574,5 @@ Gpu::DrawingUnit& MSDFText::getDrawingUnitWithGlyphAt(int32_t glyphChar)
 
 void MSDFText::destory()
 {
-
 }
 } // namespace Voxol::Render

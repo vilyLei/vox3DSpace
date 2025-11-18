@@ -812,4 +812,5 @@ void EntityCompStorage::foreachBoundsWithEntityId(uint32_t eId, EntityBoundsResp
         callback(pid, vb);
     }
 }
+
 } // namespace Voxol::Render

@@ -354,4 +354,10 @@ void EntityUnitStorage::initalize(int total)
 }
 
 
+std::vector<Render::Gpu::DrawingUnit> EntityUnitStorage::getDrawUnitsFromText(const std::string& text, float fontSize, const Voxol::Math::Vec2& pos)
+{
+    std::vector<Render::Gpu::DrawingUnit> units;
+    drawing->msdfText->createDrawUnitsFromText(text, units, pos, fontSize);
+    return units;
+}
 } // namespace Voxol::Scene
