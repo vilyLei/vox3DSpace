@@ -57,6 +57,7 @@ public:
     void addXY(float px, float py);
     void addXY(const Vec2& p);
 
+    Vec2 position() const;
     Vec2 size() const;
     void size(const Vec2& vsize);
     void size(float pw, float ph);

@@ -111,6 +111,10 @@ void VxRect::addXY(const Vec2& p)
     else if (fBottom < p.y) fBottom = p.y;
 }
 
+Vec2 VxRect::position() const
+{
+    return {fLeft, fTop};
+}
 Vec2 VxRect::size() const
 {
     return {fRight - fLeft, fBottom - fTop};
