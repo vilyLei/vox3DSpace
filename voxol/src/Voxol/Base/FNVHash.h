@@ -35,7 +35,7 @@ public:
     
     explicit FNVHasher(typename Config::ValueType seed) : hash_(seed) {}
     
-    // 更新哈希状态
+    // update hash state
     template<typename T>
     void update(const T* data, size_t count = 1) {
         static_assert(std::is_trivial_v<T>, "T must be trivial type for hashing");
@@ -49,13 +49,13 @@ public:
         }
     }
     
-    // 便捷方法：直接哈希单个值
+    // update a hash value
     template<typename T>
     void update(const T& value) {
         update(&value, 1);
     }
     
-    // 字符串特化
+    // string specialization
     void update(const char* str) {
         while (*str) {
             hash_ ^= static_cast<uint8_t>(*str);
@@ -68,10 +68,9 @@ public:
         update(str.c_str());
     }
     
-    // 获取当前哈希值（不重置状态）
+    // get current hash value
     auto getCurrentHash() const { return hash_; }
     
-    // 最终化哈希并重置
     auto finalize() {
         auto result = hash_;
         reset();
@@ -87,7 +86,7 @@ public:
     }
 };
 
-// 便捷函数：一次性哈希
+// get an independent hash value
 template<size_t Bits = 64, typename... Args>
 auto fnvHash(const Args&... args) {
     FNVHasher<Bits> hasher;
