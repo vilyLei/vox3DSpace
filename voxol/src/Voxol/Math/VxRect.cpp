@@ -99,16 +99,16 @@ void VxRect::mat33MapTo(const Mat33& mat3, VxRect& dst) const
 void VxRect::addXY(float px, float py)
 {
     if (fLeft > px) fLeft = px;
-    if (fRight < px) fRight = px;
+    else if (fRight < px) fRight = px;
     if (fTop > py) fTop = py;
-    if (fBottom < py) fBottom = py;
+    else if (fBottom < py) fBottom = py;
 }
 void VxRect::addXY(const Vec2& p)
 {
     if (fLeft > p.x) fLeft = p.x;
-    if (fRight < p.x) fRight = p.x;
+    else if (fRight < p.x) fRight = p.x;
     if (fTop > p.y) fTop = p.y;
-    if (fBottom < p.y) fBottom = p.y;
+    else if (fBottom < p.y) fBottom = p.y;
 }
 
 Vec2 VxRect::size() const
