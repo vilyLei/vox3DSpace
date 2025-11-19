@@ -1,7 +1,3 @@
-这是一个场景描述的json数据示例。
-表示的是一个ui界面。一个面板其填充背景色是 0xff003366，包含start和exit两个按钮, 这两个按钮都有mouse over和mouse up事件响应。
-start 按钮在其事件响应为mouse up的时候调用系统的start功能。
-exit 按钮在其事件响应为mouse up的时候调用系统的exit功能。这样的场景描述(Scene Description)结构适合基于ANTLR4 DSL表示吗?
 {
     "version": {
         "major": 0,
@@ -10,7 +6,7 @@ exit 按钮在其事件响应为mouse up的时候调用系统的exit功能。这
         "unit": "pixel"
     },
     "scene": {
-        "objects": [
+        "nodes": [
             {
                 "type": "panel",
                 "name": "start-panel",
