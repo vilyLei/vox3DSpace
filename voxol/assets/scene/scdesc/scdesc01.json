@@ -1,0 +1,156 @@
+这是一个场景描述的json数据示例。
+表示的是一个ui界面。一个面板其填充背景色是 0xff003366，包含start和exit两个按钮, 这两个按钮都有mouse over和mouse up事件响应。
+start 按钮在其事件响应为mouse up的时候调用系统的start功能。
+exit 按钮在其事件响应为mouse up的时候调用系统的exit功能。这样的场景描述(Scene Description)结构适合基于ANTLR4 DSL表示吗?
+{
+    "version": {
+        "major": 0,
+        "minor": 1,
+        "dimension": 2,
+        "unit": "pixel"
+    },
+    "scene": {
+        "objects": [
+            {
+                "type": "panel",
+                "name": "start-panel",
+                "transform": [
+                    200,
+                    200
+                ],
+                "display": {
+                    "shape": "rectangle",
+                    "size": [
+                        300,
+                        500
+                    ],
+                    "fillColor": "0xff003366"
+                },
+                "children": [
+                    {
+                        "type": "button",
+                        "name": "start-button",
+                        "transform": [
+                            57,
+                            136
+                        ],
+                        "display": {
+                            "shape": "round-rectangle",
+                            "size": [
+                                186,
+                                76
+                            ],
+                            "fillColor": "0xff008888"
+                        },
+                        "children": [
+                            {
+                                "type": "text",
+                                "name": "start-text",
+                                "transform": [
+                                    48,
+                                    11
+                                ],
+                                "display": {
+                                    "shape": "text",
+                                    "content": "Start",
+                                    "fontSize": 36,
+                                    "fillColor": "0xff990099"
+                                }
+                            }
+                        ],
+                        "interactions": [
+                            {
+                                "over": [
+                                    {
+                                        "target": "start-button",
+                                        "action": {
+                                            "type": "change-color",
+                                            "fillColor": "0xff00bbbb"
+                                        }
+                                    }
+                                ],
+                                "up": [
+                                    {
+                                        "target": "start-button",
+                                        "action": {
+                                            "type": "change-color",
+                                            "fillColor": "0xff33bb99"
+                                        }
+                                    },
+                                    {
+                                        "target": "system-controller",
+                                        "action": {
+                                            "type": "system-event",
+                                            "cmd": "start"
+                                        }
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "type": "button",
+                        "name": "exit-button",
+                        "transform": [
+                            57,
+                            286
+                        ],
+                        "display": {
+                            "shape": "round-rectangle",
+                            "size": [
+                                186,
+                                76
+                            ],
+                            "fillColor": "0xff008888"
+                        },
+                        "children": [
+                            {
+                                "type": "text",
+                                "name": "start-text",
+                                "transform": [
+                                    48,
+                                    11
+                                ],
+                                "display": {
+                                    "shape": "text",
+                                    "content": "Exit",
+                                    "fontSize": 36,
+                                    "fillColor": "0xff990099"
+                                }
+                            }
+                        ],
+                        "interactions": [
+                            {
+                                "over": [
+                                    {
+                                        "target": "exit-button",
+                                        "action": {
+                                            "type": "change-color",
+                                            "fillColor": "0xff00bbbb"
+                                        }
+                                    }
+                                ],
+                                "up": [
+                                    {
+                                        "target": "exit-button",
+                                        "action": {
+                                            "type": "change-color",
+                                            "fillColor": "0xff33bb99"
+                                        }
+                                    },
+                                    {
+                                        "target": "system-controller",
+                                        "action": {
+                                            "type": "system-event",
+                                            "cmd": "exit"
+                                        }
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+}
