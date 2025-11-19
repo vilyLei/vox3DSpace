@@ -9,7 +9,7 @@
         "nodes": [
             {
                 "type": "panel",
-                "name": "start-panel",
+                "name": "play-panel",
                 "transform": [
                     200,
                     200
@@ -25,7 +25,7 @@
                 "children": [
                     {
                         "type": "button",
-                        "name": "start-button",
+                        "name": "play-button",
                         "transform": [
                             57,
                             136
@@ -41,7 +41,7 @@
                         "children": [
                             {
                                 "type": "text",
-                                "name": "start-text",
+                                "name": "play-text",
                                 "transform": [
                                     48,
                                     11
@@ -58,7 +58,7 @@
                             {
                                 "over": [
                                     {
-                                        "target": "start-button",
+                                        "target": "play-button",
                                         "action": {
                                             "type": "change-color",
                                             "fillColor": "0xff00bbbb"
@@ -67,7 +67,7 @@
                                 ],
                                 "up": [
                                     {
-                                        "target": "start-button",
+                                        "target": "play-button",
                                         "action": {
                                             "type": "change-color",
                                             "fillColor": "0xff33bb99"
@@ -77,7 +77,7 @@
                                         "target": "system-controller",
                                         "action": {
                                             "type": "system-event",
-                                            "cmd": "start"
+                                            "cmd": "play"
                                         }
                                     }
                                 ]
@@ -102,7 +102,7 @@
                         "children": [
                             {
                                 "type": "text",
-                                "name": "start-text",
+                                "name": "play-text",
                                 "transform": [
                                     48,
                                     11
