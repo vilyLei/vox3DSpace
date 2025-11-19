@@ -26,7 +26,7 @@ void SceneNode::print()
 {
 
     std::string hasChildStr = ", hasChild=" + (hasChild ? std::string("true") : std::string("false"));
-    std::string info        = "Node(name=" + name + ",type=" + type + ", childrenTotal=" + std::to_string(childrenTotal) + hasChildStr + ")";
+    std::string info        = "SceneNode(name=" + name + ",type=" + type + ", childrenTotal=" + std::to_string(childrenTotal) + hasChildStr + ")";
     printf("%s\n", info.c_str());
 }
 
@@ -86,7 +86,7 @@ void FileParser::parseSceneNode(SceneNode& parentNode, const JsonType& jsonNode)
 
 void DescriptionParser::initialize()
 {
-    std::string filePath = "scdesc/scdesc01.json";
+    std::string filePath = "scene/scdesc/scdesc01.json";
     fileParser.initFromFile(filePath);
 }
 
