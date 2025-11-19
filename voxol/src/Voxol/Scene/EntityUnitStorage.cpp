@@ -1,5 +1,6 @@
 #include "EntityUnitStorage.h"
 #include "SceneIRParser.h"
+#include "DescriptionParser.h"
 
 namespace Voxol::Scene
 {
@@ -17,11 +18,16 @@ void EntityUnitStorage::initalizeFromFile(const std::string& fileName)
     {
         return;
     }
+
+    DescriptionParser descParser;
+    descParser.initialize();
+
     auto fileNameStr = fileName;
     if (fileNameStr.empty())
     {
         fileNameStr = "scene/IR/scIR01.json";
     }
+
     SceneIRParser parser;
     parser.parseFromFile(fileNameStr);
     auto& shaderingModule = parser.shaderingModule;

@@ -52,6 +52,9 @@ public:
     ~DescriptionParser() = default;
 
 public:
+    Desc::FileParser fileParser;
+
+public:
     void initialize();
 };
 

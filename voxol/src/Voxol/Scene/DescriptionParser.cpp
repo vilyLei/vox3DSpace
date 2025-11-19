@@ -42,9 +42,9 @@ void FileParser::initFromFile(const std::string& fileName)
 }
 void FileParser::parseHeriNodes(const JsonType& jsonNode)
 {
-    if (jsonNode.contains("objects") && jsonNode["objects"].is_array())
+    if (jsonNode.contains("nodes") && jsonNode["nodes"].is_array())
     {
-        auto&& elements = jsonNode["objects"];
+        auto&& elements = jsonNode["nodes"];
 
         auto sizeValue = elements.size();
 
@@ -86,6 +86,8 @@ void FileParser::parseSceneNode(SceneNode& parentNode, const JsonType& jsonNode)
 
 void DescriptionParser::initialize()
 {
+    std::string filePath = "scdesc/scdesc01.json";
+    fileParser.initFromFile(filePath);
 }
 
 } // namespace Voxol::Scene
