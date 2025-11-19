@@ -143,6 +143,8 @@ void EntityUnitStorage::initalizeFromFile(const std::string& fileName)
 
             auto&& vb       = drawing->msdfText->calcStringBounds(strModel.content, strModel.fontSize, trans.pos());
             strModel.bounds = vb;
+            strModel.posOffset = trans.pos() - vb.position();
+           
             //printf("text, ");
             //vb.print();
             trans.pos()                       = vb.position();

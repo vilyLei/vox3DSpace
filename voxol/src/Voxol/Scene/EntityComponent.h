@@ -64,9 +64,10 @@ enum class UnitModelType : uint32_t
 
 struct UnitStringModel
 {
-    uint32_t    id       = Base::ID::INVALID_ID;
-    float       fontSize = 12;
-    std::string content;
+    uint32_t     id       = Base::ID::INVALID_ID;
+    float        fontSize = 12;
+    std::string  content;
+    Math::Vec2   posOffset;
     Math::Bounds bounds;
 };
 

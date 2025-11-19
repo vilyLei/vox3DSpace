@@ -179,13 +179,14 @@ bool EntityRenderSystem::drawUnit(const Draw::DrawContext& rctx, const Scene::Co
         if (!str.empty()) {
             auto pos        = wM.getXY();
             auto ph  = strModel.bounds.height();
-            pos.y += ph;
+            pos += strModel.posOffset;
+
             auto&& glyphUnits = entityStorage->getDrawUnitsFromText(str, strModel.fontSize, pos);
             for (auto& unit : glyphUnits)
             {
                 unit.blendMode = 1;
                 unit.setColor(shdDesc.color);
-                //unit.objMat  = wM;
+
                 unit.mvp    = vpM;
                 unit.draw();
             }
