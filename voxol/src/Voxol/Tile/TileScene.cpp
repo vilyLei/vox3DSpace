@@ -324,7 +324,7 @@ void TileScene::run(const Render::Draw::DrawContext& ctx)
     //{
     //    printf("TileScene::run(), tile grids total: %zu, lv:%d\n", viewUnitIndexMap.size(), lv);
     //}
-    //return;
+    return;
     //*
     //ctx.drawCall({}, vpM);
 

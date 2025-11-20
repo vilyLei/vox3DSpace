@@ -61,35 +61,33 @@
                                 }
                             }
                         ],
-                        "interactions": [
-                            {
-                                "over": [
-                                    {
-                                        "target": "play-button",
-                                        "action": {
-                                            "type": "change-color",
-                                            "fillColor": "0xff00bbbb"
-                                        }
+                        "interactions": {
+                            "over": [
+                                {
+                                    "target": "play-button",
+                                    "action": {
+                                        "type": "change-color",
+                                        "fillColor": "0xff00bbbb"
                                     }
-                                ],
-                                "up": [
-                                    {
-                                        "target": "play-button",
-                                        "action": {
-                                            "type": "change-color",
-                                            "fillColor": "0xff33bb99"
-                                        }
-                                    },
-                                    {
-                                        "target": "system-controller",
-                                        "action": {
-                                            "type": "system-event",
-                                            "cmd": "play"
-                                        }
+                                }
+                            ],
+                            "up": [
+                                {
+                                    "target": "play-button",
+                                    "action": {
+                                        "type": "change-color",
+                                        "fillColor": "0xff33bb99"
                                     }
-                                ]
-                            }
-                        ]
+                                },
+                                {
+                                    "target": "system-controller",
+                                    "action": {
+                                        "type": "system-event",
+                                        "cmd": "play"
+                                    }
+                                }
+                            ]
+                        }
                     },
                     {
                         "type": "button",
@@ -126,35 +124,33 @@
                                 }
                             }
                         ],
-                        "interactions": [
-                            {
-                                "over": [
-                                    {
-                                        "target": "exit-button",
-                                        "action": {
-                                            "type": "change-color",
-                                            "fillColor": "0xff00bbbb"
-                                        }
+                        "interactions": {
+                            "over": [
+                                {
+                                    "target": "exit-button",
+                                    "action": {
+                                        "type": "change-color",
+                                        "fillColor": "0xff00bbbb"
                                     }
-                                ],
-                                "up": [
-                                    {
-                                        "target": "exit-button",
-                                        "action": {
-                                            "type": "change-color",
-                                            "fillColor": "0xff33bb99"
-                                        }
-                                    },
-                                    {
-                                        "target": "system-controller",
-                                        "action": {
-                                            "type": "system-event",
-                                            "cmd": "exit"
-                                        }
+                                }
+                            ],
+                            "up": [
+                                {
+                                    "target": "exit-button",
+                                    "action": {
+                                        "type": "change-color",
+                                        "fillColor": "0xff33bb99"
                                     }
-                                ]
-                            }
-                        ]
+                                },
+                                {
+                                    "target": "system-controller",
+                                    "action": {
+                                        "type": "system-event",
+                                        "cmd": "exit"
+                                    }
+                                }
+                            ]
+                        }
                     }
                 ]
             }
