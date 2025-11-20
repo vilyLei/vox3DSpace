@@ -162,9 +162,6 @@ bool EntityRenderSystem::drawUnit(const Draw::DrawContext& rctx, const Scene::Co
 
     auto&& shadingEt = compStorage->get<Scene::Component::UnitShadingEntity>(entity.shadingId);
     auto&& model     = modelsPool[entity.modelId];
-    auto   drawingId = model.drawUnitId;
-    auto&  drs       = *entityStorage->drawing;
-    auto&& drawUnit  = drs[drawingId];
     auto&& shdDesc   = shaderingDescPool[shadingEt.shadingDescId];
 
     Math::Bounds vb;
@@ -193,6 +190,10 @@ bool EntityRenderSystem::drawUnit(const Draw::DrawContext& rctx, const Scene::Co
         }
         return true;
     }
+
+    auto   drawingId = model.drawUnitId;
+    auto&  drs       = *entityStorage->drawing;
+    auto&& drawUnit  = drs[drawingId];
 
     //if (shdDesc.flags > 0 && compStorage->shadingShadowIdMap.contains(shadingEt.shadingDescId))
     //{
