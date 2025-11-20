@@ -159,12 +159,59 @@ void FileParser::parseSceneNode(SceneNode& parentNode, const JsonType& jsonNode)
         parentNode.childrenTotal = static_cast<int>(parentNode.children.size());
     }
 }
+
+void HierarchyParser::foreachNode(Desc::SceneNode& parentNode, SceneNodeForeachCallbackType callback)
+{
+
+    callback(parentNode);
+
+    auto& children = parentNode.children;
+    if (children.empty())
+        return;
+
+    for (auto i = 0; i < children.size(); ++i)
+    {
+        foreachNode(children[i], callback);
+    }
+}
+void HierarchyParser::parse(Desc::SceneNode& parentNode, Desc::HierarchyNode& parentHierNode)
+{
+    parentHierNode.id   = parentNode.index;
+    parentHierNode.name = parentNode.name;
+
+    auto& children = parentNode.children;
+    if (children.empty())
+    {
+        parentNode.hieraychy = parentHierNode.hieraychy;
+        parentHierNode.print();
+        return;
+    }
+
+    parentHierNode.hieraychy.firstChild = children[0].index;
+    for (auto i = 0; i < children.size(); ++i)
+    {
+        auto&&              child = children[i];
+        Desc::HierarchyNode hierNode;
+        hierNode.hieraychy.parent = parentNode.index;
+
+        if ((i + 1) < children.size())
+            hierNode.hieraychy.next = children[i + 1].index;
+
+        parse(child, hierNode);
+    }
+    parentNode.hieraychy = parentHierNode.hieraychy;
+    parentHierNode.print();
+}
+
 } // namespace Desc
 
 void DescriptionParser::initialize()
 {
     std::string filePath = "scene/scdesc/scdesc01.json";
     fileParser.initFromFile(filePath);
+
+    Desc::HierarchyNode rootHierNode;
+    hierParser.parse(fileParser.rootNode, rootHierNode);
 }
 
 } // namespace Voxol::Scene

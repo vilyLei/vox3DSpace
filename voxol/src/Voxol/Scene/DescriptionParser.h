@@ -6,6 +6,7 @@
 #include "../Math/Vec2.h"
 #include <nlohmann/json.hpp>
 #include <string>
+#include <functional>
 
 namespace Voxol::Scene
 {
@@ -37,13 +38,13 @@ struct SceneNode
     uint32_t               index = 0;
     std::vector<SceneNode> children;
 
-    Component::UnitHierarchy       hieraychy;
-    Component::UnitTransform       trans;
-    Component::UnitShadingDesc     shaingDesc;
-    Component::UnitShadingEntity   shadingEntity;
-    Component::UnitModel           unitModel;
-    Component::UnitEntity          entity;
-    Component::UnitStringModel     textModel;
+    Component::UnitHierarchy     hieraychy;
+    Component::UnitTransform     trans;
+    Component::UnitShadingDesc   shaingDesc;
+    Component::UnitShadingEntity shadingEntity;
+    Component::UnitModel         unitModel;
+    Component::UnitEntity        entity;
+    Component::UnitStringModel   textModel;
 
     int childrenTotal = 0;
 
@@ -70,6 +71,18 @@ public:
     void parseHeriNodes(const JsonType& jsonNode);
     void parseSceneNode(SceneNode& parentNode, const JsonType& jsonNode);
 };
+
+using SceneNodeForeachCallbackType = std::function<void(Desc::SceneNode& node)>;
+class HierarchyParser
+{
+public:
+    HierarchyParser()  = default;
+    ~HierarchyParser() = default;
+
+public:
+    void foreachNode(Desc::SceneNode& parentNode, SceneNodeForeachCallbackType callback);
+    void parse(Desc::SceneNode& parentNode, Desc::HierarchyNode& parentHierNode);
+};
 } // namespace Desc
 
 class DescriptionParser
@@ -79,7 +92,8 @@ public:
     ~DescriptionParser() = default;
 
 public:
-    Desc::FileParser fileParser;
+    Desc::FileParser      fileParser;
+    Desc::HierarchyParser hierParser;
 
 public:
     void initialize();
