@@ -1,6 +1,6 @@
 {
     "version": {
-        "run-mode": "edit",
+        "runtime-mode": "edit",
         "major": 0,
         "minor": 1,
         "dimension": 2,
