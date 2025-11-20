@@ -15,7 +15,7 @@ void SceneNode::parseTrans(const JsonType& jsonNode)
         SceneIR::Scene::Transform jTrans;
         jTrans.parse(jsonNode["transform"]);
         auto pv     = jTrans.position;
-        trans.pos() = jTrans.position;
+        transform.pos() = jTrans.position;
     }
     if (jsonNode.contains("display"))
     {
@@ -49,12 +49,12 @@ void SceneNode::parseTrans(const JsonType& jsonNode)
         if (jModel.hasRadius())
         {
             auto pw       = jModel.getRadius() * 2;
-            trans.scale() = {pw, pw};
+            transform.scale() = {pw, pw};
         }
         else if (jModel.hasSize())
         {
             auto&& size   = jModel.getSize();
-            trans.scale() = size;
+            transform.scale() = size;
         }
 
         if ((jModel.type == "text" || jModel.type == "Text") && !jModel.content.empty())
@@ -63,7 +63,7 @@ void SceneNode::parseTrans(const JsonType& jsonNode)
                          jModel.getFontSize(),
                          jModel.content};
 
-            trans.scale() = {textModel.fontSize, textModel.fontSize};
+            transform.scale() = {textModel.fontSize, textModel.fontSize};
         }
     }
 }
@@ -99,10 +99,10 @@ void SceneNode::print() const
     info = "SceneNode(name=" + name + ",type=" + type + info + ")";
     printf("%s\n", info.c_str());
 }
-void SceneNode::printTrans() const
+void SceneNode::printTransform() const
 {
-    std::string info = ", tran(x=" + std::to_string(trans.x) + ",y=" + std::to_string(trans.y);
-    info += ",sx=" + std::to_string(trans.sx) + ",sy=" + std::to_string(trans.sy) + ")";
+    std::string info = ", tran(x=" + std::to_string(transform.x) + ",y=" + std::to_string(transform.y);
+    info += ",sx=" + std::to_string(transform.sx) + ",sy=" + std::to_string(transform.sy) + ")";
     info = "SceneNode(name=" + name + info + ")";
     printf("%s\n", info.c_str());
 }

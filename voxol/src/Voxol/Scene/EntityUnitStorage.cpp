@@ -71,6 +71,28 @@ void EntityUnitStorage::initalizeFromDescFile(const std::string& fileName)
         e.firstChild = Base::ID::INVALID_ID;
     });
 
+    descParser.hierParser.foreachNode(descParser.fileParser.rootNode, [&](Desc::SceneNode& node) {
+
+        auto i = node.id;
+        if (node.unitModel.type == Component::UnitModelType::Text)
+        {
+            auto&  textModel = node.textModel;
+            auto   pos       = node.transform.pos();
+            auto&& bv        = drawing->msdfText->calcStringBounds(textModel.content, textModel.fontSize, pos);
+            bv.print();
+            node.transform.scale()        = {bv.width(), bv.height()};
+            textModel.bounds   = bv;
+            textModel.posOffset       = {pos.x - bv.x(), pos.y - bv.y()};
+            comp->entityStringModelMap[i] = textModel;
+        }
+
+        shaderingDescPool[i] = node.shaingDesc;
+        shaderingEntitiesPool[i] = node.shadingEntity;
+        hierarchiesPool[i]       = node.hieraychy;
+        transformsPool[i]        = node.transform;
+        modelsPool[i]            = node.unitModel;
+        entitiesPool[i]        = node.entity;
+    });
 }
 void EntityUnitStorage::initalizeFromIRFile(const std::string& fileName)
 {

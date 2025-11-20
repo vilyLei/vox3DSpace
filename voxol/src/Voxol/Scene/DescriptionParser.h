@@ -39,7 +39,7 @@ struct SceneNode
     std::vector<SceneNode> children;
 
     Component::UnitHierarchy     hieraychy;
-    Component::UnitTransform     trans;
+    Component::UnitTransform     transform;
     Component::UnitShadingDesc   shaingDesc;
     Component::UnitShadingEntity shadingEntity;
     Component::UnitModel         unitModel;
@@ -54,7 +54,7 @@ struct SceneNode
     void parseTrans(const JsonType& jsonNode);
     void parse(const JsonType& jsonNode);
     void print() const;
-    void printTrans() const;
+    void printTransform() const;
 };
 
 class FileParser
