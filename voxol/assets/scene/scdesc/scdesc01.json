@@ -1,5 +1,6 @@
 {
     "version": {
+        "run-mode": "edit",
         "major": 0,
         "minor": 1,
         "dimension": 2,
@@ -10,26 +11,30 @@
             {
                 "type": "panel",
                 "name": "play-panel",
-                "transform": [
-                    200,
-                    200
-                ],
+                "transform": {
+                    "position": [
+                        200,
+                        200
+                    ]
+                },
                 "display": {
                     "shape": "rectangle",
                     "size": [
                         300,
                         500
                     ],
-                    "fillColor": "0xff003366"
+                    "fillColor": "0xff775566"
                 },
                 "children": [
                     {
                         "type": "button",
                         "name": "play-button",
-                        "transform": [
-                            57,
-                            136
-                        ],
+                        "transform": {
+                            "position": [
+                                57,
+                                136
+                            ]
+                        },
                         "display": {
                             "shape": "round-rectangle",
                             "size": [
@@ -42,10 +47,12 @@
                             {
                                 "type": "text",
                                 "name": "play-text",
-                                "transform": [
-                                    48,
-                                    11
-                                ],
+                                "transform": {
+                                    "position": [
+                                        48,
+                                        25
+                                    ]
+                                },
                                 "display": {
                                     "shape": "text",
                                     "content": "Start",
@@ -87,10 +94,12 @@
                     {
                         "type": "button",
                         "name": "exit-button",
-                        "transform": [
-                            57,
-                            286
-                        ],
+                        "transform": {
+                            "position": [
+                                57,
+                                286
+                            ]
+                        },
                         "display": {
                             "shape": "round-rectangle",
                             "size": [
@@ -103,10 +112,12 @@
                             {
                                 "type": "text",
                                 "name": "play-text",
-                                "transform": [
-                                    48,
-                                    11
-                                ],
+                                "transform": {
+                                    "position": [
+                                        48,
+                                        25
+                                    ]
+                                },
                                 "display": {
                                     "shape": "text",
                                     "content": "Exit",
