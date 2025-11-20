@@ -93,7 +93,7 @@ public:
         {
             const Node& n = m_nodes[i];
 
-            printf("v2 build() CCC, n.objectId: %s, n(l=%d,r=%d)\n", n.objectId.idToString().c_str(), n.left, n.right);
+            //printf("v2 build() CCC, n.objectId: %s, n(l=%d,r=%d)\n", n.objectId.idToString().c_str(), n.left, n.right);
             if (isLeaf(n))
             {
                 m_fatBounds[n.objectId] = n.bounds.expanded(m_fatPad);
@@ -524,7 +524,7 @@ private:
             const LeafTemp& lt = m_leafTemps[indices[l]];
             node.objectId      = lt.objectId;
             node.left = node.right = -1;
-            printf("v2 buildRecursiveFromLeaves() B, indices[l]:%d, node.objectId: %s, node(l=%d, r=%d), nodeIndex: %d\n", indices[l], node.objectId.idToString().c_str(), node.left, node.right, nodeIndex);
+            //printf("v2 buildRecursiveFromLeaves() B, indices[l]:%d, node.objectId: %s, node(l=%d, r=%d), nodeIndex: %d\n", indices[l], node.objectId.idToString().c_str(), node.left, node.right, nodeIndex);
             return nodeIndex;
         }
 
@@ -554,7 +554,7 @@ private:
         node.left     = leftIdx;
         node.right    = rightIdx;
         node.objectId = Base::ID::INVALID_KEY;
-        printf("v2 buildRecursiveFromLeaves() D, indices[l]:%d, node.objectId: %s, node(l=%d, r=%d), nodeIndex: %d\n", indices[l], node.objectId.idToString().c_str(), node.left, node.right, nodeIndex);
+        //printf("v2 buildRecursiveFromLeaves() D, indices[l]:%d, node.objectId: %s, node(l=%d, r=%d), nodeIndex: %d\n", indices[l], node.objectId.idToString().c_str(), node.left, node.right, nodeIndex);
         node.bounds = Math::Bounds::Union(m_nodes[leftIdx].bounds, m_nodes[rightIdx].bounds);
         return nodeIndex;
     }
