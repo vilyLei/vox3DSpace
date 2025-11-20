@@ -14,6 +14,14 @@ EntityUnitStorage::SP EntityUnitStorage::make()
 
 void EntityUnitStorage::initalizeFromFile(const std::string& fileName)
 {
+    initalizeFromIRFile(fileName);
+}
+void EntityUnitStorage::initalizeFromDescFile(const std::string& fileName)
+{
+
+}
+void EntityUnitStorage::initalizeFromIRFile(const std::string& fileName)
+{
     if (comp)
     {
         return;
