@@ -9,9 +9,10 @@ namespace Shadering
 {
 void EffectShadow::parse(const JsonType& node)
 {
-
-    id   = node["id"];
-    type = node["type"];
+    if (node.contains("id"))
+        id   = node["id"];
+    if (node.contains("type"))
+        type = node["type"];
 
     if (node.contains("color"))
     {
@@ -94,8 +95,12 @@ void Description::parseColor(const JsonType& vo)
 }
 void Description::parse(const JsonType& node)
 {
-    id    = node["id"];
-    type  = node["type"];
+
+    if (node.contains("id"))
+        id = node["id"];
+    if (node.contains("type"))
+        type  = node["type"];
+
     color = 0x0;
     if (node.contains("color"))
     {
@@ -170,7 +175,8 @@ namespace Scene
 
 void Model::parse(const JsonType& node)
 {
-    id = node["id"];
+    if (node.contains("id"))
+        id = node["id"];
 
     if (node.contains("content"))
         content = node["content"];
@@ -178,7 +184,8 @@ void Model::parse(const JsonType& node)
     if (node.contains("type"))
         type = node["type"];
 
-    method.parse(node["method"]);
+    if (node.contains("method"))
+        method.parse(node["method"]);
 
     if (node.contains("radius") && node["radius"].is_number())
     {
@@ -213,7 +220,8 @@ void Model::parse(const JsonType& node)
 
 void Transform::parse(const JsonType& node)
 {
-    id = node["id"];
+    if (node.contains("id"))
+        id = node["id"];
 
     if (node.contains("position") && node["position"].is_array())
     {
