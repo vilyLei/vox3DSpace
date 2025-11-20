@@ -35,7 +35,7 @@ struct SceneNode
 {
     std::string            type;
     std::string            name;
-    uint32_t               index = 0;
+    uint32_t               id = Base::ID::INVALID_ID;
     std::vector<SceneNode> children;
 
     Component::UnitHierarchy     hieraychy;
@@ -69,7 +69,7 @@ public:
 public:
     void initFromFile(const std::string& fileName);
     void parseHeriNodes(const JsonType& jsonNode);
-    void parseSceneNode(SceneNode& parentNode, const JsonType& jsonNode);
+    void parseSceneNode(SceneNode& parentNode, uint32_t& id, const JsonType& jsonNode);
 };
 
 using SceneNodeForeachCallbackType = std::function<void(Desc::SceneNode& node)>;

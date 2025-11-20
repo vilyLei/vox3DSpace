@@ -20,8 +20,8 @@ void SceneNode::parseTrans(const JsonType& jsonNode)
     if (jsonNode.contains("display"))
     {
         auto&& displayNode    = jsonNode["display"];
-        shadingEntity.id      = index;
-        unitModel.id          = index;
+        shadingEntity.id      = id;
+        unitModel.id          = id;
         std::string shapeType = "";
         if (displayNode.contains("shape") && displayNode["shape"].is_string())
         {
@@ -29,7 +29,7 @@ void SceneNode::parseTrans(const JsonType& jsonNode)
         }
         if (shapeType == "rectangle" || shapeType == "round-rectangle")
         {
-            shadingEntity.shadingDescId = index;
+            shadingEntity.shadingDescId = id;
             unitModel.drawUnitId        = 0;
             unitModel.type              = Component::UnitModelType::Mesh;
         }
@@ -59,7 +59,7 @@ void SceneNode::parseTrans(const JsonType& jsonNode)
 
         if ((jModel.type == "text" || jModel.type == "Text") && !jModel.content.empty())
         {
-            textModel = {index,
+            textModel = {id,
                          jModel.getFontSize(),
                          jModel.content};
 
@@ -78,11 +78,11 @@ void SceneNode::parse(const JsonType& jsonNode)
         name = jsonNode["name"];
     }
     parseTrans(jsonNode);
-    entity.id          = index;
-    entity.shadingId   = index;
-    entity.transformId = index;
-    entity.hierarchyId = index;
-    entity.modelId     = index;
+    entity.id          = id;
+    entity.shadingId   = id;
+    entity.transformId = id;
+    entity.hierarchyId = id;
+    entity.modelId     = id;
 
     if (jsonNode.contains("children") && jsonNode["children"].is_array())
     {
@@ -95,7 +95,7 @@ void SceneNode::print() const
 {
 
     std::string info = ", hasChild=" + (hasChild ? std::string("true") : std::string("false"));
-    info += ", childrenTotal=" + std::to_string(childrenTotal) + ", index=" + std::to_string(index);
+    info += ", childrenTotal=" + std::to_string(childrenTotal) + ", id=" + std::to_string(id);
     info = "SceneNode(name=" + name + ",type=" + type + info + ")";
     printf("%s\n", info.c_str());
 }
@@ -128,15 +128,18 @@ void FileParser::parseHeriNodes(const JsonType& jsonNode)
         if (elements.empty())
             return;
 
+        uint32_t id     = 0;
+        rootNode.id        = id;
         rootNode.hasParent = false;
         for (auto& item : elements)
         {
-            parseSceneNode(rootNode, item);
+            id++;
+            parseSceneNode(rootNode, id, item);
             rootNode.print();
         }
     }
 }
-void FileParser::parseSceneNode(SceneNode& parentNode, const JsonType& jsonNode)
+void FileParser::parseSceneNode(SceneNode& parentNode, uint32_t& id, const JsonType& jsonNode)
 {
 
     parentNode.parse(jsonNode);
@@ -152,7 +155,8 @@ void FileParser::parseSceneNode(SceneNode& parentNode, const JsonType& jsonNode)
         for (auto& item : elements)
         {
             SceneNode node;
-            parseSceneNode(node, item);
+            node.id = id++;
+            parseSceneNode(node, id, item);
             node.print();
             parentNode.children.emplace_back(std::move(node));
         }
@@ -176,7 +180,7 @@ void HierarchyParser::foreachNode(Desc::SceneNode& parentNode, SceneNodeForeachC
 }
 void HierarchyParser::parse(Desc::SceneNode& parentNode, Desc::HierarchyNode& parentHierNode)
 {
-    parentHierNode.id   = parentNode.index;
+    parentHierNode.id   = parentNode.id;
     parentHierNode.name = parentNode.name;
 
     auto& children = parentNode.children;
@@ -187,15 +191,15 @@ void HierarchyParser::parse(Desc::SceneNode& parentNode, Desc::HierarchyNode& pa
         return;
     }
 
-    parentHierNode.hieraychy.firstChild = children[0].index;
+    parentHierNode.hieraychy.firstChild = children[0].id;
     for (auto i = 0; i < children.size(); ++i)
     {
         auto&&              child = children[i];
         Desc::HierarchyNode hierNode;
-        hierNode.hieraychy.parent = parentNode.index;
+        hierNode.hieraychy.parent = parentNode.id;
 
         if ((i + 1) < children.size())
-            hierNode.hieraychy.next = children[i + 1].index;
+            hierNode.hieraychy.next = children[i + 1].id;
 
         parse(child, hierNode);
     }
