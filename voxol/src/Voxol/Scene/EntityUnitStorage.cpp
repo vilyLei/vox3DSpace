@@ -93,6 +93,7 @@ void EntityUnitStorage::initalizeFromDescFile(const std::string& fileName)
         modelsPool[i]            = node.unitModel;
         entitiesPool[i]        = node.entity;
     });
+    comp->updateHierarchyInfo();
 }
 void EntityUnitStorage::initalizeFromIRFile(const std::string& fileName)
 {
