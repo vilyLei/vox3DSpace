@@ -19,8 +19,21 @@ void EntityUnitStorage::initalizeFromFile(const std::string& fileName)
 }
 void EntityUnitStorage::initalizeFromDescFile(const std::string& fileName)
 {
+    if (comp)
+    {
+        return;
+    }
     DescriptionParser descParser;
     descParser.initialize();
+
+    auto total = 128;
+    total      = total < 128 ? 128 : total;
+    comp       = EntityCompStorage::make();
+    if (!drawing)
+    {
+        drawing = Render::DrawingUnitStorage::make();
+    }
+    drawing->initalize(total);
 
 }
 void EntityUnitStorage::initalizeFromIRFile(const std::string& fileName)
@@ -45,8 +58,6 @@ void EntityUnitStorage::initalizeFromIRFile(const std::string& fileName)
 
     auto total = 128;
     total      = total < 128 ? 128 : total;
-
-
     comp = EntityCompStorage::make();
     if (!drawing)
     {
