@@ -21,7 +21,10 @@ void SceneNode::parseTrans(const JsonType& jsonNode)
     {
         auto&& displayNode    = jsonNode["display"];
         shadingEntity.id      = id;
+        shadingEntity.shadingDescId = id;
+
         unitModel.id          = id;
+
         std::string shapeType = "";
         if (displayNode.contains("shape") && displayNode["shape"].is_string())
         {
@@ -29,7 +32,6 @@ void SceneNode::parseTrans(const JsonType& jsonNode)
         }
         if (shapeType == "rectangle" || shapeType == "round-rectangle")
         {
-            shadingEntity.shadingDescId = id;
             unitModel.drawUnitId        = 0;
             unitModel.type              = Component::UnitModelType::Mesh;
         }
