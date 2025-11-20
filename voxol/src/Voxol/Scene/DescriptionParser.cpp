@@ -7,31 +7,6 @@ namespace Voxol::Scene
 {
 namespace Desc
 {
-//void SceneNode::parse(const JsonType& jsonNode)
-//{
-//    if (jsonNode.contains("type"))
-//    {
-//        type = jsonNode["type"];
-//    }
-//    if (jsonNode.contains("name"))
-//    {
-//        name = jsonNode["name"];
-//    }
-//    if (jsonNode.contains("children") && jsonNode["children"].is_array())
-//    {
-//        auto&& elements = jsonNode["children"];
-//        hasChild        = !elements.empty();
-//    }
-//}
-//void SceneNode::print()
-//{
-//
-//    std::string hasChildStr = ", hasChild=" + (hasChild ? std::string("true") : std::string("false"));
-//    std::string info        = "SceneNode(name=" + name + ",type=" + type + ", childrenTotal=" + std::to_string(childrenTotal) + hasChildStr + ")";
-//    printf("%s\n", info.c_str());
-//}
-
-
 
 void SceneNode::parseTrans(const JsonType& jsonNode)
 {
