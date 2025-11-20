@@ -183,6 +183,8 @@ void Model::parse(const JsonType& node)
 
     if (node.contains("type"))
         type = node["type"];
+    if (node.contains("shape"))
+        type = node["shape"];
 
     if (node.contains("method"))
         method.parse(node["method"]);

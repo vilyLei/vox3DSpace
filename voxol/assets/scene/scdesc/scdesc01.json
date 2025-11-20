@@ -23,7 +23,7 @@
                         300,
                         500
                     ],
-                    "fillColor": "0xff775566"
+                    "fillColor": "0xffaabb99"
                 },
                 "children": [
                     {
@@ -50,7 +50,7 @@
                                 "transform": {
                                     "position": [
                                         48,
-                                        25
+                                        11
                                     ]
                                 },
                                 "display": {
@@ -115,7 +115,7 @@
                                 "transform": {
                                     "position": [
                                         48,
-                                        25
+                                        11
                                     ]
                                 },
                                 "display": {
