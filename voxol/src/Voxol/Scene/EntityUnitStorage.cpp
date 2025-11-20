@@ -280,7 +280,7 @@ void EntityUnitStorage::initalize(int total)
     //auto&& tb                      = drawing->msdfText.getGlyphBounds('D', 70, {350, 350});
     //shaderingDescPool[6].transform = {tb.x(), tb.y(), tb.width(), tb.height()};
 
-    auto&& vbs        = drawing->msdfText->getStringBounds("BcD", 70, {350, 350});
+    auto&& vbs        = drawing->msdfText->getGlyphBoundsWithText("BcD", 70, {350, 350});
     auto   tb         = vbs[0];
     transformsPool[6] = {tb.x(), tb.y(), tb.width(), tb.height()};
     tb                = vbs[1];

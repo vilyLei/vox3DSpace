@@ -85,7 +85,7 @@ public:
                                                                      const Voxol::Math::Vec2&       pos      = {},
                                                                      float                          fontSize = 20);
     void                                        buildDrawingRes();
-    std::vector<Math::Bounds>                   getStringBounds(const std::string& text, float fontSize, const Math::Vec2& pos);
+    std::vector<Math::Bounds>                   getGlyphBoundsWithText(const std::string& text, float fontSize, const Math::Vec2& pos);
     Math::Bounds                                calcStringBounds(const std::string& text, float fontSize, const Math::Vec2& pos);
     Math::Bounds                                getGlyphBounds(int32_t glyphChar, float fontSize, const Math::Vec2& pos);
     void                                        buildDrawingUnitWithGlyph(int32_t glyphChar, Gpu::DrawingUnit& unit);

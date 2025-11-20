@@ -455,7 +455,7 @@ void MSDFText::buildDrawingRes()
 }
 
 
-std::vector<Math::Bounds> MSDFText::getStringBounds(const std::string& text, float fontSize, const Math::Vec2& pos)
+std::vector<Math::Bounds> MSDFText::getGlyphBoundsWithText(const std::string& text, float fontSize, const Math::Vec2& pos)
 {
     auto& atlas = mMSDFAtlas;
     float scale = fontSize / atlas.emSize;
@@ -522,6 +522,8 @@ Math::Bounds MSDFText::calcStringBounds(const std::string& text, float fontSize,
         penX += glyph.advance * scale;
         i++;
     }
+
+    bv.addXY(bv.x(), pos.y - atlas.lineHeight * scale);
     return bv;
 }
 
