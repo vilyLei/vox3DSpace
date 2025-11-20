@@ -35,6 +35,42 @@ void EntityUnitStorage::initalizeFromDescFile(const std::string& fileName)
     }
     drawing->initalize(total);
 
+    
+    auto& entitiesPool          = comp->entitiesPool;
+    auto& shaderingEntitiesPool = comp->shaderingEntitiesPool;
+    auto& shaderingDescPool     = comp->shaderingDescPool;
+    auto& transformsPool        = comp->transformsPool;
+    auto& modelsPool            = comp->modelsPool;
+    auto& hierarchiesPool       = comp->hierarchiesPool;
+
+    entitiesPool.initialize(total);
+    shaderingEntitiesPool.initialize(total);
+    hierarchiesPool.initialize(total);
+    modelsPool.initialize(total);
+    auto shaderingDescTotal = total * 2;
+    shaderingDescPool.initialize(shaderingDescTotal);
+    transformsPool.initialize(shaderingDescTotal);
+
+
+    entitiesPool.forEach([&](auto& e, int32_t index) {
+        e.id          = index;
+        e.shadingId   = Base::ID::INVALID_ID;
+        e.transformId = Base::ID::INVALID_ID;
+        e.modelId     = Base::ID::INVALID_ID;
+        e.hierarchyId = Base::ID::INVALID_ID;
+    });
+    shaderingEntitiesPool.forEach([&](auto& e, int32_t index) {
+        e.id = index;
+    });
+    modelsPool.forEach([&](auto& e, int32_t index) {
+        e.id = index;
+    });
+    hierarchiesPool.forEach([&](auto& e, uint32_t index) {
+        e.parent     = Base::ID::INVALID_ID;
+        e.next       = Base::ID::INVALID_ID;
+        e.firstChild = Base::ID::INVALID_ID;
+    });
+
 }
 void EntityUnitStorage::initalizeFromIRFile(const std::string& fileName)
 {
