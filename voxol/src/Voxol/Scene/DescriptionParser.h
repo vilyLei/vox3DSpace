@@ -13,6 +13,23 @@ namespace Desc
 {
 using JsonType = nlohmann::json;
 
+
+struct HierarchyNode
+{
+    uint32_t                 id = Base::ID::INVALID_ID;
+    std::string              name;
+    Component::UnitHierarchy hieraychy;
+    void                     print()
+    {
+        std::string info = ", parent=" + std::to_string(hieraychy.parent);
+        info += ", firstChild=" + std::to_string(hieraychy.firstChild);
+        info += ", next=" + std::to_string(hieraychy.next);
+        info += ", id=" + std::to_string(id);
+        info = "HierarchyNode(name=" + name + info + ")";
+        printf("%s\n", info.c_str());
+    }
+};
+
 struct SceneNode
 {
     std::string            type;

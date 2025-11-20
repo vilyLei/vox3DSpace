@@ -64,7 +64,6 @@ void EffectShadow::parse(const JsonType& node)
 
 void Description::parseColor(const JsonType& vo)
 {
-    //auto&& vo = node["color"];
     if (vo.is_number())
     {
         color = static_cast<uint32_t>(vo);
