@@ -101,36 +101,6 @@ void Description::parse(const JsonType& node)
     if (node.contains("color"))
     {
         parseColor(node["color"]);
-        /*
-        auto&& vo = node["color"];
-        if (vo.is_number())
-        {
-            color = static_cast<uint32_t>(vo);
-        }
-        else if (vo.is_string())
-        {
-            std::string&& hex_str = vo;
-            std::transform(hex_str.begin(), hex_str.end(), hex_str.begin(),
-                           [](unsigned char c) { return std::tolower(c); });
-
-            if (hex_str.find('#') == 0)
-            {
-                color = std::stoul(hex_str.substr(1), nullptr, 16);
-            }
-            else if (hex_str.find('x') == 1)
-            {
-                if (hex_str.size() >= 3)
-                {
-                    color = std::stoul(hex_str.substr(2), nullptr, 16);
-                }
-            }
-            else
-            {
-                color = std::stoul(hex_str.substr(2), nullptr, 16);
-            }
-            printf("color: %x\n", color);
-        }
-        //*/
     }
     else if (node.contains("fillColor"))
     {
