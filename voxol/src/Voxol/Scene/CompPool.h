@@ -110,6 +110,8 @@ public:
     template <typename Fn>
     void forEach(Fn&& fn) noexcept
     {
+        if (comps.empty())
+            return;
         for (uint32_t i = 0; i < static_cast<uint32_t>(comps.size()); ++i)
         {
             if constexpr (std::is_invocable_r_v<bool, Fn, T&, uint32_t>)
@@ -134,6 +136,8 @@ public:
     template <typename Fn>
     void forEach(Fn&& fn) const noexcept
     {
+        if (comps.empty())
+            return;
         for (uint32_t i = 0; i < static_cast<uint32_t>(comps.size()); ++i)
         {
             if constexpr (std::is_invocable_r_v<bool, Fn, const T&, uint32_t>)

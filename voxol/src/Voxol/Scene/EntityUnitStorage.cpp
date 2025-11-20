@@ -14,10 +14,13 @@ EntityUnitStorage::SP EntityUnitStorage::make()
 
 void EntityUnitStorage::initalizeFromFile(const std::string& fileName)
 {
-    initalizeFromIRFile(fileName);
+    //initalizeFromIRFile(fileName);
+    initalizeFromDescFile(fileName);
 }
 void EntityUnitStorage::initalizeFromDescFile(const std::string& fileName)
 {
+    DescriptionParser descParser;
+    descParser.initialize();
 
 }
 void EntityUnitStorage::initalizeFromIRFile(const std::string& fileName)
@@ -27,8 +30,6 @@ void EntityUnitStorage::initalizeFromIRFile(const std::string& fileName)
         return;
     }
 
-    DescriptionParser descParser;
-    descParser.initialize();
 
     auto fileNameStr = fileName;
     if (fileNameStr.empty())
