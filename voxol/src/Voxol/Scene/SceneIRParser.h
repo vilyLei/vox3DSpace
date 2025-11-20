@@ -2,7 +2,7 @@
 #define VOXOL_SCENE_SCENE_IR_PARSER_H
 
 #include "../Base/BaseDefine.h"
-#include "EntityComponent.h"
+#include "SceneIRComponent.h"
 #include "../Math/Vec2.h"
 #include <nlohmann/json.hpp>
 #include <string>
@@ -12,6 +12,7 @@
 namespace Voxol::Scene
 {
 using JsonType = nlohmann::json;
+/*
 namespace SceneIR
 {
 namespace Shadering
@@ -259,7 +260,7 @@ struct Module
 };
 } // namespace Scene
 } // namespace SceneIR
-
+//*/
 
 class SceneIRParser
 {

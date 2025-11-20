@@ -5,6 +5,7 @@
 
 namespace Voxol::Scene
 {
+/*
 namespace SceneIR
 {
 namespace Shadering
@@ -224,7 +225,7 @@ void Transform::parse(const JsonType& node)
 }
 } // namespace Scene
 } // namespace SceneIR
-
+//*/
 void SceneIRParser::parseFromFile(const std::string& fileName)
 {
 
