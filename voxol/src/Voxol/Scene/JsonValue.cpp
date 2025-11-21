@@ -4,7 +4,7 @@ namespace Voxol::Scene
 {
 namespace Data
 {
-
+/*
 bool ColorValue::parseStringColor(const JsonType& node) {
 
     if (parseStringColorWithName(node, "color"))
@@ -57,6 +57,7 @@ bool ColorValue::parseStringColorWithName(const JsonType& node, const std::strin
 
     return true;
 }
+//*/
 
 bool JsonValue::parseStringColorWithName(const JsonType& node, const std::string& valueName)
 {
