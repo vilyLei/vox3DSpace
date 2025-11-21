@@ -10,7 +10,7 @@ namespace Shadering
 void EffectShadow::parse(const JsonType& node)
 {
     if (node.contains("id"))
-        id   = node["id"];
+        id = node["id"];
     if (node.contains("type"))
         type = node["type"];
 
@@ -99,7 +99,7 @@ void Description::parse(const JsonType& node)
     if (node.contains("id"))
         id = node["id"];
     if (node.contains("type"))
-        type  = node["type"];
+        type = node["type"];
 
     color = 0x0;
     if (node.contains("color"))
@@ -128,6 +128,31 @@ void Description::parse(const JsonType& node)
                 continue;
             effects.push_back(static_cast<uint32_t>(element));
         }
+    }
+}
+
+void Unit::parse(const JsonType& node)
+{
+    if (node.contains("id"))
+        id = node["id"];
+    if (node.contains("description"))
+        description = node["description"];
+
+    std::string blendmodeStr = node["blendmode"];
+
+    static std::unordered_map<std::string, uint32_t> blendmodeMap{};
+
+    if (blendmodeMap.empty())
+    {
+        blendmodeMap["None"]        = 0;
+        blendmodeMap["Transparent"] = 1;
+        blendmodeMap["Add"]         = 2;
+    }
+
+    blendmode = 0;
+    if (blendmodeMap.contains(blendmodeStr))
+    {
+        blendmode = blendmodeMap[blendmodeStr];
     }
 }
 void Module::parse(const JsonType& node)

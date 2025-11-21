@@ -42,28 +42,26 @@ struct Unit
     uint32_t id = Base::ID::INVALID_ID;
     uint32_t description;
     uint32_t blendmode;
-    void     parse(const JsonType& node)
-    {
-        id          = node["id"];
-        description = node["description"];
+    void     parse(const JsonType& node);
+    //void     parse(const JsonType& node)
+    //{
+    //    id          = node["id"];
+    //    description = node["description"];
 
-        std::string blendmodeStr = node["blendmode"];
-
-        static std::unordered_map<std::string, uint32_t> blendmodeMap{};
-
-        if (blendmodeMap.empty())
-        {
-            blendmodeMap["None"]        = 0;
-            blendmodeMap["Transparent"] = 1;
-            blendmodeMap["Add"]         = 2;
-        }
-
-        blendmode = 0;
-        if (blendmodeMap.contains(blendmodeStr))
-        {
-            blendmode = blendmodeMap[blendmodeStr];
-        }
-    }
+    //    std::string blendmodeStr = node["blendmode"];
+    //    static std::unordered_map<std::string, uint32_t> blendmodeMap{};
+    //    if (blendmodeMap.empty())
+    //    {
+    //        blendmodeMap["None"]        = 0;
+    //        blendmodeMap["Transparent"] = 1;
+    //        blendmodeMap["Add"]         = 2;
+    //    }
+    //    blendmode = 0;
+    //    if (blendmodeMap.contains(blendmodeStr))
+    //    {
+    //        blendmode = blendmodeMap[blendmodeStr];
+    //    }
+    //}
 };
 struct Module
 {
