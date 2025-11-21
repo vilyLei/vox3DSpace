@@ -25,12 +25,13 @@ struct Vec3
     bool operator!=(const Vec3& v) const noexcept { return !(*this == v); }
 
     static float Dot(const Vec3& a, const Vec3& b) noexcept { return a.x * b.x + a.y * b.y + a.z * b.z; }
-    static Vec3 Cross(const Vec3& a, const Vec3& b) noexcept {
-        
-    float x = a.y * b.z - a.z * b.y;
-    float y = a.z * b.x - a.x * b.z;
-    float z = a.x * b.y - a.y * b.x;
-        return {x,y,z};
+    static Vec3  Cross(const Vec3& a, const Vec3& b) noexcept
+    {
+
+        float x = a.y * b.z - a.z * b.y;
+        float y = a.z * b.x - a.x * b.z;
+        float z = a.x * b.y - a.y * b.x;
+        return {x, y, z};
     }
     static Vec3 Normalize(const Vec3& v) noexcept
     {
@@ -57,7 +58,7 @@ struct Vec3
     float length() const noexcept { return std::sqrt(lengthSquared()); }
 
     float dot(const Vec3& v) const noexcept { return Dot(*this, v); }
-    Vec3 cross(const Vec3& v) const noexcept { return Cross(*this, v); }
+    Vec3  cross(const Vec3& v) const noexcept { return Cross(*this, v); }
     Vec3  normalize() const noexcept { return Normalize(*this); }
 
     const float* ptr() const noexcept { return &x; }
