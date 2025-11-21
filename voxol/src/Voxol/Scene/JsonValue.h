@@ -20,6 +20,8 @@ enum class ColorType
     Pantone,
     Named // for future define"skyblue", "tomato"
 };
+// color data json data: https://github.com/cheprasov/json-colors/blob/master/colors.json
+
 struct ColorValue
 {
     union
