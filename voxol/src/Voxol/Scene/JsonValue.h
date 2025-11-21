@@ -76,7 +76,7 @@ struct JsonValue
     JsonValue(const ObjectType& obj) :
         type(Type::Object), value(obj) {}
 
-    void parseWithName(const JsonType& node, const std::string& valueName);
+    bool parseWithName(const JsonType& node, const std::string& valueName);
 
     void parse(const JsonType& j);
 
