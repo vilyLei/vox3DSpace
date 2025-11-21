@@ -13,6 +13,13 @@ namespace Data
 {
 using JsonType = nlohmann::json;
 
+struct ColorValue
+{
+    uint32_t color = 0x0;
+    bool     parseStringColorWithName(const JsonType& node, const std::string& valueName);
+
+};
+
 struct JsonValue
 {
     enum class Type : uint8_t

@@ -114,18 +114,18 @@ void Description::parse(const JsonType& node)
     //{
     //    parseColor(node["strokeColor"]);
     //}
-    Data::JsonValue jv;
-    if (jv.parseStringColorWithName(node, "color"))
+    Data::ColorValue cv;
+    if (cv.parseStringColorWithName(node, "color"))
     {
-        color = jv.get<uint32_t>();
+        color = cv.color;
     }
-    else if (jv.parseStringColorWithName(node, "fillColor"))
+    else if (cv.parseStringColorWithName(node, "fillColor"))
     {
-        color = jv.get<uint32_t>();
+        color = cv.color;
     }
-    else if (jv.parseStringColorWithName(node, "strokeColor"))
+    else if (cv.parseStringColorWithName(node, "strokeColor"))
     {
-        color = jv.get<uint32_t>();
+        color = cv.color;
     }
 
     if (node.contains("effects") && node["effects"].is_array())
