@@ -51,8 +51,8 @@ struct SceneNode
     bool hasChild  = false;
     bool hasParent = true;
 
-    void parseTrans(const JsonType& jsonNode);
-    void parse(const JsonType& jsonNode);
+    //void parseTrans(const JsonType& jsonNode);
+    //void parse(const JsonType& jsonNode);
     void print() const;
     void printTransform() const;
 };
@@ -71,8 +71,8 @@ public:
     void parseHeriNodes(const JsonType& jsonNode);
     void parseSceneNode(SceneNode& parentNode, uint32_t& id, const JsonType& jsonNode);
 
-    void parseNodeTransData(SceneNode& node, uint32_t id, const JsonType& jsonNode);
-    void parseNodeData(SceneNode& node, uint32_t id, const JsonType& jsonNode);
+    void parseNodeTransData(SceneNode& node, const JsonType& jsonNode);
+    void parseNodeData(SceneNode& node, const JsonType& jsonNode);
 };
 
 using SceneNodeForeachCallbackType = std::function<void(Desc::SceneNode& node)>;

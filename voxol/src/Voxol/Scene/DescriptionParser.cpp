@@ -8,6 +8,7 @@ namespace Voxol::Scene
 namespace Desc
 {
 
+/*
 void SceneNode::parseTrans(const JsonType& jsonNode)
 {
     if (jsonNode.contains("transform"))
@@ -92,6 +93,7 @@ void SceneNode::parse(const JsonType& jsonNode)
         hasChild        = !elements.empty();
     }
 }
+//*/
 
 void SceneNode::print() const
 {
@@ -144,7 +146,8 @@ void FileParser::parseHeriNodes(const JsonType& jsonNode)
 void FileParser::parseSceneNode(SceneNode& parentNode, uint32_t& id, const JsonType& jsonNode)
 {
 
-    parentNode.parse(jsonNode);
+    //parentNode.parse(jsonNode);
+    parseNodeData(parentNode, jsonNode);
 
     if (!parentNode.hasChild)
         return;
@@ -168,8 +171,9 @@ void FileParser::parseSceneNode(SceneNode& parentNode, uint32_t& id, const JsonT
 
 
 
-void FileParser::parseNodeTransData(SceneNode& node, uint32_t id, const JsonType& jsonNode)
+void FileParser::parseNodeTransData(SceneNode& node, const JsonType& jsonNode)
 {
+    auto id = node.id;
     if (jsonNode.contains("transform"))
     {
         SceneIR::Scene::Transform jTrans;
@@ -229,7 +233,8 @@ void FileParser::parseNodeTransData(SceneNode& node, uint32_t id, const JsonType
         }
     }
 }
-void FileParser::parseNodeData(SceneNode& node, uint32_t id, const JsonType& jsonNode)
+
+void FileParser::parseNodeData(SceneNode& node, const JsonType& jsonNode)
 {
     if (jsonNode.contains("type"))
     {
@@ -239,7 +244,8 @@ void FileParser::parseNodeData(SceneNode& node, uint32_t id, const JsonType& jso
     {
         node.name = jsonNode["name"];
     }
-    parseNodeTransData(node, jsonNode, id);
+    auto id = node.id;
+    parseNodeTransData(node, jsonNode);
     auto& entity       = node.entity;
     entity.id          = id;
     entity.shadingId   = id;
