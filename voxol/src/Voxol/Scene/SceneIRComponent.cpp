@@ -102,17 +102,30 @@ void Description::parse(const JsonType& node)
         type = node["type"];
 
     color = 0x0;
-    if (node.contains("color"))
+    //if (node.contains("color"))
+    //{
+    //    parseColor(node["color"]);
+    //}
+    //else if (node.contains("fillColor"))
+    //{
+    //    parseColor(node["fillColor"]);
+    //}
+    //else if (node.contains("strokeColor"))
+    //{
+    //    parseColor(node["strokeColor"]);
+    //}
+    Data::JsonValue jv;
+    if (jv.parseStringColorWithName(node, "color"))
     {
-        parseColor(node["color"]);
+        color = jv.get<uint32_t>();
     }
-    else if (node.contains("fillColor"))
+    else if (jv.parseStringColorWithName(node, "fillColor"))
     {
-        parseColor(node["fillColor"]);
+        color = jv.get<uint32_t>();
     }
-    else if (node.contains("strokeColor"))
+    else if (jv.parseStringColorWithName(node, "strokeColor"))
     {
-        parseColor(node["strokeColor"]);
+        color = jv.get<uint32_t>();
     }
 
     if (node.contains("effects") && node["effects"].is_array())
