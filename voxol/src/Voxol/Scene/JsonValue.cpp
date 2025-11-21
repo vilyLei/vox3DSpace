@@ -5,6 +5,12 @@ namespace Voxol::Scene
 namespace Desc
 {
 
+void JsonValue::parseWithName(const JsonType& node, const std::string& valueName)
+{
+    if (!node.contains(valueName))
+        return;
+    parse(node[valueName]);
+}
 void JsonValue::parse(const JsonType& j)
 {
     if (j.is_null())
