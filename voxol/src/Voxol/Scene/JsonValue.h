@@ -22,9 +22,18 @@ enum class ColorType
 };
 struct ColorValue
 {
-    // stored as ARGB (0xAARRGGBB)
-    uint32_t color = 0x00000000;
+    union
+    {
+        struct
+        {
+            uint8_t a, r, g, b;
+        };
+        uint8_t data[4];
+        // stored as ARGB (0xAARRGGBB)
+        uint32_t color = 0x00000000;
+    };
 
+    bool parsePantone(const std::string& s);
     bool parse(const JsonType& node);
     bool parseWithName(const JsonType& node, const std::string& key);
 private:

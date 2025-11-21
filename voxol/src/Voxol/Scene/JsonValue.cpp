@@ -4,6 +4,10 @@ namespace Voxol::Scene
 {
 namespace Data
 {
+bool ColorValue::parsePantone(const std::string& s){
+    return false;
+};
+
 bool ColorValue::parse(const JsonType& node)
 {
     return parseWithName(node, "color") ||
