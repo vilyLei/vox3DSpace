@@ -44,7 +44,7 @@ struct SceneNode
     Component::UnitShadingEntity shadingEntity;
     Component::UnitModel         unitModel;
     Component::UnitEntity        entity;
-    Component::UnitStringModel   textModel;
+    //Component::UnitStringModel   textModel;
 
     int childrenTotal = 0;
 
@@ -65,6 +65,7 @@ public:
 
 public:
     SceneNode rootNode;
+    std::unordered_map<uint32_t, Component::UnitStringModel> textModelMap;
 
 public:
     void initFromFile(const std::string& fileName);

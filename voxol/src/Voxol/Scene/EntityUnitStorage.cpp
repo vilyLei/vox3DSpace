@@ -71,20 +71,36 @@ void EntityUnitStorage::initalizeFromDescFile(const std::string& fileName)
         e.firstChild = Base::ID::INVALID_ID;
     });
 
-    descParser.hierParser.foreachNode(descParser.fileParser.rootNode, [&](Desc::SceneNode& node) {
+    auto& fileParser = descParser.fileParser;
+    auto& hierParser = descParser.hierParser;
+
+    hierParser.foreachNode(fileParser.rootNode, [&](Desc::SceneNode& node) {
 
         auto i = node.id;
-        if (node.unitModel.type == Component::UnitModelType::Text)
+        
+    auto textFlag = node.unitModel.type == Component::UnitModelType::Text;
+        if (textFlag && fileParser.textModelMap.contains(i))
         {
-            auto&  textModel = node.textModel;
+            auto&& textModel = fileParser.textModelMap[i];
             auto   pos       = node.transform.pos();
             auto&& bv        = drawing->msdfText->calcStringBounds(textModel.content, textModel.fontSize, pos);
             bv.print();
             node.transform.scale()        = {bv.width(), bv.height()};
-            textModel.bounds   = bv;
-            textModel.posOffset       = {pos.x - bv.x(), pos.y - bv.y()};
+            textModel.bounds              = bv;
+            textModel.posOffset           = {pos.x - bv.x(), pos.y - bv.y()};
             comp->entityStringModelMap[i] = textModel;
         }
+        //if (node.unitModel.type == Component::UnitModelType::Text)
+        //{
+        //    auto&  textModel = node.textModel;
+        //    auto   pos       = node.transform.pos();
+        //    auto&& bv        = drawing->msdfText->calcStringBounds(textModel.content, textModel.fontSize, pos);
+        //    bv.print();
+        //    node.transform.scale()        = {bv.width(), bv.height()};
+        //    textModel.bounds   = bv;
+        //    textModel.posOffset       = {pos.x - bv.x(), pos.y - bv.y()};
+        //    comp->entityStringModelMap[i] = textModel;
+        //}
 
         shaderingDescPool[i] = node.shaingDesc;
         shaderingEntitiesPool[i] = node.shadingEntity;

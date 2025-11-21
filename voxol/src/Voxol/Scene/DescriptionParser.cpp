@@ -225,11 +225,15 @@ void FileParser::parseNodeTransData(SceneNode& node, const JsonType& jsonNode)
 
         if ((jModel.type == "text" || jModel.type == "Text") && !jModel.content.empty())
         {
-            node.textModel = {node.id,
-                         jModel.getFontSize(),
-                              jModel.content};
-
-            node.transform.scale() = {node.textModel.fontSize, node.textModel.fontSize};
+            Component::UnitStringModel textModel = {node.id,
+                                                    jModel.getFontSize(),
+                                                    jModel.content};
+            //textModelMap
+            //node.textModel = {node.id,
+            //             jModel.getFontSize(),
+            //                  jModel.content};
+            textModelMap[textModel.id] = textModel;
+            node.transform.scale() = {textModel.fontSize, textModel.fontSize};
         }
     }
 }
