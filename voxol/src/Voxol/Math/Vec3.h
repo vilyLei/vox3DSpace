@@ -1,6 +1,6 @@
 
-#ifndef VOXOL_MATH_VEC2_H
-#define VOXOL_MATH_VEC2_H
+#ifndef VOXOL_MATH_VEC3_H
+#define VOXOL_MATH_VEC3_H
 
 #include <cmath>
 
