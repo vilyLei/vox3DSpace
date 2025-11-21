@@ -102,4 +102,3 @@ void JsonValue::parse(const JsonType& j)
 }
 }
 } // namespace Voxol::Scene
-"
