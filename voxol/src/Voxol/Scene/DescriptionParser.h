@@ -70,6 +70,9 @@ public:
     void initFromFile(const std::string& fileName);
     void parseHeriNodes(const JsonType& jsonNode);
     void parseSceneNode(SceneNode& parentNode, uint32_t& id, const JsonType& jsonNode);
+
+    void parseNodeTransData(SceneNode& node, uint32_t id, const JsonType& jsonNode);
+    void parseNodeData(SceneNode& node, uint32_t id, const JsonType& jsonNode);
 };
 
 using SceneNodeForeachCallbackType = std::function<void(Desc::SceneNode& node)>;

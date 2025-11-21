@@ -166,6 +166,95 @@ void FileParser::parseSceneNode(SceneNode& parentNode, uint32_t& id, const JsonT
     }
 }
 
+
+
+void FileParser::parseNodeTransData(SceneNode& node, uint32_t id, const JsonType& jsonNode)
+{
+    if (jsonNode.contains("transform"))
+    {
+        SceneIR::Scene::Transform jTrans;
+        jTrans.parse(jsonNode["transform"]);
+        auto pv         = jTrans.position;
+        node.transform.pos() = jTrans.position;
+    }
+    if (jsonNode.contains("display"))
+    {
+        auto&& displayNode          = jsonNode["display"];
+        node.shadingEntity.id       = id;
+        node.shadingEntity.shadingDescId = id;
+
+        node.unitModel.id = id;
+
+        std::string shapeType = "";
+        if (displayNode.contains("shape") && displayNode["shape"].is_string())
+        {
+            shapeType = displayNode["shape"];
+        }
+        if (shapeType == "rectangle" || shapeType == "round-rectangle")
+        {
+            node.unitModel.drawUnitId = 0;
+            node.unitModel.type       = Component::UnitModelType::Mesh;
+        }
+        else if (shapeType == "text" || shapeType == "Text")
+        {
+            node.unitModel.drawUnitId = 0;
+            node.unitModel.type       = Component::UnitModelType::Text;
+        }
+
+        SceneIR::Shadering::Description jDesc;
+        jDesc.parse(displayNode);
+
+        node.shaingDesc.color = jDesc.color;
+
+        SceneIR::Scene::Model jModel;
+        jModel.parse(displayNode);
+        if (jModel.hasRadius())
+        {
+            auto pw           = jModel.getRadius() * 2;
+            node.transform.scale() = {pw, pw};
+        }
+        else if (jModel.hasSize())
+        {
+            auto&& size       = jModel.getSize();
+            node.transform.scale() = size;
+        }
+
+        if ((jModel.type == "text" || jModel.type == "Text") && !jModel.content.empty())
+        {
+            node.textModel = {node.id,
+                         jModel.getFontSize(),
+                              jModel.content};
+
+            node.transform.scale() = {node.textModel.fontSize, node.textModel.fontSize};
+        }
+    }
+}
+void FileParser::parseNodeData(SceneNode& node, uint32_t id, const JsonType& jsonNode)
+{
+    if (jsonNode.contains("type"))
+    {
+        node.type = jsonNode["type"];
+    }
+    if (jsonNode.contains("name"))
+    {
+        node.name = jsonNode["name"];
+    }
+    parseNodeTransData(node, jsonNode, id);
+    auto& entity       = node.entity;
+    entity.id          = id;
+    entity.shadingId   = id;
+    entity.transformId = id;
+    entity.hierarchyId = id;
+    entity.modelId     = id;
+
+    if (jsonNode.contains("children") && jsonNode["children"].is_array())
+    {
+        auto&& elements = jsonNode["children"];
+        node.hasChild    = !elements.empty();
+    }
+}
+
+
 void HierarchyParser::foreachNode(Desc::SceneNode& parentNode, SceneNodeForeachCallbackType callback)
 {
 
