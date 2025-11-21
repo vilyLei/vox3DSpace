@@ -5,6 +5,22 @@ namespace Voxol::Scene
 namespace Data
 {
 
+bool ColorValue::parseStringColor(const JsonType& node) {
+
+    if (parseStringColorWithName(node, "color"))
+    {
+        return true;
+    }
+    else if (parseStringColorWithName(node, "fillColor"))
+    {
+        return true;
+    }
+    else if (parseStringColorWithName(node, "strokeColor"))
+    {
+        return true;
+    }
+    return false;
+}
 bool ColorValue::parseStringColorWithName(const JsonType& node, const std::string& valueName)
 {
     if (!node.contains(valueName))

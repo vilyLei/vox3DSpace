@@ -16,6 +16,7 @@ using JsonType = nlohmann::json;
 struct ColorValue
 {
     uint32_t color = 0x0;
+    bool     parseStringColor(const JsonType& node);
     bool     parseStringColorWithName(const JsonType& node, const std::string& valueName);
 
 };
