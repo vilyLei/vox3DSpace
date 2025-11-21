@@ -29,7 +29,7 @@ struct ColorValue
     bool parseWithName(const JsonType& node, const std::string& key);
 private:
     // ----------------------------------------
-    // parse ["r","g","b"] or ["r","g","b","a"]
+    // parse ["r","g","b"] or ["a","r","g","b"]
     // float[0-1],uint8[0-255]
     // ----------------------------------------
     bool parseColorArray(const JsonType& arr);
