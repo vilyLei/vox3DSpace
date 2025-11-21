@@ -30,8 +30,13 @@ struct ColorValue
         };
         uint8_t data[4];
         // stored as ARGB (0xAARRGGBB)
-        uint32_t color = 0x00000000;
+        uint32_t argb = 0x00000000;
     };
+
+    constexpr ColorValue() noexcept :
+        data{} {}
+    constexpr ColorValue(uint8_t r_, uint8_t g_, uint8_t b_, float a_ = 255) :
+        r(r_), g(g_), b(b_), a(a_) {}
 
     bool parsePantone(const std::string& s);
     bool parse(const JsonType& node);
