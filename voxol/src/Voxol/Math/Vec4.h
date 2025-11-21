@@ -14,6 +14,10 @@ struct Vec4
         {
             float x, y, z, w;
         };
+        struct
+        {
+            float r, g, b, a;
+        };
         float data[4];
     };
     constexpr Vec4() noexcept :
