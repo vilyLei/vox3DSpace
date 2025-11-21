@@ -80,7 +80,7 @@ struct Model
     }
     bool isText() const
     {
-        return type == "Text";
+        return type == "text";
     }
     bool hasFontSize() const
     {

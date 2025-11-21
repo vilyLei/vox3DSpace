@@ -199,7 +199,11 @@ void Model::parse(const JsonType& node)
         content = node["content"];
 
     if (node.contains("type"))
+    {
         type = node["type"];
+        std::transform(type.begin(), type.end(), type.begin(),
+                       [](unsigned char c) { return std::tolower(c); });
+    }
     if (node.contains("shape"))
         type = node["shape"];
 

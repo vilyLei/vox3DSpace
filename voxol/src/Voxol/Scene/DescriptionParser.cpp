@@ -134,7 +134,7 @@ void FileParser::parseNodeTransData(SceneNode& node, const JsonType& jsonNode)
             node.transform.scale() = size;
         }
 
-        if ((jModel.type == "text" || jModel.type == "Text") && !jModel.content.empty())
+        if (jModel.isText() && !jModel.content.empty())
         {
             Component::UnitStringModel textModel = {node.id,
                                                     jModel.getFontSize(),
