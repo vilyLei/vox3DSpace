@@ -35,7 +35,7 @@ void EntityUnitStorage::initalizeFromDescFile(const std::string& fileName)
     }
     drawing->initalize(total);
 
-    
+
     auto& entitiesPool          = comp->entitiesPool;
     auto& shaderingEntitiesPool = comp->shaderingEntitiesPool;
     auto& shaderingDescPool     = comp->shaderingDescPool;
@@ -77,8 +77,8 @@ void EntityUnitStorage::initalizeFromDescFile(const std::string& fileName)
     hierParser.foreachNode(fileParser.rootNode, [&](Desc::SceneNode& node) {
 
         auto i = node.id;
-        
-    auto textFlag = node.unitModel.type == Component::UnitModelType::Text;
+
+        auto textFlag = node.unitModel.type == Component::UnitModelType::Text;
         if (textFlag && fileParser.textModelMap.contains(i))
         {
             auto&& textModel = fileParser.textModelMap[i];
@@ -90,24 +90,12 @@ void EntityUnitStorage::initalizeFromDescFile(const std::string& fileName)
             textModel.posOffset           = {pos.x - bv.x(), pos.y - bv.y()};
             comp->entityStringModelMap[i] = textModel;
         }
-        //if (node.unitModel.type == Component::UnitModelType::Text)
-        //{
-        //    auto&  textModel = node.textModel;
-        //    auto   pos       = node.transform.pos();
-        //    auto&& bv        = drawing->msdfText->calcStringBounds(textModel.content, textModel.fontSize, pos);
-        //    bv.print();
-        //    node.transform.scale()        = {bv.width(), bv.height()};
-        //    textModel.bounds   = bv;
-        //    textModel.posOffset       = {pos.x - bv.x(), pos.y - bv.y()};
-        //    comp->entityStringModelMap[i] = textModel;
-        //}
-
-        shaderingDescPool[i] = node.shaingDesc;
+        shaderingDescPool[i]     = node.shaingDesc;
         shaderingEntitiesPool[i] = node.shadingEntity;
         hierarchiesPool[i]       = node.hieraychy;
         transformsPool[i]        = node.transform;
         modelsPool[i]            = node.unitModel;
-        entitiesPool[i]        = node.entity;
+        entitiesPool[i]          = node.entity;
     });
     comp->updateHierarchyInfo();
 }
@@ -133,7 +121,7 @@ void EntityUnitStorage::initalizeFromIRFile(const std::string& fileName)
 
     auto total = 128;
     total      = total < 128 ? 128 : total;
-    comp = EntityCompStorage::make();
+    comp       = EntityCompStorage::make();
     if (!drawing)
     {
         drawing = Render::DrawingUnitStorage::make();
@@ -239,13 +227,12 @@ void EntityUnitStorage::initalizeFromIRFile(const std::string& fileName)
             Scene::Component::UnitStringModel strModel{
                 et.id,
                 dataModel.getFontSize(),
-                dataModel.content
-            };
+                dataModel.content};
 
-            auto&& vb       = drawing->msdfText->calcStringBounds(strModel.content, strModel.fontSize, trans.pos());
-            strModel.bounds = vb;
+            auto&& vb          = drawing->msdfText->calcStringBounds(strModel.content, strModel.fontSize, trans.pos());
+            strModel.bounds    = vb;
             strModel.posOffset = trans.pos() - vb.position();
-           
+
             //printf("text, ");
             //vb.print();
             trans.pos()                       = vb.position();

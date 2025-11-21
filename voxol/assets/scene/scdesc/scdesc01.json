@@ -55,7 +55,7 @@
                                 },
                                 "display": {
                                     "shape": "text",
-                                    "content": "Start",
+                                    "content": "Play",
                                     "fontSize": 36,
                                     "fillColor": "0xff990099"
                                 }

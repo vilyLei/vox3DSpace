@@ -44,15 +44,12 @@ struct SceneNode
     Component::UnitShadingEntity shadingEntity;
     Component::UnitModel         unitModel;
     Component::UnitEntity        entity;
-    //Component::UnitStringModel   textModel;
 
     int childrenTotal = 0;
 
     bool hasChild  = false;
     bool hasParent = true;
 
-    //void parseTrans(const JsonType& jsonNode);
-    //void parse(const JsonType& jsonNode);
     void print() const;
     void printTransform() const;
 };

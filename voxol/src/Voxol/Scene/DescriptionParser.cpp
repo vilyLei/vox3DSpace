@@ -8,96 +8,8 @@ namespace Voxol::Scene
 namespace Desc
 {
 
-/*
-void SceneNode::parseTrans(const JsonType& jsonNode)
-{
-    if (jsonNode.contains("transform"))
-    {
-        SceneIR::Scene::Transform jTrans;
-        jTrans.parse(jsonNode["transform"]);
-        auto pv     = jTrans.position;
-        transform.pos() = jTrans.position;
-    }
-    if (jsonNode.contains("display"))
-    {
-        auto&& displayNode    = jsonNode["display"];
-        shadingEntity.id      = id;
-        shadingEntity.shadingDescId = id;
-
-        unitModel.id          = id;
-
-        std::string shapeType = "";
-        if (displayNode.contains("shape") && displayNode["shape"].is_string())
-        {
-            shapeType = displayNode["shape"];
-        }
-        if (shapeType == "rectangle" || shapeType == "round-rectangle")
-        {
-            unitModel.drawUnitId        = 0;
-            unitModel.type              = Component::UnitModelType::Mesh;
-        }
-        else if (shapeType == "text" || shapeType == "Text")
-        {
-            unitModel.drawUnitId = 0;
-            unitModel.type       = Component::UnitModelType::Text;
-        }
-
-        SceneIR::Shadering::Description jDesc;
-        jDesc.parse(displayNode);
-
-        shaingDesc.color = jDesc.color;
-
-        SceneIR::Scene::Model jModel;
-        jModel.parse(displayNode);
-        if (jModel.hasRadius())
-        {
-            auto pw       = jModel.getRadius() * 2;
-            transform.scale() = {pw, pw};
-        }
-        else if (jModel.hasSize())
-        {
-            auto&& size   = jModel.getSize();
-            transform.scale() = size;
-        }
-
-        if ((jModel.type == "text" || jModel.type == "Text") && !jModel.content.empty())
-        {
-            textModel = {id,
-                         jModel.getFontSize(),
-                         jModel.content};
-
-            transform.scale() = {textModel.fontSize, textModel.fontSize};
-        }
-    }
-}
-void SceneNode::parse(const JsonType& jsonNode)
-{
-    if (jsonNode.contains("type"))
-    {
-        type = jsonNode["type"];
-    }
-    if (jsonNode.contains("name"))
-    {
-        name = jsonNode["name"];
-    }
-    parseTrans(jsonNode);
-    entity.id          = id;
-    entity.shadingId   = id;
-    entity.transformId = id;
-    entity.hierarchyId = id;
-    entity.modelId     = id;
-
-    if (jsonNode.contains("children") && jsonNode["children"].is_array())
-    {
-        auto&& elements = jsonNode["children"];
-        hasChild        = !elements.empty();
-    }
-}
-//*/
-
 void SceneNode::print() const
 {
-
     std::string info = ", hasChild=" + (hasChild ? std::string("true") : std::string("false"));
     info += ", childrenTotal=" + std::to_string(childrenTotal) + ", id=" + std::to_string(id);
     info = "SceneNode(name=" + name + ",type=" + type + info + ")";
@@ -146,7 +58,6 @@ void FileParser::parseHeriNodes(const JsonType& jsonNode)
 void FileParser::parseSceneNode(SceneNode& parentNode, uint32_t& id, const JsonType& jsonNode)
 {
 
-    //parentNode.parse(jsonNode);
     parseNodeData(parentNode, jsonNode);
 
     if (!parentNode.hasChild)
@@ -228,10 +139,6 @@ void FileParser::parseNodeTransData(SceneNode& node, const JsonType& jsonNode)
             Component::UnitStringModel textModel = {node.id,
                                                     jModel.getFontSize(),
                                                     jModel.content};
-            //textModelMap
-            //node.textModel = {node.id,
-            //             jModel.getFontSize(),
-            //                  jModel.content};
             textModelMap[textModel.id] = textModel;
             node.transform.scale() = {textModel.fontSize, textModel.fontSize};
         }
