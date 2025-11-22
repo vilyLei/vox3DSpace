@@ -33,13 +33,11 @@ struct Color
     {
         return Color(argb);
     }
-    uint32_t argb()
+    constexpr uint32_t argb() const noexcept { return value; }
+    constexpr uint32_t rgba() const noexcept
     {
-        return value;
-    }
-    uint32_t rgba()
-    {
-        return r() << 24 | g() << 16 | b() << 8 | a();
+        return (uint32_t(r()) << 24) | (uint32_t(g()) << 16) |
+            (uint32_t(b()) << 8) | uint32_t(a());
     }
     constexpr void setA(uint8_t a) noexcept
     {
