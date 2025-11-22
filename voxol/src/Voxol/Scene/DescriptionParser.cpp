@@ -59,6 +59,13 @@ void DisplayShape::parse(const JsonType& jsonNode)
 }
 
 
+
+void SceneActionTargetNode::reset() {
+
+    srcActType = "";
+    actions.clear();
+
+}
 void SceneActionTargetNode::parse(const JsonType& jsonNode, const std::string& srcActType_)
 {
     if (!jsonNode.contains(srcActType_))
@@ -93,6 +100,9 @@ void SceneActionTargetNode::parse(const JsonType& jsonNode, const std::string& s
         if (actJNode.contains("cmd"))
         {
             actDesc.cmd = actJNode["cmd"];
+        }
+        else {
+            actDesc.cmd = "None";
         }
         printf("actDesc.target: %s, srcActType: %s\n", actDesc.target.c_str(), srcActType.c_str());
         actions.emplace_back(actDesc);
@@ -190,7 +200,7 @@ void FileParser::buildInteraction(Intent::Interaction::InteractionSource& srcNod
         auto&& ni = nodeNameMap[tarAct.target];
         printf("FileParser::buildInteraction(), srcActType: %s, ni.id: %d\n", srcActType.c_str(), ni.id);
         auto tarKeyId = Base::ID::KeyUint64::make(ni.id);
-        tarSet.targets.push_back({0, tarKeyId, "default", "None", tarAct.color, visible});
+        tarSet.targets.push_back({0, tarKeyId, tarAct.type, tarAct.cmd, tarAct.color, visible});
     }
     srcNode.addTargetSet(tarSet);
 }

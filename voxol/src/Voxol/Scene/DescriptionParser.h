@@ -58,6 +58,7 @@ struct SceneActionTargetNode
 {
     std::string                  srcActType;
     std::vector<SceneActionDesc> actions;
+    void                         reset();
     void                         parse(const JsonType& jsonNode, const std::string& srcActType_);
 };
 
