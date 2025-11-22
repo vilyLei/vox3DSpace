@@ -155,63 +155,11 @@ private:
 
     // recursive builder from temps (indices range [l,r))
     int buildRecursiveFromLeaves(std::vector<int>& indices, int l, int r, int parent);
-    /*
-    int buildRecursiveFromLeaves(std::vector<int>& indices, int l, int r, int parent)
-    {
-        int nodeIndex = (int)m_nodes.size();
-        m_nodes.emplace_back();
-        Node& node  = m_nodes.back();
-        node.parent = parent;
 
-        // compute bounds
-        Math::Bounds b;
-        b.toEmpty();
-        for (int i = l; i < r; ++i) b.expand(m_leafTemps[indices[i]].bounds);
-        node.bounds = b;
-
-        int count = r - l;
-        if (count == 1)
-        {
-            const LeafTemp& lt = m_leafTemps[indices[l]];
-            node.objectId      = lt.objectId;
-            node.left = node.right = -1;
-            //printf("v2 buildRecursiveFromLeaves() B, indices[l]:%d, node.objectId: %s, node(l=%d, r=%d), nodeIndex: %d\n", indices[l], node.objectId.idToString().c_str(), node.left, node.right, nodeIndex);
-            return nodeIndex;
-        }
-
-        auto ext  = node.bounds.extent();
-        int  axis = (ext.y > ext.x) ? 1 : 0;
-
-        // median by center
-        float mid = 0.0f;
-        for (int i = l; i < r; ++i)
-        {
-            auto c = m_leafTemps[indices[i]].bounds.center();
-            mid += (axis == 0) ? c.x : c.y;
-        }
-        mid /= float(count);
-
-        auto it       = std::partition(indices.begin() + l, indices.begin() + r,
-                                       [&](int idx) {
-                                     auto c = m_leafTemps[idx].bounds.center();
-                                     return (axis == 0) ? (c.x < mid) : (c.y < mid);
-                                 });
-        int  midIndex = int(it - indices.begin());
-        if (midIndex == l || midIndex == r) midIndex = l + (count / 2);
-
-        int leftIdx  = buildRecursiveFromLeaves(indices, l, midIndex, nodeIndex);
-        int rightIdx = buildRecursiveFromLeaves(indices, midIndex, r, nodeIndex);
-
-        node.left     = leftIdx;
-        node.right    = rightIdx;
-        node.objectId = Base::ID::INVALID_KEY;
-        //printf("v2 buildRecursiveFromLeaves() D, indices[l]:%d, node.objectId: %s, node(l=%d, r=%d), nodeIndex: %d\n", indices[l], node.objectId.idToString().c_str(), node.left, node.right, nodeIndex);
-        node.bounds = Math::Bounds::Union(m_nodes[leftIdx].bounds, m_nodes[rightIdx].bounds);
-        return nodeIndex;
-    }
-    //*/
-    
     // mark ancestors bounds up to root (used for small moves within fat bounds)
+    void markAncestorsDirtyUpToRoot(int leafIdx);
+
+    /*
     void markAncestorsDirtyUpToRoot(int leafIdx)
     {
         int cur = leafIdx;
@@ -235,7 +183,8 @@ private:
             cur = p;
         }
     }
-
+    //*/
+    
     // choose subtree root to rebuild for a leaf
     int chooseSubtreeRootForLeaf(int leafIdx)
     {
@@ -272,6 +221,8 @@ private:
     }
 
     // rebuild subtree rooted at nodeIdx by collecting leaves and appending a new subtree
+    void rebuildSubtreeAtNode(int nodeIdx);
+    /*
     void rebuildSubtreeAtNode(int nodeIdx)
     {
         if (!validNodeIndex(nodeIdx)) return;
@@ -332,6 +283,7 @@ private:
         }
         // Note: old subtree remains unreachable; will be reclaimed by compactIfNeeded()
     }
+    */
     // --------- 安全的 refitAllNodes() ----------
     // 将已删除叶视为“空”的 bounds（toEmpty），并在合并时根据子节点的有效性选择合并规则。
     void refitAllNodes()

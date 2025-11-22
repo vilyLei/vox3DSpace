@@ -441,5 +441,90 @@ int BVH2D_LazyGC::buildRecursiveFromLeaves(std::vector<int>& indices, int l, int
     return nodeIndex;
 }
 
+void BVH2D_LazyGC::markAncestorsDirtyUpToRoot(int leafIdx)
+{
+    int cur = leafIdx;
+    while (cur >= 0)
+    {
+        int p = m_nodes[cur].parent;
+        if (p < 0) break;
+        // recompute parent from children
+        if (m_nodes[p].left >= 0 && m_nodes[p].right >= 0)
+        {
+            m_nodes[p].bounds = Math::Bounds::Union(m_nodes[m_nodes[p].left].bounds, m_nodes[m_nodes[p].right].bounds);
+        }
+        else if (m_nodes[p].left >= 0)
+        {
+            m_nodes[p].bounds = m_nodes[m_nodes[p].left].bounds;
+        }
+        else if (m_nodes[p].right >= 0)
+        {
+            m_nodes[p].bounds = m_nodes[m_nodes[p].right].bounds;
+        }
+        cur = p;
+    }
+}
+
+void BVH2D_LazyGC::rebuildSubtreeAtNode(int nodeIdx)
+{
+    if (!validNodeIndex(nodeIdx)) return;
+
+    // collect leaves under nodeIdx
+    std::vector<LeafTemp> leaves;
+    std::stack<int>       st;
+    st.push(nodeIdx);
+    while (!st.empty())
+    {
+        int idx = st.top();
+        st.pop();
+        const Node& n = m_nodes[idx];
+        if (isLeaf(n))
+        {
+            if (n.objectId.isIDValid()) leaves.push_back(LeafTemp{n.objectId, n.bounds});
+        }
+        else
+        {
+            if (n.left >= 0) st.push(n.left);
+            if (n.right >= 0) st.push(n.right);
+        }
+    }
+    if (leaves.empty()) return;
+
+    // swap out current leafTemps temporarily
+    auto saved  = std::move(m_leafTemps);
+    m_leafTemps = std::move(leaves);
+
+    // prepare indices
+    std::vector<int> indices((int)m_leafTemps.size());
+    for (int i = 0; i < (int)indices.size(); ++i) indices[i] = i;
+
+    int newRootIdx = buildRecursiveFromLeaves(indices, 0, (int)indices.size(), -1);
+
+    // restore previous leafTemps
+    m_leafTemps = std::move(saved);
+
+    int parent = m_nodes[nodeIdx].parent;
+    if (parent >= 0)
+    {
+        Node& p = m_nodes[parent];
+        if (p.left == nodeIdx) p.left = newRootIdx;
+        else if (p.right == nodeIdx)
+            p.right = newRootIdx;
+        m_nodes[newRootIdx].parent = parent;
+    }
+    else
+    {
+        // nodeIdx is root: swap contents
+        if (newRootIdx != nodeIdx)
+        {
+            std::swap(m_nodes[nodeIdx], m_nodes[newRootIdx]);
+            // fix parent references of children
+            if (m_nodes[nodeIdx].left >= 0) m_nodes[m_nodes[nodeIdx].left].parent = nodeIdx;
+            if (m_nodes[nodeIdx].right >= 0) m_nodes[m_nodes[nodeIdx].right].parent = nodeIdx;
+        }
+    }
+    // Note: old subtree remains unreachable; will be reclaimed by compactIfNeeded()
+}
+
 }
 }
