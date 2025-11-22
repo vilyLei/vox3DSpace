@@ -1,40 +1,105 @@
 {
-    "fills": [
-        {
-            "type": "color",
-            "value": "0xff990099",
-            "blend": "normal",
-            "opacity": 1.0
+    "display1": {
+        "fills": [
+            {
+                "type": "color",
+                "value": "0xff990099",
+                "blend": "normal",
+                "opacity": 1.0
+            },
+            {
+                "type": "linear-gradient",
+                "from": [
+                    0,
+                    0
+                ],
+                "to": [
+                    0,
+                    1
+                ],
+                "stops": [
+                    {
+                        "offset": 0.0,
+                        "color": "0xffffffff"
+                    },
+                    {
+                        "offset": 1.0,
+                        "color": "0xff000000"
+                    }
+                ],
+                "blend": "overlay",
+                "opacity": 0.5
+            },
+            {
+                "type": "texture",
+                "src": "textures/paper.png",
+                "uvMode": "repeat",
+                "blend": "multiply",
+                "opacity": 0.8
+            }
+        ]
+    },
+    
+    "display2": {
+        "shape": {
+            "type": "round-rectangle",
+            "size": [
+                186,
+                76
+            ],
+            "radius": 18
         },
-        {
-            "type": "linear-gradient",
-            "from": [
-                0,
-                0
-            ],
-            "to": [
-                0,
-                1
-            ],
-            "stops": [
+        "style": {
+            "fills": [
                 {
-                    "offset": 0.0,
-                    "color": "0xffffffff"
+                    "type": "color",
+                    "value": "PANTONE 2031 C",
+                    "opacity": 1.0
                 },
                 {
-                    "offset": 1.0,
-                    "color": "0xff000000"
+                    "type": "linear-gradient",
+                    "from": [
+                        0,
+                        0
+                    ],
+                    "to": [
+                        0,
+                        1
+                    ],
+                    "stops": [
+                        {
+                            "offset": 0,
+                            "color": "0xffffffff"
+                        },
+                        {
+                            "offset": 1,
+                            "color": "0x00ffffff"
+                        }
+                    ],
+                    "blend": "softlight",
+                    "opacity": 0.4
+                },
+                {
+                    "type": "texture",
+                    "src": "textures/noise_small.png",
+                    "blend": "overlay",
+                    "opacity": 0.15
                 }
             ],
-            "blend": "overlay",
-            "opacity": 0.5
-        },
-        {
-            "type": "texture",
-            "src": "textures/paper.png",
-            "uvMode": "repeat",
-            "blend": "multiply",
-            "opacity": 0.8
+            "stroke": {
+                "color": "0xffffffff",
+                "width": 2
+            },
+            "shadow": [
+                {
+                    "offset": [
+                        4,
+                        4
+                    ],
+                    "blur": 12,
+                    "color": "0x33000000"
+                }
+            ]
         }
-    ]
+    }
 }
