@@ -48,6 +48,7 @@ struct SceneNodeName
 
 struct SceneActionDesc
 {
+    std::string target;
     std::string type;
     std::string cmd;
     uint32_t color = 0xff000000;
@@ -55,10 +56,9 @@ struct SceneActionDesc
 
 struct SceneActionTargetNode
 {
-    std::string type;
-    std::string target;
-    SceneActionDesc action;
-    void parse(const JsonType& jsonNode, const std::string& actType);
+    std::string                  srcActType;
+    std::vector<SceneActionDesc> actions;
+    void parse(const JsonType& jsonNode, const std::string& srcActType_);
 };
 
 struct SceneNode

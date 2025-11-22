@@ -59,33 +59,56 @@ void DisplayShape::parse(const JsonType& jsonNode)
 }
 
 
-void SceneActionTargetNode::parse(const JsonType& jsonNode, const std::string& actType)
+void SceneActionTargetNode::parse(const JsonType& jsonNode, const std::string& srcActType_)
 {
-    if (!jsonNode.contains(actType))
+    if (!jsonNode.contains(srcActType_))
     {
         return;
     }
-    type           = actType;
-    auto&& elements = jsonNode[actType];
+    srcActType      = srcActType_;
+    auto&& elements = jsonNode[srcActType_];
     if (elements.empty())
     {
         return;
     }
-    //auto&& elements = jsonNode["nodes"];
-    auto&& jNode    = elements[0];
-    target         = jNode["target"];
-    auto&& actJNode = jNode["action"];
-    if (actJNode.contains("type"))
+
+    for (auto& item : elements)
     {
-        action.type = actJNode["type"];
+        auto&          jNode = item;
+
+        SceneActionDesc actDesc;
+        actDesc.target = jNode["target"];
+
+        auto&& actJNode = jNode["action"];
+        if (actJNode.contains("type"))
+        {
+            actDesc.type = actJNode["type"];
+        }
+
+        Data::ColorValue cv;
+        cv.parse(actJNode);
+        actDesc.color = cv.color.argb();
+        if (actJNode.contains("cmd"))
+        {
+            actDesc.cmd = actJNode["cmd"];
+        }
+        printf("actDesc.target: %s, srcActType: %s\n", actDesc.target.c_str(), srcActType.c_str());
+        actions.emplace_back(actDesc);
     }
-    Data::ColorValue cv;
-    cv.parse(actJNode);
-    action.color = cv.color.argb();
-    if (actJNode.contains("cmd"))
-    {
-        action.cmd = actJNode["cmd"];
-    }
+    //auto&& jNode    = elements[0];
+    //target         = jNode["target"];
+    //auto&& actJNode = jNode["action"];
+    //if (actJNode.contains("type"))
+    //{
+    //    action.type = actJNode["type"];
+    //}
+    //Data::ColorValue cv;
+    //cv.parse(actJNode);
+    //action.color = cv.color.argb();
+    //if (actJNode.contains("cmd"))
+    //{
+    //    action.cmd = actJNode["cmd"];
+    //}
 
 }
 
