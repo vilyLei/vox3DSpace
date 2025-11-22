@@ -13,6 +13,8 @@
 #include <unordered_map>
 #include <cassert>
 
+#include <iostream>
+
 namespace Voxol::Colour
 {
 namespace Component
@@ -398,7 +400,30 @@ inline void convertColorsBatchToSpace(const std::vector<ColorEx>& src, std::vect
         out[i]                       = ColorEx(linDst[0], linDst[1], linDst[2], c.a, dstSpace);
     }
 }
+int testColorEx()
+{
+    // Given your base Color (ARGB 8-bit)
+    Color c8(0xFFFF0000u); // opaque red (A=255,R=255,G=0,B=0) ; or Color(255,0,0)
 
+    // Convert to ColorEx (linear) assuming source is sRGB
+    ColorEx ex = ColorEx::fromColor(c8, ColorSpaceKind::sRGB);
+
+    // Convert to DisplayP3 and get 8-bit back
+    Color p3 = ex.toColor(ColorSpaceKind::DisplayP3);
+
+    std::cout << "P3 ARGB: 0x" << std::hex << p3.argb() << std::dec << "\n";
+
+    // Convert to Lab for comparison
+    Lab lab = ex.toLab();
+    std::cout << "Lab: L=" << lab.L << " a=" << lab.a << " b=" << lab.b << "\n";
+
+    // Create ColorEx in AdobeRGB linear, then convert to sRGB color
+    ColorEx adobe_lin = ColorEx::fromColor(Color(0, 128, 255), ColorSpaceKind::AdobeRGB);
+    Color   sRgbOut   = adobe_lin.toColor(ColorSpaceKind::sRGB);
+    std::cout << "sRGB ARGB: 0x" << std::hex << sRgbOut.argb() << std::dec << "\n";
+
+    return 0;
+}
 } // namespace Component
 } // namespace Voxol::Colour
 #endif
