@@ -201,15 +201,6 @@ void FileParser::parseNodeActionData(SceneNode& parentNode, const JsonType& json
     InteractionSource srcNode;
     srcNode.id = Base::ID::KeyUint64::make(parentNode.id);
 
-    ////SceneActionTargetNode overNode;
-    ////overNode.parse(jsonNode, "over");
-    //SceneActionTargetNode outNode;
-    //outNode.parse(jsonNode, "out");
-    //SceneActionTargetNode downNode;
-    //downNode.parse(jsonNode, "down");
-    //SceneActionTargetNode upNode;
-    //upNode.parse(jsonNode, "up");
-
     bool visible = true;
 
     auto actFlag = static_cast<uint8_t>(MouseStatus::Over);
