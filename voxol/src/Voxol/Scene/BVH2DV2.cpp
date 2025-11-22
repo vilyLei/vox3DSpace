@@ -465,6 +465,41 @@ void BVH2D_LazyGC::markAncestorsDirtyUpToRoot(int leafIdx)
     }
 }
 
+// choose subtree root to rebuild for a leaf
+int BVH2D_LazyGC::chooseSubtreeRootForLeaf(int leafIdx)
+{
+    int cur = leafIdx;
+    while (true)
+    {
+        int parent = m_nodes[cur].parent;
+        if (parent < 0) return cur;
+        int leafCount = countLeavesUnderNode(parent);
+        if (leafCount > m_subtreeLeafLimit) return cur;
+        cur = parent;
+    }
+}
+
+// count leaves under node (simple DFS)
+int BVH2D_LazyGC::countLeavesUnderNode(int nodeIdx)
+{
+    int             cnt = 0;
+    std::stack<int> st;
+    st.push(nodeIdx);
+    while (!st.empty())
+    {
+        int idx = st.top();
+        st.pop();
+        const Node& n = m_nodes[idx];
+        if (isLeaf(n)) ++cnt;
+        else
+        {
+            if (n.left >= 0) st.push(n.left);
+            if (n.right >= 0) st.push(n.right);
+        }
+    }
+    return cnt;
+}
+
 void BVH2D_LazyGC::rebuildSubtreeAtNode(int nodeIdx)
 {
     if (!validNodeIndex(nodeIdx)) return;
