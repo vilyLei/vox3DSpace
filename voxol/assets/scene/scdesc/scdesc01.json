@@ -9,9 +9,9 @@
     "scene": {
         "nodes": [
             {
-                "config":{
-                    "cacheAsBitmap" : true,
-                    "colourEdit" : true
+                "config": {
+                    "cacheAsBitmap": true,
+                    "colourEdit": true
                 },
                 "type": "panel",
                 "name": "play-panel",
@@ -22,11 +22,13 @@
                     ]
                 },
                 "display": {
-                    "shapeType": "rectangle",
-                    "size": [
-                        300,
-                        500
-                    ],
+                    "shape": {
+                        "type": "rectangle",
+                        "size": [
+                            300,
+                            500
+                        ]
+                    },
                     "fillColor": "0xffaabb99"
                 },
                 "children": [
@@ -40,11 +42,13 @@
                             ]
                         },
                         "display": {
-                            "shapeType": "round-rectangle",
-                            "size": [
-                                186,
-                                76
-                            ],
+                            "shape": {
+                                "type": "round-rectangle",
+                                "size": [
+                                    186,
+                                    76
+                                ]
+                            },
                             "fillColor": "0xff008888"
                         },
                         "children": [
@@ -58,9 +62,11 @@
                                     ]
                                 },
                                 "display": {
-                                    "shapeType": "text",
-                                    "content": "Play",
-                                    "fontSize": 36,
+                                    "shape": {
+                                        "type": "text",
+                                        "content": "Play",
+                                        "fontSize": 36
+                                    },
                                     "fillColor": "0xff990099"
                                 }
                             }
@@ -103,11 +109,13 @@
                             ]
                         },
                         "display": {
-                            "shapeType": "round-rectangle",
-                            "size": [
-                                186,
-                                76
-                            ],
+                            "shape": {
+                                "type": "round-rectangle",
+                                "size": [
+                                    186,
+                                    76
+                                ]
+                            },
                             "fillColor": "0xff008888"
                         },
                         "children": [
@@ -121,9 +129,11 @@
                                     ]
                                 },
                                 "display": {
-                                    "shapeType": "text",
-                                    "content": "Exit",
-                                    "fontSize": 36,
+                                    "shape": {
+                                        "type": "text",
+                                        "content": "Exit",
+                                        "fontSize": 36
+                                    },
                                     "fillColor": "0xff990099"
                                 }
                             }

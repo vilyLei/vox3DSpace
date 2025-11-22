@@ -49,7 +49,7 @@ void DisplayShape::parse(const JsonType& jsonNode)
     }
     else if (type == "text")
     {
-        jsonValue.parseWithName(jsonNode, "text");
+        jsonValue.parseTextWithName(jsonNode, "content");
         if (jsonValue.is<Component::UnitTextDesc>())
         {
             auto&& textDesc = jsonValue.get<Component::UnitTextDesc>();
@@ -154,10 +154,9 @@ void FileParser::parseNodeTransData(SceneNode& node, const JsonType& jsonNode)
         jDesc.parse(displayNode);
 
         node.shaingDesc.color = jDesc.color;
-
+        /*
         SceneIR::Scene::Model jModel;
         jModel.parse(displayNode);
-
         // for debug
         if (jModel.type == "rectangle" || jModel.type == "round-rectangle")
         {
@@ -187,6 +186,42 @@ void FileParser::parseNodeTransData(SceneNode& node, const JsonType& jsonNode)
 
             textModelMap[textModel.id]           = textModel;
             node.transform.scale()     = {textModel.text.fontSize, textModel.text.fontSize};
+        }
+        //*/
+        DisplayShape shape;
+        shape.parse(displayNode["shape"]);
+        node.transform.scale() = shape.size;
+
+        if (shape.type == "rectangle" || shape.type == "round-rectangle")
+        {
+            node.unitModel.drawUnitId = 0;
+            node.unitModel.type       = Component::UnitModelType::Mesh;
+
+            //if (jModel.hasSize())
+            //{
+            //    auto&& size            = jModel.getSize();
+            //    node.transform.scale() = size;
+            //}
+        }
+        else if (shape.type == "circle")
+        {
+            node.unitModel.drawUnitId = 1;
+            node.unitModel.type       = Component::UnitModelType::Mesh;
+            //auto radius            = jModel.getRadius() * 2;
+            //node.transform.scale() = {radius, radius};
+        }
+        else if (shape.type == "text")
+        {
+            node.unitModel.drawUnitId = 0;
+            node.unitModel.type       = Component::UnitModelType::Text;
+
+            auto&                    textDesc = shape.jsonValue.get<Component::UnitTextDesc>();
+            Component::UnitTextModel textModel;
+            textModel.id   = node.id;
+            textModel.text = textDesc;
+
+            textModelMap[textModel.id] = textModel;
+            //node.transform.scale()     = {textDesc.fontSize, textDesc.fontSize};
         }
     }
 }
