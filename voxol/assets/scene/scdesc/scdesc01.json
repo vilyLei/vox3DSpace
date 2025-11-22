@@ -10,7 +10,6 @@
         "nodes": [
             {
                 "config": {
-                    "cacheAsBitmap": true,
                     "colourEdit": true
                 },
                 "type": "panel",
@@ -40,7 +39,7 @@
                         ]
                     }
                 },
-                "childrenT": [
+                "children": [
                     {
                         "type": "button",
                         "name": "play-button",
@@ -204,7 +203,7 @@
                                         }
                                     },
                                     {
-                                        "target": "select_01",
+                                        "target": "info-panel",
                                         "action": {
                                             "type": "toggle-visible",
                                             "visible": 1
@@ -237,23 +236,27 @@
                 "name": "info-panel",
                 "transform": {
                     "position": [
-                        520,
+                        502,
                         200
                     ]
                 },
                 "display": {
+                    "props": {
+                        "visible": true,
+                        "cacheAsBitmap": true
+                    },
                     "shape": {
                         "type": "rectangle",
                         "size": [
                             200,
-                            100
+                            500
                         ]
                     },
                     "style": {
                         "fills": [
                             {
                                 "type": "color",
-                                "value": "0xffffebcd",
+                                "value": "0xffe9967a",
                                 "blend": "normal",
                                 "opacity": 1.0
                             }

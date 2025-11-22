@@ -218,6 +218,8 @@ bool EntityRenderSystem::drawUnit(const Draw::DrawContext& rctx, const Scene::Co
     //printf(c"xxx xxx trans(x=%f, y=%f)\n", trans.x, trans.y);
 
     auto tempColor = shdDesc.color;
+    // fbo test
+    /*
     if (entity.id == 2)
     {
         tempColor = 0xffaaaa00;
@@ -322,6 +324,7 @@ bool EntityRenderSystem::drawUnit(const Draw::DrawContext& rctx, const Scene::Co
         drawRUnit.vertex.toShape();
         return true;
     }
+    //*/
     printf("render curr ...\n");
     drawUnit.blendMode = 1;
     drawUnit.setColor(tempColor);
