@@ -149,9 +149,11 @@ void FileParser::parseSceneActions(const JsonType& jsonNode)
         if (elements.empty())
             return;
 
-        for (auto& item : elements)
+        //for (auto& item : elements)
+        auto& children = rootNode.children;
+        for (auto i = 0; i < elements.size(); i++)
         {
-            parseNodeAction(rootNode, item);
+            parseNodeAction(children[i], elements[i]);
         }
     }
 }
