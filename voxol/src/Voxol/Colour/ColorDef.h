@@ -31,6 +31,11 @@ struct Color
     constexpr uint8_t g() const noexcept { return (value >> 8) & 0xFF; }
     constexpr uint8_t b() const noexcept { return value & 0xFF; }
 
+    constexpr uint8_t floatA() const noexcept { return ((value >> 24) & 0xFF)/255.0f; }
+    constexpr uint8_t floatG() const noexcept {return ((value >> 16) & 0xFF) / 255.0f; }
+    constexpr uint8_t floatB() const noexcept {return ((value >> 8) & 0xFF) / 255.0f; }
+    constexpr uint8_t floatA() const noexcept { return (value & 0xFF) / 255.0f; }
+
     constexpr uint32_t argb() const noexcept { return value; }
     constexpr uint32_t rgba() const noexcept
     {
