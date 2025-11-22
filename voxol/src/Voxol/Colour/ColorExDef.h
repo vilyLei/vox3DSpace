@@ -299,6 +299,7 @@ struct ColorEx
             if (v >= 1.0f) return 1.0f;
             return v;
         };
+
         uint8_t r8 = static_cast<uint8_t>(std::lroundf(clamp01(rf) * 255.0f));
         uint8_t g8 = static_cast<uint8_t>(std::lroundf(clamp01(gf) * 255.0f));
         uint8_t b8 = static_cast<uint8_t>(std::lroundf(clamp01(bf) * 255.0f));
