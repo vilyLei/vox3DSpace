@@ -144,7 +144,9 @@ void InteractionSourceSystem::execActToDsiplay(Interaction::InteractionSource& s
         if (!compStorage)
             return;
 
-        desc.apply();
+        //desc.apply();
+
+        printf("InteractionSourceSystem::execActToDsiplay(), desc.type: %s, desc.command: %s\n", desc.type.c_str(), desc.command.c_str());
 
         auto etId = desc.entityKey.protoId();
 
