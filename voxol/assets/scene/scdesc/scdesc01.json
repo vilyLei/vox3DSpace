@@ -94,6 +94,15 @@
                                     }
                                 }
                             ],
+                            "out": [
+                                {
+                                    "target": "play-button",
+                                    "action": {
+                                        "type": "change-color",
+                                        "fillColor": "0xff008888"
+                                    }
+                                }
+                            ],
                             "up": [
                                 {
                                     "target": "play-button",
@@ -162,6 +171,15 @@
                                     "action": {
                                         "type": "change-color",
                                         "fillColor": "0xff00bbbb"
+                                    }
+                                }
+                            ],
+                            "out": [
+                                {
+                                    "target": "exit-button",
+                                    "action": {
+                                        "type": "change-color",
+                                        "fillColor": "0xff008888"
                                     }
                                 }
                             ],

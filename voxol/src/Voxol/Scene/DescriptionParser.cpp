@@ -178,6 +178,8 @@ void FileParser::parseNodeActionData(SceneNode& parentNode, const JsonType& json
 
     SceneActionTargetNode overNode;
     overNode.parse(jsonNode, "over");
+    SceneActionTargetNode outNode;
+    outNode.parse(jsonNode, "out");
     SceneActionTargetNode upNode;
     upNode.parse(jsonNode, "up");
 
@@ -187,11 +189,23 @@ void FileParser::parseNodeActionData(SceneNode& parentNode, const JsonType& json
     for (auto& tarAct : overNode.actions)
     {
         auto&& ni = nodeNameMap[tarAct.target];
-        printf("FileParser::parseNodeActionData(), ni.id: %d\n", ni.id);
+        printf("FileParser::parseNodeActionData(), over, ni.id: %d\n", ni.id);
         auto   tarKeyId = Base::ID::KeyUint64::make(ni.id);
         overTar.targets.push_back({tarKeyId, "default", tarAct.color, visible});
     }
     srcNode.tars[overTar.flag] = overTar;
+
+    
+    Intent::Interaction::InteractionTargetSet outTar;
+    outTar.flag = static_cast<uint8_t>(Intent::Interaction::MouseStatus::Out);
+    for (auto& tarAct : outNode.actions)
+    {
+        auto&& ni = nodeNameMap[tarAct.target];
+        printf("FileParser::parseNodeActionData(), out, ni.id: %d\n", ni.id);
+        auto tarKeyId = Base::ID::KeyUint64::make(ni.id);
+        overTar.targets.push_back({tarKeyId, "default", tarAct.color, visible});
+    }
+    srcNode.tars[outTar.flag] = overTar;
 
     interactionMap[srcNode.id] = srcNode;
 
