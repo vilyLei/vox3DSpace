@@ -1,36 +1,50 @@
-#ifndef VOXOL_COLOUR_COLOR_DEF_H
-#define VOXOL_COLOUR_COLOR_DEF_H
 
 #include "ColorDef.h"
+#include <format>
+
 namespace Voxol::Colour
 {
 namespace Component
 {
-struct Color
+
+std::string Color::toString(std::string_view fmt) const
 {
-    // default format: argb
-    union
+    if (fmt == "hex")
     {
-        struct
+        return std::format("#{:02X}{:02X}{:02X}{:02X}", r(), g(), b(), a());
+    }
+    else if (fmt == "argb")
+    {
+        return std::format("ARGB({:02X}{:02X}{:02X}{:02X})", a(), r(), g(), b());
+    }
+    else if (fmt == "rgba")
+    {
+        return std::format("RGBA({:02X}{:02X}{:02X}{:02X})", r(), g(), b(), a());
+    }
+    else if (fmt == "css")
+    {
+        if (a() == 255)
         {
-            uint8_t a, r, g, b;
-        };
-        uint8_t data[4];
-        // stored as ARGB (0xAARRGGBB)
-        uint32_t value = 0xFF000000;
-    };
-    constexpr Color() noexcept :
-        data{} {}
-    constexpr Color(uint8_t r_, uint8_t g_, uint8_t b_, float a_ = 255) :
-        r(r_), g(g_), b(b_), a(a_) {}
-    uint32_t argb() {
-        return value;
+            return std::format("rgb({}, {}, {})", r(), g(), b());
+        }
+        else
+        {
+            return std::format("rgba({}, {}, {}, {:.2f})", r() / 255.0f, g() / 255.0f, b() / 255.0f, a() / 255.0f);
+        }
     }
-    uint32_t rgba()
+    else
     {
-        return (value << 8) | (value>>24);
+        return std::format("Color(r={}, g={}, b={}, a={})", r(), g(), b(), a());
     }
-};
 }
+std::string Color::toHexString() const
+{
+    return std::format("0x{:02X}{:02X}{:02X}{:02X}", r(), g(), b(), a());
 }
-#endif
+std::string Color::toCSSString() const
+{
+    return std::format("#{:02X}{:02X}{:02X}{:02X}", r(), g(), b(), a());
+}
+
+} // namespace Component
+} // namespace Voxol::Colour

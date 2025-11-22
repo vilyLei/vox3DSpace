@@ -3,9 +3,10 @@
 
 namespace Voxol::Colour
 {
+
+/*
 namespace Component
 {
-
 struct Color
 {
     // default format: argb
@@ -149,5 +150,5 @@ struct Color
     }
 };
 } // namespace Component
+//*/
 } // namespace Voxol::Colour
-#endif
