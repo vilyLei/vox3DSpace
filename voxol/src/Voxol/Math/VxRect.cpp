@@ -31,7 +31,6 @@ VxRect VxRect::makeLTRB(float pl, float pt, float pr, float pb)
 
 void VxRect::moveTo(float px, float py)
 {
-    //setXYWH(px, py, width(), height());
     fRX += px - fX;
     fBY += py - fY;
     fX = px;
@@ -39,7 +38,6 @@ void VxRect::moveTo(float px, float py)
 }
 void VxRect::offset(float dx, float dy)
 {
-    //setXYWH(px, py, width(), height());
     fRX += dx;
     fBY += dy;
     fX += dx;
@@ -115,6 +113,7 @@ Vec2 VxRect::position() const
 {
     return {fLeft, fTop};
 }
+
 Vec2 VxRect::size() const
 {
     return {fRight - fLeft, fBottom - fTop};
@@ -131,6 +130,7 @@ void VxRect::size(float pw, float ph)
     fRight  = fX + pw;
     fBottom = fY + ph;
 }
+
 bool VxRect::intersects(const VxRect& other) const
 {
     if (other.fX > fRight || other.fRight < fLeft)
@@ -139,6 +139,7 @@ bool VxRect::intersects(const VxRect& other) const
         return false;
     return true;
 }
+
 void VxRect::outset(float dx, float dy)
 {
     fX -= dx;
@@ -163,6 +164,7 @@ bool VxRect::contains(float px, float py) const
         return false;
     return true;
 }
+
 bool VxRect::contains(const Vec2& pv) const
 {
     return contains(pv.x, pv.y);
