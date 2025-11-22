@@ -59,16 +59,19 @@ public:
     void setCompactFactor(size_t f) { m_compactFactor = f; }
 
     // ---------- Add / Build ----------
-    void addItem(const Base::ID::KeyUint64& objectId, const Math::Bounds& bounds)
-    {
-        LeafTemp lt;
-        lt.objectId = objectId;
-        lt.bounds   = bounds;
-        auto flag   = objectId.isIDValid();
-        m_leafTemps.push_back(lt);
-    }
+    void addItem(const Base::ID::KeyUint64& objectId, const Math::Bounds& bounds);
+    //void addItem(const Base::ID::KeyUint64& objectId, const Math::Bounds& bounds)
+    //{
+    //    LeafTemp lt;
+    //    lt.objectId = objectId;
+    //    lt.bounds   = bounds;
+    //    auto flag   = objectId.isIDValid();
+    //    m_leafTemps.push_back(lt);
+    //}
 
     // Build entire BVH from m_leafTemps (clears previous nodes)
+    void build();
+    /*
     void build()
     {
         m_nodes.clear();
@@ -103,9 +106,12 @@ public:
         rebuildObjectMap();
         m_dirty = false;
     }
+    //*/
 
     // ---------- Update (with fat bounds) ----------
     // Update bounds by object id; returns true if updated.
+    bool updateItemBoundsByObjectId(const Base::ID::KeyUint64& objectId, const Math::Bounds& newBounds);
+    /*
     bool updateItemBoundsByObjectId(const Base::ID::KeyUint64& objectId, const Math::Bounds& newBounds)
     {
         auto mit = m_objectToLeaf.find(objectId);
@@ -143,7 +149,7 @@ public:
         m_dirty = true;
         return true;
     }
-
+    //*/
     // ---------- Remove (lazy) ----------
     // Mark object as removed. Removal is lazy; node remains in m_nodes until compact.
     // Returns true if removed.
