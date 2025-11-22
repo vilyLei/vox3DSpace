@@ -174,6 +174,42 @@ void BVH2D_LazyGC::endFrameCompact(size_t maxBlocksToProcess)
         compactIfNeededFull(); // 全量重建（安全）
     }
 }
+void BVH2D_LazyGC::compactBlock(int blockIndex)
+{
+    int start = blockIndex * GC_BLOCK_SIZE;
+    int end   = std::min((int)m_nodes.size(), start + GC_BLOCK_SIZE);
 
+    // collect live leaves within this block
+    std::vector<std::pair<int, int>> livePairs; // pair(oldLeafIdx, newLeafSlotCandidate)
+    livePairs.reserve(end - start);
+    for (int i = start; i < end; ++i)
+    {
+        if (!validNodeIndex(i)) continue;
+        Node& n = m_nodes[i];
+        if (isValidLeaf(n))
+        {
+            livePairs.emplace_back(i, -1);
+        }
+        else if (isLeafNodeSlot(n) && n.objectId.isIDInvalid())
+        {
+            // deleted slot — candidate for reuse
+            m_freeList.push_back(i);
+        }
+    }
+    // If block has no live leaves, return (we already pushed deleted slots into freeList)
+    if (livePairs.empty()) return;
+
+    // Heuristic simple approach:
+    // We'll not physically move nodes in m_nodes (避免内部指针复杂度)；
+    // 而是 mark them as "live" and allow future partial rebuilds to append new nodes,
+    // 或者在全量 compact 时再做彻底重排。
+    //
+    // 这里我们只是 attempt to reclaim obviously-deleted slots in the block by filling freeList,
+    // real relocation is expensive and left to compactIfNeededFull().
+    //
+    // So this compactBlock is intentionally lightweight to avoid big work per frame.
+    //
+    return;
+}
 }
 }

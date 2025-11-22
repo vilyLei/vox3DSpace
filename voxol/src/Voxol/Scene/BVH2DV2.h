@@ -90,6 +90,8 @@ public:
 
     // 局部压缩：尝试紧缩单个 block（把该范围的有效叶收集到块前端并更新映射）
     // 这里的实现是一个“示例/概念实现”——实际可按你的容器结构优化以避免大量复制
+    void compactBlock(int blockIndex);
+    /*
     void compactBlock(int blockIndex)
     {
         int start = blockIndex * GC_BLOCK_SIZE;
@@ -127,6 +129,7 @@ public:
         //
         return;
     }
+    //*/
 
     // 全量 compact: 收集所有 live leaves 到 leafTemps 并 full build（回收垃圾）
     void compactIfNeededFull()
