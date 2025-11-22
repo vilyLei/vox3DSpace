@@ -217,8 +217,9 @@ void Model::parse(const JsonType& node)
 
             if (node.contains("fontSize") && node["fontSize"].is_number())
             {
-                auto v = static_cast<float>(node["fontSize"]);
+                auto v            = static_cast<float>(node["fontSize"]);
                 textDesc.fontSize = std::isnan(v) ? 0.0f : v;
+                value             = textDesc;
                 return;
             }
         }
