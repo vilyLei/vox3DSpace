@@ -179,6 +179,8 @@ void FileParser::parseNodeActionData(SceneNode& parentNode, const JsonType& json
     overNode.parse(jsonNode, "over");
     SceneActionTargetNode outNode;
     outNode.parse(jsonNode, "out");
+    SceneActionTargetNode downNode;
+    downNode.parse(jsonNode, "down");
     SceneActionTargetNode upNode;
     upNode.parse(jsonNode, "up");
 
@@ -187,6 +189,9 @@ void FileParser::parseNodeActionData(SceneNode& parentNode, const JsonType& json
     overTar.flag = static_cast<uint8_t>(Intent::Interaction::MouseStatus::Over);
     for (auto& tarAct : overNode.actions)
     {
+        if (!nodeNameMap.contains(tarAct.target))
+            continue;
+
         auto&& ni = nodeNameMap[tarAct.target];
         printf("FileParser::parseNodeActionData(), over, ni.id: %d\n", ni.id);
         auto tarKeyId = Base::ID::KeyUint64::make(ni.id);
@@ -199,12 +204,44 @@ void FileParser::parseNodeActionData(SceneNode& parentNode, const JsonType& json
     outTar.flag = static_cast<uint8_t>(Intent::Interaction::MouseStatus::Out);
     for (auto& tarAct : outNode.actions)
     {
+        if (!nodeNameMap.contains(tarAct.target))
+            continue;
+
         auto&& ni = nodeNameMap[tarAct.target];
         printf("FileParser::parseNodeActionData(), out, ni.id: %d\n", ni.id);
         auto tarKeyId = Base::ID::KeyUint64::make(ni.id);
         outTar.targets.push_back({tarKeyId, "default", tarAct.color, visible});
     }
     srcNode.tars[outTar.flag] = outTar;
+
+    Intent::Interaction::InteractionTargetSet downTar;
+    downTar.flag = static_cast<uint8_t>(Intent::Interaction::MouseStatus::Down);
+    for (auto& tarAct : downNode.actions)
+    {
+        if (!nodeNameMap.contains(tarAct.target))
+            continue;
+
+        auto&& ni = nodeNameMap[tarAct.target];
+        printf("FileParser::parseNodeActionData(), down, ni.id: %d\n", ni.id);
+        auto tarKeyId = Base::ID::KeyUint64::make(ni.id);
+        downTar.targets.push_back({tarKeyId, "default", tarAct.color, visible});
+    }
+    srcNode.tars[downTar.flag] = downTar;
+
+    
+    Intent::Interaction::InteractionTargetSet upTar;
+    upTar.flag = static_cast<uint8_t>(Intent::Interaction::MouseStatus::Up);
+    for (auto& tarAct : upNode.actions)
+    {
+        if (!nodeNameMap.contains(tarAct.target))
+            continue;
+
+        auto&& ni = nodeNameMap[tarAct.target];
+        printf("FileParser::parseNodeActionData(), up, ni.id: %d\n", ni.id);
+        auto tarKeyId = Base::ID::KeyUint64::make(ni.id);
+        upTar.targets.push_back({tarKeyId, "default", tarAct.color, visible});
+    }
+    srcNode.tars[upTar.flag] = upTar;
 
     interactionMap[srcNode.id] = srcNode;
 }
