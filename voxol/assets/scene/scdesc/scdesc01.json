@@ -9,6 +9,9 @@
     "scene": {
         "nodes": [
             {
+                "config":{
+                    "cacheAsBitmap" : true
+                },
                 "type": "panel",
                 "name": "play-panel",
                 "transform": {
