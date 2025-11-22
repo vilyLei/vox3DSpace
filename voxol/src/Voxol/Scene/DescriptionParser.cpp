@@ -132,6 +132,34 @@ void FileParser::parseSceneNode(SceneNode& parentNode, uint32_t& id, const JsonT
 
 
 
+void FileParser::parseNodeDisplayData(SceneNode& node, const JsonType& jsonNode)
+{
+    DisplayShape shape;
+    shape.parse(jsonNode);
+    node.transform.scale() = shape.size;
+
+    if (shape.type == "rectangle" || shape.type == "round-rectangle")
+    {
+        node.unitModel.drawUnitId = 0;
+        node.unitModel.type       = Component::UnitModelType::Mesh;
+    }
+    else if (shape.type == "circle")
+    {
+        node.unitModel.drawUnitId = 1;
+        node.unitModel.type       = Component::UnitModelType::Mesh;
+    }
+    else if (shape.type == "text")
+    {
+        node.unitModel.drawUnitId = 0;
+        node.unitModel.type       = Component::UnitModelType::Text;
+
+        auto&                    textDesc = shape.jsonValue.get<Component::UnitTextDesc>();
+        Component::UnitTextModel textModel;
+        textModel.id               = node.id;
+        textModel.text             = textDesc;
+        textModelMap[textModel.id] = textModel;
+    }
+}
 void FileParser::parseNodeTransData(SceneNode& node, const JsonType& jsonNode)
 {
     auto id = node.id;
@@ -150,12 +178,12 @@ void FileParser::parseNodeTransData(SceneNode& node, const JsonType& jsonNode)
 
         node.unitModel.id = id;
 
-        //SceneIR::Shadering::Description jDesc;
-        //jDesc.parse(displayNode);
         Data::ColorValue cv;
         cv.parse(displayNode);
         node.shaingDesc.color = cv.color.argb();
 
+        parseNodeDisplayData(node, displayNode["shape"]);
+        /*
         DisplayShape shape;
         shape.parse(displayNode["shape"]);
         node.transform.scale() = shape.size;
@@ -181,6 +209,7 @@ void FileParser::parseNodeTransData(SceneNode& node, const JsonType& jsonNode)
             textModel.text = textDesc;
             textModelMap[textModel.id] = textModel;
         }
+        //*/
     }
 }
 

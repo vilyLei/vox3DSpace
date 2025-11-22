@@ -76,6 +76,7 @@ public:
     void parseHeriNodes(const JsonType& jsonNode);
     void parseSceneNode(SceneNode& parentNode, uint32_t& id, const JsonType& jsonNode);
 
+    void parseNodeDisplayData(SceneNode& node, const JsonType& jsonNode);
     void parseNodeTransData(SceneNode& node, const JsonType& jsonNode);
     void parseNodeData(SceneNode& node, const JsonType& jsonNode);
 };
