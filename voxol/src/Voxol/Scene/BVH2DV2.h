@@ -65,7 +65,6 @@ public:
     // ---------- Update (with fat bounds) ----------
     // Update bounds by object id; returns true if updated.
     bool updateItemBoundsByObjectId(const Base::ID::KeyUint64& objectId, const Math::Bounds& newBounds);
-
     // ---------- Remove (lazy) ----------
     // Mark object as removed. Removal is lazy; node remains in m_nodes until compact.
     // Returns true if removed.
