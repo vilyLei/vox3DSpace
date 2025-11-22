@@ -179,7 +179,7 @@ void FileParser::parseNodeActionData(SceneNode& parentNode, const JsonType& json
     SceneActionTargetNode overNode;
     overNode.parse(jsonNode, "over");
     SceneActionTargetNode upNode;
-    overNode.parse(jsonNode, "up");
+    upNode.parse(jsonNode, "up");
 
     bool                                      visible = true;
     Intent::Interaction::InteractionTargetSet overTar;
@@ -187,6 +187,7 @@ void FileParser::parseNodeActionData(SceneNode& parentNode, const JsonType& json
     for (auto& tarAct : overNode.actions)
     {
         auto&& ni = nodeNameMap[tarAct.target];
+        printf("FileParser::parseNodeActionData(), ni.id: %d\n", ni.id);
         auto   tarKeyId = Base::ID::KeyUint64::make(ni.id);
         overTar.targets.push_back({tarKeyId, "default", tarAct.color, visible});
     }

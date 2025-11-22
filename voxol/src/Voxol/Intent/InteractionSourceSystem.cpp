@@ -9,12 +9,12 @@ InteractionSourceSystem::SP InteractionSourceSystem::make()
 }
 void InteractionSourceSystem::initialize()
 {
+    /*
     using namespace Interaction;
 
     InteractionSource srcNode;
     srcNode.id = Base::ID::KeyUint64::make(4);
 
-    /*
     // 模拟DSL输入后得到的初始化,
     // ID::KeyUint64::make(1) 表示的是场景层次节点1模拟按钮, 即 entity(1)
     // ID::KeyUint64::make(5) 表示的是场景层次节点5模拟一个面板, 即 entity(5)
