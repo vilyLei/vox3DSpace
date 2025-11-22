@@ -74,7 +74,7 @@ void SceneActionTargetNode::parse(const JsonType& jsonNode, const std::string& s
 
     for (auto& item : elements)
     {
-        auto&          jNode = item;
+        auto& jNode = item;
 
         SceneActionDesc actDesc;
         actDesc.target = jNode["target"];
@@ -116,14 +116,14 @@ void SceneNode::printTransform() const
 
 void FileParser::initFromFile(const std::string& fileName)
 {
-    auto           pngPath = std::filesystem::path(SRC_DIR) / "assets/";
-    auto           pathStr = pngPath.string() + fileName;
-    std::ifstream  fs(pathStr);
+    auto          pngPath = std::filesystem::path(SRC_DIR) / "assets/";
+    auto          pathStr = pngPath.string() + fileName;
+    std::ifstream fs(pathStr);
     fs >> jsonObj;
 
     auto&& sceneNode = jsonObj["scene"];
-    parseHeriNodes( sceneNode );
-    parseSceneActions( sceneNode );
+    parseHeriNodes(sceneNode);
+    parseSceneActions(sceneNode);
 }
 
 void FileParser::parseSceneActions(const JsonType& jsonNode)
@@ -142,7 +142,6 @@ void FileParser::parseSceneActions(const JsonType& jsonNode)
             parseNodeAction(rootNode, item);
         }
     }
-
 }
 
 void FileParser::parseNodeAction(SceneNode& parentNode, const JsonType& jsonNode)
@@ -190,12 +189,12 @@ void FileParser::parseNodeActionData(SceneNode& parentNode, const JsonType& json
     {
         auto&& ni = nodeNameMap[tarAct.target];
         printf("FileParser::parseNodeActionData(), over, ni.id: %d\n", ni.id);
-        auto   tarKeyId = Base::ID::KeyUint64::make(ni.id);
+        auto tarKeyId = Base::ID::KeyUint64::make(ni.id);
         overTar.targets.push_back({tarKeyId, "default", tarAct.color, visible});
     }
     srcNode.tars[overTar.flag] = overTar;
 
-    
+
     Intent::Interaction::InteractionTargetSet outTar;
     outTar.flag = static_cast<uint8_t>(Intent::Interaction::MouseStatus::Out);
     for (auto& tarAct : outNode.actions)
@@ -203,12 +202,11 @@ void FileParser::parseNodeActionData(SceneNode& parentNode, const JsonType& json
         auto&& ni = nodeNameMap[tarAct.target];
         printf("FileParser::parseNodeActionData(), out, ni.id: %d\n", ni.id);
         auto tarKeyId = Base::ID::KeyUint64::make(ni.id);
-        overTar.targets.push_back({tarKeyId, "default", tarAct.color, visible});
+        outTar.targets.push_back({tarKeyId, "default", tarAct.color, visible});
     }
-    srcNode.tars[outTar.flag] = overTar;
+    srcNode.tars[outTar.flag] = outTar;
 
     interactionMap[srcNode.id] = srcNode;
-
 }
 
 void FileParser::parseHeriNodes(const JsonType& jsonNode)
@@ -268,7 +266,8 @@ void FileParser::parseNodeDisplayStyle(SceneNode& node, const JsonType& jsonNode
     if (jNode.contains("fills"))
     {
         auto&& elements = jNode["fills"];
-        if (!elements.empty()) {
+        if (!elements.empty())
+        {
             for (auto& item : elements)
             {
                 Data::ColorValue cv;
