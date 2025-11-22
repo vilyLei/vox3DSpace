@@ -1,5 +1,5 @@
-#ifndef VOXOL_COLOR_DEF_H
-#define VOXOL_COLOR_DEF_H
+#ifndef VOXOL_COLOUR_COLOR_DEF_H
+#define VOXOL_COLOUR_COLOR_DEF_H
 
 #include "../Base/BaseDefine.h"
 #include <cstdint>
