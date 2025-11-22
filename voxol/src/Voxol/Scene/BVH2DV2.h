@@ -97,6 +97,8 @@ public:
 
     // ---------- Per-frame maintenance ----------
     // Process dirty leaves — partial rebuilds or full rebuild based on thresholds.
+    void updateDirty();
+    /*
     void updateDirty()
     {
         if (!m_dirty && m_dirtyLeaves.empty()) return;
@@ -143,7 +145,7 @@ public:
 
         m_dirty = false;
     }
-
+    //*/
     // Called at frame end to do lazy GC / compact heuristics.
     // Should be called once per frame (or less frequently) by host.
     // ---------- Compact: fully rebuild leaves from reachable leaves (reclaims deleted/garbage) ----------

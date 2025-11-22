@@ -240,5 +240,52 @@ void BVH2D_LazyGC::compactIfNeededFull()
     build();
 }
 
+void BVH2D_LazyGC::updateDirty()
+{
+    if (!m_dirty && m_dirtyLeaves.empty()) return;
+    if (m_nodes.empty())
+    {
+        m_dirty = false;
+        m_dirtyLeaves.clear();
+        return;
+    }
+
+    size_t leafCount  = m_objectToLeaf.size();
+    size_t dirtyCount = m_dirtyLeaves.size();
+
+    // if many dirty -> full rebuild
+    float ratio = leafCount ? (float)dirtyCount / float(leafCount) : 0.0f;
+    if (ratio > m_rebuildRatio)
+    {
+        // rebuild full from current live leaves
+        collectLeavesToTempsAndRebuild();
+        return;
+    }
+
+    // else handle partial rebuilds
+    std::vector<int> dirtyList;
+    dirtyList.reserve(m_dirtyLeaves.size());
+    for (int li : m_dirtyLeaves) dirtyList.push_back(li);
+
+    for (int leafIdx : dirtyList)
+    {
+        if (!validNodeIndex(leafIdx)) continue;
+        const Node& maybeLeaf = m_nodes[leafIdx];
+        if (!isLeaf(maybeLeaf) || maybeLeaf.objectId.isIDInvalid()) continue;
+        int subtreeRoot = chooseSubtreeRootForLeaf(leafIdx);
+        rebuildSubtreeAtNode(subtreeRoot);
+    }
+
+    m_dirtyLeaves.clear();
+
+    // recompute bounds bottom-up
+    refitAllNodes();
+
+    // rebuild mapping (re-maps appended nodes)
+    rebuildObjectMap();
+
+    m_dirty = false;
+}
+
 }
 }
