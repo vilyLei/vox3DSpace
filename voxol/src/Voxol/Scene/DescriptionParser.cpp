@@ -171,6 +171,8 @@ void FileParser::parseNodeActionData(SceneNode& parentNode, const JsonType& json
     interactionMap[srcNode.id] = srcNode;
     SceneActionTargetNode overNode;
     overNode.parse(jsonNode, "over");
+    SceneActionTargetNode upNode;
+    overNode.parse(jsonNode, "up");
     //if (jsonNode.contains("over"))
     //{
     //    auto&& overNode = jsonNode["over"];
