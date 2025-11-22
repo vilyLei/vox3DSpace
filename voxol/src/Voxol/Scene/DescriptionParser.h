@@ -107,6 +107,8 @@ public:
     void parseNodeTransData(SceneNode& node, const JsonType& jsonNode);
     void parseNodeData(SceneNode& node, const JsonType& jsonNode);
 
+    void buildInteraction(Intent::Interaction::InteractionSource& srcNode, const std::string& srcActType, uint8_t actFlag, const JsonType& jsonNode);
+
     void parseSceneActions(const JsonType& jsonNode);
     void parseNodeAction(SceneNode& parentNode, const JsonType& jsonNode);
     void parseNodeActionData(SceneNode& parentNode, const JsonType& jsonNode);

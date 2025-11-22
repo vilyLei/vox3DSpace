@@ -32,6 +32,7 @@ struct InteractionTargetDesc
 {
     Base::ID::KeyUint64 id;
     std::string         type;
+    //std::string         command;
     uint32_t            color   = 0xff000000;
     bool                visible = true;
 };
