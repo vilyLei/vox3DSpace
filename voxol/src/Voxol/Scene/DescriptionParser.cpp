@@ -144,7 +144,7 @@ void FileParser::parseNodeDisplayStyle(SceneNode& node, const JsonType& jsonNode
             for (auto& item : elements)
             {
                 Data::ColorValue cv;
-                cv.parse(jNode);
+                cv.parseWithName(item, "value");
                 node.shaingDesc.color = cv.color.argb();
             }
             return;
