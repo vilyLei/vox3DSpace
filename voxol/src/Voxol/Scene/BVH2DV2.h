@@ -70,58 +70,6 @@ public:
     // Mark object as removed. Removal is lazy; node remains in m_nodes until compact.
     // Returns true if removed.
     bool removeItemByObjectId(const Base::ID::KeyUint64& objectId);
-    /*
-    bool removeItemByObjectId(const Base::ID::KeyUint64& objectId)
-    {
-        auto it = m_objectToLeaf.find(objectId);
-        if (it == m_objectToLeaf.end()) return false;
-        int leafIdx = it->second;
-        if (!validNodeIndex(leafIdx))
-        {
-            m_objectToLeaf.erase(it);
-            return false;
-        }
-
-        Node& leaf = m_nodes[leafIdx];
-        // mark as deleted (logical delete)
-        leaf.objectId = Base::ID::INVALID_KEY;
-
-        // remove object mapping and fat bound entry if exist
-        m_objectToLeaf.erase(it);
-        m_fatBounds.erase(objectId);
-
-        // add this slot to free list for future reuse
-        m_freeList.push_back(leafIdx);
-        ++m_deletedCount;
-        m_needsCompact = true;
-
-        // propagate up: 如果父节点变成两个无效子，则将父也转换为无效叶槽（objectId=-1, left=right=-1）
-        int cur = leaf.parent;
-        while (cur >= 0)
-        {
-            Node& p = m_nodes[cur];
-
-            bool leftAlive  = (p.left >= 0) && ((isLeafNodeSlot(m_nodes[p.left]) && m_nodes[p.left].objectId.isIDValid()) || !isLeafNodeSlot(m_nodes[p.left]));
-            bool rightAlive = (p.right >= 0) && ((isLeafNodeSlot(m_nodes[p.right]) && m_nodes[p.right].objectId.isIDValid()) || !isLeafNodeSlot(m_nodes[p.right]));
-
-            if (!leftAlive && !rightAlive)
-            {
-                // collapse parent to an empty leaf slot
-                p.left = p.right = -1;
-                p.objectId       = Base::ID::INVALID_KEY;
-                cur              = p.parent;
-            }
-            else
-            {
-                break;
-            }
-        }
-
-        // 标记树需要 refit（但 refit 会把已删除叶当空处理，不会出错）
-        m_dirty = true;
-        return true;
-    }
-    //*/
 
     // --------- 分块 lazy GC（每帧处理有限工作量） ---------
     // 设计：把 leafSlots 分成块 (BLOCK_SIZE)，每帧处理 1..N 个块，合并空洞或移除已删除的槽。
