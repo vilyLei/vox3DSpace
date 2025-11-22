@@ -133,12 +133,18 @@ void FileParser::parseSceneNode(SceneNode& parentNode, uint32_t& id, const JsonT
 
 void FileParser::parseNodeDisplayStyle(SceneNode& node, const JsonType& jsonNode)
 {
-
+    if (!jsonNode.contains("style"))
+        return;
 }
 void FileParser::parseNodeDisplayShape(SceneNode& node, const JsonType& jsonNode)
 {
+    if (!jsonNode.contains("shape"))
+        return;
+
+    auto&& jNode = jsonNode["shape"];
+
     DisplayShape shape;
-    shape.parse(jsonNode);
+    shape.parse(jNode);
     node.transform.scale() = shape.size;
 
     if (shape.type == "rectangle" || shape.type == "round-rectangle")
@@ -185,7 +191,8 @@ void FileParser::parseNodeTransData(SceneNode& node, const JsonType& jsonNode)
         cv.parse(displayNode);
         node.shaingDesc.color = cv.color.argb();
 
-        parseNodeDisplayShape(node, displayNode["shape"]);
+        parseNodeDisplayShape(node, displayNode);
+        parseNodeDisplayStyle(node, displayNode);
     }
 }
 
