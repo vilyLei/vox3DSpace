@@ -66,6 +66,24 @@ struct Color
     {
         value = (value & 0xFFFFFF00) | static_cast<uint32_t>(b);
     }
+
+    constexpr Color WithA(uint8_t a) noexcept
+    {
+        return Color((value & 0x00FFFFFF) | (static_cast<uint32_t>(a) << 24));
+    }
+    constexpr Color withR(uint8_t nr) const noexcept
+    {
+        return Color((value & 0xFF00FFFFu) | (uint32_t(nr) << 16));
+    }
+    constexpr Color withG(uint8_t g) noexcept
+    {
+        return Color((value & 0xFFFF00FF) | (static_cast<uint32_t>(g) << 8));
+    }
+    constexpr Color withB(uint8_t b) noexcept
+    {
+        return Color((value & 0xFFFFFF00) | static_cast<uint32_t>(b));
+    }
+
     constexpr std::array<uint8_t, 4> toARGBBytes() const noexcept
     {
         return {a(), r(), g(), b()};
