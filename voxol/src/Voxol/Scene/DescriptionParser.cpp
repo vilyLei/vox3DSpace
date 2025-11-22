@@ -111,18 +111,29 @@ void FileParser::parseNodeTransData(SceneNode& node, const JsonType& jsonNode)
         {
             node.unitModel.drawUnitId = 0;
             node.unitModel.type       = Component::UnitModelType::Mesh;
+
+            if (jModel.hasSize())
+            {
+                auto&& size            = jModel.getSize();
+                node.transform.scale() = size;
+            }
+        }
+        else if (jModel.type == "circle")
+        {
+            auto radius                = jModel.getRadius() * 2;
+            node.transform.scale() = {radius, radius};
         }
 
-        if (jModel.hasRadius())
-        {
-            auto pw           = jModel.getRadius() * 2;
-            node.transform.scale() = {pw, pw};
-        }
-        else if (jModel.hasSize())
-        {
-            auto&& size       = jModel.getSize();
-            node.transform.scale() = size;
-        }
+        //if (jModel.hasRadius())
+        //{
+        //    auto pw           = jModel.getRadius() * 2;
+        //    node.transform.scale() = {pw, pw};
+        //}
+        //else if (jModel.hasSize())
+        //{
+        //    auto&& size       = jModel.getSize();
+        //    node.transform.scale() = size;
+        //}
 
         if (jModel.hasText())
         {

@@ -198,16 +198,17 @@ void Model::parse(const JsonType& node)
     if (node.contains("type"))
     {
         type = node["type"];
-        std::transform(type.begin(), type.end(), type.begin(),
-                       [](unsigned char c) { return std::tolower(c); });
-    }
-    if (node.contains("shape"))
+    }else if (node.contains("shape"))
     {
         type = node["shape"];
-    }
-    if (node.contains("shapeType"))
+    }else if (node.contains("shapeType"))
     {
         type = node["shapeType"];
+    }
+    if (!type.empty())
+    {
+        std::transform(type.begin(), type.end(), type.begin(),
+                       [](unsigned char c) { return std::tolower(c); });
     }
 
     if (node.contains("method"))
