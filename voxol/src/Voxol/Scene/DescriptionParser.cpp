@@ -94,7 +94,7 @@ void FileParser::parseHeriNodes(const JsonType& jsonNode)
         if (elements.empty())
             return;
 
-        uint32_t id     = 0;
+        uint32_t id        = 0;
         rootNode.id        = id;
         rootNode.hasParent = false;
         for (auto& item : elements)
@@ -139,13 +139,13 @@ void FileParser::parseNodeTransData(SceneNode& node, const JsonType& jsonNode)
     {
         SceneIR::Scene::Transform jTrans;
         jTrans.parse(jsonNode["transform"]);
-        auto pv         = jTrans.position;
+        auto pv              = jTrans.position;
         node.transform.pos() = jTrans.position;
     }
     if (jsonNode.contains("display"))
     {
-        auto&& displayNode          = jsonNode["display"];
-        node.shadingEntity.id       = id;
+        auto&& displayNode               = jsonNode["display"];
+        node.shadingEntity.id            = id;
         node.shadingEntity.shadingDescId = id;
 
         node.unitModel.id = id;
@@ -248,7 +248,7 @@ void FileParser::parseNodeData(SceneNode& node, const JsonType& jsonNode)
     if (jsonNode.contains("children") && jsonNode["children"].is_array())
     {
         auto&& elements = jsonNode["children"];
-        node.hasChild    = !elements.empty();
+        node.hasChild   = !elements.empty();
     }
 }
 
