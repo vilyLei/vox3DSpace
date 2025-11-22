@@ -171,7 +171,8 @@ void BVH2D_LazyGC::endFrameCompact(size_t maxBlocksToProcess)
     size_t idealNodes = std::max<size_t>(4, live * 2);
     if (holeRatio > m_deleteRebuildRatio || m_nodes.size() > idealNodes * m_compactFactor)
     {
-        compactIfNeededFull(); // 全量重建（安全）
+        // 全量重建(安全)
+        compactIfNeededFull();
     }
 }
 
