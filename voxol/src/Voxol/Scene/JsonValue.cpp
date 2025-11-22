@@ -24,7 +24,7 @@ bool ColorValue::parseWithName(const JsonType& node, const std::string& key)
 
     if (v.is_number())
     {
-        value = static_cast<uint32_t>(v);
+        color.value = static_cast<uint32_t>(v);
         return true;
     }
 
@@ -66,7 +66,7 @@ bool ColorValue::parseColorArray(const JsonType& arr)
     uint8_t B = conv(b);
     uint8_t A = conv(a);
 
-    value = (A << 24) | (R << 16) | (G << 8) | B;
+    color.value = (A << 24) | (R << 16) | (G << 8) | B;
     return true;
 }
 
@@ -124,23 +124,17 @@ bool ColorValue::parseHex(const std::string& hex)
     if (hex.size() == 6)
     {
         // RGB ¡ú ARGB
-        value = 0xFF000000 | v;
+        color.value = 0xFF000000 | v;
+        return;
     }
-    else if (hex.size() == 8)
+    
+    if (hex.size() == 8)
     {
-        // RGBA ¡ú ARGB
-        //uint32_t r = (v >> 24) & 0xFF;
-        //uint32_t g = (v >> 16) & 0xFF;
-        //uint32_t b = (v >> 8) & 0xFF;
-        //uint32_t a = (v >> 0) & 0xFF;
-        //argb      = (a << 24) | (r << 16) | (g << 8) | b;
-        value = v;
+        color.value = v;
+        return;
     }
-    else
-    {
-        return false;
-    }
-    return true;
+
+    return false;
 }
 
 bool ColorValue::parseCssName(const std::string& name)
@@ -162,7 +156,7 @@ bool ColorValue::parseCssName(const std::string& name)
     auto it = cssColors.find(name);
     if (it != cssColors.end())
     {
-        value = it->second;
+        color.value = it->second;
         return true;
     }
     return false;

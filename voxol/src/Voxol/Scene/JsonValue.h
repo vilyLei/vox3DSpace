@@ -6,6 +6,7 @@
 #include "../Math/Vec2.h"
 #include "../Math/Vec3.h"
 #include "../Math/Vec4.h"
+#include "../Colour/ColorDef.h"
 
 namespace Voxol::Scene
 {
@@ -24,25 +25,26 @@ enum class ColorType
 
 struct ColorValue
 {
-    union
-    {
-        struct
-        {
-            uint8_t a, r, g, b;
-        };
-        uint8_t data[4];
-        // stored as ARGB (0xAARRGGBB)
-        uint32_t value = 0x00000000;
-    };
+    //union
+    //{
+    //    struct
+    //    {
+    //        uint8_t a, r, g, b;
+    //    };
+    //    uint8_t data[4];
+    //    // stored as ARGB (0xAARRGGBB)
+    //    uint32_t value = 0x00000000;
+    //};
+    Colour::Component::Color color;
 
-    constexpr ColorValue() noexcept :
-        data{} {}
-    constexpr ColorValue(uint8_t r_, uint8_t g_, uint8_t b_, float a_ = 255) :
-        r(r_), g(g_), b(b_), a(a_) {}
+    //constexpr ColorValue() noexcept :
+    //    data{} {}
+    //constexpr ColorValue(uint8_t r_, uint8_t g_, uint8_t b_, float a_ = 255) :
+    //    r(r_), g(g_), b(b_), a(a_) {}
 
-    uint32_t argb() {
-        return value;
-    }
+    //uint32_t argb() {
+    //    return value;
+    //}
     bool parsePantone(const std::string& s);
     bool parse(const JsonType& node);
     bool parseWithName(const JsonType& node, const std::string& key);
