@@ -100,26 +100,6 @@ void FileParser::parseNodeTransData(SceneNode& node, const JsonType& jsonNode)
 
         node.unitModel.id = id;
 
-        //std::string shapeType = "";
-        //if (displayNode.contains("shape") && displayNode["shape"].is_string())
-        //{
-        //    shapeType = displayNode["shape"];
-        //}
-        //else if (displayNode.contains("shapeType") && displayNode["shapeType"].is_string())
-        //{
-        //    shapeType = displayNode["shapeType"];
-        //}
-        //if (shapeType == "rectangle" || shapeType == "round-rectangle")
-        //{
-        //    node.unitModel.drawUnitId = 0;
-        //    node.unitModel.type       = Component::UnitModelType::Mesh;
-        //}
-        //else if (shapeType == "text" || shapeType == "Text")
-        //{
-        //    node.unitModel.drawUnitId = 0;
-        //    node.unitModel.type       = Component::UnitModelType::Text;
-        //}
-
         SceneIR::Shadering::Description jDesc;
         jDesc.parse(displayNode);
 
