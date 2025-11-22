@@ -62,11 +62,23 @@ enum class UnitModelType : uint32_t
     Text    = 1 << 1
 };
 
+
+struct UnitTextDesc
+{
+    float       fontSize = 12;
+    uint32_t    color    = 0xff000000;
+    std::string text;
+    bool        getColorAt(int i)
+    {
+        return color;
+    }
+};
 struct UnitStringModel
 {
-    uint32_t     id       = Base::ID::INVALID_ID;
-    float        fontSize = 12;
-    std::string  content;
+    uint32_t id = Base::ID::INVALID_ID;
+    //float        fontSize = 12;
+    //std::string  content;
+    UnitTextDesc text;
     Math::Vec2   posOffset;
     Math::Bounds bounds;
 };

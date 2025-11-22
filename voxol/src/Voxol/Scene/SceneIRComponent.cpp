@@ -195,9 +195,6 @@ void Model::parse(const JsonType& node)
     if (node.contains("id"))
         id = node["id"];
 
-    if (node.contains("content"))
-        content = node["content"];
-
     if (node.contains("type"))
     {
         type = node["type"];
@@ -210,18 +207,37 @@ void Model::parse(const JsonType& node)
     if (node.contains("method"))
         method.parse(node["method"]);
 
+    if (node.contains("content"))
+    {
+        std::string str = node["content"];
+        if (!str.empty())
+        {
+            Component::UnitTextDesc textDesc;
+            textDesc.text = str;
+
+            if (node.contains("fontSize") && node["fontSize"].is_number())
+            {
+                auto v = static_cast<float>(node["fontSize"]);
+                textDesc.fontSize = std::isnan(v) ? 0.0f : v;
+                return;
+            }
+        }
+        //content = node["content"];
+        return;
+    }
+
     if (node.contains("radius") && node["radius"].is_number())
     {
         auto v = static_cast<float>(node["radius"]);
         value  = std::isnan(v) ? 0.0f : v;
         return;
     }
-    if (node.contains("fontSize") && node["fontSize"].is_number())
-    {
-        auto v = static_cast<float>(node["fontSize"]);
-        value  = std::isnan(v) ? 0.0f : v;
-        return;
-    }
+    //if (node.contains("fontSize") && node["fontSize"].is_number())
+    //{
+    //    auto v = static_cast<float>(node["fontSize"]);
+    //    value  = std::isnan(v) ? 0.0f : v;
+    //    return;
+    //}
 
     if (node.contains("size") && node["size"].is_array())
     {

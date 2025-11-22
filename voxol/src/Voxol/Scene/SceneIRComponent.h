@@ -59,19 +59,24 @@ struct ModelMethod
     uint32_t id = Base::ID::INVALID_ID;
     // Mesh / SDF / Procedural / Volume / Voxel
     std::string type;
-    void        parse(const JsonType& node)
+    void parse(const JsonType& node)
     {
-        id   = node["id"];
-        type = node["type"];
+
+        if (node.contains("id"))
+            id = node["id"];
+
+        if (node.contains("type"))
+            type = node["type"];
     }
 };
+
 struct Model
 {
     uint32_t                        id = Base::ID::INVALID_ID;
     std::string                     type;
-    std::string                     content;
+    //std::string                     content;
     ModelMethod                     method;
-    std::variant<float, Math::Vec2> value;
+    std::variant<float, Math::Vec2, std::string, Component::UnitTextDesc> value;
     void                            parse(const JsonType& node);
     template <typename T>
     T getValue()
@@ -82,10 +87,10 @@ struct Model
     {
         return type == "text";
     }
-    bool hasFontSize() const
-    {
-        return std::holds_alternative<float>(value);
-    }
+    //bool hasFontSize() const
+    //{
+    //    return std::holds_alternative<float>(value);
+    //}
     bool hasRadius() const
     {
         return std::holds_alternative<float>(value);
@@ -98,13 +103,24 @@ struct Model
     {
         return hasRadius() ? getValue<float>() : 0;
     }
-    float getFontSize()
-    {
-        return hasFontSize() ? getValue<float>() : 0;
-    }
+    //float getFontSize()
+    //{
+    //    return hasFontSize() ? getValue<float>() : 0;
+    //}
     Math::Vec2 getSize()
     {
         return hasSize() ? getValue<Math::Vec2>() : Math::Vec2{};
+    }
+    bool hasText() const
+    {
+        if (!isText()) {
+            return false;
+        }
+        return std::holds_alternative<Component::UnitTextDesc>(value);
+    }
+    Component::UnitTextDesc getText()
+    {
+        return hasText() ? getValue<Component::UnitTextDesc>() : Component::UnitTextDesc{};
     }
 };
 

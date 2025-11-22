@@ -82,8 +82,9 @@ void EntityUnitStorage::initalizeFromDescFile(const std::string& fileName)
         if (textFlag && fileParser.textModelMap.contains(i))
         {
             auto&& textModel = fileParser.textModelMap[i];
+            auto   text      = textModel.text;
             auto   pos       = node.transform.pos();
-            auto&& bv        = drawing->msdfText->calcStringBounds(textModel.content, textModel.fontSize, pos);
+            auto&& bv        = drawing->msdfText->calcStringBounds(text.text, text.fontSize, pos);
             bv.print();
             node.transform.scale()        = {bv.width(), bv.height()};
             textModel.bounds              = bv;
@@ -220,16 +221,16 @@ void EntityUnitStorage::initalizeFromIRFile(const std::string& fileName)
         auto&& dataModel = sceneModule.modelsMap[modelId];
         auto&& model     = modelsPool[modelId];
         model.drawUnitId = dataModel.method.id;
-        if (dataModel.type == "Text")
+        if (dataModel.hasText())
         {
             model.type = UnitModelType::Text;
 
+            auto&&                            text = dataModel.getText();
             Scene::Component::UnitStringModel strModel{
                 et.id,
-                dataModel.getFontSize(),
-                dataModel.content};
+                text};
 
-            auto&& vb          = drawing->msdfText->calcStringBounds(strModel.content, strModel.fontSize, trans.pos());
+            auto&& vb          = drawing->msdfText->calcStringBounds(text.text, text.fontSize, trans.pos());
             strModel.bounds    = vb;
             strModel.posOffset = trans.pos() - vb.position();
 

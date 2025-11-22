@@ -172,13 +172,15 @@ bool EntityRenderSystem::drawUnit(const Draw::DrawContext& rctx, const Scene::Co
     if (model.type == Scene::Component::UnitModelType::Text)
     {
         auto&& strModel = compStorage->entityStringModelMap[entity.id];
-        auto&  str      = strModel.content;
-        if (!str.empty()) {
+        auto&  textDesc      = strModel.text;
+        //auto&  str      = strModel.content;
+        if (!textDesc.text.empty())
+        {
             auto pos        = wM.getXY();
             auto ph  = strModel.bounds.height();
             pos += strModel.posOffset;
 
-            auto&& glyphUnits = entityStorage->getDrawUnitsFromText(str, strModel.fontSize, pos);
+            auto&& glyphUnits = entityStorage->getDrawUnitsFromText(textDesc.text, textDesc.fontSize, pos);
             for (auto& unit : glyphUnits)
             {
                 unit.blendMode = 1;

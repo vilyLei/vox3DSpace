@@ -134,13 +134,24 @@ void FileParser::parseNodeTransData(SceneNode& node, const JsonType& jsonNode)
             node.transform.scale() = size;
         }
 
-        if (jModel.isText() && !jModel.content.empty())
+        //if (jModel.isText() && !jModel.content.empty())
+        //{
+        //    Component::UnitStringModel textModel = {node.id,
+        //                                            jModel.getFontSize(),
+        //                                            jModel.content};
+        //    textModelMap[textModel.id] = textModel;
+        //    node.transform.scale() = {textModel.fontSize, textModel.fontSize};
+        //}
+        if (jModel.hasText())
         {
-            Component::UnitStringModel textModel = {node.id,
-                                                    jModel.getFontSize(),
-                                                    jModel.content};
-            textModelMap[textModel.id] = textModel;
-            node.transform.scale() = {textModel.fontSize, textModel.fontSize};
+            Component::UnitStringModel textModel;
+            textModel.id = node.id;
+            textModel.text = jModel.getText();
+            //= {node.id,
+            //                                        jModel.getFontSize(),
+            //                                        jModel.content};
+            textModelMap[textModel.id]           = textModel;
+            node.transform.scale()     = {textModel.text.fontSize, textModel.text.fontSize};
         }
     }
 }
