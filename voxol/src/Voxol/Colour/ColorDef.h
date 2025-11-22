@@ -31,9 +31,9 @@ struct Color
     constexpr uint8_t g() const noexcept { return (value >> 8) & 0xFF; }
     constexpr uint8_t b() const noexcept { return value & 0xFF; }
 
-    constexpr uint8_t floatA() const noexcept { return ((value >> 24) & 0xFF)/255.0f; }
-    constexpr uint8_t floatG() const noexcept {return ((value >> 16) & 0xFF) / 255.0f; }
-    constexpr uint8_t floatB() const noexcept {return ((value >> 8) & 0xFF) / 255.0f; }
+    constexpr uint8_t floatA() const noexcept { return ((value >> 24) & 0xFF) / 255.0f; }
+    constexpr uint8_t floatG() const noexcept { return ((value >> 16) & 0xFF) / 255.0f; }
+    constexpr uint8_t floatB() const noexcept { return ((value >> 8) & 0xFF) / 255.0f; }
     constexpr uint8_t floatA() const noexcept { return (value & 0xFF) / 255.0f; }
 
     constexpr uint32_t argb() const noexcept { return value; }
@@ -124,15 +124,18 @@ struct Color
     std::string toCSSString() const;
 };
 
-struct ColorSpace
+enum class ColorSpaceKind
 {
-    uint32_t type;
+    sRGB,
+    DisplayP3,
+    AdobeRGB,
+    // extend: Rec2020, ACEScg, XYZ, Lab, DeviceICC
 };
 
 struct ColorEx
 {
-    Color      color8bit; // underlay 32-bit color
-    ColorSpace space;     // enum or pointer to ICC profile
+    Color          color8bit; // underlay 32-bit color
+    ColorSpaceKind space;     // enum or pointer to ICC profile
 };
 } // namespace Component
 } // namespace Voxol::Colour
