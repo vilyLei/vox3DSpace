@@ -135,6 +135,11 @@ void FileParser::parseNodeDisplayStyle(SceneNode& node, const JsonType& jsonNode
 {
     if (!jsonNode.contains("style"))
         return;
+
+    auto&&           jNode = jsonNode["style"];
+    Data::ColorValue cv;
+    cv.parse(jNode);
+    node.shaingDesc.color = cv.color.argb();
 }
 void FileParser::parseNodeDisplayShape(SceneNode& node, const JsonType& jsonNode)
 {
@@ -186,10 +191,6 @@ void FileParser::parseNodeTransData(SceneNode& node, const JsonType& jsonNode)
         node.shadingEntity.shadingDescId = id;
 
         node.unitModel.id = id;
-
-        Data::ColorValue cv;
-        cv.parse(displayNode);
-        node.shaingDesc.color = cv.color.argb();
 
         parseNodeDisplayShape(node, displayNode);
         parseNodeDisplayStyle(node, displayNode);
