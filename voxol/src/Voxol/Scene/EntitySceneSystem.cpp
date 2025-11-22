@@ -105,9 +105,12 @@ void EntitySceneSystem::initalize(const std::string& configFileName)
     
     if (!interSrcSys)
     {
+        auto compStorage         = entityStorage->comp;
         interSrcSys = Intent::InteractionSourceSystem::make();
-        interSrcSys->compStorage = entityStorage->comp;
+        interSrcSys->compStorage = compStorage;
         interSrcSys->initialize();
+        
+        auto& actMap = entityStorage->descParser.fileParser.interactionMap;
     }
 }
 

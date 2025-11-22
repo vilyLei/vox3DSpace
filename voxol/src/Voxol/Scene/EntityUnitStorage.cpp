@@ -1,6 +1,5 @@
 #include "EntityUnitStorage.h"
 #include "SceneIRParser.h"
-#include "DescriptionParser.h"
 
 namespace Voxol::Scene
 {
@@ -23,7 +22,6 @@ void EntityUnitStorage::initalizeFromDescFile(const std::string& fileName)
     {
         return;
     }
-    DescriptionParser descParser;
     descParser.initialize();
 
     auto total = 128;

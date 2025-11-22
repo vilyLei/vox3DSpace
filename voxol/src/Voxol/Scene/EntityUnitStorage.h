@@ -3,6 +3,7 @@
 
 #include "EntityCompStorage.h"
 #include "../Render/DrawingUnitStorage.h"
+#include "DescriptionParser.h"
 
 
 namespace Voxol::Scene
@@ -23,14 +24,17 @@ public:
     ~EntityUnitStorage() = default;
 
 public:
+    DescriptionParser descParser;
+
+    std::vector<Render::Gpu::DrawingUnit> getDrawUnitsFromText(const std::string& text, float fontSize = 36, const Voxol::Math::Vec2& pos = {});
+    EntityCompStorage::SP                 comp{};
+    Render::DrawingUnitStorage::SP        drawing{};
+
+public:
     void initalizeFromFile(const std::string& fileName);
     void initalizeFromDescFile(const std::string& fileName);
     void initalizeFromIRFile(const std::string& fileName);
     void initalize(int total = 512);
-
-    std::vector<Render::Gpu::DrawingUnit> getDrawUnitsFromText(const std::string& text, float fontSize = 36, const Voxol::Math::Vec2& pos = {});
-    EntityCompStorage::SP  comp{};
-    Render::DrawingUnitStorage::SP drawing{};
 
 private:
 };
