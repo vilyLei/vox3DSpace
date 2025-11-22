@@ -60,99 +60,17 @@ public:
 
     // ---------- Add / Build ----------
     void addItem(const Base::ID::KeyUint64& objectId, const Math::Bounds& bounds);
-    //void addItem(const Base::ID::KeyUint64& objectId, const Math::Bounds& bounds)
-    //{
-    //    LeafTemp lt;
-    //    lt.objectId = objectId;
-    //    lt.bounds   = bounds;
-    //    auto flag   = objectId.isIDValid();
-    //    m_leafTemps.push_back(lt);
-    //}
-
     // Build entire BVH from m_leafTemps (clears previous nodes)
     void build();
-    /*
-    void build()
-    {
-        m_nodes.clear();
-        m_objectToLeaf.clear();
-        m_fatBounds.clear();
-        m_dirtyLeaves.clear();
-        m_deletedCount = 0;
-        m_needsCompact = false;
-
-        if (m_leafTemps.empty()) return;
-
-        m_nodes.reserve(std::max<size_t>(4, m_leafTemps.size() * 2));
-        // build index array
-        std::vector<int> indices((int)m_leafTemps.size());
-        for (int i = 0; i < (int)indices.size(); ++i) indices[i] = i;
-
-        int root = buildRecursiveFromLeaves(indices, 0, (int)indices.size(), -1);
-        (void)root;
-
-        // init fat bounds from leaves
-        for (int i = 0; i < (int)m_nodes.size(); ++i)
-        {
-            const Node& n = m_nodes[i];
-
-            //printf("v2 build() CCC, n.objectId: %s, n(l=%d,r=%d)\n", n.objectId.idToString().c_str(), n.left, n.right);
-            if (isLeaf(n))
-            {
-                m_fatBounds[n.objectId] = n.bounds.expanded(m_fatPad);
-            }
-        }
-
-        rebuildObjectMap();
-        m_dirty = false;
-    }
-    //*/
-
     // ---------- Update (with fat bounds) ----------
     // Update bounds by object id; returns true if updated.
     bool updateItemBoundsByObjectId(const Base::ID::KeyUint64& objectId, const Math::Bounds& newBounds);
-    /*
-    bool updateItemBoundsByObjectId(const Base::ID::KeyUint64& objectId, const Math::Bounds& newBounds)
-    {
-        auto mit = m_objectToLeaf.find(objectId);
-        if (mit == m_objectToLeaf.end()) return false;
-        int leafIdx = mit->second;
-        if (!validNodeIndex(leafIdx)) return false;
-        Node& leaf = m_nodes[leafIdx];
 
-        auto fit = m_fatBounds.find(objectId);
-        if (fit == m_fatBounds.end())
-        {
-            m_fatBounds[objectId] = newBounds.expanded(m_fatPad);
-            leaf.bounds           = newBounds;
-            markAncestorsDirtyUpToRoot(leafIdx);
-            m_dirty = true;
-            return true;
-        }
-
-        Math::Bounds& fb = fit->second;
-        // if within fat bound -> update and local refit
-        if (newBounds.left() >= fb.left() && newBounds.right() <= fb.right() &&
-            newBounds.top() >= fb.top() && newBounds.bottom() <= fb.bottom())
-        {
-            leaf.bounds = newBounds;
-            // immediate local refit (propagate up)
-            markAncestorsDirtyUpToRoot(leafIdx);
-            m_dirty = true;
-            return true;
-        }
-
-        // exceeded fat bound: expand fat, mark for partial rebuild
-        fb          = newBounds.expanded(m_fatPad);
-        leaf.bounds = newBounds;
-        m_dirtyLeaves.insert(leafIdx);
-        m_dirty = true;
-        return true;
-    }
-    //*/
     // ---------- Remove (lazy) ----------
     // Mark object as removed. Removal is lazy; node remains in m_nodes until compact.
     // Returns true if removed.
+    bool removeItemByObjectId(const Base::ID::KeyUint64& objectId);
+    /*
     bool removeItemByObjectId(const Base::ID::KeyUint64& objectId)
     {
         auto it = m_objectToLeaf.find(objectId);
@@ -203,6 +121,7 @@ public:
         m_dirty = true;
         return true;
     }
+    //*/
 
     // --------- 分块 lazy GC（每帧处理有限工作量） ---------
     // 设计：把 leafSlots 分成块 (BLOCK_SIZE)，每帧处理 1..N 个块，合并空洞或移除已删除的槽。
