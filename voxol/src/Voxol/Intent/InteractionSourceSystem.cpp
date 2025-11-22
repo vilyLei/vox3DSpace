@@ -9,6 +9,7 @@ InteractionSourceSystem::SP InteractionSourceSystem::make()
 }
 void InteractionSourceSystem::initialize()
 {
+    /*
     using namespace Interaction;
 
     InteractionSource srcNode;
@@ -54,6 +55,7 @@ void InteractionSourceSystem::initialize()
     srcNode.tars[upTar.flag] = upTar;
 
     addSource(srcNode);
+    //*/
 }
 
 

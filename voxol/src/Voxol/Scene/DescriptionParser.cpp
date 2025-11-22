@@ -95,21 +95,6 @@ void SceneActionTargetNode::parse(const JsonType& jsonNode, const std::string& s
         printf("actDesc.target: %s, srcActType: %s\n", actDesc.target.c_str(), srcActType.c_str());
         actions.emplace_back(actDesc);
     }
-    //auto&& jNode    = elements[0];
-    //target         = jNode["target"];
-    //auto&& actJNode = jNode["action"];
-    //if (actJNode.contains("type"))
-    //{
-    //    action.type = actJNode["type"];
-    //}
-    //Data::ColorValue cv;
-    //cv.parse(actJNode);
-    //action.color = cv.color.argb();
-    //if (actJNode.contains("cmd"))
-    //{
-    //    action.cmd = actJNode["cmd"];
-    //}
-
 }
 
 
@@ -191,15 +176,24 @@ void FileParser::parseNodeActionData(SceneNode& parentNode, const JsonType& json
     Intent::Interaction::InteractionSource srcNode;
     srcNode.id = Base::ID::KeyUint64::make(parentNode.id);
 
-    interactionMap[srcNode.id] = srcNode;
     SceneActionTargetNode overNode;
     overNode.parse(jsonNode, "over");
     SceneActionTargetNode upNode;
     overNode.parse(jsonNode, "up");
-    //if (jsonNode.contains("over"))
-    //{
-    //    auto&& overNode = jsonNode["over"];
-    //}
+
+    bool                                      visible = true;
+    Intent::Interaction::InteractionTargetSet overTar;
+    overTar.flag = static_cast<uint8_t>(Intent::Interaction::MouseStatus::Over);
+    for (auto& tarAct : overNode.actions)
+    {
+        auto&& ni = nodeNameMap[tarAct.target];
+        auto   tarKeyId = Base::ID::KeyUint64::make(ni.id);
+        overTar.targets.push_back({tarKeyId, "default", tarAct.color, visible});
+    }
+    srcNode.tars[overTar.flag] = overTar;
+
+    interactionMap[srcNode.id] = srcNode;
+
 }
 
 void FileParser::parseHeriNodes(const JsonType& jsonNode)
