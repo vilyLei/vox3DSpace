@@ -14,6 +14,7 @@ set(BASE_DIR "${VOX_DIR}/Base")
 set(SCENE_DIR "${VOX_DIR}/Scene")
 set(SYSTEM_DIR "${VOX_DIR}/System")
 set(CORE_DIR "${VOX_DIR}/Core")
+set(COLOUR_DIR "${VOX_DIR}/Colour")
 set(MOTION_DIR "${VOX_DIR}/Motion")
 set(PHYSICS_DIR "${VOX_DIR}/Physics")
 set(UTIL_DIR "${VOX_DIR}/Util")
@@ -38,6 +39,7 @@ include_directories(
   ${SCENE_DIR}
   ${SYSTEM_DIR}
   ${CORE_DIR}
+  ${COLOUR_DIR}
   ${MOTION_DIR}
   ${PHYSICS_DIR}
   ${UTIL_DIR}
@@ -60,6 +62,7 @@ file(GLOB BASE_SRC "${BASE_DIR}/*.cpp" "${BASE_DIR}/*.h")
 file(GLOB SCENE_SRC "${SCENE_DIR}/*.cpp" "${SCENE_DIR}/*.h")
 file(GLOB SYSTEM_SRC "${SYSTEM_DIR}/*.cpp" "${SYSTEM_DIR}/*.h")
 file(GLOB CORE_SRC "${CORE_DIR}/*.cpp" "${CORE_DIR}/*.h")
+file(GLOB COLOUR_SRC "${COLOUR_DIR}/*.cpp" "${COLOUR_DIR}/*.h")
 file(GLOB MOTION_SRC "${MOTION_DIR}/*.cpp" "${MOTION_DIR}/*.h")
 file(GLOB PHYSICS_SRC "${PHYSICS_DIR}/*.cpp" "${PHYSICS_DIR}/*.h")
 file(GLOB UTIL_SRC "${UTIL_DIR}/*.cpp" "${UTIL_DIR}/*.h")
@@ -77,6 +80,7 @@ set(ALL_SOURCES
   ${SCENE_SRC}
   ${SYSTEM_SRC}
   ${CORE_SRC}
+  ${COLOUR_SRC}
   ${MOTION_SRC}
   ${PHYSICS_SRC}
   ${UTIL_SRC}
@@ -94,6 +98,7 @@ source_group("Base" FILES ${BASE_SRC})
 source_group("Scene" FILES ${SCENE_SRC})
 source_group("System" FILES ${SYSTEM_SRC})
 source_group("Core" FILES ${CORE_SRC})
+source_group("Colour" FILES ${COLOUR_SRC})
 source_group("Motion" FILES ${MOTION_SRC})
 source_group("Physics" FILES ${PHYSICS_SRC})
 source_group("Util" FILES ${UTIL_SRC})
