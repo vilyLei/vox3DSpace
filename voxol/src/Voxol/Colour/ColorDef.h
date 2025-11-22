@@ -125,18 +125,6 @@ struct Color
     std::string toCSSString() const;
 };
 
-//enum class ColorSpaceKind
-//{
-//    sRGB,
-//    DisplayP3,
-//    AdobeRGB,
-//    // extend: Rec2020, ACEScg, XYZ, Lab, DeviceICC
-//};
-//struct ColorEx
-//{
-//    Color          color8bit; // underlay 32-bit color
-//    ColorSpaceKind space;     // enum or pointer to ICC profile
-//};
 } // namespace Component
 } // namespace Voxol::Colour
 #endif
