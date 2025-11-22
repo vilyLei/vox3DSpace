@@ -111,7 +111,8 @@ public:
 
     void parseSceneActions(const JsonType& jsonNode);
     void parseNodeAction(SceneNode& parentNode, const JsonType& jsonNode);
-    void parseNodeActionData(SceneNode& parentNode, const JsonType& jsonNode);
+    void parseNodeActionMouseData(SceneNode& currNode, const JsonType& jsonNode);
+    void parseNodeActionData(SceneNode& currNode, const JsonType& jsonNode);
 };
 
 using SceneNodeForeachCallbackType = std::function<void(Desc::SceneNode& node)>;

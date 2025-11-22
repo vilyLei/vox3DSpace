@@ -192,14 +192,14 @@ void FileParser::buildInteraction(Intent::Interaction::InteractionSource& srcNod
     }
     srcNode.addTargetSet(tarSet);
 }
-void FileParser::parseNodeActionData(SceneNode& parentNode, const JsonType& jsonNode)
+void FileParser::parseNodeActionMouseData(SceneNode& currNode, const JsonType& jsonNode)
 {
-    printf("FileParser::parseNodeActionData(), name: %s\n", parentNode.name.c_str());
+    printf("FileParser::parseNodeActionMouseData(), name: %s\n", currNode.name.c_str());
 
     using namespace Intent::Interaction;
 
     InteractionSource srcNode;
-    srcNode.id = Base::ID::KeyUint64::make(parentNode.id);
+    srcNode.id = Base::ID::KeyUint64::make(currNode.id);
 
     bool visible = true;
 
@@ -216,6 +216,14 @@ void FileParser::parseNodeActionData(SceneNode& parentNode, const JsonType& json
     buildInteraction(srcNode, "up", actFlag, jsonNode);
 
     interactionMap[srcNode.id] = srcNode;
+}
+void FileParser::parseNodeActionData(SceneNode& currNode, const JsonType& jsonNode)
+{
+    printf("FileParser::parseNodeActionData(), name: %s\n", currNode.name.c_str());
+    if (jsonNode.contains("mouse"))
+    {
+        parseNodeActionMouseData(currNode, jsonNode["mouse"]);
+    }
 }
 
 void FileParser::parseHeriNodes(const JsonType& jsonNode)
