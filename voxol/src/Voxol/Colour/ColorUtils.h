@@ -39,6 +39,17 @@ struct Color
         return (uint32_t(r()) << 24) | (uint32_t(g()) << 16) |
             (uint32_t(b()) << 8) | uint32_t(a());
     }
+    constexpr uint32_t bgra() const noexcept
+    {
+        return (uint32_t(b()) << 24) | (uint32_t(g()) << 16) |
+            (uint32_t(r()) << 8) | uint32_t(a());
+    }
+    constexpr uint32_t abgr() const noexcept
+    {
+        return (uint32_t(a()) << 24) | (uint32_t(b()) << 16) |
+            (uint32_t(g()) << 8) | uint32_t(r());
+    }
+
     constexpr void setA(uint8_t a) noexcept
     {
         value = (value & 0x00FFFFFF) | (static_cast<uint32_t>(a) << 24);
