@@ -41,6 +41,7 @@ struct InteractionTargetSet
     uint8_t                            flag = 0;
     std::string                        type = "default";
     std::vector<InteractionTargetDesc> targets;
+
 };
 
 struct InteractionSource
@@ -56,6 +57,10 @@ struct InteractionSource
     bool        dirty   = false;
 
     std::unordered_map<uint8_t, InteractionTargetSet> tars;
+    void addTargetSet(const InteractionTargetSet& targetSet)
+    {
+        tars[targetSet.flag] = targetSet;
+    }
 };
 
 using SourceCallbackType = std::function<void(InteractionSource& srcNode)>;

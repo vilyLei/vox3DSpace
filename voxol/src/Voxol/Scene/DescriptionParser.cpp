@@ -197,7 +197,8 @@ void FileParser::parseNodeActionData(SceneNode& parentNode, const JsonType& json
         auto tarKeyId = Base::ID::KeyUint64::make(ni.id);
         overTar.targets.push_back({tarKeyId, "default", tarAct.color, visible});
     }
-    srcNode.tars[overTar.flag] = overTar;
+    //srcNode.tars[overTar.flag] = overTar;
+    srcNode.addTargetSet(overTar);
 
 
     Intent::Interaction::InteractionTargetSet outTar;
@@ -212,7 +213,8 @@ void FileParser::parseNodeActionData(SceneNode& parentNode, const JsonType& json
         auto tarKeyId = Base::ID::KeyUint64::make(ni.id);
         outTar.targets.push_back({tarKeyId, "default", tarAct.color, visible});
     }
-    srcNode.tars[outTar.flag] = outTar;
+    //srcNode.tars[outTar.flag] = outTar;
+    srcNode.addTargetSet(outTar);
 
     Intent::Interaction::InteractionTargetSet downTar;
     downTar.flag = static_cast<uint8_t>(Intent::Interaction::MouseStatus::Down);
@@ -226,7 +228,8 @@ void FileParser::parseNodeActionData(SceneNode& parentNode, const JsonType& json
         auto tarKeyId = Base::ID::KeyUint64::make(ni.id);
         downTar.targets.push_back({tarKeyId, "default", tarAct.color, visible});
     }
-    srcNode.tars[downTar.flag] = downTar;
+    //srcNode.tars[downTar.flag] = downTar;
+    srcNode.addTargetSet(downTar);
 
     
     Intent::Interaction::InteractionTargetSet upTar;
@@ -241,7 +244,7 @@ void FileParser::parseNodeActionData(SceneNode& parentNode, const JsonType& json
         auto tarKeyId = Base::ID::KeyUint64::make(ni.id);
         upTar.targets.push_back({tarKeyId, "default", tarAct.color, visible});
     }
-    srcNode.tars[upTar.flag] = upTar;
+    srcNode.addTargetSet(upTar);
 
     interactionMap[srcNode.id] = srcNode;
 }
