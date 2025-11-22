@@ -86,8 +86,10 @@ void SceneActionTargetNode::parse(const JsonType& jsonNode, const std::string& s
         }
 
         Data::ColorValue cv;
-        cv.parse(actJNode);
-        actDesc.color = cv.color.argb();
+        if (cv.parse(actJNode))
+        {
+            actDesc.color = cv.color.argb();
+        }
         if (actJNode.contains("cmd"))
         {
             actDesc.cmd = actJNode["cmd"];
