@@ -8,7 +8,6 @@ namespace Voxol::Scene
 namespace Desc
 {
 
-
 void DisplayShape::parse(const JsonType& jsonNode)
 {
 
@@ -32,13 +31,10 @@ void DisplayShape::parse(const JsonType& jsonNode)
 
     if (type == "rectangle" || type == "round-rectangle")
     {
-        //node.unitModel.drawUnitId = 0;
-        //node.unitModel.type       = Component::UnitModelType::Mesh;
         jsonValue.parseWithName(jsonNode, "size");
         if (jsonValue.is<Math::Vec2>())
         {
             size = jsonValue.get<Math::Vec2>();
-            //node.transform.scale() = size;
         }
     }
     else if (type == "circle")
@@ -53,6 +49,12 @@ void DisplayShape::parse(const JsonType& jsonNode)
     }
     else if (type == "text")
     {
+        jsonValue.parseWithName(jsonNode, "text");
+        if (jsonValue.is<Component::UnitTextDesc>())
+        {
+            auto&& textDesc = jsonValue.get<Component::UnitTextDesc>();
+            size            = {textDesc.fontSize, textDesc.fontSize};
+        }
     }
 }
 
