@@ -123,6 +123,17 @@ struct Color
     std::string toHexString() const;
     std::string toCSSString() const;
 };
+
+struct ColorSpace
+{
+    uint32_t type;
+};
+
+struct ColorEx
+{
+    Color      color8bit; // underlay 32-bit color
+    ColorSpace space;     // enum or pointer to ICC profile
+};
 } // namespace Component
 } // namespace Voxol::Colour
 #endif
