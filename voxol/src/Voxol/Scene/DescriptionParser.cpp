@@ -107,6 +107,8 @@ void FileParser::parseNodeTransData(SceneNode& node, const JsonType& jsonNode)
 
         SceneIR::Scene::Model jModel;
         jModel.parse(displayNode);
+
+        // for debug
         if (jModel.type == "rectangle" || jModel.type == "round-rectangle")
         {
             node.unitModel.drawUnitId = 0;
@@ -123,17 +125,6 @@ void FileParser::parseNodeTransData(SceneNode& node, const JsonType& jsonNode)
             auto radius                = jModel.getRadius() * 2;
             node.transform.scale() = {radius, radius};
         }
-
-        //if (jModel.hasRadius())
-        //{
-        //    auto pw           = jModel.getRadius() * 2;
-        //    node.transform.scale() = {pw, pw};
-        //}
-        //else if (jModel.hasSize())
-        //{
-        //    auto&& size       = jModel.getSize();
-        //    node.transform.scale() = size;
-        //}
 
         if (jModel.hasText())
         {
