@@ -10,7 +10,8 @@
         "nodes": [
             {
                 "config":{
-                    "cacheAsBitmap" : true
+                    "cacheAsBitmap" : true,
+                    "colourEdit" : true
                 },
                 "type": "panel",
                 "name": "play-panel",
