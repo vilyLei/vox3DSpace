@@ -163,8 +163,18 @@ void InteractionSourceSystem::execActToDsiplay(Interaction::InteractionSource& s
             return;
         }
         auto& shdDesc  = shaderingDescVec[shadingEt.shadingDescId];
-        shdDesc.color  = desc.color;
-        entity.visible = desc.visible;
+        if (desc.type == "change-color")
+        {
+            shdDesc.color = desc.color;
+        }
+        else if (desc.type == "change-visible")
+        {
+            entity.visible = desc.visible;
+        }
+        else if (desc.type == "toggle-visible")
+        {
+            entity.visible = !entity.visible;
+        }
         printf("modifyDstFunc() etId: %d, actDesc: %s, color: 0x%x\n", etId, actDesc.c_str(), shdDesc.color);
         compStorage->foreachBoundsWithEntityId(etId, [this](const Base::ID::KeyUint64& etId, const Math::Bounds& bounds) {
             tileSys->addDirtyBounds(bounds, 0);
