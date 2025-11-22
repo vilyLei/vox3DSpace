@@ -136,7 +136,20 @@ void FileParser::parseNodeDisplayStyle(SceneNode& node, const JsonType& jsonNode
     if (!jsonNode.contains("style"))
         return;
 
-    auto&&           jNode = jsonNode["style"];
+    auto&& jNode = jsonNode["style"];
+    if (jNode.contains("fills"))
+    {
+        auto&& elements = jNode["fills"];
+        if (!elements.empty()) {
+            for (auto& item : elements)
+            {
+                Data::ColorValue cv;
+                cv.parse(jNode);
+                node.shaingDesc.color = cv.color.argb();
+            }
+            return;
+        }
+    }
     Data::ColorValue cv;
     cv.parse(jNode);
     node.shaingDesc.color = cv.color.argb();

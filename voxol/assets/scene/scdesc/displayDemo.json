@@ -1,0 +1,40 @@
+{
+    "fills": [
+        {
+            "type": "color",
+            "value": "0xff990099",
+            "blend": "normal",
+            "opacity": 1.0
+        },
+        {
+            "type": "linear-gradient",
+            "from": [
+                0,
+                0
+            ],
+            "to": [
+                0,
+                1
+            ],
+            "stops": [
+                {
+                    "offset": 0.0,
+                    "color": "0xffffffff"
+                },
+                {
+                    "offset": 1.0,
+                    "color": "0xff000000"
+                }
+            ],
+            "blend": "overlay",
+            "opacity": 0.5
+        },
+        {
+            "type": "texture",
+            "src": "textures/paper.png",
+            "uvMode": "repeat",
+            "blend": "multiply",
+            "opacity": 0.8
+        }
+    ]
+}

@@ -30,7 +30,14 @@
                         ]
                     },
                     "style": {
-                        "fillColor": "0xffaabb99"
+                        "fills": [
+                            {
+                                "type": "color",
+                                "value": "0xffaabb99",
+                                "blend": "normal",
+                                "opacity": 1.0
+                            }
+                        ]
                     }
                 },
                 "children": [
