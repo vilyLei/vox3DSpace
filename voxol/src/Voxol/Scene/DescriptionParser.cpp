@@ -185,7 +185,7 @@ void FileParser::parseNodeTransData(SceneNode& node, const JsonType& jsonNode)
         cv.parse(displayNode);
         node.shaingDesc.color = cv.color.argb();
 
-        parseNodeDisplayData(node, displayNode["shape"]);
+        parseNodeDisplayShape(node, displayNode["shape"]);
     }
 }
 
