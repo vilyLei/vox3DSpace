@@ -225,8 +225,8 @@ void EntityUnitStorage::initalizeFromIRFile(const std::string& fileName)
         {
             model.type = UnitModelType::Text;
 
-            auto&&                            text = dataModel.getText();
-            Scene::Component::UnitStringModel strModel{
+            auto&&                          text = dataModel.getText();
+            Scene::Component::UnitTextModel strModel{
                 et.id,
                 text};
 

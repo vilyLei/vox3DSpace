@@ -144,7 +144,7 @@ void FileParser::parseNodeTransData(SceneNode& node, const JsonType& jsonNode)
         //}
         if (jModel.hasText())
         {
-            Component::UnitStringModel textModel;
+            Component::UnitTextModel textModel;
             textModel.id = node.id;
             textModel.text = jModel.getText();
             //= {node.id,

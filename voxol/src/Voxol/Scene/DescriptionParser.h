@@ -62,7 +62,7 @@ public:
 
 public:
     SceneNode rootNode;
-    std::unordered_map<uint32_t, Component::UnitStringModel> textModelMap;
+    std::unordered_map<uint32_t, Component::UnitTextModel> textModelMap;
 
 public:
     void initFromFile(const std::string& fileName);
