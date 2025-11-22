@@ -172,7 +172,10 @@ void FileParser::parseNodeAction(SceneNode& parentNode, const JsonType& jsonNode
 void FileParser::parseNodeActionData(SceneNode& parentNode, const JsonType& jsonNode)
 {
     printf("FileParser::parseNodeActionData(), name: %s\n", parentNode.name.c_str());
-    Intent::Interaction::InteractionSource srcNode;
+
+    using namespace Intent::Interaction;
+
+    InteractionSource srcNode;
     srcNode.id = Base::ID::KeyUint64::make(parentNode.id);
 
     SceneActionTargetNode overNode;
@@ -185,8 +188,9 @@ void FileParser::parseNodeActionData(SceneNode& parentNode, const JsonType& json
     upNode.parse(jsonNode, "up");
 
     bool                                      visible = true;
-    Intent::Interaction::InteractionTargetSet overTar;
-    overTar.flag = static_cast<uint8_t>(Intent::Interaction::MouseStatus::Over);
+    //Intent::Interaction::InteractionTargetSet overTar;
+    auto&& overTar = InteractionTargetSet::makeFromeMouseStatus(MouseStatus::Over);
+    //overTar.flag = static_cast<uint8_t>(Intent::Interaction::MouseStatus::Over);
     for (auto& tarAct : overNode.actions)
     {
         if (!nodeNameMap.contains(tarAct.target))
@@ -201,8 +205,9 @@ void FileParser::parseNodeActionData(SceneNode& parentNode, const JsonType& json
     srcNode.addTargetSet(overTar);
 
 
-    Intent::Interaction::InteractionTargetSet outTar;
-    outTar.flag = static_cast<uint8_t>(Intent::Interaction::MouseStatus::Out);
+    //Intent::Interaction::InteractionTargetSet outTar;
+    auto&& outTar = InteractionTargetSet::makeFromeMouseStatus(MouseStatus::Out);
+    //outTar.flag = static_cast<uint8_t>(Intent::Interaction::MouseStatus::Out);
     for (auto& tarAct : outNode.actions)
     {
         if (!nodeNameMap.contains(tarAct.target))
@@ -216,8 +221,8 @@ void FileParser::parseNodeActionData(SceneNode& parentNode, const JsonType& json
     //srcNode.tars[outTar.flag] = outTar;
     srcNode.addTargetSet(outTar);
 
-    Intent::Interaction::InteractionTargetSet downTar;
-    downTar.flag = static_cast<uint8_t>(Intent::Interaction::MouseStatus::Down);
+    auto&& downTar = InteractionTargetSet::makeFromeMouseStatus(MouseStatus::Down);
+    //downTar.flag = static_cast<uint8_t>(Intent::Interaction::MouseStatus::Down);
     for (auto& tarAct : downNode.actions)
     {
         if (!nodeNameMap.contains(tarAct.target))
@@ -232,8 +237,9 @@ void FileParser::parseNodeActionData(SceneNode& parentNode, const JsonType& json
     srcNode.addTargetSet(downTar);
 
     
-    Intent::Interaction::InteractionTargetSet upTar;
-    upTar.flag = static_cast<uint8_t>(Intent::Interaction::MouseStatus::Up);
+    //Intent::Interaction::InteractionTargetSet upTar;
+    auto&& upTar = InteractionTargetSet::makeFromeMouseStatus(MouseStatus::Up);
+    //upTar.flag = static_cast<uint8_t>(Intent::Interaction::MouseStatus::Up);
     for (auto& tarAct : upNode.actions)
     {
         if (!nodeNameMap.contains(tarAct.target))

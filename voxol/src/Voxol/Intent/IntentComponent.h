@@ -42,6 +42,13 @@ struct InteractionTargetSet
     std::string                        type = "default";
     std::vector<InteractionTargetDesc> targets;
 
+    static InteractionTargetSet makeFromeMouseStatus(MouseStatus status)
+    {
+        InteractionTargetSet tar;
+        tar.flag = static_cast<uint8_t>(status);
+        return tar;
+    }
+
 };
 
 struct InteractionSource
