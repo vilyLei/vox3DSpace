@@ -310,5 +310,80 @@ void BVH2D_LazyGC::compactIfNeeded()
     build(); // this will also rebuild fat bounds & object map
 }
 
+// ---------- Queries ----------
+void BVH2D_LazyGC::queryPoint(const Math::Vec2& p, std::vector<Base::ID::KeyUint64>& outIds) const
+{
+    if (m_nodes.empty()) return;
+    std::stack<int> st;
+    st.push(0);
+    while (!st.empty())
+    {
+        int idx = st.top();
+        st.pop();
+        if (!validNodeIndex(idx)) continue;
+        const Node& n = m_nodes[idx];
+        if (!n.bounds.contains(p)) continue;
+        if (isLeaf(n))
+        {
+            if (n.objectId.isIDValid()) outIds.push_back(n.objectId);
+        }
+        else
+        {
+            if (n.right >= 0) st.push(n.right);
+            if (n.left >= 0) st.push(n.left);
+        }
+    }
+}
+
+void BVH2D_LazyGC::queryBounds(const Math::Bounds& b, std::vector<Base::ID::KeyUint64>& outIds) const
+{
+    if (m_nodes.empty()) return;
+    std::stack<int> st;
+    st.push(0);
+
+    static bool flag = true;
+
+    //if (flag)
+    //{
+    //    printf("v2 queryBounds() AAA 01,m_nodes.size(): %lld\n", m_nodes.size());
+    //    for (auto& n : m_nodes)
+    //    {
+    //        printf("v2 queryBounds() AAA 01, n.objectId: %s, n(l=%d,r=%d)\n", n.objectId.idToString().c_str(), n.left, n.right);
+    //    }
+    //}
+    while (!st.empty())
+    {
+        int idx = st.top();
+        st.pop();
+
+        //if (flag)
+        //{
+        //    printf("v2 queryBounds() CCC,idx: %d, validNodeIndex(idx): %d\n", idx, validNodeIndex(idx));
+        //}
+
+        if (!validNodeIndex(idx)) continue;
+        const Node& n = m_nodes[idx];
+        //if (flag)
+        //{
+        //    printf("v2 queryBounds() CCC,idx: %d, n.objectId: %s, n(l=%d,r=%d)\n", idx, n.objectId.idToString().c_str(), n.left, n.right);
+        //}
+        if (!n.bounds.intersects(b)) continue;
+        if (isLeaf(n))
+        {
+            if (n.objectId.isIDValid() && n.bounds.intersects(b))
+            {
+                outIds.push_back(n.objectId);
+            }
+        }
+        else
+        {
+            if (n.right >= 0) st.push(n.right);
+            if (n.left >= 0) st.push(n.left);
+        }
+    }
+
+    flag = false;
+}
+
 }
 }

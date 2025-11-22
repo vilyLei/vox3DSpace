@@ -105,6 +105,8 @@ public:
     void compactIfNeeded();
 
     // ---------- Queries ----------
+    void queryPoint(const Math::Vec2& p, std::vector<Base::ID::KeyUint64>& outIds) const;
+    /*
     void queryPoint(const Math::Vec2& p, std::vector<Base::ID::KeyUint64>& outIds) const
     {
         if (m_nodes.empty()) return;
@@ -128,7 +130,9 @@ public:
             }
         }
     }
-
+    //*/
+    void queryBounds(const Math::Bounds& b, std::vector<Base::ID::KeyUint64>& outIds) const;
+    /*
     void queryBounds(const Math::Bounds& b, std::vector<Base::ID::KeyUint64>& outIds) const
     {
         if (m_nodes.empty()) return;
@@ -178,7 +182,7 @@ public:
 
         flag = false;
     }
-
+    //*/
     // ---------- Utilities / debug ----------
     size_t              nodeCount() const { return m_nodes.size(); }
     size_t              leafCount() const { return m_objectToLeaf.size(); }
