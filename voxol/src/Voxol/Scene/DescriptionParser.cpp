@@ -58,6 +58,33 @@ void DisplayShape::parse(const JsonType& jsonNode)
     }
 }
 
+
+void SceneActionTargetNode::parse(const JsonType& jsonNode, const std::string& actType)
+{
+    if (!jsonNode.contains("actType"))
+    {
+        return;
+    }
+    type           = actType;
+    auto&& jNode   = jsonNode["actType"];
+    target         = jNode["target"];
+    auto&& actJNode = jsonNode["action"];
+    if (actJNode.contains("type"))
+    {
+        action.type = actJNode["type"];
+    }
+    Data::ColorValue cv;
+    cv.parse(actJNode);
+    action.color = cv.color.argb();
+    if (actJNode.contains("cmd"))
+    {
+        action.cmd = actJNode["cmd"];
+    }
+
+}
+
+
+
 void SceneNode::print() const
 {
     std::string info = ", hasChild=" + (hasChild ? std::string("true") : std::string("false"));
@@ -134,7 +161,12 @@ void FileParser::parseNodeActionData(SceneNode& parentNode, const JsonType& json
     printf("FileParser::parseNodeActionData(), name: %s\n", parentNode.name.c_str());
     Intent::Interaction::InteractionSource srcNode;
     srcNode.id = Base::ID::KeyUint64::make(parentNode.id);
+
     interactionMap[srcNode.id] = srcNode;
+    if (jsonNode.contains("over"))
+    {
+        auto&& overNode = jsonNode["over"];
+    }
 }
 
 void FileParser::parseHeriNodes(const JsonType& jsonNode)

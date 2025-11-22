@@ -37,13 +37,30 @@ struct DisplayShape
     std::string     type;
     Math::Vec2      size;
     Data::JsonValue jsonValue;
-    void            parse(const JsonType& jsonNode);
+    void parse(const JsonType& jsonNode);
 };
+
 struct SceneNodeName
 {
     uint32_t    id = Base::ID::INVALID_ID;
     std::string name;
 };
+
+struct SceneActionDesc
+{
+    std::string type;
+    std::string cmd;
+    uint32_t color = 0xff000000;
+};
+
+struct SceneActionTargetNode
+{
+    std::string type;
+    std::string target;
+    SceneActionDesc action;
+    void parse(const JsonType& jsonNode, const std::string& actType);
+};
+
 struct SceneNode
 {
     std::string            type;
