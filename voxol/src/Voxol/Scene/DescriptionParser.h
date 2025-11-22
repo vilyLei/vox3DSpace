@@ -3,6 +3,7 @@
 
 #include "../Base/BaseDefine.h"
 #include "EntityComponent.h"
+#include "Intent/IntentComponent.h"
 #include "JsonValue.h"
 #include "../Math/Vec2.h"
 #include <nlohmann/json.hpp>
@@ -71,6 +72,7 @@ public:
     SceneNode                                              rootNode;
     nlohmann::json                                         jsonObj;
     std::unordered_map<uint32_t, Component::UnitTextModel> textModelMap;
+    Base::ID::keyUint64Unordered_map<Intent::Interaction::InteractionSource> interactionMap;
 
 public:
     void initFromFile(const std::string& fileName);

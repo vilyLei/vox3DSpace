@@ -128,10 +128,15 @@ void FileParser::parseNodeAction(SceneNode& parentNode, const JsonType& jsonNode
         }
     }
 }
+
 void FileParser::parseNodeActionData(SceneNode& parentNode, const JsonType& jsonNode)
 {
     printf("FileParser::parseNodeActionData(), name: %s\n", parentNode.name.c_str());
+    Intent::Interaction::InteractionSource srcNode;
+    srcNode.id = Base::ID::KeyUint64::make(parentNode.id);
+    interactionMap[srcNode.id] = srcNode;
 }
+
 void FileParser::parseHeriNodes(const JsonType& jsonNode)
 {
     if (jsonNode.contains("nodes") && jsonNode["nodes"].is_array())
