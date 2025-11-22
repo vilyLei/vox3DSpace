@@ -13,15 +13,18 @@ std::string Color::toString(std::string_view fmt) const
     {
         return std::format("#{:02X}{:02X}{:02X}{:02X}", r(), g(), b(), a());
     }
-    else if (fmt == "argb")
+    
+    if (fmt == "argb")
     {
         return std::format("ARGB({:02X}{:02X}{:02X}{:02X})", a(), r(), g(), b());
     }
-    else if (fmt == "rgba")
+    
+    if (fmt == "rgba")
     {
         return std::format("RGBA({:02X}{:02X}{:02X}{:02X})", r(), g(), b(), a());
     }
-    else if (fmt == "css")
+    
+    if (fmt == "css")
     {
         if (a() == 255)
         {
@@ -32,10 +35,8 @@ std::string Color::toString(std::string_view fmt) const
             return std::format("rgba({}, {}, {}, {:.2f})", r(), g(), b(), a() / 255.0f);
         }
     }
-    else
-    {
-        return std::format("Color(r={:.2f}, g={:.2f}, b={:.2f}, a={:.2f})", r() / 255.0f, g() / 255.0f, b() / 255.0f, a() / 255.0f);
-    }
+    
+    return std::format("Color(r={:.2f}, g={:.2f}, b={:.2f}, a={:.2f})", r() / 255.0f, g() / 255.0f, b() / 255.0f, a() / 255.0f);
 }
 std::string Color::toHexString() const
 {
