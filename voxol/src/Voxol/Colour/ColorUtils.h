@@ -30,7 +30,24 @@ struct Color
     }
     uint32_t rgba()
     {
-        return (value << 8) | (value>>24);
+        return r >> 24 | g << 16 | b << 8 | a;
+    }
+    uint32_t setRGB(uint8_t r_, uint8_t g_, uint8_t b_)
+    {
+        r = r_;
+        g = g_;
+        b = b_;
+    }
+    uint32_t setAlpha(uint8_t a_)
+    {
+        a = a_;
+    }
+    uint32_t setRGBA(uint8_t r_, uint8_t g_, uint8_t b_, uint8_t a_)
+    {
+        r = r_;
+        g = g_;
+        b = b_;
+        a = a_;
     }
 };
 }
