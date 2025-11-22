@@ -30,11 +30,13 @@ struct HierarchyNode
         printf("%s\n", info.c_str());
     }
 };
-//struct DisplayShape
-//{
-//    std::string type;
-//    void        parse(Component::UnitTransform& trans,const JsonType& jsonNode);
-//};
+struct DisplayShape
+{
+    std::string type;
+    Math::Vec2  size;
+    Data::JsonValue jsonValue;
+    void        parse(const JsonType& jsonNode);
+};
 struct SceneNode
 {
     std::string            type;

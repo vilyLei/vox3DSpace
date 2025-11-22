@@ -163,40 +163,55 @@ bool ColorValue::parseCssName(const std::string& name)
     return false;
 }
 
-bool JsonValue::parseStringColorWithName(const JsonType& node, const std::string& valueName)
+bool JsonValue::parseColor(const JsonType& node)
+{
+    ColorValue cv;
+    if (!cv.parse(node))
+    {
+        return false;
+    }
+    value = cv.color.value;
+    printf("JsonValue::parseColor(), color: %s\n", cv.color.toHexString().c_str());
+    return true;
+}
+bool JsonValue::parseColorWithName(const JsonType& node, const std::string& valueName)
 {
     if (!node.contains(valueName))
         return false;
-    uint32_t color = 0x0;
-    auto&& vo = node[valueName];
-    if (vo.is_number())
-    {
-        color = static_cast<uint32_t>(vo);
-    }
-    else if (vo.is_string())
-    {
-        std::string&& hex_str = vo;
-        std::transform(hex_str.begin(), hex_str.end(), hex_str.begin(),
-                       [](unsigned char c) { return std::tolower(c); });
+    //uint32_t color = 0x0;
+    //auto&& vo = node[valueName];
+    //if (vo.is_number())
+    //{
+    //    color = static_cast<uint32_t>(vo);
+    //}
+    //else if (vo.is_string())
+    //{
+    //    std::string&& hex_str = vo;
+    //    std::transform(hex_str.begin(), hex_str.end(), hex_str.begin(),
+    //                   [](unsigned char c) { return std::tolower(c); });
 
-        if (hex_str.find('#') == 0)
-        {
-            color = std::stoul(hex_str.substr(1), nullptr, 16);
-        }
-        else if (hex_str.find('x') == 1)
-        {
-            if (hex_str.size() >= 3)
-            {
-                color = std::stoul(hex_str.substr(2), nullptr, 16);
-            }
-        }
-        else
-        {
-            color = std::stoul(hex_str.substr(2), nullptr, 16);
-        }
+    //    if (hex_str.find('#') == 0)
+    //    {
+    //        color = std::stoul(hex_str.substr(1), nullptr, 16);
+    //    }
+    //    else if (hex_str.find('x') == 1)
+    //    {
+    //        if (hex_str.size() >= 3)
+    //        {
+    //            color = std::stoul(hex_str.substr(2), nullptr, 16);
+    //        }
+    //    }
+    //    else
+    //    {
+    //        color = std::stoul(hex_str.substr(2), nullptr, 16);
+    //    }
+    //}
+    ColorValue cv;
+    if (!cv.parseWithName(node, valueName)) {
+        return false;
     }
-    printf("JsonValue::parseStringColorWithName(), color: %x\n", color);
-    value = color;
+    value = cv.color.value;
+    printf("JsonValue::parseStringColorWithName(), color: %s\n", cv.color.toHexString().c_str());
     return true;
 }
 bool JsonValue::parseWithName(const JsonType& node, const std::string& valueName)

@@ -8,6 +8,45 @@ namespace Voxol::Scene
 namespace Desc
 {
 
+
+void DisplayShape::parse(const JsonType& jsonNode) {
+
+    if (jsonNode.contains("type"))
+    {
+        type = jsonNode["type"];
+    }
+    else if (jsonNode.contains("shape"))
+    {
+        type = jsonNode["shape"];
+    }
+    else if (jsonNode.contains("shapeType"))
+    {
+        type = jsonNode["shapeType"];
+    }
+    if (!type.empty())
+    {
+        std::transform(type.begin(), type.end(), type.begin(),
+                       [](unsigned char c) { return std::tolower(c); });
+    }
+
+    if (type == "rectangle" || type == "round-rectangle")
+    {
+        //node.unitModel.drawUnitId = 0;
+        //node.unitModel.type       = Component::UnitModelType::Mesh;
+        jsonValue.
+        if (jModel.hasSize())
+        {
+            auto&& size            = jModel.getSize();
+            node.transform.scale() = size;
+        }
+    }
+    else if (jModel.type == "circle")
+    {
+        auto radius            = jModel.getRadius() * 2;
+        node.transform.scale() = {radius, radius};
+    }
+}
+
 void SceneNode::print() const
 {
     std::string info = ", hasChild=" + (hasChild ? std::string("true") : std::string("false"));

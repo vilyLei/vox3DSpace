@@ -113,7 +113,8 @@ struct JsonValue
     JsonValue(const ObjectType& obj) :
         type(Type::Object), value(obj) {}
 
-    bool parseStringColorWithName(const JsonType& node, const std::string& valueName);
+    bool parseColor(const JsonType& node);
+    bool parseColorWithName(const JsonType& node, const std::string& valueName);
     bool parseWithName(const JsonType& node, const std::string& valueName);
 
     void parse(const JsonType& j);
