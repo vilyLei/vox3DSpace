@@ -100,25 +100,25 @@ void FileParser::parseNodeTransData(SceneNode& node, const JsonType& jsonNode)
 
         node.unitModel.id = id;
 
-        std::string shapeType = "";
-        if (displayNode.contains("shape") && displayNode["shape"].is_string())
-        {
-            shapeType = displayNode["shape"];
-        }
-        else if (displayNode.contains("shapeType") && displayNode["shapeType"].is_string())
-        {
-            shapeType = displayNode["shapeType"];
-        }
-        if (shapeType == "rectangle" || shapeType == "round-rectangle")
-        {
-            node.unitModel.drawUnitId = 0;
-            node.unitModel.type       = Component::UnitModelType::Mesh;
-        }
-        else if (shapeType == "text" || shapeType == "Text")
-        {
-            node.unitModel.drawUnitId = 0;
-            node.unitModel.type       = Component::UnitModelType::Text;
-        }
+        //std::string shapeType = "";
+        //if (displayNode.contains("shape") && displayNode["shape"].is_string())
+        //{
+        //    shapeType = displayNode["shape"];
+        //}
+        //else if (displayNode.contains("shapeType") && displayNode["shapeType"].is_string())
+        //{
+        //    shapeType = displayNode["shapeType"];
+        //}
+        //if (shapeType == "rectangle" || shapeType == "round-rectangle")
+        //{
+        //    node.unitModel.drawUnitId = 0;
+        //    node.unitModel.type       = Component::UnitModelType::Mesh;
+        //}
+        //else if (shapeType == "text" || shapeType == "Text")
+        //{
+        //    node.unitModel.drawUnitId = 0;
+        //    node.unitModel.type       = Component::UnitModelType::Text;
+        //}
 
         SceneIR::Shadering::Description jDesc;
         jDesc.parse(displayNode);
@@ -127,6 +127,11 @@ void FileParser::parseNodeTransData(SceneNode& node, const JsonType& jsonNode)
 
         SceneIR::Scene::Model jModel;
         jModel.parse(displayNode);
+        if (jModel.type == "rectangle" || jModel.type == "round-rectangle")
+        {
+            node.unitModel.drawUnitId = 0;
+            node.unitModel.type       = Component::UnitModelType::Mesh;
+        }
 
         if (jModel.hasRadius())
         {
@@ -141,6 +146,9 @@ void FileParser::parseNodeTransData(SceneNode& node, const JsonType& jsonNode)
 
         if (jModel.hasText())
         {
+            node.unitModel.drawUnitId = 0;
+            node.unitModel.type       = Component::UnitModelType::Text;
+
             Component::UnitTextModel textModel;
             textModel.id = node.id;
             textModel.text = jModel.getText();
