@@ -150,10 +150,11 @@ void FileParser::parseNodeTransData(SceneNode& node, const JsonType& jsonNode)
 
         node.unitModel.id = id;
 
-        SceneIR::Shadering::Description jDesc;
-        jDesc.parse(displayNode);
-
-        node.shaingDesc.color = jDesc.color;
+        //SceneIR::Shadering::Description jDesc;
+        //jDesc.parse(displayNode);
+        Data::ColorValue cv;
+        cv.parse(displayNode);
+        node.shaingDesc.color = cv.color.argb();
 
         DisplayShape shape;
         shape.parse(displayNode["shape"]);
