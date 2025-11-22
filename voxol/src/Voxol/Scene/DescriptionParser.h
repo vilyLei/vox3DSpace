@@ -68,7 +68,8 @@ public:
     ~FileParser() = default;
 
 public:
-    SceneNode rootNode;
+    SceneNode                                              rootNode;
+    nlohmann::json                                         jsonObj;
     std::unordered_map<uint32_t, Component::UnitTextModel> textModelMap;
 
 public:
@@ -80,6 +81,10 @@ public:
     void parseNodeDisplayShape(SceneNode& node, const JsonType& jsonNode);
     void parseNodeTransData(SceneNode& node, const JsonType& jsonNode);
     void parseNodeData(SceneNode& node, const JsonType& jsonNode);
+
+    void parseSceneActions(const JsonType& jsonNode);
+    void parseNodeAction(SceneNode& parentNode, const JsonType& jsonNode);
+    void parseNodeActionData(SceneNode& parentNode, const JsonType& jsonNode);
 };
 
 using SceneNodeForeachCallbackType = std::function<void(Desc::SceneNode& node)>;

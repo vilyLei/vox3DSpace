@@ -78,10 +78,59 @@ void FileParser::initFromFile(const std::string& fileName)
     auto           pngPath = std::filesystem::path(SRC_DIR) / "assets/";
     auto           pathStr = pngPath.string() + fileName;
     std::ifstream  fs(pathStr);
-    nlohmann::json jsonObj;
     fs >> jsonObj;
 
-    parseHeriNodes(jsonObj["scene"]);
+    auto&& sceneNode = jsonObj["scene"];
+    parseHeriNodes( sceneNode );
+    parseSceneActions( sceneNode );
+}
+
+void FileParser::parseSceneActions(const JsonType& jsonNode)
+{
+    if (jsonNode.contains("nodes") && jsonNode["nodes"].is_array())
+    {
+        auto&& elements = jsonNode["nodes"];
+
+        auto sizeValue = elements.size();
+
+        if (elements.empty())
+            return;
+
+        for (auto& item : elements)
+        {
+            parseNodeAction(rootNode, item);
+        }
+    }
+
+}
+
+void FileParser::parseNodeAction(SceneNode& parentNode, const JsonType& jsonNode)
+{
+
+    if (jsonNode.contains("interactions"))
+    {
+        auto&& jNode = jsonNode["interactions"];
+        parseNodeActionData(parentNode, jNode);
+    }
+
+    if (!parentNode.hasChild)
+        return;
+
+    if (jsonNode.contains("children") && jsonNode["children"].is_array())
+    {
+        auto&& elements = jsonNode["children"];
+        if (elements.empty())
+            return;
+
+        for (auto i = 0; i < elements.size(); i++)
+        {
+            parseNodeAction(parentNode.children[i], elements[i]);
+        }
+    }
+}
+void FileParser::parseNodeActionData(SceneNode& parentNode, const JsonType& jsonNode)
+{
+    printf("FileParser::parseNodeActionData(), name: %s\n", parentNode.name.c_str());
 }
 void FileParser::parseHeriNodes(const JsonType& jsonNode)
 {
