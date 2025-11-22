@@ -526,5 +526,96 @@ void BVH2D_LazyGC::rebuildSubtreeAtNode(int nodeIdx)
     // Note: old subtree remains unreachable; will be reclaimed by compactIfNeeded()
 }
 
+void BVH2D_LazyGC::refitAllNodes()
+{
+    if (m_nodes.empty()) return;
+
+    // 先收集 preorder（根到叶），再反转为 postorder（子先父后）
+    std::vector<int> order;
+    order.reserve(m_nodes.size());
+    std::stack<int> st;
+    st.push(0);
+    while (!st.empty())
+    {
+        int idx = st.top();
+        st.pop();
+        order.push_back(idx);
+        const Node& n = m_nodes[idx];
+        if (n.left >= 0) st.push(n.left);
+        if (n.right >= 0) st.push(n.right);
+    }
+
+    // postorder: children first
+    for (auto it = order.rbegin(); it != order.rend(); ++it)
+    {
+        Node& node = m_nodes[*it];
+
+        if (isLeafNodeSlot(node))
+        {
+            if (node.objectId.isIDValid())
+            {
+                // 有效叶：bounds 已经存在（通常由更新函数设置）
+                // (nothing to do)
+            }
+            else
+            {
+                // 已删除的叶槽：把 bounds 置为空（toEmpty），以便父节点正确合并
+                node.bounds.toEmpty();
+            }
+        }
+        else
+        {
+            // internal node: 合并孩子
+            bool leftValid  = (node.left >= 0) && (isValidLeaf(m_nodes[node.left]) || !isLeafNodeSlot(m_nodes[node.left]));
+            bool rightValid = (node.right >= 0) && (isValidLeaf(m_nodes[node.right]) || !isLeafNodeSlot(m_nodes[node.right]));
+
+            if (leftValid && rightValid)
+            {
+                node.bounds = Math::Bounds::Union(m_nodes[node.left].bounds, m_nodes[node.right].bounds);
+            }
+            else if (leftValid)
+            {
+                node.bounds = m_nodes[node.left].bounds;
+            }
+            else if (rightValid)
+            {
+                node.bounds = m_nodes[node.right].bounds;
+            }
+            else
+            {
+                node.bounds.toEmpty();
+            }
+        }
+    }
+}
+
+
+
+// full rebuild using current reachable leaves
+void BVH2D_LazyGC::collectLeavesToTempsAndRebuild()
+{
+    std::vector<LeafTemp> saved;
+    saved.reserve(m_objectToLeaf.size());
+    for (const auto& kv : m_objectToLeaf)
+    {
+        int leafIdx = kv.second;
+        if (!validNodeIndex(leafIdx)) continue;
+        const Node& n = m_nodes[leafIdx];
+        if (n.objectId.isIDValid()) saved.push_back(LeafTemp{n.objectId, n.bounds});
+    }
+    m_leafTemps.swap(saved);
+    build();
+}
+
+void BVH2D_LazyGC::rebuildObjectMap()
+{
+    m_objectToLeaf.clear();
+    for (int i = 0; i < (int)m_nodes.size(); ++i)
+    {
+        const Node& n = m_nodes[i];
+        if (isLeaf(n) && n.objectId.isIDValid()) m_objectToLeaf[n.objectId] = i;
+    }
+}
+
 }
 }
