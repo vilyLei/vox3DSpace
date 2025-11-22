@@ -3,6 +3,7 @@
 
 #include "../Base/BaseDefine.h"
 #include "EntityComponent.h"
+#include "JsonValue.h"
 #include "../Math/Vec2.h"
 #include <nlohmann/json.hpp>
 #include <string>

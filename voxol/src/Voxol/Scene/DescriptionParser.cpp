@@ -9,7 +9,8 @@ namespace Desc
 {
 
 
-void DisplayShape::parse(const JsonType& jsonNode) {
+void DisplayShape::parse(const JsonType& jsonNode)
+{
 
     if (jsonNode.contains("type"))
     {
@@ -33,17 +34,25 @@ void DisplayShape::parse(const JsonType& jsonNode) {
     {
         //node.unitModel.drawUnitId = 0;
         //node.unitModel.type       = Component::UnitModelType::Mesh;
-        jsonValue.
-        if (jModel.hasSize())
+        jsonValue.parseWithName(jsonNode, "size");
+        if (jsonValue.is<Math::Vec2>())
         {
-            auto&& size            = jModel.getSize();
-            node.transform.scale() = size;
+            size = jsonValue.get<Math::Vec2>();
+            //node.transform.scale() = size;
         }
     }
-    else if (jModel.type == "circle")
+    else if (type == "circle")
     {
-        auto radius            = jModel.getRadius() * 2;
-        node.transform.scale() = {radius, radius};
+        jsonValue.parseWithName(jsonNode, "radius");
+        float radius = 100.0f;
+        if (jsonValue.is<float>())
+        {
+            radius = jsonValue.get<float>() * 2;
+            size   = {2 * radius, 2 * radius};
+        }
+    }
+    else if (type == "text")
+    {
     }
 }
 
