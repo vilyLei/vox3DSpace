@@ -231,6 +231,35 @@
                         }
                     }
                 ]
+            },
+            {
+                "type": "panel",
+                "name": "info-panel",
+                "transform": {
+                    "position": [
+                        520,
+                        200
+                    ]
+                },
+                "display": {
+                    "shape": {
+                        "type": "rectangle",
+                        "size": [
+                            200,
+                            100
+                        ]
+                    },
+                    "style": {
+                        "fills": [
+                            {
+                                "type": "color",
+                                "value": "0xffffebcd",
+                                "blend": "normal",
+                                "opacity": 1.0
+                            }
+                        ]
+                    }
+                }
             }
         ]
     }
