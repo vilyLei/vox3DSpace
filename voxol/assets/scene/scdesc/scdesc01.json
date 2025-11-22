@@ -40,7 +40,7 @@
                         ]
                     }
                 },
-                "children": [
+                "childrenT": [
                     {
                         "type": "button",
                         "name": "play-button",

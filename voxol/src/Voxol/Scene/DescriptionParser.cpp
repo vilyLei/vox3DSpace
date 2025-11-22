@@ -252,12 +252,19 @@ void FileParser::parseHeriNodes(const JsonType& jsonNode)
         uint32_t id        = 0;
         rootNode.id        = id;
         rootNode.hasParent = false;
+        rootNode.type      = "root";
+        rootNode.name      = "root-node";
+        id++;
         for (auto& item : elements)
         {
-            id++;
-            parseSceneNode(rootNode, id, item);
-            rootNode.print();
+            SceneNode node;
+            node.id = id++;
+            parseSceneNode(node, id, item);
+            node.print();
+            rootNode.children.emplace_back(std::move(node));
         }
+        rootNode.childrenTotal = static_cast<int>(rootNode.children.size());
+        rootNode.print();
     }
 }
 void FileParser::parseSceneNode(SceneNode& parentNode, uint32_t& id, const JsonType& jsonNode)
