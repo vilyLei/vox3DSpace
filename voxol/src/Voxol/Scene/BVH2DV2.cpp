@@ -145,5 +145,35 @@ bool BVH2D_LazyGC::removeItemByObjectId(const Base::ID::KeyUint64& objectId)
     m_dirty = true;
     return true;
 }
+
+
+// 每帧在 endFrameCompact 调用：处理至多 maxBlocksToProcess 个 block
+void BVH2D_LazyGC::endFrameCompact(size_t maxBlocksToProcess)
+{
+    if (!m_needsCompact && m_deletedCount == 0) return;
+
+    size_t live      = m_objectToLeaf.size();
+    size_t deleted   = m_deletedCount;
+    float  holeRatio = (live + deleted) ? (float)deleted / float(live + deleted) : 0.0f;
+
+    // 优先处理一些 dirty blocks（逐块压缩）
+    size_t processed = 0;
+    auto   it        = m_dirtyBlocks.begin();
+    while (it != m_dirtyBlocks.end() && processed < maxBlocksToProcess)
+    {
+        int blockIndex = *it;
+        compactBlock(blockIndex);
+        it = m_dirtyBlocks.erase(it);
+        ++processed;
+    }
+
+    // 若空洞比例依然很高或者 node 数量 >> ideal * factor，则做全量 compact
+    size_t idealNodes = std::max<size_t>(4, live * 2);
+    if (holeRatio > m_deleteRebuildRatio || m_nodes.size() > idealNodes * m_compactFactor)
+    {
+        compactIfNeededFull(); // 全量重建（安全）
+    }
+}
+
 }
 }

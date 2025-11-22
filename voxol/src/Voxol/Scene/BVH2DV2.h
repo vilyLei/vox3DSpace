@@ -77,6 +77,7 @@ public:
     // 记录哪些块有空洞（以便逐块压缩）
     std::unordered_set<int> m_dirtyBlocks; // 存放 blockIndex
     std::vector<int>        m_freeList;
+
     // 当删除一个 leaf 时，登记其 block：
     void registerDeletedSlotForBlock(int leafIdx)
     {
@@ -85,6 +86,8 @@ public:
     }
 
     // 每帧在 endFrameCompact 调用：处理至多 maxBlocksToProcess 个 block
+    void endFrameCompact(size_t maxBlocksToProcess = 1);
+    /*
     void endFrameCompact(size_t maxBlocksToProcess = 1)
     {
         if (!m_needsCompact && m_deletedCount == 0) return;
@@ -111,6 +114,7 @@ public:
             compactIfNeededFull(); // 全量重建（安全）
         }
     }
+    //*/
 
     // 局部压缩：尝试紧缩单个 block（把该范围的有效叶收集到块前端并更新映射）
     // 这里的实现是一个“示例/概念实现”——实际可按你的容器结构优化以避免大量复制
