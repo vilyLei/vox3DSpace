@@ -106,83 +106,8 @@ public:
 
     // ---------- Queries ----------
     void queryPoint(const Math::Vec2& p, std::vector<Base::ID::KeyUint64>& outIds) const;
-    /*
-    void queryPoint(const Math::Vec2& p, std::vector<Base::ID::KeyUint64>& outIds) const
-    {
-        if (m_nodes.empty()) return;
-        std::stack<int> st;
-        st.push(0);
-        while (!st.empty())
-        {
-            int idx = st.top();
-            st.pop();
-            if (!validNodeIndex(idx)) continue;
-            const Node& n = m_nodes[idx];
-            if (!n.bounds.contains(p)) continue;
-            if (isLeaf(n))
-            {
-                if (n.objectId.isIDValid()) outIds.push_back(n.objectId);
-            }
-            else
-            {
-                if (n.right >= 0) st.push(n.right);
-                if (n.left >= 0) st.push(n.left);
-            }
-        }
-    }
-    //*/
     void queryBounds(const Math::Bounds& b, std::vector<Base::ID::KeyUint64>& outIds) const;
-    /*
-    void queryBounds(const Math::Bounds& b, std::vector<Base::ID::KeyUint64>& outIds) const
-    {
-        if (m_nodes.empty()) return;
-        std::stack<int> st;
-        st.push(0);
 
-        static bool flag = true;
-
-        //if (flag)
-        //{
-        //    printf("v2 queryBounds() AAA 01,m_nodes.size(): %lld\n", m_nodes.size());
-        //    for (auto& n : m_nodes)
-        //    {
-        //        printf("v2 queryBounds() AAA 01, n.objectId: %s, n(l=%d,r=%d)\n", n.objectId.idToString().c_str(), n.left, n.right);
-        //    }
-        //}
-        while (!st.empty())
-        {
-            int idx = st.top();
-            st.pop();
-
-            //if (flag)
-            //{
-            //    printf("v2 queryBounds() CCC,idx: %d, validNodeIndex(idx): %d\n", idx, validNodeIndex(idx));
-            //}
-
-            if (!validNodeIndex(idx)) continue;
-            const Node& n = m_nodes[idx];
-            //if (flag)
-            //{
-            //    printf("v2 queryBounds() CCC,idx: %d, n.objectId: %s, n(l=%d,r=%d)\n", idx, n.objectId.idToString().c_str(), n.left, n.right);
-            //}
-            if (!n.bounds.intersects(b)) continue;
-            if (isLeaf(n))
-            {
-                if (n.objectId.isIDValid() && n.bounds.intersects(b))
-                {
-                    outIds.push_back(n.objectId);
-                }
-            }
-            else
-            {
-                if (n.right >= 0) st.push(n.right);
-                if (n.left >= 0) st.push(n.left);
-            }
-        }
-
-        flag = false;
-    }
-    //*/
     // ---------- Utilities / debug ----------
     size_t              nodeCount() const { return m_nodes.size(); }
     size_t              leafCount() const { return m_objectToLeaf.size(); }
@@ -227,9 +152,10 @@ private:
     {
         return isLeafNodeSlot(n) && n.objectId.isIDValid();
     }
-    //inline bool validNodeIndex(int idx) const { return idx >= 0 && idx < (int)m_nodes.size(); }
 
     // recursive builder from temps (indices range [l,r))
+    int buildRecursiveFromLeaves(std::vector<int>& indices, int l, int r, int parent);
+    /*
     int buildRecursiveFromLeaves(std::vector<int>& indices, int l, int r, int parent)
     {
         int nodeIndex = (int)m_nodes.size();
@@ -283,7 +209,8 @@ private:
         node.bounds = Math::Bounds::Union(m_nodes[leftIdx].bounds, m_nodes[rightIdx].bounds);
         return nodeIndex;
     }
-
+    //*/
+    
     // mark ancestors bounds up to root (used for small moves within fat bounds)
     void markAncestorsDirtyUpToRoot(int leafIdx)
     {
