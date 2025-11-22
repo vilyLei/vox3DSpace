@@ -174,6 +174,7 @@ void BVH2D_LazyGC::endFrameCompact(size_t maxBlocksToProcess)
         compactIfNeededFull(); // 全量重建（安全）
     }
 }
+
 void BVH2D_LazyGC::compactBlock(int blockIndex)
 {
     int start = blockIndex * GC_BLOCK_SIZE;
