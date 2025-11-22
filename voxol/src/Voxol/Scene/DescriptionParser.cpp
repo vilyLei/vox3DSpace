@@ -144,8 +144,6 @@ void FileParser::parseSceneActions(const JsonType& jsonNode)
     {
         auto&& elements = jsonNode["nodes"];
 
-        auto sizeValue = elements.size();
-
         if (elements.empty())
             return;
 
@@ -170,16 +168,17 @@ void FileParser::parseNodeAction(SceneNode& parentNode, const JsonType& jsonNode
     if (!parentNode.hasChild)
         return;
 
-    if (jsonNode.contains("children") && jsonNode["children"].is_array())
-    {
-        auto&& elements = jsonNode["children"];
-        if (elements.empty())
-            return;
+    auto flag = jsonNode.contains("children") && jsonNode["children"].is_array();
+    if (!flag)
+        return;
 
-        for (auto i = 0; i < elements.size(); i++)
-        {
-            parseNodeAction(parentNode.children[i], elements[i]);
-        }
+    auto&& elements = jsonNode["children"];
+    if (elements.empty())
+        return;
+
+    for (auto i = 0; i < elements.size(); i++)
+    {
+        parseNodeAction(parentNode.children[i], elements[i]);
     }
 }
 
@@ -242,32 +241,31 @@ void FileParser::parseNodeActionData(SceneNode& currNode, const JsonType& jsonNo
 
 void FileParser::parseHeriNodes(const JsonType& jsonNode)
 {
-    if (jsonNode.contains("nodes") && jsonNode["nodes"].is_array())
+    auto flag = jsonNode.contains("nodes") && jsonNode["nodes"].is_array();
+    if (!flag)
+        return;
+    
+    auto&& elements = jsonNode["nodes"];
+
+    if (elements.empty())
+        return;
+
+    uint32_t id        = 0;
+    rootNode.id        = id;
+    rootNode.hasParent = false;
+    rootNode.type      = "root";
+    rootNode.name      = "root-node";
+    id++;
+    for (auto& item : elements)
     {
-        auto&& elements = jsonNode["nodes"];
-
-        auto sizeValue = elements.size();
-
-        if (elements.empty())
-            return;
-
-        uint32_t id        = 0;
-        rootNode.id        = id;
-        rootNode.hasParent = false;
-        rootNode.type      = "root";
-        rootNode.name      = "root-node";
-        id++;
-        for (auto& item : elements)
-        {
-            SceneNode node;
-            node.id = id++;
-            parseSceneNode(node, id, item);
-            node.print();
-            rootNode.children.emplace_back(std::move(node));
-        }
-        rootNode.childrenTotal = static_cast<int>(rootNode.children.size());
-        rootNode.print();
+        SceneNode node;
+        node.id = id++;
+        parseSceneNode(node, id, item);
+        node.print();
+        rootNode.children.emplace_back(std::move(node));
     }
+    rootNode.childrenTotal = static_cast<int>(rootNode.children.size());
+    rootNode.print();
 }
 void FileParser::parseSceneNode(SceneNode& parentNode, uint32_t& id, const JsonType& jsonNode)
 {
