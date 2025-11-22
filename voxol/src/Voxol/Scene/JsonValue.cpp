@@ -121,17 +121,17 @@ bool ColorValue::parseHex(const std::string& hex)
 {
     uint32_t v = std::stoul(hex, nullptr, 16);
 
-    if (hex.size() == 6)
+    if (hex.size() <= 6)
     {
         // RGB ¡ú ARGB
         color.value = 0xFF000000 | v;
-        return;
+        return true;
     }
     
     if (hex.size() == 8)
     {
         color.value = v;
-        return;
+        return true;
     }
 
     return false;
