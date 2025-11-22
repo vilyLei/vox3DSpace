@@ -61,14 +61,20 @@ void DisplayShape::parse(const JsonType& jsonNode)
 
 void SceneActionTargetNode::parse(const JsonType& jsonNode, const std::string& actType)
 {
-    if (!jsonNode.contains("actType"))
+    if (!jsonNode.contains(actType))
     {
         return;
     }
     type           = actType;
-    auto&& jNode   = jsonNode["actType"];
+    auto&& elements = jsonNode[actType];
+    if (elements.empty())
+    {
+        return;
+    }
+    //auto&& elements = jsonNode["nodes"];
+    auto&& jNode    = elements[0];
     target         = jNode["target"];
-    auto&& actJNode = jsonNode["action"];
+    auto&& actJNode = jNode["action"];
     if (actJNode.contains("type"))
     {
         action.type = actJNode["type"];
@@ -163,10 +169,12 @@ void FileParser::parseNodeActionData(SceneNode& parentNode, const JsonType& json
     srcNode.id = Base::ID::KeyUint64::make(parentNode.id);
 
     interactionMap[srcNode.id] = srcNode;
-    if (jsonNode.contains("over"))
-    {
-        auto&& overNode = jsonNode["over"];
-    }
+    SceneActionTargetNode overNode;
+    overNode.parse(jsonNode, "over");
+    //if (jsonNode.contains("over"))
+    //{
+    //    auto&& overNode = jsonNode["over"];
+    //}
 }
 
 void FileParser::parseHeriNodes(const JsonType& jsonNode)
