@@ -213,5 +213,32 @@ void BVH2D_LazyGC::compactBlock(int blockIndex)
     //
     return;
 }
+
+void BVH2D_LazyGC::compactIfNeededFull()
+{
+    std::vector<LeafTemp> saved;
+    saved.reserve(m_objectToLeaf.size());
+    for (const auto& kv : m_objectToLeaf)
+    {
+        int leafIdx = kv.second;
+        if (!validNodeIndex(leafIdx)) continue;
+        const Node& n = m_nodes[leafIdx];
+        if (n.objectId.isIDValid()) saved.push_back(LeafTemp{n.objectId, n.bounds});
+    }
+    // replace leafTemps and rebuild
+    m_leafTemps.swap(saved);
+    // reset
+    m_nodes.clear();
+    m_objectToLeaf.clear();
+    m_fatBounds.clear();
+    m_dirtyLeaves.clear();
+    m_freeList.clear();
+    m_deletedCount = 0;
+    m_needsCompact = false;
+
+    // call build which will repopulate nodes & mapping
+    build();
+}
+
 }
 }

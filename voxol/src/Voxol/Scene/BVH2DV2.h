@@ -93,6 +93,8 @@ public:
     void compactBlock(int blockIndex);
 
     // 全量 compact: 收集所有 live leaves 到 leafTemps 并 full build（回收垃圾）
+    void compactIfNeededFull();
+    /*
     void compactIfNeededFull()
     {
         std::vector<LeafTemp> saved;
@@ -118,7 +120,7 @@ public:
         // call build which will repopulate nodes & mapping
         build();
     }
-
+    //*/
 
     // ---------- Per-frame maintenance ----------
     // Process dirty leaves — partial rebuilds or full rebuild based on thresholds.
