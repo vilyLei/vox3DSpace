@@ -110,6 +110,13 @@
                                             "type": "change-color",
                                             "fillColor": "0xd0e000"
                                         }
+                                    },
+                                    {
+                                        "target": "info-panel",
+                                        "action": {
+                                            "type": "toggle-visible",
+                                            "visible": 1
+                                        }
                                     }
                                 ],
                                 "up": [
@@ -200,13 +207,6 @@
                                         "action": {
                                             "type": "change-color",
                                             "fillColor": "0xd0e000"
-                                        }
-                                    },
-                                    {
-                                        "target": "info-panel",
-                                        "action": {
-                                            "type": "toggle-visible",
-                                            "visible": 1
                                         }
                                     }
                                 ],
