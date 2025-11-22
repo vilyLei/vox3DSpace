@@ -29,10 +29,7 @@ struct Color
     constexpr uint8_t      r() const noexcept { return (value >> 16) & 0xFF; }
     constexpr uint8_t      g() const noexcept { return (value >> 8) & 0xFF; }
     constexpr uint8_t      b() const noexcept { return value & 0xFF; }
-    static constexpr Color makeFromARGB(uint32_t argb)
-    {
-        return Color(argb);
-    }
+
     constexpr uint32_t argb() const noexcept { return value; }
     constexpr uint32_t rgba() const noexcept
     {
@@ -83,6 +80,8 @@ struct Color
     {
         return Color((value & 0xFFFFFF00) | static_cast<uint32_t>(b));
     }
+    constexpr bool isTransparent() const noexcept { return a() < 255; }
+    constexpr bool isOpaque() const noexcept { return a() == 255; }
 
     constexpr std::array<uint8_t, 4> toARGBBytes() const noexcept
     {
@@ -99,6 +98,11 @@ struct Color
     constexpr std::array<float, 4> toRGBABF4() const noexcept
     {
         return {r() / 255.0f, g() / 255.0f, b() / 255.0f, a() / 255.0f};
+    }
+
+    static constexpr Color makeFromARGB(uint32_t argb)
+    {
+        return Color(argb);
     }
     static constexpr Color makeFromRGBA(uint32_t rgba)
     {
