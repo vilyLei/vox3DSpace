@@ -131,8 +131,11 @@ void FileParser::parseSceneNode(SceneNode& parentNode, uint32_t& id, const JsonT
 }
 
 
+void FileParser::parseNodeDisplayStyle(SceneNode& node, const JsonType& jsonNode)
+{
 
-void FileParser::parseNodeDisplayData(SceneNode& node, const JsonType& jsonNode)
+}
+void FileParser::parseNodeDisplayShape(SceneNode& node, const JsonType& jsonNode)
 {
     DisplayShape shape;
     shape.parse(jsonNode);
