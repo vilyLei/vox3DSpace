@@ -1,7 +1,7 @@
 #ifndef VOXOL_COLOUR_COLOR_UTILS_H
 #define VOXOL_COLOUR_COLOR_UTILS_H
 
-#include "../Base/BaseDefine.h"
+#include "ColorUtils.h"
 #include <cstdint>
 #include <array>
 #include <string>
