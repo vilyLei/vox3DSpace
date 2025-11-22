@@ -164,7 +164,8 @@ private:
     int countLeavesUnderNode(int nodeIdx);
 
     // rebuild subtree rooted at nodeIdx by collecting leaves and appending a new subtree
-    void rebuildSubtreeAtNode(int nodeIdx);    
+    void rebuildSubtreeAtNode(int nodeIdx);
+
     // --------- 安全的 refitAllNodes() ----------
     // 将已删除叶视为“空”的 bounds（toEmpty），并在合并时根据子节点的有效性选择合并规则。
     void refitAllNodes();
