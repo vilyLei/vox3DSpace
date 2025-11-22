@@ -158,33 +158,6 @@ private:
 
     // mark ancestors bounds up to root (used for small moves within fat bounds)
     void markAncestorsDirtyUpToRoot(int leafIdx);
-
-    /*
-    void markAncestorsDirtyUpToRoot(int leafIdx)
-    {
-        int cur = leafIdx;
-        while (cur >= 0)
-        {
-            int p = m_nodes[cur].parent;
-            if (p < 0) break;
-            // recompute parent from children
-            if (m_nodes[p].left >= 0 && m_nodes[p].right >= 0)
-            {
-                m_nodes[p].bounds = Math::Bounds::Union(m_nodes[m_nodes[p].left].bounds, m_nodes[m_nodes[p].right].bounds);
-            }
-            else if (m_nodes[p].left >= 0)
-            {
-                m_nodes[p].bounds = m_nodes[m_nodes[p].left].bounds;
-            }
-            else if (m_nodes[p].right >= 0)
-            {
-                m_nodes[p].bounds = m_nodes[m_nodes[p].right].bounds;
-            }
-            cur = p;
-        }
-    }
-    //*/
-    
     // choose subtree root to rebuild for a leaf
     int chooseSubtreeRootForLeaf(int leafIdx);
     // count leaves under node (simple DFS)
