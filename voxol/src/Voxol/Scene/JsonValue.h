@@ -7,6 +7,7 @@
 #include "../Math/Vec3.h"
 #include "../Math/Vec4.h"
 #include "../Colour/ColorDef.h"
+#include "EntityComponent.h"
 
 namespace Voxol::Scene
 {
@@ -63,6 +64,7 @@ struct JsonValue
         Vec2,
         Vec3,
         Vec4,
+        UnitText,
         Array,
         Object
     };
@@ -80,6 +82,7 @@ struct JsonValue
         Math::Vec2,
         Math::Vec3,
         Math::Vec4,
+        Component::UnitTextDesc,
         ArrayType,
         ObjectType>;
 
@@ -114,6 +117,7 @@ struct JsonValue
         type(Type::Object), value(obj) {}
 
     bool parseColor(const JsonType& node);
+    bool parseTextWithName(const JsonType& node, const std::string& valueName);
     bool parseColorWithName(const JsonType& node, const std::string& valueName);
     bool parseWithName(const JsonType& node, const std::string& valueName);
 

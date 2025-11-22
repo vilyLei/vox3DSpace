@@ -4,7 +4,8 @@ namespace Voxol::Scene
 {
 namespace Data
 {
-bool ColorValue::parsePantone(const std::string& s){
+bool ColorValue::parsePantone(const std::string& s)
+{
     return false;
 };
 
@@ -128,7 +129,7 @@ bool ColorValue::parseHex(const std::string& hex)
         color.value = 0xFF000000 | v;
         return true;
     }
-    
+
     if (hex.size() == 8)
     {
         color.value = v;
@@ -170,47 +171,56 @@ bool JsonValue::parseColor(const JsonType& node)
     {
         return false;
     }
-    value = cv.color.value;
+    value = cv.color.argb();
     printf("JsonValue::parseColor(), color: %s\n", cv.color.toHexString().c_str());
+    return true;
+}
+
+bool JsonValue::parseTextWithName(const JsonType& node, const std::string& valueName)
+{
+
+    if (!node.contains(valueName))
+        return false;
+
+    auto&&                  jNode = node[valueName];
+
+    Component::UnitTextDesc textDesc;
+
+    if (node.contains("content"))
+    {
+
+        std::string str = node["content"];
+        if (str.empty())
+            return false;
+
+        textDesc.text = str;
+    }
+    if (node.contains("fontSize") && node["fontSize"].is_number())
+    {
+        auto v            = static_cast<float>(node["fontSize"]);
+        textDesc.fontSize = std::isnan(v) ? 0.0f : v;
+    }
+    if (jNode.contains("color"))
+    {
+        ColorValue cv;
+        cv.parse(jNode["color"]);
+        textDesc.color = cv.color.argb();
+    }
+    value = textDesc;
     return true;
 }
 bool JsonValue::parseColorWithName(const JsonType& node, const std::string& valueName)
 {
+
     if (!node.contains(valueName))
         return false;
-    //uint32_t color = 0x0;
-    //auto&& vo = node[valueName];
-    //if (vo.is_number())
-    //{
-    //    color = static_cast<uint32_t>(vo);
-    //}
-    //else if (vo.is_string())
-    //{
-    //    std::string&& hex_str = vo;
-    //    std::transform(hex_str.begin(), hex_str.end(), hex_str.begin(),
-    //                   [](unsigned char c) { return std::tolower(c); });
 
-    //    if (hex_str.find('#') == 0)
-    //    {
-    //        color = std::stoul(hex_str.substr(1), nullptr, 16);
-    //    }
-    //    else if (hex_str.find('x') == 1)
-    //    {
-    //        if (hex_str.size() >= 3)
-    //        {
-    //            color = std::stoul(hex_str.substr(2), nullptr, 16);
-    //        }
-    //    }
-    //    else
-    //    {
-    //        color = std::stoul(hex_str.substr(2), nullptr, 16);
-    //    }
-    //}
     ColorValue cv;
-    if (!cv.parseWithName(node, valueName)) {
+    if (!cv.parseWithName(node, valueName))
+    {
         return false;
     }
-    value = cv.color.value;
+    value = cv.color.argb();
     printf("JsonValue::parseStringColorWithName(), color: %s\n", cv.color.toHexString().c_str());
     return true;
 }
@@ -317,5 +327,5 @@ void JsonValue::parse(const JsonType& j)
         value = std::move(obj);
     }
 }
-}
+} // namespace Data
 } // namespace Voxol::Scene
