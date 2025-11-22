@@ -30,11 +30,15 @@ struct InteractionSourceFlag
 
 struct InteractionTargetDesc
 {
-    Base::ID::KeyUint64 id;
+    uint32_t            id = 0;
+    Base::ID::KeyUint64 entityKey;
     std::string         type;
-    //std::string         command;
+    std::string         command;
     uint32_t            color   = 0xff000000;
     bool                visible = true;
+    void                apply() {
+
+    }
 };
 
 struct InteractionTargetSet

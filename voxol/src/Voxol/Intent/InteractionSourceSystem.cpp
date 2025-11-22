@@ -139,12 +139,14 @@ void InteractionSourceSystem::updateSourceAct(const Base::ID::KeyUint64& srcId, 
 void InteractionSourceSystem::execActToDsiplay(Interaction::InteractionSource& srcNode, Interaction::MouseStatus status, std::string actDesc)
 {
 
-    auto modifyDstFunc = [this](const Interaction::InteractionTargetDesc& desc, std::string actDesc) {
+    auto modifyDstFunc = [this](Interaction::InteractionTargetDesc& desc, std::string actDesc) {
 
         if (!compStorage)
             return;
 
-        auto etId = desc.id.protoId();
+        desc.apply();
+
+        auto etId = desc.entityKey.protoId();
 
         auto&& entity            = compStorage->entitiesPool[etId];
         auto&  shaderingEntities = compStorage->shaderingEntitiesPool;

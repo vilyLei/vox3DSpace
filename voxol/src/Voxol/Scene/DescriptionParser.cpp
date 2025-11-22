@@ -188,7 +188,7 @@ void FileParser::buildInteraction(Intent::Interaction::InteractionSource& srcNod
         auto&& ni = nodeNameMap[tarAct.target];
         printf("FileParser::buildInteraction(), srcActType: %s, ni.id: %d\n", srcActType.c_str(), ni.id);
         auto tarKeyId = Base::ID::KeyUint64::make(ni.id);
-        tarSet.targets.push_back({tarKeyId, "default", tarAct.color, visible});
+        tarSet.targets.push_back({0, tarKeyId, "default", "None", tarAct.color, visible});
     }
     srcNode.addTargetSet(tarSet);
 }
