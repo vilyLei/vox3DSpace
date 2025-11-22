@@ -34,10 +34,15 @@ struct HierarchyNode
 };
 struct DisplayShape
 {
-    std::string type;
-    Math::Vec2  size;
+    std::string     type;
+    Math::Vec2      size;
     Data::JsonValue jsonValue;
-    void        parse(const JsonType& jsonNode);
+    void            parse(const JsonType& jsonNode);
+};
+struct SceneNodeName
+{
+    uint32_t    id = Base::ID::INVALID_ID;
+    std::string name;
 };
 struct SceneNode
 {
@@ -69,9 +74,10 @@ public:
     ~FileParser() = default;
 
 public:
-    SceneNode                                              rootNode;
-    nlohmann::json                                         jsonObj;
-    std::unordered_map<uint32_t, Component::UnitTextModel> textModelMap;
+    SceneNode                                                                rootNode;
+    nlohmann::json                                                           jsonObj;
+    std::unordered_map<uint32_t, Component::UnitTextModel>                   textModelMap;
+    std::unordered_map<std::string, SceneNodeName>                           nodeNameMap;
     Base::ID::keyUint64Unordered_map<Intent::Interaction::InteractionSource> interactionMap;
 
 public:

@@ -266,15 +266,20 @@ void FileParser::parseNodeTransData(SceneNode& node, const JsonType& jsonNode)
 
 void FileParser::parseNodeData(SceneNode& node, const JsonType& jsonNode)
 {
+
     if (jsonNode.contains("type"))
     {
         node.type = jsonNode["type"];
     }
+
     if (jsonNode.contains("name"))
     {
         node.name = jsonNode["name"];
     }
-    auto id = node.id;
+
+    auto id                = node.id;
+    nodeNameMap[node.name] = {id, node.name};
+
     parseNodeTransData(node, jsonNode);
     auto& entity       = node.entity;
     entity.id          = id;
