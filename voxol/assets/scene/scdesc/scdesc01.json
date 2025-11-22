@@ -22,7 +22,7 @@
                     ]
                 },
                 "display": {
-                    "shape": "rectangle",
+                    "shapeType": "rectangle",
                     "size": [
                         300,
                         500
@@ -40,7 +40,7 @@
                             ]
                         },
                         "display": {
-                            "shape": "round-rectangle",
+                            "shapeType": "round-rectangle",
                             "size": [
                                 186,
                                 76
@@ -58,7 +58,7 @@
                                     ]
                                 },
                                 "display": {
-                                    "shape": "text",
+                                    "shapeType": "text",
                                     "content": "Play",
                                     "fontSize": 36,
                                     "fillColor": "0xff990099"
@@ -103,7 +103,7 @@
                             ]
                         },
                         "display": {
-                            "shape": "round-rectangle",
+                            "shapeType": "round-rectangle",
                             "size": [
                                 186,
                                 76
@@ -121,7 +121,7 @@
                                     ]
                                 },
                                 "display": {
-                                    "shape": "text",
+                                    "shapeType": "text",
                                     "content": "Exit",
                                     "fontSize": 36,
                                     "fillColor": "0xff990099"

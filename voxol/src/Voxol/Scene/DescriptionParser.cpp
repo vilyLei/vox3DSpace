@@ -105,6 +105,10 @@ void FileParser::parseNodeTransData(SceneNode& node, const JsonType& jsonNode)
         {
             shapeType = displayNode["shape"];
         }
+        else if (displayNode.contains("shapeType") && displayNode["shapeType"].is_string())
+        {
+            shapeType = displayNode["shapeType"];
+        }
         if (shapeType == "rectangle" || shapeType == "round-rectangle")
         {
             node.unitModel.drawUnitId = 0;
