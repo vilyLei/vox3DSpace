@@ -105,7 +105,7 @@ void Description::parse(const JsonType& node)
 
     Data::ColorValue cv;
     cv.parse(node);
-    color = cv.argb();
+    color = cv.color.argb();
 
     if (node.contains("effects") && node["effects"].is_array())
     {

@@ -119,6 +119,7 @@ bool ColorValue::isHexString(const std::string& s)
 // ----------------------------------------
 bool ColorValue::parseHex(const std::string& hex)
 {
+
     uint32_t v = std::stoul(hex, nullptr, 16);
 
     if (hex.size() <= 6)
