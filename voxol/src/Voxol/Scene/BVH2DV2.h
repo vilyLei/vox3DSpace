@@ -102,28 +102,7 @@ public:
     // Called at frame end to do lazy GC / compact heuristics.
     // Should be called once per frame (or less frequently) by host.
     // ---------- Compact: fully rebuild leaves from reachable leaves (reclaims deleted/garbage) ----------
-    void compactIfNeeded()
-    {
-        // collect current live leaves
-        std::vector<LeafTemp> saved;
-        saved.reserve(m_objectToLeaf.size());
-        for (const auto& kv : m_objectToLeaf)
-        {
-            int leafIdx = kv.second;
-            if (!validNodeIndex(leafIdx)) continue;
-            const Node& n = m_nodes[leafIdx];
-            if (n.objectId.isIDValid()) saved.push_back(LeafTemp{n.objectId, n.bounds});
-        }
-        // swap into leaf temps and rebuild
-        m_leafTemps.swap(saved);
-        m_nodes.clear();
-        m_objectToLeaf.clear();
-        m_fatBounds.clear();
-        m_dirtyLeaves.clear();
-        m_deletedCount = 0;
-        m_needsCompact = false;
-        build(); // this will also rebuild fat bounds & object map
-    }
+    void compactIfNeeded();
 
     // ---------- Queries ----------
     void queryPoint(const Math::Vec2& p, std::vector<Base::ID::KeyUint64>& outIds) const
