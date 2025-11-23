@@ -40,12 +40,6 @@ struct DisplayShape
     void            parse(const JsonType& jsonNode);
 };
 
-struct SceneNodeName
-{
-    uint32_t    id = Base::ID::INVALID_ID;
-    std::string name;
-};
-
 struct SceneActionDesc
 {
     std::string target;
@@ -95,7 +89,8 @@ public:
     SceneNode                                                                rootNode;
     nlohmann::json                                                           jsonObj;
     std::unordered_map<uint32_t, Component::UnitTextModel>                   textModelMap;
-    std::unordered_map<std::string, SceneNodeName>                           nodeNameMap;
+    std::unordered_map<std::string, Intent::Interaction::InteractionNodeName> nodeNameMap;
+    std::unordered_map<uint32_t, Intent::Interaction::InteractionNodeName>    actionIDMap;
     Base::ID::keyUint64Unordered_map<Intent::Interaction::InteractionSource> interactionMap;
 
 public:

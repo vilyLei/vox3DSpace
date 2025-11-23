@@ -110,7 +110,10 @@ void EntitySceneSystem::initalize(const std::string& configFileName)
         interSrcSys->compStorage = compStorage;
         interSrcSys->initialize();
         
-        auto& interactionMap = entityStorage->descParser.fileParser.interactionMap;
+        auto& fileParser     = entityStorage->descParser.fileParser;
+        interSrcSys->actionIDMap = fileParser.actionIDMap;
+
+        auto& interactionMap = fileParser.interactionMap;
         for (auto& item : interactionMap) {
             auto& srcNode = item.second;
             interSrcSys->addSource(srcNode);

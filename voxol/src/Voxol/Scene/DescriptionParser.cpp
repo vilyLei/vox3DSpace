@@ -199,6 +199,7 @@ void FileParser::buildInteraction(Intent::Interaction::InteractionSource& srcNod
             continue;
 
         auto&& ni = nodeNameMap[tarAct.target];
+
         printf("FileParser::buildInteraction(), srcActType: %s, ni.id: %d\n", srcActType.c_str(), ni.id);
         auto tarKeyId = Base::ID::KeyUint64::make(ni.id);
         tarSet.targets.push_back({0, tarKeyId, tarAct.type, tarAct.cmd, tarAct.color, visible});
@@ -213,6 +214,8 @@ void FileParser::parseNodeActionMouseData(SceneNode& currNode, const JsonType& j
 
     InteractionSource srcNode;
     srcNode.id = Base::ID::KeyUint64::make(currNode.id);
+
+    actionIDMap[currNode.id] = {currNode.id, currNode.name};
 
     bool visible = true;
 

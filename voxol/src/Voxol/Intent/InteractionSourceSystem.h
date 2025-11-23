@@ -23,7 +23,8 @@ public:
 
 public:
     Scene::EntityCompStorage::SP compStorage;
-    Tile::TileSystem::SP          tileSys;
+    Tile::TileSystem::SP                        tileSys;
+    std::unordered_map<uint32_t, Interaction::InteractionNodeName> actionIDMap;
 
 public:
     void initialize();

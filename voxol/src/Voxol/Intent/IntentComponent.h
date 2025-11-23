@@ -41,6 +41,13 @@ struct InteractionTargetDesc
     }
 };
 
+
+struct InteractionNodeName
+{
+    uint32_t    id = Base::ID::INVALID_ID;
+    std::string name;
+};
+
 struct InteractionTargetSet
 {
     uint8_t                            flag = 0;
