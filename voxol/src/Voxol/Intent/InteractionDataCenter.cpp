@@ -6,6 +6,12 @@
 namespace Voxol::Intent
 {
 
+InteractionDataCenter::SP InteractionDataCenter::make()
+{
+    auto sp = std::make_shared<InteractionDataCenter>();
+    return sp;
+}
+
 void InteractionDataCenter::initialize() {}
 void InteractionDataCenter::addSource(const Interaction::InteractionSource& srcNode)
 {
