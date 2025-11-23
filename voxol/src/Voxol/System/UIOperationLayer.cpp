@@ -39,12 +39,10 @@ void MouseController::selectWithSingle(const System::Mouse::MouseEvent& evt, con
     auto actSrcId = targetSys->interSrcSys->findSrcId(qeIds);
     if (evt.isMoving())
     {
-        //targetSys->interSrcSys->updateSourceAct(topId, "move");
         targetSys->interSrcSys->updateSourceAct(actSrcId, "move");
     }
     else if (evt.isEnd())
     {
-        //targetSys->interSrcSys->updateSourceAct(topId, "up");
         targetSys->interSrcSys->updateSourceAct(actSrcId, "up");
     }
 
@@ -55,7 +53,6 @@ void MouseController::selectWithSingle(const System::Mouse::MouseEvent& evt, con
         originEtPos   = etStorage->getEntityGlobalXYAt(etId.protoId());
         unitTransform = etStorage->getEntityTransformAt(etId.protoId());
 
-        //targetSys->interSrcSys->updateSourceAct(etId, "down");
         targetSys->interSrcSys->updateSourceAct(actSrcId, "down");
         return;
     }
