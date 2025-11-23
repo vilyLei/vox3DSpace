@@ -58,7 +58,7 @@
                                 ]
                             },
                             "style": {
-                                "fillColor": "0xff008888"
+                                "fillColor": "0xff5f9ea0"
                             }
                         },
                         "children": [
@@ -78,7 +78,7 @@
                                         "fontSize": 36
                                     },
                                     "style": {
-                                        "fillColor": "0xff990099"
+                                        "fillColor": "0xff9932cc"
                                     }
                                 }
                             }
@@ -99,7 +99,7 @@
                                         "target": "play-button",
                                         "action": {
                                             "type": "change-color",
-                                            "fillColor": "0xff008888"
+                                            "fillColor": "0xff5f9ea0"
                                         }
                                     }
                                 ],
@@ -156,7 +156,7 @@
                                 ]
                             },
                             "style": {
-                                "fillColor": "0xff008888"
+                                "fillColor": "0xff5f9ea0"
                             }
                         },
                         "children": [
@@ -176,7 +176,7 @@
                                         "fontSize": 36
                                     },
                                     "style": {
-                                        "fillColor": "0xff990099"
+                                        "fillColor": "0xff9932cc"
                                     }
                                 }
                             }
@@ -197,7 +197,7 @@
                                         "target": "exit-button",
                                         "action": {
                                             "type": "change-color",
-                                            "fillColor": "0xff008888"
+                                            "fillColor": "0xff5f9ea0"
                                         }
                                     }
                                 ],
