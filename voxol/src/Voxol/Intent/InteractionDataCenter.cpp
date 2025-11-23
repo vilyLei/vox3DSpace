@@ -7,7 +7,10 @@ namespace Voxol::Intent
 {
 
 void InteractionDataCenter::initialize() {}
-void InteractionDataCenter::addSource(const Interaction::InteractionSource& srcNode) {}
+void InteractionDataCenter::addSource(const Interaction::InteractionSource& srcNode)
+{
+    srcMap[srcNode.id] = srcNode;
+}
 
 bool InteractionDataCenter::containsSrcId(const Base::ID::KeyUint64& srcId)
 {
@@ -23,6 +26,20 @@ Base::ID::KeyUint64 InteractionDataCenter::findSrcId(const std::vector<Base::ID:
             return qeIds[i];
     }
     return Base::ID::INVALID_KEY;
+}
+
+void InteractionDataCenter::foreachSrcNode(const Interaction::SourceCallbackType& callback)
+{
+    if (!callback)
+        return;
+
+    for (auto& item : srcMap)
+    {
+        auto& obj = item.second;
+        callback(obj);
+        obj.flags = Interaction::MouseStatus::None;
+        obj.dirty = false;
+    }
 }
 void InteractionDataCenter::update() {
 }
