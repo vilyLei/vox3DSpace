@@ -127,7 +127,24 @@ void InteractionSourceSystem::singalParse(Interaction::InteractionSource& srcNod
         printf("InteractionSourceSystem::singalParse() hit srcNode.act: %s\n", srcNode.actDesc.c_str());
     }
 }
-// 由其他交互事件响应逻辑产生触发信号
+
+bool InteractionSourceSystem::containsSrcId(const Base::ID::KeyUint64& srcId)
+{
+    return actionIDMap.contains(srcId.protoId());
+}
+
+Base::ID::KeyUint64 InteractionSourceSystem::findSrcId(const std::vector<Base::ID::KeyUint64>& qeIds)
+{
+    auto tot = qeIds.size();
+    for (auto i = 0; i < tot; i++)
+    {
+        if (actionIDMap.contains(qeIds[i].protoId()))
+            return qeIds[i];
+    }
+    return Base::ID::INVALID_KEY;
+}
+
+/// 由其他交互事件响应逻辑产生触发信号
 void InteractionSourceSystem::updateSourceAct(const Base::ID::KeyUint64& srcId, const std::string& actDesc)
 {
     for (auto& item : srcMap)

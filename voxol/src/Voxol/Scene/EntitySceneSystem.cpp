@@ -15,10 +15,6 @@ void EntitySceneSystem::initalize(const std::string& configFileName)
     if (entityStorage)
         return;
 
-    // for test
-    //entityStorage01 = EntityUnitStorage::make();
-    //entityStorage01->initalizeFromFile("");
-
     entityStorage = EntityUnitStorage::make();
     if (configFileName.empty())
     {

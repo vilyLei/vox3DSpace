@@ -22,16 +22,18 @@ public:
     ~InteractionSourceSystem() = default;
 
 public:
-    Scene::EntityCompStorage::SP compStorage;
-    Tile::TileSystem::SP                        tileSys;
+    Scene::EntityCompStorage::SP                                   compStorage;
+    Tile::TileSystem::SP                                           tileSys;
     std::unordered_map<uint32_t, Interaction::InteractionNodeName> actionIDMap;
 
 public:
-    void initialize();
-    void addSource(const Interaction::InteractionSource& srcNode);
-    void singalParse(Interaction::InteractionSource& srcNode, bool selectionFlag, const std::string& actDesc);
-    void updateSourceAct(const Base::ID::KeyUint64& srcId, const std::string& actDesc);
-    void foreachSrcNode(const Interaction::SourceCallbackType& callback);
+    void                initialize();
+    void                addSource(const Interaction::InteractionSource& srcNode);
+    void                singalParse(Interaction::InteractionSource& srcNode, bool selectionFlag, const std::string& actDesc);
+    bool                containsSrcId(const Base::ID::KeyUint64& srcId);
+    Base::ID::KeyUint64 findSrcId(const std::vector<Base::ID::KeyUint64>& qeIds);
+    void                updateSourceAct(const Base::ID::KeyUint64& srcId, const std::string& actDesc);
+    void                foreachSrcNode(const Interaction::SourceCallbackType& callback);
 
     void execActToDsiplay(Interaction::InteractionSource& srcNode, Interaction::MouseStatus status, std::string actDesc);
     void singalToBehavior(Interaction::InteractionSource& srcNode);
