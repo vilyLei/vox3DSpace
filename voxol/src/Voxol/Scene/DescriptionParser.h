@@ -86,12 +86,13 @@ public:
     ~FileParser() = default;
 
 public:
-    SceneNode                                                                rootNode;
-    nlohmann::json                                                           jsonObj;
-    std::unordered_map<uint32_t, Component::UnitTextModel>                   textModelMap;
+    SceneNode                                                                 rootNode;
+    nlohmann::json                                                            jsonObj;
+    std::unordered_map<uint32_t, Component::UnitTextModel>                    textModelMap;
     std::unordered_map<std::string, Intent::Interaction::InteractionNodeName> nodeNameMap;
     std::unordered_map<uint32_t, Intent::Interaction::InteractionNodeName>    interactionIDMap;
-    Base::ID::keyUint64Unordered_map<Intent::Interaction::InteractionSource> interactionMap;
+    Base::ID::keyUint64Unordered_map<Intent::Interaction::InteractionSource>  interactionSrcMap;
+    std::unordered_map<uint32_t, Intent::Interaction::InteractionNodeName>    actionIDMap;
 
 public:
     void initFromFile(const std::string& fileName);

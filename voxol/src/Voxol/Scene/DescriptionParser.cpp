@@ -165,6 +165,11 @@ void FileParser::parseNodeAction(SceneNode& parentNode, const JsonType& jsonNode
         parseNodeActionData(parentNode, jNode);
     }
 
+    if (jsonNode.contains("actions"))
+    {
+        auto&& jNode = jsonNode["actions"];
+    }
+
     if (!parentNode.hasChild)
         return;
 
@@ -231,7 +236,7 @@ void FileParser::parseNodeActionMouseData(SceneNode& currNode, const JsonType& j
     actFlag = static_cast<uint8_t>(MouseStatus::Up);
     buildInteraction(srcNode, "up", actFlag, jsonNode);
 
-    interactionMap[srcNode.id] = srcNode;
+    interactionSrcMap[srcNode.id] = srcNode;
 }
 void FileParser::parseNodeActionData(SceneNode& currNode, const JsonType& jsonNode)
 {

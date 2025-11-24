@@ -166,6 +166,7 @@ public:
 
     
     std::unordered_map<uint32_t, Component::UnitIdName> interactionIDMap;
+    std::unordered_map<uint32_t, Component::UnitIdName> actionIDMap;
 
 private:
     std::vector<uint32_t> topoOrder;
