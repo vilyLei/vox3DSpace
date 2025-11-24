@@ -38,7 +38,7 @@ void EntitySystemLayer::initalize(const std::string& configFileName)
     etRenderSys->entityStorage = etSceneSys->entityStorage;
     etRenderSys->initalize();
     tileSys->initalize();
-    etSceneSys->interSrcSys->tileSys = tileSys;
+    //etSceneSys->interSrcSys->tileSys = tileSys;
 
     auto& etCompStorage = etSceneSys->entityStorage->comp;
 
