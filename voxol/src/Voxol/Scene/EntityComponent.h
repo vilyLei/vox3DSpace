@@ -24,6 +24,11 @@ struct UnitTransform
     inline Math::Vec2&       scale() { return *reinterpret_cast<Math::Vec2*>(&sx); }
     inline const Math::Vec2& pos() const { return *reinterpret_cast<const Math::Vec2*>(&x); }
     inline const Math::Vec2& scale() const { return *reinterpret_cast<const Math::Vec2*>(&sx); }
+
+    constexpr UnitTransform() noexcept :
+        x(0), y(0), sx(1), sy(1), rotation{0} {}
+    constexpr UnitTransform(float x_, float y_, float sx_, float sy_, float rotation_ = 0) :
+        x(x_), y(y_), sx(sx_), sy(sy_), rotation(rotation_) {}
 };
 constexpr UnitTransform defaultTrans{0, 0, 1, 1, 0};
 constexpr Math::VxRect  defaultRect{0, 0, 1, 1};

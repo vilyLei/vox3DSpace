@@ -510,11 +510,26 @@ void EntityCompStorage::traverseBuildGlobalMat(uint32_t etId, const Math::Mat33&
 
     if (Base::ID::isValidID(et.transformId))
     {
-        auto&& tr          = transformsPool[et.transformId];
         auto&& parentTrans = parentMat.getXY();
-        worldMat.identity();
-        worldMat.setXY(parentTrans.x + tr.x, parentTrans.y + tr.y);
-        worldMat.setScaleXY(tr.sx, tr.sy);
+        auto&& tr          = transformsPool[et.transformId];
+        if (tr.rotation != 0)
+        {
+            Math::Vec2 pos = {parentTrans.x + tr.x, parentTrans.y + tr.y};
+            Math::Vec2 sv  = {tr.sx, tr.sy};
+            worldMat.setTo(pos.x, pos.y, sv.x, sv.y, tr.rotation);
+            // rotating around the entity bounds center
+            Math::Vec2 centerPivot{0.5f, 0.5f};
+            auto       srcCV       = worldMat.mapPoint(centerPivot);
+            Math::Vec2 dstCV       = pos + sv * 0.5f;
+            pos += dstCV - srcCV;
+            worldMat.setXY(pos);
+        }
+        else
+        {
+            worldMat.identity();
+            worldMat.setXY(parentTrans.x + tr.x, parentTrans.y + tr.y);
+            worldMat.setScaleXY(tr.sx, tr.sy);
+        }
     }
 
     entityGlobalMat33Map[etId] = worldMat;

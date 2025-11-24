@@ -65,6 +65,9 @@ void EntityUnitStorage::initalizeFromDescFile(const std::string& fileName)
     modelsPool.forEach([&](auto& e, int32_t index) {
         e.id = index;
     });
+    transformsPool.forEach([&](auto& e, int32_t index) {
+        e = {0,0,1,1,0};
+    });
     hierarchiesPool.forEach([&](auto& e, uint32_t index) {
         e.parent     = Base::ID::INVALID_ID;
         e.next       = Base::ID::INVALID_ID;
