@@ -271,13 +271,15 @@ void InteractionSourceSystem::update()
         if (Base::ID::isInvalidID(entity.transformId))
             continue;
 
+        return;
         auto&& trans  = compStorage->transformsPool[entity.transformId];
 
         Math::Vec2 offset      = {1,0};
         auto&& originEtPos = compStorage->getEntityGlobalXYAt(etId);
         auto&& key   = Base::ID::KeyUint64::make(etId);
         entityDirtyCall(0, key);
-        trans.pos() += offset;
+        trans.rotation += 0.2f;
+        //trans.pos() += offset;
         //compStorage->setEntityGlobalXYAt(originEtPos + offset, key.protoId());
         // 
         
