@@ -295,6 +295,15 @@
                             }
                         ]
                     }
+                },
+                "actions": {
+                    "rotate": {
+                        "active": true,
+                        "speed": 0.1,
+                        "center": "left-top",
+                        "frequency": 1,
+                        "duration": 0
+                    }
                 }
             }
         ]
