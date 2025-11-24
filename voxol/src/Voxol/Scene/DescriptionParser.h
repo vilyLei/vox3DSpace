@@ -108,7 +108,8 @@ public:
 
     void parseSceneActions(const JsonType& jsonNode);
     void parseNodeAction(SceneNode& parentNode, const JsonType& jsonNode);
-    void parseNodeActionMouseData(SceneNode& currNode, const JsonType& jsonNode);
+    void parseNodeInteractionMouseData(SceneNode& currNode, const JsonType& jsonNode);
+    void parseNodeInteractionData(SceneNode& currNode, const JsonType& jsonNode);
     void parseNodeActionData(SceneNode& currNode, const JsonType& jsonNode);
 };
 

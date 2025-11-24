@@ -257,6 +257,13 @@ void InteractionSourceSystem::update()
             return;
         singalToBehavior(srcNode);
     });
+
+    auto& actionIdMap = compStorage->actionIDMap;
+    for (auto&& item : actionIdMap) {
+        auto etId = item.first;
+        auto&& entity = compStorage->entitiesPool[etId];
+        auto&& trans  = compStorage->transformsPool[entity.transformId];
+    }
 }
 
 
