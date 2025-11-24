@@ -263,6 +263,39 @@
                         ]
                     }
                 }
+            },
+            {
+                "type": "label",
+                "name": "color-rect-label",
+                "transform": {
+                    "position": [
+                        600,
+                        300
+                    ]
+                },
+                "display": {
+                    "props": {
+                        "visible": true,
+                        "cacheAsBitmap": true
+                    },
+                    "shape": {
+                        "type": "rectangle",
+                        "size": [
+                            80,
+                            50
+                        ]
+                    },
+                    "style": {
+                        "fills": [
+                            {
+                                "type": "color",
+                                "value": "0xffdddd33",
+                                "blend": "normal",
+                                "opacity": 1.0
+                            }
+                        ]
+                    }
+                }
             }
         ]
     }
