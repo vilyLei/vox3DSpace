@@ -166,7 +166,7 @@ void EntityCompStorage::setEntityLocalXYAt(const Math::Vec2& pv, uint32_t id)
     auto&& trans = transformsPool[et.transformId];
     trans.pos()  = pv;
 
-    auto&& parentMat = getEntityParentGlobalMatAt(id);
+    auto&& parentMat   = getEntityParentGlobalMatAt(id);
     auto&& parentTrans = parentMat.getXY();
     auto&& worldMat    = Math::Mat33::makeTranslate(parentTrans.x + trans.x, parentTrans.y + trans.y);
     worldMat.setScaleXY(trans.sx, trans.sy);
@@ -231,7 +231,7 @@ void EntityCompStorage::checkIds(std::vector<Base::ID::KeyUint64>& edis)
         return;
 
     std::vector<Base::ID::KeyUint64> ids{};
-    auto                       tot = edis.size();
+    auto                             tot = edis.size();
     for (auto i = 0; i < tot; ++i)
     {
         auto&& key = edis[i];
@@ -286,23 +286,25 @@ void EntityCompStorage::updateHierarchyInfo()
 
 void EntityCompStorage::traverseSortWithShadowEffect(const Base::ID::KeyUint64& srcKey, uint32_t protoId, uint32_t& index)
 {
-    if (entitiesPool.isValid(protoId))
+    if (!entitiesPool.isValid(protoId))
+        return;
+
+    auto&& et = entitiesPool[protoId];
+    if (Base::ID::isInvalidID(et.shadingId))
+        return;
+    auto&& shadingEt = shaderingEntitiesPool[et.shadingId];
+    if (Base::ID::isInvalidID(shadingEt.shadingDescId))
+        return;
+
+    auto&& shdDesc = shaderingDescPool[shadingEt.shadingDescId];
+    if (shdDesc.flags > 0 && shadingShadowIdMap.contains(shadingEt.shadingDescId))
     {
-        auto&& et = entitiesPool[protoId];
-        if (Base::ID::isValidID(et.shadingId))
+        auto&& effects = shadingShadowIdMap[shadingEt.shadingDescId];
+        for (auto ef : effects)
         {
-            auto&& shadingEt = shaderingEntitiesPool[et.shadingId];
-            auto&& shdDesc   = shaderingDescPool[shadingEt.shadingDescId];
-            if (shdDesc.flags > 0 && shadingShadowIdMap.contains(shadingEt.shadingDescId))
-            {
-                auto&& effects = shadingShadowIdMap[shadingEt.shadingDescId];
-                for (auto ef : effects)
-                {
-                    auto&& key = Base::ID::KeyUint64::makeWithEffectShadow(srcKey, ef);
-                    printf("traverseSortWithShadowEffect(), key:%s index: %u\n", key.idToString().c_str(), index);
-                    hierarchyIndexMap[key] = index++;
-                }
-            }
+            auto&& key = Base::ID::KeyUint64::makeWithEffectShadow(srcKey, ef);
+            printf("traverseSortWithShadowEffect(), key:%s index: %u\n", key.idToString().c_str(), index);
+            hierarchyIndexMap[key] = index++;
         }
     }
 }
@@ -519,8 +521,8 @@ void EntityCompStorage::traverseBuildGlobalMat(uint32_t etId, const Math::Mat33&
             worldMat.setTo(pos.x, pos.y, sv.x, sv.y, tr.rotation);
             // rotating around the entity bounds center
             Math::Vec2 centerPivot{0.5f, 0.5f};
-            auto       srcCV       = worldMat.mapPoint(centerPivot);
-            Math::Vec2 dstCV       = pos + sv * 0.5f;
+            auto       srcCV = worldMat.mapPoint(centerPivot);
+            Math::Vec2 dstCV = pos + sv * 0.5f;
             pos += dstCV - srcCV;
             worldMat.setXY(pos);
         }
@@ -620,7 +622,7 @@ void EntityCompStorage::collectShadowEffect(const Base::ID::KeyUint64& srcKey, u
 
 void EntityCompStorage::collectAllEntitiesWithInstance(const Base::ID::KeyUint64& etId, std::vector<Base::ID::KeyUint64>& ids)
 {
-    auto                       iid = etId.iid();
+    auto                             iid = etId.iid();
     std::vector<Base::ID::KeyUint64> stack;
     stack.reserve(256);
     stack.emplace_back(etId);
@@ -636,7 +638,7 @@ void EntityCompStorage::collectAllEntitiesWithInstance(const Base::ID::KeyUint64
         if (entitiesPool.isInvalid(protoId))
             continue;
 
-        auto&&   et             = entitiesPool[protoId];
+        auto&&   et     = entitiesPool[protoId];
         uint32_t currId = Base::ID::isValidID(et.prototypeId) ? et.prototypeId : protoId;
 
         for (auto child = hierarchiesPool[currId].firstChild;
@@ -828,4 +830,4 @@ void EntityCompStorage::foreachBoundsWithEntityId(uint32_t eId, EntityBoundsResp
     }
 }
 
-} // namespace Voxol::Render
+} // namespace Voxol::Scene

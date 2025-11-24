@@ -43,7 +43,9 @@ void EntitySceneSystem::initalize(const std::string& configFileName)
 
         if (Base::ID::isInvalidID(et.shadingId)) { return; }
 
-        auto&  shadingEt = shaderingEntitiesPool[et.shadingId];
+        auto& shadingEt = shaderingEntitiesPool[et.shadingId];
+        if (Base::ID::isInvalidID(shadingEt.shadingDescId)) { return; }
+
         auto&  desc      = shaderingDescPool[shadingEt.shadingDescId];
         if (desc.flags == 0) { return; }
         auto&& efs = storage->shadingShadowIdMap[shadingEt.shadingDescId];

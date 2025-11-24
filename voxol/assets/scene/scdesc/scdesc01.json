@@ -9,6 +9,58 @@
     "scene": {
         "nodes": [
             {
+                "type": "label",
+                "name": "red-label",
+                "transform": {
+                    "position": [
+                        200,
+                        200
+                    ]
+                },
+                "display": {
+                    "shape": "rectangle",
+                    "size": [
+                        70,
+                        50
+                    ],
+                    "fillColor": "0xffff0000"
+                },
+                "actions": {
+                    "rotate": {
+                        "active": true,
+                        "speed": 0.1,
+                        "center": "left-top",
+                        "frequency": 1,
+                        "duration": 0
+                    }
+                }
+            },
+            {
+                "reference": {
+                    "src": "color-label",
+                    "type": "container"
+                },
+                "name": "color-label-group",
+                "transform": {
+                    "position": [
+                        300,
+                        200
+                    ]
+                },
+                "layout": {
+                    "type": "reference-item",
+                    "method": "row-column",
+                    "position": [
+                        20,
+                        20
+                    ],
+                    "column-count": 5,
+                    "distance-x": 35,
+                    "distance-y": 35,
+                    "count": 20
+                }
+            },
+            {
                 "config": {
                     "colourEdit": true
                 },

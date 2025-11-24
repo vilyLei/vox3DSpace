@@ -135,8 +135,18 @@ bool EntityRenderSystem::drawUnitEffect(const Draw::DrawContext& rctx, const Bas
     if (!wbounds.intersects(vb))
         return false;
 
+    if (Base::ID::isInvalidID(entity.modelId))
+    {
+        return false;
+    }
     auto&  modelsPool = compStorage->modelsPool;
     auto   drawingId  = modelsPool[entity.modelId].drawUnitId;
+
+    if (Base::ID::isInvalidID(drawingId))
+    {
+        return false;
+    }
+
     auto&  drs        = *entityStorage->drawing;
     auto&& drawUnit   = drs[drawingId];
 
@@ -161,6 +171,12 @@ bool EntityRenderSystem::drawUnit(const Draw::DrawContext& rctx, const Scene::Co
     auto& modelsPool        = compStorage->modelsPool;
 
     auto&& shadingEt = compStorage->get<Scene::Component::UnitShadingEntity>(entity.shadingId);
+
+    if (Base::ID::isInvalidID(entity.modelId) || Base::ID::isInvalidID(shadingEt.shadingDescId))
+    {
+        return false;
+    }
+
     auto&& model     = modelsPool[entity.modelId];
     auto&& shdDesc   = shaderingDescPool[shadingEt.shadingDescId];
 
@@ -193,6 +209,10 @@ bool EntityRenderSystem::drawUnit(const Draw::DrawContext& rctx, const Scene::Co
         return true;
     }
 
+    if (Base::ID::isInvalidID(model.drawUnitId))
+    {
+        return false;
+    }
     auto   drawingId = model.drawUnitId;
     auto&  drs       = *entityStorage->drawing;
     auto&& drawUnit  = drs[drawingId];
