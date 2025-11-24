@@ -33,6 +33,7 @@ void EntityUnitStorage::initalizeFromDescFile(const std::string& fileName)
     }
     drawing->initalize(total);
 
+    comp->interactionIDMap = descParser.fileParser.interactionIDMap;
 
     auto& entitiesPool          = comp->entitiesPool;
     auto& shaderingEntitiesPool = comp->shaderingEntitiesPool;

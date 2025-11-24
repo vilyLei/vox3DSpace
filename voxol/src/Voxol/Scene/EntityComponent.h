@@ -43,6 +43,14 @@ struct UnitShadowEntity
     uint32_t            effectId = Base::ID::INVALID_ID;
 };
 
+
+
+struct UnitIdName
+{
+    uint32_t    id = Base::ID::INVALID_ID;
+    std::string name;
+};
+
 struct UnitShadingDesc
 {
     uint32_t color = 0xff000000;

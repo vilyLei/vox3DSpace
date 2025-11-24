@@ -215,7 +215,7 @@ void FileParser::parseNodeActionMouseData(SceneNode& currNode, const JsonType& j
     InteractionSource srcNode;
     srcNode.id = Base::ID::KeyUint64::make(currNode.id);
 
-    actionIDMap[currNode.id] = {currNode.id, currNode.name};
+    interactionIDMap[currNode.id] = {currNode.id, currNode.name};
 
     bool visible = true;
 

@@ -90,7 +90,7 @@ public:
     nlohmann::json                                                           jsonObj;
     std::unordered_map<uint32_t, Component::UnitTextModel>                   textModelMap;
     std::unordered_map<std::string, Intent::Interaction::InteractionNodeName> nodeNameMap;
-    std::unordered_map<uint32_t, Intent::Interaction::InteractionNodeName>    actionIDMap;
+    std::unordered_map<uint32_t, Intent::Interaction::InteractionNodeName>    interactionIDMap;
     Base::ID::keyUint64Unordered_map<Intent::Interaction::InteractionSource> interactionMap;
 
 public:

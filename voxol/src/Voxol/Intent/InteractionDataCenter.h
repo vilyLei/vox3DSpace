@@ -2,6 +2,7 @@
 #define VOXOL_INTENT_INTERACTION_DATA_CENTER_H
 
 #include "IntentComponent.h"
+#include "../Scene/EntityCompStorage.h"
 #include <functional>
 
 namespace Voxol::Intent

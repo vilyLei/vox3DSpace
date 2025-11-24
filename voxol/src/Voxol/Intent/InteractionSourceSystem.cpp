@@ -130,15 +130,26 @@ void InteractionSourceSystem::singalParse(Interaction::InteractionSource& srcNod
 
 bool InteractionSourceSystem::containsSrcId(const Base::ID::KeyUint64& srcId)
 {
-    return actionIDMap.contains(srcId.protoId());
+    if (!compStorage)
+        return true;
+
+    return compStorage->interactionIDMap.contains(srcId.protoId());
 }
 
 Base::ID::KeyUint64 InteractionSourceSystem::findSrcId(const std::vector<Base::ID::KeyUint64>& qeIds)
 {
+    if (!compStorage)
+        return Base::ID::INVALID_KEY;
+
     auto tot = qeIds.size();
+    auto& interIdMap = compStorage->interactionIDMap;
+
     for (auto i = 0; i < tot; i++)
     {
-        if (actionIDMap.contains(qeIds[i].protoId()))
+        //if (actionIDMap.contains(qeIds[i].protoId()))
+        //    return qeIds[i];
+
+        if (interIdMap.contains(qeIds[i].protoId()))
             return qeIds[i];
     }
     return Base::ID::INVALID_KEY;

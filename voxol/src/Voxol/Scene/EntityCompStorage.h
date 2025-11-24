@@ -164,6 +164,9 @@ public:
     std::unordered_map<uint32_t, Component::UnitInstanceMap>     instanceStorage;
     std::unordered_map<uint32_t, Component::UnitTextModel>       entityStringModelMap;
 
+    
+    std::unordered_map<uint32_t, Component::UnitIdName> interactionIDMap;
+
 private:
     std::vector<uint32_t> topoOrder;
     std::vector<uint32_t> topoIndex;

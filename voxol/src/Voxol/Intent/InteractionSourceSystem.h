@@ -2,6 +2,7 @@
 #define VOXOL_INTENT_INTERACTION_SOURCE_SYSTEM_H
 
 #include "IntentComponent.h"
+#include "../Scene/EntityCompStorage.h"
 #include "../Tile/TileSystem.h"
 #include <functional>
 
@@ -24,7 +25,6 @@ public:
 public:
     Scene::EntityCompStorage::SP                                   compStorage;
     Tile::TileSystem::SP                                           tileSys;
-    std::unordered_map<uint32_t, Interaction::InteractionNodeName> actionIDMap;
 
 public:
     void                initialize();

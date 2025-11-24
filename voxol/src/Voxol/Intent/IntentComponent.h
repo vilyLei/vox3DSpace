@@ -4,7 +4,9 @@
 #include "intentPreDef.h"
 #include "EnumWrapper.h"
 #include "../Base/IDDef.h"
-#include "../Scene/EntityCompStorage.h"
+//#include "../Scene/EntityCompStorage.h"
+#include "../Scene/EntityComponent.h"
+#include <functional>
 
 namespace Voxol::Intent
 {
@@ -42,11 +44,12 @@ struct InteractionTargetDesc
 };
 
 
-struct InteractionNodeName
-{
-    uint32_t    id = Base::ID::INVALID_ID;
-    std::string name;
-};
+//struct InteractionNodeName
+//{
+//    uint32_t    id = Base::ID::INVALID_ID;
+//    std::string name;
+//};
+using InteractionNodeName = Scene::Component::UnitIdName;
 
 struct InteractionTargetSet
 {
