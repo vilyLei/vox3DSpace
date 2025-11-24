@@ -262,9 +262,30 @@ void InteractionSourceSystem::update()
 
     auto& actionIdMap = compStorage->actionIDMap;
     for (auto&& item : actionIdMap) {
+
         auto etId = item.first;
+        if (Base::ID::isInvalidID(etId))
+            continue;
+
         auto&& entity = compStorage->entitiesPool[etId];
+        if (Base::ID::isInvalidID(entity.transformId))
+            continue;
+
         auto&& trans  = compStorage->transformsPool[entity.transformId];
+
+        Math::Vec2 offset      = {1,0};
+        auto&& originEtPos = compStorage->getEntityGlobalXYAt(etId);
+        auto&& key   = Base::ID::KeyUint64::make(etId);
+        entityDirtyCall(0, key);
+        trans.pos() += offset;
+        //compStorage->setEntityGlobalXYAt(originEtPos + offset, key.protoId());
+        // 
+        
+        auto&& parentMat = compStorage->getEntityParentGlobalMatAt(key.protoId());
+        compStorage->traverseBuildGlobalMat(key.protoId(), parentMat);
+        compStorage->updateAllInstanceGlobalMats(key);
+        //entityDirtyCall(1, key);
+
     }
 }
 
