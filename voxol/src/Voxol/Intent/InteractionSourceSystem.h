@@ -8,6 +8,7 @@
 
 namespace Voxol::Intent
 {
+    
 class InteractionSourceSystem
 {
 public:
@@ -25,6 +26,8 @@ public:
 public:
     Scene::EntityCompStorage::SP                                   compStorage;
     Tile::TileSystem::SP                                           tileSys;
+
+    Interaction::EntityDirtyCallType entityDirtyCall;
 
 public:
     void                initialize();

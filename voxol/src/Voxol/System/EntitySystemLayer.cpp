@@ -42,6 +42,17 @@ void EntitySystemLayer::initalize(const std::string& configFileName)
 
     auto& etCompStorage = etSceneSys->entityStorage->comp;
 
+    etSceneSys->interSrcSys->entityDirtyCall = [&, this](uint32_t type, const Base::ID::KeyUint64& etId) {
+        if (type == 0)
+        {
+            updateTileWithEntityId(etId);
+        }
+        else
+        {
+            updateBVHAndTileWithEntityId(etId);
+        }
+    };
+
     uiOpLayer                      = std::make_shared<System::UIOperationLayer>();
     uiOpLayer->mouseCtrl.dirtyCall = [&, this](const Math::Bounds& bounds, uint32_t type, const Base::ID::KeyUint64& etId) {
         if (type == 0)

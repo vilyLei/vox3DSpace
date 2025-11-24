@@ -12,6 +12,9 @@ namespace Voxol::Intent
 {
 namespace Interaction
 {
+
+using EntityDirtyCallType = std::function<void(uint32_t type, const Base::ID::KeyUint64& etId)>;
+
 enum class MouseStatus : uint8_t
 {
     None = 0,
