@@ -60,6 +60,26 @@
                                 "fillColor": "0xff228822"
                             }
                         }
+                    },
+                    {
+                        "type": "text",
+                        "name": "V",
+                        "transform": {
+                            "position": [
+                                20,
+                                10
+                            ]
+                        },
+                        "display": {
+                            "shape": {
+                                "type": "text",
+                                "content": "Vily",
+                                "fontSize": 24
+                            },
+                            "style": {
+                                "fillColor": "0xff99aa33"
+                            }
+                        }
                     }
                 ]
             },
