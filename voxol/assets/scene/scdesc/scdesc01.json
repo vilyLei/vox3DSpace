@@ -38,7 +38,7 @@
                         "duration": 0
                     }
                 },
-                "childrenT": [
+                "children": [
                     {
                         "type": "label",
                         "name": "gfeen-small-label-0",

@@ -96,8 +96,8 @@ public:
 
 public:
     void initFromFile(const std::string& fileName);
-    void parseSceneNodeWithNameFromRoot(SceneNode& currNode, uint32_t id, const std::string& nodeName);
-    void parseSceneNodeWithNameRecursive(SceneNode& currNode, uint32_t id, const std::string& nodeName, const JsonType& jsonNode, const std::string& nodesName);
+    void parseSceneNodeWithNameFromRoot(SceneNode& currNode, uint32_t& id, const std::string& nodeName);
+    void parseSceneNodeWithNameRecursive(SceneNode& currNode, uint32_t& id, const std::string& nodeName, const JsonType& jsonNode, const std::string& nodesName);
     void parseHeriNodes(const JsonType& jsonNode);
     void parseSceneNode(SceneNode& parentNode, uint32_t& id, const JsonType& jsonNode, const std::string& nodesName);
 
