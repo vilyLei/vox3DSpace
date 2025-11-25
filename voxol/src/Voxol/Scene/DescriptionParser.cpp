@@ -312,7 +312,7 @@ void FileParser::parseSceneNode(SceneNode& parentNode, uint32_t& id, const JsonT
 
         if (srcNodeType == "container")
         {
-            auto total = 1;
+            auto total = 10;
             auto cn    = 3;
             Math::Vec2 beginPos{30, 30};
             Math::Vec2 offsetPos{25, 25};
@@ -322,11 +322,16 @@ void FileParser::parseSceneNode(SceneNode& parentNode, uint32_t& id, const JsonT
                 auto c = i % cn;
                 auto r = i / cn;
                 Math::Vec2 multV{float(c), float(r)};
-                parseSceneNodeWithNameFromRoot(parentNode, srcNodeName);
-                Math::Vec2 disV = parentNode.transform.scale() + offsetPos;
+                SceneNode  node;
+                node.id = id++;
+                parseSceneNodeWithNameFromRoot(node, srcNodeName);
+                Math::Vec2 disV            = node.transform.scale() + offsetPos;
                 auto pv   = disV * multV + beginPos;
-                parentNode.transform.pos() = pv;
+                node.transform.pos()       = pv;
+                node.print();
+                parentNode.children.emplace_back(std::move(node));
             }
+            parentNode.childrenTotal = static_cast<int>(parentNode.children.size());
 
         }
         else {
