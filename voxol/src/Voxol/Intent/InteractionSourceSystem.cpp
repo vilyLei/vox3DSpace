@@ -167,7 +167,7 @@ void InteractionSourceSystem::updateSourceAct(const Base::ID::KeyUint64& srcId, 
 void InteractionSourceSystem::execActToDsiplay(Interaction::InteractionSource& srcNode, Interaction::MouseStatus status, std::string actDesc)
 {
 
-    auto modifyDstFunc = [this](Interaction::InteractionTargetDesc& desc, std::string actDesc) {
+    auto modifyDstFunc = [this](const Interaction::InteractionSource& src, Interaction::InteractionTargetDesc& desc, std::string actDesc) {
 
         if (!compStorage)
             return;
@@ -217,7 +217,7 @@ void InteractionSourceSystem::execActToDsiplay(Interaction::InteractionSource& s
     printf("InteractionSourceSystem::execActToDsiplay(), tar.targets.size(): %zu\n", tar.targets.size());
     for (auto& dst : tar.targets)
     {
-        modifyDstFunc(dst, actDesc);
+        modifyDstFunc(srcNode, dst, actDesc);
     }
 }
 
