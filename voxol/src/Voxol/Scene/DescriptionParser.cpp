@@ -60,11 +60,11 @@ void DisplayShape::parse(const JsonType& jsonNode)
 
 
 
-void SceneActionTargetNode::reset() {
+void SceneActionTargetNode::reset()
+{
 
     srcActType = "";
     actions.clear();
-
 }
 void SceneActionTargetNode::parse(const JsonType& jsonNode, const std::string& srcActType_)
 {
@@ -101,7 +101,8 @@ void SceneActionTargetNode::parse(const JsonType& jsonNode, const std::string& s
         {
             actDesc.cmd = actJNode["cmd"];
         }
-        else {
+        else
+        {
             actDesc.cmd = "None";
         }
         printf("actDesc.target: %s, srcActType: %s\n", actDesc.target.c_str(), srcActType.c_str());
@@ -258,7 +259,7 @@ void FileParser::parseHeriNodes(const JsonType& jsonNode)
     auto flag = jsonNode.contains("nodes") && jsonNode["nodes"].is_array();
     if (!flag)
         return;
-    
+
     auto&& elements = jsonNode["nodes"];
 
     if (elements.empty())
@@ -291,24 +292,26 @@ void FileParser::parseSceneNode(SceneNode& parentNode, uint32_t& id, const JsonT
         auto&& refNode = jsonNode[refKey];
     }
 
-    if (!parentNode.hasChild)
+    //if (!parentNode.hasChild)
+    //    return;
+    if (!jsonNode.contains(nodesName) || !jsonNode[nodesName].is_array())
         return;
 
-    if (jsonNode.contains(nodesName) && jsonNode[nodesName].is_array())
+    //if (jsonNode.contains(nodesName) && jsonNode[nodesName].is_array())
+    //{
+    auto&& elements = jsonNode[nodesName];
+    if (elements.empty())
+        return;
+    for (auto& item : elements)
     {
-        auto&& elements = jsonNode[nodesName];
-        if (elements.empty())
-            return;
-        for (auto& item : elements)
-        {
-            SceneNode node;
-            node.id = id++;
-            parseSceneNode(node, id, item, nodesName);
-            node.print();
-            parentNode.children.emplace_back(std::move(node));
-        }
-        parentNode.childrenTotal = static_cast<int>(parentNode.children.size());
+        SceneNode node;
+        node.id = id++;
+        parseSceneNode(node, id, item, nodesName);
+        node.print();
+        parentNode.children.emplace_back(std::move(node));
     }
+    parentNode.childrenTotal = static_cast<int>(parentNode.children.size());
+    //}
 }
 
 
