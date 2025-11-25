@@ -37,7 +37,31 @@
                         "frequency": 1,
                         "duration": 0
                     }
-                }
+                },
+                "children": [
+                    {
+                        "type": "label",
+                        "name": "gfeen-small-label-0",
+                        "transform": {
+                            "position": [
+                                10,
+                                10
+                            ]
+                        },
+                        "display": {
+                            "shape": {
+                                "type": "rectangle",
+                                "size": [
+                                    10,
+                                    10
+                                ]
+                            },
+                            "style": {
+                                "fillColor": "0xff228822"
+                            }
+                        }
+                    }
+                ]
             },
             {
                 "reference": {
