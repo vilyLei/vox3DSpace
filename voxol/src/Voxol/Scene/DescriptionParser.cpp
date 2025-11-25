@@ -274,14 +274,14 @@ void FileParser::parseHeriNodes(const JsonType& jsonNode)
     {
         SceneNode node;
         node.id = id++;
-        parseSceneNode(node, id, item);
+        parseSceneNode(node, id, item, "children");
         node.print();
         rootNode.children.emplace_back(std::move(node));
     }
     rootNode.childrenTotal = static_cast<int>(rootNode.children.size());
     rootNode.print();
 }
-void FileParser::parseSceneNode(SceneNode& parentNode, uint32_t& id, const JsonType& jsonNode)
+void FileParser::parseSceneNode(SceneNode& parentNode, uint32_t& id, const JsonType& jsonNode, const std::string& nodesName)
 {
 
     parseNodeData(parentNode, jsonNode);
@@ -294,16 +294,16 @@ void FileParser::parseSceneNode(SceneNode& parentNode, uint32_t& id, const JsonT
     if (!parentNode.hasChild)
         return;
 
-    if (jsonNode.contains("children") && jsonNode["children"].is_array())
+    if (jsonNode.contains(nodesName) && jsonNode[nodesName].is_array())
     {
-        auto&& elements = jsonNode["children"];
+        auto&& elements = jsonNode[nodesName];
         if (elements.empty())
             return;
         for (auto& item : elements)
         {
             SceneNode node;
             node.id = id++;
-            parseSceneNode(node, id, item);
+            parseSceneNode(node, id, item, nodesName);
             node.print();
             parentNode.children.emplace_back(std::move(node));
         }

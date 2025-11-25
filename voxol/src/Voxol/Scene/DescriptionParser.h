@@ -97,7 +97,7 @@ public:
 public:
     void initFromFile(const std::string& fileName);
     void parseHeriNodes(const JsonType& jsonNode);
-    void parseSceneNode(SceneNode& parentNode, uint32_t& id, const JsonType& jsonNode);
+    void parseSceneNode(SceneNode& parentNode, uint32_t& id, const JsonType& jsonNode, const std::string& nodesName);
 
     void parseNodeDisplayStyle(SceneNode& node, const JsonType& jsonNode);
     void parseNodeDisplayShape(SceneNode& node, const JsonType& jsonNode);
