@@ -42,6 +42,64 @@
             {
                 "reference": {
                     "src": "dark-red-label",
+                    "type": "node"
+                },
+                "name": "dark-red-label-group",
+                "transform": {
+                    "position": [
+                        180,
+                        100
+                    ]
+                },
+                "layout": {
+                    "type": "reference-item",
+                    "method": "row-column",
+                    "position": [
+                        20,
+                        20
+                    ],
+                    "column-count": 5,
+                    "distance-x": 35,
+                    "distance-y": 35,
+                    "count": 20
+                }
+            }
+        ],
+        "nodesC": [
+            {
+                "type": "label",
+                "name": "dark-red-label",
+                "transform": {
+                    "position": [
+                        100,
+                        100
+                    ]
+                },
+                "display": {
+                    "shape": {
+                        "type": "rectangle",
+                        "size": [
+                            70,
+                            50
+                        ]
+                    },
+                    "style": {
+                        "fillColor": "0xff772200"
+                    }
+                },
+                "actions": {
+                    "rotate": {
+                        "active": true,
+                        "speed": 0.1,
+                        "center": "left-top",
+                        "frequency": 1,
+                        "duration": 0
+                    }
+                }
+            },
+            {
+                "reference": {
+                    "src": "dark-red-label",
                     "type": "container"
                 },
                 "name": "dark-red-label-group",
