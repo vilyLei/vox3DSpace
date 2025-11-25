@@ -253,6 +253,36 @@ void FileParser::parseNodeInteractionData(SceneNode& currNode, const JsonType& j
     }
 }
 
+void FileParser::parseSceneNodeWithNameFromRoot(SceneNode& currNode, const std::string& nodeName)
+{
+
+    auto&& sceneNode = jsonObj["scene"];
+    parseSceneNodeWithNameRecursive(currNode, nodeName, sceneNode, "nodes");
+}
+void FileParser::parseSceneNodeWithNameRecursive(SceneNode& currNode, const std::string& nodeName, const JsonType& jsonNode, const std::string& nodesName)
+{
+
+    if (!jsonNode.contains(nodesName) || !jsonNode[nodesName].is_array())
+        return;
+
+    auto&& elements = jsonNode[nodesName];
+    if (elements.empty())
+        return;
+    for (auto& item : elements)
+    {
+        std::string keyName = "name";
+        if (item.contains(keyName) && item[keyName].is_string())
+        {
+            std::string nameStr = item[keyName];
+            if (!nameStr.empty() && nameStr == nodeName)
+            {
+                parseSceneNode(currNode, currNode.id, item, "children");
+                return;
+            }
+        }
+        parseSceneNodeWithNameRecursive(currNode, nodeName, item, "children");
+    }
+}
 void FileParser::parseHeriNodes(const JsonType& jsonNode)
 {
     uint32_t id        = 0;
@@ -265,6 +295,7 @@ void FileParser::parseHeriNodes(const JsonType& jsonNode)
     parseSceneNode(rootNode, id, jsonNode, "nodes");
     rootNode.entity.modelId = Base::ID::INVALID_ID;
     rootNode.entity.shadingId = Base::ID::INVALID_ID;
+    rootNode.print();
 }
 void FileParser::parseSceneNode(SceneNode& parentNode, uint32_t& id, const JsonType& jsonNode, const std::string& nodesName)
 {
@@ -274,15 +305,25 @@ void FileParser::parseSceneNode(SceneNode& parentNode, uint32_t& id, const JsonT
     if (jsonNode.contains(refKey) && jsonNode[refKey].is_object())
     {
         auto&& refNode = jsonNode[refKey];
+        std::string srcNodeName = refNode["src"];
+        std::string srcNodeType = refNode["type"];
+        auto        preTrans    = parentNode.transform;
+        auto        preName    = parentNode.name;
+
+        if (srcNodeType == "container")
+        {
+
+        }
+        else {
+            parseSceneNodeWithNameFromRoot(parentNode, srcNodeName);
+            parentNode.transform.pos() = preTrans.pos();
+            parentNode.name = preName;
+        }
     }
 
-    //if (!parentNode.hasChild)
-    //    return;
     if (!jsonNode.contains(nodesName) || !jsonNode[nodesName].is_array())
         return;
 
-    //if (jsonNode.contains(nodesName) && jsonNode[nodesName].is_array())
-    //{
     auto&& elements = jsonNode[nodesName];
     if (elements.empty())
         return;
@@ -295,7 +336,6 @@ void FileParser::parseSceneNode(SceneNode& parentNode, uint32_t& id, const JsonT
         parentNode.children.emplace_back(std::move(node));
     }
     parentNode.childrenTotal = static_cast<int>(parentNode.children.size());
-    //}
 }
 
 
