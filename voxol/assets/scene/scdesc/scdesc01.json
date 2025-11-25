@@ -42,7 +42,7 @@
             {
                 "reference": {
                     "src": "dark-red-label",
-                    "type": "node"
+                    "type": "container"
                 },
                 "name": "dark-red-label-group",
                 "transform": {

@@ -319,8 +319,8 @@ void FileParser::parseSceneNode(SceneNode& parentNode, uint32_t& id, const JsonT
 
             for (auto i = 0; i < total; i++)
             {
-                auto c = total % cn;
-                auto r = total / cn;
+                auto c = i % cn;
+                auto r = i / cn;
                 Math::Vec2 multV{float(c), float(r)};
                 parseSceneNodeWithNameFromRoot(parentNode, srcNodeName);
                 Math::Vec2 disV = parentNode.transform.scale() + offsetPos;
