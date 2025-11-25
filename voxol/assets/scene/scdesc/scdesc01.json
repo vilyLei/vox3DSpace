@@ -38,7 +38,7 @@
                         "duration": 0
                     }
                 },
-                "children": [
+                "childrenT": [
                     {
                         "type": "label",
                         "name": "gfeen-small-label-0",
@@ -66,7 +66,7 @@
             {
                 "reference": {
                     "src": "dark-red-label",
-                    "type": "node"
+                    "type": "container"
                 },
                 "name": "dark-red-label-group",
                 "transform": {
