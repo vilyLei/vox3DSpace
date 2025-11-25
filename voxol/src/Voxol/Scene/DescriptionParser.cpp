@@ -285,6 +285,11 @@ void FileParser::parseSceneNode(SceneNode& parentNode, uint32_t& id, const JsonT
 {
 
     parseNodeData(parentNode, jsonNode);
+    std::string refKey = "reference";
+    if (jsonNode.contains(refKey) && jsonNode[refKey].is_object())
+    {
+        auto&& refNode = jsonNode[refKey];
+    }
 
     if (!parentNode.hasChild)
         return;
