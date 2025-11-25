@@ -7,11 +7,10 @@
         "unit": "pixel"
     },
     "scene": {
-        
         "nodes": [
             {
                 "type": "label",
-                "name": "red-label",
+                "name": "dark-red-label",
                 "transform": {
                     "position": [
                         200,
@@ -19,12 +18,16 @@
                     ]
                 },
                 "display": {
-                    "shape": "rectangle",
-                    "size": [
-                        70,
-                        50
-                    ],
-                    "fillColor": "0xffff0000"
+                    "shape": {
+                        "type": "rectangle",
+                        "size": [
+                            70,
+                            50
+                        ]
+                    },
+                    "style": {
+                        "fillColor": "0xff772200"
+                    }
                 },
                 "actions": {
                     "rotate": {
@@ -38,14 +41,14 @@
             },
             {
                 "reference": {
-                    "src": "color-label",
+                    "src": "dark-red-label",
                     "type": "container"
                 },
-                "name": "color-label-group",
+                "name": "dark-red-label-group",
                 "transform": {
                     "position": [
                         300,
-                        200
+                        100
                     ]
                 },
                 "layout": {
@@ -73,12 +76,16 @@
                     ]
                 },
                 "display": {
-                    "shape": "rectangle",
-                    "size": [
-                        70,
-                        50
-                    ],
-                    "fillColor": "0xffff0000"
+                    "shape": {
+                        "type": "rectangle",
+                        "size": [
+                            70,
+                            50
+                        ]
+                    },
+                    "style": {
+                        "fillColor": "0xffff0000"
+                    }
                 },
                 "actions": {
                     "rotate": {
