@@ -253,13 +253,13 @@ void FileParser::parseNodeInteractionData(SceneNode& currNode, const JsonType& j
     }
 }
 
-void FileParser::parseSceneNodeWithNameFromRoot(SceneNode& currNode, const std::string& nodeName)
+void FileParser::parseSceneNodeWithNameFromRoot(SceneNode& currNode, uint32_t id, const std::string& nodeName)
 {
 
     auto&& sceneNode = jsonObj["scene"];
-    parseSceneNodeWithNameRecursive(currNode, nodeName, sceneNode, "nodes");
+    parseSceneNodeWithNameRecursive(currNode, id, nodeName, sceneNode, "nodes");
 }
-void FileParser::parseSceneNodeWithNameRecursive(SceneNode& currNode, const std::string& nodeName, const JsonType& jsonNode, const std::string& nodesName)
+void FileParser::parseSceneNodeWithNameRecursive(SceneNode& currNode, uint32_t id, const std::string& nodeName, const JsonType& jsonNode, const std::string& nodesName)
 {
 
     if (!jsonNode.contains(nodesName) || !jsonNode[nodesName].is_array())
@@ -276,11 +276,11 @@ void FileParser::parseSceneNodeWithNameRecursive(SceneNode& currNode, const std:
             std::string nameStr = item[keyName];
             if (!nameStr.empty() && nameStr == nodeName)
             {
-                parseSceneNode(currNode, currNode.id, item, "children");
+                parseSceneNode(currNode, id, item, "children");
                 return;
             }
         }
-        parseSceneNodeWithNameRecursive(currNode, nodeName, item, "children");
+        parseSceneNodeWithNameRecursive(currNode, id, nodeName, item, "children");
     }
 }
 void FileParser::parseHeriNodes(const JsonType& jsonNode)
@@ -324,7 +324,7 @@ void FileParser::parseSceneNode(SceneNode& parentNode, uint32_t& id, const JsonT
                 Math::Vec2 multV{float(c), float(r)};
                 SceneNode  node;
                 node.id = id++;
-                parseSceneNodeWithNameFromRoot(node, srcNodeName);
+                parseSceneNodeWithNameFromRoot(node, node.id, srcNodeName);
                 Math::Vec2 disV      = node.transform.scale() + offsetPos;
                 auto       pv        = disV * multV + beginPos;
                 node.transform.pos() = pv;
@@ -335,7 +335,7 @@ void FileParser::parseSceneNode(SceneNode& parentNode, uint32_t& id, const JsonT
         }
         else
         {
-            parseSceneNodeWithNameFromRoot(parentNode, srcNodeName);
+            parseSceneNodeWithNameFromRoot(parentNode, parentNode.id + 1, srcNodeName);
             parentNode.transform.pos() = preTrans.pos();
             parentNode.name            = preName;
         }
@@ -347,6 +347,9 @@ void FileParser::parseSceneNode(SceneNode& parentNode, uint32_t& id, const JsonT
     auto&& elements = jsonNode[nodesName];
     if (elements.empty())
         return;
+
+    auto parentId = parentNode.id;
+
     for (auto& item : elements)
     {
         SceneNode node;
