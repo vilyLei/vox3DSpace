@@ -7,7 +7,7 @@
         "unit": "pixel"
     },
     "scene": {
-        "nodes": [
+        "nodesA": [
             {
                 "type": "label",
                 "name": "dark-red-label",
@@ -65,13 +65,13 @@
                 }
             }
         ],
-        "nodesB": [
+        "nodes": [
             {
                 "type": "label",
                 "name": "red-label",
                 "transform": {
                     "position": [
-                        200,
+                        100,
                         200
                     ]
                 },
