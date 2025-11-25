@@ -293,7 +293,7 @@ void FileParser::parseHeriNodes(const JsonType& jsonNode)
     id++;
 
     parseSceneNode(rootNode, id, jsonNode, "nodes");
-    rootNode.entity.modelId = Base::ID::INVALID_ID;
+    rootNode.entity.modelId   = Base::ID::INVALID_ID;
     rootNode.entity.shadingId = Base::ID::INVALID_ID;
     rootNode.print();
 }
@@ -304,40 +304,40 @@ void FileParser::parseSceneNode(SceneNode& parentNode, uint32_t& id, const JsonT
     std::string refKey = "reference";
     if (jsonNode.contains(refKey) && jsonNode[refKey].is_object())
     {
-        auto&& refNode = jsonNode[refKey];
+        auto&&      refNode     = jsonNode[refKey];
         std::string srcNodeName = refNode["src"];
         std::string srcNodeType = refNode["type"];
         auto        preTrans    = parentNode.transform;
-        auto        preName    = parentNode.name;
+        auto        preName     = parentNode.name;
 
         if (srcNodeType == "container")
         {
-            auto total = 10;
-            auto cn    = 3;
+            auto       total = 10;
+            auto       cn    = 3;
             Math::Vec2 beginPos{30, 30};
             Math::Vec2 offsetPos{25, 25};
 
             for (auto i = 0; i < total; i++)
             {
-                auto c = i % cn;
-                auto r = i / cn;
+                auto       c = i % cn;
+                auto       r = i / cn;
                 Math::Vec2 multV{float(c), float(r)};
                 SceneNode  node;
                 node.id = id++;
                 parseSceneNodeWithNameFromRoot(node, srcNodeName);
-                Math::Vec2 disV            = node.transform.scale() + offsetPos;
-                auto pv   = disV * multV + beginPos;
-                node.transform.pos()       = pv;
+                Math::Vec2 disV      = node.transform.scale() + offsetPos;
+                auto       pv        = disV * multV + beginPos;
+                node.transform.pos() = pv;
                 node.print();
                 parentNode.children.emplace_back(std::move(node));
             }
             parentNode.childrenTotal = static_cast<int>(parentNode.children.size());
-
         }
-        else {
+        else
+        {
             parseSceneNodeWithNameFromRoot(parentNode, srcNodeName);
             parentNode.transform.pos() = preTrans.pos();
-            parentNode.name = preName;
+            parentNode.name            = preName;
         }
     }
 
