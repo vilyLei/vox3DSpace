@@ -436,6 +436,10 @@ int BVH2D_LazyGC::buildRecursiveFromLeaves(std::vector<int>& indices, int l, int
     node.left     = leftIdx;
     node.right    = rightIdx;
     node.objectId = Base::ID::INVALID_KEY;
+
+    auto&& currNode = m_nodes[nodeIndex];
+    currNode.left   = leftIdx;
+    currNode.right  = rightIdx;
     //printf("v2 buildRecursiveFromLeaves() D, indices[l]:%d, node.objectId: %s, node(l=%d, r=%d), nodeIndex: %d\n", indices[l], node.objectId.idToString().c_str(), node.left, node.right, nodeIndex);
     node.bounds = Math::Bounds::Union(m_nodes[leftIdx].bounds, m_nodes[rightIdx].bounds);
     return nodeIndex;
