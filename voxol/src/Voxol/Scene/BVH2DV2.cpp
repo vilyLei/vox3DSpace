@@ -532,7 +532,10 @@ void BVH2D_LazyGC::rebuildSubtreeAtNode(int nodeIdx)
     // prepare indices
     std::vector<int> indices((int)m_leafTemps.size());
     for (int i = 0; i < (int)indices.size(); ++i) indices[i] = i;
-
+    if (nodeIdx == 0)
+    {
+        m_nodes.clear();
+    }
     int newRootIdx = buildRecursiveFromLeaves(indices, 0, (int)indices.size(), -1);
 
     // restore previous leafTemps
