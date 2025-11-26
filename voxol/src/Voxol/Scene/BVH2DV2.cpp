@@ -505,7 +505,8 @@ int BVH2D_LazyGC::chooseSubtreeRootForLeaf(int leafIdx)
         if (parent < 0) {
             break;
         }
-        int leafCount = countLeavesUnderNode(parent);
+        //int leafCount = countLeavesUnderNode(parent);
+        int leafCount = countValidLeavesUnderNode(parent);
         cur           = parent;
         if (leafCount > m_subtreeLeafLimit) {
             double factor = leafCount;
@@ -519,7 +520,6 @@ int BVH2D_LazyGC::chooseSubtreeRootForLeaf(int leafIdx)
     }
     return cur;
 }
-
 // count leaves under node (simple DFS)
 int BVH2D_LazyGC::countLeavesUnderNode(int nodeIdx)
 {
@@ -541,6 +541,31 @@ int BVH2D_LazyGC::countLeavesUnderNode(int nodeIdx)
     return cnt;
 }
 
+int BVH2D_LazyGC::countValidLeavesUnderNode(int nodeIdx) const
+{
+    if (!validNodeIndex(nodeIdx)) return 0;
+    int             cnt = 0;
+    std::stack<int> st;
+    st.push(nodeIdx);
+    while (!st.empty())
+    {
+        int idx = st.top();
+        st.pop();
+        if (!validNodeIndex(idx)) continue;
+        auto&& n = m_nodes[idx];
+        if (isLeafNodeSlot(n))
+        {
+            // leaf slot exists; count only if objectId valid
+            if (n.objectId.isIDValid()) ++cnt;
+        }
+        else
+        {
+            if (n.left >= 0) st.push(n.left);
+            if (n.right >= 0) st.push(n.right);
+        }
+    }
+    return cnt;
+}
 void BVH2D_LazyGC::rebuildSubtreeAtNode(int nodeIdx)
 {
     if (!validNodeIndex(nodeIdx)) return;

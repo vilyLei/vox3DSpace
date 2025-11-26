@@ -163,6 +163,7 @@ private:
     int chooseSubtreeRootForLeaf(int leafIdx);
     // count leaves under node (simple DFS)
     int countLeavesUnderNode(int nodeIdx);
+    int countValidLeavesUnderNode(int nodeIdx) const;
 
     // rebuild subtree rooted at nodeIdx by collecting leaves and appending a new subtree
     void rebuildSubtreeAtNode(int nodeIdx);
