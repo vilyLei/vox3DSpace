@@ -487,6 +487,17 @@ void BVH2D_LazyGC::markAncestorsDirtyUpToRoot(int leafIdx)
 // choose subtree root to rebuild for a leaf
 int BVH2D_LazyGC::chooseSubtreeRootForLeaf(int leafIdx)
 {
+    if (!validNodeIndex(leafIdx)) return -1;
+
+    if (!isValidLeaf(m_nodes[leafIdx]))
+    {
+        int cur = leafIdx;
+        while (cur >= 0 && !isValidLeaf(m_nodes[cur])) cur = m_nodes[cur].parent;
+        if (cur < 0) return 0; // fallback root
+        // now cur is some valid leaf, continue below
+        leafIdx = cur;
+    }
+
     int cur = leafIdx;
     while (true)
     {
