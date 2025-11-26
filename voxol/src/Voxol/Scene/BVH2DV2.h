@@ -46,6 +46,7 @@ public:
         int32_t             right    = -1;
         int32_t             parent   = -1;
         Base::ID::KeyUint64 objectId = Base::ID::INVALID_KEY; // >=0 for leaf, -1 for internal or deleted slot
+        bool                removed  = false;
     };
 
     BVH2D_LazyGC()  = default;

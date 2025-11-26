@@ -321,7 +321,11 @@ void BVH2D_LazyGC::queryPoint(const Math::Vec2& p, std::vector<Base::ID::KeyUint
         int idx = st.top();
         st.pop();
         if (!validNodeIndex(idx)) continue;
-        const Node& n = m_nodes[idx];
+        auto&& n = m_nodes[idx];
+        if (n.removed) {
+            continue;
+        }
+        //if ((n.left < 0 && n.right < 0) || !n.bounds.contains(p)) continue;
         if (!n.bounds.contains(p)) continue;
         if (isLeaf(n))
         {
@@ -362,12 +366,23 @@ void BVH2D_LazyGC::queryBounds(const Math::Bounds& b, std::vector<Base::ID::KeyU
         //}
 
         if (!validNodeIndex(idx)) continue;
-        const Node& n = m_nodes[idx];
+
+        auto&& n = m_nodes[idx];
         //if (flag)
         //{
         //    printf("v2 queryBounds() CCC,idx: %d, n.objectId: %s, n(l=%d,r=%d)\n", idx, n.objectId.idToString().c_str(), n.left, n.right);
         //}
-        if (!n.bounds.intersects(b)) continue;
+        //if (!n.bounds.intersects(b)) continue;
+
+        if (n.removed)
+        {
+            continue;
+        }
+        //if ((n.left < 0 && n.right < 0) || !n.bounds.intersects(b)) {
+        if (!n.bounds.intersects(b)) {
+            continue;
+        }
+
         if (isLeaf(n))
         {
             if (n.objectId.isIDValid() && n.bounds.intersects(b))
@@ -516,10 +531,14 @@ void BVH2D_LazyGC::rebuildSubtreeAtNode(int nodeIdx)
     {
         int idx = st.top();
         st.pop();
-        const Node& n = m_nodes[idx];
+        auto&& n = m_nodes[idx];
         if (isLeaf(n))
         {
-            if (n.objectId.isIDValid()) leaves.push_back(LeafTemp{n.objectId, n.bounds});
+            if (n.objectId.isIDValid()) {
+                leaves.push_back(LeafTemp{n.objectId, n.bounds});
+                n.removed = true;
+                n.objectId = Base::ID::INVALID_KEY;
+            }
         }
         else
         {
