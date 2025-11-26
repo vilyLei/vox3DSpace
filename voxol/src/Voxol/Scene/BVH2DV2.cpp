@@ -146,10 +146,65 @@ bool BVH2D_LazyGC::removeItemByObjectId(const Base::ID::KeyUint64& objectId)
     return true;
 }
 
+void BVH2D_LazyGC::endFrameCompactRemovedNodes()
+{
+    if (!m_removedNodeDirty)
+        return;
+    m_removedNodeDirty = false;
+
+    const int oldCount = (int)m_nodes.size();
+    if (oldCount == 0) return;
+
+    // 1. map old index → new index
+    std::vector<int> newIndex(oldCount, -1);
+    int              newCount = 0;
+    for (int i = 0; i < oldCount; ++i)
+    {
+        if (!m_nodes[i].removed)
+        {
+            newIndex[i] = newCount++;
+        }
+    }
+
+    // 若没有需要删除的，直接返回
+    if (newCount == oldCount) return;
+
+    // 2. 构建新节点数组
+    std::vector<Node> newNodes;
+    newNodes.reserve(newCount);
+
+    for (int old = 0; old < oldCount; ++old)
+    {
+        if (newIndex[old] >= 0)
+        {
+            newNodes.push_back(m_nodes[old]);
+        }
+    }
+
+    // 3. 修复 parent/left/right 为新索引
+    for (int i = 0; i < newCount; ++i)
+    {
+        auto&& n = newNodes[i];
+
+        if (n.parent >= 0) n.parent = newIndex[n.parent];
+        if (n.left >= 0) n.left = newIndex[n.left];
+        if (n.right >= 0) n.right = newIndex[n.right];
+    }
+
+    // 4. 替换节点表
+    m_nodes.swap(newNodes);
+
+    // 5. 安全检查（可选）
+    assert(m_nodes[0].parent == -1);
+
+    rebuildObjectMap();
+}
 
 // 每帧在 endFrameCompact 调用：处理至多 maxBlocksToProcess 个 block
 void BVH2D_LazyGC::endFrameCompact(size_t maxBlocksToProcess)
 {
+    endFrameCompactRemovedNodes();
+
     if (!m_needsCompact && m_deletedCount == 0) return;
 
     size_t live      = m_objectToLeaf.size();
@@ -281,8 +336,11 @@ void BVH2D_LazyGC::updateDirty()
     // recompute bounds bottom-up
     refitAllNodes();
 
-    // rebuild mapping (re-maps appended nodes)
-    rebuildObjectMap();
+    if (!m_removedNodeDirty)
+    {
+        // rebuild mapping (re-maps appended nodes)
+        rebuildObjectMap();
+    }
 
     m_dirty = false;
 }
@@ -585,7 +643,9 @@ void BVH2D_LazyGC::rebuildSubtreeAtNode(int nodeIdx)
                 leaves.push_back(LeafTemp{n.objectId, n.bounds});
                 n.removed = true;
                 n.objectId = Base::ID::INVALID_KEY;
+                m_removedNodeDirty = true;
             }
+            //continue;
         }
         else
         {

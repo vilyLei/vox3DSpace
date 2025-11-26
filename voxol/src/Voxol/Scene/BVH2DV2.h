@@ -86,6 +86,7 @@ public:
         m_dirtyBlocks.insert(blockIndex);
     }
 
+    void endFrameCompactRemovedNodes();
     // 每帧在 endFrameCompact 调用：处理至多 maxBlocksToProcess 个 block
     void endFrameCompact(size_t maxBlocksToProcess = 1);
 
@@ -176,14 +177,15 @@ private:
     void rebuildObjectMap();
 
 private:
-    std::vector<LeafTemp>                          m_leafTemps;            // temps before build
-    std::vector<Node>                              m_nodes;                // compact storage of tree
-    Base::ID::keyUint64Unordered_map<int32_t>      m_objectToLeaf;         // objectId -> leaf node idx
-    Base::ID::keyUint64Unordered_map<Math::Bounds> m_fatBounds;            // fat bounds per objectId
-    std::unordered_set<int>                        m_dirtyLeaves;          // leaf node indices needing relocation
-    size_t                                         m_deletedCount = 0;     // approx deleted count (for heuristics)
-    bool                                           m_needsCompact = false; // mark that compaction may be beneficial
-    bool                                           m_dirty        = false; // needs refit/partial rebuild
+    std::vector<LeafTemp>                          m_leafTemps;                // temps before build
+    std::vector<Node>                              m_nodes;                    // compact storage of tree
+    Base::ID::keyUint64Unordered_map<int32_t>      m_objectToLeaf;             // objectId -> leaf node idx
+    Base::ID::keyUint64Unordered_map<Math::Bounds> m_fatBounds;                // fat bounds per objectId
+    std::unordered_set<int>                        m_dirtyLeaves;              // leaf node indices needing relocation
+    size_t                                         m_deletedCount     = 0;     // approx deleted count (for heuristics)
+    bool                                           m_needsCompact     = false; // mark that compaction may be beneficial
+    bool                                           m_dirty            = false; // needs refit/partial rebuild
+    bool                                           m_removedNodeDirty = false; // need compact some removed nodes
 
     // configs:
     float  m_fatPad             = 2.0f;
