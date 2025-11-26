@@ -188,7 +188,7 @@ private:
     float  m_fatPad             = 2.0f;
     float  m_rebuildRatio       = 0.15f;
     float  m_deleteRebuildRatio = 0.20f;
-    int    m_subtreeLeafLimit   = 64;
+    int    m_subtreeLeafLimit   = 16;
     size_t m_compactFactor      = 6;
 };
 

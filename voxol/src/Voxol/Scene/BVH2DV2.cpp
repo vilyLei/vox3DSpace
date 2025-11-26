@@ -493,7 +493,9 @@ int BVH2D_LazyGC::chooseSubtreeRootForLeaf(int leafIdx)
         int parent = m_nodes[cur].parent;
         if (parent < 0) return cur;
         int leafCount = countLeavesUnderNode(parent);
-        if (leafCount > m_subtreeLeafLimit) return cur;
+        if (leafCount > m_subtreeLeafLimit) {
+            return parent;
+        }
         cur = parent;
     }
 }
