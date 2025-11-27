@@ -336,13 +336,18 @@ void BVH2D_LazyGC::updateDirty()
     int subtreeRoot = -1;
     for (int leafIdx : dirtyList)
     {
-        if (!validNodeIndex(leafIdx)) continue;
+        if (!validNodeIndex(leafIdx))
+            continue;
+
+        auto&& maybeLeaf = m_nodes[leafIdx];
+        if (!isLeaf(maybeLeaf) || maybeLeaf.objectId.isIDInvalid())
+            continue;
 
         if (rootids.contains(leafIdx))
             continue;
+        if (rootids.contains(maybeLeaf.parent))
+            continue;
 
-        const Node& maybeLeaf = m_nodes[leafIdx];
-        if (!isLeaf(maybeLeaf) || maybeLeaf.objectId.isIDInvalid()) continue;
         subtreeRoot = chooseSubtreeRootForLeaf(leafIdx);
         if (subtreeRoot == 0)
             break;
