@@ -596,14 +596,14 @@ int BVH2D_LazyGC::chooseSubtreeRootForLeaf(int leafIdx)
         //int leafCount = countLeavesUnderNode(parent);
         int leafCount = countValidLeavesUnderNode(parent);
         cur           = parent;
+        double factor = leafCount;
         if (leafCount > m_subtreeLeafLimit) {
-            double factor = leafCount;
             factor        = factor / (m_nodes.size() + 1);
-            printf("BVH2D_LazyGC::chooseSubtreeRootForLeaf() leafCount: %d, m_nodes.size(): %lld, factor: %f\n", leafCount, m_nodes.size(), factor);
-            if (factor < 0.6f)
-            {
-                break;
-            }
+            //printf("BVH2D_LazyGC::chooseSubtreeRootForLeaf() leafCount: %d, m_nodes.size(): %lld, factor: %f\n", leafCount, m_nodes.size(), factor);
+        }
+        if (factor < 0.6f)
+        {
+            break;
         }
     }
     return cur;
