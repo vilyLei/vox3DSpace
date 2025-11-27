@@ -330,27 +330,35 @@ void BVH2D_LazyGC::updateDirty()
     dirtyList.reserve(m_dirtyLeaves.size());
     for (int li : m_dirtyLeaves) dirtyList.push_back(li);
 
-    std::vector<int> rootids;
-    rootids.reserve(16);
+    //std::vector<int> rootids;
+    //rootids.reserve(16);
+    std::unordered_map<int, int> rootids;
     int subtreeRoot = -1;
     for (int leafIdx : dirtyList)
     {
         if (!validNodeIndex(leafIdx)) continue;
+
+        if (rootids.contains(leafIdx))
+            continue;
+
         const Node& maybeLeaf = m_nodes[leafIdx];
         if (!isLeaf(maybeLeaf) || maybeLeaf.objectId.isIDInvalid()) continue;
         subtreeRoot = chooseSubtreeRootForLeaf(leafIdx);
         if (subtreeRoot == 0)
             break;
-        rootids.emplace_back(subtreeRoot);
+
+        if (rootids.contains(subtreeRoot))
+            continue;
+        rootids[subtreeRoot] = subtreeRoot;
     }
     if (subtreeRoot == 0)
     {
         collectLeavesToTempsAndRebuild();
         return;
     }
-    for (int id : rootids)
+    for (auto item : rootids)
     {
-        rebuildSubtreeAtNode(id);
+        rebuildSubtreeAtNode(item.second);
     }
     //for (int leafIdx : dirtyList)
     //{
