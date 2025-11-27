@@ -309,7 +309,7 @@ void BVH2D_LazyGC::updateDirty()
     size_t dirtyCount = m_dirtyLeaves.size();
 
     // if many dirty -> full rebuild
-    float ratio = leafCount ? (float)dirtyCount / float(leafCount) : 0.0f;
+    double ratio = leafCount ? (double)dirtyCount / double(leafCount) : 0.0f;
     if (ratio > m_rebuildRatio)
     {
         // rebuild full from current live leaves
@@ -317,9 +317,9 @@ void BVH2D_LazyGC::updateDirty()
         return;
     }
 
-    printf("BVH2D_LazyGC::updateDirty(), m_nodes.size(): %zu, m_objectToLeaf.size(): %zu\n", m_nodes.size(), m_objectToLeaf.size());
+    printf("BVH2D_LazyGC::updateDirty(), m_nodes.size(): %zu, leafCount: %zu\n", m_nodes.size(), leafCount);
     auto nodesTotal = m_nodes.size();
-    if (nodesTotal > 80 && nodesTotal > (m_objectToLeaf.size() * 3))
+    if (nodesTotal > 80 && nodesTotal > (leafCount * 3))
     {
         collectLeavesToTempsAndRebuild();
         return;
