@@ -317,19 +317,49 @@ void BVH2D_LazyGC::updateDirty()
         return;
     }
 
+    printf("BVH2D_LazyGC::updateDirty(), m_nodes.size(): %zu, m_objectToLeaf.size(): %zu\n", m_nodes.size(), m_objectToLeaf.size());
+    auto nodesTotal = m_nodes.size();
+    if (nodesTotal > 80 && nodesTotal > (m_objectToLeaf.size() * 3))
+    {
+        collectLeavesToTempsAndRebuild();
+        return;
+    }
+
     // else handle partial rebuilds
     std::vector<int> dirtyList;
     dirtyList.reserve(m_dirtyLeaves.size());
     for (int li : m_dirtyLeaves) dirtyList.push_back(li);
 
+    std::vector<int> rootids;
+    rootids.reserve(16);
+    int subtreeRoot = -1;
     for (int leafIdx : dirtyList)
     {
         if (!validNodeIndex(leafIdx)) continue;
         const Node& maybeLeaf = m_nodes[leafIdx];
         if (!isLeaf(maybeLeaf) || maybeLeaf.objectId.isIDInvalid()) continue;
-        int subtreeRoot = chooseSubtreeRootForLeaf(leafIdx);
-        rebuildSubtreeAtNode(subtreeRoot);
+        subtreeRoot = chooseSubtreeRootForLeaf(leafIdx);
+        if (subtreeRoot == 0)
+            break;
+        rootids.emplace_back(subtreeRoot);
     }
+    if (subtreeRoot == 0)
+    {
+        collectLeavesToTempsAndRebuild();
+        return;
+    }
+    for (int id : rootids)
+    {
+        rebuildSubtreeAtNode(id);
+    }
+    //for (int leafIdx : dirtyList)
+    //{
+    //    if (!validNodeIndex(leafIdx)) continue;
+    //    const Node& maybeLeaf = m_nodes[leafIdx];
+    //    if (!isLeaf(maybeLeaf) || maybeLeaf.objectId.isIDInvalid()) continue;
+    //    int subtreeRoot = chooseSubtreeRootForLeaf(leafIdx);
+    //    rebuildSubtreeAtNode(subtreeRoot);
+    //}
 
     m_dirtyLeaves.clear();
 
