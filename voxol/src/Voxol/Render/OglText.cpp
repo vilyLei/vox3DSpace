@@ -379,7 +379,7 @@ void MSDFText::buildText(const std::string&             text,
         float ph = (glyph.planeTop - glyph.planeBottom) * scale;
 
         unit.color = color;
-        // pos.y 就是基线
+        // pos.y is base line
         unit.objMat.setTo(pos.x + penX + x0,
                           pos.y - y1,
                           pw, ph);
@@ -388,7 +388,7 @@ void MSDFText::buildText(const std::string&             text,
 
         units.push_back(unit);
 
-        penX += glyph.advance * scale; // 横向推进
+        penX += glyph.advance * scale;
     }
 }
 
@@ -438,7 +438,7 @@ void MSDFText::createDrawUnitsFromText(const std::string&             text,
         //Gpu::buildMSDFTexDrawUnit(unit, mAtlasImgData, glyph);
         //units.push_back(unit);
 
-        penX += glyph.advance * scale; // 横向推进
+        penX += glyph.advance * scale;
         i++;
     }
 }
@@ -544,7 +544,7 @@ Math::Bounds MSDFText::getGlyphBounds(int32_t glyphChar, float fontSize, const M
 
     auto px = pos.x + x0;
     auto py = pos.y - y1;
-    // pos.y 就是基线
+    // pos.y is base line
     return {
         px,
         py,
