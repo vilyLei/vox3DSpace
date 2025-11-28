@@ -195,6 +195,7 @@ bool EntityRenderSystem::drawUnit(const Draw::DrawContext& rctx, const Scene::Co
     if (!wbounds.intersects(vb))
         return false;
 
+
     if (model.type == Scene::Component::UnitModelType::Text)
     {
         auto&& strModel = compStorage->entityStringModelMap[entity.id];
@@ -226,6 +227,10 @@ bool EntityRenderSystem::drawUnit(const Draw::DrawContext& rctx, const Scene::Co
     auto   drawingId = model.drawUnitId;
     auto&  drs       = *entityStorage->drawing;
     auto&& drawUnit  = drs[drawingId];
+
+    Math::Mat33 svM;
+    svM.setScaleXY(trans.sx, trans.sy);
+    svM.prepend(wM);
 
     //if (shdDesc.flags > 0 && compStorage->shadingShadowIdMap.contains(shadingEt.shadingDescId))
     //{
@@ -357,9 +362,6 @@ bool EntityRenderSystem::drawUnit(const Draw::DrawContext& rctx, const Scene::Co
     //*/
     printf("render curr ...\n");
 
-    Math::Mat33 svM;
-    svM.setScaleXY(trans.sx, trans.sy);
-    svM.prepend(wM);
 
     drawUnit.blendMode = 1;
     drawUnit.setColor(tempColor);
