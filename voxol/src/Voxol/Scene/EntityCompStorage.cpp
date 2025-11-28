@@ -649,6 +649,8 @@ void EntityCompStorage::collectShadowEffect(const Base::ID::KeyUint64& srcKey, u
         return;
 
     auto&& shadingEt = shaderingEntitiesPool[et.shadingId];
+    if (Base::ID::isInvalidID(shadingEt.shadingDescId))
+        return;
     auto&& shdDesc   = shaderingDescPool[shadingEt.shadingDescId];
     if (shdDesc.flags == 0 || !shadingShadowIdMap.contains(shadingEt.shadingDescId))
         return;
@@ -836,6 +838,8 @@ void EntityCompStorage::foreachBoundsWithEntityId(uint32_t eId, EntityBoundsResp
         if (Base::ID::isInvalidID(et.shadingId)) { return; }
 
         auto&& shadingEt = shaderingEntitiesPool[et.shadingId];
+        if (entitiesPool.isInvalid(shadingEt.shadingDescId)) { return; }
+
         auto&& desc      = shaderingDescPool[shadingEt.shadingDescId];
         if (desc.flags == 0) { return; }
         auto&& efs = shadingShadowIdMap[shadingEt.shadingDescId];

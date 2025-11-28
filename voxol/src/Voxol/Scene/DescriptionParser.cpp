@@ -123,7 +123,7 @@ void SceneNode::printTransform() const
 {
     std::string info = ", tran(x=" + std::to_string(transform.x) + ",y=" + std::to_string(transform.y);
     info += ",sx=" + std::to_string(transform.sx) + ",sy=" + std::to_string(transform.sy) + ")";
-    info = "SceneNode(name=" + name + info + ")";
+    info = "NodeTrans(name=" + name + info + ")";
     printf("%s\n", info.c_str());
 }
 
@@ -430,12 +430,6 @@ void FileParser::parseNodeTransData(SceneNode& node, const JsonType& jsonNode)
         node.transform.pos() = jTrans.position;
         node.transform.rotation = jTrans.rotation;
 
-        auto flagT = 0;
-        if (node.name == "dark-red-label")
-        {
-            //flagT++;
-            //node.transform.rotation = 0.5f;
-        }
     }
     if (jsonNode.contains("display"))
     {
@@ -447,6 +441,9 @@ void FileParser::parseNodeTransData(SceneNode& node, const JsonType& jsonNode)
 
         parseNodeDisplayShape(node, displayNode);
         parseNodeDisplayStyle(node, displayNode);
+    }
+    else {
+        node.transform.scale() = {0,0};
     }
 }
 
@@ -534,6 +531,10 @@ void DescriptionParser::initialize()
 
     Desc::HierarchyNode rootHierNode;
     hierParser.parse(fileParser.rootNode, rootHierNode);
+
+    hierParser.foreachNode(fileParser.rootNode, [](Desc::SceneNode& node) {
+        node.printTransform();
+    });
 }
 
 } // namespace Voxol::Scene

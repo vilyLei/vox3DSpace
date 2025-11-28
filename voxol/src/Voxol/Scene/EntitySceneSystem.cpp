@@ -88,8 +88,17 @@ void EntitySceneSystem::initalize(const std::string& configFileName)
         if (Base::ID::isInvalidID(et.transformId))
             return;
 
+    
+        auto&& srcBounds = storage->getEntityLocalBoundsAt(et.id);
+        if (srcBounds.isEmpty())
+        {
+            printf("et.id: %d, bounds is empty().\n", et.id);
+            return;
+        }
+
         if (Base::ID::isValidID(et.prototypeId))
         {
+            // instance entity
             updateProtoEtBVHData(et);
             return;
         }
@@ -97,9 +106,7 @@ void EntitySceneSystem::initalize(const std::string& configFileName)
         auto&& key = Base::ID::KeyUint64::make(et.id);
         addShadowEffectBVHData(key, storage->getEntityGlobalMat33At(et.id));
         auto&& vb = storage->getEntityGlobalBoundsAt(et.id);
-        //printf("add bvh vb: \n");
-        auto pw = vb.width();
-        auto ph = vb.height();
+        printf("et.id: %d, add bvh vb: \n", et.id);
         vb.print();
         bvh->addItem(key, vb);
     });
