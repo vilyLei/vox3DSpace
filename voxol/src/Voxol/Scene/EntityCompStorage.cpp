@@ -548,9 +548,12 @@ void EntityCompStorage::traverseBuildGlobalMat(uint32_t etId, const Math::Mat33&
     if (Base::ID::isValidID(et.transformId))
     {
         auto&& tr          = transformsPool[et.transformId];
-        auto&& parentTrans = parentMat.getXY();
-        worldMat.identity();
-        worldMat.setXY(parentTrans.x + tr.x, parentTrans.y + tr.y);
+        Math::Mat33 objMat;
+        objMat.setXY(tr.pos());
+        worldMat.prepend(objMat);
+        //auto&& parentTrans = parentMat.getXY();
+        //worldMat.identity();
+        //worldMat.setXY(parentTrans.x + tr.x, parentTrans.y + tr.y);
 
         /*
         auto&& parentTrans = parentMat.getXY();
