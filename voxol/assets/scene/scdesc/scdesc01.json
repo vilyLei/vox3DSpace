@@ -7,7 +7,7 @@
         "unit": "pixel"
     },
     "scene": {
-        "nodes": [
+        "nodesKK0": [
             {
                 "type": "label",
                 "name": "dark-red-label",
@@ -76,7 +76,7 @@
                 }
             }
         ],
-        "nodesKKK": [
+        "nodes": [
             {
                 "type": "label",
                 "name": "dark-red-label",
