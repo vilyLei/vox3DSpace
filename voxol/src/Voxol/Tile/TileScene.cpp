@@ -178,11 +178,7 @@ bool TileScene::createGrid(const RC::Pos& pos, const Render::Draw::DrawContext& 
     grid.setRCAndAreaSize(pos, currGridSize);
     grid.drawUnit.setTextureAt(texPool.acquire(), 0);
     auto draw_count = buildGridContent(grid, ctx);
-    //if (draw_count < 1)
-    //{
-    //    releaseGrid(viewUnitIndexMap[pos.value]);
-    //    viewUnitIndexMap.erase(pos.value);
-    //}
+    viewUnitIndexMap[pos.value].empty = draw_count < 1;
     return draw_count > 0;
 }
 
@@ -322,6 +318,10 @@ void TileScene::run(const Render::Draw::DrawContext& ctx)
     for (auto&& it = viewUnitIndexMap.begin(); it != viewUnitIndexMap.end(); it++)
     {
         auto& node = it->second;
+        if (node.empty)
+        {
+            continue;
+        }
         auto& unit = gridUnits[node.index].drawUnit;
         unit.mvp   = vpM;
         unit.draw();
@@ -343,6 +343,10 @@ void TileScene::run(const Render::Draw::DrawContext& ctx)
     for (auto&& it = viewUnitIndexMap.begin(); it != viewUnitIndexMap.end(); it++)
     {
         auto& node = it->second;
+        if (node.empty)
+        {
+            continue;
+        }
         auto& unit = gridUnits[node.index].drawUnit;
 
         outlineUnit.drawUnit.objMat = unit.objMat;
