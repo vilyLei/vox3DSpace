@@ -828,7 +828,7 @@ void EntityCompStorage::foreachBoundsWithEntityId(uint32_t eId, EntityBoundsResp
     if (Base::ID::isInvalidID(eId))
         return;
 
-    auto addShadowEffectBVHData = [&](const Base::ID::KeyUint64& key) {
+    auto addShadowEffectBVHData = [&](const Base::ID::KeyUint64& key, const Math::Bounds& srcBounds) {
         auto protoId = key.protoId();
         if (entitiesPool.isInvalid(protoId)) { return; }
 
@@ -842,7 +842,6 @@ void EntityCompStorage::foreachBoundsWithEntityId(uint32_t eId, EntityBoundsResp
 
         auto&& wmat = getEntityGlobalMat33At(key);
 
-        auto&& srcBounds = getEntityLocalBoundsAt(protoId);
         Math::Bounds vb;
         for (auto& ef : efs)
         {
@@ -865,10 +864,10 @@ void EntityCompStorage::foreachBoundsWithEntityId(uint32_t eId, EntityBoundsResp
         if (pid.flags() > 0)
             continue;
 
-        auto wm = getEntityGlobalMat33At(pid);
-        addShadowEffectBVHData(pid);
-
         auto&& srcBounds = getEntityLocalBoundsAt(pid);
+        auto wm = getEntityGlobalMat33At(pid);
+        addShadowEffectBVHData(pid, srcBounds);
+
         srcBounds.mat33MapTo(wm, vb);
         callback(pid, vb);
     }
