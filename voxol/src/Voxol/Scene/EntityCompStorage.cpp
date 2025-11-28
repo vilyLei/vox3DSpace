@@ -74,7 +74,6 @@ Math::Bounds EntityCompStorage::getEntityGlobalBoundsAt(uint32_t id)
 
     Math::Bounds srcBounds{0, 0, trans.sx, trans.sy};
     Math::Bounds tb;
-    //Component::defaultRect.mat33MapTo(entityGlobalMat33Map[id], tb);
     srcBounds.mat33MapTo(entityGlobalMat33Map[id], tb);
     return tb;
 }
@@ -88,7 +87,6 @@ Math::Bounds EntityCompStorage::getEntityGlobalBoundsAt(const Base::ID::KeyUint6
     auto&&       trans = transformsPool[et.transformId];
     Math::Bounds tb;
     Math::Bounds srcBounds{0, 0, trans.sx, trans.sy};
-    //Component::defaultRect.mat33MapTo(getEntityGlobalMat33At(id), tb);
     srcBounds.mat33MapTo(getEntityGlobalMat33At(id), tb);
     return tb;
 }
@@ -552,9 +550,6 @@ void EntityCompStorage::traverseBuildGlobalMat(uint32_t etId, const Math::Mat33&
         objMat.setTo(tr.x, tr.y, 1, 1, tr.rotation);
 
         worldMat.append(objMat);
-        //auto&& parentTrans = parentMat.getXY();
-        //worldMat.identity();
-        //worldMat.setXY(parentTrans.x + tr.x, parentTrans.y + tr.y);
 
         /*
         auto&& parentTrans = parentMat.getXY();
