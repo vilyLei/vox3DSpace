@@ -102,6 +102,8 @@ public:
     Math::Mat33              getEntityParentGlobalMatAt(uint32_t id);
     Math::Bounds             getEntityGlobalBoundsAt(uint32_t id);
     Math::Bounds             getEntityGlobalBoundsAt(const Base::ID::KeyUint64& id);
+    Math::Bounds             getEntityLocalBoundsAt(uint32_t id);
+    Math::Bounds             getEntityLocalBoundsAt(const Base::ID::KeyUint64& id);
 
     uint32_t    getEntityParentIdAt(uint32_t id);
     Math::Vec2  getEntityGlobalXYAt(uint32_t id);

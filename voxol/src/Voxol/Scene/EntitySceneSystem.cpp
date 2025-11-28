@@ -50,14 +50,16 @@ void EntitySceneSystem::initalize(const std::string& configFileName)
         if (desc.flags == 0) { return; }
         auto&& efs = storage->shadingShadowIdMap[shadingEt.shadingDescId];
 
+        auto&& srcBounds = storage->getEntityLocalBoundsAt(protoId);
         Math::Bounds vb;
         for (auto& ef : efs)
         {
             auto&& shdData = storage->effectShadowMap[ef];
             auto   wm      = wmat;
             wm.offsetXY(shdData.offset);
-            Component::defaultRect.mat33MapTo(wm, vb);
-            auto shadowKey = Base::ID::KeyUint64::makeWithEffectShadow(key, ef);
+            //Component::defaultRect.mat33MapTo(wm, vb);
+            srcBounds.mat33MapTo(wm, vb);
+            auto&& shadowKey = Base::ID::KeyUint64::makeWithEffectShadow(key, ef);
             bvh->addItem(shadowKey, vb);
             storage->effectShadowEntityMap[shadowKey] = {shadowKey, key, ef};
         }
@@ -75,7 +77,9 @@ void EntitySceneSystem::initalize(const std::string& configFileName)
         {
             auto&& mat = wmats[item.first];
             addShadowEffectBVHData(item.first, mat);
-            Component::defaultRect.mat33MapTo(mat, vb);
+            auto&& srcBounds = storage->getEntityLocalBoundsAt(item.first);
+            //Component::defaultRect.mat33MapTo(mat, vb);
+            srcBounds.mat33MapTo(mat, vb);
             bvh->addItem(item.first, vb);
         }
     };

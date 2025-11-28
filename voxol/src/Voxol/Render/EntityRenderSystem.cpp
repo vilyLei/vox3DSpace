@@ -116,6 +116,7 @@ bool EntityRenderSystem::drawUnitEffect(const Draw::DrawContext& rctx, const Bas
     auto   etId              = entity.id;
     auto&  shaderingEntities = compStorage->shaderingEntitiesPool;
     auto&  shaderingDescVec  = compStorage->shaderingDescPool;
+    auto&  transformsPool    = compStorage->transformsPool;
 
     auto& shadingEt = shaderingEntities[entity.shadingId];
     auto& shdDesc   = shaderingDescVec[shadingEt.shadingDescId];
@@ -125,13 +126,15 @@ bool EntityRenderSystem::drawUnitEffect(const Draw::DrawContext& rctx, const Bas
 
     auto&& shdData = compStorage->effectShadowMap[srUnit.effectId];
 
-    auto wm = compStorage->getEntityGlobalMat33At(entityId);
+    auto wM = compStorage->getEntityGlobalMat33At(entityId);
 
     // shadow offset in the global space
-    wm.offsetXY(shdData.offset);
+    wM.offsetXY(shdData.offset);
 
-    Math::Bounds vb;
-    Scene::Component::defaultRect.mat33MapTo(wm, vb);
+    auto&&       trans = transformsPool[entity.transformId];
+
+    auto&& vb = compStorage->getEntityGlobalBoundsAt(etId);
+    //Scene::Component::defaultRect.mat33MapTo(wm, vb);
     if (!wbounds.intersects(vb))
         return false;
 
@@ -150,9 +153,13 @@ bool EntityRenderSystem::drawUnitEffect(const Draw::DrawContext& rctx, const Bas
     auto&  drs        = *entityStorage->drawing;
     auto&& drawUnit   = drs[drawingId];
 
+    Math::Mat33 svM;
+    svM.setScaleXY(trans.sx, trans.sy);
+    svM.prepend(wM);
+
     drawUnit.blendMode = 1;
     drawUnit.setColor(shdData.color);
-    drawUnit.objMat = wm;
+    drawUnit.objMat = wM;
     drawUnit.mvp    = vpM;
     drawUnit.draw();
 
@@ -179,9 +186,11 @@ bool EntityRenderSystem::drawUnit(const Draw::DrawContext& rctx, const Scene::Co
 
     auto&& model     = modelsPool[entity.modelId];
     auto&& shdDesc   = shaderingDescPool[shadingEt.shadingDescId];
+    auto&& trans     = transformsPool[entity.transformId];
 
-    Math::Bounds vb;
-    Scene::Component::defaultRect.mat33MapTo(wM, vb);
+    //Math::Bounds vb;
+    //Scene::Component::defaultRect.mat33MapTo(wM, vb);
+    auto&& vb = compStorage->getEntityGlobalBoundsAt(entity.id);
     if (!wbounds.intersects(vb))
         return false;
 
@@ -346,9 +355,15 @@ bool EntityRenderSystem::drawUnit(const Draw::DrawContext& rctx, const Scene::Co
     }
     //*/
     printf("render curr ...\n");
+
+    Math::Mat33 svM;
+    svM.setScaleXY(trans.sx, trans.sy);
+    svM.prepend(wM);
+
     drawUnit.blendMode = 1;
     drawUnit.setColor(tempColor);
-    drawUnit.objMat = wM;
+    //drawUnit.objMat = wM;
+    drawUnit.objMat = svM;
     drawUnit.mvp    = vpM;
     drawUnit.draw();
     return true;

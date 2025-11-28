@@ -69,8 +69,13 @@ Math::Bounds EntityCompStorage::getEntityGlobalBoundsAt(uint32_t id)
         return {};
     }
 
+    auto&&       et = entitiesPool[id];
+    auto&&       trans = transformsPool[et.transformId];
+
+    Math::Bounds srcBounds{0, 0, trans.sx, trans.sy};
     Math::Bounds tb;
-    Component::defaultRect.mat33MapTo(entityGlobalMat33Map[id], tb);
+    //Component::defaultRect.mat33MapTo(entityGlobalMat33Map[id], tb);
+    srcBounds.mat33MapTo(entityGlobalMat33Map[id], tb);
     return tb;
 }
 Math::Bounds EntityCompStorage::getEntityGlobalBoundsAt(const Base::ID::KeyUint64& id)
@@ -79,9 +84,35 @@ Math::Bounds EntityCompStorage::getEntityGlobalBoundsAt(const Base::ID::KeyUint6
     if (id.isIDInvalid())
         return {};
 
+    auto&&       et    = entitiesPool[id.protoId()];
+    auto&&       trans = transformsPool[et.transformId];
     Math::Bounds tb;
-    Component::defaultRect.mat33MapTo(getEntityGlobalMat33At(id), tb);
+    Math::Bounds srcBounds{0, 0, trans.sx, trans.sy};
+    //Component::defaultRect.mat33MapTo(getEntityGlobalMat33At(id), tb);
+    srcBounds.mat33MapTo(getEntityGlobalMat33At(id), tb);
     return tb;
+}
+
+Math::Bounds EntityCompStorage::getEntityLocalBoundsAt(uint32_t id) {
+
+    if (Base::ID::isInvalidID(id) || id >= hierarchiesPool.capacity() || !entityGlobalMat33Map.contains(id))
+    {
+        return {};
+    }
+    auto&& et    = entitiesPool[id];
+    auto&& trans = transformsPool[et.transformId];
+
+    return {0, 0, trans.sx, trans.sy};
+}
+
+Math::Bounds EntityCompStorage::getEntityLocalBoundsAt(const Base::ID::KeyUint64& id) {
+
+    if (id.isIDInvalid())
+        return {};
+
+    auto&&       et    = entitiesPool[id.protoId()];
+    auto&&       trans = transformsPool[et.transformId];
+    return {0, 0, trans.sx, trans.sy};
 }
 
 uint32_t EntityCompStorage::getEntityParentIdAt(uint32_t id)
@@ -512,6 +543,12 @@ void EntityCompStorage::traverseBuildGlobalMat(uint32_t etId, const Math::Mat33&
 
     if (Base::ID::isValidID(et.transformId))
     {
+        auto&& tr          = transformsPool[et.transformId];
+        auto&& parentTrans = parentMat.getXY();
+        worldMat.identity();
+        worldMat.setXY(parentTrans.x + tr.x, parentTrans.y + tr.y);
+
+        /*
         auto&& parentTrans = parentMat.getXY();
         auto&& tr          = transformsPool[et.transformId];
         if (tr.rotation != 0)
@@ -532,6 +569,7 @@ void EntityCompStorage::traverseBuildGlobalMat(uint32_t etId, const Math::Mat33&
             worldMat.setXY(parentTrans.x + tr.x, parentTrans.y + tr.y);
             worldMat.setScaleXY(tr.sx, tr.sy);
         }
+        //*/
     }
 
     entityGlobalMat33Map[etId] = worldMat;
@@ -801,13 +839,14 @@ void EntityCompStorage::foreachBoundsWithEntityId(uint32_t eId, EntityBoundsResp
 
         auto&& wmat = getEntityGlobalMat33At(key);
 
+        auto&& srcBounds = getEntityLocalBoundsAt(protoId);
         Math::Bounds vb;
         for (auto& ef : efs)
         {
             auto&& shdData = effectShadowMap[ef];
             auto   wm      = wmat;
             wm.offsetXY(shdData.offset);
-            Component::defaultRect.mat33MapTo(wm, vb);
+            srcBounds.mat33MapTo(wm, vb);
 
             auto&& efKey = Base::ID::KeyUint64::makeWithEffectShadow(key, ef);
             callback(key, vb);
@@ -825,7 +864,9 @@ void EntityCompStorage::foreachBoundsWithEntityId(uint32_t eId, EntityBoundsResp
 
         auto wm = getEntityGlobalMat33At(pid);
         addShadowEffectBVHData(pid);
-        Component::defaultRect.mat33MapTo(wm, vb);
+
+        auto&& srcBounds = getEntityLocalBoundsAt(pid);
+        srcBounds.mat33MapTo(wm, vb);
         callback(pid, vb);
     }
 }
