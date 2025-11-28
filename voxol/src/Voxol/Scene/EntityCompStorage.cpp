@@ -154,27 +154,25 @@ void EntityCompStorage::setEntityGlobalXYAt(const Math::Vec2& pv, uint32_t id)
 
 Math::Mat33 EntityCompStorage::getEntityWorldMatWithoutScale(uint32_t id)
 {
-    auto&& trans = getEntityLocalTransAt(id);
-    // printf("getEntityWorldMatWithoutScale() id: %u, trans(x=%f,y=%f,sx=%f,sy=%f)\n", id, trans.x, trans.y, trans.sx, trans.sy);
-    auto&& temptMat = Math::Mat33::makeScale(trans.sx, trans.sy);
-
-    Math::Mat33 temptMatInv;
-    temptMat.inverseTo(temptMatInv);
+    //auto&& trans = getEntityLocalTransAt(id);
+    //// printf("getEntityWorldMatWithoutScale() id: %u, trans(x=%f,y=%f,sx=%f,sy=%f)\n", id, trans.x, trans.y, trans.sx, trans.sy);
+    //auto&& temptMat = Math::Mat33::makeScale(trans.sx, trans.sy);
+    //Math::Mat33 temptMatInv;
+    //temptMat.inverseTo(temptMatInv);
     auto&& wmat = getEntityGlobalMat33At(id);
-    wmat.append(temptMatInv);
+    //wmat.append(temptMatInv);
     //parentMat.print();
     return wmat;
 }
 Math::Mat33 EntityCompStorage::getEntityParentWorldMatWithoutScale(uint32_t id)
 {
-    auto&& trans = getEntityParentLocalTransAt(id);
+    //auto&& trans = getEntityParentLocalTransAt(id);
     // printf("getEntityParentWorldMatWithoutScale() id: %u, trans(x=%f,y=%f,sx=%f,sy=%f)\n", id, trans.x, trans.y, trans.sx, trans.sy);
-    auto&& temptMat = Math::Mat33::makeScale(trans.sx, trans.sy);
-
-    Math::Mat33 temptMatInv;
-    temptMat.inverseTo(temptMatInv);
+    //auto&& temptMat = Math::Mat33::makeScale(trans.sx, trans.sy);
+    //Math::Mat33 temptMatInv;
+    //temptMat.inverseTo(temptMatInv);
     auto&& parentMat = getEntityParentGlobalMatAt(id);
-    parentMat.append(temptMatInv);
+    //parentMat.append(temptMatInv);
     //parentMat.print();
     return parentMat;
 }
