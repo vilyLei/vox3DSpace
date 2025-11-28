@@ -26,7 +26,8 @@
                     "position": [
                         100,
                         100
-                    ]
+                    ],
+                    "rotation": 30
                 },
                 "display": {
                     "shape": {

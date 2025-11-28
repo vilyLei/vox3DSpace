@@ -1,6 +1,8 @@
 #ifndef VOXOL_MATH_DEF_H
 #define VOXOL_MATH_DEF_H
 #include <cmath>
+#include <numbers>
+#include <concepts>
 namespace Voxol::Math
 {
 #define MATH_E             2.71828182845904523536  // e
@@ -21,10 +23,15 @@ namespace Voxol::Math
 #define MATH_1_OVER_SQRT2  0.70710678118654752440  // 1/sqrt(2)
 
 double calcCeilOfTwoLevel(double value);
-
 float calcCeilOfTwoLevel(float value);
-
 int calcCeilOfTwoLevelToInt(float value);
+
+template <std::floating_point T>
+constexpr T degrees_to_radians(T degrees)
+{
+    //return degrees * (std::numbers::pi_v<T> * T{MATH_PI_OVER_180});
+    return degrees * T{MATH_PI_OVER_180};
+}
 
 }
 #endif

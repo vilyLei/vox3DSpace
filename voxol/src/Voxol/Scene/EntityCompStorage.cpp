@@ -549,16 +549,9 @@ void EntityCompStorage::traverseBuildGlobalMat(uint32_t etId, const Math::Mat33&
     {
         auto&& tr          = transformsPool[et.transformId];
         Math::Mat33 objMat;
+        objMat.setTo(tr.x, tr.y, 1, 1, tr.rotation);
 
-        if (tr.rotation != 0)
-        {
-            objMat.setTo(tr.x, tr.y, 1, 1, tr.rotation);
-        }
-        else
-        {
-            objMat.setXY(tr.pos());
-        }
-        worldMat.prepend(objMat);
+        worldMat.append(objMat);
         //auto&& parentTrans = parentMat.getXY();
         //worldMat.identity();
         //worldMat.setXY(parentTrans.x + tr.x, parentTrans.y + tr.y);

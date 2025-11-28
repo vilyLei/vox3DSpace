@@ -1,4 +1,5 @@
 #include "SceneIRComponent.h"
+#include "../Math/MathDef.h"
 #include <cctype>
 
 namespace Voxol::Scene
@@ -284,6 +285,15 @@ void Transform::parse(const JsonType& node)
         if (std::isnan(vs[0]) || std::isnan(vs[1]))
             return;
         position = {vs[0], vs[1]};
+    }
+
+    if (node.contains("rotation") && node["rotation"].is_number())
+    {
+        auto v = static_cast<float>(node["rotation"]);
+        v = std::isnan(v) ? 0.0f : v;
+
+        rotation = Math::degrees_to_radians<float>(v);
+        return;
     }
 }
 } // namespace Scene

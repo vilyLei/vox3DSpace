@@ -428,12 +428,13 @@ void FileParser::parseNodeTransData(SceneNode& node, const JsonType& jsonNode)
         jTrans.parse(jsonNode["transform"]);
         //auto pv              = jTrans.position;
         node.transform.pos() = jTrans.position;
+        node.transform.rotation = jTrans.rotation;
 
         auto flagT = 0;
         if (node.name == "dark-red-label")
         {
             //flagT++;
-            node.transform.rotation = 0.5f;
+            //node.transform.rotation = 0.5f;
         }
     }
     if (jsonNode.contains("display"))
