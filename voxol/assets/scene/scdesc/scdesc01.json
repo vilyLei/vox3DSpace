@@ -7,6 +7,17 @@
         "unit": "pixel"
     },
     "scene": {
+        "nodesPA0": [
+            {
+                "name": "dark-empty",
+                "transform": {
+                    "position": [
+                        180,
+                        100
+                    ]
+                }
+            }
+        ],
         "nodes": [
             {
                 "type": "label",

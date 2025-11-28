@@ -34,7 +34,7 @@ private:
     bool releaseGrid(const RC::Pos& pos);
     bool updateGrid(const RC::Pos& pos, const Render::Draw::DrawContext& ctx, int phase);
     bool createGrid(const RC::Pos& pos, const Render::Draw::DrawContext& ctx);
-    void buildGridContent(Grid::Unit& unit, const Render::Draw::DrawContext& ctx);
+    int buildGridContent(Grid::Unit& unit, const Render::Draw::DrawContext& ctx);
     void testFreeViewGrids();
     void updateDirtyGrid(const Render::Draw::DrawContext& ctx);
     void updateEmptyGrid(const Render::Draw::DrawContext& ctx);

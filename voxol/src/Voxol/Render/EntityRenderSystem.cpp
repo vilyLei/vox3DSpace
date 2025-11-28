@@ -22,15 +22,15 @@ void EntityRenderSystem::initalize()
     Render::Gpu::buildTexDrawUnitWithTexBlur(blurVUnit, GL_ZERO, true, 1);
 }
 
-void EntityRenderSystem::render(const Draw::DrawContext& rctx, const Math::Mat33& vpM, const Math::Bounds& wbounds, const std::vector<Base::ID::KeyUint64>& queriedEIds)
+int EntityRenderSystem::render(const Draw::DrawContext& rctx, const Math::Mat33& vpM, const Math::Bounds& wbounds, const std::vector<Base::ID::KeyUint64>& queriedEIds)
 {
     if (!entityStorage)
-        return;
+        return 0;
 
     //printf("EntityRenderSystem::render() B %d\n", queriedEIds.size());
 
     if (queriedEIds.empty())
-        return;
+        return 0;
 
     auto& compStorage = entityStorage->comp;
 
@@ -82,6 +82,9 @@ void EntityRenderSystem::render(const Draw::DrawContext& rctx, const Math::Mat33
         auto flag = drawUnit(rctx, et, vpM, wbounds, compStorage->entityGlobalMat33Map[proId]);
         drawTotal += flag ? 1 : 0;
     }
+    
+    return drawTotal;
+
     //if (drawTotal < total)
     //{
     //    printf(">>> >>> >>> EntityRenderSystem::render() , drawTotal: %d, total: %d\n", drawTotal, total);
@@ -188,8 +191,6 @@ bool EntityRenderSystem::drawUnit(const Draw::DrawContext& rctx, const Scene::Co
     auto&& shdDesc   = shaderingDescPool[shadingEt.shadingDescId];
     auto&& trans     = transformsPool[entity.transformId];
 
-    //Math::Bounds vb;
-    //Scene::Component::defaultRect.mat33MapTo(wM, vb);
     auto&& vb = compStorage->getEntityGlobalBoundsAt(entity.id);
     if (!wbounds.intersects(vb))
         return false;
@@ -198,7 +199,7 @@ bool EntityRenderSystem::drawUnit(const Draw::DrawContext& rctx, const Scene::Co
     {
         auto&& strModel = compStorage->entityStringModelMap[entity.id];
         auto&  textDesc      = strModel.text;
-        //auto&  str      = strModel.content;
+
         if (!textDesc.text.empty())
         {
             auto pos        = wM.getXY();

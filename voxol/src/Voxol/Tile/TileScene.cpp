@@ -55,7 +55,7 @@ void TileScene::addDirtyBounds(const Math::Bounds& bounds, int phase)
     gridModifyDirty = true;
 }
 
-void TileScene::buildGridContent(Grid::Unit& unit, const Render::Draw::DrawContext& ctx)
+int TileScene::buildGridContent(Grid::Unit& unit, const Render::Draw::DrawContext& ctx)
 {
 
     auto&  drawUnit = unit.drawUnit;
@@ -83,11 +83,12 @@ void TileScene::buildGridContent(Grid::Unit& unit, const Render::Draw::DrawConte
 
     auto&& xy = RC::rcToXY(unit.rc, currGridSize);
     auto&& vb = Math::VxRect::makeXYWH(xy.x, xy.y, currGridSize, currGridSize);
-    ctx.drawCall(vb, vpMat);
+    auto draw_count = ctx.drawCall(vb, vpMat);
 
     auto rttTex = nodeGuard.getRTTextureAt(0);
-    printf("Tile >>> nodeGuard.getRTTextureAt(0): %d\n", rttTex);
+    printf("Tile >>> nodeGuard.getRTTextureAt(0): %d, draw_count: %d\n", rttTex, draw_count);
     Render::Gpu::buildTexDrawUnitWithTex(drawUnit, rttTex, true);
+    return draw_count;
 }
 
 
@@ -138,20 +139,23 @@ bool TileScene::updateGrid(const RC::Pos& pos, const Render::Draw::DrawContext& 
     {
         //printf("TileScene::updateGrid() build content node(r=%d,c=%d) A, phase: %d\n", node.pos.r, node.pos.c, phase);
         grid.setRCAndAreaSize(pos, currGridSize);
-        buildGridContent(grid, ctx);
-        if (phase == 0)
+        auto draw_count = buildGridContent(grid, ctx);
+        if (draw_count > 0)
         {
-            emptyUnitIndexMap[node.pos.value] = {node.pos, false, phase};
+            if (phase == 0)
+            {
+                emptyUnitIndexMap[node.pos.value] = {node.pos, false, phase};
+            }
+            return true;
         }
     }
-    else
-    {
-        unitIndexPool.release(node.index);
-        auto& unit = grid.drawUnit;
-        //printf("TileScene::updateGrid() release node(r=%d, c=%d, level=%d) B, phase: %d\n", node.pos.r, node.pos.c, node.pos.level, phase);
-        texPool.release(unit.getTextureAt(0));
-        viewUnitIndexMap.erase(pos.value);
-    }
+
+    unitIndexPool.release(node.index);
+    auto& unit = grid.drawUnit;
+    //printf("TileScene::updateGrid() release node(r=%d, c=%d, level=%d) B, phase: %d\n", node.pos.r, node.pos.c, node.pos.level, phase);
+    texPool.release(unit.getTextureAt(0));
+    viewUnitIndexMap.erase(pos.value);
+
     return true;
 }
 
@@ -173,8 +177,13 @@ bool TileScene::createGrid(const RC::Pos& pos, const Render::Draw::DrawContext& 
     auto& grid                  = gridUnits[k];
     grid.setRCAndAreaSize(pos, currGridSize);
     grid.drawUnit.setTextureAt(texPool.acquire(), 0);
-    buildGridContent(grid, ctx);
-    return true;
+    auto draw_count = buildGridContent(grid, ctx);
+    //if (draw_count < 1)
+    //{
+    //    releaseGrid(viewUnitIndexMap[pos.value]);
+    //    viewUnitIndexMap.erase(pos.value);
+    //}
+    return draw_count > 0;
 }
 
 void TileScene::updateDirtyGrid(const Render::Draw::DrawContext& ctx)

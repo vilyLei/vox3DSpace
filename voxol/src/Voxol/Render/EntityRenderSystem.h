@@ -27,7 +27,7 @@ public:
 
 public:
     void initalize();
-    void render(const Draw::DrawContext& rctx, const Math::Mat33& vpM, const Math::Bounds& wbounds, const std::vector<Base::ID::KeyUint64>& queriedEIds);
+    int render(const Draw::DrawContext& rctx, const Math::Mat33& vpM, const Math::Bounds& wbounds, const std::vector<Base::ID::KeyUint64>& queriedEIds);
     void clear();
 
     Scene::EntityUnitStorage::SP entityStorage{};

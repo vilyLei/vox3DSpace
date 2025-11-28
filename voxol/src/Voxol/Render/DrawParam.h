@@ -12,7 +12,7 @@ namespace Voxol::Render
 namespace Draw
 {
 
-using DrawCallType  = std::function<void(const Math::VxRect& bounds, const Math::Mat33& vpMat)>;
+using DrawCallType  = std::function<int(const Math::VxRect& bounds, const Math::Mat33& vpMat)>;
 using DrawQueryType = std::function<int(const Math::VxRect& bounds, int phase)>;
 
 struct Viewport

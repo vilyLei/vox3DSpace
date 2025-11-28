@@ -70,9 +70,10 @@ void EntitySystemLayer::initalize(const std::string& configFileName)
     auto queryCall = [this](const Math::VxRect& bounds, int phase) -> int {
         return etSceneSys->drawQuery(bounds, phase);
     };
-    auto drawCall = [this](const Math::VxRect& bounds, const Math::Mat33& vpMat) {
+    auto drawCall = [this](const Math::VxRect& bounds, const Math::Mat33& vpMat) -> int {
         auto&& ids = etSceneSys->getQueriedEIds();
-        etRenderSys->render(drawCtx, vpMat, bounds, ids);
+        auto count = etRenderSys->render(drawCtx, vpMat, bounds, ids);
+        return count;
     };
 
     drawCtx.drawCall      = drawCall;
