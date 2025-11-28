@@ -203,13 +203,19 @@ bool EntityRenderSystem::drawUnit(const Draw::DrawContext& rctx, const Scene::Co
 
         if (!textDesc.text.empty())
         {
-            auto pos        = wM.getXY();
-            auto ph  = strModel.bounds.height();
-            pos += strModel.posOffset;
+            //auto pos        = wM.getXY();
+            //auto ph  = strModel.bounds.height();
+            //pos += strModel.posOffset;
+            //auto&& glyphUnits = entityStorage->getDrawUnitsFromText(textDesc.text, textDesc.fontSize, pos);
 
-            auto&& glyphUnits = entityStorage->getDrawUnitsFromText(textDesc.text, textDesc.fontSize, pos);
+            auto&& glyphUnits = entityStorage->getDrawUnitsFromText(textDesc.text, textDesc.fontSize, {});
             for (auto& unit : glyphUnits)
             {
+                auto objM = unit.objMat;
+                objM.offsetXY(strModel.posOffset);
+                objM.prepend(wM);
+
+                unit.objMat    = objM;
                 unit.blendMode = 1;
                 unit.setColor(shdDesc.color);
 
