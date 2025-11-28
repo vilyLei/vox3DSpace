@@ -426,8 +426,15 @@ void FileParser::parseNodeTransData(SceneNode& node, const JsonType& jsonNode)
     {
         SceneIR::Scene::Transform jTrans;
         jTrans.parse(jsonNode["transform"]);
-        auto pv              = jTrans.position;
+        //auto pv              = jTrans.position;
         node.transform.pos() = jTrans.position;
+
+        auto flagT = 0;
+        if (node.name == "dark-red-label")
+        {
+            //flagT++;
+            node.transform.rotation = 0.5f;
+        }
     }
     if (jsonNode.contains("display"))
     {

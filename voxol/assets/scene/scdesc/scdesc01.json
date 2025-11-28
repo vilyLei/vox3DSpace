@@ -63,8 +63,8 @@
                             "shape": {
                                 "type": "rectangle",
                                 "size": [
-                                    10,
-                                    10
+                                    35,
+                                    20
                                 ]
                             },
                             "style": {
@@ -95,7 +95,7 @@
                 ]
             },
             {
-                "reference": {
+                "referenceT": {
                     "src": "dark-red-label",
                     "type": "container"
                 },
