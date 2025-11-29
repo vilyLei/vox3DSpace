@@ -16,28 +16,6 @@ namespace Describe
 {
 using JsonType = nlohmann::json;
 
-struct SceneNode
-{
-    std::string            type;
-    std::string            name;
-    uint32_t               id = Base::ID::INVALID_ID;
-    std::vector<SceneNode> children;
-
-    Component::UnitHierarchy     hieraychy;
-    Component::UnitTransform     transform;
-    Component::UnitShadingDesc   shaingDesc;
-    Component::UnitShadingEntity shadingEntity;
-    Component::UnitModel         unitModel;
-    Component::UnitEntity        entity;
-
-    int childrenTotal = 0;
-
-    bool hasChild  = false;
-    bool hasParent = true;
-
-    void print() const;
-    void printTransform() const;
-};
 
 class FileParser
 {

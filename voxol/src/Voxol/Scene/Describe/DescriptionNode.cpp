@@ -67,4 +67,65 @@ void SceneActionTargetNode::reset()
     actions.clear();
 }
 
+void SceneActionTargetNode::parse(const JsonType& jsonNode, const std::string& srcActType_)
+{
+    if (!jsonNode.contains(srcActType_))
+    {
+        return;
+    }
+    srcActType      = srcActType_;
+    auto&& elements = jsonNode[srcActType_];
+    if (elements.empty())
+    {
+        return;
+    }
+
+    for (auto& item : elements)
+    {
+        auto& jNode = item;
+
+        SceneActionDesc actDesc;
+        actDesc.target = jNode["target"];
+
+        auto&& actJNode = jNode["action"];
+        if (actJNode.contains("type"))
+        {
+            actDesc.type = actJNode["type"];
+        }
+
+        Data::ColorValue cv;
+        if (cv.parse(actJNode))
+        {
+            actDesc.color = cv.color.argb();
+        }
+        if (actJNode.contains("cmd"))
+        {
+            actDesc.cmd = actJNode["cmd"];
+        }
+        else
+        {
+            actDesc.cmd = "None";
+        }
+        printf("actDesc.target: %s, srcActType: %s\n", actDesc.target.c_str(), srcActType.c_str());
+        actions.emplace_back(actDesc);
+    }
+}
+
+
+void SceneNode::print() const
+{
+    std::string info = ", hasChild=" + (hasChild ? std::string("true") : std::string("false"));
+    info += ", childrenTotal=" + std::to_string(childrenTotal) + ", id=" + std::to_string(id);
+    info = "SceneNode(name=" + name + ",type=" + type + info + ")";
+    printf("%s\n", info.c_str());
+}
+void SceneNode::printTransform() const
+{
+    std::string info = ", tran(x=" + std::to_string(transform.x) + ",y=" + std::to_string(transform.y);
+    info += ",sx=" + std::to_string(transform.sx) + ",sy=" + std::to_string(transform.sy) + ")";
+    info = "NodeTrans(name=" + name + info + ")";
+    printf("%s\n", info.c_str());
+}
+
+
 } // namespace Voxol::Scene::Describe
