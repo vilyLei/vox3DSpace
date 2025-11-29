@@ -34,7 +34,7 @@
             {
                 "reference": {
                     "src": "rect-01-label",
-                    "type": "node"
+                    "type": "container"
                 },
                 "visible": true,
                 "name": "rect-01-label-group",
@@ -79,7 +79,7 @@
                         80
                     ]
                 },
-                "visible": true,
+                "visible": false,
                 "display": {
                     "shape": {
                         "type": "rectangle",
@@ -96,7 +96,7 @@
             {
                 "reference": {
                     "src": "rect-02-label",
-                    "type": "node"
+                    "type": "container"
                 },
                 "visible": true,
                 "name": "rect-02-label-group",
