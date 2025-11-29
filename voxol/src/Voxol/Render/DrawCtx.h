@@ -116,18 +116,21 @@ struct DrawContext
 
     GLuint getRTTextureAt(int index) const;
 
-    [[nodiscard]] auto makeFBOGraphNodeGuard(const Render::Draw::FBOCtxNode& fboCtx, const std::string& debugEnterInfo, const std::string& debugExitInfo) const
+    [[nodiscard]] auto makeFBOGraphNodeGuard(const Render::Draw::FBOCtxNode& fboCtx, const std::string& debugEnterInfo = "", const std::string& debugExitInfo = "") const
     {
         auto&& guard = Base::Scope::make_scope_enter_and_exit_guard(
             [&, this]() noexcept {
-                printf("%s\n", debugEnterInfo.c_str());
-                printf("makeFBOGraphNode exec enter graph.pushNode() ...\n");
+
+                if (!debugEnterInfo.empty())
+                    printf("%s\n", debugEnterInfo.c_str());
+                //printf("makeFBOGraphNode exec enter graph.pushNode() ...\n");
                 fboGraph.pushNode(fboCtx);
             },
             [&, this]() noexcept {
                 fboGraph.popNode();
-                printf("makeFBOGraphNode exec exit graph.popNode() ...\n");
-                printf("%s\n", debugExitInfo.c_str());
+                //printf("makeFBOGraphNode exec exit graph.popNode() ...\n");
+                if (!debugExitInfo.empty())
+                    printf("%s\n", debugExitInfo.c_str());
             });
 
         using GuardT = std::decay_t<decltype(guard)>;

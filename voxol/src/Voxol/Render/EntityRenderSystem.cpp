@@ -366,7 +366,7 @@ bool EntityRenderSystem::drawUnit(const Draw::DrawContext& rctx, const Scene::Co
         return true;
     }
     //*/
-    printf("render curr ...\n");
+    //printf("render curr ...\n");
 
 
     drawUnit.blendMode = 1;

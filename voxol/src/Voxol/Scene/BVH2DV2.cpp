@@ -317,7 +317,7 @@ void BVH2D_LazyGC::updateDirty()
         return;
     }
 
-    printf("BVH2D_LazyGC::updateDirty(), m_nodes.size(): %zu, leafCount: %zu\n", m_nodes.size(), leafCount);
+    //printf("BVH2D_LazyGC::updateDirty(), m_nodes.size(): %zu, leafCount: %zu\n", m_nodes.size(), leafCount);
     auto nodesTotal = m_nodes.size();
     if (nodesTotal > 80 && nodesTotal > (leafCount * 3))
     {

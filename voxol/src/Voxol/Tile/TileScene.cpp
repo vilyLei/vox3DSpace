@@ -79,14 +79,15 @@ int TileScene::buildGridContent(Grid::Unit& unit, const Render::Draw::DrawContex
     std::string debugEnterInfo = std::format("Tile AAA RC({}, {}) Begin", static_cast<int>(unit.rc.r), static_cast<int>(unit.rc.c));
     std::string debugExitInfo  = std::format("Tile AAA RC({}, {}) End\n", static_cast<int>(unit.rc.r), static_cast<int>(unit.rc.c));
 
-    auto&& nodeGuard      = ctx.makeFBOGraphNodeGuard(fboCtx, debugEnterInfo, debugExitInfo);
+    //auto&& nodeGuard      = ctx.makeFBOGraphNodeGuard(fboCtx, debugEnterInfo, debugExitInfo);
+    auto&& nodeGuard = ctx.makeFBOGraphNodeGuard(fboCtx);
 
     auto&& xy = RC::rcToXY(unit.rc, currGridSize);
     auto&& vb = Math::VxRect::makeXYWH(xy.x, xy.y, currGridSize, currGridSize);
     auto draw_count = ctx.drawCall(vb, vpMat);
 
     auto rttTex = nodeGuard.getRTTextureAt(0);
-    printf("Tile >>> nodeGuard.getRTTextureAt(0): %d, draw_count: %d\n", rttTex, draw_count);
+    //printf("Tile >>> nodeGuard.getRTTextureAt(0): %d, draw_count: %d\n", rttTex, draw_count);
     Render::Gpu::buildTexDrawUnitWithTex(drawUnit, rttTex, true);
     return draw_count;
 }

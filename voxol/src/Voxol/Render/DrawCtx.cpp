@@ -7,7 +7,7 @@ namespace Draw
 
 void FBOCtxNode::bindFBO(bool onlyChangeViewport) const
 {
-    printf("FBOCtxNode::bindFBO() fbo(%d), onlyChangeViewport: %d\n", fbo->uid(), onlyChangeViewport);
+    //printf("FBOCtxNode::bindFBO() fbo(%d), onlyChangeViewport: %d\n", fbo->uid(), onlyChangeViewport);
 
     fbo->bindFBO();
     for (auto& tex : texUnits)
@@ -25,7 +25,7 @@ void FBOCtxNode::bindFBO(bool onlyChangeViewport) const
 }
 void FBOCtxNode::unbindFBO() const
 {
-    printf("FBOCtxNode::unbindFBO() fbo(%d), texUnits.size(): %lld\n", fbo->uid(), texUnits.size());
+    //printf("FBOCtxNode::unbindFBO() fbo(%d), texUnits.size(): %lld\n", fbo->uid(), texUnits.size());
     if (texUnits.empty())
     {
         fbo->unbindFBO(false);
@@ -97,7 +97,7 @@ void FBORenderGraph::bindNode() const
 }
 void FBORenderGraph::renderBegin() const
 {
-    printf("FBORenderGraph::renderBeginWithFBOCtx() ...\n");
+    //printf("FBORenderGraph::renderBeginWithFBOCtx() ...\n");
 
     auto&  stack = fboCtxStack.ctxStack;
     auto&& fctx  = stack.back();
@@ -109,7 +109,7 @@ void FBORenderGraph::renderEnd() const
     auto&  stack = fboCtxStack.ctxStack;
     auto&& fctx  = stack.back();
     fctx.unbindFBO();
-    printf("FBORenderGraph::renderEndWithFBOCtx() ...\n");
+    //printf("FBORenderGraph::renderEndWithFBOCtx() ...\n");
 }
 bool FBORenderGraph::hasNode() const
 {
@@ -123,7 +123,7 @@ bool FBORenderGraph::hasNotNode() const
 }
 void FBORenderGraph::pushNode(const FBOCtxNode& fboCtx, bool autoRenderBegin) const
 {
-    printf("FBORenderGraph::pushFBOCtx() ...\n");
+    //printf("FBORenderGraph::pushFBOCtx() ...\n");
     auto& stack = fboCtxStack.ctxStack;
     if (!stack.empty())
     {
@@ -177,17 +177,17 @@ void FBORenderGraph::popNode() const
     }
     stack.pop_back();
 
-    printf("FBORenderGraph::popFBOCtx() stack.empty(): %d\n", stack.empty());
+    //printf("FBORenderGraph::popFBOCtx() stack.empty(): %d\n", stack.empty());
 
     if (stack.empty())
     {
-        printf("FBORenderGraph::popFBOCtx() switch to background buffer ...\n");
+        //printf("FBORenderGraph::popFBOCtx() switch to background buffer ...\n");
         backgroundClearParam.applyViewport();
         return;
     }
 
     auto&& nextCtx = stack.back();
-    printf("FBORenderGraph::popFBOCtx() switch to orther rtt ...\n");
+    //printf("FBORenderGraph::popFBOCtx() switch to orther rtt ...\n");
     nextCtx.bindFBO(true);
 }
 const FBOCtxNode& FBORenderGraph::topNode() const
@@ -203,7 +203,7 @@ GLuint FBORenderGraph::getRTTextureAt(int index) const
 
     auto& ctx = fboCtxStack.ctxStack.back();
     auto  tex = ctx.getRTTextureAt(index);
-    printf("FBORenderGraph::getRTTextureAt() tex: %d\n", tex);
+    //printf("FBORenderGraph::getRTTextureAt() tex: %d\n", tex);
     return tex;
 }
 
