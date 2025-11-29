@@ -47,6 +47,11 @@ void DisplayShape::parse(const JsonType& jsonNode)
             radius = jsonValue.get<float>() * 2;
             size   = {2 * radius, 2 * radius};
         }
+        else if (jsonValue.is<int>())
+        {
+            radius = jsonValue.get<int>() * 2;
+            size   = {2 * radius, 2 * radius};
+        }
     }
     else if (type == "text")
     {

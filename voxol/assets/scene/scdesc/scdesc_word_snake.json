@@ -15,16 +15,12 @@
                     "position": [
                         100,
                         100
-                    ],
-                    "rotation": 30
+                    ]
                 },
                 "display": {
                     "shape": {
-                        "type": "rectangle",
-                        "size": [
-                            70,
-                            50
-                        ]
+                        "type": "circle",
+                        "radius": 50
                     },
                     "style": {
                         "fillColor": "0xff772200"
@@ -39,7 +35,7 @@
                         "duration": 0
                     }
                 },
-                "children": [
+                "childrenT": [
                     {
                         "type": "label",
                         "name": "gfeen-small-label-0",
