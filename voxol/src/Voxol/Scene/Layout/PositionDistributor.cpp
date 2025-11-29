@@ -24,8 +24,6 @@ std::vector<Math::Vec2> PositionDistribution::grid(int count, const Math::Vec2& 
     std::vector<Math::Vec2> positions;
     positions.reserve(count);
 
-    //Math::Vec2 staggered{1,0};
-
     auto dv = itemSize + spacing;
     for (int i = 0; i < count; ++i)
     {

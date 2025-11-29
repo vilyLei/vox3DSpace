@@ -39,6 +39,21 @@ struct DisplayShape
     void            parse(const JsonType& jsonNode);
 };
 
+struct DescreferenceLayoutNode
+{
+    static constexpr const char* TYPE_DEFAULT    = "default";
+    static constexpr const char* TYPE_BASE       = "basic";
+    static constexpr const char* TYPE_ADVANCED   = "advanced";
+    static constexpr const char* TYPE_PHYSICS    = "physics";
+    static constexpr const char* TYPE_GENERATIVE = "generative";
+    static constexpr const char* TYPE_REACTIVE   = "reactive";
+
+    std::string     type = "default";
+    // basic, advanced, physics, generative, reactive
+    std::string     method = "grid";
+    void            parse(const JsonType& jsonNode);
+};
+
 struct SceneActionDesc
 {
     std::string target;

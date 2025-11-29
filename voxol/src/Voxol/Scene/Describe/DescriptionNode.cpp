@@ -59,7 +59,17 @@ void DisplayShape::parse(const JsonType& jsonNode)
     }
 }
 
-
+void DescreferenceLayoutNode::parse(const JsonType& jsonNode)
+{
+    if (jsonNode.contains("type") && jsonNode["type"].is_string())
+    {
+        type = jsonNode["type"];
+    }
+    if(jsonNode.contains("method") && jsonNode["method"].is_string())
+    {
+        method = jsonNode["method"];
+    }
+}
 
 void SceneActionTargetNode::reset()
 {
