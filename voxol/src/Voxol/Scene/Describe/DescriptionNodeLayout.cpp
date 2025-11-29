@@ -143,23 +143,6 @@ void DescriptionNodeLauout::referenceLayoutSceneNodeMany(const JsonType& jsonNod
 
         referenceLayoutSceneNodeOnce(item, nodeSize, callback);
     }
-    /*
-    std::string method        = "grid";
-    auto&&      refLayoutNode = jsonNode[refLayoutKey];
-    if (refLayoutNode.contains("method") && refLayoutNode["method"].is_string())
-    {
-        method = refLayoutNode["method"];
-    }
-
-    if (method == "grid")
-    {
-        referenceLayoutSceneNodeWithGrid(refLayoutNode, nodeSize, callback);
-    }
-    else if (method == "circle")
-    {
-        referenceLayoutSceneNodeWithCircle(refLayoutNode, nodeSize, callback);
-    }
-    //*/
 }
 void DescriptionNodeLauout::referenceLayoutSceneNode(const JsonType& jsonNode, const Math::Vec2& nodeSize, const DescNodeLayoutCallbackType& callback)
 {
@@ -172,29 +155,6 @@ void DescriptionNodeLauout::referenceLayoutSceneNode(const JsonType& jsonNode, c
     }
 
     referenceLayoutSceneNodeMany(jsonNode, nodeSize, callback);
-
-    /*
-    std::string refLayoutKey = "reference-layout";
-
-    if (!jsonNode.contains(refLayoutKey) || !jsonNode[refLayoutKey].is_object())
-        return;
-
-    std::string method        = "grid";
-    auto&&      refLayoutNode = jsonNode[refLayoutKey];
-    if (refLayoutNode.contains("method") && refLayoutNode["method"].is_string())
-    {
-        method = refLayoutNode["method"];
-    }
-
-    if (method == "grid")
-    {
-        referenceLayoutSceneNodeWithGrid(refLayoutNode, nodeSize, callback);
-    }
-    else if (method == "circle")
-    {
-        referenceLayoutSceneNodeWithCircle(refLayoutNode, nodeSize, callback);
-    }
-    //*/
 }
 
 } // namespace Voxol::Scene::Describe
