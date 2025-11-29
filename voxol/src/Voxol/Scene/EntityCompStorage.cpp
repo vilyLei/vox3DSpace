@@ -69,8 +69,8 @@ Math::Bounds EntityCompStorage::getEntityGlobalBoundsAt(uint32_t id)
         return {};
     }
 
-    auto&&       et = entitiesPool[id];
-    auto&&       trans = transformsPool[et.transformId];
+    auto&& et    = entitiesPool[id];
+    auto&& trans = transformsPool[et.transformId];
 
     Math::Bounds srcBounds{0, 0, trans.sx, trans.sy};
     Math::Bounds tb;
@@ -91,7 +91,8 @@ Math::Bounds EntityCompStorage::getEntityGlobalBoundsAt(const Base::ID::KeyUint6
     return tb;
 }
 
-Math::Bounds EntityCompStorage::getEntityLocalBoundsAt(uint32_t id) {
+Math::Bounds EntityCompStorage::getEntityLocalBoundsAt(uint32_t id)
+{
 
     if (Base::ID::isInvalidID(id) || id >= hierarchiesPool.capacity() || !entityGlobalMat33Map.contains(id))
     {
@@ -103,13 +104,14 @@ Math::Bounds EntityCompStorage::getEntityLocalBoundsAt(uint32_t id) {
     return {0, 0, trans.sx, trans.sy};
 }
 
-Math::Bounds EntityCompStorage::getEntityLocalBoundsAt(const Base::ID::KeyUint64& id) {
+Math::Bounds EntityCompStorage::getEntityLocalBoundsAt(const Base::ID::KeyUint64& id)
+{
 
     if (id.isIDInvalid())
         return {};
 
-    auto&&       et    = entitiesPool[id.protoId()];
-    auto&&       trans = transformsPool[et.transformId];
+    auto&& et    = entitiesPool[id.protoId()];
+    auto&& trans = transformsPool[et.transformId];
     return {0, 0, trans.sx, trans.sy};
 }
 
@@ -295,17 +297,6 @@ void EntityCompStorage::checkIds(std::vector<Base::ID::KeyUint64>& edis)
     std::sort(edis.begin(), edis.end(), [&](Base::ID::KeyUint64 a, Base::ID::KeyUint64 b) {
         return hierarchyIndexMap[a] < hierarchyIndexMap[b];
     });
-
-    /*
-    printf("checkIds(), Begin >>>>>\n");
-    tot  = edis.size();
-    for (auto i = 0; i < tot; ++i)
-    {
-        auto&& key = edis[i];
-        printf("checkIds(), key: %s, flag: %d, index: %llu\n", key.idToString().c_str(), key.flags(), i);
-    }
-    printf("checkIds(), End >>>>>\n");
-    //*/
 }
 
 
@@ -546,7 +537,7 @@ void EntityCompStorage::traverseBuildGlobalMat(uint32_t etId, const Math::Mat33&
 
     if (Base::ID::isValidID(et.transformId))
     {
-        auto&& tr          = transformsPool[et.transformId];
+        auto&&      tr = transformsPool[et.transformId];
         Math::Mat33 objMat;
         objMat.setTo(tr.x, tr.y, 1, 1, tr.rotation);
 
@@ -652,7 +643,7 @@ void EntityCompStorage::collectShadowEffect(const Base::ID::KeyUint64& srcKey, u
     auto&& shadingEt = shaderingEntitiesPool[et.shadingId];
     if (Base::ID::isInvalidID(shadingEt.shadingDescId))
         return;
-    auto&& shdDesc   = shaderingDescPool[shadingEt.shadingDescId];
+    auto&& shdDesc = shaderingDescPool[shadingEt.shadingDescId];
     if (shdDesc.flags == 0 || !shadingShadowIdMap.contains(shadingEt.shadingDescId))
         return;
 
@@ -841,7 +832,7 @@ void EntityCompStorage::foreachBoundsWithEntityId(uint32_t eId, EntityBoundsResp
         auto&& shadingEt = shaderingEntitiesPool[et.shadingId];
         if (entitiesPool.isInvalid(shadingEt.shadingDescId)) { return; }
 
-        auto&& desc      = shaderingDescPool[shadingEt.shadingDescId];
+        auto&& desc = shaderingDescPool[shadingEt.shadingDescId];
         if (desc.flags == 0) { return; }
         auto&& efs = shadingShadowIdMap[shadingEt.shadingDescId];
 
@@ -870,7 +861,7 @@ void EntityCompStorage::foreachBoundsWithEntityId(uint32_t eId, EntityBoundsResp
             continue;
 
         auto&& srcBounds = getEntityLocalBoundsAt(pid);
-        auto wm = getEntityGlobalMat33At(pid);
+        auto   wm        = getEntityGlobalMat33At(pid);
         addShadowEffectBVHData(pid, srcBounds);
 
         srcBounds.mat33MapTo(wm, vb);
@@ -881,7 +872,7 @@ void EntityCompStorage::propagateVisibility(uint32_t rootId)
 {
     std::function<void(uint32_t, bool)> dfs =
         [&, this](uint32_t id, bool parentVisible) {
-            auto&& e         = entitiesPool[id];
+            auto&& e        = entitiesPool[id];
             e.globalVisible = e.visible && parentVisible;
 
             uint32_t child = hierarchiesPool[id].firstChild;
@@ -891,14 +882,7 @@ void EntityCompStorage::propagateVisibility(uint32_t rootId)
                 child = hierarchiesPool[child].next;
             }
         };
-    /*
-    for (auto child = hierarchiesPool[protoId].firstChild;
-         Base::ID::isValidID(child);
-         child = hierarchiesPool[child].next)
-    {
-        collectAllEntities(Base::ID::KeyUint64::make(child), ids);
-    }
-    */
+
     dfs(rootId, true);
 }
 
