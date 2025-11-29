@@ -48,11 +48,7 @@ int EntityRenderSystem::render(const Draw::DrawContext& rctx, const Math::Mat33&
 
         if (key.isIDInvalid())
             continue;
-        if (key.flags() > 0)
-        {
-            drawUnitEffect(rctx, key, vpM, wbounds);
-            continue;
-        }
+
         auto proId = key.protoId();
         if (Base::ID::isInvalidID(proId))
         {
@@ -64,8 +60,13 @@ int EntityRenderSystem::render(const Draw::DrawContext& rctx, const Math::Mat33&
         }
         auto  iid = key.iid();
         auto& et  = entitiesPool[proId];
-        if (Base::ID::isInvalidID(et.shadingId) || !et.visible)
+        if (Base::ID::isInvalidID(et.shadingId) || !et.globalVisible)
         {
+            continue;
+        }
+        if (key.flags() > 0)
+        {
+            drawUnitEffect(rctx, key, vpM, wbounds);
             continue;
         }
 
