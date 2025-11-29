@@ -1,0 +1,616 @@
+{
+    "version": {
+        "runtime-mode": "edit",
+        "major": 0,
+        "minor": 1,
+        "dimension": 2,
+        "unit": "pixel"
+    },
+    "scene": {
+        "nodes": [
+            {
+                "type": "label",
+                "name": "dark-red-label",
+                "transform": {
+                    "position": [
+                        100,
+                        100
+                    ],
+                    "rotation": 30
+                },
+                "display": {
+                    "shape": {
+                        "type": "rectangle",
+                        "size": [
+                            70,
+                            50
+                        ]
+                    },
+                    "style": {
+                        "fillColor": "0xff772200"
+                    }
+                },
+                "actions": {
+                    "rotate": {
+                        "active": true,
+                        "speed": 0.1,
+                        "center": "left-top",
+                        "frequency": 1,
+                        "duration": 0
+                    }
+                },
+                "children": [
+                    {
+                        "type": "label",
+                        "name": "gfeen-small-label-0",
+                        "transform": {
+                            "position": [
+                                10,
+                                10
+                            ]
+                        },
+                        "display": {
+                            "shape": {
+                                "type": "rectangle",
+                                "size": [
+                                    35,
+                                    20
+                                ]
+                            },
+                            "style": {
+                                "fillColor": "0xff228822"
+                            }
+                        }
+                    },
+                    {
+                        "type": "text",
+                        "name": "V",
+                        "transform": {
+                            "position": [
+                                20,
+                                10
+                            ]
+                        },
+                        "display": {
+                            "shape": {
+                                "type": "text",
+                                "content": "happy",
+                                "fontSize": 50
+                            },
+                            "style": {
+                                "fillColor": "0xff00aa33"
+                            }
+                        }
+                    }
+                ]
+            }
+        ],
+        "nodesPA0": [
+            {
+                "name": "dark-empty",
+                "transform": {
+                    "position": [
+                        180,
+                        100
+                    ]
+                }
+            }
+        ],
+        "nodesPOI": [
+            {
+                "type": "label",
+                "name": "dark-red-label",
+                "transform": {
+                    "position": [
+                        100,
+                        100
+                    ]
+                },
+                "display": {
+                    "shape": {
+                        "type": "rectangle",
+                        "size": [
+                            70,
+                            50
+                        ]
+                    },
+                    "style": {
+                        "fillColor": "0xff772200"
+                    }
+                },
+                "actions": {
+                    "rotate": {
+                        "active": true,
+                        "speed": 0.1,
+                        "center": "left-top",
+                        "frequency": 1,
+                        "duration": 0
+                    }
+                },
+                "children": [
+                    {
+                        "type": "label",
+                        "name": "gfeen-small-label-0",
+                        "transform": {
+                            "position": [
+                                10,
+                                10
+                            ]
+                        },
+                        "display": {
+                            "shape": {
+                                "type": "rectangle",
+                                "size": [
+                                    35,
+                                    20
+                                ]
+                            },
+                            "style": {
+                                "fillColor": "0xff228822"
+                            }
+                        }
+                    },
+                    {
+                        "type": "text",
+                        "name": "V",
+                        "transform": {
+                            "position": [
+                                20,
+                                10
+                            ]
+                        },
+                        "display": {
+                            "shape": {
+                                "type": "text",
+                                "content": "Vily",
+                                "fontSize": 24
+                            },
+                            "style": {
+                                "fillColor": "0xff99aa33"
+                            }
+                        }
+                    }
+                ]
+            },
+            {
+                "reference": {
+                    "src": "dark-red-label",
+                    "type": "container"
+                },
+                "name": "dark-red-label-group",
+                "transform": {
+                    "position": [
+                        180,
+                        100
+                    ]
+                },
+                "layout": {
+                    "type": "reference-item",
+                    "method": "row-column",
+                    "position": [
+                        20,
+                        20
+                    ],
+                    "column-count": 5,
+                    "distance-x": 35,
+                    "distance-y": 35,
+                    "count": 20
+                }
+            }
+        ],
+        "nodesD": [
+            {
+                "type": "label",
+                "name": "dark-red-label",
+                "transform": {
+                    "position": [
+                        100,
+                        100
+                    ]
+                },
+                "display": {
+                    "shape": {
+                        "type": "rectangle",
+                        "size": [
+                            70,
+                            50
+                        ]
+                    },
+                    "style": {
+                        "fillColor": "0xff772200"
+                    }
+                },
+                "actions": {
+                    "rotate": {
+                        "active": true,
+                        "speed": 0.1,
+                        "center": "left-top",
+                        "frequency": 1,
+                        "duration": 0
+                    }
+                }
+            },
+            {
+                "reference": {
+                    "src": "dark-red-label",
+                    "type": "container"
+                },
+                "name": "dark-red-label-group",
+                "transform": {
+                    "position": [
+                        180,
+                        100
+                    ]
+                },
+                "layout": {
+                    "type": "reference-item",
+                    "method": "row-column",
+                    "position": [
+                        20,
+                        20
+                    ],
+                    "column-count": 5,
+                    "distance-x": 35,
+                    "distance-y": 35,
+                    "count": 20
+                }
+            }
+        ],
+        "nodesOOO": [
+            {
+                "type": "label",
+                "name": "red-label",
+                "transform": {
+                    "position": [
+                        100,
+                        200
+                    ]
+                },
+                "display": {
+                    "shape": {
+                        "type": "rectangle",
+                        "size": [
+                            70,
+                            50
+                        ]
+                    },
+                    "style": {
+                        "fillColor": "0xffff0000"
+                    }
+                },
+                "actions": {
+                    "rotate": {
+                        "active": true,
+                        "speed": 0.1,
+                        "center": "left-top",
+                        "frequency": 1,
+                        "duration": 0
+                    }
+                }
+            },
+            {
+                "reference": {
+                    "src": "color-label",
+                    "type": "container"
+                },
+                "name": "color-label-group",
+                "transform": {
+                    "position": [
+                        300,
+                        200
+                    ]
+                },
+                "layout": {
+                    "type": "reference-item",
+                    "method": "row-column",
+                    "position": [
+                        20,
+                        20
+                    ],
+                    "column-count": 5,
+                    "distance-x": 35,
+                    "distance-y": 35,
+                    "count": 20
+                }
+            },
+            {
+                "config": {
+                    "colourEdit": true
+                },
+                "type": "panel",
+                "name": "play-panel",
+                "transform": {
+                    "position": [
+                        200,
+                        200
+                    ]
+                },
+                "display": {
+                    "shape": {
+                        "type": "rectangle",
+                        "size": [
+                            300,
+                            500
+                        ]
+                    },
+                    "style": {
+                        "fills": [
+                            {
+                                "type": "color",
+                                "value": "0xffaabb99",
+                                "blend": "normal",
+                                "opacity": 1.0
+                            }
+                        ]
+                    }
+                },
+                "children": [
+                    {
+                        "type": "button",
+                        "name": "play-button",
+                        "transform": {
+                            "position": [
+                                57,
+                                136
+                            ]
+                        },
+                        "display": {
+                            "shape": {
+                                "type": "round-rectangle",
+                                "size": [
+                                    186,
+                                    76
+                                ]
+                            },
+                            "style": {
+                                "fillColor": "0xff5f9ea0"
+                            }
+                        },
+                        "children": [
+                            {
+                                "type": "text",
+                                "name": "play-text",
+                                "transform": {
+                                    "position": [
+                                        58,
+                                        11
+                                    ]
+                                },
+                                "display": {
+                                    "shape": {
+                                        "type": "text",
+                                        "content": "Play",
+                                        "fontSize": 36
+                                    },
+                                    "style": {
+                                        "fillColor": "0xff9932cc"
+                                    }
+                                }
+                            }
+                        ],
+                        "interactions": {
+                            "mouse": {
+                                "over": [
+                                    {
+                                        "target": "play-button",
+                                        "action": {
+                                            "type": "change-color",
+                                            "fillColor": "0xff00bbbb"
+                                        }
+                                    }
+                                ],
+                                "out": [
+                                    {
+                                        "target": "play-button",
+                                        "action": {
+                                            "type": "change-color",
+                                            "fillColor": "0xff5f9ea0"
+                                        }
+                                    }
+                                ],
+                                "down": [
+                                    {
+                                        "target": "play-button",
+                                        "action": {
+                                            "type": "change-color",
+                                            "fillColor": "0xd0e000"
+                                        }
+                                    },
+                                    {
+                                        "target": "info-panel",
+                                        "action": {
+                                            "type": "toggle-visible",
+                                            "visible": 1
+                                        }
+                                    }
+                                ],
+                                "up": [
+                                    {
+                                        "target": "play-button",
+                                        "action": {
+                                            "type": "change-color",
+                                            "fillColor": "0xff00bbbb"
+                                        }
+                                    },
+                                    {
+                                        "target": "system-controller",
+                                        "action": {
+                                            "type": "system-event",
+                                            "cmd": "play"
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        "type": "button",
+                        "name": "exit-button",
+                        "transform": {
+                            "position": [
+                                57,
+                                286
+                            ]
+                        },
+                        "display": {
+                            "shape": {
+                                "type": "round-rectangle",
+                                "size": [
+                                    186,
+                                    76
+                                ]
+                            },
+                            "style": {
+                                "fillColor": "0xff5f9ea0"
+                            }
+                        },
+                        "children": [
+                            {
+                                "type": "text",
+                                "name": "play-text",
+                                "transform": {
+                                    "position": [
+                                        58,
+                                        11
+                                    ]
+                                },
+                                "display": {
+                                    "shape": {
+                                        "type": "text",
+                                        "content": "Exit",
+                                        "fontSize": 36
+                                    },
+                                    "style": {
+                                        "fillColor": "0xff9932cc"
+                                    }
+                                }
+                            }
+                        ],
+                        "interactions": {
+                            "mouse": {
+                                "over": [
+                                    {
+                                        "target": "exit-button",
+                                        "action": {
+                                            "type": "change-color",
+                                            "fillColor": "0xff00bbbb"
+                                        }
+                                    }
+                                ],
+                                "out": [
+                                    {
+                                        "target": "exit-button",
+                                        "action": {
+                                            "type": "change-color",
+                                            "fillColor": "0xff5f9ea0"
+                                        }
+                                    }
+                                ],
+                                "down": [
+                                    {
+                                        "target": "exit-button",
+                                        "action": {
+                                            "type": "change-color",
+                                            "fillColor": "0xd0e000"
+                                        }
+                                    }
+                                ],
+                                "up": [
+                                    {
+                                        "target": "exit-button",
+                                        "action": {
+                                            "type": "change-color",
+                                            "fillColor": "0xff00bbbb"
+                                        }
+                                    },
+                                    {
+                                        "target": "system-controller",
+                                        "action": {
+                                            "type": "system-event",
+                                            "cmd": "exit"
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                ]
+            },
+            {
+                "type": "panel",
+                "name": "info-panel",
+                "transform": {
+                    "position": [
+                        502,
+                        200
+                    ]
+                },
+                "display": {
+                    "props": {
+                        "visible": true,
+                        "cacheAsBitmap": true
+                    },
+                    "shape": {
+                        "type": "rectangle",
+                        "size": [
+                            200,
+                            500
+                        ]
+                    },
+                    "style": {
+                        "fills": [
+                            {
+                                "type": "color",
+                                "value": "0xffe9967a",
+                                "blend": "normal",
+                                "opacity": 1.0
+                            }
+                        ]
+                    }
+                }
+            },
+            {
+                "type": "label",
+                "name": "color-rect-label",
+                "transform": {
+                    "position": [
+                        600,
+                        300
+                    ]
+                },
+                "display": {
+                    "props": {
+                        "visible": true,
+                        "cacheAsBitmap": true
+                    },
+                    "shape": {
+                        "type": "rectangle",
+                        "size": [
+                            80,
+                            50
+                        ]
+                    },
+                    "style": {
+                        "fills": [
+                            {
+                                "type": "color",
+                                "value": "0xffdddd33",
+                                "blend": "normal",
+                                "opacity": 1.0
+                            }
+                        ]
+                    }
+                },
+                "actions": {
+                    "rotate": {
+                        "active": true,
+                        "speed": 0.1,
+                        "center": "left-top",
+                        "frequency": 1,
+                        "duration": 0
+                    }
+                }
+            }
+        ]
+    }
+}

@@ -14,12 +14,27 @@ float sdfRect(vec2 p, vec2 size) {
     vec2 d = abs(p) - size;
     return length(max(d, 0.0)) + min(max(d.x, d.y), 0.0);
 }
-float sdfRoundRect(vec2 pv, vec2 b, vec4 r) {
-    r.xy = (pv.x > 0.0) ? r.xy : r.zw;
-    r.x = (pv.y > 0.0) ? r.x : r.y;
-    vec2 q = abs(pv) - b + r.x;
-    return min(max(q.x, q.y), 0.0) + length(max(q, 0.0)) - r.x;
+/// sdf rounded rectangle With 4 radii
+float sdfRoundRect(vec2 p, vec2 b, vec4 r)
+{
+    r = min(r, vec4(min(b.x, b.y)));
+
+    float rx = (p.x > 0.0) ? r.y : r.x; // l or r
+    float ry = (p.y > 0.0) ? r.w : r.z; // t or b
+
+    float cr = (p.x > 0.0)
+        ? ((p.y > 0.0) ? r.y : r.z)  // rt or rb
+        : ((p.y > 0.0) ? r.x : r.w); // lt or lb
+
+    vec2 q = abs(p) - b + vec2(cr);
+    return length(max(q, 0.0)) + min(max(q.x, q.y), 0.0) - cr;
 }
+// float sdfRoundRect(vec2 pv, vec2 b, vec4 r) {
+//     r.xy = (pv.x > 0.0) ? r.xy : r.zw;
+//     r.x = (pv.y > 0.0) ? r.x : r.y;
+//     vec2 q = abs(pv) - b + r.x;
+//     return min(max(q.x, q.y), 0.0) + length(max(q, 0.0)) - r.x;
+// }
 float sdfRoundedRect(vec2 p, vec2 size, float radius) {
     vec2 d = abs(p) - size;
     return length(max(d, 0.0)) - radius;

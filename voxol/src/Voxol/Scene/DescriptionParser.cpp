@@ -616,6 +616,7 @@ void HierarchyParser::parse(Desc::SceneNode& parentNode, Desc::HierarchyNode& pa
 void DescriptionParser::initialize()
 {
     std::string filePath = "scene/scdesc/scdesc01.json";
+    filePath = "scene/scdesc/scdesc_word_snake.json";
     fileParser.initFromFile(filePath);
 
     Desc::HierarchyNode rootHierNode;
