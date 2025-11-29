@@ -868,7 +868,7 @@ void EntityCompStorage::foreachBoundsWithEntityId(uint32_t eId, EntityBoundsResp
         callback(pid, vb);
     }
 }
-void EntityCompStorage::propagateVisibility(uint32_t rootId)
+void EntityCompStorage::propagateVisibility(uint32_t rootId, bool visible)
 {
     std::function<void(uint32_t, bool)> dfs =
         [&, this](uint32_t id, bool parentVisible) {
@@ -883,7 +883,7 @@ void EntityCompStorage::propagateVisibility(uint32_t rootId)
             }
         };
 
-    dfs(rootId, true);
+    dfs(rootId, visible);
 }
 
 } // namespace Voxol::Scene
