@@ -76,7 +76,7 @@
                 }
             }
         ],
-        "nodes": [
+        "nodesVVV01": [
             {
                 "type": "label",
                 "name": "dark-red-label",
@@ -237,7 +237,7 @@
                 }
             }
         ],
-        "nodesB": [
+        "nodes": [
             {
                 "type": "label",
                 "name": "red-label",
