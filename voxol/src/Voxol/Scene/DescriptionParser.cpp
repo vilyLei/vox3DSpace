@@ -1,6 +1,7 @@
 #include "DescriptionParser.h"
 #include "SceneIRComponent.h"
 #include "../Math/MathDef.h"
+#include "../Scene/Layout/PositionDistributor.h"
 #include <fstream>
 #include <filesystem>
 
@@ -358,7 +359,26 @@ void FileParser::parseSceneNode(SceneNode& parentNode, uint32_t& id, const JsonT
 
         if (srcNodeType == "container")
         {
-            //*
+            using namespace Voxol::Scene::Layout;
+
+            auto       total = 10;
+            auto       columns = 3;
+            Math::Vec2 beginPos{30, 30};
+            Math::Vec2 spacing{25, 25};
+
+            SceneNode  tempNode;
+            parseSceneNodeWithNameFromRoot(tempNode, tempNode.id, srcNodeName);
+            auto&& positions = PositionDistribution::grid(total, beginPos, spacing, columns, tempNode.transform.scale());
+            for (auto& pv : positions)
+            {
+                SceneNode node;
+                node.id = id++;
+                parseSceneNodeWithNameFromRoot(node, id, srcNodeName);
+                node.transform.pos() = pv;
+                node.print();
+                parentNode.children.emplace_back(std::move(node));
+            }
+            /*
             auto       total = 10;
             auto       cn    = 3;
             Math::Vec2 beginPos{30, 30};
