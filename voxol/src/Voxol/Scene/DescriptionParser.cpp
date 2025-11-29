@@ -165,7 +165,11 @@ bool FileParser::hasSceneNodeWithNameRecursive(const std::string& nodeName, cons
                 return true;
             }
         }
-        return hasSceneNodeWithNameRecursive(nodeName, item, "children");
+        auto flag = hasSceneNodeWithNameRecursive(nodeName, item, "children");
+        if (flag)
+        {
+            return true;
+        }
     }
     return false;
 }
