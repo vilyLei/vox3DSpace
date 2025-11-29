@@ -19,15 +19,15 @@
                 },
                 "visible": false,
                 "display": {
-                    "shape": {
+                    "shapeT": {
                         "type": "circle",
                         "radius": 5
                     },
-                    "shapeT": {
+                    "shape": {
                         "type": "rectangle",
                         "size": [
-                            50,
-                            50
+                            10,
+                            10
                         ]
                     },
                     "style": {
@@ -55,9 +55,9 @@
                         500,
                         310
                     ],
-                    "rings": 4,
+                    "rings": 3,
                     "hex-radius": 30,
-                    "count": 91
+                    "count": 61
                 },
                 "reference-layoutTT": {
                     "type": "default",
