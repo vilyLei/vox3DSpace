@@ -1,5 +1,6 @@
 #include "DescriptionParser.h"
 #include "SceneIRComponent.h"
+#include "../Math/MathDef.h"
 #include <fstream>
 #include <filesystem>
 
@@ -352,6 +353,7 @@ void FileParser::parseSceneNode(SceneNode& parentNode, uint32_t& id, const JsonT
 
         if (srcNodeType == "container")
         {
+            //*
             auto       total = 10;
             auto       cn    = 3;
             Math::Vec2 beginPos{30, 30};
@@ -371,6 +373,56 @@ void FileParser::parseSceneNode(SceneNode& parentNode, uint32_t& id, const JsonT
                 node.print();
                 parentNode.children.emplace_back(std::move(node));
             }
+            //*/
+            /*
+            auto       total = 10;
+            Math::Vec2 pos{300, 250};
+            float      radius = 150.0f;
+            for (auto i = 0; i < total; i++)
+            {
+                float angle = MATH_2PI * float(i) / total;
+
+                SceneNode node;
+                node.id = id++;
+                parseSceneNodeWithNameFromRoot(node, id, srcNodeName);
+
+                Math::Vec2 pv;
+                pv.x = pos.x + radius * cos(angle);
+                pv.y = pos.y + radius * sin(angle);
+
+                node.transform.pos()    = pv;
+                node.transform.rotation = angle;
+                parentNode.children.emplace_back(std::move(node));
+            }
+            //*/
+            /*
+            auto       total = 10;
+            Math::Vec2 pos{300, 250};
+            float      startRadius = 20.0f;
+            float      radiusStep  = 50.0f;
+            float      angleStep  = 0;
+
+            for (auto i = 0; i < total; i++)
+            {
+                auto  fk            = float(i);
+                float angle         = angleStep + MATH_2PI * fk / 6;
+                angleStep += 0.1f;
+                float currentRadius = startRadius + radiusStep * (fk / 7);
+                radiusStep += 5.0f;
+
+                SceneNode node;
+                node.id = id++;
+                parseSceneNodeWithNameFromRoot(node, id, srcNodeName);
+
+                Math::Vec2 pv;
+                pv.x = pos.x + currentRadius * cos(angle);
+                pv.y = pos.y + currentRadius * sin(angle);
+
+                node.transform.pos() = pv;
+                node.transform.rotation = angle;
+                parentNode.children.emplace_back(std::move(node));
+            }
+            //*/
             parentNode.childrenTotal = static_cast<int>(parentNode.children.size());
         }
         else

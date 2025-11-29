@@ -76,7 +76,7 @@
                 }
             }
         ],
-        "nodesVVV01": [
+        "nodes": [
             {
                 "type": "label",
                 "name": "dark-red-label",
@@ -84,8 +84,7 @@
                     "position": [
                         100,
                         100
-                    ],
-                    "rotation": 30
+                    ]
                 },
                 "display": {
                     "shape": {
@@ -237,7 +236,7 @@
                 }
             }
         ],
-        "nodes": [
+        "nodesOOO": [
             {
                 "type": "label",
                 "name": "red-label",
