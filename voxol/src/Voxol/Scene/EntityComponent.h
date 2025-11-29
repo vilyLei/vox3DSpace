@@ -99,6 +99,14 @@ struct UnitModel
     uint32_t      id         = Base::ID::INVALID_ID;
     uint32_t      drawUnitId = Base::ID::INVALID_ID;
     UnitModelType type       = UnitModelType::Mesh;
+
+    constexpr bool isText(){
+        return type == UnitModelType::Text;
+    };
+    constexpr bool isMesh()
+    {
+        return type == UnitModelType::Mesh;
+    };
 };
 
 struct UnitHierarchy
@@ -179,6 +187,7 @@ struct UnitInstanceMap
     Base::ID::keyUint64Unordered_map<Base::ID::KeyUint64> map;
     bool                                                  dirty = true;
 };
+void updateUunitModel(UnitModel& model, const std::string typeName);
 
 } // namespace Component
 

@@ -493,7 +493,9 @@ void FileParser::parseNodeDisplayShape(SceneNode& node, const JsonType& jsonNode
     DisplayShape shape;
     shape.parse(jNode);
     node.transform.scale() = shape.size;
-
+    node.unitModel.id      = node.id;
+    Component::updateUunitModel(node.unitModel, shape.type);
+    /*
     if (shape.type == "rectangle")
     {
         node.unitModel.drawUnitId = 0;
@@ -514,6 +516,14 @@ void FileParser::parseNodeDisplayShape(SceneNode& node, const JsonType& jsonNode
         node.unitModel.drawUnitId = 8;
         node.unitModel.type       = Component::UnitModelType::Text;
 
+        auto&                    textDesc = shape.jsonValue.get<Component::UnitTextDesc>();
+        Component::UnitTextModel textModel;
+        textModel.text             = textDesc;
+        textModelMap[textModel.id] = textModel;
+    }
+    //*/
+    if (node.unitModel.isText())
+    {
         auto&                    textDesc = shape.jsonValue.get<Component::UnitTextDesc>();
         Component::UnitTextModel textModel;
         textModel.id               = node.id;

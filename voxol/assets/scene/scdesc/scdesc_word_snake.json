@@ -7,7 +7,7 @@
         "unit": "pixel"
     },
     "scene": {
-        "nodes": [
+        "nodesPP": [
             {
                 "type": "label",
                 "name": "dark-red-label",
@@ -95,7 +95,7 @@
                 }
             }
         ],
-        "nodesPOI": [
+        "nodes": [
             {
                 "type": "label",
                 "name": "dark-red-label",
@@ -165,7 +165,7 @@
                                 "fontSize": 24
                             },
                             "style": {
-                                "fillColor": "0xff99aa33"
+                                "fillColor": "0xff00aaaa"
                             }
                         }
                     }
