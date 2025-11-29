@@ -2,9 +2,9 @@
 #define VOXOL_SCENE_DESCRIPTION_PARSER_H
 
 #include "../Base/BaseDefine.h"
-#include "EntityComponent.h"
-#include "Intent/IntentComponent.h"
-#include "JsonValue.h"
+//#include "EntityComponent.h"
+//#include "Intent/IntentComponent.h"
+#include "Describe/DescriptionNode.h"
 #include "../Math/Vec2.h"
 #include <nlohmann/json.hpp>
 #include <string>
@@ -17,21 +17,21 @@ namespace Describe
 using JsonType = nlohmann::json;
 
 
-struct HierarchyNode
-{
-    uint32_t                 id = Base::ID::INVALID_ID;
-    std::string              name;
-    Component::UnitHierarchy hieraychy;
-    void                     print()
-    {
-        std::string info = ", parent=" + std::to_string(hieraychy.parent);
-        info += ", firstChild=" + std::to_string(hieraychy.firstChild);
-        info += ", next=" + std::to_string(hieraychy.next);
-        info += ", id=" + std::to_string(id);
-        info = "HierarchyNode(name=" + name + info + ")";
-        printf("%s\n", info.c_str());
-    }
-};
+//struct HierarchyNode
+//{
+//    uint32_t                 id = Base::ID::INVALID_ID;
+//    std::string              name;
+//    Component::UnitHierarchy hieraychy;
+//    void                     print()
+//    {
+//        std::string info = ", parent=" + std::to_string(hieraychy.parent);
+//        info += ", firstChild=" + std::to_string(hieraychy.firstChild);
+//        info += ", next=" + std::to_string(hieraychy.next);
+//        info += ", id=" + std::to_string(id);
+//        info = "HierarchyNode(name=" + name + info + ")";
+//        printf("%s\n", info.c_str());
+//    }
+//};
 struct DisplayShape
 {
     std::string     type;

@@ -1,11 +1,11 @@
 #ifndef VOXOL_SCENE_DESCRITION_NODE_H
 #define VOXOL_SCENE_DESCRITION_NODE_H
 
-#include "../Base/BaseDefine.h"
-#include "EntityComponent.h"
-#include "Intent/IntentComponent.h"
-#include "JsonValue.h"
-#include "../Math/Vec2.h"
+#include "../../Base/BaseDefine.h"
+#include "../EntityComponent.h"
+#include "../../Intent/IntentComponent.h"
+#include "../JsonValue.h"
+#include "../../Math/Vec2.h"
 #include <nlohmann/json.hpp>
 #include <string>
 #include <functional>
