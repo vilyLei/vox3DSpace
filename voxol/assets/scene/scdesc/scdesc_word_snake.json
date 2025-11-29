@@ -175,8 +175,9 @@
             {
                 "reference": {
                     "src": "dark-red-label",
-                    "type": "node"
+                    "type": "container"
                 },
+                "visible" : true,
                 "name": "dark-red-label-group",
                 "transform": {
                     "position": [
