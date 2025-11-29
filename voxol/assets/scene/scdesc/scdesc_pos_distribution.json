@@ -44,6 +44,18 @@
                         100
                     ]
                 },
+                "reference-layoutT0": {
+                    "type": "default",
+                    "method": "arc",
+                    "position": [
+                        300,
+                        210
+                    ],
+                    "start-angle": 50,
+                    "arc-angle": 180,
+                    "radius": 150,
+                    "count": 10
+                },
                 "reference-layoutT": {
                     "type": "default",
                     "method": "grid",
@@ -88,9 +100,21 @@
                             700,
                             210
                         ],
-                        "rotation": 50,
-                        "radius": 150,
+                        "start-angle": 50,
+                        "radius": 100,
                         "count": 10
+                    },
+                    {
+                        "type": "default",
+                        "method": "arc",
+                        "position": [
+                            250,
+                            310
+                        ],
+                        "start-angle": 80,
+                        "arc-angle": 90,
+                        "radius": 250,
+                        "count": 8
                     }
                 ]
             }

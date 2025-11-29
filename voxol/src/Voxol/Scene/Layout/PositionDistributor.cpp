@@ -4,7 +4,7 @@
 namespace Voxol::Scene::Layout
 {
 
-std::vector<Math::Vec2> PositionDistribution::circle(int count, const Math::Vec2& center, float radius, float startRadian)
+std::vector<Math::Vec2> PositionDistribution::circle(std::vector<float>& angles, int count, const Math::Vec2& center, float radius, float startRadian)
 {
     std::vector<Math::Vec2> positions;
     positions.reserve(count);
@@ -12,6 +12,7 @@ std::vector<Math::Vec2> PositionDistribution::circle(int count, const Math::Vec2
     for (int i = 0; i < count; ++i)
     {
         float angle = startRadian + MATH_2PI * float(i) / count;
+        angles.push_back(angle);
         positions.emplace_back(
             center.x + radius * std::cos(angle),
             center.y + radius * std::sin(angle));
@@ -56,7 +57,7 @@ std::vector<Math::Vec2> PositionDistribution::spiral(int count, const Math::Vec2
     return positions;
 }
 
-std::vector<Math::Vec2> PositionDistribution::arc(int count, const Math::Vec2& center, float radius, float startRadian, float arcRadian)
+std::vector<Math::Vec2> PositionDistribution::arc(std::vector<float>& angles, int count, const Math::Vec2& center, float radius, float startRadian, float arcRadian)
 {
     std::vector<Math::Vec2> positions;
     positions.reserve(count);
@@ -64,6 +65,7 @@ std::vector<Math::Vec2> PositionDistribution::arc(int count, const Math::Vec2& c
     for (int i = 0; i < count; ++i)
     {
         float angle = startRadian + arcRadian * float(i) / std::max(1, count - 1);
+        angles.push_back(angle);
         positions.emplace_back(
             center.x + radius * std::cos(angle),
             center.y + radius * std::sin(angle));

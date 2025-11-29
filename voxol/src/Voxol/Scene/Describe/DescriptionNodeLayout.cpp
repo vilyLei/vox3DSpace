@@ -5,6 +5,73 @@
 namespace Voxol::Scene::Describe
 {
 
+void DescriptionNodeLauout::referenceLayoutSceneNodeWithArc(const JsonType& jsonNode, const Math::Vec2& nodeSize, const DescNodeLayoutCallbackType& callback)
+{
+    using namespace Voxol::Scene::Layout;
+
+
+    auto       count = 10;
+    Math::Vec2 center{300, 300};
+    float      radius     = 100.0f;
+    float      startAngle = 0;
+    float      arcAngle = 180;
+
+    Data::JsonValue positionV;
+    positionV.parseWithName(jsonNode, "position");
+    if (positionV.is<Math::Vec2>())
+    {
+        center = positionV.get<Math::Vec2>();
+    }
+    Data::JsonValue radiusV;
+    radiusV.parseWithName(jsonNode, "radius");
+    if (radiusV.is<int>())
+    {
+        radius = radiusV.get<int>();
+    }
+    else if (positionV.is<float>())
+    {
+        radius = radiusV.get<float>();
+    }
+
+    Data::JsonValue startAngleV;
+    startAngleV.parseWithName(jsonNode, "start-angle");
+    if (startAngleV.is<int>())
+    {
+        startAngle = startAngleV.get<int>();
+    }
+    else if (startAngleV.is<float>())
+    {
+        startAngle = startAngleV.get<float>();
+    }
+
+    Data::JsonValue arcAngleV;
+    arcAngleV.parseWithName(jsonNode, "arc-angle");
+    if (arcAngleV.is<int>())
+    {
+        arcAngle = arcAngleV.get<int>();
+    }
+    else if (arcAngleV.is<float>())
+    {
+        arcAngle = arcAngleV.get<float>();
+    }
+
+
+    Data::JsonValue countV;
+    countV.parseWithName(jsonNode, "count");
+    if (countV.is<int>())
+    {
+        count = countV.get<int>();
+    }
+    auto   startRad  = Math::degrees_to_radians(startAngle);
+    auto   arctRad   = Math::degrees_to_radians(arcAngle);
+    std::vector<float> angles;
+    angles.reserve(count);
+    auto&&             positions = PositionDistribution::arc(angles, count, center, radius, startRad, arctRad);
+    for (auto i = 0; i < positions.size(); i++)
+    {
+        callback(i, positions[i], {1, 1}, angles[i]);
+    }
+}
 void DescriptionNodeLauout::referenceLayoutSceneNodeWithCircle(const JsonType& jsonNode, const Math::Vec2& nodeSize, const DescNodeLayoutCallbackType& callback)
 {
     using namespace Voxol::Scene::Layout;
@@ -49,12 +116,13 @@ void DescriptionNodeLauout::referenceLayoutSceneNodeWithCircle(const JsonType& j
     {
         count = countV.get<int>();
     }
-    auto   startRad  = Math::degrees_to_radians(startAngle);
-    auto&& positions = PositionDistribution::circle(count, center, radius, startRad);
+    auto               startRad = Math::degrees_to_radians(startAngle);
+    std::vector<float> angles;
+    angles.reserve(count);
+    auto&& positions = PositionDistribution::circle(angles, count, center, radius, startRad);
     for (auto i = 0; i < positions.size(); i++)
     {
-        float rotation = startRad + MATH_2PI * float(i) / count;
-        callback(i, positions[i], {1, 1}, rotation);
+        callback(i, positions[i], {1, 1}, angles[i]);
     }
 }
 void DescriptionNodeLauout::referenceLayoutSceneNodeWithGrid(const JsonType& jsonNode, const Math::Vec2& nodeSize, const DescNodeLayoutCallbackType& callback)
@@ -127,7 +195,7 @@ void DescriptionNodeLauout::referenceLayoutSceneNodeOnce(const JsonType& refLayo
     }
     else if (layoutNode.method == "arc")
     {
-        referenceLayoutSceneNodeWithCircle(refLayoutNode, nodeSize, callback);
+        referenceLayoutSceneNodeWithArc(refLayoutNode, nodeSize, callback);
     }
 }
 void DescriptionNodeLauout::referenceLayoutSceneNodeMany(const JsonType& jsonNode, const Math::Vec2& nodeSize, const DescNodeLayoutCallbackType& callback) {
