@@ -30,5 +30,23 @@ struct HierarchyNode
     }
 };
 
+
+struct DisplayShape
+{
+    std::string     type;
+    Math::Vec2      size;
+    Data::JsonValue jsonValue;
+    void            parse(const JsonType& jsonNode);
+};
+
+struct SceneActionDesc
+{
+    std::string target;
+    std::string type;
+    std::string cmd;
+    uint32_t    color = 0xff000000;
+};
+
+
 } // namespace Voxol::Scene::Layout
 #endif

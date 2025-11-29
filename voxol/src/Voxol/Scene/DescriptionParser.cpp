@@ -9,7 +9,7 @@ namespace Voxol::Scene
 {
 namespace Describe
 {
-
+/*
 void DisplayShape::parse(const JsonType& jsonNode)
 {
 
@@ -65,7 +65,7 @@ void DisplayShape::parse(const JsonType& jsonNode)
     }
 }
 
-
+//*/
 
 void SceneActionTargetNode::reset()
 {
