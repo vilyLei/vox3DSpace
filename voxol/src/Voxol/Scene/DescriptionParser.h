@@ -12,7 +12,7 @@
 
 namespace Voxol::Scene
 {
-namespace Desc
+namespace Describe
 {
 using JsonType = nlohmann::json;
 
@@ -123,7 +123,7 @@ public:
     void parseNodeActionData(SceneNode& currNode, const JsonType& jsonNode);
 };
 
-using SceneNodeForeachCallbackType = std::function<void(Desc::SceneNode& node)>;
+using SceneNodeForeachCallbackType = std::function<void(Describe::SceneNode& node)>;
 class HierarchyParser
 {
 public:
@@ -131,8 +131,8 @@ public:
     ~HierarchyParser() = default;
 
 public:
-    void foreachNode(Desc::SceneNode& parentNode, SceneNodeForeachCallbackType callback);
-    void parse(Desc::SceneNode& parentNode, Desc::HierarchyNode& parentHierNode);
+    void foreachNode(Describe::SceneNode& parentNode, SceneNodeForeachCallbackType callback);
+    void parse(Describe::SceneNode& parentNode, Describe::HierarchyNode& parentHierNode);
 };
 } // namespace Desc
 
@@ -143,8 +143,8 @@ public:
     ~DescriptionParser() = default;
 
 public:
-    Desc::FileParser      fileParser;
-    Desc::HierarchyParser hierParser;
+    Describe::FileParser  fileParser;
+    Describe::HierarchyParser hierParser;
 
 public:
     void initialize();

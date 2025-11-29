@@ -77,7 +77,7 @@ void EntityUnitStorage::initalizeFromDescFile(const std::string& fileName)
     auto& fileParser = descParser.fileParser;
     auto& hierParser = descParser.hierParser;
 
-    hierParser.foreachNode(fileParser.rootNode, [&](Desc::SceneNode& node) {
+    hierParser.foreachNode(fileParser.rootNode, [&](Describe::SceneNode& node) {
 
         auto i = node.id;
 

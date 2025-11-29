@@ -7,7 +7,7 @@
 
 namespace Voxol::Scene
 {
-namespace Desc
+namespace Describe
 {
 
 void DisplayShape::parse(const JsonType& jsonNode)
@@ -642,7 +642,7 @@ void FileParser::parseNodeData(SceneNode& node, const JsonType& jsonNode)
 }
 
 
-void HierarchyParser::foreachNode(Desc::SceneNode& parentNode, SceneNodeForeachCallbackType callback)
+void HierarchyParser::foreachNode(Describe::SceneNode& parentNode, SceneNodeForeachCallbackType callback)
 {
 
     callback(parentNode);
@@ -656,7 +656,7 @@ void HierarchyParser::foreachNode(Desc::SceneNode& parentNode, SceneNodeForeachC
         foreachNode(children[i], callback);
     }
 }
-void HierarchyParser::parse(Desc::SceneNode& parentNode, Desc::HierarchyNode& parentHierNode)
+void HierarchyParser::parse(Describe::SceneNode& parentNode, Describe::HierarchyNode& parentHierNode)
 {
     parentHierNode.id   = parentNode.id;
     parentHierNode.name = parentNode.name;
@@ -673,7 +673,7 @@ void HierarchyParser::parse(Desc::SceneNode& parentNode, Desc::HierarchyNode& pa
     for (auto i = 0; i < children.size(); ++i)
     {
         auto&&              child = children[i];
-        Desc::HierarchyNode hierNode;
+        Describe::HierarchyNode hierNode;
         hierNode.hieraychy.parent = parentNode.id;
 
         if ((i + 1) < children.size())
@@ -694,10 +694,10 @@ void DescriptionParser::initialize()
     filePath = "scene/scdesc/scdesc_pos_distribution.json";
     fileParser.initFromFile(filePath);
 
-    Desc::HierarchyNode rootHierNode;
+    Describe::HierarchyNode rootHierNode;
     hierParser.parse(fileParser.rootNode, rootHierNode);
 
-    hierParser.foreachNode(fileParser.rootNode, [](Desc::SceneNode& node) {
+    hierParser.foreachNode(fileParser.rootNode, [](Describe::SceneNode& node) {
         node.printTransform();
     });
 }
