@@ -20,6 +20,10 @@
                 "visible": false,
                 "display": {
                     "shape": {
+                        "type": "circle",
+                        "radius": 15
+                    },
+                    "shapeT": {
                         "type": "rectangle",
                         "size": [
                             50,
@@ -43,6 +47,17 @@
                         100,
                         100
                     ]
+                },
+                "reference-layout": {
+                    "type": "default",
+                    "method": "hexagonal-grid",
+                    "position": [
+                        300,
+                        210
+                    ],
+                    "hex-size": 70,
+                    "columns": 3,
+                    "count": 15
                 },
                 "reference-layoutT0": {
                     "type": "default",
@@ -74,7 +89,7 @@
                     ],
                     "count": 32
                 },
-                "reference-layouts": [
+                "reference-layoutsT": [
                     {
                         "type": "default",
                         "method": "grid",

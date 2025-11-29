@@ -4,6 +4,27 @@
 namespace Voxol::Scene::Layout
 {
 
+std::vector<Math::Vec2> PositionDistribution::hexagonalGrid(int count, const Math::Vec2& start, float hexSize, int columns)
+{
+    std::vector<Math::Vec2> positions;
+    positions.reserve(count);
+
+    float hexWidth  = hexSize * 2.0f;
+    float hexHeight = hexSize * std::sqrt(3.0f);
+
+    for (int i = 0; i < count; ++i)
+    {
+        int col = i % columns;
+        int row = i / columns;
+
+        float xOffset = (row % 2 == 1) ? hexWidth * 0.5f : 0.0f;
+        //xOffset       = 0;
+        positions.emplace_back(
+            start.x + col * hexWidth * 0.75f + xOffset,
+            start.y + row * hexHeight * 0.5f);
+    }
+    return positions;
+}
 std::vector<Math::Vec2> PositionDistribution::circle(std::vector<float>& angles, int count, const Math::Vec2& center, float radius, float startRadian)
 {
     std::vector<Math::Vec2> positions;
@@ -72,4 +93,4 @@ std::vector<Math::Vec2> PositionDistribution::arc(std::vector<float>& angles, in
     }
     return positions;
 }
-}
+} // namespace Voxol::Scene::Layout

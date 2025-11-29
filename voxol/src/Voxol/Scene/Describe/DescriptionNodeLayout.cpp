@@ -5,6 +5,52 @@
 namespace Voxol::Scene::Describe
 {
 
+void DescriptionNodeLauout::referenceLayoutSceneNodeWithHexagonalGrid(const JsonType& jsonNode, const Math::Vec2& nodeSize, const DescNodeLayoutCallbackType& callback)
+{
+    using namespace Voxol::Scene::Layout;
+
+    auto       count = 10;
+    Math::Vec2 pos{300, 300};
+    int      columns  = 5;
+    float      hexSize = 180;
+
+    Data::JsonValue positionV;
+    positionV.parseWithName(jsonNode, "position");
+    if (positionV.is<Math::Vec2>())
+    {
+        pos = positionV.get<Math::Vec2>();
+    }
+    Data::JsonValue hexSizeV;
+    hexSizeV.parseWithName(jsonNode, "hex-size");
+    if (hexSizeV.is<int>())
+    {
+        hexSize = hexSizeV.get<int>();
+    }
+    else if (positionV.is<float>())
+    {
+        hexSize = hexSizeV.get<float>();
+    }
+
+    Data::JsonValue columnsV;
+    columnsV.parseWithName(jsonNode, "columns");
+    if (columnsV.is<int>())
+    {
+        columns = columnsV.get<int>();
+    }
+
+    Data::JsonValue countV;
+    countV.parseWithName(jsonNode, "count");
+    if (countV.is<int>())
+    {
+        count = countV.get<int>();
+    }
+
+    auto&& positions = PositionDistribution::hexagonalGrid(count, pos, hexSize, columns);
+    for (auto i = 0; i < positions.size(); i++)
+    {
+        callback(i, positions[i], {1, 1}, 0);
+    }
+}
 void DescriptionNodeLauout::referenceLayoutSceneNodeWithArc(const JsonType& jsonNode, const Math::Vec2& nodeSize, const DescNodeLayoutCallbackType& callback)
 {
     using namespace Voxol::Scene::Layout;
@@ -196,6 +242,10 @@ void DescriptionNodeLauout::referenceLayoutSceneNodeOnce(const JsonType& refLayo
     else if (layoutNode.method == "arc")
     {
         referenceLayoutSceneNodeWithArc(refLayoutNode, nodeSize, callback);
+    }
+    else if (layoutNode.method == "hexagonal-grid")
+    {
+        referenceLayoutSceneNodeWithHexagonalGrid(refLayoutNode, nodeSize, callback);
     }
 }
 void DescriptionNodeLauout::referenceLayoutSceneNodeMany(const JsonType& jsonNode, const Math::Vec2& nodeSize, const DescNodeLayoutCallbackType& callback) {
