@@ -215,7 +215,7 @@ void FileParser::parseHeriNodes(const JsonType& jsonNode)
     rootNode.print();
 }
 
-
+/*
 void FileParser::referenceLayoutSceneNodeWithGrid(SceneNode& parentNode, bool visible, uint32_t& id, const JsonType& jsonNode, const std::string& srcNodeName)
 {
     using namespace Voxol::Scene::Layout;
@@ -284,6 +284,8 @@ void FileParser::referenceLayoutSceneNode(SceneNode& parentNode, bool visible, u
     }
 
 }
+//*/
+
 void FileParser::parseSceneNode(SceneNode& parentNode, uint32_t& id, const JsonType& jsonNode, const std::string& nodesName)
 {
 
