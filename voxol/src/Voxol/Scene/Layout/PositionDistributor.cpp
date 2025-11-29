@@ -19,19 +19,25 @@ std::vector<Math::Vec2> PositionDistribution::circle(int count, const Math::Vec2
     return positions;
 }
 
-std::vector<Math::Vec2> PositionDistribution::grid(int count, const Math::Vec2& start, const Math::Vec2& spacing, int columns, const Math::Vec2& itemSize)
+std::vector<Math::Vec2> PositionDistribution::grid(int count, const Math::Vec2& start, const Math::Vec2& spacing, int columns, const Math::Vec2& itemSize, const Math::Vec2& staggered)
 {
     std::vector<Math::Vec2> positions;
     positions.reserve(count);
+
+    //Math::Vec2 staggered{1,0};
 
     auto dv = itemSize + spacing;
     for (int i = 0; i < count; ++i)
     {
         int col = i % columns;
         int row = i / columns;
+
+        float xOffset = ((row % 2 == 1) ? dv.x : 0) * staggered.x;
+        float yOffset = ((col % 2 == 1) ? dv.y : 0) * staggered.y;
+
         positions.emplace_back(
-            start.x + col * dv.x,
-            start.y + row * dv.y);
+            start.x + xOffset + col * dv.x,
+            start.y + yOffset + row * dv.y);
     }
     return positions;
 }

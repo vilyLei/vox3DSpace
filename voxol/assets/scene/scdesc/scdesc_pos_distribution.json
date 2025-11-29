@@ -51,12 +51,80 @@
                         20,
                         20
                     ],
-                    "columns": 4,
-                    "spacing": [
-                        30,
-                        30
+                    "columns": 8,
+                    "staggered": [
+                        1,
+                        0
                     ],
-                    "count": 8
+                    "spacing": [
+                        50,
+                        50
+                    ],
+                    "count": 32
+                },
+                "reference-layout_circle": {
+                    "type": "default",
+                    "method": "circle",
+                    "position": [
+                        300,
+                        260
+                    ],
+                    "rotation": 50,
+                    "radius": 150,
+                    "count": 10
+                }
+            }
+        ],
+        "nodesKK": [
+            {
+                "type": "label",
+                "name": "rect-01-label",
+                "transform": {
+                    "position": [
+                        50,
+                        50
+                    ]
+                },
+                "visible": false,
+                "display": {
+                    "shape": {
+                        "type": "rectangle",
+                        "size": [
+                            50,
+                            50
+                        ]
+                    },
+                    "style": {
+                        "fillColor": "0xffff7f50"
+                    }
+                }
+            },
+            {
+                "reference": {
+                    "src": "rect-01-label",
+                    "type": "container"
+                },
+                "visible": true,
+                "name": "rect-01-label-group",
+                "transform": {
+                    "position": [
+                        100,
+                        100
+                    ]
+                },
+                "reference-layout": {
+                    "type": "default",
+                    "method": "grid",
+                    "position": [
+                        20,
+                        20
+                    ],
+                    "columns": 8,
+                    "spacing": [
+                        50,
+                        50
+                    ],
+                    "count": 32
                 },
                 "reference-layout_circle": {
                     "type": "default",
@@ -113,12 +181,63 @@
                         20,
                         20
                     ],
-                    "columns": 4,
+                    "columns": 8,
                     "spacing": [
-                        30,
-                        30
+                        50,
+                        50
                     ],
-                    "count": 8
+                    "count": 32
+                }
+            },
+            {
+                "type": "label",
+                "name": "rect-03-label",
+                "transform": {
+                    "position": [
+                        80,
+                        80
+                    ]
+                },
+                "visible": false,
+                "display": {
+                    "shape": {
+                        "type": "rectangle",
+                        "size": [
+                            50,
+                            50
+                        ]
+                    },
+                    "style": {
+                        "fillColor": "0xff8fbc8f"
+                    }
+                }
+            },
+            {
+                "reference": {
+                    "src": "rect-03-label",
+                    "type": "container"
+                },
+                "visible": false,
+                "name": "rect-03-label-group",
+                "transform": {
+                    "position": [
+                        200,
+                        150
+                    ]
+                },
+                "reference-layout": {
+                    "type": "default",
+                    "method": "grid",
+                    "position": [
+                        20,
+                        20
+                    ],
+                    "columns": 8,
+                    "spacing": [
+                        50,
+                        50
+                    ],
+                    "count": 32
                 }
             }
         ]
