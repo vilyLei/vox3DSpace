@@ -44,7 +44,7 @@
                         100
                     ]
                 },
-                "reference-layout": {
+                "reference-layoutT": {
                     "type": "default",
                     "method": "grid",
                     "position": [
@@ -62,17 +62,37 @@
                     ],
                     "count": 32
                 },
-                "reference-layout_circle": {
-                    "type": "default",
-                    "method": "circle",
-                    "position": [
-                        300,
-                        260
-                    ],
-                    "rotation": 50,
-                    "radius": 150,
-                    "count": 10
-                }
+                "reference-layouts": [
+                    {
+                        "type": "default",
+                        "method": "grid",
+                        "position": [
+                            20,
+                            20
+                        ],
+                        "columns": 4,
+                        "staggered": [
+                            1,
+                            0
+                        ],
+                        "spacing": [
+                            50,
+                            50
+                        ],
+                        "count": 16
+                    },
+                    {
+                        "type": "default",
+                        "method": "circle",
+                        "position": [
+                            700,
+                            210
+                        ],
+                        "rotation": 50,
+                        "radius": 150,
+                        "count": 10
+                    }
+                ]
             }
         ],
         "nodesKK": [
