@@ -144,7 +144,7 @@ public:
     void updateAllInstanceGlobalMats(const Base::ID::KeyUint64& etId);
     void setPrototypeEntitiesDirty(uint32_t etId, bool dirty, uint16_t reserveSize = 128);
     void foreachBoundsWithEntityId(uint32_t eId, EntityBoundsResponseCallType callback);
-
+    void propagateVisibility(uint32_t rootId);
 
 public:
     CompPool<Component::UnitEntity>        entitiesPool{};

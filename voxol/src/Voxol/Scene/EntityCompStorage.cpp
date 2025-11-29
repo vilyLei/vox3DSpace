@@ -315,6 +315,7 @@ void EntityCompStorage::updateHierarchyInfo()
     traverseSortIndex(0, index);
     //traverseSortIndexAndBuildGlobalMat(0, index, {});
     traverseBuildGlobalMat(0, {});
+    propagateVisibility(0);
 }
 
 void EntityCompStorage::traverseSortWithShadowEffect(const Base::ID::KeyUint64& srcKey, uint32_t protoId, uint32_t& index)
@@ -830,7 +831,7 @@ void EntityCompStorage::foreachBoundsWithEntityId(uint32_t eId, EntityBoundsResp
     if (Base::ID::isInvalidID(eId))
         return;
 
-    auto addShadowEffectBVHData = [&](const Base::ID::KeyUint64& key, const Math::Bounds& srcBounds) {
+    auto addShadowEffectBVHData = [&, this](const Base::ID::KeyUint64& key, const Math::Bounds& srcBounds) {
         auto protoId = key.protoId();
         if (entitiesPool.isInvalid(protoId)) { return; }
 
@@ -875,6 +876,30 @@ void EntityCompStorage::foreachBoundsWithEntityId(uint32_t eId, EntityBoundsResp
         srcBounds.mat33MapTo(wm, vb);
         callback(pid, vb);
     }
+}
+void EntityCompStorage::propagateVisibility(uint32_t rootId)
+{
+    std::function<void(uint32_t, bool)> dfs =
+        [&, this](uint32_t id, bool parentVisible) {
+            auto&& e         = entitiesPool[id];
+            e.globalVisible = e.visible && parentVisible;
+
+            uint32_t child = hierarchiesPool[id].firstChild;
+            while (Base::ID::isValidID(child))
+            {
+                dfs(child, e.globalVisible);
+                child = hierarchiesPool[child].next;
+            }
+        };
+    /*
+    for (auto child = hierarchiesPool[protoId].firstChild;
+         Base::ID::isValidID(child);
+         child = hierarchiesPool[child].next)
+    {
+        collectAllEntities(Base::ID::KeyUint64::make(child), ids);
+    }
+    */
+    dfs(rootId, true);
 }
 
 } // namespace Voxol::Scene
