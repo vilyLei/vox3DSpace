@@ -337,10 +337,81 @@ void FileParser::parseHeriNodes(const JsonType& jsonNode)
     rootNode.entity.shadingId = Base::ID::INVALID_ID;
     rootNode.print();
 }
+
+
+void FileParser::referenceLayoutSceneNodeWithGrid(SceneNode& parentNode, bool visible, uint32_t& id, const JsonType& jsonNode, const std::string& srcNodeName)
+{
+    using namespace Voxol::Scene::Layout;
+
+    auto       count   = 10;
+    auto       columns = 3;
+    Math::Vec2 beginPos{30, 30};
+    Math::Vec2 spacing{25, 25};
+    Data::JsonValue  positionV;
+    positionV.parseWithName(jsonNode, "position");
+    if (positionV.is<Math::Vec2>())
+    {
+        beginPos = positionV.get<Math::Vec2>();
+    }
+    Data::JsonValue columnsV;
+    columnsV.parseWithName(jsonNode, "columns");
+    if (positionV.is<int>())
+    {
+        columns = positionV.get<int>();
+    }
+    Data::JsonValue countV;
+    countV.parseWithName(jsonNode, "count");
+    if (countV.is<int>())
+    {
+        count = countV.get<int>();
+    }
+    Data::JsonValue spacingV;
+    spacingV.parseWithName(jsonNode, "spacing");
+    if (positionV.is<Math::Vec2>())
+    {
+        spacing = positionV.get<Math::Vec2>();
+    }
+
+    SceneNode tempNode;
+    parseSceneNodeWithNameFromRoot(tempNode, tempNode.id, srcNodeName);
+    auto&& positions = PositionDistribution::grid(count, beginPos, spacing, columns, tempNode.transform.scale());
+    for (auto& pv : positions)
+    {
+        SceneNode node;
+        node.id = id++;
+        parseSceneNodeWithNameFromRoot(node, id, srcNodeName);
+        node.transform.pos() = pv;
+        node.entity.visible  = visible;
+        node.print();
+        parentNode.children.emplace_back(std::move(node));
+    }
+
+ }
+void FileParser::referenceLayoutSceneNode(SceneNode& parentNode, bool visible, uint32_t& id, const JsonType& jsonNode, const std::string& srcNodeName)
+{
+
+    std::string refLayoutKey = "reference-layout";
+
+    if (!jsonNode.contains(refLayoutKey) || !jsonNode[refLayoutKey].is_object())
+        return;
+
+    std::string method        = "grid";
+    auto&& refLayoutNode = jsonNode[refLayoutKey];
+    if (refLayoutNode.contains("method") && refLayoutNode["method"].is_string())
+    {
+        method = refLayoutNode["method"];
+    }
+    if (method == "grid")
+    {
+        referenceLayoutSceneNodeWithGrid(parentNode, visible, id, refLayoutNode, srcNodeName);
+    }
+
+}
 void FileParser::parseSceneNode(SceneNode& parentNode, uint32_t& id, const JsonType& jsonNode, const std::string& nodesName)
 {
 
     parseNodeData(parentNode, jsonNode);
+
     std::string refKey = "reference";
     if (jsonNode.contains(refKey) && jsonNode[refKey].is_object())
     {
@@ -357,10 +428,13 @@ void FileParser::parseSceneNode(SceneNode& parentNode, uint32_t& id, const JsonT
         auto        preTrans    = parentNode.transform;
         auto        preName     = parentNode.name;
         auto        visible     = parentNode.entity.visible;
+
         if (srcNodeType == "container")
         {
-            using namespace Voxol::Scene::Layout;
+            referenceLayoutSceneNode(parentNode, visible, id, jsonNode, srcNodeName);
 
+            /*
+            using namespace Voxol::Scene::Layout;
             auto       total = 10;
             auto       columns = 3;
             Math::Vec2 beginPos{30, 30};
@@ -379,7 +453,7 @@ void FileParser::parseSceneNode(SceneNode& parentNode, uint32_t& id, const JsonT
                 node.print();
                 parentNode.children.emplace_back(std::move(node));
             }
-
+            //*/
             /*
             auto       total = 10;
             Math::Vec2 pos{300, 250};
@@ -617,6 +691,7 @@ void DescriptionParser::initialize()
 {
     std::string filePath = "scene/scdesc/scdesc01.json";
     filePath = "scene/scdesc/scdesc_word_snake.json";
+    filePath = "scene/scdesc/scdesc_pos_distribution.json";
     fileParser.initFromFile(filePath);
 
     Desc::HierarchyNode rootHierNode;

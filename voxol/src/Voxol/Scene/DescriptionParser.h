@@ -106,6 +106,9 @@ public:
     void parseHeriNodes(const JsonType& jsonNode);
     void parseSceneNode(SceneNode& parentNode, uint32_t& id, const JsonType& jsonNode, const std::string& nodesName);
 
+    void referenceLayoutSceneNodeWithGrid(SceneNode& parentNode, bool visible, uint32_t& id, const JsonType& jsonNode, const std::string& srcNodeName);
+    void referenceLayoutSceneNode(SceneNode& parentNode, bool visible, uint32_t& id, const JsonType& jsonNode, const std::string& srcNodeName);
+
     void parseNodeDisplayStyle(SceneNode& node, const JsonType& jsonNode);
     void parseNodeDisplayShape(SceneNode& node, const JsonType& jsonNode);
     void parseNodeTransData(SceneNode& node, const JsonType& jsonNode);
