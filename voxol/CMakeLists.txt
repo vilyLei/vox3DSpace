@@ -12,6 +12,7 @@ set(RENDER_DIR "${VOX_DIR}/Render")
 set(MATH_DIR "${VOX_DIR}/Math")
 set(BASE_DIR "${VOX_DIR}/Base")
 set(SCENE_DIR "${VOX_DIR}/Scene")
+set(SCENE_LAYOUT_DIR "${VOX_DIR}/Scene/Layout")
 set(SYSTEM_DIR "${VOX_DIR}/System")
 set(CORE_DIR "${VOX_DIR}/Core")
 set(COLOUR_DIR "${VOX_DIR}/Colour")
@@ -37,6 +38,7 @@ include_directories(
   ${MATH_DIR}
   ${BASE_DIR}
   ${SCENE_DIR}
+  ${SCENE_LAYOUT_DIR}
   ${SYSTEM_DIR}
   ${CORE_DIR}
   ${COLOUR_DIR}
@@ -60,6 +62,7 @@ file(GLOB RENDER_SRC "${RENDER_DIR}/*.cpp" "${RENDER_DIR}/*.h")
 file(GLOB MATH_SRC "${MATH_DIR}/*.cpp" "${MATH_DIR}/*.h")
 file(GLOB BASE_SRC "${BASE_DIR}/*.cpp" "${BASE_DIR}/*.h")
 file(GLOB SCENE_SRC "${SCENE_DIR}/*.cpp" "${SCENE_DIR}/*.h")
+file(GLOB SCENE_LAYOUT_SRC "${SCENE_LAYOUT_DIR}/*.cpp" "${SCENE_LAYOUT_DIR}/*.h")
 file(GLOB SYSTEM_SRC "${SYSTEM_DIR}/*.cpp" "${SYSTEM_DIR}/*.h")
 file(GLOB CORE_SRC "${CORE_DIR}/*.cpp" "${CORE_DIR}/*.h")
 file(GLOB COLOUR_SRC "${COLOUR_DIR}/*.cpp" "${COLOUR_DIR}/*.h")
@@ -78,6 +81,7 @@ set(ALL_SOURCES
   ${MATH_SRC}
   ${BASE_SRC}
   ${SCENE_SRC}
+  ${SCENE_LAYOUT_SRC}
   ${SYSTEM_SRC}
   ${CORE_SRC}
   ${COLOUR_SRC}
@@ -96,6 +100,7 @@ source_group("Render" FILES ${RENDER_SRC})
 source_group("Math" FILES ${MATH_SRC})
 source_group("Base" FILES ${BASE_SRC})
 source_group("Scene" FILES ${SCENE_SRC})
+source_group("Scene\\Layout" FILES ${SCENE_LAYOUT_SRC})
 source_group("System" FILES ${SYSTEM_SRC})
 source_group("Core" FILES ${CORE_SRC})
 source_group("Colour" FILES ${COLOUR_SRC})
