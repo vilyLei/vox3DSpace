@@ -95,7 +95,12 @@ public:
     std::unordered_map<uint32_t, Intent::Interaction::InteractionNodeName>    actionIDMap;
 
 public:
+
     void initFromFile(const std::string& fileName);
+
+    bool hasSceneNodeWithNameFromRoot(const std::string& nodeName);
+    bool hasSceneNodeWithNameRecursive(const std::string& nodeName, const JsonType& jsonNode, const std::string& nodesName);
+
     void parseSceneNodeWithNameFromRoot(SceneNode& currNode, uint32_t& id, const std::string& nodeName);
     void parseSceneNodeWithNameRecursive(SceneNode& currNode, uint32_t& id, const std::string& nodeName, const JsonType& jsonNode, const std::string& nodesName);
     void parseHeriNodes(const JsonType& jsonNode);

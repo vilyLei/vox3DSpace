@@ -38,6 +38,7 @@ private:
     void testFreeViewGrids();
     void updateDirtyGrid(const Render::Draw::DrawContext& ctx);
     void updateEmptyGrid(const Render::Draw::DrawContext& ctx);
+    void debugShowGrid(const Math::Mat33& vpM, const RC::Rect gr);
 
     //Render::Draw::OglFbo::SP mFbo{};
 

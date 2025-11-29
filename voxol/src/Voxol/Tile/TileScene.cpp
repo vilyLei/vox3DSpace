@@ -12,12 +12,6 @@ void TileScene::initalize()
     {
         return;
     }
-    //if (mFbo)
-    //{
-    //    return;
-    //}
-    //mFbo = Render::Draw::OglFbo::make();
-    //mFbo->init(GL_ZERO);
 
     outlineUnit.drawUnit.vertex.toLine();
     Render::Gpu::buildBaseDrawUnit(outlineUnit.drawUnit);
@@ -334,10 +328,15 @@ void TileScene::run(const Render::Draw::DrawContext& ctx)
     //{
     //    printf("TileScene::run(), tile grids total: %zu, lv:%d\n", viewUnitIndexMap.size(), lv);
     //}
+    // 
+    
     //return;
-    //*
-    //ctx.drawCall({}, vpM);
 
+    debugShowGrid(vpM, gr);
+}
+
+void TileScene::debugShowGrid(const Math::Mat33& vpM, const RC::Rect gr)
+{
 
     outlineUnit.drawUnit.vertex.lineWidth = 3.0f;
     outlineUnit.drawUnit.setColor(0xff005555);
@@ -367,6 +366,5 @@ void TileScene::run(const Render::Draw::DrawContext& ctx)
             outlineUnit.drawUnit.draw();
         }
     }
-    //*/
 }
 } // namespace Voxol::Tile

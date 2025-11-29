@@ -253,6 +253,39 @@ void FileParser::parseNodeInteractionData(SceneNode& currNode, const JsonType& j
     }
 }
 
+
+
+bool FileParser::hasSceneNodeWithNameFromRoot(const std::string& nodeName) {
+
+    auto&& sceneNode = jsonObj["scene"];
+    return hasSceneNodeWithNameRecursive(nodeName, sceneNode, "nodes");
+}
+
+bool FileParser::hasSceneNodeWithNameRecursive(const std::string& nodeName, const JsonType& jsonNode, const std::string& nodesName) {
+
+    if (!jsonNode.contains(nodesName) || !jsonNode[nodesName].is_array())
+        return false;
+
+    auto&& elements = jsonNode[nodesName];
+    if (elements.empty())
+        return false;
+
+    for (auto& item : elements)
+    {
+        std::string keyName = "name";
+        if (item.contains(keyName) && item[keyName].is_string())
+        {
+            std::string nameStr = item[keyName];
+            if (!nameStr.empty() && nameStr == nodeName)
+            {
+                return true;
+            }
+        }
+        return hasSceneNodeWithNameRecursive(nodeName, item, "children");
+    }
+    return false;
+}
+
 void FileParser::parseSceneNodeWithNameFromRoot(SceneNode& currNode, uint32_t& id, const std::string& nodeName)
 {
 
@@ -306,6 +339,13 @@ void FileParser::parseSceneNode(SceneNode& parentNode, uint32_t& id, const JsonT
     {
         auto&&      refNode     = jsonNode[refKey];
         std::string srcNodeName = refNode["src"];
+
+        if (srcNodeName.empty())
+            return;
+
+        if (!hasSceneNodeWithNameFromRoot(srcNodeName))
+            return;
+
         std::string srcNodeType = refNode["type"];
         auto        preTrans    = parentNode.transform;
         auto        preName     = parentNode.name;

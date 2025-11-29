@@ -190,23 +190,23 @@ int OglRenderer::initCtx()
 void OglRenderer::setMouseXY(float x, float y)
 {
     mousePos = {x, y};
-    if (!mousePos.isEqual(canvas.view.mousePos))
+    if (mousePos.isEqual(canvas.view.mousePos))
+        return;
+
+    canvas.view.mousePos = mousePos;
+    auto type            = System::Mouse::MouseEventType::MouseMove;
+    switch (mouseButton)
     {
-        canvas.view.mousePos = mousePos;
-        auto type            = System::Mouse::MouseEventType::MouseMove;
-        switch (mouseButton)
-        {
-            case 1:
-                type = System::Mouse::MouseEventType::MouseRightMove;
-                break;
-            case 2:
-                type = System::Mouse::MouseEventType::MouseMiddleMove;
-                break;
-            default:
-                break;
-        }
-        setMouseParams({mousePos.x, mousePos.y, type, 0});
+        case 1:
+            type = System::Mouse::MouseEventType::MouseRightMove;
+            break;
+        case 2:
+            type = System::Mouse::MouseEventType::MouseMiddleMove;
+            break;
+        default:
+            break;
     }
+    setMouseParams({mousePos.x, mousePos.y, type, 0});
 }
 
 void OglRenderer::setMouseParams(const System::Mouse::MouseInputParam& param)
