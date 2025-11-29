@@ -13,7 +13,7 @@ void DescriptionNodeLauout::referenceLayoutSceneNodeWithCircle(const JsonType& j
     auto       count = 10;
     Math::Vec2 center{300, 300};
     float      radius   = 100.0f;
-    float      rotation = 0;
+    float      startAngle = 0;
 
     Data::JsonValue positionV;
     positionV.parseWithName(jsonNode, "position");
@@ -32,16 +32,15 @@ void DescriptionNodeLauout::referenceLayoutSceneNodeWithCircle(const JsonType& j
         radius = radiusV.get<float>();
     }
 
-
-    Data::JsonValue rotationV;
-    rotationV.parseWithName(jsonNode, "rotation");
-    if (rotationV.is<int>())
+    Data::JsonValue startAngleV;
+    startAngleV.parseWithName(jsonNode, "start-angle");
+    if (startAngleV.is<int>())
     {
-        rotation = rotationV.get<int>();
+        startAngle = startAngleV.get<int>();
     }
-    else if (rotationV.is<float>())
+    else if (startAngleV.is<float>())
     {
-        rotation = rotationV.get<float>();
+        startAngle = startAngleV.get<float>();
     }
 
     Data::JsonValue countV;
@@ -50,7 +49,7 @@ void DescriptionNodeLauout::referenceLayoutSceneNodeWithCircle(const JsonType& j
     {
         count = countV.get<int>();
     }
-    auto   startRad  = Math::degrees_to_radians(rotation);
+    auto   startRad  = Math::degrees_to_radians(startAngle);
     auto&& positions = PositionDistribution::circle(count, center, radius, startRad);
     for (auto i = 0; i < positions.size(); i++)
     {
@@ -110,17 +109,23 @@ void DescriptionNodeLauout::referenceLayoutSceneNodeWithGrid(const JsonType& jso
 void DescriptionNodeLauout::referenceLayoutSceneNodeOnce(const JsonType& refLayoutNode, const Math::Vec2& nodeSize, const DescNodeLayoutCallbackType& callback)
 {
 
-    std::string method        = "grid";
+    //std::string method        = "grid";
+    //if (refLayoutNode.contains("method") && refLayoutNode["method"].is_string())
+    //{
+    //    method = refLayoutNode["method"];
+    //}
+    DescreferenceLayoutNode layoutNode;
+    layoutNode.parse(refLayoutNode);
 
-    if (refLayoutNode.contains("method") && refLayoutNode["method"].is_string())
-    {
-        method = refLayoutNode["method"];
-    }
-    if (method == "grid")
+    if (layoutNode.method == "grid")
     {
         referenceLayoutSceneNodeWithGrid(refLayoutNode, nodeSize, callback);
     }
-    else if (method == "circle")
+    else if (layoutNode.method == "circle")
+    {
+        referenceLayoutSceneNodeWithCircle(refLayoutNode, nodeSize, callback);
+    }
+    else if (layoutNode.method == "arc")
     {
         referenceLayoutSceneNodeWithCircle(refLayoutNode, nodeSize, callback);
     }
