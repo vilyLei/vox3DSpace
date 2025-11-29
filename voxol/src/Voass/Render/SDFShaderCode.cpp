@@ -184,7 +184,7 @@ void main()
 {
     vec2 center = vec2(0.5, 0.5);
     //float d = buildRoundRect(v_uv, center, vec2(0.5, 0.5), vec4(0.2, 0.1, 0.4, 0.1));
-    float d = sdfRoundRect(v_uv - center, vec2(0.5, 0.5), vec4(0.2, 0.1, 0.4, 0.1));
+    float d = sdfRoundRect(v_uv - center, vec2(0.5, 0.5), vec4(0.1, 0.1, 0.1, 0.1));
     fragColor = buildFragColor(u_color, d);
 }
 )";

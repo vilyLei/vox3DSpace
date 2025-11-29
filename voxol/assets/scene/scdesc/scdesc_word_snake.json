@@ -19,8 +19,11 @@
                 },
                 "display": {
                     "shape": {
-                        "type": "circle",
-                        "radius": 50
+                        "type": "round-rectangle",
+                        "size": [
+                            80,
+                            50
+                        ]
                     },
                     "style": {
                         "fillColor": "0xff772200"
