@@ -3,27 +3,98 @@
 
 namespace Voxol::Scene::Layout
 {
-
-std::vector<Math::Vec2> PositionDistribution::hexagonalGrid(int count, const Math::Vec2& start, float hexSize, int columns)
+namespace Honeycomb
 {
-    std::vector<Math::Vec2> positions;
-    positions.reserve(count);
+Math::Vec2 hexToWorld(Hex h, float hexRadius)
+{
+    float size = hexRadius; // distance center->vertex
+    float x    = size * std::sqrt(3.f) * (h.q + h.r * 0.5f);
+    float y    = size * 1.5f * h.r;
+    return {x, y};
+}
+Math::Vec2 hexToWorld2(int q, int r, float hexR)
+{
+    float x = hexR * std::sqrt(3.0f) * (q + r * 0.5f);
+    float y = hexR * 1.5f * r;
+    return {x, y};
+}
 
-    float hexWidth  = hexSize * 2.0f;
-    float hexHeight = hexSize * std::sqrt(3.0f);
+std::vector<Math::Vec2> generate(
+    Math::Vec2 center,
+    size_t     count,
+    float      hexRadius
+)
+{
+    std::vector<Math::Vec2> pts;
+    pts.reserve(count);
 
-    for (int i = 0; i < count; ++i)
+    if (count == 0) return pts;
+
+    // 1. Push center first
+    pts.push_back(center);
+    if (count == 1) return pts;
+
+    size_t total  = 1;
+    int    radius = 1;
+
+    // 2. Expand ring by ring until enough points
+    while (total < count)
     {
-        int col = i % columns;
-        int row = i / columns;
+        // starting hex: (q = 0, r = -radius)
+        Hex h = {0, -radius};
 
-        float xOffset = (row % 2 == 1) ? hexWidth * 0.5f : 0.0f;
-        //xOffset       = 0;
-        positions.emplace_back(
-            start.x + col * hexWidth * 0.75f + xOffset,
-            start.y + row * hexHeight * 0.5f);
+        // Move to first ring direction start
+        h.q += dq[4] * radius;
+        h.r += dr[4] * radius;
+
+        // 6 sides
+        for (int dir = 0; dir < 6; ++dir)
+        {
+            for (int step = 0; step < radius; ++step)
+            {
+                if (total >= count) break;
+
+                // world position
+                Math::Vec2 p = hexToWorld(h, hexRadius);
+                pts.push_back({center.x + p.x, center.y + p.y});
+                total++;
+
+                // move one step along direction
+                h.q += dq[dir];
+                h.r += dr[dir];
+            }
+            if (total >= count) break;
+        }
+
+        radius++;
     }
-    return positions;
+
+    return pts;
+}
+std::vector<Math::Vec2> generateHexGridT(const Math::Vec2& center, int rings, float hexR)
+{
+    std::vector<Math::Vec2> ls;
+    ls.reserve(1 + 3 * rings * (rings + 1));
+    for (int q = -rings; q <= rings; ++q)
+    {
+        for (int r = -rings; r <= rings; ++r)
+        {
+            int s = -q - r;
+            if (std::abs(q) + std::abs(r) + std::abs(s) <= rings * 2)
+            {
+                auto v = hexToWorld2(q, r, hexR);
+                ls.push_back(center + v);
+            }
+        }
+    }
+
+    return ls;
+}
+} // namespace Honeycomb
+
+std::vector<Math::Vec2> PositionDistribution::hexagonalGrid(int count, const Math::Vec2& center, int rings, float hexRadius)
+{
+    return Honeycomb::generateHexGridT(center, rings, hexRadius);
 }
 std::vector<Math::Vec2> PositionDistribution::circle(std::vector<float>& angles, int count, const Math::Vec2& center, float radius, float startRadian)
 {

@@ -21,7 +21,7 @@
                 "display": {
                     "shape": {
                         "type": "circle",
-                        "radius": 15
+                        "radius": 5
                     },
                     "shapeT": {
                         "type": "rectangle",
@@ -52,14 +52,14 @@
                     "type": "default",
                     "method": "hexagonal-grid",
                     "position": [
-                        300,
-                        210
+                        500,
+                        310
                     ],
-                    "hex-size": 70,
-                    "columns": 3,
-                    "count": 15
+                    "rings": 4,
+                    "hex-radius": 30,
+                    "count": 91
                 },
-                "reference-layoutT0": {
+                "reference-layoutTT": {
                     "type": "default",
                     "method": "arc",
                     "position": [

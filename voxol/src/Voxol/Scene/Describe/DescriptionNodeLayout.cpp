@@ -11,8 +11,8 @@ void DescriptionNodeLauout::referenceLayoutSceneNodeWithHexagonalGrid(const Json
 
     auto       count = 10;
     Math::Vec2 pos{300, 300};
-    int      columns  = 5;
-    float      hexSize = 180;
+    int        rings     = 5;
+    float      hexRadius = 180;
 
     Data::JsonValue positionV;
     positionV.parseWithName(jsonNode, "position");
@@ -20,22 +20,22 @@ void DescriptionNodeLauout::referenceLayoutSceneNodeWithHexagonalGrid(const Json
     {
         pos = positionV.get<Math::Vec2>();
     }
-    Data::JsonValue hexSizeV;
-    hexSizeV.parseWithName(jsonNode, "hex-size");
-    if (hexSizeV.is<int>())
+    Data::JsonValue hexRadiusV;
+    hexRadiusV.parseWithName(jsonNode, "hex-radius");
+    if (hexRadiusV.is<int>())
     {
-        hexSize = hexSizeV.get<int>();
+        hexRadius = hexRadiusV.get<int>();
     }
     else if (positionV.is<float>())
     {
-        hexSize = hexSizeV.get<float>();
+        hexRadius = hexRadiusV.get<float>();
     }
 
     Data::JsonValue columnsV;
-    columnsV.parseWithName(jsonNode, "columns");
+    columnsV.parseWithName(jsonNode, "rings");
     if (columnsV.is<int>())
     {
-        columns = columnsV.get<int>();
+        rings = columnsV.get<int>();
     }
 
     Data::JsonValue countV;
@@ -45,8 +45,10 @@ void DescriptionNodeLauout::referenceLayoutSceneNodeWithHexagonalGrid(const Json
         count = countV.get<int>();
     }
 
-    auto&& positions = PositionDistribution::hexagonalGrid(count, pos, hexSize, columns);
-    for (auto i = 0; i < positions.size(); i++)
+    auto&& positions = PositionDistribution::hexagonalGrid(count, pos, rings, hexRadius);
+    auto   tot       = static_cast<int>(positions.size());
+    tot              = tot < count ? tot : count;
+    for (auto i = 0; i < tot; i++)
     {
         callback(i, positions[i], {1, 1}, 0);
     }
