@@ -59,4 +59,12 @@ void DisplayShape::parse(const JsonType& jsonNode)
     }
 }
 
+
+
+void SceneActionTargetNode::reset()
+{
+    srcActType = "";
+    actions.clear();
+}
+
 } // namespace Voxol::Scene::Describe

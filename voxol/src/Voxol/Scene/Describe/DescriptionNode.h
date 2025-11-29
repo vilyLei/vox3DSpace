@@ -47,6 +47,14 @@ struct SceneActionDesc
     uint32_t    color = 0xff000000;
 };
 
+struct SceneActionTargetNode
+{
+    std::string                  srcActType;
+    std::vector<SceneActionDesc> actions;
+    void                         reset();
+    void                         parse(const JsonType& jsonNode, const std::string& srcActType_);
+};
+
 
 } // namespace Voxol::Scene::Layout
 #endif

@@ -16,45 +16,6 @@ namespace Describe
 {
 using JsonType = nlohmann::json;
 
-
-//struct HierarchyNode
-//{
-//    uint32_t                 id = Base::ID::INVALID_ID;
-//    std::string              name;
-//    Component::UnitHierarchy hieraychy;
-//    void                     print()
-//    {
-//        std::string info = ", parent=" + std::to_string(hieraychy.parent);
-//        info += ", firstChild=" + std::to_string(hieraychy.firstChild);
-//        info += ", next=" + std::to_string(hieraychy.next);
-//        info += ", id=" + std::to_string(id);
-//        info = "HierarchyNode(name=" + name + info + ")";
-//        printf("%s\n", info.c_str());
-//    }
-//};
-//struct DisplayShape
-//{
-//    std::string     type;
-//    Math::Vec2      size;
-//    Data::JsonValue jsonValue;
-//    void            parse(const JsonType& jsonNode);
-//};
-//struct SceneActionDesc
-//{
-//    std::string target;
-//    std::string type;
-//    std::string cmd;
-//    uint32_t    color = 0xff000000;
-//};
-
-struct SceneActionTargetNode
-{
-    std::string                  srcActType;
-    std::vector<SceneActionDesc> actions;
-    void                         reset();
-    void                         parse(const JsonType& jsonNode, const std::string& srcActType_);
-};
-
 struct SceneNode
 {
     std::string            type;
