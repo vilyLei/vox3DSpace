@@ -1,0 +1,117 @@
+{
+    "version": {
+        "runtime-mode": "edit",
+        "major": 0,
+        "minor": 1,
+        "dimension": 2,
+        "unit": "pixel"
+    },
+    "scene": {
+        "nodes": [
+            {
+                "type": "label",
+                "name": "dark-red-label",
+                "transform": {
+                    "position": [
+                        100,
+                        100
+                    ]
+                },
+                "visible": true,
+                "display": {
+                    "shape": {
+                        "type": "rectangle",
+                        "size": [
+                            70,
+                            50
+                        ]
+                    },
+                    "style": {
+                        "fillColor": "0xff772200"
+                    }
+                },
+                "actions": {
+                    "rotate": {
+                        "active": true,
+                        "speed": 0.1,
+                        "center": "left-top",
+                        "frequency": 1,
+                        "duration": 0
+                    }
+                },
+                "children": [
+                    {
+                        "type": "label",
+                        "name": "gfeen-small-label-0",
+                        "transform": {
+                            "position": [
+                                10,
+                                10
+                            ]
+                        },
+                        "display": {
+                            "shape": {
+                                "type": "rectangle",
+                                "size": [
+                                    35,
+                                    20
+                                ]
+                            },
+                            "style": {
+                                "fillColor": "0xff228822"
+                            }
+                        }
+                    },
+                    {
+                        "type": "text",
+                        "name": "V",
+                        "transform": {
+                            "position": [
+                                20,
+                                10
+                            ]
+                        },
+                        "display": {
+                            "shape": {
+                                "type": "text",
+                                "content": "Vily",
+                                "fontSize": 24
+                            },
+                            "style": {
+                                "fillColor": "0xff00aaaa"
+                            }
+                        }
+                    }
+                ]
+            },
+            {
+                "reference": {
+                    "src": "dark-red-label",
+                    "type": "container"
+                },
+                "visible": true,
+                "name": "dark-red-label-group",
+                "transform": {
+                    "position": [
+                        180,
+                        100
+                    ]
+                },
+                "reference-layout": {
+                    "type": "default",
+                    "method": "grid",
+                    "position": [
+                        20,
+                        20
+                    ],
+                    "columns": 3,
+                    "spacing": [
+                        30,
+                        30
+                    ],
+                    "count": 10
+                }
+            }
+        ]
+    }
+}
