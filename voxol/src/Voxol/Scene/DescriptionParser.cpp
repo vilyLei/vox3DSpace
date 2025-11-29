@@ -436,7 +436,6 @@ void FileParser::parseNodeTransData(SceneNode& node, const JsonType& jsonNode)
         auto&& displayNode               = jsonNode["display"];
         node.shadingEntity.id            = id;
         node.shadingEntity.shadingDescId = id;
-
         node.unitModel.id = id;
 
         parseNodeDisplayShape(node, displayNode);
