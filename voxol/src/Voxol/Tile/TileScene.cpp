@@ -337,6 +337,7 @@ void TileScene::run(const Render::Draw::DrawContext& ctx)
 
 void TileScene::debugShowGrid(const Math::Mat33& vpM, const RC::Rect gr)
 {
+    return;
 
     outlineUnit.drawUnit.vertex.lineWidth = 3.0f;
     outlineUnit.drawUnit.setColor(0xff005555);

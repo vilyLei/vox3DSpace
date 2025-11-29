@@ -10,90 +10,37 @@
         "nodes": [
             {
                 "type": "label",
-                "name": "dark-red-label",
+                "name": "rect-01-label",
                 "transform": {
                     "position": [
-                        100,
-                        100
+                        50,
+                        50
                     ]
                 },
-                "visible": true,
+                "visible": false,
                 "display": {
                     "shape": {
                         "type": "rectangle",
                         "size": [
-                            70,
+                            50,
                             50
                         ]
                     },
                     "style": {
-                        "fillColor": "0xff772200"
+                        "fillColor": "0xffff7f50"
                     }
-                },
-                "actions": {
-                    "rotate": {
-                        "active": true,
-                        "speed": 0.1,
-                        "center": "left-top",
-                        "frequency": 1,
-                        "duration": 0
-                    }
-                },
-                "children": [
-                    {
-                        "type": "label",
-                        "name": "gfeen-small-label-0",
-                        "transform": {
-                            "position": [
-                                10,
-                                10
-                            ]
-                        },
-                        "display": {
-                            "shape": {
-                                "type": "rectangle",
-                                "size": [
-                                    35,
-                                    20
-                                ]
-                            },
-                            "style": {
-                                "fillColor": "0xff228822"
-                            }
-                        }
-                    },
-                    {
-                        "type": "text",
-                        "name": "V",
-                        "transform": {
-                            "position": [
-                                20,
-                                10
-                            ]
-                        },
-                        "display": {
-                            "shape": {
-                                "type": "text",
-                                "content": "Vily",
-                                "fontSize": 24
-                            },
-                            "style": {
-                                "fillColor": "0xff00aaaa"
-                            }
-                        }
-                    }
-                ]
+                }
             },
             {
                 "reference": {
-                    "src": "dark-red-label",
+                    "src": "rect-01-label",
                     "type": "container"
                 },
                 "visible": true,
-                "name": "dark-red-label-group",
+                "name": "rect-01-label-group",
                 "transform": {
                     "position": [
-                        180,
+                        100,
                         100
                     ]
                 },
@@ -104,12 +51,12 @@
                         20,
                         20
                     ],
-                    "columns": 5,
+                    "columns": 8,
                     "spacing": [
                         30,
                         30
                     ],
-                    "count": 26
+                    "count": 32
                 },
                 "reference-layout_circle": {
                     "type": "default",
