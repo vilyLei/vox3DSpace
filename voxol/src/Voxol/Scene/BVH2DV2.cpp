@@ -325,7 +325,7 @@ void BVH2D_LazyGC::updateDirty()
         return;
     }
 
-    // else handle partial rebuilds
+    // handle partial rebuilds
     std::vector<int> dirtyList;
     dirtyList.reserve(m_dirtyLeaves.size());
     for (int li : m_dirtyLeaves) dirtyList.push_back(li);
