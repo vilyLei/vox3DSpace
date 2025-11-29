@@ -105,6 +105,7 @@
                         100
                     ]
                 },
+                "visible": true,
                 "display": {
                     "shape": {
                         "type": "rectangle",

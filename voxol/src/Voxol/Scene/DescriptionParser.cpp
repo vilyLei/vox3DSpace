@@ -356,7 +356,7 @@ void FileParser::parseSceneNode(SceneNode& parentNode, uint32_t& id, const JsonT
         std::string srcNodeType = refNode["type"];
         auto        preTrans    = parentNode.transform;
         auto        preName     = parentNode.name;
-
+        auto        visible     = parentNode.entity.visible;
         if (srcNodeType == "container")
         {
             using namespace Voxol::Scene::Layout;
@@ -375,30 +375,11 @@ void FileParser::parseSceneNode(SceneNode& parentNode, uint32_t& id, const JsonT
                 node.id = id++;
                 parseSceneNodeWithNameFromRoot(node, id, srcNodeName);
                 node.transform.pos() = pv;
+                node.entity.visible  = visible;
                 node.print();
                 parentNode.children.emplace_back(std::move(node));
             }
-            /*
-            auto       total = 10;
-            auto       cn    = 3;
-            Math::Vec2 beginPos{30, 30};
-            Math::Vec2 offsetPos{25, 25};
 
-            for (auto i = 0; i < total; i++)
-            {
-                auto       c = i % cn;
-                auto       r = i / cn;
-                Math::Vec2 multV{float(c), float(r)};
-                SceneNode  node;
-                node.id = id++;
-                parseSceneNodeWithNameFromRoot(node, id, srcNodeName);
-                Math::Vec2 disV      = node.transform.scale() + offsetPos;
-                auto       pv        = disV * multV + beginPos;
-                node.transform.pos() = pv;
-                node.print();
-                parentNode.children.emplace_back(std::move(node));
-            }
-            //*/
             /*
             auto       total = 10;
             Math::Vec2 pos{300, 250};
@@ -426,7 +407,6 @@ void FileParser::parseSceneNode(SceneNode& parentNode, uint32_t& id, const JsonT
             float      startRadius = 20.0f;
             float      radiusStep  = 50.0f;
             float      angleStep  = 0;
-
             for (auto i = 0; i < total; i++)
             {
                 auto  fk            = float(i);
@@ -455,6 +435,7 @@ void FileParser::parseSceneNode(SceneNode& parentNode, uint32_t& id, const JsonT
             parseSceneNodeWithNameFromRoot(parentNode, id, srcNodeName);
             parentNode.transform.pos() = preTrans.pos();
             parentNode.name            = preName;
+            parentNode.entity.visible  = visible;
         }
     }
 
@@ -573,6 +554,10 @@ void FileParser::parseNodeData(SceneNode& node, const JsonType& jsonNode)
     entity.transformId = id;
     entity.hierarchyId = id;
     entity.modelId     = id;
+    if (jsonNode.contains("visible") && jsonNode["visible"].is_boolean())
+    {
+        entity.visible = jsonNode["visible"];
+    }
 
     std::string childrenName = "children";
     if (jsonNode.contains(childrenName) && jsonNode[childrenName].is_array())
