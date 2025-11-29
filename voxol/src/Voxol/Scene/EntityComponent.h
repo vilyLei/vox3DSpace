@@ -125,7 +125,8 @@ struct UnitEntity
     uint32_t hierarchyId = Base::ID::INVALID_ID;
     uint32_t prototypeId = Base::ID::INVALID_ID;
 
-    bool visible = true;
+    bool visible       = true;
+    bool globalVisible = true; // derived visibility
     bool dirty   = true;
 };
 
