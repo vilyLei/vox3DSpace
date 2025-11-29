@@ -106,7 +106,7 @@ source_group("Test" FILES ${TEST_SRC})
 source_group("Task" FILES ${TASK_SRC})
 source_group("Tile" FILES ${TILE_SRC})
 source_group("Intent" FILES ${INTENT_SRC})
-source_group("VoassRender" FILES ${VOASS_RENDER_SRC})
+source_group("Voass\\Render" FILES ${VOASS_RENDER_SRC})
 
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Emscripten")

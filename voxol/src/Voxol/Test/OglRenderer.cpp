@@ -62,31 +62,31 @@ void OglRenderer::mouseButton_callback(GLFWwindow* window, int sign, int flag, i
 {
     std::cout << "mouse button( sign=" << sign << ", flag=" << flag << ",type=" << type << ")" << std::endl;
     auto renderer = static_cast<OglRenderer*>(glfwGetWindowUserPointer(window));
-    if (renderer)
+    if (!renderer)
+        return;
+
+    using namespace System::Mouse;
+
+    renderer->mouseButton = flag > 0 ? sign : 0;
+    auto mouseActType = flag > 0 ? MouseEventType::MouseDown : MouseEventType::MouseUp;
+    switch (sign)
     {
-        renderer->mouseButton = sign;
-        //auto  btn          = sign + 1;
-        //auto  mouseActType = flag > 0 ? btn * 10 + 1 : btn * 10 + 2;
-        auto mouseActType = flag > 0 ? System::Mouse::MouseEventType::MouseDown : System::Mouse::MouseEventType::MouseUp;
-        switch (sign)
+        case 1:
         {
-            case 1:
-            {
-                mouseActType = flag > 0 ? System::Mouse::MouseEventType::MouseRightDown : System::Mouse::MouseEventType::MouseRightUp;
-            }
-            break;
-            case 2:
-            {
-                mouseActType = flag > 0 ? System::Mouse::MouseEventType::MouseMiddleDown : System::Mouse::MouseEventType::MouseMiddleUp;
-            }
-            break;
-            default:
-                break;
+            mouseActType = flag > 0 ? MouseEventType::MouseRightDown : MouseEventType::MouseRightUp;
         }
-        auto& mousePos = renderer->mousePos;
-        System::Mouse::MouseInputParam param{mousePos.x, mousePos.y, mouseActType, 0};
-        renderer->setMouseParams(param);
+        break;
+        case 2:
+        {
+            mouseActType = flag > 0 ? MouseEventType::MouseMiddleDown : MouseEventType::MouseMiddleUp;
+        }
+        break;
+        default:
+            break;
     }
+    auto& mousePos = renderer->mousePos;
+    MouseInputParam param{mousePos.x, mousePos.y, mouseActType, 0};
+    renderer->setMouseParams(param);
 }
 int OglRenderer::initCtx()
 {

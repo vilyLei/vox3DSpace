@@ -428,7 +428,6 @@ void FileParser::parseNodeTransData(SceneNode& node, const JsonType& jsonNode)
         jTrans.parse(jsonNode["transform"]);
         node.transform.pos() = jTrans.position;
         node.transform.rotation = jTrans.rotation;
-
     }
     if (jsonNode.contains("display"))
     {
@@ -436,7 +435,6 @@ void FileParser::parseNodeTransData(SceneNode& node, const JsonType& jsonNode)
         node.shadingEntity.id            = id;
         node.shadingEntity.shadingDescId = id;
         node.unitModel.id = id;
-
         parseNodeDisplayShape(node, displayNode);
         parseNodeDisplayStyle(node, displayNode);
     }
@@ -448,12 +446,12 @@ void FileParser::parseNodeTransData(SceneNode& node, const JsonType& jsonNode)
 void FileParser::parseNodeData(SceneNode& node, const JsonType& jsonNode)
 {
 
-    if (jsonNode.contains("type"))
+    if (jsonNode.contains("type") && jsonNode["type"].is_string())
     {
         node.type = jsonNode["type"];
     }
 
-    if (jsonNode.contains("name"))
+    if (jsonNode.contains("name") && jsonNode["name"].is_string())
     {
         node.name = jsonNode["name"];
     }
@@ -469,9 +467,10 @@ void FileParser::parseNodeData(SceneNode& node, const JsonType& jsonNode)
     entity.hierarchyId = id;
     entity.modelId     = id;
 
-    if (jsonNode.contains("children") && jsonNode["children"].is_array())
+    std::string childrenName = "children";
+    if (jsonNode.contains(childrenName) && jsonNode[childrenName].is_array())
     {
-        auto&& elements = jsonNode["children"];
+        auto&& elements = jsonNode[childrenName];
         node.hasChild   = !elements.empty();
     }
 }
