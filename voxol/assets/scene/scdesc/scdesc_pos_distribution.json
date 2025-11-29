@@ -97,28 +97,28 @@
                         100
                     ]
                 },
-                "reference-layout_grid": {
+                "reference-layout": {
                     "type": "default",
                     "method": "grid",
                     "position": [
                         20,
                         20
                     ],
-                    "columns": 3,
+                    "columns": 5,
                     "spacing": [
                         30,
                         30
                     ],
-                    "count": 10
+                    "count": 26
                 },
-                "reference-layout": {
+                "reference-layout_circle": {
                     "type": "default",
                     "method": "circle",
                     "position": [
                         300,
                         260
                     ],
-                    "rotation": 30,
+                    "rotation": 50,
                     "radius": 150,
                     "count": 10
                 }

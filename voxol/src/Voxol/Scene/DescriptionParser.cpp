@@ -320,6 +320,7 @@ void FileParser::parseSceneNode(SceneNode& parentNode, uint32_t& id, const JsonT
                     node.id = id++;
                     parseSceneNodeWithNameFromRoot(node, id, srcNodeName);
                     node.transform.pos() = pos;
+                    node.transform.rotation = rotation;
                     parentNode.children.emplace_back(std::move(node));
             });
 
