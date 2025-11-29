@@ -309,14 +309,18 @@ void FileParser::parseSceneNode(SceneNode& parentNode, uint32_t& id, const JsonT
         if (srcNodeType == "container")
         {
             //referenceLayoutSceneNode(parentNode, visible, id, jsonNode, srcNodeName);
+
             SceneNode tempNode;
             parseSceneNodeWithNameFromRoot(tempNode, tempNode.id, srcNodeName);
-            Describe::DescriptionNodeLauout::referenceLayoutSceneNode(jsonNode, tempNode.transform.scale(), [&, this](int index, const Math::Vec2& pos) {
-                SceneNode node;
-                node.id = id++;
-                parseSceneNodeWithNameFromRoot(node, id, srcNodeName);
-                node.transform.pos() = pos;
-                parentNode.children.emplace_back(std::move(node));
+            Describe::DescriptionNodeLauout::referenceLayoutSceneNode(
+                jsonNode,
+                tempNode.transform.scale(),
+                [&, this](int index, const Math::Vec2& pos, const Math::Vec2& scale, float rotation) {
+                    SceneNode node;
+                    node.id = id++;
+                    parseSceneNodeWithNameFromRoot(node, id, srcNodeName);
+                    node.transform.pos() = pos;
+                    parentNode.children.emplace_back(std::move(node));
             });
 
             /*

@@ -97,7 +97,7 @@
                         100
                     ]
                 },
-                "reference-layout": {
+                "reference-layout_grid": {
                     "type": "default",
                     "method": "grid",
                     "position": [
@@ -109,6 +109,17 @@
                         30,
                         30
                     ],
+                    "count": 10
+                },
+                "reference-layout": {
+                    "type": "default",
+                    "method": "circle",
+                    "position": [
+                        300,
+                        260
+                    ],
+                    "rotation": 30,
+                    "radius": 150,
                     "count": 10
                 }
             }
