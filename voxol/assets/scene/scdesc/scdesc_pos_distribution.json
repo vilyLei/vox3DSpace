@@ -51,12 +51,12 @@
                         20,
                         20
                     ],
-                    "columns": 8,
+                    "columns": 4,
                     "spacing": [
                         30,
                         30
                     ],
-                    "count": 32
+                    "count": 8
                 },
                 "reference-layout_circle": {
                     "type": "default",
@@ -68,6 +68,57 @@
                     "rotation": 50,
                     "radius": 150,
                     "count": 10
+                }
+            },
+            {
+                "type": "label",
+                "name": "rect-02-label",
+                "transform": {
+                    "position": [
+                        50,
+                        50
+                    ]
+                },
+                "visible": false,
+                "display": {
+                    "shape": {
+                        "type": "rectangle",
+                        "size": [
+                            50,
+                            50
+                        ]
+                    },
+                    "style": {
+                        "fillColor": "0xff008b8b"
+                    }
+                }
+            },
+            {
+                "reference": {
+                    "src": "rect-02-label",
+                    "type": "container"
+                },
+                "visible": true,
+                "name": "rect-02-label-group",
+                "transform": {
+                    "position": [
+                        150,
+                        150
+                    ]
+                },
+                "reference-layout": {
+                    "type": "default",
+                    "method": "grid",
+                    "position": [
+                        20,
+                        20
+                    ],
+                    "columns": 4,
+                    "spacing": [
+                        30,
+                        30
+                    ],
+                    "count": 8
                 }
             }
         ]
