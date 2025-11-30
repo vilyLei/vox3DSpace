@@ -6,6 +6,7 @@
 #include "../../Intent/IntentComponent.h"
 #include "../JsonValue.h"
 #include "../../Math/Vec2.h"
+#include "../../Math/MathDef.h"
 #include <nlohmann/json.hpp>
 #include <string>
 #include <functional>
@@ -13,6 +14,107 @@
 namespace Voxol::Scene::Describe
 {
 using JsonType = nlohmann::json;
+
+enum class RefLayoutSrcWrapping : uint8_t
+{
+    Repeat,
+    Clamp
+};
+
+struct RefLayoutValue
+{
+
+    Scene::Data::JsonValue jsonV;
+
+    Math::Vec2 position(const JsonType& jsonNode)
+    {
+
+        return jsonV.parseVec2WithName(jsonNode, "position");
+    }
+    Math::Vec2 spacing(const JsonType& jsonNode)
+    {
+        return jsonV.parseVec2WithName(jsonNode, "spacing");
+    }
+    Math::Vec2 staggered(const JsonType& jsonNode)
+    {
+        return jsonV.parseVec2WithName(jsonNode, "staggered");
+    }
+
+    int count(const JsonType& jsonNode)
+    {
+        return jsonV.parseIntWithName(jsonNode, "count");
+    }
+    int rings(const JsonType& jsonNode)
+    {
+        return jsonV.parseIntWithName(jsonNode, "rings");
+    }
+    int columns(const JsonType& jsonNode)
+    {
+        return jsonV.parseIntWithName(jsonNode, "columns");
+    }
+    float hexRadius(const JsonType& jsonNode)
+    {
+        return jsonV.parseIntWithName(jsonNode, "hex-radius");
+    }
+    float startRadius(const JsonType& jsonNode)
+    {
+        return jsonV.parseIntWithName(jsonNode, "start-radius");
+    }
+    float stepRadius(const JsonType& jsonNode)
+    {
+        return jsonV.parseFloatWithName(jsonNode, "step-radius");
+    }
+
+    float radius(const JsonType& jsonNode)
+    {
+        return jsonV.parseFloatWithName(jsonNode, "radius");
+    }
+    float startAngle(const JsonType& jsonNode, bool toRadian = true)
+    {
+        auto v = jsonV.parseFloatWithName(jsonNode, "start-angle");
+        if (toRadian)
+        {
+            v = Math::degrees_to_radians(v);
+        }
+        return v;
+    }
+    float stepAngle(const JsonType& jsonNode, bool toRadian = true)
+    {
+        auto v = jsonV.parseFloatWithName(jsonNode, "step-angle");
+        if (toRadian)
+        {
+            v = Math::degrees_to_radians(v);
+        }
+        return v;
+    }
+    float angle(const JsonType& jsonNode, bool toRadian = true)
+    {
+        auto v = jsonV.parseFloatWithName(jsonNode, "angle");
+        if (toRadian)
+        {
+            v = Math::degrees_to_radians(v);
+        }
+        return v;
+    }
+    float rotation(const JsonType& jsonNode, bool toRadian = true)
+    {
+        auto v = jsonV.parseFloatWithName(jsonNode, "rotation");
+        if (toRadian)
+        {
+            v = Math::degrees_to_radians(v);
+        }
+        return v;
+    }
+    float arcAngle(const JsonType& jsonNode, bool toRadian = true)
+    {
+        auto v = jsonV.parseFloatWithName(jsonNode, "arc-angle");
+        if (toRadian)
+        {
+            v = Math::degrees_to_radians(v);
+        }
+        return v;
+    }
+};
 
 struct HierarchyNode
 {

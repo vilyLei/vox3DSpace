@@ -267,10 +267,11 @@ void FileParser::parseSceneNode(SceneNode& parentNode, uint32_t& id, const JsonT
             std::string srcWrappingKey = "src-wrapping";
             std::string srcWrappingStr = (refNode.contains(srcWrappingKey) && refNode[srcWrappingKey].is_string()) ? refNode[srcWrappingKey] : "";
 
-            auto srcWrapping = 1;
-            if (srcWrappingStr == "repeat")
+            Describe::RefLayoutSrcWrapping srcWrapping = RefLayoutSrcWrapping::Repeat;
+            // repeat | clamp
+            if (srcWrappingStr == "clamp")
             {
-                srcWrapping = 1;
+                srcWrapping = RefLayoutSrcWrapping::Clamp;
             }
 
             auto srcCount = static_cast<int>(srcList.size());
@@ -283,7 +284,18 @@ void FileParser::parseSceneNode(SceneNode& parentNode, uint32_t& id, const JsonT
                 [&, this](int index, const Math::Vec2& pos, const Math::Vec2& scale, float rotation) {
                     SceneNode node;
                     node.id        = id++;
-                    const auto& ns = srcList[index % srcCount];
+                    auto        k  = index % srcCount;
+                    switch (srcWrapping)
+                    {
+                        case Voxol::Scene::Describe::RefLayoutSrcWrapping::Clamp:
+                            k = index > (srcCount - 1) ? (srcCount - 1) : index;
+                            break;
+                        default:
+                            k = index % srcCount;
+                            break;
+                    }
+
+                    const auto& ns = srcList[k];
                     parseSceneNodeWithNameFromRoot(node, id, ns);
                     node.transform.pos()    = pos;
                     node.transform.rotation = rotation;

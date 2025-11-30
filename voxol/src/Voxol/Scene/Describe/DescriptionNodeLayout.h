@@ -5,7 +5,8 @@
 
 namespace Voxol::Scene::Describe
 {
-    
+
+
 using DescNodeLayoutCallbackType = std::function<void(int index, const Math::Vec2& pos, const Math::Vec2& scale, float rotation)>;
 class DescriptionNodeLauout
 {

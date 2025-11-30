@@ -5,92 +5,6 @@
 namespace Voxol::Scene::Describe
 {
 
-
-struct RefLayoutValue
-{
-
-    Scene::Data::JsonValue jsonV;
-
-    Math::Vec2 position(const JsonType& jsonNode) {
-
-        return jsonV.parseVec2WithName(jsonNode, "position");
-    }
-    int count(const JsonType& jsonNode)
-    {
-        return jsonV.parseIntWithName(jsonNode, "count");
-    }
-    int rings(const JsonType& jsonNode)
-    {
-        return jsonV.parseIntWithName(jsonNode, "rings");
-    }
-    int columns(const JsonType& jsonNode)
-    {
-        return jsonV.parseIntWithName(jsonNode, "columns");
-    }
-    float hexRadius(const JsonType& jsonNode)
-    {
-        return jsonV.parseIntWithName(jsonNode, "hex-radius");
-    }
-    float startRadius(const JsonType& jsonNode)
-    {
-        return jsonV.parseIntWithName(jsonNode, "start-radius");
-    }
-    float stepRadius(const JsonType& jsonNode)
-    {
-        return jsonV.parseFloatWithName(jsonNode, "step-radius");
-    }
-
-    float radius(const JsonType& jsonNode)
-    {
-        return jsonV.parseFloatWithName(jsonNode, "radius");
-    }
-    float startAngle(const JsonType& jsonNode, bool toRadian = true)
-    {
-        auto v = jsonV.parseFloatWithName(jsonNode, "start-angle");
-        if (toRadian)
-        {
-            v = Math::degrees_to_radians(v);
-        }
-        return v;
-    }
-    float stepAngle(const JsonType& jsonNode, bool toRadian = true)
-    {
-        auto v = jsonV.parseFloatWithName(jsonNode, "step-angle");
-        if (toRadian)
-        {
-            v = Math::degrees_to_radians(v);
-        }
-        return v;
-    }
-    float angle(const JsonType& jsonNode, bool toRadian = true)
-    {
-        auto v = jsonV.parseFloatWithName(jsonNode, "angle");
-        if (toRadian)
-        {
-            v = Math::degrees_to_radians(v);
-        }
-        return v;
-    }
-    float rotation(const JsonType& jsonNode, bool toRadian = true)
-    {
-        auto v = jsonV.parseFloatWithName(jsonNode, "rotation");
-        if (toRadian)
-        {
-            v = Math::degrees_to_radians(v);
-        }
-        return v;
-    }
-    float arcAngle(const JsonType& jsonNode, bool toRadian = true)
-    {
-        auto v = jsonV.parseFloatWithName(jsonNode, "arc-angle");
-        if (toRadian)
-        {
-            v = Math::degrees_to_radians(v);
-        }
-        return v;
-    }
-};
-
 void DescriptionNodeLauout::referenceLayoutSceneNodeWithHexagonalGrid(const JsonType& jsonNode, const Math::Vec2& nodeSize, const DescNodeLayoutCallbackType& callback)
 {
     using namespace Voxol::Scene::Layout;
@@ -215,8 +129,6 @@ void DescriptionNodeLauout::referenceLayoutSceneNodeWithCircle(const JsonType& j
     //{
     //    center = positionV.get<Math::Vec2>();
     //}
-    
-
     //Data::JsonValue radiusV;
     //radiusV.parseWithName(jsonNode, "radius");
     //if (radiusV.is<int>())
@@ -238,7 +150,6 @@ void DescriptionNodeLauout::referenceLayoutSceneNodeWithCircle(const JsonType& j
     //{
     //    startAngle = startAngleV.get<float>();
     //}
-
     //Data::JsonValue countV;
     //countV.parseWithName(jsonNode, "count");
     //if (countV.is<int>())
@@ -260,43 +171,49 @@ void DescriptionNodeLauout::referenceLayoutSceneNodeWithGrid(const JsonType& jso
 
     int        count   = 10;
     int        columns = 3;
-    Math::Vec2 beginPos{30, 30};
+    Math::Vec2 pos{30, 30};
     Math::Vec2 spacing{25, 25};
     Math::Vec2 staggered;
 
-    Data::JsonValue positionV;
-    positionV.parseWithName(jsonNode, "position");
-    if (positionV.is<Math::Vec2>())
-    {
-        beginPos = positionV.get<Math::Vec2>();
-    }
-    Data::JsonValue columnsV;
-    columnsV.parseWithName(jsonNode, "columns");
-    if (columnsV.is<int>())
-    {
-        columns = columnsV.get<int>();
-    }
-    Data::JsonValue countV;
-    countV.parseWithName(jsonNode, "count");
-    if (countV.is<int>())
-    {
-        count = countV.get<int>();
-    }
-    Data::JsonValue spacingV;
-    spacingV.parseWithName(jsonNode, "spacing");
-    if (spacingV.is<Math::Vec2>())
-    {
-        spacing = spacingV.get<Math::Vec2>();
-    }
+    RefLayoutValue  jsonV;
+    pos = jsonV.position(jsonNode);
+    columns = jsonV.columns(jsonNode);
+    count     = jsonV.count(jsonNode);
+    spacing = jsonV.spacing(jsonNode);
+    staggered = jsonV.staggered(jsonNode);
 
-    Data::JsonValue staggeredV;
-    staggeredV.parseWithName(jsonNode, "staggered");
-    if (staggeredV.is<Math::Vec2>())
-    {
-        staggered = staggeredV.get<Math::Vec2>();
-    }
+    //Data::JsonValue positionV;
+    //positionV.parseWithName(jsonNode, "position");
+    //if (positionV.is<Math::Vec2>())
+    //{
+    //    beginPos = positionV.get<Math::Vec2>();
+    //}
+    //Data::JsonValue columnsV;
+    //columnsV.parseWithName(jsonNode, "columns");
+    //if (columnsV.is<int>())
+    //{
+    //    columns = columnsV.get<int>();
+    //}
+    //Data::JsonValue countV;
+    //countV.parseWithName(jsonNode, "count");
+    //if (countV.is<int>())
+    //{
+    //    count = countV.get<int>();
+    //}
+    //Data::JsonValue spacingV;
+    //spacingV.parseWithName(jsonNode, "spacing");
+    //if (spacingV.is<Math::Vec2>())
+    //{
+    //    spacing = spacingV.get<Math::Vec2>();
+    //}
+    //Data::JsonValue staggeredV;
+    //staggeredV.parseWithName(jsonNode, "staggered");
+    //if (staggeredV.is<Math::Vec2>())
+    //{
+    //    staggered = staggeredV.get<Math::Vec2>();
+    //}
 
-    auto&& positions = PositionDistribution::grid(count, beginPos, spacing, columns, nodeSize, staggered);
+    auto&& positions = PositionDistribution::grid(count, pos, spacing, columns, nodeSize, staggered);
     for (auto i = 0; i < positions.size(); i++)
     {
         callback(i, positions[i], {1, 1}, 0);

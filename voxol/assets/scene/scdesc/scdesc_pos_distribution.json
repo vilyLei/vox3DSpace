@@ -122,7 +122,7 @@
                     "count": 61
                 },
                 "reference-layoutPPI": {
-                    "type": "default",
+                    "type": "base",
                     "method": "hexagonal-grid",
                     "position": [
                         500,
