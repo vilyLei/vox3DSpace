@@ -7,7 +7,7 @@
         "unit": "pixel"
     },
     "scene": {
-        "nodes": [
+        "nodesFFG": [
             {
                 "type": "label",
                 "name": "rect-01-label",
@@ -117,61 +117,13 @@
                     ],
                     "scale": 50,
                     "count": 50,
-                    "paramsA": {
-                        "m": 6,
-                        "a": 1,
-                        "b": 1,
-                        "n1": 0.3,
-                        "n2": 0.3,
-                        "n3": 0.3
-                    },
-                    "paramsTT": {
-                        "m": 6,
-                        "a": 1,
-                        "b": 1,
-                        "n1": 0.3,
-                        "n2": 1,
-                        "n3": 1
-                    },
-                    "paramsUUU": {
-                        "m": 5,
-                        "a": 1,
-                        "b": 1,
-                        "n1": 0.2,
-                        "n2": 0.8,
-                        "n3": 0.8
-                    },
-                    "params09": {
+                    "params": {
                         "m": 6,
                         "a": 1,
                         "b": 1,
                         "n1": 0.3,
                         "n2": 0.4,
                         "n3": 0.4
-                    },
-                    "params98": {
-                        "m": 1,
-                        "a": 1,
-                        "b": 1,
-                        "n1": 0.2,
-                        "n2": 1.7,
-                        "n3": 1.7
-                    },
-                    "params78": {
-                        "m": 6,
-                        "a": 1,
-                        "b": 1,
-                        "n1": 0.5,
-                        "n2": 10,
-                        "n3": 300
-                    },
-                    "params": {
-                        "m": 3,
-                        "a": 1,
-                        "b": 1,
-                        "n1": -0.3,
-                        "n2": 0.8,
-                        "n3": 0.2
                     }
                 },
                 "reference-layoutLLL": {
@@ -391,7 +343,7 @@
                 ]
             }
         ],
-        "nodesKK": [
+        "nodes": [
             {
                 "type": "label",
                 "name": "rect-01-label",
@@ -441,17 +393,6 @@
                         50
                     ],
                     "count": 32
-                },
-                "reference-layout_circle": {
-                    "type": "default",
-                    "method": "circle",
-                    "position": [
-                        300,
-                        260
-                    ],
-                    "rotation": 50,
-                    "radius": 150,
-                    "count": 10
                 }
             },
             {
