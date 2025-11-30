@@ -16,9 +16,10 @@ public:
     static void referenceLayoutSceneNodeWithArc(const JsonType& jsonNode, const Math::Vec2& nodeSize);
     static void referenceLayoutSceneNodeWithCircle(const JsonType& jsonNode, const Math::Vec2& nodeSize);
     static void referenceLayoutSceneNodeWithGrid(const JsonType& jsonNode, const Math::Vec2& nodeSize);
-    static void referenceLayoutSceneNodeOnce(const JsonType& refLayoutNode, const Math::Vec2& nodeSize, const DescNodeLayoutCallbackType& callback);
+    static void referenceLayoutSceneNodeOnce(const JsonType& refLayoutNode, const Math::Vec2& nodeSize);
     static void referenceLayoutSceneNodeMany(const JsonType& jsonNode, const Math::Vec2& nodeSize, const DescNodeLayoutCallbackType& callback);
     static void referenceLayoutSceneNode(const JsonType& jsonNode, const Math::Vec2& nodeSize, const DescNodeLayoutCallbackType& callback);
+    static void referenceLayoutCallback(const DescNodeLayoutCallbackType& callback);
 
 private:
     static std::vector<float> angles;

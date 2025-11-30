@@ -110,10 +110,6 @@ void DescriptionNodeLauout::referenceLayoutSceneNodeWithCircle(const JsonType& j
     angles.reserve(count);
     angles.clear();
     positions = PositionDistribution::circle(angles, count, center, radius, startAngle);
-    //for (auto i = 0; i < positions.size(); i++)
-    //{
-    //    callback(i, positions[i], {1, 1}, angles[i]);
-    //}
 }
 void DescriptionNodeLauout::referenceLayoutSceneNodeWithGrid(const JsonType& jsonNode, const Math::Vec2& nodeSize)
 {
@@ -133,13 +129,9 @@ void DescriptionNodeLauout::referenceLayoutSceneNodeWithGrid(const JsonType& jso
     staggered = jsonV.staggered();
 
     positions = PositionDistribution::grid(count, pos, spacing, columns, nodeSize, staggered);
-    //for (auto i = 0; i < positions.size(); i++)
-    //{
-    //    callback(i, positions[i], {1, 1}, 0);
-    //}
 }
 
-void DescriptionNodeLauout::referenceLayoutSceneNodeOnce(const JsonType& refLayoutNode, const Math::Vec2& nodeSize, const DescNodeLayoutCallbackType& callback)
+void DescriptionNodeLauout::referenceLayoutSceneNodeOnce(const JsonType& refLayoutNode, const Math::Vec2& nodeSize)
 {
     DescreferenceLayoutNode layoutNode;
     layoutNode.parse(refLayoutNode);
@@ -181,14 +173,16 @@ void DescriptionNodeLauout::referenceLayoutSceneNodeMany(const JsonType& jsonNod
         if (!item.is_object())
             continue;
 
-        referenceLayoutSceneNodeOnce(item, nodeSize, callback);
+        referenceLayoutSceneNodeOnce(item, nodeSize);
         // test tombinators
 
-        auto tot = positions.size();
-        for (auto i = 0; i < positions.size(); i++)
-        {
-            callback(i, positions[i], {1, 1}, angles.size() >= tot ? angles[i] : 0);
-        }
+        //auto tot = positions.size();
+        //for (auto i = 0; i < positions.size(); i++)
+        //{
+        //    callback(i, positions[i], {1, 1}, angles.size() >= tot ? angles[i] : 0);
+        //}
+
+        referenceLayoutCallback(callback);
     }
 }
 void DescriptionNodeLauout::referenceLayoutSceneNode(const JsonType& jsonNode, const Math::Vec2& nodeSize, const DescNodeLayoutCallbackType& callback)
@@ -198,15 +192,24 @@ void DescriptionNodeLauout::referenceLayoutSceneNode(const JsonType& jsonNode, c
     if (jsonNode.contains(refLayoutKey) && jsonNode[refLayoutKey].is_object())
     {
         auto&& refLayoutNode = jsonNode[refLayoutKey];
-        referenceLayoutSceneNodeOnce(refLayoutNode, nodeSize, callback);
-        auto tot = positions.size();
-        for (auto i = 0; i < positions.size(); i++)
-        {
-            callback(i, positions[i], {1, 1}, angles.size() >= tot ? angles[i] : 0);
-        }
+        referenceLayoutSceneNodeOnce(refLayoutNode, nodeSize);
+        //auto tot = positions.size();
+        //for (auto i = 0; i < positions.size(); i++)
+        //{
+        //    callback(i, positions[i], {1, 1}, angles.size() >= tot ? angles[i] : 0);
+        //}
+        referenceLayoutCallback( callback );
     }
 
     referenceLayoutSceneNodeMany(jsonNode, nodeSize, callback);
 }
+void DescriptionNodeLauout::referenceLayoutCallback(const DescNodeLayoutCallbackType& callback)
+{
+    auto tot = positions.size();
+    for (auto i = 0; i < positions.size(); i++)
+    {
+        callback(i, positions[i], {1, 1}, angles.size() >= tot ? angles[i] : 0);
+    }
 
+}
 } // namespace Voxol::Scene::Describe
