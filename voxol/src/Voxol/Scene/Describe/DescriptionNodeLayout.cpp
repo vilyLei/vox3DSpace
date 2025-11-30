@@ -183,6 +183,8 @@ void DescriptionNodeLauout::referenceLayoutSceneNodeMany(const JsonType& jsonNod
             continue;
 
         referenceLayoutSceneNodeOnce(item, nodeSize, callback);
+        // test tombinators
+
         auto tot = positions.size();
         for (auto i = 0; i < positions.size(); i++)
         {
