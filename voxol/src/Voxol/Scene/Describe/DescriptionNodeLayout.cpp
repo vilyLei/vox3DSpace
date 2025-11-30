@@ -65,18 +65,13 @@ void DescriptionNodeLauout::referenceLayoutSceneNodeWithSpiral(const JsonType& j
     float      start_angle = 0;
     float      step_angle = 30;
 
-    Data::JsonValue positionV;
-    positionV.parseWithName(jsonNode, "position");
-    if (positionV.is<Math::Vec2>())
-    {
-        center = positionV.get<Math::Vec2>();
-    }
-
-    start_radius = positionV.parseFloatWithName(jsonNode, "start-radius");
-    step_radius = positionV.parseFloatWithName(jsonNode, "step-radius");
-    step_angle = positionV.parseFloatWithName(jsonNode, "step-angle");
-    start_angle = positionV.parseFloatWithName(jsonNode, "start-angle");
-    count = positionV.parseIntWithName(jsonNode, "count");
+    Data::JsonValue jsonV;
+    center       = jsonV.parseVec2WithName(jsonNode, "position");
+    start_radius = jsonV.parseFloatWithName(jsonNode, "start-radius");
+    step_radius  = jsonV.parseFloatWithName(jsonNode, "step-radius");
+    step_angle   = jsonV.parseFloatWithName(jsonNode, "step-angle");
+    start_angle  = jsonV.parseFloatWithName(jsonNode, "start-angle");
+    count        = jsonV.parseIntWithName(jsonNode, "count");
 
     step_angle = Math::degrees_to_radians(step_angle);
     start_angle = Math::degrees_to_radians(start_angle);

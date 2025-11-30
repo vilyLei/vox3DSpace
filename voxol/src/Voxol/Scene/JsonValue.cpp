@@ -244,6 +244,7 @@ int JsonValue::parseIntWithName(const JsonType& node, const std::string& valueNa
 float JsonValue::parseFloatWithName(const JsonType& node, const std::string& valueName)
 {
     parseWithName(node, valueName);
+
     if (is<float>())
     {
         return get<float>();
@@ -254,6 +255,39 @@ float JsonValue::parseFloatWithName(const JsonType& node, const std::string& val
     }
     return 0;
 }
+
+
+Math::Vec2 JsonValue::parseVec2WithName(const JsonType& node, const std::string& valueName)
+{
+    parseWithName(node, valueName);
+
+    if (is<Math::Vec2>())
+    {
+        return get<Math::Vec2>();
+    }
+    return {};
+}
+Math::Vec3 JsonValue::parseVec3WithName(const JsonType& node, const std::string& valueName)
+{
+    parseWithName(node, valueName);
+
+    if (is<Math::Vec3>())
+    {
+        return get<Math::Vec3>();
+    }
+    return {};
+}
+Math::Vec4 JsonValue::parseVec4WithName(const JsonType& node, const std::string& valueName)
+{
+    parseWithName(node, valueName);
+
+    if (is<Math::Vec4>())
+    {
+        return get<Math::Vec4>();
+    }
+    return {};
+}
+
 void JsonValue::parse(const JsonType& j)
 {
     if (j.is_null())

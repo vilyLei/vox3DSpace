@@ -31,6 +31,7 @@ struct ColorValue
     bool parsePantone(const std::string& s);
     bool parse(const JsonType& node);
     bool parseWithName(const JsonType& node, const std::string& key);
+
 private:
     // ----------------------------------------
     // parse ["r","g","b"] or ["a","r","g","b"]
@@ -116,12 +117,15 @@ struct JsonValue
     JsonValue(const ObjectType& obj) :
         type(Type::Object), value(obj) {}
 
-    bool parseColor(const JsonType& node);
-    bool parseTextWithName(const JsonType& node, const std::string& valueName);
-    bool parseColorWithName(const JsonType& node, const std::string& valueName);
-    bool parseWithName(const JsonType& node, const std::string& valueName);
-    int parseIntWithName(const JsonType& node, const std::string& valueName);
-    float parseFloatWithName(const JsonType& node, const std::string& valueName);
+    bool       parseColor(const JsonType& node);
+    bool       parseTextWithName(const JsonType& node, const std::string& valueName);
+    bool       parseColorWithName(const JsonType& node, const std::string& valueName);
+    bool       parseWithName(const JsonType& node, const std::string& valueName);
+    int        parseIntWithName(const JsonType& node, const std::string& valueName);
+    float      parseFloatWithName(const JsonType& node, const std::string& valueName);
+    Math::Vec2 parseVec2WithName(const JsonType& node, const std::string& valueName);
+    Math::Vec3 parseVec3WithName(const JsonType& node, const std::string& valueName);
+    Math::Vec4 parseVec4WithName(const JsonType& node, const std::string& valueName);
 
     void parse(const JsonType& j);
 
@@ -136,6 +140,6 @@ struct JsonValue
 
     float getFloat();
 };
-} // namespace Desc
+} // namespace Data
 } // namespace Voxol::Scene
 #endif
