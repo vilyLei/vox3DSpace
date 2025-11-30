@@ -108,6 +108,25 @@
                         100
                     ]
                 },
+                
+                "reference-layoutLLWW": {
+                    "type": "default",
+                    "method": "superformula",
+                    "position": [
+                        400,
+                        300
+                    ],
+                    "scale": 120,
+                    "count": 300,
+                    "params": {
+                        "m": 6,
+                        "a": 1,
+                        "b": 1,
+                        "n1": 0.3,
+                        "n2": 0.3,
+                        "n3": 0.3
+                    }
+                },
                 "reference-layoutLLL": {
                     "type": "default",
                     "method": "spiral",

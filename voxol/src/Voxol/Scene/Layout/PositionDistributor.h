@@ -37,6 +37,10 @@ inline std::vector<Math::Vec2> generateHexGridT(const Math::Vec2& center, int ri
 Math::Vec2                     diamond(int i, int n, float R);
 
 } // namespace Distribution
+namespace Superformula
+{
+
+}
 class PositionDistribution
 {
 public:
