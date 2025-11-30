@@ -227,13 +227,21 @@ bool FileParser::parseSceneNodeReference(SceneNode& parentNode, uint32_t& id, co
     {
 
         auto&&      refNode     = jsonNode[refKey];
-        std::string srcNodeType = refNode["type"];
+        //std::string srcNodeType = refNode["type"];
         auto&       preTrans    = parentNode.transform;
         auto        preName     = parentNode.name;
         auto        visible     = parentNode.entity.visible;
 
-        if (srcNodeType == "container")
+        DescNodeRference ref;
+        ref.parse(refNode);
+        if (refNode.empty())
+            return true;
+
+        //if (srcNodeType == "container")
+        auto& srcList = ref.srcList;
+        if (ref.isContainer())
         {
+            /*
             std::vector<std::string> srcList;
             std::string              srcNodeName = (refNode.contains("src") && refNode["src"].is_string()) ? refNode["src"] : "";
 
@@ -267,21 +275,20 @@ bool FileParser::parseSceneNodeReference(SceneNode& parentNode, uint32_t& id, co
             }
             if (srcList.empty())
                 return true;
+            //*/
+            //std::string srcWrappingKey = "src-wrapping";
+            //std::string srcWrappingStr = (refNode.contains(srcWrappingKey) && refNode[srcWrappingKey].is_string()) ? refNode[srcWrappingKey] : "";
 
-            std::string srcWrappingKey = "src-wrapping";
-            std::string srcWrappingStr = (refNode.contains(srcWrappingKey) && refNode[srcWrappingKey].is_string()) ? refNode[srcWrappingKey] : "";
-
-            Describe::RefLayoutSrcWrapping srcWrapping = RefLayoutSrcWrapping::Repeat;
-            // repeat | clamp
-            if (srcWrappingStr == "clamp")
-            {
-                srcWrapping = RefLayoutSrcWrapping::Clamp;
-            }
-
+            //Describe::RefLayoutSrcWrapping srcWrapping = RefLayoutSrcWrapping::Repeat;
+            //// repeat | clamp
+            //if (srcWrappingStr == "clamp")
+            //{
+            //    srcWrapping = RefLayoutSrcWrapping::Clamp;
+            //}
             auto srcCount = static_cast<int>(srcList.size());
 
             SceneNode tempNode;
-            parseSceneNodeWithNameFromRoot(tempNode, tempNode.id, srcList[0]);
+            parseSceneNodeWithNameFromRoot(tempNode, tempNode.id, srcList[0].src);
             DescriptionNodeLauout::referenceLayoutSceneNode(
                 jsonNode,
                 tempNode.transform.scale(),
@@ -289,7 +296,7 @@ bool FileParser::parseSceneNodeReference(SceneNode& parentNode, uint32_t& id, co
                     SceneNode node;
                     node.id = id++;
                     auto k  = index % srcCount;
-                    switch (srcWrapping)
+                    switch (ref.srcWrapping)
                     {
                         case Voxol::Scene::Describe::RefLayoutSrcWrapping::Clamp:
                             k = index > (srcCount - 1) ? (srcCount - 1) : index;
@@ -299,7 +306,7 @@ bool FileParser::parseSceneNodeReference(SceneNode& parentNode, uint32_t& id, co
                             break;
                     }
 
-                    const auto& ns = srcList[k];
+                    const auto& ns = srcList[k].src;
                     parseSceneNodeWithNameFromRoot(node, id, ns);
                     node.transform.pos()    = pos;
                     node.transform.rotation = rotation;
@@ -311,9 +318,10 @@ bool FileParser::parseSceneNodeReference(SceneNode& parentNode, uint32_t& id, co
         }
         else
         {
-            std::string srcNodeName = refNode["src"];
-            if (srcNodeName.empty())
-                return true;
+            //std::string srcNodeName = refNode["src"];
+            //if (srcNodeName.empty())
+            //    return true;
+            auto& srcNodeName = srcList[0].src;
             if (!hasSceneNodeWithNameFromRoot(srcNodeName))
                 return true;
 

@@ -37,6 +37,10 @@ void DescNodeRferenceSrcItem::parse(const JsonType& jsonNode)
 bool DescNodeRference::empty() const {
     return srcList.empty();
 }
+bool DescNodeRference::isContainer() const
+{
+    return type == "container";
+}
 void DescNodeRference::reset() {
 
     srcWrapping = RefLayoutSrcWrapping::Repeat;

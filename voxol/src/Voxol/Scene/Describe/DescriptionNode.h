@@ -213,6 +213,7 @@ struct DescNodeRference
     std::string                          type;
     std::vector<DescNodeRferenceSrcItem> srcList;
     RefLayoutSrcWrapping                 srcWrapping = RefLayoutSrcWrapping::Repeat;
+    bool                                 isContainer() const;
     bool                                 empty() const;
     void                                 reset();
     void                                 parse(const JsonType& jsonNode);
