@@ -1,9 +1,9 @@
-#ifndef VOXOL_SCENE_DESCRIPTION_PARSER_H
-#define VOXOL_SCENE_DESCRIPTION_PARSER_H
+#ifndef VOXOL_SCENE_DESCRIBE_DESCRIPTION_PARSER_H
+#define VOXOL_SCENE_DESCRIBE_DESCRIPTION_PARSER_H
 
-#include "../Base/BaseDefine.h"
-#include "Describe/DescriptionNode.h"
-#include "../Math/Vec2.h"
+#include "../../Base/BaseDefine.h"
+#include "DescriptionNode.h"
+#include "../../Math/Vec2.h"
 #include <nlohmann/json.hpp>
 #include <string>
 #include <functional>

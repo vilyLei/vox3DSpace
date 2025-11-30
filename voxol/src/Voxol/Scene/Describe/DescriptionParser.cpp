@@ -1,7 +1,7 @@
 #include "DescriptionParser.h"
-#include "SceneIRComponent.h"
-#include "../Math/MathDef.h"
-#include "../Scene/Layout/PositionDistributor.h"
+#include "../SceneIRComponent.h"
+#include "../../Math/MathDef.h"
+#include "../Layout/PositionDistributor.h"
 #include "DescriptionNodeLayout.h"
 #include <fstream>
 #include <filesystem>
