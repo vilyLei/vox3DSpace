@@ -186,7 +186,7 @@
                     ],
                     "count": 32
                 },
-                "reference-layout": {
+                "reference-layoutGG": {
                     "type": "basic",
                     "method": "diamond",
                     "position": [
@@ -194,6 +194,17 @@
                         310
                     ],
                     "radius": 110,
+                    "count": 8
+                },
+                "reference-layout": {
+                    "type": "basic",
+                    "method": "diamond-filled",
+                    "position": [
+                        570,
+                        310
+                    ],
+                    "radius": 5,
+                    "spacing": [20,20],
                     "count": 8
                 },
                 "reference-layouthh": {

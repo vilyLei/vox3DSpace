@@ -128,6 +128,30 @@ Math::Vec2 diamond(int i, int n, float R)
     }
     return {x, y};
 }
+std::vector<Math::Vec2> diamondFilledGrid(const Math::Vec2& center, const Math::Vec2& spacing, int radiusCells)
+{
+    std::vector<Math::Vec2> out;
+    out.reserve((2 * radiusCells + 1) * (2 * radiusCells + 1));
+
+    for (int y = -radiusCells; y <= radiusCells; ++y)
+    {
+        for (int x = -radiusCells; x <= radiusCells; ++x)
+        {
+            // L1 (Manhattan) distance check for diamond region
+            if (std::abs(x) + std::abs(y) <= radiusCells)
+            {
+                // map grid (x,y) to world coordinates:  choose orientation you like
+                // Here we map so diamond points sit on integer lattice scaled by spacing
+                Math::Vec2 p;
+                p.x = x * spacing.x;
+                p.y = y * spacing.y;
+                out.push_back(p + center);
+            }
+        }
+    }
+    return out;
+}
+
 Math::Vec2 snowflake(int i, int n, float R)
 {
     float branch = (i % 6);

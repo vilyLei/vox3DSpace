@@ -35,7 +35,8 @@ std::vector<Math::Vec2> generate(
 );
 inline std::vector<Math::Vec2> generateHexGrid(const Math::Vec2& center, int rings, float hexR);
 Math::Vec2                     diamond(int i, int n, float R);
-Math::Vec2                     snowflake(int i, int n, float R);
+std::vector<Math::Vec2>        diamondFilledGrid(const Math::Vec2& center, const Math::Vec2& spacing, int radiusCells);
+ Math::Vec2                     snowflake(int i, int n, float R);
 std::vector<Math::Vec2>        kochSnowflake(int iteration, float R);
 Math::Vec2                     rhombusGrid(int i, int n, const Math::Vec2& spacing);
 Math::Vec2                     rose(int i, int n, float R, float amplitude);

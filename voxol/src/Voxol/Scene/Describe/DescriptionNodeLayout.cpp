@@ -61,12 +61,21 @@ void DescriptionNodeLauout::referenceLayoutSceneNodeWithBasic(const JsonType& js
     }
     if (method == "diamond")
     {
+        //positions   = Distribution::diamondFilledGrid(20, 5);
+
         auto radius = jsonV.radius();
         for (auto i = 0; i < count; i++)
         {
             auto&& pv = Distribution::diamond(i, count, radius);
             positions.emplace_back(pos + pv);
         }
+        return;
+    }
+    if (method == "diamond-filled")
+    {
+        auto radius = jsonV.radius();
+        auto spacing = jsonV.spacing();
+        positions    = Distribution::diamondFilledGrid(pos, spacing, radius);
         return;
     }
     if (method == "snowflake")
