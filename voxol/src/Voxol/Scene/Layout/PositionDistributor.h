@@ -5,7 +5,7 @@
 
 namespace Voxol::Scene::Layout
 {
-namespace Honeycomb
+namespace HexLayout
 {
 
 // axial six directions
@@ -35,7 +35,7 @@ std::vector<Math::Vec2> generate(
 );
 inline std::vector<Math::Vec2> generateHexGridT(const Math::Vec2& center, int rings, float hexR);
 
-} // namespace Honeycomb
+} // namespace HexLayout
 class PositionDistribution
 {
 public:

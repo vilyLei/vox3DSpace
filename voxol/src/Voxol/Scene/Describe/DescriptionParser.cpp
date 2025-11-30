@@ -138,13 +138,15 @@ void FileParser::parseNodeInteractionData(SceneNode& currNode, const JsonType& j
 
 
 
-bool FileParser::hasSceneNodeWithNameFromRoot(const std::string& nodeName) {
+bool FileParser::hasSceneNodeWithNameFromRoot(const std::string& nodeName)
+{
 
     auto&& sceneNode = jsonObj["scene"];
     return hasSceneNodeWithNameRecursive(nodeName, sceneNode, "nodes");
 }
 
-bool FileParser::hasSceneNodeWithNameRecursive(const std::string& nodeName, const JsonType& jsonNode, const std::string& nodesName) {
+bool FileParser::hasSceneNodeWithNameRecursive(const std::string& nodeName, const JsonType& jsonNode, const std::string& nodesName)
+{
 
     if (!jsonNode.contains(nodesName) || !jsonNode[nodesName].is_array())
         return false;
@@ -229,14 +231,14 @@ void FileParser::parseSceneNode(SceneNode& parentNode, uint32_t& id, const JsonT
 
         auto&&      refNode     = jsonNode[refKey];
         std::string srcNodeType = refNode["type"];
-        auto        preTrans    = parentNode.transform;
+        auto&       preTrans    = parentNode.transform;
         auto        preName     = parentNode.name;
         auto        visible     = parentNode.entity.visible;
 
         if (srcNodeType == "container")
         {
             std::vector<std::string> srcList;
-            std::string srcNodeName = (refNode.contains("src") && refNode["src"].is_string()) ? refNode["src"] : "";
+            std::string              srcNodeName = (refNode.contains("src") && refNode["src"].is_string()) ? refNode["src"] : "";
 
             if (!srcNodeName.empty() && hasSceneNodeWithNameFromRoot(srcNodeName))
             {
@@ -262,8 +264,8 @@ void FileParser::parseSceneNode(SceneNode& parentNode, uint32_t& id, const JsonT
             if (srcList.empty())
                 return;
 
-            std::string srcWrappingKey  = "src-wrapping";
-            std::string srcWrappingStr    = (refNode.contains(srcWrappingKey) && refNode[srcWrappingKey].is_string()) ? refNode[srcWrappingKey] : "";
+            std::string srcWrappingKey = "src-wrapping";
+            std::string srcWrappingStr = (refNode.contains(srcWrappingKey) && refNode[srcWrappingKey].is_string()) ? refNode[srcWrappingKey] : "";
 
             auto srcWrapping = 1;
             if (srcWrappingStr == "repeat")
@@ -280,14 +282,14 @@ void FileParser::parseSceneNode(SceneNode& parentNode, uint32_t& id, const JsonT
                 tempNode.transform.scale(),
                 [&, this](int index, const Math::Vec2& pos, const Math::Vec2& scale, float rotation) {
                     SceneNode node;
-                    node.id = id++;
+                    node.id        = id++;
                     const auto& ns = srcList[index % srcCount];
                     parseSceneNodeWithNameFromRoot(node, id, ns);
-                    node.transform.pos() = pos;
+                    node.transform.pos()    = pos;
                     node.transform.rotation = rotation;
                     node.entity.visible     = visible;
                     parentNode.children.emplace_back(std::move(node));
-            });
+                });
 
             parentNode.childrenTotal = static_cast<int>(parentNode.children.size());
         }
@@ -381,7 +383,7 @@ void FileParser::parseNodeTransData(SceneNode& node, const JsonType& jsonNode)
     {
         SceneIR::Scene::Transform jTrans;
         jTrans.parse(jsonNode["transform"]);
-        node.transform.pos() = jTrans.position;
+        node.transform.pos()    = jTrans.position;
         node.transform.rotation = jTrans.rotation;
     }
     if (jsonNode.contains("display"))
@@ -389,12 +391,13 @@ void FileParser::parseNodeTransData(SceneNode& node, const JsonType& jsonNode)
         auto&& displayNode               = jsonNode["display"];
         node.shadingEntity.id            = id;
         node.shadingEntity.shadingDescId = id;
-        node.unitModel.id = id;
+        node.unitModel.id                = id;
         parseNodeDisplayShape(node, displayNode);
         parseNodeDisplayStyle(node, displayNode);
     }
-    else {
-        node.transform.scale() = {0,0};
+    else
+    {
+        node.transform.scale() = {0, 0};
     }
 }
 
@@ -465,7 +468,7 @@ void HierarchyParser::parse(SceneNode& parentNode, HierarchyNode& parentHierNode
     parentHierNode.hieraychy.firstChild = children[0].id;
     for (auto i = 0; i < children.size(); ++i)
     {
-        auto&&              child = children[i];
+        auto&&        child = children[i];
         HierarchyNode hierNode;
         hierNode.hieraychy.parent = parentNode.id;
 
@@ -481,8 +484,8 @@ void HierarchyParser::parse(SceneNode& parentNode, HierarchyNode& parentHierNode
 void DescriptionParser::initialize()
 {
     std::string filePath = "scene/scdesc/scdesc01.json";
-    filePath = "scene/scdesc/scdesc_word_snake.json";
-    filePath = "scene/scdesc/scdesc_pos_distribution.json";
+    filePath             = "scene/scdesc/scdesc_word_snake.json";
+    filePath             = "scene/scdesc/scdesc_pos_distribution.json";
     fileParser.initFromFile(filePath);
 
     HierarchyNode rootHierNode;

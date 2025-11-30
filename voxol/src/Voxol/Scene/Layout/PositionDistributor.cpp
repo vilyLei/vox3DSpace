@@ -3,7 +3,7 @@
 
 namespace Voxol::Scene::Layout
 {
-namespace Honeycomb
+namespace HexLayout
 {
 Math::Vec2 hexToWorld(Hex h, float hexRadius)
 {
@@ -90,11 +90,11 @@ std::vector<Math::Vec2> generateHexGridT(const Math::Vec2& center, int rings, fl
 
     return ls;
 }
-} // namespace Honeycomb
+} // namespace HexLayout
 
 std::vector<Math::Vec2> PositionDistribution::hexagonalGrid(int count, const Math::Vec2& center, int rings, float hexRadius)
 {
-    return Honeycomb::generateHexGridT(center, rings, hexRadius);
+    return HexLayout::generateHexGridT(center, rings, hexRadius);
 }
 std::vector<Math::Vec2> PositionDistribution::circle(std::vector<float>& angles, int count, const Math::Vec2& center, float radius, float startRadian)
 {

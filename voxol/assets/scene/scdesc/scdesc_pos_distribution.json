@@ -46,11 +46,11 @@
                 },
                 "visible": false,
                 "display": {
-                    "shape": {
+                    "shapeTTT": {
                         "type": "circle",
                         "radius": 10
                     },
-                    "shapeTT": {
+                    "shape": {
                         "type": "rectangle",
                         "size": [
                             20,
@@ -63,9 +63,36 @@
                 }
             },
             {
+                "type": "label",
+                "name": "circle-02-label",
+                "transform": {
+                    "position": [
+                        50,
+                        50
+                    ]
+                },
+                "visible": false,
+                "display": {
+                    "shapeTTT": {
+                        "type": "circle",
+                        "radius": 10
+                    },
+                    "shape": {
+                        "type": "rectangle",
+                        "size": [
+                            20,
+                            20
+                        ]
+                    },
+                    "style": {
+                        "fillColor": "0xff886650"
+                    }
+                }
+            },
+            {
                 "reference": {
                     "srcTT": "rect-01-label",
-                    "src-list": ["rect-01-label", "circle-01-label"],
+                    "src-list": ["rect-01-label", "circle-01-label","circle-02-label"],
                     "src-wrapping": "repeat",
                     "type": "container"
                 },
