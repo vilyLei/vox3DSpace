@@ -4,6 +4,13 @@
 namespace Voxol::Scene::Describe
 {
 
+bool DescreferenceLayoutNode::isTypeDefault() const {
+    return type == TYPE_DEFAULT;
+}
+bool DescreferenceLayoutNode::isTypeBasic() const
+{
+    return type == TYPE_BASIC;
+}
 void DescreferenceLayoutNode::parse(const JsonType& jsonNode)
 {
     Data::JsonValue jsonV;
@@ -19,6 +26,7 @@ void RefLayoutValue::parse(const JsonType& jsonNode)
 {
     layoutNode.parse(jsonNode);
 }
+
 bool DescNodeRferenceSrcItem::empty() const {
 
     return src.empty();

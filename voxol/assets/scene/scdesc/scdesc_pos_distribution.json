@@ -108,7 +108,6 @@
                         100
                     ]
                 },
-
                 "reference-layoutLLWW": {
                     "type": "default",
                     "method": "superformula",
@@ -181,7 +180,17 @@
                     ],
                     "count": 32
                 },
-                "reference-layouts": [
+                "reference-layout": {
+                    "type": "basic",
+                    "method": "diamond",
+                    "position": [
+                        570,
+                        310
+                    ],
+                    "radius": 110,
+                    "count": 10
+                },
+                "reference-layoutsPPP": [
                     {
                         "type": "default",
                         "method": "grid",

@@ -24,16 +24,19 @@ enum class RefLayoutSrcWrapping : uint8_t
 struct DescreferenceLayoutNode
 {
     static constexpr const char* TYPE_DEFAULT    = "default";
-    static constexpr const char* TYPE_BASE       = "basic";
+    static constexpr const char* TYPE_BASIC       = "basic";
     static constexpr const char* TYPE_ADVANCED   = "advanced";
     static constexpr const char* TYPE_PHYSICS    = "physics";
     static constexpr const char* TYPE_GENERATIVE = "generative";
     static constexpr const char* TYPE_REACTIVE   = "reactive";
 
-    std::string type = "default";
     // basic, advanced, physics, generative, reactive
+    std::string type = "default";
     std::string method = "grid";
+
     Math::Vec2  position;
+    bool        isTypeDefault() const;
+    bool        isTypeBasic() const;
     void        parse(const JsonType& jsonNode);
 };
 
@@ -42,6 +45,7 @@ struct RefLayoutValue
 
     Scene::Data::JsonValue jsonV;
     DescreferenceLayoutNode layoutNode;
+
     void parse(const JsonType& jsonNode);
 
     Math::Vec2 position(const JsonType& jsonNode)
@@ -145,6 +149,10 @@ struct RefLayoutValueRef
     RefLayoutValueRef(const JsonType& jn) :
         jsonNodeRef(jn) {}
 
+    
+    void parse() {
+        value.parse(jsonNodeRef);
+    }
     Math::Vec2 position()
     {
         return value.position(jsonNodeRef);
