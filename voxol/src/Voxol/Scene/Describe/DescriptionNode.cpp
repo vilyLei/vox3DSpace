@@ -4,18 +4,28 @@
 namespace Voxol::Scene::Describe
 {
 
-    
-//"reference": {
-//    "srcTT": "rect-01-label",
-//    "src-list": [
-//        "rect-01-label",
-//        "circle-01-label",
-//        "circle-02-label"
-//    ],
-//    "src-wrapping": "repeat",
-//    "type": "container"
-//},
+void DescreferenceLayoutNode::parse(const JsonType& jsonNode)
+{
+    Data::JsonValue jsonV;
 
+    position = jsonV.parseVec2WithName(jsonNode, "position");
+    type     = jsonV.parseStringWithName(jsonNode, "type", TYPE_DEFAULT);
+    method   = jsonV.parseStringWithName(jsonNode, "method", "grid");
+
+    //if (jsonNode.contains("type") && jsonNode["type"].is_string())
+    //{
+    //    type = jsonNode["type"];
+    //}
+    //if(jsonNode.contains("method") && jsonNode["method"].is_string())
+    //{
+    //    method = jsonNode["method"];
+    //}
+}
+
+void RefLayoutValue::parse(const JsonType& jsonNode)
+{
+    layoutNode.parse(jsonNode);
+}
 bool DescNodeRferenceSrcItem::empty() const {
 
     return src.empty();
@@ -141,18 +151,6 @@ void DisplayShape::parse(const JsonType& jsonNode)
             auto&& textDesc = jsonValue.get<Component::UnitTextDesc>();
             size            = {textDesc.fontSize, textDesc.fontSize};
         }
-    }
-}
-
-void DescreferenceLayoutNode::parse(const JsonType& jsonNode)
-{
-    if (jsonNode.contains("type") && jsonNode["type"].is_string())
-    {
-        type = jsonNode["type"];
-    }
-    if(jsonNode.contains("method") && jsonNode["method"].is_string())
-    {
-        method = jsonNode["method"];
     }
 }
 

@@ -20,10 +20,29 @@ enum class RefLayoutSrcWrapping : uint8_t
     Repeat,
     Clamp
 };
+
+struct DescreferenceLayoutNode
+{
+    static constexpr const char* TYPE_DEFAULT    = "default";
+    static constexpr const char* TYPE_BASE       = "basic";
+    static constexpr const char* TYPE_ADVANCED   = "advanced";
+    static constexpr const char* TYPE_PHYSICS    = "physics";
+    static constexpr const char* TYPE_GENERATIVE = "generative";
+    static constexpr const char* TYPE_REACTIVE   = "reactive";
+
+    std::string type = "default";
+    // basic, advanced, physics, generative, reactive
+    std::string method = "grid";
+    Math::Vec2  position;
+    void        parse(const JsonType& jsonNode);
+};
+
 struct RefLayoutValue
 {
 
     Scene::Data::JsonValue jsonV;
+    DescreferenceLayoutNode layoutNode;
+    void parse(const JsonType& jsonNode);
 
     Math::Vec2 position(const JsonType& jsonNode)
     {
@@ -243,21 +262,6 @@ struct DisplayShape
     Math::Vec2      size;
     Data::JsonValue jsonValue;
     void            parse(const JsonType& jsonNode);
-};
-
-struct DescreferenceLayoutNode
-{
-    static constexpr const char* TYPE_DEFAULT    = "default";
-    static constexpr const char* TYPE_BASE       = "basic";
-    static constexpr const char* TYPE_ADVANCED   = "advanced";
-    static constexpr const char* TYPE_PHYSICS    = "physics";
-    static constexpr const char* TYPE_GENERATIVE = "generative";
-    static constexpr const char* TYPE_REACTIVE   = "reactive";
-
-    std::string type = "default";
-    // basic, advanced, physics, generative, reactive
-    std::string method = "grid";
-    void        parse(const JsonType& jsonNode);
 };
 
 struct SceneActionDesc
