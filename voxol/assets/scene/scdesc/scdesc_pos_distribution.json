@@ -180,7 +180,7 @@
                     ],
                     "count": 32
                 },
-                "reference-layout": {
+                "reference-layoutKOKO": {
                     "type": "basic",
                     "method": "diamond",
                     "position": [
@@ -198,6 +198,16 @@
                         310
                     ],
                     "radius": 110,
+                    "count": 20
+                },
+                "reference-layout": {
+                    "type": "basic",
+                    "method": "rhombus-grid",
+                    "position": [
+                        570,
+                        310
+                    ],
+                    "spacing": [30,30],
                     "count": 20
                 },
                 "reference-layoutsPPP": [

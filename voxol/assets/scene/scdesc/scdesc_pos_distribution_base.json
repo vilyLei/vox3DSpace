@@ -1,0 +1,165 @@
+{
+    "version": {
+        "runtime-mode": "edit",
+        "major": 0,
+        "minor": 1,
+        "dimension": 2,
+        "unit": "pixel"
+    },
+    "scene": {
+        "nodes": [
+            {
+                "type": "label",
+                "name": "rect-01-label",
+                "transform": {
+                    "position": [
+                        50,
+                        50
+                    ]
+                },
+                "visible": false,
+                "display": {
+                    "shape": {
+                        "type": "rectangle",
+                        "size": [
+                            20,
+                            20
+                        ]
+                    },
+                    "style": {
+                        "fillColor": "0xffff7f50"
+                    }
+                }
+            },
+            {
+                "type": "label",
+                "name": "circle-01-label",
+                "transform": {
+                    "position": [
+                        50,
+                        50
+                    ]
+                },
+                "visible": false,
+                "display": {
+                    "shape": {
+                        "type": "circle",
+                        "radius": 10
+                    },
+                    "style": {
+                        "fillColor": "0xff88aa50"
+                    }
+                }
+            },
+            {
+                "type": "label",
+                "name": "rect-02-label",
+                "transform": {
+                    "position": [
+                        50,
+                        50
+                    ]
+                },
+                "visible": false,
+                "display": {
+                    "shape": {
+                        "type": "rectangle",
+                        "size": [
+                            20,
+                            20
+                        ]
+                    },
+                    "style": {
+                        "fillColor": "0xff886650"
+                    }
+                }
+            },
+            {
+                "reference": {
+                    "src-list": [
+                        "rect-01-label",
+                        "circle-01-label",
+                        "circle-02-label"
+                    ],
+                    "src-wrapping": "repeat",
+                    "type": "container"
+                },
+                "visible": true,
+                "name": "rect-circle-label-group-0",
+                "transform": {
+                    "position": [
+                        100,
+                        100
+                    ]
+                },
+                "reference-layouts": [
+                    {
+                        "type": "default",
+                        "method": "grid",
+                        "position": [
+                            20,
+                            20
+                        ],
+                        "columns": 4,
+                        "staggered": [
+                            1,
+                            0
+                        ],
+                        "spacing": [
+                            50,
+                            50
+                        ],
+                        "count": 16
+                    },
+                    {
+                        "type": "default",
+                        "method": "circle",
+                        "position": [
+                            700,
+                            210
+                        ],
+                        "start-angle": 50,
+                        "radius": 100,
+                        "count": 10
+                    },
+                    {
+                        "type": "default",
+                        "method": "arc",
+                        "position": [
+                            250,
+                            310
+                        ],
+                        "start-angle": 80,
+                        "arc-angle": 90,
+                        "radius": 250,
+                        "count": 8
+                    },
+                    {
+                        "type": "default",
+                        "method": "spiral",
+                        "position": [
+                            500,
+                            310
+                        ],
+                        "start-angle": 30,
+                        "step-angle": 20,
+                        "start-radius": 20,
+                        "step-radius": 5,
+                        "count": 30
+                    },
+                    {
+                        "type": "base",
+                        "method": "hexagonal-grid",
+                        "position": [
+                            500,
+                            310
+                        ],
+                        "rings": 3,
+                        "hex-radius": 30,
+                        "count": 61
+                    }
+                ]
+            }
+        ]
+    }
+}
