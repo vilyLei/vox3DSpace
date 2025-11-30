@@ -18,11 +18,6 @@ void DescriptionNodeLauout::referenceLayoutSceneNodeWithBasic(const JsonType& js
     auto       count = 10;
     Math::Vec2 pos{300, 300};
 
-    float      start_radius = 0;
-    float      step_radius  = 30;
-    float      start_angle  = 0;
-    float      step_angle   = 30;
-
     RefLayoutValueRef jsonV{jsonNode};
     jsonV.parse();
 
@@ -51,6 +46,17 @@ void DescriptionNodeLauout::referenceLayoutSceneNodeWithBasic(const JsonType& js
             auto&& pos = Distribution::diamond(i, count, radius);
             positions.emplace_back(pos);
         }
+        return;
+    }
+    if (method == "snowflake")
+    {
+        auto radius = jsonV.radius();
+        for (auto i = 0; i < count; i++)
+        {
+            auto&& pos = Distribution::snowflake(i, count, radius);
+            positions.emplace_back(pos);
+        }
+        return;
     }
 }
 void DescriptionNodeLauout::referenceLayoutSceneNodeWithSpiral(const JsonType& jsonNode, const Math::Vec2& nodeSize)

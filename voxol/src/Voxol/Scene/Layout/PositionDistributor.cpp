@@ -92,7 +92,7 @@ std::vector<Math::Vec2> generateHexGrid(const Math::Vec2& center, int rings, flo
 Math::Vec2 diamond(int i, int n, float R)
 {
     float t     = float(i) / float(n); // 0~1
-    float angle = t * 4.0f * MATH_PI;  // four segments
+    float angle = t * 4.0f * MATH_2PI;  // four segments
 
     float s = std::fmod(angle, MATH_2PI) / MATH_2PI;
 
@@ -107,6 +107,16 @@ Math::Vec2 diamond(int i, int n, float R)
         case 3: return {R * (2 * s - 1), -R};
     }
     return {};
+}
+Math::Vec2 snowflake(int i, int n, float R)
+{
+    float branch = (i % 6);
+    float layer  = (i / 6);
+
+    float radius = (layer + 1) * (R / (n / 6.0f));
+
+    float angle = branch * (MATH_PI / 3.0); // six directions
+    return {radius * cos(angle), radius * sin(angle)};
 }
 std::vector<Math::Vec2> kochSnowflake(int iteration, float R)
 {
