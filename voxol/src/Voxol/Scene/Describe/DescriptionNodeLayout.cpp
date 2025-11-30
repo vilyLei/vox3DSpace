@@ -72,56 +72,61 @@ void DescriptionNodeLauout::referenceLayoutSceneNodeWithSpiral(const JsonType& j
         center = positionV.get<Math::Vec2>();
     }
     Data::JsonValue startRadiusV;
-    startRadiusV.parseWithName(jsonNode, "start-radius");
-    if (startRadiusV.is<int>())
-    {
-        start_radius = startRadiusV.get<int>();
-    }
-    else if (positionV.is<float>())
-    {
-        start_radius = startRadiusV.get<float>();
-    }
+    start_radius = startRadiusV.parseFloatWithName(jsonNode, "start-radius");
+    //startRadiusV.parseWithName(jsonNode, "start-radius");
+    //if (startRadiusV.is<int>())
+    //{
+    //    start_radius = startRadiusV.get<int>();
+    //}
+    //else if (positionV.is<float>())
+    //{
+    //    start_radius = startRadiusV.get<float>();
+    //}
 
     Data::JsonValue stepRadiusV;
-    stepRadiusV.parseWithName(jsonNode, "step-radius");
-    if (stepRadiusV.is<int>())
-    {
-        step_radius = stepRadiusV.get<int>();
-    }
-    else if (positionV.is<float>())
-    {
-        step_radius = stepRadiusV.get<float>();
-    }
+    step_radius = stepRadiusV.parseFloatWithName(jsonNode, "step-radius");
+    //stepRadiusV.parseWithName(jsonNode, "step-radius");
+    //if (stepRadiusV.is<int>())
+    //{
+    //    step_radius = stepRadiusV.get<int>();
+    //}
+    //else if (positionV.is<float>())
+    //{
+    //    step_radius = stepRadiusV.get<float>();
+    //}
 
     Data::JsonValue stepAngleV;
-    stepAngleV.parseWithName(jsonNode, "step-angle");
-    if (stepAngleV.is<int>())
-    {
-        step_angle = stepAngleV.get<int>();
-    }
-    else if (stepAngleV.is<float>())
-    {
-        step_angle = stepAngleV.get<float>();
-    }
+    step_angle = stepAngleV.parseFloatWithName(jsonNode, "step-angle");
+    //stepAngleV.parseWithName(jsonNode, "step-angle");
+    //if (stepAngleV.is<int>())
+    //{
+    //    step_angle = stepAngleV.get<int>();
+    //}
+    //else if (stepAngleV.is<float>())
+    //{
+    //    step_angle = stepAngleV.get<float>();
+    //}
 
     Data::JsonValue startAngleV;
-    startAngleV.parseWithName(jsonNode, "start-angle");
-    if (startAngleV.is<int>())
-    {
-        start_angle = startAngleV.get<int>();
-    }
-    else if (startAngleV.is<float>())
-    {
-        start_angle = startAngleV.get<float>();
-    }
+    start_angle = startAngleV.parseFloatWithName(jsonNode, "start-angle");
+    //start_angle = startAngleV.getFloat();
+    //if (startAngleV.is<int>())
+    //{
+    //    start_angle = startAngleV.get<int>();
+    //}
+    //else if (startAngleV.is<float>())
+    //{
+    //    start_angle = startAngleV.get<float>();
+    //}
 
 
     Data::JsonValue countV;
-    countV.parseWithName(jsonNode, "count");
-    if (countV.is<int>())
-    {
-        count = countV.get<int>();
-    }
+    count = countV.parseIntWithName(jsonNode, "count");
+    //countV.parseWithName(jsonNode, "count");
+    //if (countV.is<int>())
+    //{
+    //    count = countV.get<int>();
+    //}
     step_angle = Math::degrees_to_radians(step_angle);
     start_angle = Math::degrees_to_radians(start_angle);
 

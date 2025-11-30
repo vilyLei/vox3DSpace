@@ -232,6 +232,28 @@ bool JsonValue::parseWithName(const JsonType& node, const std::string& valueName
     parse(node[valueName]);
     return true;
 }
+int JsonValue::parseIntWithName(const JsonType& node, const std::string& valueName)
+{
+    parseWithName(node, valueName);
+    if (is<int>())
+    {
+        return get<int>();
+    }
+    return 0;
+}
+float JsonValue::parseFloatWithName(const JsonType& node, const std::string& valueName)
+{
+    parseWithName(node, valueName);
+    if (is<float>())
+    {
+        return get<float>();
+    }
+    if (is<int>())
+    {
+        return get<int>();
+    }
+    return 0;
+}
 void JsonValue::parse(const JsonType& j)
 {
     if (j.is_null())
@@ -337,6 +359,7 @@ float JsonValue::getFloat()
     {
         return get<int>();
     }
+    return 0;
 }
 } // namespace Data
 } // namespace Voxol::Scene

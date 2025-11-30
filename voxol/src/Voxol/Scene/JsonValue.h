@@ -120,6 +120,8 @@ struct JsonValue
     bool parseTextWithName(const JsonType& node, const std::string& valueName);
     bool parseColorWithName(const JsonType& node, const std::string& valueName);
     bool parseWithName(const JsonType& node, const std::string& valueName);
+    int parseIntWithName(const JsonType& node, const std::string& valueName);
+    float parseFloatWithName(const JsonType& node, const std::string& valueName);
 
     void parse(const JsonType& j);
 
