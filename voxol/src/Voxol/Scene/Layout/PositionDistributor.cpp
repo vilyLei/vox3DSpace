@@ -1,5 +1,7 @@
 
 #include "PositionDistributor.h"
+#include <cmath>
+#include <random>
 
 namespace Voxol::Scene::Layout
 {
@@ -214,6 +216,28 @@ Math::Vec2 rose(int i, int n, float R, float amplitude)
 
     float r = R * std::cos(amplitude * a);
     return {r * cos(a), r * sin(a)};
+}
+
+std::vector<Math::Vec2> circleFilledRandom(const Math::Vec2& pos, int count, float R)
+{
+    static thread_local std::mt19937      rng{std::random_device{}()};
+    std::uniform_real_distribution<float> dist(0.0f, 1.0f);
+
+    std::vector<Math::Vec2> out;
+    out.reserve(count);
+
+    for (int i = 0; i < count; ++i)
+    {
+        float u = dist(rng);
+        float v = dist(rng);
+
+        float r = R * std::sqrt(u); // correct area-uniform radius
+        float a = v * MATH_2PI;  // angle 0..2¦Ð
+
+        Math::Vec2 pv{r * std::cos(a), r * std::sin(a)};
+        out.push_back(pv + pos);
+    }
+    return out;
 }
 } // namespace Distribution
 

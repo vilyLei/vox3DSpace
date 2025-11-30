@@ -196,7 +196,7 @@
                     "radius": 110,
                     "count": 8
                 },
-                "reference-layout": {
+                "reference-layoutgy6": {
                     "type": "basic",
                     "method": "diamond-filled",
                     "position": [
@@ -206,6 +206,16 @@
                     "radius": 5,
                     "spacing": [20,20],
                     "count": 8
+                },
+                "reference-layout": {
+                    "type": "basic",
+                    "method": "circle-filled-random",
+                    "position": [
+                        570,
+                        310
+                    ],
+                    "radius":100,
+                    "count": 20
                 },
                 "reference-layouthh": {
                     "type": "basic",
