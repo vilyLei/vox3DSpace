@@ -14,13 +14,7 @@ void DescriptionNodeLauout::referenceLayoutSceneNodeWithHexagonalGrid(const Json
     int        rings     = 5;
     float      hexRadius = 180;
 
-    //Data::JsonValue jsonV;
-    //pos = jsonV.parseVec2WithName(jsonNode, "position");
-    //hexRadius = jsonV.parseFloatWithName(jsonNode, "hex-radius");
-    //rings = jsonV.parseIntWithName(jsonNode, "rings");
-    //count = jsonV.parseIntWithName(jsonNode, "count");
-
-    RefLayoutValue jsonV;
+    RefLayoutValue jsonV{jsonNode};
     pos = jsonV.position(jsonNode);
     hexRadius = jsonV.hexRadius(jsonNode);
     rings     = jsonV.rings(jsonNode);
@@ -46,23 +40,13 @@ void DescriptionNodeLauout::referenceLayoutSceneNodeWithSpiral(const JsonType& j
     float      start_angle = 0;
     float      step_angle = 30;
 
-    //Data::JsonValue jsonV;
-    //center       = jsonV.parseVec2WithName(jsonNode, "position");
-    //start_radius = jsonV.parseFloatWithName(jsonNode, "start-radius");
-    //step_radius  = jsonV.parseFloatWithName(jsonNode, "step-radius");
-    //step_angle   = jsonV.parseFloatWithName(jsonNode, "step-angle");
-    //start_angle  = jsonV.parseFloatWithName(jsonNode, "start-angle");
-    //count        = jsonV.parseIntWithName(jsonNode, "count");
-    RefLayoutValue jsonV;
+    RefLayoutValue jsonV{jsonNode};
     center       = jsonV.position(jsonNode);
     start_radius = jsonV.startRadius(jsonNode);
     step_radius  = jsonV.stepRadius(jsonNode);
     step_angle   = jsonV.stepAngle(jsonNode);
     start_angle  = jsonV.startAngle(jsonNode);
     count        = jsonV.count(jsonNode);
-
-    //step_angle = Math::degrees_to_radians(step_angle);
-    //start_angle = Math::degrees_to_radians(start_angle);
 
     std::vector<float> angles;
     angles.reserve(count);
@@ -83,22 +67,13 @@ void DescriptionNodeLauout::referenceLayoutSceneNodeWithArc(const JsonType& json
     float      startAngle = 0;
     float      arcAngle = 180;
 
-    //Data::JsonValue jsonV;
-    //center     = jsonV.parseVec2WithName(jsonNode, "position");
-    //radius     = jsonV.parseFloatWithName(jsonNode, "radius");
-    //startAngle = jsonV.parseFloatWithName(jsonNode, "start-angle");
-    //arcAngle   = jsonV.parseFloatWithName(jsonNode, "arc-angle");
-    //count      = jsonV.parseIntWithName(jsonNode, "count");
-
-    RefLayoutValue jsonV;
+    RefLayoutValue jsonV{jsonNode};
     center                       = jsonV.position(jsonNode);
     radius                       = jsonV.radius(jsonNode);
     startAngle                   = jsonV.startAngle(jsonNode);
     arcAngle                     = jsonV.arcAngle(jsonNode);
     count                        = jsonV.count(jsonNode);
 
-    //auto   startRad  = Math::degrees_to_radians(startAngle);
-    //auto   arctRad   = Math::degrees_to_radians(arcAngle);
     std::vector<float> angles;
     angles.reserve(count);
     auto&& positions = PositionDistribution::arc(angles, count, center, radius, startAngle, arcAngle);
@@ -117,46 +92,12 @@ void DescriptionNodeLauout::referenceLayoutSceneNodeWithCircle(const JsonType& j
     float      radius   = 100.0f;
     float      startAngle = 0;
 
-    RefLayoutValue jsonV;
+    RefLayoutValue jsonV{jsonNode};
     center = jsonV.position(jsonNode);
     radius = jsonV.radius(jsonNode);
     startAngle = jsonV.startAngle(jsonNode);
     count      = jsonV.count(jsonNode);
 
-    //Data::JsonValue positionV;
-    //positionV.parseWithName(jsonNode, "position");
-    //if (positionV.is<Math::Vec2>())
-    //{
-    //    center = positionV.get<Math::Vec2>();
-    //}
-    //Data::JsonValue radiusV;
-    //radiusV.parseWithName(jsonNode, "radius");
-    //if (radiusV.is<int>())
-    //{
-    //    radius = radiusV.get<int>();
-    //}
-    //else if (positionV.is<float>())
-    //{
-    //    radius = radiusV.get<float>();
-    //}
-
-    //Data::JsonValue startAngleV;
-    //startAngleV.parseWithName(jsonNode, "start-angle");
-    //if (startAngleV.is<int>())
-    //{
-    //    startAngle = startAngleV.get<int>();
-    //}
-    //else if (startAngleV.is<float>())
-    //{
-    //    startAngle = startAngleV.get<float>();
-    //}
-    //Data::JsonValue countV;
-    //countV.parseWithName(jsonNode, "count");
-    //if (countV.is<int>())
-    //{
-    //    count = countV.get<int>();
-    //}
-    //auto               startRad = Math::degrees_to_radians(startAngle);
     std::vector<float> angles;
     angles.reserve(count);
     auto&& positions = PositionDistribution::circle(angles, count, center, radius, startAngle);
@@ -175,43 +116,12 @@ void DescriptionNodeLauout::referenceLayoutSceneNodeWithGrid(const JsonType& jso
     Math::Vec2 spacing{25, 25};
     Math::Vec2 staggered;
 
-    RefLayoutValue  jsonV;
+    RefLayoutValue jsonV{jsonNode};
     pos = jsonV.position(jsonNode);
     columns = jsonV.columns(jsonNode);
     count     = jsonV.count(jsonNode);
     spacing = jsonV.spacing(jsonNode);
     staggered = jsonV.staggered(jsonNode);
-
-    //Data::JsonValue positionV;
-    //positionV.parseWithName(jsonNode, "position");
-    //if (positionV.is<Math::Vec2>())
-    //{
-    //    beginPos = positionV.get<Math::Vec2>();
-    //}
-    //Data::JsonValue columnsV;
-    //columnsV.parseWithName(jsonNode, "columns");
-    //if (columnsV.is<int>())
-    //{
-    //    columns = columnsV.get<int>();
-    //}
-    //Data::JsonValue countV;
-    //countV.parseWithName(jsonNode, "count");
-    //if (countV.is<int>())
-    //{
-    //    count = countV.get<int>();
-    //}
-    //Data::JsonValue spacingV;
-    //spacingV.parseWithName(jsonNode, "spacing");
-    //if (spacingV.is<Math::Vec2>())
-    //{
-    //    spacing = spacingV.get<Math::Vec2>();
-    //}
-    //Data::JsonValue staggeredV;
-    //staggeredV.parseWithName(jsonNode, "staggered");
-    //if (staggeredV.is<Math::Vec2>())
-    //{
-    //    staggered = staggeredV.get<Math::Vec2>();
-    //}
 
     auto&& positions = PositionDistribution::grid(count, pos, spacing, columns, nodeSize, staggered);
     for (auto i = 0; i < positions.size(); i++)
