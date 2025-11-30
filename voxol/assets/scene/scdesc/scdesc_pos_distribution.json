@@ -121,7 +121,7 @@
                     "step-radius": 5,
                     "count": 61
                 },
-                "reference-layoutPPI": {
+                "reference-layout": {
                     "type": "base",
                     "method": "hexagonal-grid",
                     "position": [
@@ -162,7 +162,7 @@
                     ],
                     "count": 32
                 },
-                "reference-layouts": [
+                "reference-layoutsPPO": [
                     {
                         "type": "default",
                         "method": "grid",
