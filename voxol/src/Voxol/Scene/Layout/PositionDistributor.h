@@ -5,7 +5,7 @@
 
 namespace Voxol::Scene::Layout
 {
-namespace HexLayout
+namespace Distribution
 {
 
 // axial six directions
@@ -34,8 +34,9 @@ std::vector<Math::Vec2> generate(
     float      hexRadius = 20.0f // spacing
 );
 inline std::vector<Math::Vec2> generateHexGridT(const Math::Vec2& center, int rings, float hexR);
+Math::Vec2                     diamond(int i, int n, float R);
 
-} // namespace HexLayout
+} // namespace Distribution
 class PositionDistribution
 {
 public:

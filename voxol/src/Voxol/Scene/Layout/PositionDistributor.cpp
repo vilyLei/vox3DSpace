@@ -3,7 +3,7 @@
 
 namespace Voxol::Scene::Layout
 {
-namespace HexLayout
+namespace Distribution
 {
 Math::Vec2 hexToWorld(Hex h, float hexRadius)
 {
@@ -90,11 +90,83 @@ std::vector<Math::Vec2> generateHexGridT(const Math::Vec2& center, int rings, fl
 
     return ls;
 }
-} // namespace HexLayout
+Math::Vec2 diamond(int i, int n, float R)
+{
+    float t     = float(i) / float(n); // 0~1
+    float angle = t * 4.0f * MATH_PI;     // 四段
+
+    float s = std::fmod(angle, MATH_2PI) / MATH_2PI;
+
+    // 四个方向：右、上、左、下
+    int sector = int(angle / MATH_2PI) % 4;
+
+    switch (sector)
+    {
+        case 0: return {R, R * (1 - 2 * s)};
+        case 1: return {R * (1 - 2 * s), R};
+        case 2: return {-R, R * (2 * s - 1)};
+        case 3: return {R * (2 * s - 1), -R};
+    }
+    return {};
+}
+std::vector<Math::Vec2> kochSnowflake(int iteration, float R)
+{
+    std::vector<Math::Vec2> pts{
+        {0, -R},
+        {R * 0.866f, 0.5f * R},
+        {-R * 0.866f, 0.5f * R}};
+
+    for (int it = 0; it < iteration; ++it)
+    {
+        std::vector<Math::Vec2> next;
+        for (int i = 0; i < pts.size(); ++i)
+        {
+            Math::Vec2 a = pts[i];
+            Math::Vec2 b = pts[(i + 1) % pts.size()];
+
+            Math::Vec2 ab = (b - a) / 3.0f;
+
+            Math::Vec2 p1 = a + ab;
+            Math::Vec2 p2 = a + ab * 2.0f;
+
+            float angle = MATH_PI / 3.0f;
+            Math::Vec2 peak  = {
+                p1.x + ab.x * cos(angle) - ab.y * sin(angle),
+                p1.y + ab.x * sin(angle) + ab.y * cos(angle)};
+
+            next.push_back(a);
+            next.push_back(p1);
+            next.push_back(peak);
+            next.push_back(p2);
+        }
+        pts = std::move(next);
+    }
+    return pts;
+}
+
+Math::Vec2 rhombusGrid(int i, int n, float spacing)
+{
+    int side = std::ceil(std::sqrt(n));
+    int x    = i % side;
+    int y    = i / side;
+
+    return {
+        (x - y) * spacing,
+        (x + y) * spacing * 0.5f};
+}
+Math::Vec2 rose(int i, int n, float R, int k)
+{
+    float t = float(i) / n;
+    float a = t * 2 * MATH_PI;
+
+    float r = R * std::cos(k * a);
+    return {r * cos(a), r * sin(a)};
+}
+} // namespace Distribution
 
 std::vector<Math::Vec2> PositionDistribution::hexagonalGrid(int count, const Math::Vec2& center, int rings, float hexRadius)
 {
-    return HexLayout::generateHexGridT(center, rings, hexRadius);
+    return Distribution::generateHexGridT(center, rings, hexRadius);
 }
 std::vector<Math::Vec2> PositionDistribution::circle(std::vector<float>& angles, int count, const Math::Vec2& center, float radius, float startRadian)
 {
