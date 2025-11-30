@@ -80,6 +80,15 @@ struct RefLayoutValue
         }
         return v;
     }
+    float arcAngle(const JsonType& jsonNode, bool toRadian = true)
+    {
+        auto v = jsonV.parseFloatWithName(jsonNode, "arc-angle");
+        if (toRadian)
+        {
+            v = Math::degrees_to_radians(v);
+        }
+        return v;
+    }
 };
 
 void DescriptionNodeLauout::referenceLayoutSceneNodeWithHexagonalGrid(const JsonType& jsonNode, const Math::Vec2& nodeSize, const DescNodeLayoutCallbackType& callback)
@@ -160,18 +169,25 @@ void DescriptionNodeLauout::referenceLayoutSceneNodeWithArc(const JsonType& json
     float      startAngle = 0;
     float      arcAngle = 180;
 
-    Data::JsonValue jsonV;
-    center     = jsonV.parseVec2WithName(jsonNode, "position");
-    radius     = jsonV.parseFloatWithName(jsonNode, "radius");
-    startAngle = jsonV.parseFloatWithName(jsonNode, "start-angle");
-    arcAngle   = jsonV.parseFloatWithName(jsonNode, "arc-angle");
-    count      = jsonV.parseIntWithName(jsonNode, "count");
+    //Data::JsonValue jsonV;
+    //center     = jsonV.parseVec2WithName(jsonNode, "position");
+    //radius     = jsonV.parseFloatWithName(jsonNode, "radius");
+    //startAngle = jsonV.parseFloatWithName(jsonNode, "start-angle");
+    //arcAngle   = jsonV.parseFloatWithName(jsonNode, "arc-angle");
+    //count      = jsonV.parseIntWithName(jsonNode, "count");
 
-    auto   startRad  = Math::degrees_to_radians(startAngle);
-    auto   arctRad   = Math::degrees_to_radians(arcAngle);
+    RefLayoutValue jsonV;
+    center                       = jsonV.position(jsonNode);
+    radius                       = jsonV.radius(jsonNode);
+    startAngle                   = jsonV.startAngle(jsonNode);
+    arcAngle                     = jsonV.arcAngle(jsonNode);
+    count                        = jsonV.count(jsonNode);
+
+    //auto   startRad  = Math::degrees_to_radians(startAngle);
+    //auto   arctRad   = Math::degrees_to_radians(arcAngle);
     std::vector<float> angles;
     angles.reserve(count);
-    auto&&             positions = PositionDistribution::arc(angles, count, center, radius, startRad, arctRad);
+    auto&& positions = PositionDistribution::arc(angles, count, center, radius, startAngle, arcAngle);
     for (auto i = 0; i < positions.size(); i++)
     {
         callback(i, positions[i], {1, 1}, angles[i]);

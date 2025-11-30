@@ -108,7 +108,7 @@
                         100
                     ]
                 },
-                "reference-layout": {
+                "reference-layoutLLL": {
                     "type": "default",
                     "method": "spiral",
                     "position": [
@@ -132,7 +132,7 @@
                     "hex-radius": 30,
                     "count": 61
                 },
-                "reference-layoutPPPPy": {
+                "reference-layout": {
                     "type": "default",
                     "method": "arc",
                     "position": [
