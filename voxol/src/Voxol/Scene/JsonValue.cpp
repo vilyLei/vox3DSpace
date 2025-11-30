@@ -232,6 +232,17 @@ bool JsonValue::parseWithName(const JsonType& node, const std::string& valueName
     parse(node[valueName]);
     return true;
 }
+
+std::string JsonValue::parseStringWithName(const JsonType& node, const std::string& valueName, const std::string& defaultValue)
+{
+    parseWithName(node, valueName);
+    if (is<std::string>())
+    {
+        return get<std::string>();
+    }
+    return defaultValue;
+
+}
 int JsonValue::parseIntWithName(const JsonType& node, const std::string& valueName)
 {
     parseWithName(node, valueName);

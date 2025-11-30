@@ -4,6 +4,87 @@
 namespace Voxol::Scene::Describe
 {
 
+    
+//"reference": {
+//    "srcTT": "rect-01-label",
+//    "src-list": [
+//        "rect-01-label",
+//        "circle-01-label",
+//        "circle-02-label"
+//    ],
+//    "src-wrapping": "repeat",
+//    "type": "container"
+//},
+
+bool DescNodeRferenceSrcItem::empty() const {
+
+    return src.empty();
+}
+
+void DescNodeRferenceSrcItem::parse(const JsonType& jsonNode)
+{
+    if (!jsonNode.is_object())
+        return;
+
+    Data::JsonValue jsonV;
+    type = jsonV.parseStringWithName(jsonNode, "type");
+    src  = jsonV.parseStringWithName(jsonNode, "src");
+    condition = jsonV.parseStringWithName(jsonNode, "condition");
+    mergePolicy = jsonV.parseStringWithName(jsonNode, "merge-policy", "composite");
+    conflictResolution = jsonV.parseStringWithName(jsonNode, "conflict-resolution", "last-wins");
+
+}
+bool DescNodeRference::empty() const {
+    return srcList.empty();
+}
+void DescNodeRference::reset() {
+
+    srcWrapping = RefLayoutSrcWrapping::Repeat;
+    srcList.clear();
+}
+void DescNodeRference::parse(const JsonType& jsonNode)
+{
+    Data::JsonValue jsonV;
+
+    type = jsonV.parseStringWithName(jsonNode, "type");
+    auto srcWrappingStr = jsonV.parseStringWithName(jsonNode, "src-wrapping");
+    if (srcWrappingStr == "clamp")
+    {
+        srcWrapping = RefLayoutSrcWrapping::Clamp;
+    }
+
+    std::string srcNodeName = (jsonNode.contains("src") && jsonNode["src"].is_string()) ? jsonNode["src"] : "";
+    if (!srcNodeName.empty())
+    {
+        srcList.emplace_back("", srcNodeName);
+    }
+    std::string srcListKey = "src-list";
+    if (jsonNode.contains(srcListKey) && jsonNode[srcListKey].is_array())
+    {
+        auto&& elements = jsonNode[srcListKey];
+        if (elements.empty())
+            return;
+
+        for (auto& item : elements)
+        {
+
+            if (item.is_string())
+            {
+                std::string srcNodeName = item;
+                if (srcNodeName.empty())
+                    continue;
+                srcList.emplace_back("", srcNodeName);
+                continue;
+            }
+
+            DescNodeRferenceSrcItem srcitem;
+            srcitem.parse(item);
+            if (srcitem.empty())
+                continue;
+            srcList.emplace_back(srcitem);
+        }
+    }
+}
 void DisplayShape::parse(const JsonType& jsonNode)
 {
 

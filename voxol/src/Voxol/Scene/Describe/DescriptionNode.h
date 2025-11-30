@@ -121,8 +121,8 @@ struct RefLayoutValue
 
 struct RefLayoutValueRef
 {
-    RefLayoutValue         value;
-    const JsonType&              jsonNodeRef;
+    RefLayoutValue  value;
+    const JsonType& jsonNodeRef;
     RefLayoutValueRef(const JsonType& jn) :
         jsonNodeRef(jn) {}
 
@@ -195,6 +195,30 @@ struct RefLayoutValueRef
     }
 };
 
+
+struct DescNodeRferenceSrcItem
+{
+    std::string type;
+    std::string src;
+    std::string condition;
+    // some values: composite, sequential, layered
+    std::string mergePolicy = "composite";
+    // some values: last-wins, first-wins, merge-deep
+    std::string conflictResolution = "last-wins";
+    bool        empty() const;
+    void        parse(const JsonType& jsonNode);
+};
+struct DescNodeRference
+{
+    std::string                          type;
+    std::vector<DescNodeRferenceSrcItem> srcList;
+    RefLayoutSrcWrapping                 srcWrapping = RefLayoutSrcWrapping::Repeat;
+    bool                                 empty() const;
+    void                                 reset();
+    void                                 parse(const JsonType& jsonNode);
+};
+
+
 struct HierarchyNode
 {
     uint32_t                 id = Base::ID::INVALID_ID;
@@ -229,10 +253,10 @@ struct DescreferenceLayoutNode
     static constexpr const char* TYPE_GENERATIVE = "generative";
     static constexpr const char* TYPE_REACTIVE   = "reactive";
 
-    std::string     type = "default";
+    std::string type = "default";
     // basic, advanced, physics, generative, reactive
-    std::string     method = "grid";
-    void            parse(const JsonType& jsonNode);
+    std::string method = "grid";
+    void        parse(const JsonType& jsonNode);
 };
 
 struct SceneActionDesc
@@ -276,5 +300,5 @@ struct SceneNode
     void printTransform() const;
 };
 
-} // namespace Voxol::Scene::Layout
+} // namespace Voxol::Scene::Describe
 #endif

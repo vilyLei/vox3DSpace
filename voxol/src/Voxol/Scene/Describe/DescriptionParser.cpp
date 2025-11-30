@@ -241,6 +241,7 @@ bool FileParser::parseSceneNodeReference(SceneNode& parentNode, uint32_t& id, co
             {
                 srcList.push_back(srcNodeName);
             }
+
             std::string srcListKey = "src-list";
             if (refNode.contains(srcListKey) && refNode[srcListKey].is_array())
             {
