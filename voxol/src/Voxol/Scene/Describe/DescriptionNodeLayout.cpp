@@ -31,6 +31,7 @@ void DescriptionNodeLauout::referenceLayoutSceneNodeWithBasic(const JsonType& js
     {
         return;
     }
+    jsonV.reset();
     pos         = jsonV.position();
 
     positions.reserve(count);
@@ -49,11 +50,16 @@ void DescriptionNodeLauout::referenceLayoutSceneNodeWithBasic(const JsonType& js
         RefLayoutValueRef          jsonParamsV{paramsJson};
         Superformula::FormulaParam param;
 
-        param.m    = jsonParamsV.floatValue("m");
-        param.a    = jsonParamsV.floatValue("a");
+        param.m = jsonParamsV.floatValue("m");
+        jsonParamsV.reset();
+        param.a = jsonParamsV.floatValue("a");
+        jsonParamsV.reset();
         param.b    = jsonParamsV.floatValue("b");
+        jsonParamsV.reset();
         param.n1   = jsonParamsV.floatValue("n1");
-        param.n1  = jsonParamsV.floatValue("n1");
+        jsonParamsV.reset();
+        param.n1   = jsonParamsV.floatValue("n1");
+        jsonParamsV.reset();
         param.n2   = jsonParamsV.floatValue("n2");
 
         positions = Superformula::generateSuperformula(pos, count, param, scale);
@@ -74,6 +80,7 @@ void DescriptionNodeLauout::referenceLayoutSceneNodeWithBasic(const JsonType& js
     if (method == "diamond-filled")
     {
         auto radius = jsonV.radius();
+        jsonV.reset();
         auto spacing = jsonV.spacing();
         positions    = Distribution::diamondFilledGrid(pos, spacing, radius);
         return;
@@ -87,20 +94,23 @@ void DescriptionNodeLauout::referenceLayoutSceneNodeWithBasic(const JsonType& js
     if (method == "circle-filled-grid")
     {
         auto radius = jsonV.radius();
+        jsonV.reset();
         auto radiusSpacing = jsonV.radiusSpacing();
         positions          = Distribution::circleFilledGrid(pos, radiusSpacing, radius);
         return;
     }
     if (method == "circle-filled-hex")
     {
-        auto radius        = jsonV.radius();
+        auto radius = jsonV.radius();
+        jsonV.reset();
         auto radiusSpacing = jsonV.radiusSpacing();
         positions          = Distribution::circleFilledHex(pos, radiusSpacing, radius);
         return;
     }
     if (method == "poisson-disk-circle")
     {
-        auto radius        = jsonV.radius();
+        auto radius = jsonV.radius();
+        jsonV.reset();
         auto mindDistance = jsonV.mindDistance();
         positions          = Distribution::poissonDiskCircle(pos, radius, mindDistance);
         return;
@@ -129,7 +139,8 @@ void DescriptionNodeLauout::referenceLayoutSceneNodeWithBasic(const JsonType& js
     }
     if (method == "rose")
     {
-        auto radius    = jsonV.radius();
+        auto radius = jsonV.radius();
+        jsonV.reset();
         auto amplitude = jsonV.amplitude();
         for (auto i = 0; i < count; i++)
         {
@@ -153,11 +164,16 @@ void DescriptionNodeLauout::referenceLayoutSceneNodeWithSpiral(const JsonType& j
     float      step_angle = 30;
 
     RefLayoutValueRef jsonV{jsonNode};
-    center       = jsonV.position();
+    center = jsonV.position();
+    jsonV.reset();
     start_radius = jsonV.startRadius();
+    jsonV.reset();
     step_radius  = jsonV.stepRadius();
+    jsonV.reset();
     step_angle   = jsonV.stepAngle();
+    jsonV.reset();
     start_angle  = jsonV.startAngle();
+    jsonV.reset();
     count        = jsonV.count();
 
     angles.reserve(count);
@@ -177,9 +193,12 @@ void DescriptionNodeLauout::referenceLayoutSceneNodeWithHexagonalGrid(const Json
     float      hexRadius = 180;
 
     RefLayoutValueRef jsonV{jsonNode};
-    pos       = jsonV.position();
+    pos = jsonV.position();
+    jsonV.reset();
     hexRadius = jsonV.hexRadius();
+    jsonV.reset();
     rings     = jsonV.rings();
+    jsonV.reset();
     count     = jsonV.count();
 
     auto&& pvs = PositionDistribution::hexagonalGrid(count, pos, rings, hexRadius);
@@ -205,23 +224,19 @@ void DescriptionNodeLauout::referenceLayoutSceneNodeWithArc(const JsonType& json
     float      arcAngle = 180;
 
     RefLayoutValueRef jsonV{jsonNode};
-    center                       = jsonV.position();
-    radius                       = jsonV.radius();
+    center = jsonV.position();
+    jsonV.reset();
+    radius = jsonV.radius();
+    jsonV.reset();
     startAngle                   = jsonV.startAngle();
+    jsonV.reset();
     arcAngle                     = jsonV.arcAngle();
+    jsonV.reset();
     count                        = jsonV.count();
 
     angles.reserve(count);
     angles.clear();
     positions = PositionDistribution::arc(angles, count, center, radius, startAngle, arcAngle);
-    //for (auto i = 0; i < positions.size(); i++)
-    //{
-    //    callback(i, positions[i], {1, 1}, angles[i]);
-    //}
-    //auto tot = positions.size();
-    //for (auto i = 0; i < tot; i++)
-    //{
-    //}
 }
 void DescriptionNodeLauout::referenceLayoutSceneNodeWithCircle(const JsonType& jsonNode, const Math::Vec2& nodeSize)
 {
@@ -235,8 +250,11 @@ void DescriptionNodeLauout::referenceLayoutSceneNodeWithCircle(const JsonType& j
 
     RefLayoutValueRef jsonV{jsonNode};
     center = jsonV.position();
+    jsonV.reset();
     radius = jsonV.radius();
+    jsonV.reset();
     startAngle = jsonV.startAngle();
+    jsonV.reset();
     count      = jsonV.count();
 
     angles.reserve(count);
@@ -255,9 +273,13 @@ void DescriptionNodeLauout::referenceLayoutSceneNodeWithGrid(const JsonType& jso
 
     RefLayoutValueRef jsonV{jsonNode};
     pos = jsonV.position();
+    jsonV.reset();
     columns = jsonV.columns();
-    count     = jsonV.count();
+    jsonV.reset();
+    count   = jsonV.count();
+    jsonV.reset();
     spacing = jsonV.spacing();
+    jsonV.reset();
     staggered = jsonV.staggered();
 
     positions = PositionDistribution::grid(count, pos, spacing, columns, nodeSize, staggered);
