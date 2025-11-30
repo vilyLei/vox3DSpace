@@ -5,6 +5,8 @@
 namespace Voxol::Scene::Describe
 {
 
+    
+std::vector<float> DescriptionNodeLauout::angles{};
 void DescriptionNodeLauout::referenceLayoutSceneNodeWithHexagonalGrid(const JsonType& jsonNode, const Math::Vec2& nodeSize, const DescNodeLayoutCallbackType& callback)
 {
     using namespace Voxol::Scene::Layout;
@@ -48,8 +50,9 @@ void DescriptionNodeLauout::referenceLayoutSceneNodeWithSpiral(const JsonType& j
     start_angle  = jsonV.startAngle();
     count        = jsonV.count();
 
-    std::vector<float> angles;
     angles.reserve(count);
+    angles.clear();
+
     auto&& positions = PositionDistribution::spiral(angles, count, center, start_radius, step_radius, start_angle, step_angle);
     for (auto i = 0; i < positions.size(); i++)
     {
@@ -74,8 +77,8 @@ void DescriptionNodeLauout::referenceLayoutSceneNodeWithArc(const JsonType& json
     arcAngle                     = jsonV.arcAngle();
     count                        = jsonV.count();
 
-    std::vector<float> angles;
     angles.reserve(count);
+    angles.clear();
     auto&& positions = PositionDistribution::arc(angles, count, center, radius, startAngle, arcAngle);
     for (auto i = 0; i < positions.size(); i++)
     {
@@ -98,8 +101,8 @@ void DescriptionNodeLauout::referenceLayoutSceneNodeWithCircle(const JsonType& j
     startAngle = jsonV.startAngle();
     count      = jsonV.count();
 
-    std::vector<float> angles;
     angles.reserve(count);
+    angles.clear();
     auto&& positions = PositionDistribution::circle(angles, count, center, radius, startAngle);
     for (auto i = 0; i < positions.size(); i++)
     {
