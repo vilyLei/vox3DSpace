@@ -108,7 +108,7 @@
                         100
                     ]
                 },
-                "reference-layout": {
+                "reference-layoutdffd": {
                     "type": "basic",
                     "method": "superformula",
                     "position": [
@@ -186,7 +186,7 @@
                     ],
                     "count": 32
                 },
-                "reference-layoutKOKO": {
+                "reference-layout": {
                     "type": "basic",
                     "method": "diamond",
                     "position": [
@@ -194,7 +194,7 @@
                         310
                     ],
                     "radius": 110,
-                    "count": 20
+                    "count": 8
                 },
                 "reference-layouthh": {
                     "type": "basic",

@@ -91,22 +91,42 @@ std::vector<Math::Vec2> generateHexGrid(const Math::Vec2& center, int rings, flo
 }
 Math::Vec2 diamond(int i, int n, float R)
 {
-    float t     = float(i) / float(n); // 0~1
-    float angle = t * 4.0f * MATH_2PI;  // four segments
+    // n = number of points along the perimeter (recommended n>0)
+    // i in [0, n-1] (wrap-around)
+    if (n <= 0) return {0.0f, 0.0f};
 
-    float s = std::fmod(angle, MATH_2PI) / MATH_2PI;
+    // u in [0,4) : 4 segments each length 1
+    float u      = (float(i) / float(n)) * 4.0f;
+    int   sector = static_cast<int>(std::floor(u)) % 4;
+    float s      = u - std::floor(u); // s in [0,1) within the current segment
 
-    // four directions£ºright, top, left, down
-    int sector = int(angle / MATH_2PI) % 4;
-
+    float x = 0.0f, y = 0.0f;
     switch (sector)
     {
-        case 0: return {R, R * (1 - 2 * s)};
-        case 1: return {R * (1 - 2 * s), R};
-        case 2: return {-R, R * (2 * s - 1)};
-        case 3: return {R * (2 * s - 1), -R};
+        // from ( R, 0) -> ( 0, R)
+        case 0:
+            x = R * (1.0f - s);
+            y = R * s;
+            break;
+        // from ( 0, R) -> (-R, 0)
+        case 1:
+            x = -R * s;
+            y = R * (1.0f - s);
+            break;
+        // from (-R, 0) -> ( 0,-R)
+        case 2:
+            x = -R * (1.0f - s);
+            y = -R * s;
+            break;
+        // from ( 0,-R) -> ( R, 0)
+        case 3:
+            x = R * s;
+            y = -R * (1.0f - s);
+            break;
+        default:
+            break;
     }
-    return {};
+    return {x, y};
 }
 Math::Vec2 snowflake(int i, int n, float R)
 {
