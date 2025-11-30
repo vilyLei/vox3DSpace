@@ -220,11 +220,121 @@ void FileParser::parseHeriNodes(const JsonType& jsonNode)
     rootNode.print();
 }
 
+bool FileParser::parseSceneNodeReference(SceneNode& parentNode, uint32_t& id, const JsonType& jsonNode, const std::string& nodesName)
+{
+    std::string refKey = "reference";
+    if (jsonNode.contains(refKey) && jsonNode[refKey].is_object())
+    {
+
+        auto&&      refNode     = jsonNode[refKey];
+        std::string srcNodeType = refNode["type"];
+        auto&       preTrans    = parentNode.transform;
+        auto        preName     = parentNode.name;
+        auto        visible     = parentNode.entity.visible;
+
+        if (srcNodeType == "container")
+        {
+            std::vector<std::string> srcList;
+            std::string              srcNodeName = (refNode.contains("src") && refNode["src"].is_string()) ? refNode["src"] : "";
+
+            if (!srcNodeName.empty() && hasSceneNodeWithNameFromRoot(srcNodeName))
+            {
+                srcList.push_back(srcNodeName);
+            }
+            std::string srcListKey = "src-list";
+            if (refNode.contains(srcListKey) && refNode[srcListKey].is_array())
+            {
+                auto&& elements = refNode[srcListKey];
+                if (elements.empty())
+                    return true;
+
+                for (auto& item : elements)
+                {
+                    if (item.is_string())
+                    {
+
+                        srcNodeName = item;
+                        if (srcNodeName.empty())
+                            continue;
+                        srcList.push_back(srcNodeName);
+                    }
+                    else if (item.is_object())
+                    {
+                        // maybe src entity-node file
+                    }
+                }
+            }
+            if (srcList.empty())
+                return true;
+
+            std::string srcWrappingKey = "src-wrapping";
+            std::string srcWrappingStr = (refNode.contains(srcWrappingKey) && refNode[srcWrappingKey].is_string()) ? refNode[srcWrappingKey] : "";
+
+            Describe::RefLayoutSrcWrapping srcWrapping = RefLayoutSrcWrapping::Repeat;
+            // repeat | clamp
+            if (srcWrappingStr == "clamp")
+            {
+                srcWrapping = RefLayoutSrcWrapping::Clamp;
+            }
+
+            auto srcCount = static_cast<int>(srcList.size());
+
+            SceneNode tempNode;
+            parseSceneNodeWithNameFromRoot(tempNode, tempNode.id, srcList[0]);
+            DescriptionNodeLauout::referenceLayoutSceneNode(
+                jsonNode,
+                tempNode.transform.scale(),
+                [&, this](int index, const Math::Vec2& pos, const Math::Vec2& scale, float rotation) {
+                    SceneNode node;
+                    node.id = id++;
+                    auto k  = index % srcCount;
+                    switch (srcWrapping)
+                    {
+                        case Voxol::Scene::Describe::RefLayoutSrcWrapping::Clamp:
+                            k = index > (srcCount - 1) ? (srcCount - 1) : index;
+                            break;
+                        default:
+                            k = index % srcCount;
+                            break;
+                    }
+
+                    const auto& ns = srcList[k];
+                    parseSceneNodeWithNameFromRoot(node, id, ns);
+                    node.transform.pos()    = pos;
+                    node.transform.rotation = rotation;
+                    node.entity.visible     = visible;
+                    parentNode.children.emplace_back(std::move(node));
+                });
+
+            parentNode.childrenTotal = static_cast<int>(parentNode.children.size());
+        }
+        else
+        {
+            std::string srcNodeName = refNode["src"];
+            if (srcNodeName.empty())
+                return true;
+            if (!hasSceneNodeWithNameFromRoot(srcNodeName))
+                return true;
+
+            parseSceneNodeWithNameFromRoot(parentNode, id, srcNodeName);
+            parentNode.transform.pos() = preTrans.pos();
+            parentNode.name            = preName;
+            parentNode.entity.visible  = visible;
+        }
+        return true;
+    }
+    return false;
+}
 void FileParser::parseSceneNode(SceneNode& parentNode, uint32_t& id, const JsonType& jsonNode, const std::string& nodesName)
 {
 
     parseNodeData(parentNode, jsonNode);
-
+    auto flag = parseSceneNodeReference(parentNode, id, jsonNode, nodesName);
+    if (flag)
+    {
+        return;
+    }
+    /*
     std::string refKey = "reference";
     if (jsonNode.contains(refKey) && jsonNode[refKey].is_object())
     {
@@ -253,12 +363,17 @@ void FileParser::parseSceneNode(SceneNode& parentNode, uint32_t& id, const JsonT
 
                 for (auto& item : elements)
                 {
-                    if (!item.is_string())
-                        continue;
-                    srcNodeName = item;
-                    if (srcNodeName.empty())
-                        continue;
-                    srcList.push_back(srcNodeName);
+                    if (item.is_string()) {
+
+                        srcNodeName = item;
+                        if (srcNodeName.empty())
+                            continue;
+                        srcList.push_back(srcNodeName);
+                    }
+                    else if (item.is_object())
+                    {
+                        // maybe src entity-node file
+                    }
                 }
             }
             if (srcList.empty())
@@ -319,7 +434,7 @@ void FileParser::parseSceneNode(SceneNode& parentNode, uint32_t& id, const JsonT
             parentNode.entity.visible  = visible;
         }
     }
-
+    //*/
     if (!jsonNode.contains(nodesName) || !jsonNode[nodesName].is_array())
         return;
 

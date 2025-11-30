@@ -40,6 +40,7 @@ public:
     void parseSceneNodeWithNameRecursive(SceneNode& currNode, uint32_t& id, const std::string& nodeName, const JsonType& jsonNode, const std::string& nodesName);
     void parseHeriNodes(const JsonType& jsonNode);
     void parseSceneNode(SceneNode& parentNode, uint32_t& id, const JsonType& jsonNode, const std::string& nodesName);
+    bool parseSceneNodeReference(SceneNode& parentNode, uint32_t& id, const JsonType& jsonNode, const std::string& nodesName);
 
     void parseNodeDisplayStyle(SceneNode& node, const JsonType& jsonNode);
     void parseNodeDisplayShape(SceneNode& node, const JsonType& jsonNode);

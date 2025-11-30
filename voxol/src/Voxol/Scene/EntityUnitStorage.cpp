@@ -36,8 +36,9 @@ void EntityUnitStorage::initalizeFromDescFile(const std::string& fileName)
     comp->interactionIDMap = descParser.fileParser.interactionIDMap;
     comp->actionIDMap      = descParser.fileParser.actionIDMap;
 
-    total                       = 1024;
-    total                       = total < 1024 ? 1024 : total;
+    constexpr int poolSzie = 8192;
+    total                  = poolSzie;
+    total                  = total < poolSzie ? poolSzie : total;
 
     auto& entitiesPool          = comp->entitiesPool;
     auto& shaderingEntitiesPool = comp->shaderingEntitiesPool;
