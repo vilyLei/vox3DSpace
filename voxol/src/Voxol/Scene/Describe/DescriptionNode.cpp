@@ -57,7 +57,7 @@ void DescNodeRference::parse(const JsonType& jsonNode)
         srcWrapping = RefLayoutSrcWrapping::Clamp;
     }
 
-    std::string srcNodeName = (jsonNode.contains("src") && jsonNode["src"].is_string()) ? jsonNode["src"] : "";
+    std::string srcNodeName = jsonV.parseStringWithName(jsonNode, "src");
     if (!srcNodeName.empty())
     {
         srcList.emplace_back("", srcNodeName);

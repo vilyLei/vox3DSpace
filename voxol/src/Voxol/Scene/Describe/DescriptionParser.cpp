@@ -218,121 +218,72 @@ void FileParser::parseHeriNodes(const JsonType& jsonNode)
     rootNode.entity.modelId   = Base::ID::INVALID_ID;
     rootNode.entity.shadingId = Base::ID::INVALID_ID;
     rootNode.print();
+
 }
 
 bool FileParser::parseSceneNodeReference(SceneNode& parentNode, uint32_t& id, const JsonType& jsonNode, const std::string& nodesName)
 {
     std::string refKey = "reference";
-    if (jsonNode.contains(refKey) && jsonNode[refKey].is_object())
+    if (!jsonNode.contains(refKey) || !jsonNode[refKey].is_object())
+        return false;
+
+
+    auto&& refNode = jsonNode[refKey];
+    auto& preTrans = parentNode.transform;
+    auto  preName  = parentNode.name;
+    auto  visible  = parentNode.entity.visible;
+
+    DescNodeRference ref;
+    ref.parse(refNode);
+    if (refNode.empty())
+        return true;
+
+    auto& srcList = ref.srcList;
+    if (ref.isContainer())
     {
+        auto srcCount = static_cast<int>(srcList.size());
 
-        auto&&      refNode     = jsonNode[refKey];
-        //std::string srcNodeType = refNode["type"];
-        auto&       preTrans    = parentNode.transform;
-        auto        preName     = parentNode.name;
-        auto        visible     = parentNode.entity.visible;
+        SceneNode tempNode;
+        parseSceneNodeWithNameFromRoot(tempNode, tempNode.id, srcList[0].src);
+        DescriptionNodeLauout::referenceLayoutSceneNode(
+            jsonNode,
+            tempNode.transform.scale(),
+            [&, this](int index, const Math::Vec2& pos, const Math::Vec2& scale, float rotation) {
+                SceneNode node;
+                node.id = id++;
+                auto k  = index % srcCount;
+                switch (ref.srcWrapping)
+                {
+                    case Voxol::Scene::Describe::RefLayoutSrcWrapping::Clamp:
+                        k = index > (srcCount - 1) ? (srcCount - 1) : index;
+                        break;
+                    default:
+                        k = index % srcCount;
+                        break;
+                }
 
-        DescNodeRference ref;
-        ref.parse(refNode);
-        if (refNode.empty())
+                const auto& ns = srcList[k].src;
+                parseSceneNodeWithNameFromRoot(node, id, ns);
+                node.transform.pos()    = pos;
+                node.transform.rotation = rotation;
+                node.entity.visible     = visible;
+                parentNode.children.emplace_back(std::move(node));
+            });
+
+        parentNode.childrenTotal = static_cast<int>(parentNode.children.size());
+    }
+    else
+    {
+        auto& srcNodeName = srcList[0].src;
+        if (!hasSceneNodeWithNameFromRoot(srcNodeName))
             return true;
 
-        //if (srcNodeType == "container")
-        auto& srcList = ref.srcList;
-        if (ref.isContainer())
-        {
-            /*
-            std::vector<std::string> srcList;
-            std::string              srcNodeName = (refNode.contains("src") && refNode["src"].is_string()) ? refNode["src"] : "";
-
-            if (!srcNodeName.empty() && hasSceneNodeWithNameFromRoot(srcNodeName))
-            {
-                srcList.push_back(srcNodeName);
-            }
-
-            std::string srcListKey = "src-list";
-            if (refNode.contains(srcListKey) && refNode[srcListKey].is_array())
-            {
-                auto&& elements = refNode[srcListKey];
-                if (elements.empty())
-                    return true;
-
-                for (auto& item : elements)
-                {
-                    if (item.is_string())
-                    {
-
-                        srcNodeName = item;
-                        if (srcNodeName.empty())
-                            continue;
-                        srcList.push_back(srcNodeName);
-                    }
-                    else if (item.is_object())
-                    {
-                        // maybe src entity-node file
-                    }
-                }
-            }
-            if (srcList.empty())
-                return true;
-            //*/
-            //std::string srcWrappingKey = "src-wrapping";
-            //std::string srcWrappingStr = (refNode.contains(srcWrappingKey) && refNode[srcWrappingKey].is_string()) ? refNode[srcWrappingKey] : "";
-
-            //Describe::RefLayoutSrcWrapping srcWrapping = RefLayoutSrcWrapping::Repeat;
-            //// repeat | clamp
-            //if (srcWrappingStr == "clamp")
-            //{
-            //    srcWrapping = RefLayoutSrcWrapping::Clamp;
-            //}
-            auto srcCount = static_cast<int>(srcList.size());
-
-            SceneNode tempNode;
-            parseSceneNodeWithNameFromRoot(tempNode, tempNode.id, srcList[0].src);
-            DescriptionNodeLauout::referenceLayoutSceneNode(
-                jsonNode,
-                tempNode.transform.scale(),
-                [&, this](int index, const Math::Vec2& pos, const Math::Vec2& scale, float rotation) {
-                    SceneNode node;
-                    node.id = id++;
-                    auto k  = index % srcCount;
-                    switch (ref.srcWrapping)
-                    {
-                        case Voxol::Scene::Describe::RefLayoutSrcWrapping::Clamp:
-                            k = index > (srcCount - 1) ? (srcCount - 1) : index;
-                            break;
-                        default:
-                            k = index % srcCount;
-                            break;
-                    }
-
-                    const auto& ns = srcList[k].src;
-                    parseSceneNodeWithNameFromRoot(node, id, ns);
-                    node.transform.pos()    = pos;
-                    node.transform.rotation = rotation;
-                    node.entity.visible     = visible;
-                    parentNode.children.emplace_back(std::move(node));
-                });
-
-            parentNode.childrenTotal = static_cast<int>(parentNode.children.size());
-        }
-        else
-        {
-            //std::string srcNodeName = refNode["src"];
-            //if (srcNodeName.empty())
-            //    return true;
-            auto& srcNodeName = srcList[0].src;
-            if (!hasSceneNodeWithNameFromRoot(srcNodeName))
-                return true;
-
-            parseSceneNodeWithNameFromRoot(parentNode, id, srcNodeName);
-            parentNode.transform.pos() = preTrans.pos();
-            parentNode.name            = preName;
-            parentNode.entity.visible  = visible;
-        }
-        return true;
+        parseSceneNodeWithNameFromRoot(parentNode, id, srcNodeName);
+        parentNode.transform.pos() = preTrans.pos();
+        parentNode.name            = preName;
+        parentNode.entity.visible  = visible;
     }
-    return false;
+    return true;
 }
 void FileParser::parseSceneNode(SceneNode& parentNode, uint32_t& id, const JsonType& jsonNode, const std::string& nodesName)
 {
