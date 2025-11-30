@@ -20,60 +20,57 @@ enum class RefLayoutSrcWrapping : uint8_t
     Repeat,
     Clamp
 };
-
 struct RefLayoutValue
 {
 
     Scene::Data::JsonValue jsonV;
-    const JsonType&              jsonNodeRef;
-    RefLayoutValue(const JsonType& jn) :
-        jsonNodeRef(jn) {}
+
     Math::Vec2 position(const JsonType& jsonNode)
     {
 
-        return jsonV.parseVec2WithName(jsonNodeRef, "position");
+        return jsonV.parseVec2WithName(jsonNode, "position");
     }
-    Math::Vec2 spacing(const JsonType& jsonNodeRef)
+    Math::Vec2 spacing(const JsonType& jsonNode)
     {
-        return jsonV.parseVec2WithName(jsonNodeRef, "spacing");
+        return jsonV.parseVec2WithName(jsonNode, "spacing");
     }
-    Math::Vec2 staggered(const JsonType& jsonNodeRef)
+    Math::Vec2 staggered(const JsonType& jsonNode)
     {
-        return jsonV.parseVec2WithName(jsonNodeRef, "staggered");
+        return jsonV.parseVec2WithName(jsonNode, "staggered");
     }
 
     int count(const JsonType& jsonNode)
     {
-        return jsonV.parseIntWithName(jsonNodeRef, "count");
+        return jsonV.parseIntWithName(jsonNode, "count");
     }
     int rings(const JsonType& jsonNode)
     {
-        return jsonV.parseIntWithName(jsonNodeRef, "rings");
+        return jsonV.parseIntWithName(jsonNode, "rings");
     }
     int columns(const JsonType& jsonNode)
     {
-        return jsonV.parseIntWithName(jsonNodeRef, "columns");
+        return jsonV.parseIntWithName(jsonNode, "columns");
     }
     float hexRadius(const JsonType& jsonNode)
     {
-        return jsonV.parseIntWithName(jsonNodeRef, "hex-radius");
+        return jsonV.parseIntWithName(jsonNode, "hex-radius");
     }
     float startRadius(const JsonType& jsonNode)
     {
-        return jsonV.parseIntWithName(jsonNodeRef, "start-radius");
+        return jsonV.parseIntWithName(jsonNode, "start-radius");
     }
     float stepRadius(const JsonType& jsonNode)
     {
-        return jsonV.parseFloatWithName(jsonNodeRef, "step-radius");
+        return jsonV.parseFloatWithName(jsonNode, "step-radius");
     }
 
     float radius(const JsonType& jsonNode)
     {
-        return jsonV.parseFloatWithName(jsonNodeRef, "radius");
+        return jsonV.parseFloatWithName(jsonNode, "radius");
     }
     float startAngle(const JsonType& jsonNode, bool toRadian = true)
     {
-        auto v = jsonV.parseFloatWithName(jsonNodeRef, "start-angle");
+        auto v = jsonV.parseFloatWithName(jsonNode, "start-angle");
         if (toRadian)
         {
             v = Math::degrees_to_radians(v);
@@ -82,7 +79,7 @@ struct RefLayoutValue
     }
     float stepAngle(const JsonType& jsonNode, bool toRadian = true)
     {
-        auto v = jsonV.parseFloatWithName(jsonNodeRef, "step-angle");
+        auto v = jsonV.parseFloatWithName(jsonNode, "step-angle");
         if (toRadian)
         {
             v = Math::degrees_to_radians(v);
@@ -91,7 +88,7 @@ struct RefLayoutValue
     }
     float angle(const JsonType& jsonNode, bool toRadian = true)
     {
-        auto v = jsonV.parseFloatWithName(jsonNodeRef, "angle");
+        auto v = jsonV.parseFloatWithName(jsonNode, "angle");
         if (toRadian)
         {
             v = Math::degrees_to_radians(v);
@@ -100,7 +97,7 @@ struct RefLayoutValue
     }
     float rotation(const JsonType& jsonNode, bool toRadian = true)
     {
-        auto v = jsonV.parseFloatWithName(jsonNodeRef, "rotation");
+        auto v = jsonV.parseFloatWithName(jsonNode, "rotation");
         if (toRadian)
         {
             v = Math::degrees_to_radians(v);
@@ -109,12 +106,83 @@ struct RefLayoutValue
     }
     float arcAngle(const JsonType& jsonNode, bool toRadian = true)
     {
-        auto v = jsonV.parseFloatWithName(jsonNodeRef, "arc-angle");
+        auto v = jsonV.parseFloatWithName(jsonNode, "arc-angle");
         if (toRadian)
         {
             v = Math::degrees_to_radians(v);
         }
         return v;
+    }
+};
+
+struct RefLayoutValueRef
+{
+    RefLayoutValue         value;
+    const JsonType&              jsonNodeRef;
+    RefLayoutValueRef(const JsonType& jn) :
+        jsonNodeRef(jn) {}
+
+    Math::Vec2 position()
+    {
+        return value.position(jsonNodeRef);
+    }
+    Math::Vec2 spacing()
+    {
+        return value.spacing(jsonNodeRef);
+    }
+    Math::Vec2 staggered()
+    {
+        return value.staggered(jsonNodeRef);
+    }
+
+    int count()
+    {
+        return value.count(jsonNodeRef);
+    }
+    int rings()
+    {
+        return value.rings(jsonNodeRef);
+    }
+    int columns()
+    {
+        return value.columns(jsonNodeRef);
+    }
+    float hexRadius()
+    {
+        return value.hexRadius(jsonNodeRef);
+    }
+    float startRadius()
+    {
+        return value.startRadius(jsonNodeRef);
+    }
+    float stepRadius()
+    {
+        return value.stepRadius(jsonNodeRef);
+    }
+
+    float radius()
+    {
+        return value.radius(jsonNodeRef);
+    }
+    float startAngle(bool toRadian = true)
+    {
+        return value.startAngle(jsonNodeRef, toRadian);
+    }
+    float stepAngle(bool toRadian = true)
+    {
+        return value.stepAngle(jsonNodeRef, toRadian);
+    }
+    float angle(bool toRadian = true)
+    {
+        return value.angle(jsonNodeRef, toRadian);
+    }
+    float rotation(bool toRadian = true)
+    {
+        return value.rotation(jsonNodeRef, toRadian);
+    }
+    float arcAngle(bool toRadian = true)
+    {
+        return value.arcAngle(jsonNodeRef, toRadian);
     }
 };
 

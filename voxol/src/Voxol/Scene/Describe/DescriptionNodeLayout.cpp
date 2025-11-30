@@ -14,11 +14,11 @@ void DescriptionNodeLauout::referenceLayoutSceneNodeWithHexagonalGrid(const Json
     int        rings     = 5;
     float      hexRadius = 180;
 
-    RefLayoutValue jsonV{jsonNode};
-    pos = jsonV.position(jsonNode);
-    hexRadius = jsonV.hexRadius(jsonNode);
-    rings     = jsonV.rings(jsonNode);
-    count     = jsonV.count(jsonNode);
+    RefLayoutValueRef jsonV{jsonNode};
+    pos = jsonV.position();
+    hexRadius = jsonV.hexRadius();
+    rings     = jsonV.rings();
+    count     = jsonV.count();
 
     auto&& positions = PositionDistribution::hexagonalGrid(count, pos, rings, hexRadius);
     auto   tot       = static_cast<int>(positions.size());
@@ -40,13 +40,13 @@ void DescriptionNodeLauout::referenceLayoutSceneNodeWithSpiral(const JsonType& j
     float      start_angle = 0;
     float      step_angle = 30;
 
-    RefLayoutValue jsonV{jsonNode};
-    center       = jsonV.position(jsonNode);
-    start_radius = jsonV.startRadius(jsonNode);
-    step_radius  = jsonV.stepRadius(jsonNode);
-    step_angle   = jsonV.stepAngle(jsonNode);
-    start_angle  = jsonV.startAngle(jsonNode);
-    count        = jsonV.count(jsonNode);
+    RefLayoutValueRef jsonV{jsonNode};
+    center       = jsonV.position();
+    start_radius = jsonV.startRadius();
+    step_radius  = jsonV.stepRadius();
+    step_angle   = jsonV.stepAngle();
+    start_angle  = jsonV.startAngle();
+    count        = jsonV.count();
 
     std::vector<float> angles;
     angles.reserve(count);
@@ -67,12 +67,12 @@ void DescriptionNodeLauout::referenceLayoutSceneNodeWithArc(const JsonType& json
     float      startAngle = 0;
     float      arcAngle = 180;
 
-    RefLayoutValue jsonV{jsonNode};
-    center                       = jsonV.position(jsonNode);
-    radius                       = jsonV.radius(jsonNode);
-    startAngle                   = jsonV.startAngle(jsonNode);
-    arcAngle                     = jsonV.arcAngle(jsonNode);
-    count                        = jsonV.count(jsonNode);
+    RefLayoutValueRef jsonV{jsonNode};
+    center                       = jsonV.position();
+    radius                       = jsonV.radius();
+    startAngle                   = jsonV.startAngle();
+    arcAngle                     = jsonV.arcAngle();
+    count                        = jsonV.count();
 
     std::vector<float> angles;
     angles.reserve(count);
@@ -92,11 +92,11 @@ void DescriptionNodeLauout::referenceLayoutSceneNodeWithCircle(const JsonType& j
     float      radius   = 100.0f;
     float      startAngle = 0;
 
-    RefLayoutValue jsonV{jsonNode};
-    center = jsonV.position(jsonNode);
-    radius = jsonV.radius(jsonNode);
-    startAngle = jsonV.startAngle(jsonNode);
-    count      = jsonV.count(jsonNode);
+    RefLayoutValueRef jsonV{jsonNode};
+    center = jsonV.position();
+    radius = jsonV.radius();
+    startAngle = jsonV.startAngle();
+    count      = jsonV.count();
 
     std::vector<float> angles;
     angles.reserve(count);
@@ -116,12 +116,12 @@ void DescriptionNodeLauout::referenceLayoutSceneNodeWithGrid(const JsonType& jso
     Math::Vec2 spacing{25, 25};
     Math::Vec2 staggered;
 
-    RefLayoutValue jsonV{jsonNode};
-    pos = jsonV.position(jsonNode);
-    columns = jsonV.columns(jsonNode);
-    count     = jsonV.count(jsonNode);
-    spacing = jsonV.spacing(jsonNode);
-    staggered = jsonV.staggered(jsonNode);
+    RefLayoutValueRef jsonV{jsonNode};
+    pos = jsonV.position();
+    columns = jsonV.columns();
+    count     = jsonV.count();
+    spacing = jsonV.spacing();
+    staggered = jsonV.staggered();
 
     auto&& positions = PositionDistribution::grid(count, pos, spacing, columns, nodeSize, staggered);
     for (auto i = 0; i < positions.size(); i++)
