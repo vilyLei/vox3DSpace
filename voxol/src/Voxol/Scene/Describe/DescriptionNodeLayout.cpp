@@ -14,36 +14,12 @@ void DescriptionNodeLauout::referenceLayoutSceneNodeWithHexagonalGrid(const Json
     int        rings     = 5;
     float      hexRadius = 180;
 
-    Data::JsonValue positionV;
-    positionV.parseWithName(jsonNode, "position");
-    if (positionV.is<Math::Vec2>())
-    {
-        pos = positionV.get<Math::Vec2>();
-    }
-    Data::JsonValue hexRadiusV;
-    hexRadiusV.parseWithName(jsonNode, "hex-radius");
-    if (hexRadiusV.is<int>())
-    {
-        hexRadius = hexRadiusV.get<int>();
-    }
-    else if (positionV.is<float>())
-    {
-        hexRadius = hexRadiusV.get<float>();
-    }
+    Data::JsonValue jsonV;
 
-    Data::JsonValue columnsV;
-    columnsV.parseWithName(jsonNode, "rings");
-    if (columnsV.is<int>())
-    {
-        rings = columnsV.get<int>();
-    }
-
-    Data::JsonValue countV;
-    countV.parseWithName(jsonNode, "count");
-    if (countV.is<int>())
-    {
-        count = countV.get<int>();
-    }
+    pos = jsonV.parseVec2WithName(jsonNode, "position");
+    hexRadius = jsonV.parseFloatWithName(jsonNode, "hex-radius");
+    rings = jsonV.parseIntWithName(jsonNode, "rings");
+    count = jsonV.parseIntWithName(jsonNode, "count");
 
     auto&& positions = PositionDistribution::hexagonalGrid(count, pos, rings, hexRadius);
     auto   tot       = static_cast<int>(positions.size());

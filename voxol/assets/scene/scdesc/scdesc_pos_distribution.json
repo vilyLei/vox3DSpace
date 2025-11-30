@@ -121,7 +121,7 @@
                     "step-radius": 5,
                     "count": 61
                 },
-                "reference-layoutPPPP": {
+                "reference-layout": {
                     "type": "default",
                     "method": "hexagonal-grid",
                     "position": [
@@ -132,7 +132,7 @@
                     "hex-radius": 30,
                     "count": 61
                 },
-                "reference-layout": {
+                "reference-layoutPPPPy": {
                     "type": "default",
                     "method": "arc",
                     "position": [
