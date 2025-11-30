@@ -84,6 +84,13 @@ void DescriptionNodeLauout::referenceLayoutSceneNodeWithBasic(const JsonType& js
         positions    = Distribution::circleFilledRandom(pos, count, radius);
         return;
     }
+    if (method == "circle-filled-grid")
+    {
+        auto radius = jsonV.radius();
+        auto radiusSpacing = jsonV.radiusSpacing();
+        positions          = Distribution::circleFilledGrid(pos, radius, radiusSpacing);
+        return;
+    }
     //circle-filled-random
     if (method == "snowflake")
     {

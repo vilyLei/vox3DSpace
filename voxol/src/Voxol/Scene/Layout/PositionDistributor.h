@@ -40,7 +40,8 @@ std::vector<Math::Vec2>        diamondFilledGrid(const Math::Vec2& center, const
 std::vector<Math::Vec2>        kochSnowflake(int iteration, float R);
 Math::Vec2                     rhombusGrid(int i, int n, const Math::Vec2& spacing);
 Math::Vec2                     rose(int i, int n, float R, float amplitude);
-std::vector<Math::Vec2>        circleFilledRandom(const Math::Vec2& pos, int count, float R);
+std::vector<Math::Vec2>         circleFilledRandom(const Math::Vec2& pos, int count, float R);
+std::vector<Math::Vec2>         circleFilledGrid(const Math::Vec2& pos, float radiusSpacing, float R);
 
 } // namespace Distribution
 namespace Superformula

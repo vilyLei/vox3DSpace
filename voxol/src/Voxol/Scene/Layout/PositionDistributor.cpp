@@ -239,6 +239,25 @@ std::vector<Math::Vec2> circleFilledRandom(const Math::Vec2& pos, int count, flo
     }
     return out;
 }
+std::vector<Math::Vec2> circleFilledGrid(const Math::Vec2& pos, float radiusSpacing, float R)
+{
+    std::vector<Math::Vec2> out;
+
+    int maxN = int(std::ceil(R / radiusSpacing));
+    for (int iy = -maxN; iy <= maxN; ++iy)
+    {
+        for (int ix = -maxN; ix <= maxN; ++ix)
+        {
+            float x = ix * radiusSpacing;
+            float y = iy * radiusSpacing;
+            if (x * x + y * y <= R * R) {
+                Math::Vec2 pv{x, y};
+                out.push_back(pv + pos);
+            }
+        }
+    }
+    return out;
+}
 } // namespace Distribution
 
 namespace Superformula

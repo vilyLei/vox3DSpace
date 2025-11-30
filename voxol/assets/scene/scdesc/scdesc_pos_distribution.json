@@ -209,12 +209,13 @@
                 },
                 "reference-layout": {
                     "type": "basic",
-                    "method": "circle-filled-random",
+                    "method": "circle-filled-grid",
                     "position": [
                         570,
                         310
                     ],
                     "radius":100,
+                    "radiusSpacing":20,
                     "count": 20
                 },
                 "reference-layouthh": {
