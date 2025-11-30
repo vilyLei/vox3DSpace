@@ -1,0 +1,561 @@
+{
+    "version": {
+        "runtime-mode": "edit",
+        "major": 0,
+        "minor": 1,
+        "dimension": 2,
+        "unit": "pixel"
+    },
+    "scene": {
+        "nodes": [
+            {
+                "type": "label",
+                "name": "rect-01-label",
+                "transform": {
+                    "position": [
+                        50,
+                        50
+                    ]
+                },
+                "visible": false,
+                "display": {
+                    "shapeT": {
+                        "type": "circle",
+                        "radius": 5
+                    },
+                    "shape": {
+                        "type": "rectangle",
+                        "size": [
+                            20,
+                            20
+                        ]
+                    },
+                    "style": {
+                        "fillColor": "0xffff7f50"
+                    }
+                }
+            },
+            {
+                "type": "label",
+                "name": "circle-01-label",
+                "transform": {
+                    "position": [
+                        50,
+                        50
+                    ]
+                },
+                "visible": false,
+                "display": {
+                    "shapeTTT": {
+                        "type": "circle",
+                        "radius": 10
+                    },
+                    "shape": {
+                        "type": "rectangle",
+                        "size": [
+                            20,
+                            20
+                        ]
+                    },
+                    "style": {
+                        "fillColor": "0xff88aa50"
+                    }
+                }
+            },
+            {
+                "type": "label",
+                "name": "circle-02-label",
+                "transform": {
+                    "position": [
+                        50,
+                        50
+                    ]
+                },
+                "visible": false,
+                "display": {
+                    "shapeTTT": {
+                        "type": "circle",
+                        "radius": 10
+                    },
+                    "shape": {
+                        "type": "rectangle",
+                        "size": [
+                            20,
+                            20
+                        ]
+                    },
+                    "style": {
+                        "fillColor": "0xff886650"
+                    }
+                }
+            },
+            {
+                "reference": {
+                    "srcTT": "rect-01-label",
+                    "src-list": [
+                        "rect-01-label",
+                        "circle-01-label",
+                        "circle-02-label"
+                    ],
+                    "src-wrapping": "repeat",
+                    "type": "container"
+                },
+                "visible": true,
+                "name": "rect-01-label-group",
+                "transform": {
+                    "position": [
+                        100,
+                        100
+                    ]
+                },
+                "reference-layoutdffd": {
+                    "type": "basic",
+                    "method": "superformula",
+                    "position": [
+                        500,
+                        300
+                    ],
+                    "scale": 50,
+                    "count": 50,
+                    "paramsA": {
+                        "m": 6,
+                        "a": 1,
+                        "b": 1,
+                        "n1": 0.3,
+                        "n2": 0.3,
+                        "n3": 0.3
+                    },
+                    "paramsTT": {
+                        "m": 6,
+                        "a": 1,
+                        "b": 1,
+                        "n1": 0.3,
+                        "n2": 1,
+                        "n3": 1
+                    },
+                    "paramsUUU": {
+                        "m": 5,
+                        "a": 1,
+                        "b": 1,
+                        "n1": 0.2,
+                        "n2": 0.8,
+                        "n3": 0.8
+                    },
+                    "params09": {
+                        "m": 6,
+                        "a": 1,
+                        "b": 1,
+                        "n1": 0.3,
+                        "n2": 0.4,
+                        "n3": 0.4
+                    },
+                    "params98": {
+                        "m": 1,
+                        "a": 1,
+                        "b": 1,
+                        "n1": 0.2,
+                        "n2": 1.7,
+                        "n3": 1.7
+                    },
+                    "params78": {
+                        "m": 6,
+                        "a": 1,
+                        "b": 1,
+                        "n1": 0.5,
+                        "n2": 10,
+                        "n3": 300
+                    },
+                    "params": {
+                        "m": 3,
+                        "a": 1,
+                        "b": 1,
+                        "n1": -0.3,
+                        "n2": 0.8,
+                        "n3": 0.2
+                    }
+                },
+                "reference-layoutLLL": {
+                    "type": "default",
+                    "method": "spiral",
+                    "position": [
+                        500,
+                        310
+                    ],
+                    "start-angle": 30,
+                    "step-angle": 20,
+                    "start-radius": 20,
+                    "step-radius": 5,
+                    "count": 61
+                },
+                "reference-layoutTTT01": {
+                    "type": "base",
+                    "method": "hexagonal-grid",
+                    "position": [
+                        500,
+                        310
+                    ],
+                    "rings": 3,
+                    "hex-radius": 30,
+                    "count": 61
+                },
+                "reference-layoutPPPlo": {
+                    "type": "default",
+                    "method": "arc",
+                    "position": [
+                        300,
+                        210
+                    ],
+                    "start-angle": 50,
+                    "arc-angle": 180,
+                    "radius": 150,
+                    "count": 10
+                },
+                "reference-layoutT": {
+                    "type": "default",
+                    "method": "grid",
+                    "position": [
+                        20,
+                        20
+                    ],
+                    "columns": 8,
+                    "staggered": [
+                        1,
+                        0
+                    ],
+                    "spacing": [
+                        50,
+                        50
+                    ],
+                    "count": 32
+                },
+                "reference-layoutGG": {
+                    "type": "basic",
+                    "method": "diamond",
+                    "position": [
+                        570,
+                        310
+                    ],
+                    "radius": 110,
+                    "count": 8
+                },
+                "reference-layoutgy6": {
+                    "type": "basic",
+                    "method": "diamond-filled",
+                    "position": [
+                        570,
+                        310
+                    ],
+                    "radius": 5,
+                    "spacing": [
+                        20,
+                        20
+                    ],
+                    "count": 8
+                },
+                "reference-layoutCCC": {
+                    "type": "basic",
+                    "method": "circle-filled-grid",
+                    "position": [
+                        570,
+                        310
+                    ],
+                    "radius": 100,
+                    "radius-spacing": 30,
+                    "count": 20
+                },
+                "reference-layoutPPP": {
+                    "type": "basic",
+                    "method": "circle-filled-grid",
+                    "position": [
+                        570,
+                        310
+                    ],
+                    "radius": 100,
+                    "radius-spacing": 30,
+                    "count": 20
+                },
+                "reference-layoutVVGH": {
+                    "type": "basic",
+                    "method": "poisson-disk-circle",
+                    "position": [
+                        570,
+                        310
+                    ],
+                    "radius": 100,
+                    "min-distance": 30,
+                    "count": 30
+                },
+                "reference-layouthh": {
+                    "type": "basic",
+                    "method": "snowflake",
+                    "position": [
+                        570,
+                        310
+                    ],
+                    "radius": 110,
+                    "count": 20
+                },
+                "reference-layoutVVBL": {
+                    "type": "basic",
+                    "method": "rhombus-grid",
+                    "position": [
+                        570,
+                        310
+                    ],
+                    "spacing": [
+                        30,
+                        30
+                    ],
+                    "count": 20
+                },
+                "reference-layoutOO09": {
+                    "type": "basic",
+                    "method": "rose",
+                    "position": [
+                        570,
+                        310
+                    ],
+                    "radius": 180,
+                    "amplitude": 0.1,
+                    "count": 20
+                },
+                "reference-layouts": [
+                    {
+                        "type": "default",
+                        "method": "grid",
+                        "position": [
+                            20,
+                            20
+                        ],
+                        "columns": 4,
+                        "staggered": [
+                            1,
+                            0
+                        ],
+                        "spacing": [
+                            50,
+                            50
+                        ],
+                        "count": 16
+                    },
+                    {
+                        "type": "basic",
+                        "method": "diamond-filled",
+                        "position": [
+                            780,
+                            520
+                        ],
+                        "radius": 5,
+                        "spacing": [
+                            20,
+                            20
+                        ],
+                        "count": 8
+                    },
+                    {
+                        "type": "default",
+                        "method": "circle",
+                        "position": [
+                            770,
+                            210
+                        ],
+                        "start-angle": 50,
+                        "radius": 100,
+                        "count": 10
+                    },
+                    {
+                        "type": "default",
+                        "method": "arc",
+                        "position": [
+                            250,
+                            310
+                        ],
+                        "start-angle": 80,
+                        "arc-angle": 90,
+                        "radius": 250,
+                        "count": 8
+                    },
+                    {
+                        "type": "default",
+                        "method": "spiral",
+                        "position": [
+                            530,
+                            310
+                        ],
+                        "start-angle": 30,
+                        "step-angle": 20,
+                        "start-radius": 20,
+                        "step-radius": 5,
+                        "count": 30
+                    }
+                ]
+            }
+        ],
+        "nodesKK": [
+            {
+                "type": "label",
+                "name": "rect-01-label",
+                "transform": {
+                    "position": [
+                        50,
+                        50
+                    ]
+                },
+                "visible": false,
+                "display": {
+                    "shape": {
+                        "type": "rectangle",
+                        "size": [
+                            50,
+                            50
+                        ]
+                    },
+                    "style": {
+                        "fillColor": "0xffff7f50"
+                    }
+                }
+            },
+            {
+                "reference": {
+                    "src": "rect-01-label",
+                    "type": "container"
+                },
+                "visible": true,
+                "name": "rect-01-label-group",
+                "transform": {
+                    "position": [
+                        100,
+                        100
+                    ]
+                },
+                "reference-layout": {
+                    "type": "default",
+                    "method": "grid",
+                    "position": [
+                        20,
+                        20
+                    ],
+                    "columns": 8,
+                    "spacing": [
+                        50,
+                        50
+                    ],
+                    "count": 32
+                },
+                "reference-layout_circle": {
+                    "type": "default",
+                    "method": "circle",
+                    "position": [
+                        300,
+                        260
+                    ],
+                    "rotation": 50,
+                    "radius": 150,
+                    "count": 10
+                }
+            },
+            {
+                "type": "label",
+                "name": "rect-02-label",
+                "transform": {
+                    "position": [
+                        80,
+                        80
+                    ]
+                },
+                "visible": false,
+                "display": {
+                    "shape": {
+                        "type": "rectangle",
+                        "size": [
+                            50,
+                            50
+                        ]
+                    },
+                    "style": {
+                        "fillColor": "0xff008b8b"
+                    }
+                }
+            },
+            {
+                "reference": {
+                    "src": "rect-02-label",
+                    "type": "container"
+                },
+                "visible": true,
+                "name": "rect-02-label-group",
+                "transform": {
+                    "position": [
+                        150,
+                        150
+                    ]
+                },
+                "reference-layout": {
+                    "type": "default",
+                    "method": "grid",
+                    "position": [
+                        20,
+                        20
+                    ],
+                    "columns": 8,
+                    "spacing": [
+                        50,
+                        50
+                    ],
+                    "count": 32
+                }
+            },
+            {
+                "type": "label",
+                "name": "rect-03-label",
+                "transform": {
+                    "position": [
+                        80,
+                        80
+                    ]
+                },
+                "visible": false,
+                "display": {
+                    "shape": {
+                        "type": "rectangle",
+                        "size": [
+                            50,
+                            50
+                        ]
+                    },
+                    "style": {
+                        "fillColor": "0xff8fbc8f"
+                    }
+                }
+            },
+            {
+                "reference": {
+                    "src": "rect-03-label",
+                    "type": "container"
+                },
+                "visible": false,
+                "name": "rect-03-label-group",
+                "transform": {
+                    "position": [
+                        200,
+                        150
+                    ]
+                },
+                "reference-layout": {
+                    "type": "default",
+                    "method": "grid",
+                    "position": [
+                        20,
+                        20
+                    ],
+                    "columns": 8,
+                    "spacing": [
+                        50,
+                        50
+                    ],
+                    "count": 32
+                }
+            }
+        ]
+    }
+}
