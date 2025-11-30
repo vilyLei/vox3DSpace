@@ -203,44 +203,52 @@ void DescriptionNodeLauout::referenceLayoutSceneNodeWithCircle(const JsonType& j
     float      radius   = 100.0f;
     float      startAngle = 0;
 
-    Data::JsonValue positionV;
-    positionV.parseWithName(jsonNode, "position");
-    if (positionV.is<Math::Vec2>())
-    {
-        center = positionV.get<Math::Vec2>();
-    }
-    Data::JsonValue radiusV;
-    radiusV.parseWithName(jsonNode, "radius");
-    if (radiusV.is<int>())
-    {
-        radius = radiusV.get<int>();
-    }
-    else if (positionV.is<float>())
-    {
-        radius = radiusV.get<float>();
-    }
+    RefLayoutValue jsonV;
+    center = jsonV.position(jsonNode);
+    radius = jsonV.radius(jsonNode);
+    startAngle = jsonV.startAngle(jsonNode);
+    count      = jsonV.count(jsonNode);
 
-    Data::JsonValue startAngleV;
-    startAngleV.parseWithName(jsonNode, "start-angle");
-    if (startAngleV.is<int>())
-    {
-        startAngle = startAngleV.get<int>();
-    }
-    else if (startAngleV.is<float>())
-    {
-        startAngle = startAngleV.get<float>();
-    }
+    //Data::JsonValue positionV;
+    //positionV.parseWithName(jsonNode, "position");
+    //if (positionV.is<Math::Vec2>())
+    //{
+    //    center = positionV.get<Math::Vec2>();
+    //}
+    
 
-    Data::JsonValue countV;
-    countV.parseWithName(jsonNode, "count");
-    if (countV.is<int>())
-    {
-        count = countV.get<int>();
-    }
-    auto               startRad = Math::degrees_to_radians(startAngle);
+    //Data::JsonValue radiusV;
+    //radiusV.parseWithName(jsonNode, "radius");
+    //if (radiusV.is<int>())
+    //{
+    //    radius = radiusV.get<int>();
+    //}
+    //else if (positionV.is<float>())
+    //{
+    //    radius = radiusV.get<float>();
+    //}
+
+    //Data::JsonValue startAngleV;
+    //startAngleV.parseWithName(jsonNode, "start-angle");
+    //if (startAngleV.is<int>())
+    //{
+    //    startAngle = startAngleV.get<int>();
+    //}
+    //else if (startAngleV.is<float>())
+    //{
+    //    startAngle = startAngleV.get<float>();
+    //}
+
+    //Data::JsonValue countV;
+    //countV.parseWithName(jsonNode, "count");
+    //if (countV.is<int>())
+    //{
+    //    count = countV.get<int>();
+    //}
+    //auto               startRad = Math::degrees_to_radians(startAngle);
     std::vector<float> angles;
     angles.reserve(count);
-    auto&& positions = PositionDistribution::circle(angles, count, center, radius, startRad);
+    auto&& positions = PositionDistribution::circle(angles, count, center, radius, startAngle);
     for (auto i = 0; i < positions.size(); i++)
     {
         callback(i, positions[i], {1, 1}, angles[i]);

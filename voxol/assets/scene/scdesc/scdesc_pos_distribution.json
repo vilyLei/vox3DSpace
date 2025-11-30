@@ -132,7 +132,7 @@
                     "hex-radius": 30,
                     "count": 61
                 },
-                "reference-layout": {
+                "reference-layoutKLJ": {
                     "type": "default",
                     "method": "arc",
                     "position": [
@@ -162,7 +162,7 @@
                     ],
                     "count": 32
                 },
-                "reference-layoutsKKK": [
+                "reference-layouts": [
                     {
                         "type": "default",
                         "method": "grid",
