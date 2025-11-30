@@ -251,14 +251,17 @@ bool FileParser::parseSceneNodeReference(SceneNode& parentNode, uint32_t& id, co
             [&, this](int index, const Math::Vec2& pos, const Math::Vec2& scale, float rotation) {
                 SceneNode node;
                 node.id = id++;
-                auto k  = index % srcCount;
+                auto k  = index;
                 switch (ref.srcWrapping)
                 {
                     case Voxol::Scene::Describe::RefLayoutSrcWrapping::Clamp:
                         k = index > (srcCount - 1) ? (srcCount - 1) : index;
                         break;
-                    default:
+                    case Voxol::Scene::Describe::RefLayoutSrcWrapping::Repeat:
                         k = index % srcCount;
+                        break;
+                    default:
+                        k = index;
                         break;
                 }
 

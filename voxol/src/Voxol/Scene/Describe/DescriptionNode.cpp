@@ -12,14 +12,7 @@ void DescreferenceLayoutNode::parse(const JsonType& jsonNode)
     type     = jsonV.parseStringWithName(jsonNode, "type", TYPE_DEFAULT);
     method   = jsonV.parseStringWithName(jsonNode, "method", "grid");
 
-    //if (jsonNode.contains("type") && jsonNode["type"].is_string())
-    //{
-    //    type = jsonNode["type"];
-    //}
-    //if(jsonNode.contains("method") && jsonNode["method"].is_string())
-    //{
-    //    method = jsonNode["method"];
-    //}
+    auto t = method;
 }
 
 void RefLayoutValue::parse(const JsonType& jsonNode)
