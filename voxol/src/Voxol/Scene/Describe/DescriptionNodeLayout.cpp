@@ -86,6 +86,10 @@ void DescriptionNodeLauout::referenceLayoutSceneNodeWithArc(const JsonType& json
     //{
     //    callback(i, positions[i], {1, 1}, angles[i]);
     //}
+    //auto tot = positions.size();
+    //for (auto i = 0; i < tot; i++)
+    //{
+    //}
 }
 void DescriptionNodeLauout::referenceLayoutSceneNodeWithCircle(const JsonType& jsonNode, const Math::Vec2& nodeSize)
 {

@@ -80,7 +80,9 @@ void DescNodeRference::parse(const JsonType& jsonNode)
                 std::string srcNodeName = item;
                 if (srcNodeName.empty())
                     continue;
-                srcList.emplace_back("", srcNodeName);
+                DescNodeRferenceSrcItem srcitem;
+                srcitem.src = srcNodeName;
+                srcList.emplace_back(srcitem);
                 continue;
             }
 

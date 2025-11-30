@@ -235,6 +235,7 @@ bool JsonValue::parseWithName(const JsonType& node, const std::string& valueName
 
 std::string JsonValue::parseStringWithName(const JsonType& node, const std::string& valueName, const std::string& defaultValue)
 {
+    reset();
     parseWithName(node, valueName);
     if (is<std::string>())
     {
@@ -299,6 +300,9 @@ Math::Vec4 JsonValue::parseVec4WithName(const JsonType& node, const std::string&
     return {};
 }
 
+void JsonValue::reset() {
+    value = {};
+}
 void JsonValue::parse(const JsonType& j)
 {
     if (j.is_null())

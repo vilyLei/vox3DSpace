@@ -127,7 +127,7 @@ struct JsonValue
     Math::Vec2  parseVec2WithName(const JsonType& node, const std::string& valueName);
     Math::Vec3  parseVec3WithName(const JsonType& node, const std::string& valueName);
     Math::Vec4  parseVec4WithName(const JsonType& node, const std::string& valueName);
-
+    void        reset(); 
     void parse(const JsonType& j);
 
     template <typename T>
