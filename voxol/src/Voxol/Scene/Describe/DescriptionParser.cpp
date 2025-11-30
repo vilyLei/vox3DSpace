@@ -235,21 +235,55 @@ void FileParser::parseSceneNode(SceneNode& parentNode, uint32_t& id, const JsonT
 
         if (srcNodeType == "container")
         {
+            std::vector<std::string> srcList;
             std::string srcNodeName = (refNode.contains("src") && refNode["src"].is_string()) ? refNode["src"] : "";
-            if (srcNodeName.empty())
-                return;
-            if (!hasSceneNodeWithNameFromRoot(srcNodeName))
+            //if (srcNodeName.empty())
+            //    return;
+            if (!srcNodeName.empty() && hasSceneNodeWithNameFromRoot(srcNodeName))
+            {
+                srcList.push_back(srcNodeName);
+            }
+            std::string srcListKey = "src-list";
+            if (refNode.contains(srcListKey) && refNode[srcListKey].is_array())
+            {
+                auto&& elements = jsonNode[srcListKey];
+                if (elements.empty())
+                    return;
+
+                for (auto& item : elements)
+                {
+                    if (!item.is_string())
+                        continue;
+                    srcNodeName = item;
+                    if (srcNodeName.empty())
+                        continue;
+                    srcList.push_back(srcNodeName);
+                }
+            }
+            if (srcList.empty())
                 return;
 
+            std::string srcWrappingKey  = "src-wrapping";
+            std::string srcWrappingStr    = (refNode.contains(srcWrappingKey) && refNode[srcWrappingKey].is_string()) ? refNode[srcWrappingKey] : "";
+
+            auto srcWrapping = 1;
+            if (srcWrappingStr == "repeat")
+            {
+                srcWrapping = 1;
+            }
+
+            auto srcCount = static_cast<int>(srcList.size());
+
             SceneNode tempNode;
-            parseSceneNodeWithNameFromRoot(tempNode, tempNode.id, srcNodeName);
+            parseSceneNodeWithNameFromRoot(tempNode, tempNode.id, srcList[0]);
             DescriptionNodeLauout::referenceLayoutSceneNode(
                 jsonNode,
                 tempNode.transform.scale(),
                 [&, this](int index, const Math::Vec2& pos, const Math::Vec2& scale, float rotation) {
                     SceneNode node;
                     node.id = id++;
-                    parseSceneNodeWithNameFromRoot(node, id, srcNodeName);
+                    const auto& ns = srcList[index % srcCount];
+                    parseSceneNodeWithNameFromRoot(node, id, ns);
                     node.transform.pos() = pos;
                     node.transform.rotation = rotation;
                     node.entity.visible     = visible;

@@ -38,6 +38,7 @@
             {
                 "reference": {
                     "src": "rect-01-label",
+                    "src-wrapping": "repeat",
                     "type": "container"
                 },
                 "visible": true,
