@@ -62,6 +62,7 @@ void DescriptionNodeLauout::referenceLayoutSceneNodeWithSpiral(const JsonType& j
     Math::Vec2 center{300, 300};
     float      start_radius     = 0;
     float      step_radius     = 30;
+    float      start_angle = 0;
     float      step_angle = 30;
 
     Data::JsonValue positionV;
@@ -82,7 +83,7 @@ void DescriptionNodeLauout::referenceLayoutSceneNodeWithSpiral(const JsonType& j
     }
 
     Data::JsonValue stepRadiusV;
-    stepRadiusV.parseWithName(jsonNode, "step_radius");
+    stepRadiusV.parseWithName(jsonNode, "step-radius");
     if (stepRadiusV.is<int>())
     {
         step_radius = stepRadiusV.get<int>();
@@ -103,6 +104,17 @@ void DescriptionNodeLauout::referenceLayoutSceneNodeWithSpiral(const JsonType& j
         step_angle = stepAngleV.get<float>();
     }
 
+    Data::JsonValue startAngleV;
+    startAngleV.parseWithName(jsonNode, "start-angle");
+    if (startAngleV.is<int>())
+    {
+        start_angle = startAngleV.get<int>();
+    }
+    else if (startAngleV.is<float>())
+    {
+        start_angle = startAngleV.get<float>();
+    }
+
 
     Data::JsonValue countV;
     countV.parseWithName(jsonNode, "count");
@@ -111,10 +123,11 @@ void DescriptionNodeLauout::referenceLayoutSceneNodeWithSpiral(const JsonType& j
         count = countV.get<int>();
     }
     step_angle = Math::degrees_to_radians(step_angle);
+    start_angle = Math::degrees_to_radians(start_angle);
 
     std::vector<float> angles;
     angles.reserve(count);
-    auto&& positions = PositionDistribution::arc(angles, count, center, start_radius, step_radius, step_angle);
+    auto&& positions = PositionDistribution::spiral(angles, count, center, start_radius, step_radius, start_angle, step_angle);
     for (auto i = 0; i < positions.size(); i++)
     {
         callback(i, positions[i], {1, 1}, angles[i]);

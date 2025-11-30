@@ -111,9 +111,10 @@
                         500,
                         310
                     ],
-                    "step-angle": 50,
-                    "start-radius": 50,
-                    "step-radius": 30,
+                    "start-angle": 30,
+                    "step-angle": 20,
+                    "start-radius": 20,
+                    "step-radius": 5,
                     "count": 61
                 },
                 "reference-layoutPP": {

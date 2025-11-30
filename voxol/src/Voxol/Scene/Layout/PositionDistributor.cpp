@@ -133,7 +133,7 @@ std::vector<Math::Vec2> PositionDistribution::grid(int count, const Math::Vec2& 
     return positions;
 }
 
-std::vector<Math::Vec2> PositionDistribution::spiral(std::vector<float>& angles, int count, const Math::Vec2& center, float startRadius, float radiusStep, float radStep)
+std::vector<Math::Vec2> PositionDistribution::spiral(std::vector<float>& angles, int count, const Math::Vec2& center, float startRadius, float radiusStep, float startRad, float radStep)
 {
     std::vector<Math::Vec2> positions;
     positions.reserve(count);
@@ -141,7 +141,7 @@ std::vector<Math::Vec2> PositionDistribution::spiral(std::vector<float>& angles,
     for (int i = 0; i < count; ++i)
     {
         float radius = startRadius + radiusStep * i;
-        float angle  = radStep * i;
+        float angle  = startRad + radStep * i;
         angles.push_back(angle);
         positions.emplace_back(
             center.x + radius * std::cos(angle),
