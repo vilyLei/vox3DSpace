@@ -108,7 +108,7 @@
                         100
                     ]
                 },
-                
+
                 "reference-layoutLLWW": {
                     "type": "default",
                     "method": "superformula",
@@ -140,7 +140,7 @@
                     "step-radius": 5,
                     "count": 61
                 },
-                "reference-layout": {
+                "reference-layoutTTT01": {
                     "type": "base",
                     "method": "hexagonal-grid",
                     "position": [
@@ -181,7 +181,7 @@
                     ],
                     "count": 32
                 },
-                "reference-layoutsPPO": [
+                "reference-layouts": [
                     {
                         "type": "default",
                         "method": "grid",
