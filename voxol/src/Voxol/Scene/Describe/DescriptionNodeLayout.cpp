@@ -88,7 +88,7 @@ void DescriptionNodeLauout::referenceLayoutSceneNodeWithBasic(const JsonType& js
     {
         auto radius = jsonV.radius();
         auto radiusSpacing = jsonV.radiusSpacing();
-        positions          = Distribution::circleFilledGrid(pos, radius, radiusSpacing);
+        positions          = Distribution::circleFilledGrid(pos, radiusSpacing, radius);
         return;
     }
     //circle-filled-random

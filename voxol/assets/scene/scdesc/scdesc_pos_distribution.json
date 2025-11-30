@@ -215,7 +215,7 @@
                         310
                     ],
                     "radius":100,
-                    "radiusSpacing":20,
+                    "radius-spacing":10,
                     "count": 20
                 },
                 "reference-layouthh": {
