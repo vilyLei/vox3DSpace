@@ -7,6 +7,8 @@ namespace Voxol::Scene::Describe
 
     
 std::vector<float> DescriptionNodeLauout::angles{};
+std::vector<Math::Vec2> DescriptionNodeLauout::positions{};
+
 void DescriptionNodeLauout::referenceLayoutSceneNodeWithHexagonalGrid(const JsonType& jsonNode, const Math::Vec2& nodeSize, const DescNodeLayoutCallbackType& callback)
 {
     using namespace Voxol::Scene::Layout;
@@ -22,12 +24,15 @@ void DescriptionNodeLauout::referenceLayoutSceneNodeWithHexagonalGrid(const Json
     rings     = jsonV.rings();
     count     = jsonV.count();
 
-    auto&& positions = PositionDistribution::hexagonalGrid(count, pos, rings, hexRadius);
-    auto   tot       = static_cast<int>(positions.size());
+    auto&& pvs = PositionDistribution::hexagonalGrid(count, pos, rings, hexRadius);
+    auto   tot = static_cast<int>(pvs.size());
     tot              = tot < count ? tot : count;
+    positions.reserve(tot);
+    positions.resize(tot);
     for (auto i = 0; i < tot; i++)
     {
-        callback(i, positions[i], {1, 1}, 0);
+        //callback(i, pvs[i], {1, 1}, 0);
+        positions[i] = pvs[i];
     }
 }
 void DescriptionNodeLauout::referenceLayoutSceneNodeWithSpiral(const JsonType& jsonNode, const Math::Vec2& nodeSize, const DescNodeLayoutCallbackType& callback)
@@ -53,11 +58,13 @@ void DescriptionNodeLauout::referenceLayoutSceneNodeWithSpiral(const JsonType& j
     angles.reserve(count);
     angles.clear();
 
-    auto&& positions = PositionDistribution::spiral(angles, count, center, start_radius, step_radius, start_angle, step_angle);
-    for (auto i = 0; i < positions.size(); i++)
-    {
-        callback(i, positions[i], {1, 1}, angles[i]);
-    }
+    
+    //positions.reserve(tot);
+    positions = PositionDistribution::spiral(angles, count, center, start_radius, step_radius, start_angle, step_angle);
+    //for (auto i = 0; i < positions.size(); i++)
+    //{
+    //    callback(i, positions[i], {1, 1}, angles[i]);
+    //}
 }
 void DescriptionNodeLauout::referenceLayoutSceneNodeWithArc(const JsonType& jsonNode, const Math::Vec2& nodeSize, const DescNodeLayoutCallbackType& callback)
 {
@@ -79,11 +86,11 @@ void DescriptionNodeLauout::referenceLayoutSceneNodeWithArc(const JsonType& json
 
     angles.reserve(count);
     angles.clear();
-    auto&& positions = PositionDistribution::arc(angles, count, center, radius, startAngle, arcAngle);
-    for (auto i = 0; i < positions.size(); i++)
-    {
-        callback(i, positions[i], {1, 1}, angles[i]);
-    }
+    positions = PositionDistribution::arc(angles, count, center, radius, startAngle, arcAngle);
+    //for (auto i = 0; i < positions.size(); i++)
+    //{
+    //    callback(i, positions[i], {1, 1}, angles[i]);
+    //}
 }
 void DescriptionNodeLauout::referenceLayoutSceneNodeWithCircle(const JsonType& jsonNode, const Math::Vec2& nodeSize, const DescNodeLayoutCallbackType& callback)
 {
@@ -103,11 +110,11 @@ void DescriptionNodeLauout::referenceLayoutSceneNodeWithCircle(const JsonType& j
 
     angles.reserve(count);
     angles.clear();
-    auto&& positions = PositionDistribution::circle(angles, count, center, radius, startAngle);
-    for (auto i = 0; i < positions.size(); i++)
-    {
-        callback(i, positions[i], {1, 1}, angles[i]);
-    }
+    positions = PositionDistribution::circle(angles, count, center, radius, startAngle);
+    //for (auto i = 0; i < positions.size(); i++)
+    //{
+    //    callback(i, positions[i], {1, 1}, angles[i]);
+    //}
 }
 void DescriptionNodeLauout::referenceLayoutSceneNodeWithGrid(const JsonType& jsonNode, const Math::Vec2& nodeSize, const DescNodeLayoutCallbackType& callback)
 {
@@ -126,11 +133,11 @@ void DescriptionNodeLauout::referenceLayoutSceneNodeWithGrid(const JsonType& jso
     spacing = jsonV.spacing();
     staggered = jsonV.staggered();
 
-    auto&& positions = PositionDistribution::grid(count, pos, spacing, columns, nodeSize, staggered);
-    for (auto i = 0; i < positions.size(); i++)
-    {
-        callback(i, positions[i], {1, 1}, 0);
-    }
+    positions = PositionDistribution::grid(count, pos, spacing, columns, nodeSize, staggered);
+    //for (auto i = 0; i < positions.size(); i++)
+    //{
+    //    callback(i, positions[i], {1, 1}, 0);
+    //}
 }
 
 void DescriptionNodeLauout::referenceLayoutSceneNodeOnce(const JsonType& refLayoutNode, const Math::Vec2& nodeSize, const DescNodeLayoutCallbackType& callback)
@@ -176,6 +183,11 @@ void DescriptionNodeLauout::referenceLayoutSceneNodeMany(const JsonType& jsonNod
             continue;
 
         referenceLayoutSceneNodeOnce(item, nodeSize, callback);
+        auto tot = positions.size();
+        for (auto i = 0; i < positions.size(); i++)
+        {
+            callback(i, positions[i], {1, 1}, angles.size() >= tot ? angles[i] : 0);
+        }
     }
 }
 void DescriptionNodeLauout::referenceLayoutSceneNode(const JsonType& jsonNode, const Math::Vec2& nodeSize, const DescNodeLayoutCallbackType& callback)
@@ -186,6 +198,11 @@ void DescriptionNodeLauout::referenceLayoutSceneNode(const JsonType& jsonNode, c
     {
         auto&& refLayoutNode = jsonNode[refLayoutKey];
         referenceLayoutSceneNodeOnce(refLayoutNode, nodeSize, callback);
+        auto tot = positions.size();
+        for (auto i = 0; i < positions.size(); i++)
+        {
+            callback(i, positions[i], {1, 1}, angles.size() >= tot ? angles[i] : 0);
+        }
     }
 
     referenceLayoutSceneNodeMany(jsonNode, nodeSize, callback);

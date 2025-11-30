@@ -22,6 +22,7 @@ public:
 
 private:
     static std::vector<float> angles;
+    static std::vector<Math::Vec2> positions;
 };
 
 } // namespace Voxol::Scene::Layout
