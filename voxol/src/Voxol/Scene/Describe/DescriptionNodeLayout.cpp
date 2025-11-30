@@ -53,6 +53,73 @@ void DescriptionNodeLauout::referenceLayoutSceneNodeWithHexagonalGrid(const Json
         callback(i, positions[i], {1, 1}, 0);
     }
 }
+void DescriptionNodeLauout::referenceLayoutSceneNodeWithSpiral(const JsonType& jsonNode, const Math::Vec2& nodeSize, const DescNodeLayoutCallbackType& callback)
+{
+    using namespace Voxol::Scene::Layout;
+
+
+    auto       count = 10;
+    Math::Vec2 center{300, 300};
+    float      start_radius     = 0;
+    float      step_radius     = 30;
+    float      step_angle = 30;
+
+    Data::JsonValue positionV;
+    positionV.parseWithName(jsonNode, "position");
+    if (positionV.is<Math::Vec2>())
+    {
+        center = positionV.get<Math::Vec2>();
+    }
+    Data::JsonValue startRadiusV;
+    startRadiusV.parseWithName(jsonNode, "start-radius");
+    if (startRadiusV.is<int>())
+    {
+        start_radius = startRadiusV.get<int>();
+    }
+    else if (positionV.is<float>())
+    {
+        start_radius = startRadiusV.get<float>();
+    }
+
+    Data::JsonValue stepRadiusV;
+    stepRadiusV.parseWithName(jsonNode, "step_radius");
+    if (stepRadiusV.is<int>())
+    {
+        step_radius = stepRadiusV.get<int>();
+    }
+    else if (positionV.is<float>())
+    {
+        step_radius = stepRadiusV.get<float>();
+    }
+
+    Data::JsonValue stepAngleV;
+    stepAngleV.parseWithName(jsonNode, "step-angle");
+    if (stepAngleV.is<int>())
+    {
+        step_angle = stepAngleV.get<int>();
+    }
+    else if (stepAngleV.is<float>())
+    {
+        step_angle = stepAngleV.get<float>();
+    }
+
+
+    Data::JsonValue countV;
+    countV.parseWithName(jsonNode, "count");
+    if (countV.is<int>())
+    {
+        count = countV.get<int>();
+    }
+    step_angle = Math::degrees_to_radians(step_angle);
+
+    std::vector<float> angles;
+    angles.reserve(count);
+    auto&& positions = PositionDistribution::arc(angles, count, center, start_radius, step_radius, step_angle);
+    for (auto i = 0; i < positions.size(); i++)
+    {
+        callback(i, positions[i], {1, 1}, angles[i]);
+    }
+}
 void DescriptionNodeLauout::referenceLayoutSceneNodeWithArc(const JsonType& jsonNode, const Math::Vec2& nodeSize, const DescNodeLayoutCallbackType& callback)
 {
     using namespace Voxol::Scene::Layout;
@@ -224,12 +291,6 @@ void DescriptionNodeLauout::referenceLayoutSceneNodeWithGrid(const JsonType& jso
 
 void DescriptionNodeLauout::referenceLayoutSceneNodeOnce(const JsonType& refLayoutNode, const Math::Vec2& nodeSize, const DescNodeLayoutCallbackType& callback)
 {
-
-    //std::string method        = "grid";
-    //if (refLayoutNode.contains("method") && refLayoutNode["method"].is_string())
-    //{
-    //    method = refLayoutNode["method"];
-    //}
     DescreferenceLayoutNode layoutNode;
     layoutNode.parse(refLayoutNode);
 
@@ -248,6 +309,10 @@ void DescriptionNodeLauout::referenceLayoutSceneNodeOnce(const JsonType& refLayo
     else if (layoutNode.method == "hexagonal-grid")
     {
         referenceLayoutSceneNodeWithHexagonalGrid(refLayoutNode, nodeSize, callback);
+    }
+    else if (layoutNode.method == "spiral")
+    {
+        referenceLayoutSceneNodeWithSpiral(refLayoutNode, nodeSize, callback);
     }
 }
 void DescriptionNodeLauout::referenceLayoutSceneNodeMany(const JsonType& jsonNode, const Math::Vec2& nodeSize, const DescNodeLayoutCallbackType& callback) {

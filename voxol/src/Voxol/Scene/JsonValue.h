@@ -131,6 +131,8 @@ struct JsonValue
 
     template <typename T>
     const T& get() const { return std::get<T>(value); }
+
+    float getFloat();
 };
 } // namespace Desc
 } // namespace Voxol::Scene

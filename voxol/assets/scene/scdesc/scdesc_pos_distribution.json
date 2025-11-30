@@ -106,6 +106,18 @@
                 },
                 "reference-layout": {
                     "type": "default",
+                    "method": "spiral",
+                    "position": [
+                        500,
+                        310
+                    ],
+                    "step-angle": 50,
+                    "start-radius": 50,
+                    "step-radius": 30,
+                    "count": 61
+                },
+                "reference-layoutPP": {
+                    "type": "default",
                     "method": "hexagonal-grid",
                     "position": [
                         500,

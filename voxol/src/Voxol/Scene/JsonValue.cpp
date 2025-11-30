@@ -182,7 +182,7 @@ bool JsonValue::parseTextWithName(const JsonType& node, const std::string& value
     if (!node.contains(valueName))
         return false;
 
-    auto&&                  jNode = node[valueName];
+    auto&& jNode = node[valueName];
 
     Component::UnitTextDesc textDesc;
 
@@ -325,6 +325,17 @@ void JsonValue::parse(const JsonType& j)
             obj[it.key()] = std::move(val);
         }
         value = std::move(obj);
+    }
+}
+float JsonValue::getFloat()
+{
+    if (is<float>())
+    {
+        return get<float>();
+    }
+    else if (is<int>())
+    {
+        return get<int>();
     }
 }
 } // namespace Data
