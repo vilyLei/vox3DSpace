@@ -92,7 +92,11 @@
             {
                 "reference": {
                     "srcTT": "rect-01-label",
-                    "src-list": ["rect-01-label", "circle-01-label","circle-02-label"],
+                    "src-list": [
+                        "rect-01-label",
+                        "circle-01-label",
+                        "circle-02-label"
+                    ],
                     "src-wrapping": "repeat",
                     "type": "container"
                 },
@@ -104,7 +108,7 @@
                         100
                     ]
                 },
-                "reference-layout": {
+                "reference-layoutPP0": {
                     "type": "default",
                     "method": "spiral",
                     "position": [
@@ -117,7 +121,7 @@
                     "step-radius": 5,
                     "count": 61
                 },
-                "reference-layoutPP": {
+                "reference-layoutPPPP": {
                     "type": "default",
                     "method": "hexagonal-grid",
                     "position": [
@@ -128,7 +132,7 @@
                     "hex-radius": 30,
                     "count": 61
                 },
-                "reference-layoutTT": {
+                "reference-layout": {
                     "type": "default",
                     "method": "arc",
                     "position": [
@@ -199,6 +203,19 @@
                         "arc-angle": 90,
                         "radius": 250,
                         "count": 8
+                    },
+                    {
+                        "type": "default",
+                        "method": "spiral",
+                        "position": [
+                            500,
+                            310
+                        ],
+                        "start-angle": 30,
+                        "step-angle": 20,
+                        "start-radius": 20,
+                        "step-radius": 5,
+                        "count": 30
                     }
                 ]
             }
