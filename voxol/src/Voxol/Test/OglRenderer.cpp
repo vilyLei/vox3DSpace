@@ -108,7 +108,7 @@ int OglRenderer::initCtx()
     glfwWindowHint(GLFW_RESIZABLE, GL_TRUE);
 
     // Create a GLFWwindow object that we can use for GLFW's functions
-    GLFWwindow* window = glfwCreateWindow(ctxCurrWidth, ctxCurrHeight, "VoxolModule", nullptr, nullptr);
+    GLFWwindow* window = glfwCreateWindow(ctxCurrWidth, ctxCurrHeight, "VERS", nullptr, nullptr);
     if (window == nullptr)
     {
         std::cout << "Failed to create GLFW window" << std::endl;

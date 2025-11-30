@@ -1,6 +1,7 @@
 
 #include "DescriptionNodeLayout.h"
-#include "../Scene/Layout/PositionDistributor.h"
+#include "../../Scene/Layout/PositionDistributor.h"
+#include "../../Math/Mat33.h"
 
 namespace Voxol::Scene::Describe
 {
@@ -9,7 +10,7 @@ namespace Voxol::Scene::Describe
 std::vector<float> DescriptionNodeLauout::angles{};
 std::vector<Math::Vec2> DescriptionNodeLauout::positions{};
 
-void DescriptionNodeLauout::referenceLayoutSceneNodeWithHexagonalGrid(const JsonType& jsonNode, const Math::Vec2& nodeSize, const DescNodeLayoutCallbackType& callback)
+void DescriptionNodeLauout::referenceLayoutSceneNodeWithHexagonalGrid(const JsonType& jsonNode, const Math::Vec2& nodeSize)
 {
     using namespace Voxol::Scene::Layout;
 
@@ -31,11 +32,10 @@ void DescriptionNodeLauout::referenceLayoutSceneNodeWithHexagonalGrid(const Json
     positions.resize(tot);
     for (auto i = 0; i < tot; i++)
     {
-        //callback(i, pvs[i], {1, 1}, 0);
         positions[i] = pvs[i];
     }
 }
-void DescriptionNodeLauout::referenceLayoutSceneNodeWithSpiral(const JsonType& jsonNode, const Math::Vec2& nodeSize, const DescNodeLayoutCallbackType& callback)
+void DescriptionNodeLauout::referenceLayoutSceneNodeWithSpiral(const JsonType& jsonNode, const Math::Vec2& nodeSize)
 {
     using namespace Voxol::Scene::Layout;
 
@@ -59,14 +59,9 @@ void DescriptionNodeLauout::referenceLayoutSceneNodeWithSpiral(const JsonType& j
     angles.clear();
 
     
-    //positions.reserve(tot);
     positions = PositionDistribution::spiral(angles, count, center, start_radius, step_radius, start_angle, step_angle);
-    //for (auto i = 0; i < positions.size(); i++)
-    //{
-    //    callback(i, positions[i], {1, 1}, angles[i]);
-    //}
 }
-void DescriptionNodeLauout::referenceLayoutSceneNodeWithArc(const JsonType& jsonNode, const Math::Vec2& nodeSize, const DescNodeLayoutCallbackType& callback)
+void DescriptionNodeLauout::referenceLayoutSceneNodeWithArc(const JsonType& jsonNode, const Math::Vec2& nodeSize)
 {
     using namespace Voxol::Scene::Layout;
 
@@ -92,7 +87,7 @@ void DescriptionNodeLauout::referenceLayoutSceneNodeWithArc(const JsonType& json
     //    callback(i, positions[i], {1, 1}, angles[i]);
     //}
 }
-void DescriptionNodeLauout::referenceLayoutSceneNodeWithCircle(const JsonType& jsonNode, const Math::Vec2& nodeSize, const DescNodeLayoutCallbackType& callback)
+void DescriptionNodeLauout::referenceLayoutSceneNodeWithCircle(const JsonType& jsonNode, const Math::Vec2& nodeSize)
 {
     using namespace Voxol::Scene::Layout;
 
@@ -116,7 +111,7 @@ void DescriptionNodeLauout::referenceLayoutSceneNodeWithCircle(const JsonType& j
     //    callback(i, positions[i], {1, 1}, angles[i]);
     //}
 }
-void DescriptionNodeLauout::referenceLayoutSceneNodeWithGrid(const JsonType& jsonNode, const Math::Vec2& nodeSize, const DescNodeLayoutCallbackType& callback)
+void DescriptionNodeLauout::referenceLayoutSceneNodeWithGrid(const JsonType& jsonNode, const Math::Vec2& nodeSize)
 {
     using namespace Voxol::Scene::Layout;
 
@@ -147,23 +142,23 @@ void DescriptionNodeLauout::referenceLayoutSceneNodeOnce(const JsonType& refLayo
 
     if (layoutNode.method == "grid")
     {
-        referenceLayoutSceneNodeWithGrid(refLayoutNode, nodeSize, callback);
+        referenceLayoutSceneNodeWithGrid(refLayoutNode, nodeSize);
     }
     else if (layoutNode.method == "circle")
     {
-        referenceLayoutSceneNodeWithCircle(refLayoutNode, nodeSize, callback);
+        referenceLayoutSceneNodeWithCircle(refLayoutNode, nodeSize);
     }
     else if (layoutNode.method == "arc")
     {
-        referenceLayoutSceneNodeWithArc(refLayoutNode, nodeSize, callback);
+        referenceLayoutSceneNodeWithArc(refLayoutNode, nodeSize);
     }
     else if (layoutNode.method == "hexagonal-grid")
     {
-        referenceLayoutSceneNodeWithHexagonalGrid(refLayoutNode, nodeSize, callback);
+        referenceLayoutSceneNodeWithHexagonalGrid(refLayoutNode, nodeSize);
     }
     else if (layoutNode.method == "spiral")
     {
-        referenceLayoutSceneNodeWithSpiral(refLayoutNode, nodeSize, callback);
+        referenceLayoutSceneNodeWithSpiral(refLayoutNode, nodeSize);
     }
 }
 void DescriptionNodeLauout::referenceLayoutSceneNodeMany(const JsonType& jsonNode, const Math::Vec2& nodeSize, const DescNodeLayoutCallbackType& callback) {

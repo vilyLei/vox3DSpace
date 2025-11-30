@@ -1,6 +1,6 @@
 
 cmake_minimum_required(VERSION 3.17)
-project(voxolModule)
+project(VERSModule)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -136,11 +136,11 @@ if(EMSCRIPTEN)
 
   # set(CMAKE_EXECUTABLE_SUFFIX ".html") # 生成html + wasm + js
 
-  add_executable(voxolModule ${ALL_SOURCES})
+  add_executable(VERSModule ${ALL_SOURCES})
 
-  # set_target_properties(voxolModule PROPERTIES OUTPUT_NAME "index")
+  # set_target_properties(VERSModule PROPERTIES OUTPUT_NAME "index")
   # # WebGL2 / canvas / 文件系统配置等
-  # target_link_options(voxolModule PRIVATE
+  # target_link_options(VERSModule PRIVATE
   #     "SHELL:-sUSE_WEBGL2=1"
   #     "SHELL:-sALLOW_MEMORY_GROWTH=1"
   #     "SHELL:-sEXPORTED_FUNCTIONS=['_main']"
@@ -148,7 +148,7 @@ if(EMSCRIPTEN)
   #     "SHELL:--preload-file assets"
   #     "SHELL:--bind"
   # )
-  set_target_properties(voxolModule PROPERTIES
+  set_target_properties(VERSModule PROPERTIES
     COMPILE_FLAGS "-msimd128"
     LINK_FLAGS "-O3 -msimd128 --bind -s WASM=1 \
             -s ALLOW_MEMORY_GROWTH=1 \
@@ -156,7 +156,7 @@ if(EMSCRIPTEN)
             -s FULL_ES3=1 \
             -s MODULARIZE=1 \
             -s EXPORTED_FUNCTIONS=['_getCmds','_getCmdsTotal','_get_heap_size_bytes','_get_buffer_ptr','_set_buffer_value','_startup','_setMouseParams'] \
-            -s EXPORT_NAME='VoxModule' \
+            -s EXPORT_NAME='VERSModule' \
             -s EXPORTED_RUNTIME_METHODS=['cwrap','HEAPU8']"
   )
 else()
@@ -208,13 +208,13 @@ else()
     INTERFACE_INCLUDE_DIRECTORIES "${SRC_DIR}/thirdPart/zlib/include"
   )
 
-  add_executable(voxolModule ${ALL_SOURCES})
-  target_link_directories(voxolModule PRIVATE ${THIRDPARTY_LIB})
-  target_link_libraries(voxolModule PRIVATE
+  add_executable(VERSModule ${ALL_SOURCES})
+  target_link_directories(VERSModule PRIVATE ${THIRDPARTY_LIB})
+  target_link_libraries(VERSModule PRIVATE
     opengl32
     glew32d
     glfw3
   )
-  target_compile_definitions(voxolModule PRIVATE GLEW_STATIC)
-  target_link_libraries(voxolModule PRIVATE freetype bzip2 brotlidec brotlicommon libpng zlib)
+  target_compile_definitions(VERSModule PRIVATE GLEW_STATIC)
+  target_link_libraries(VERSModule PRIVATE freetype bzip2 brotlidec brotlicommon libpng zlib)
 endif()
