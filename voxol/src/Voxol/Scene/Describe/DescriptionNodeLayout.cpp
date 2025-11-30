@@ -95,53 +95,13 @@ void DescriptionNodeLauout::referenceLayoutSceneNodeWithArc(const JsonType& json
     float      startAngle = 0;
     float      arcAngle = 180;
 
-    Data::JsonValue positionV;
-    center = positionV.parseVec2WithName(jsonNode, "position");
-    //if (positionV.is<Math::Vec2>())
-    //{
-    //    center = positionV.get<Math::Vec2>();
-    //}
-    //Data::JsonValue radiusV;
-    radius = positionV.parseFloatWithName(jsonNode, "radius");
-    //radiusV.parseWithName(jsonNode, "radius");
-    //if (radiusV.is<int>())
-    //{
-    //    radius = radiusV.get<int>();
-    //}
-    //else if (positionV.is<float>())
-    //{
-    //    radius = radiusV.get<float>();
-    //}
-    startAngle = positionV.parseFloatWithName(jsonNode, "start-angle");
-    //Data::JsonValue startAngleV;
-    //startAngleV.parseWithName(jsonNode, "start-angle");
-    //if (startAngleV.is<int>())
-    //{
-    //    startAngle = startAngleV.get<int>();
-    //}
-    //else if (startAngleV.is<float>())
-    //{
-    //    startAngle = startAngleV.get<float>();
-    //}
-    arcAngle = positionV.parseFloatWithName(jsonNode, "arc-angle");
-    //Data::JsonValue arcAngleV;
-    //arcAngleV.parseWithName(jsonNode, "arc-angle");
-    //if (arcAngleV.is<int>())
-    //{
-    //    arcAngle = arcAngleV.get<int>();
-    //}
-    //else if (arcAngleV.is<float>())
-    //{
-    //    arcAngle = arcAngleV.get<float>();
-    //}
+    Data::JsonValue jsonV;
+    center     = jsonV.parseVec2WithName(jsonNode, "position");
+    radius     = jsonV.parseFloatWithName(jsonNode, "radius");
+    startAngle = jsonV.parseFloatWithName(jsonNode, "start-angle");
+    arcAngle   = jsonV.parseFloatWithName(jsonNode, "arc-angle");
+    count      = jsonV.parseIntWithName(jsonNode, "count");
 
-    count = positionV.parseIntWithName(jsonNode, "count");
-    //Data::JsonValue countV;
-    //countV.parseWithName(jsonNode, "count");
-    //if (countV.is<int>())
-    //{
-    //    count = countV.get<int>();
-    //}
     auto   startRad  = Math::degrees_to_radians(startAngle);
     auto   arctRad   = Math::degrees_to_radians(arcAngle);
     std::vector<float> angles;
