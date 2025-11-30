@@ -42,6 +42,7 @@ Math::Vec2                     rhombusGrid(int i, int n, const Math::Vec2& spaci
 Math::Vec2                     rose(int i, int n, float R, float amplitude);
 std::vector<Math::Vec2>         circleFilledRandom(const Math::Vec2& pos, int count, float R);
 std::vector<Math::Vec2>         circleFilledGrid(const Math::Vec2& pos, float radiusSpacing, float R);
+std::vector<Math::Vec2>         circleFilledHex(const Math::Vec2& pos, float radiusSpacing, float R);
 
 } // namespace Distribution
 namespace Superformula

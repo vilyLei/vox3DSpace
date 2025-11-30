@@ -258,6 +258,33 @@ std::vector<Math::Vec2> circleFilledGrid(const Math::Vec2& pos, float radiusSpac
     }
     return out;
 }
+std::vector<Math::Vec2> circleFilledHex(const Math::Vec2& pos, float radiusSpacing, float R)
+{
+    std::vector<Math::Vec2> out;
+    float                   dx = radiusSpacing;
+    float                   dy = radiusSpacing * std::sqrt(3.0f) * 0.5f; // vertical pitch
+
+    int maxY = int(std::ceil(R / dy));
+
+    for (int iy = -maxY; iy <= maxY; ++iy)
+    {
+        float y      = iy * dy;
+        float offset = (iy & 1) ? dx * 0.5f : 0.0f;
+
+        int maxX = int(std::ceil((R - std::abs(y)) / dx));
+        for (int ix = -maxX; ix <= maxX; ++ix)
+        {
+            float x = ix * dx + offset;
+
+            if (x * x + y * y <= R * R) {
+
+                Math::Vec2 pv{x, y};
+                out.push_back(pv + pos);
+            }
+        }
+    }
+    return out;
+}
 } // namespace Distribution
 
 namespace Superformula

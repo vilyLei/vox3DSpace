@@ -207,9 +207,20 @@
                     "spacing": [20,20],
                     "count": 8
                 },
-                "reference-layout": {
+                "reference-layoutCCC": {
                     "type": "basic",
                     "method": "circle-filled-grid",
+                    "position": [
+                        570,
+                        310
+                    ],
+                    "radius":100,
+                    "radius-spacing":30,
+                    "count": 20
+                },
+                "reference-layout": {
+                    "type": "basic",
+                    "method": "circle-filled-hex",
                     "position": [
                         570,
                         310
