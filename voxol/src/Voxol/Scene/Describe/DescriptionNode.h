@@ -109,7 +109,7 @@ struct RefLayoutValue
 
     float mindDistance(const JsonType& jsonNode)
     {
-        return jsonV.parseFloatWithName(jsonNode, "mind-distance");
+        return jsonV.parseFloatWithName(jsonNode, "min-distance");
     }
 
     float scale(const JsonType& jsonNode)

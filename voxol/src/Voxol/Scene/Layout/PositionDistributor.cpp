@@ -2,11 +2,16 @@
 #include "PositionDistributor.h"
 #include <cmath>
 #include <random>
+#include <optional>
 
 namespace Voxol::Scene::Layout
 {
 namespace Distribution
 {
+static float rand01(std::mt19937& rng)
+{
+    return std::uniform_real_distribution<float>(0.0f, 1.0f)(rng);
+}
 Math::Vec2 hexToWorld(Hex h, float hexRadius)
 {
     float size = hexRadius; // distance center->vertex
@@ -284,6 +289,117 @@ std::vector<Math::Vec2> circleFilledHex(const Math::Vec2& pos, float radiusSpaci
         }
     }
     return out;
+}
+std::vector<Math::Vec2> poissonDiskCircle(
+    const Math::Vec2& pos,
+    float    R,         // 圆形区域半径
+    float    minDist,   // 采样最小距离
+    int      k // 每个点的尝试次数
+    )
+{
+    uint32_t     seed = std::random_device{}();
+    std::mt19937 rng(seed);
+
+    float cellSize = minDist / std::sqrt(2.0f);
+
+    // 网格宽度 = ceil(直径 / cell)
+    int gridW = int(std::ceil(2 * R / cellSize));
+    int gridH = int(std::ceil(2 * R / cellSize));
+
+    // 采样网格
+    std::vector<std::optional<Math::Vec2>> grid(gridW * gridH);
+
+    // 输出采样
+    std::vector<Math::Vec2> samples;
+    samples.reserve(1024);
+
+    // 活跃点列表
+    std::vector<Math::Vec2> active;
+
+    auto inCircle = [&](float x, float y) {
+        return x * x + y * y <= R * R;
+    };
+
+    auto gridIndex = [&](float px, float py) {
+        int gx = int((px + R) / cellSize);
+        int gy = int((py + R) / cellSize);
+        return gx + gy * gridW;
+    };
+
+    auto isFar = [&](float x, float y) {
+        int gx = int((x + R) / cellSize);
+        int gy = int((y + R) / cellSize);
+
+        int r = 2; // 邻域检查
+        for (int yy = gy - r; yy <= gy + r; ++yy)
+        {
+            for (int xx = gx - r; xx <= gx + r; ++xx)
+            {
+                if (xx < 0 || xx >= gridW || yy < 0 || yy >= gridH) continue;
+                auto& cell = grid[xx + yy * gridW];
+                if (cell.has_value())
+                {
+                    float dx = cell->x - x;
+                    float dy = cell->y - y;
+                    if (dx * dx + dy * dy < minDist * minDist)
+                        return false;
+                }
+            }
+        }
+        return true;
+    };
+
+    // ---- Step 1：生成第一个点（随机或中心） ----
+    {
+        float angle = rand01(rng) * MATH_2PI;
+        float rad   = std::sqrt(rand01(rng)) * R; // area-uniform
+        float x     = rad * std::cos(angle);
+        float y     = rad * std::sin(angle);
+
+        samples.push_back({x, y});
+        active.push_back({x, y});
+        grid[gridIndex(x, y)] = Math::Vec2{x, y};
+    }
+
+    // ---- Step 2：主循环 ----
+    while (!active.empty())
+    {
+
+        // 随机选择一个 active 点
+        std::uniform_int_distribution<size_t> adist(0, active.size() - 1);
+        size_t                                idx = adist(rng);
+
+        Math::Vec2 base  = active[idx];
+        bool       found = false;
+
+        for (int i = 0; i < k; ++i)
+        {
+            // 在 [minDist, 2*minDist] 之间随机采样
+            float angle  = rand01(rng) * MATH_2PI;
+            float radius = minDist * (1.0f + rand01(rng));
+
+            float nx = base.x + radius * std::cos(angle);
+            float ny = base.y + radius * std::sin(angle);
+
+            if (!inCircle(nx, ny)) continue;
+            if (!isFar(nx, ny)) continue;
+
+            // 接受
+            samples.push_back(Math::Vec2{nx, ny} + pos);
+            active.push_back({nx, ny});
+            grid[gridIndex(nx, ny)] = Math::Vec2{nx, ny};
+            found                   = true;
+        }
+
+        if (!found)
+        {
+            // 当前点无法生成更多样本，从 active 移除
+            active[idx] = active.back();
+            active.pop_back();
+        }
+    }
+
+    return samples;
 }
 } // namespace Distribution
 

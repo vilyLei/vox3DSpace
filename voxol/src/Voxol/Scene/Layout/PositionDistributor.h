@@ -43,6 +43,12 @@ Math::Vec2                     rose(int i, int n, float R, float amplitude);
 std::vector<Math::Vec2>         circleFilledRandom(const Math::Vec2& pos, int count, float R);
 std::vector<Math::Vec2>         circleFilledGrid(const Math::Vec2& pos, float radiusSpacing, float R);
 std::vector<Math::Vec2>         circleFilledHex(const Math::Vec2& pos, float radiusSpacing, float R);
+std::vector<Math::Vec2>         poissonDiskCircle(
+            const Math::Vec2& pos,
+            float             R,       // 圆形区域半径
+            float             minDist, // 采样最小距离
+            int               k = 30   // 每个点的尝试次数
+        );
 
 } // namespace Distribution
 namespace Superformula

@@ -98,6 +98,14 @@ void DescriptionNodeLauout::referenceLayoutSceneNodeWithBasic(const JsonType& js
         positions          = Distribution::circleFilledHex(pos, radiusSpacing, radius);
         return;
     }
+    if (method == "poisson-disk-circle")
+    {
+        auto radius        = jsonV.radius();
+        auto mindDistance = jsonV.mindDistance();
+        positions          = Distribution::poissonDiskCircle(pos, radius, mindDistance);
+        return;
+    }
+    //poissonDiskCircle
 
     if (method == "snowflake")
     {
