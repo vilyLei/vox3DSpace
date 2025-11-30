@@ -106,6 +106,12 @@ struct RefLayoutValue
     {
         return jsonV.parseFloatWithName(jsonNode, "radius-spacing");
     }
+
+    float mindDistance(const JsonType& jsonNode)
+    {
+        return jsonV.parseFloatWithName(jsonNode, "mind-distance");
+    }
+
     float scale(const JsonType& jsonNode)
     {
         return jsonV.parseFloatWithName(jsonNode, "scale");
@@ -233,6 +239,11 @@ struct RefLayoutValueRef
     {
         return value.radiusSpacing(jsonNodeRef);
     }
+    float mindDistance()
+    {
+        return value.mindDistance(jsonNodeRef);
+    }
+
     float scale()
     {
         return value.scale(jsonNodeRef);
