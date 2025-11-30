@@ -56,7 +56,7 @@ void DescriptionNodeLauout::referenceLayoutSceneNodeWithBasic(const JsonType& js
         param.n1  = jsonParamsV.floatValue("n1");
         param.n2   = jsonParamsV.floatValue("n2");
 
-        positions = Superformula::generateSuperformula(count, param, scale);
+        positions = Superformula::generateSuperformula(pos, count, param, scale);
         return;
     }
     if (method == "diamond")
@@ -64,8 +64,8 @@ void DescriptionNodeLauout::referenceLayoutSceneNodeWithBasic(const JsonType& js
         auto radius = jsonV.radius();
         for (auto i = 0; i < count; i++)
         {
-            auto&& pos = Distribution::diamond(i, count, radius);
-            positions.emplace_back(pos);
+            auto&& pv = Distribution::diamond(i, count, radius);
+            positions.emplace_back(pos + pv);
         }
         return;
     }
@@ -74,8 +74,8 @@ void DescriptionNodeLauout::referenceLayoutSceneNodeWithBasic(const JsonType& js
         auto radius = jsonV.radius();
         for (auto i = 0; i < count; i++)
         {
-            auto&& pos = Distribution::snowflake(i, count, radius);
-            positions.emplace_back(pos);
+            auto&& pv = Distribution::snowflake(i, count, radius);
+            positions.emplace_back(pos + pv);
         }
         return;
     }
@@ -84,8 +84,8 @@ void DescriptionNodeLauout::referenceLayoutSceneNodeWithBasic(const JsonType& js
         auto spacing = jsonV.spacing();
         for (auto i = 0; i < count; i++)
         {
-            auto&& pos = Distribution::rhombusGrid(i, count, spacing);
-            positions.emplace_back(pos);
+            auto&& pv = Distribution::rhombusGrid(i, count, spacing);
+            positions.emplace_back(pos + pv);
         }
         return;
     }
@@ -95,8 +95,8 @@ void DescriptionNodeLauout::referenceLayoutSceneNodeWithBasic(const JsonType& js
         auto amplitude = jsonV.amplitude();
         for (auto i = 0; i < count; i++)
         {
-            auto&& pos = Distribution::rose(i, count, radius, amplitude);
-            positions.emplace_back(pos);
+            auto&& pv = Distribution::rose(i, count, radius, amplitude);
+            positions.emplace_back(pos + pv);
         }
         return;
     }

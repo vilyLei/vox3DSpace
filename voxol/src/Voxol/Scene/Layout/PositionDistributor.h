@@ -54,6 +54,7 @@ struct FormulaParam
 };
 
 std::vector<Math::Vec2> generateSuperformula(
+    const Math::Vec2& pos,
     int                 count,
     const FormulaParam& param,
     float               scale = 1);

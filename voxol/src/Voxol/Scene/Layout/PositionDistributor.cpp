@@ -205,6 +205,7 @@ Math::Vec2 superformulaPoint(int i, int count, float m, float a, float b, float 
         scale * r * std::sin(theta)};
 }
 std::vector<Math::Vec2> generateSuperformula(
+    const Math::Vec2&   pos,
     int   count,
     const FormulaParam& param,
     float scale)
@@ -214,8 +215,8 @@ std::vector<Math::Vec2> generateSuperformula(
 
     for (int i = 0; i < count; ++i)
     {
-        pts.push_back(
-            superformulaPoint(i, count, param.m, param.a, param.b, param.n1, param.n2, param.n3, scale));
+        auto pv = superformulaPoint(i, count, param.m, param.a, param.b, param.n1, param.n2, param.n3, scale);
+        pts.push_back(pos + pv);
     }
     return pts;
 }

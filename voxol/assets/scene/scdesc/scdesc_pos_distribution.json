@@ -112,8 +112,8 @@
                     "type": "basic",
                     "method": "superformula",
                     "position": [
-                        500,
-                        300
+                        700,
+                        500
                     ],
                     "scale": 350,
                     "count": 150,
