@@ -38,6 +38,27 @@ void DescriptionNodeLauout::referenceLayoutSceneNodeWithBasic(const JsonType& js
     angles.clear();
 
     auto method = layoutNode.method;
+    if (method == "superformula")
+    {
+
+        auto scale = jsonV.scale();
+        if (!jsonNode.contains("params") || !jsonNode["params"].is_object())
+            return;
+
+        auto&&                     paramsJson = jsonNode["params"];
+        RefLayoutValueRef          jsonParamsV{paramsJson};
+        Superformula::FormulaParam param;
+
+        param.m    = jsonParamsV.floatValue("m");
+        param.a    = jsonParamsV.floatValue("a");
+        param.b    = jsonParamsV.floatValue("b");
+        param.n1   = jsonParamsV.floatValue("n1");
+        param.n1  = jsonParamsV.floatValue("n1");
+        param.n2   = jsonParamsV.floatValue("n2");
+
+        positions = Superformula::generateSuperformula(count, param, scale);
+        return;
+    }
     if (method == "diamond")
     {
         auto radius = jsonV.radius();

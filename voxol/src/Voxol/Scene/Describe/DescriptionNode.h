@@ -48,6 +48,18 @@ struct RefLayoutValue
 
     void parse(const JsonType& jsonNode);
 
+    void reset() {
+        jsonV.reset();
+    }
+    float floatValue(const JsonType& jsonNode, const std::string& name)
+    {
+        return jsonV.parseFloatWithName(jsonNode, name);
+    }
+    float intValue(const JsonType& jsonNode, const std::string& name)
+    {
+        return jsonV.parseIntWithName(jsonNode, name);
+    }
+
     Math::Vec2 position(const JsonType& jsonNode)
     {
         return jsonV.parseVec2WithName(jsonNode, "position");
@@ -89,6 +101,10 @@ struct RefLayoutValue
     float radius(const JsonType& jsonNode)
     {
         return jsonV.parseFloatWithName(jsonNode, "radius");
+    }
+    float scale(const JsonType& jsonNode)
+    {
+        return jsonV.parseFloatWithName(jsonNode, "scale");
     }
     float amplitude(const JsonType& jsonNode)
     {
@@ -153,6 +169,19 @@ struct RefLayoutValueRef
     void parse() {
         value.parse(jsonNodeRef);
     }
+
+    void reset()
+    {
+        value.reset();
+    }
+    float floatValue(const std::string& name)
+    {
+        return value.floatValue(jsonNodeRef, name);
+    }
+    float intValue(const std::string& name)
+    {
+        return value.intValue(jsonNodeRef, name);
+    }
     Math::Vec2 position()
     {
         return value.position(jsonNodeRef);
@@ -194,6 +223,10 @@ struct RefLayoutValueRef
     float radius()
     {
         return value.radius(jsonNodeRef);
+    }
+    float scale()
+    {
+        return value.scale(jsonNodeRef);
     }
     float amplitude()
     {
