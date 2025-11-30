@@ -200,7 +200,7 @@
                     "radius": 110,
                     "count": 20
                 },
-                "reference-layout": {
+                "reference-layoutVVBL": {
                     "type": "basic",
                     "method": "rhombus-grid",
                     "position": [
@@ -208,6 +208,17 @@
                         310
                     ],
                     "spacing": [30,30],
+                    "count": 20
+                },
+                "reference-layout": {
+                    "type": "basic",
+                    "method": "rose",
+                    "position": [
+                        570,
+                        310
+                    ],
+                    "radius": 180,
+                    "amplitude": 0.1,
                     "count": 20
                 },
                 "reference-layoutsPPP": [

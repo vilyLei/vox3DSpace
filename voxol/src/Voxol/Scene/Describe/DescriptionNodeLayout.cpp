@@ -68,6 +68,17 @@ void DescriptionNodeLauout::referenceLayoutSceneNodeWithBasic(const JsonType& js
         }
         return;
     }
+    if (method == "rose")
+    {
+        auto radius    = jsonV.radius();
+        auto amplitude = jsonV.amplitude();
+        for (auto i = 0; i < count; i++)
+        {
+            auto&& pos = Distribution::rose(i, count, radius, amplitude);
+            positions.emplace_back(pos);
+        }
+        return;
+    }
     //rhombus-grid
 }
 void DescriptionNodeLauout::referenceLayoutSceneNodeWithSpiral(const JsonType& jsonNode, const Math::Vec2& nodeSize)

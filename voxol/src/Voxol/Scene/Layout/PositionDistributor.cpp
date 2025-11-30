@@ -166,7 +166,7 @@ Math::Vec2 rhombusGrid(int i, int n, const Math::Vec2& spacing)
 Math::Vec2 rose(int i, int n, float R, float amplitude)
 {
     float t = float(i) / n;
-    float a = t * 2 * MATH_PI;
+    float a = t * MATH_2PI;
 
     float r = R * std::cos(amplitude * a);
     return {r * cos(a), r * sin(a)};
