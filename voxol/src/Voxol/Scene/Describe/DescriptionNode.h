@@ -27,7 +27,6 @@ struct RefLayoutValue
 
     Math::Vec2 position(const JsonType& jsonNode)
     {
-
         return jsonV.parseVec2WithName(jsonNode, "position");
     }
     Math::Vec2 spacing(const JsonType& jsonNode)
@@ -68,6 +67,11 @@ struct RefLayoutValue
     {
         return jsonV.parseFloatWithName(jsonNode, "radius");
     }
+    float amplitude(const JsonType& jsonNode)
+    {
+        return jsonV.parseFloatWithName(jsonNode, "amplitude");
+    }
+
     float startAngle(const JsonType& jsonNode, bool toRadian = true)
     {
         auto v = jsonV.parseFloatWithName(jsonNode, "start-angle");
@@ -164,6 +168,11 @@ struct RefLayoutValueRef
     {
         return value.radius(jsonNodeRef);
     }
+    float amplitude()
+    {
+        return value.amplitude(jsonNodeRef);
+    }
+
     float startAngle(bool toRadian = true)
     {
         return value.startAngle(jsonNodeRef, toRadian);

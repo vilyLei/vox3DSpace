@@ -33,13 +33,29 @@ std::vector<Math::Vec2> generate(
     size_t     count,
     float      hexRadius = 20.0f // spacing
 );
-inline std::vector<Math::Vec2> generateHexGridT(const Math::Vec2& center, int rings, float hexR);
+inline std::vector<Math::Vec2> generateHexGrid(const Math::Vec2& center, int rings, float hexR);
 Math::Vec2                     diamond(int i, int n, float R);
+std::vector<Math::Vec2>        kochSnowflake(int iteration, float R);
+Math::Vec2                     rhombusGrid(int i, int n, const Math::Vec2& spacing);
+Math::Vec2                     rose(int i, int n, float R, float amplitude);
 
 } // namespace Distribution
 namespace Superformula
 {
+struct FormulaParam
+{
+    float m  = 6;
+    float a = 1;
+    float b = 1;
+    float n1 = 0.3;
+    float n2 = 0.3;
+    float n3 = 0.3;
+};
 
+std::vector<Math::Vec2> generateSuperformula(
+    int                 count,
+    const FormulaParam& param,
+    float               scale = 1);
 }
 class PositionDistribution
 {

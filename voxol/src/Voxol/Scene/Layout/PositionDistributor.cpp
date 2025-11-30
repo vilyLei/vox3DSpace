@@ -70,7 +70,7 @@ std::vector<Math::Vec2> generate(
 
     return pts;
 }
-std::vector<Math::Vec2> generateHexGridT(const Math::Vec2& center, int rings, float hexR)
+std::vector<Math::Vec2> generateHexGrid(const Math::Vec2& center, int rings, float hexR)
 {
     std::vector<Math::Vec2> ls;
     ls.reserve(1 + 3 * rings * (rings + 1));
@@ -92,11 +92,11 @@ std::vector<Math::Vec2> generateHexGridT(const Math::Vec2& center, int rings, fl
 Math::Vec2 diamond(int i, int n, float R)
 {
     float t     = float(i) / float(n); // 0~1
-    float angle = t * 4.0f * MATH_PI;  // 四段
+    float angle = t * 4.0f * MATH_PI;  // four segments
 
     float s = std::fmod(angle, MATH_2PI) / MATH_2PI;
 
-    // 四个方向：右、上、左、下
+    // four directions：right, top, left, down
     int sector = int(angle / MATH_2PI) % 4;
 
     switch (sector)
@@ -143,28 +143,29 @@ std::vector<Math::Vec2> kochSnowflake(int iteration, float R)
     return pts;
 }
 
-Math::Vec2 rhombusGrid(int i, int n, float spacing)
+Math::Vec2 rhombusGrid(int i, int n, const Math::Vec2& spacing)
 {
     int side = std::ceil(std::sqrt(n));
     int x    = i % side;
     int y    = i / side;
 
     return {
-        (x - y) * spacing,
-        (x + y) * spacing * 0.5f};
+        (x - y) * spacing.x,
+        (x + y) * spacing.y * 0.5f};
 }
-Math::Vec2 rose(int i, int n, float R, int k)
+Math::Vec2 rose(int i, int n, float R, float amplitude)
 {
     float t = float(i) / n;
     float a = t * 2 * MATH_PI;
 
-    float r = R * std::cos(k * a);
+    float r = R * std::cos(amplitude * a);
     return {r * cos(a), r * sin(a)};
 }
 } // namespace Distribution
 
 namespace Superformula
 {
+
 inline float superformulaRadius(float theta,
                                 float m,
                                 float a,
@@ -195,12 +196,7 @@ Math::Vec2 superformulaPoint(int i, int count, float m, float a, float b, float 
 }
 std::vector<Math::Vec2> generateSuperformula(
     int   count,
-    float m,
-    float a,
-    float b,
-    float n1,
-    float n2,
-    float n3,
+    const FormulaParam& param,
     float scale)
 {
     std::vector<Math::Vec2> pts;
@@ -209,7 +205,7 @@ std::vector<Math::Vec2> generateSuperformula(
     for (int i = 0; i < count; ++i)
     {
         pts.push_back(
-            superformulaPoint(i, count, m, a, b, n1, n2, n3, scale));
+            superformulaPoint(i, count, param.m, param.a, param.b, param.n1, param.n2, param.n3, scale));
     }
     return pts;
 }
@@ -217,7 +213,7 @@ std::vector<Math::Vec2> generateSuperformula(
 }
 std::vector<Math::Vec2> PositionDistribution::hexagonalGrid(int count, const Math::Vec2& center, int rings, float hexRadius)
 {
-    return Distribution::generateHexGridT(center, rings, hexRadius);
+    return Distribution::generateHexGrid(center, rings, hexRadius);
 }
 std::vector<Math::Vec2> PositionDistribution::circle(std::vector<float>& angles, int count, const Math::Vec2& center, float radius, float startRadian)
 {
