@@ -151,7 +151,7 @@
                     "hex-radius": 30,
                     "count": 61
                 },
-                "reference-layout": {
+                "reference-layoutPPPlo": {
                     "type": "default",
                     "method": "arc",
                     "position": [
@@ -181,7 +181,7 @@
                     ],
                     "count": 32
                 },
-                "reference-layoutsOOOO": [
+                "reference-layouts": [
                     {
                         "type": "default",
                         "method": "grid",
@@ -204,7 +204,7 @@
                         "type": "default",
                         "method": "circle",
                         "position": [
-                            700,
+                            770,
                             210
                         ],
                         "start-angle": 50,
@@ -227,7 +227,7 @@
                         "type": "default",
                         "method": "spiral",
                         "position": [
-                            500,
+                            530,
                             310
                         ],
                         "start-angle": 30,
