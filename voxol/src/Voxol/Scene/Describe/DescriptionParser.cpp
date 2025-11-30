@@ -6,10 +6,9 @@
 #include <fstream>
 #include <filesystem>
 
-namespace Voxol::Scene
+namespace Voxol::Scene::Describe
 {
-namespace Describe
-{
+
 
 void FileParser::initFromFile(const std::string& fileName)
 {
@@ -227,15 +226,8 @@ void FileParser::parseSceneNode(SceneNode& parentNode, uint32_t& id, const JsonT
     std::string refKey = "reference";
     if (jsonNode.contains(refKey) && jsonNode[refKey].is_object())
     {
+
         auto&&      refNode     = jsonNode[refKey];
-        std::string srcNodeName = refNode["src"];
-
-        if (srcNodeName.empty())
-            return;
-
-        if (!hasSceneNodeWithNameFromRoot(srcNodeName))
-            return;
-
         std::string srcNodeType = refNode["type"];
         auto        preTrans    = parentNode.transform;
         auto        preName     = parentNode.name;
@@ -243,9 +235,15 @@ void FileParser::parseSceneNode(SceneNode& parentNode, uint32_t& id, const JsonT
 
         if (srcNodeType == "container")
         {
+            std::string srcNodeName = (refNode.contains("src") && refNode["src"].is_string()) ? refNode["src"] : "";
+            if (srcNodeName.empty())
+                return;
+            if (!hasSceneNodeWithNameFromRoot(srcNodeName))
+                return;
+
             SceneNode tempNode;
             parseSceneNodeWithNameFromRoot(tempNode, tempNode.id, srcNodeName);
-            Describe::DescriptionNodeLauout::referenceLayoutSceneNode(
+            DescriptionNodeLauout::referenceLayoutSceneNode(
                 jsonNode,
                 tempNode.transform.scale(),
                 [&, this](int index, const Math::Vec2& pos, const Math::Vec2& scale, float rotation) {
@@ -262,6 +260,12 @@ void FileParser::parseSceneNode(SceneNode& parentNode, uint32_t& id, const JsonT
         }
         else
         {
+            std::string srcNodeName = refNode["src"];
+            if (srcNodeName.empty())
+                return;
+            if (!hasSceneNodeWithNameFromRoot(srcNodeName))
+                return;
+
             parseSceneNodeWithNameFromRoot(parentNode, id, srcNodeName);
             parentNode.transform.pos() = preTrans.pos();
             parentNode.name            = preName;
@@ -398,7 +402,7 @@ void FileParser::parseNodeData(SceneNode& node, const JsonType& jsonNode)
 }
 
 
-void HierarchyParser::foreachNode(Describe::SceneNode& parentNode, SceneNodeForeachCallbackType callback)
+void HierarchyParser::foreachNode(SceneNode& parentNode, SceneNodeForeachCallbackType callback)
 {
 
     callback(parentNode);
@@ -412,7 +416,7 @@ void HierarchyParser::foreachNode(Describe::SceneNode& parentNode, SceneNodeFore
         foreachNode(children[i], callback);
     }
 }
-void HierarchyParser::parse(Describe::SceneNode& parentNode, Describe::HierarchyNode& parentHierNode)
+void HierarchyParser::parse(SceneNode& parentNode, HierarchyNode& parentHierNode)
 {
     parentHierNode.id   = parentNode.id;
     parentHierNode.name = parentNode.name;
@@ -429,7 +433,7 @@ void HierarchyParser::parse(Describe::SceneNode& parentNode, Describe::Hierarchy
     for (auto i = 0; i < children.size(); ++i)
     {
         auto&&              child = children[i];
-        Describe::HierarchyNode hierNode;
+        HierarchyNode hierNode;
         hierNode.hieraychy.parent = parentNode.id;
 
         if ((i + 1) < children.size())
@@ -441,8 +445,6 @@ void HierarchyParser::parse(Describe::SceneNode& parentNode, Describe::Hierarchy
     parentHierNode.print();
 }
 
-} // namespace Desc
-
 void DescriptionParser::initialize()
 {
     std::string filePath = "scene/scdesc/scdesc01.json";
@@ -450,12 +452,12 @@ void DescriptionParser::initialize()
     filePath = "scene/scdesc/scdesc_pos_distribution.json";
     fileParser.initFromFile(filePath);
 
-    Describe::HierarchyNode rootHierNode;
+    HierarchyNode rootHierNode;
     hierParser.parse(fileParser.rootNode, rootHierNode);
 
-    hierParser.foreachNode(fileParser.rootNode, [](Describe::SceneNode& node) {
+    hierParser.foreachNode(fileParser.rootNode, [](SceneNode& node) {
         node.printTransform();
     });
 }
 
-} // namespace Voxol::Scene
+} // namespace Voxol::Scene::Describe

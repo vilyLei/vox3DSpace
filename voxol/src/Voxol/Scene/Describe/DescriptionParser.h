@@ -8,10 +8,9 @@
 #include <string>
 #include <functional>
 
-namespace Voxol::Scene
+namespace Voxol::Scene::Describe
 {
-namespace Describe
-{
+
 using JsonType = nlohmann::json;
 
 
@@ -56,7 +55,7 @@ public:
     void parseNodeActionData(SceneNode& currNode, const JsonType& jsonNode);
 };
 
-using SceneNodeForeachCallbackType = std::function<void(Describe::SceneNode& node)>;
+using SceneNodeForeachCallbackType = std::function<void(SceneNode& node)>;
 class HierarchyParser
 {
 public:
@@ -64,10 +63,9 @@ public:
     ~HierarchyParser() = default;
 
 public:
-    void foreachNode(Describe::SceneNode& parentNode, SceneNodeForeachCallbackType callback);
-    void parse(Describe::SceneNode& parentNode, Describe::HierarchyNode& parentHierNode);
+    void foreachNode(SceneNode& parentNode, SceneNodeForeachCallbackType callback);
+    void parse(SceneNode& parentNode, HierarchyNode& parentHierNode);
 };
-} // namespace Desc
 
 class DescriptionParser
 {
@@ -76,8 +74,8 @@ public:
     ~DescriptionParser() = default;
 
 public:
-    Describe::FileParser  fileParser;
-    Describe::HierarchyParser hierParser;
+    FileParser  fileParser;
+    HierarchyParser hierParser;
 
 public:
     void initialize();
