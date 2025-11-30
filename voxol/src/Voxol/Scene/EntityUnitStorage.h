@@ -24,7 +24,7 @@ public:
     ~EntityUnitStorage() = default;
 
 public:
-    DescriptionParser descParser;
+    Describe::DescriptionParser descParser;
 
     std::vector<Render::Gpu::DrawingUnit> getDrawUnitsFromText(const std::string& text, float fontSize = 36, const Voxol::Math::Vec2& pos = {});
     EntityCompStorage::SP                 comp{};
