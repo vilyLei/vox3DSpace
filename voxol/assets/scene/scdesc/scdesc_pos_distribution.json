@@ -26,8 +26,8 @@
                     "shape": {
                         "type": "rectangle",
                         "size": [
-                            10,
-                            10
+                            20,
+                            20
                         ]
                     },
                     "style": {
@@ -36,8 +36,36 @@
                 }
             },
             {
+                "type": "label",
+                "name": "circle-01-label",
+                "transform": {
+                    "position": [
+                        50,
+                        50
+                    ]
+                },
+                "visible": false,
+                "display": {
+                    "shape": {
+                        "type": "circle",
+                        "radius": 10
+                    },
+                    "shapeTT": {
+                        "type": "rectangle",
+                        "size": [
+                            20,
+                            20
+                        ]
+                    },
+                    "style": {
+                        "fillColor": "0xff88aa50"
+                    }
+                }
+            },
+            {
                 "reference": {
-                    "src": "rect-01-label",
+                    "srcTT": "rect-01-label",
+                    "src-list": ["rect-01-label", "circle-01-label"],
                     "src-wrapping": "repeat",
                     "type": "container"
                 },

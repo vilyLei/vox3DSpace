@@ -237,8 +237,7 @@ void FileParser::parseSceneNode(SceneNode& parentNode, uint32_t& id, const JsonT
         {
             std::vector<std::string> srcList;
             std::string srcNodeName = (refNode.contains("src") && refNode["src"].is_string()) ? refNode["src"] : "";
-            //if (srcNodeName.empty())
-            //    return;
+
             if (!srcNodeName.empty() && hasSceneNodeWithNameFromRoot(srcNodeName))
             {
                 srcList.push_back(srcNodeName);
@@ -246,7 +245,7 @@ void FileParser::parseSceneNode(SceneNode& parentNode, uint32_t& id, const JsonT
             std::string srcListKey = "src-list";
             if (refNode.contains(srcListKey) && refNode[srcListKey].is_array())
             {
-                auto&& elements = jsonNode[srcListKey];
+                auto&& elements = refNode[srcListKey];
                 if (elements.empty())
                     return;
 
