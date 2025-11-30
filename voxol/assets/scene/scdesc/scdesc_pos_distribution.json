@@ -363,7 +363,7 @@
                         ]
                     },
                     "style": {
-                        "fillColor": "0xffff7f50"
+                        "fillColor": "0xffdeb887"
                     }
                 }
             },
@@ -474,11 +474,11 @@
                     "src": "rect-03-label",
                     "type": "container"
                 },
-                "visible": false,
+                "visible": true,
                 "name": "rect-03-label-group",
                 "transform": {
                     "position": [
-                        200,
+                        100,
                         150
                     ]
                 },
@@ -492,9 +492,10 @@
                     "columns": 8,
                     "spacing": [
                         50,
-                        50
+                        0
                     ],
-                    "count": 32
+                    "staggered":[0.5,0],
+                    "count": 56
                 }
             }
         ]
