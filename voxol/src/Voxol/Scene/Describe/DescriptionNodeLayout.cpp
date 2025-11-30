@@ -5,6 +5,83 @@
 namespace Voxol::Scene::Describe
 {
 
+
+struct RefLayoutValue
+{
+
+    Scene::Data::JsonValue jsonV;
+
+    Math::Vec2 position(const JsonType& jsonNode) {
+
+        return jsonV.parseVec2WithName(jsonNode, "position");
+    }
+    int count(const JsonType& jsonNode)
+    {
+        return jsonV.parseIntWithName(jsonNode, "count");
+    }
+    int rings(const JsonType& jsonNode)
+    {
+        return jsonV.parseIntWithName(jsonNode, "rings");
+    }
+    int columns(const JsonType& jsonNode)
+    {
+        return jsonV.parseIntWithName(jsonNode, "columns");
+    }
+    float hexRadius(const JsonType& jsonNode)
+    {
+        return jsonV.parseIntWithName(jsonNode, "hex-radius");
+    }
+    float startRadius(const JsonType& jsonNode)
+    {
+        return jsonV.parseIntWithName(jsonNode, "start-radius");
+    }
+    float stepRadius(const JsonType& jsonNode)
+    {
+        return jsonV.parseFloatWithName(jsonNode, "step-radius");
+    }
+
+    float radius(const JsonType& jsonNode)
+    {
+        return jsonV.parseFloatWithName(jsonNode, "radius");
+    }
+    float startAngle(const JsonType& jsonNode, bool toRadian = true)
+    {
+        auto v = jsonV.parseFloatWithName(jsonNode, "start-angle");
+        if (toRadian)
+        {
+            v = Math::degrees_to_radians(v);
+        }
+        return v;
+    }
+    float stepAngle(const JsonType& jsonNode, bool toRadian = true)
+    {
+        auto v = jsonV.parseFloatWithName(jsonNode, "step-angle");
+        if (toRadian)
+        {
+            v = Math::degrees_to_radians(v);
+        }
+        return v;
+    }
+    float angle(const JsonType& jsonNode, bool toRadian = true)
+    {
+        auto v = jsonV.parseFloatWithName(jsonNode, "angle");
+        if (toRadian)
+        {
+            v = Math::degrees_to_radians(v);
+        }
+        return v;
+    }
+    float rotation(const JsonType& jsonNode, bool toRadian = true)
+    {
+        auto v = jsonV.parseFloatWithName(jsonNode, "rotation");
+        if (toRadian)
+        {
+            v = Math::degrees_to_radians(v);
+        }
+        return v;
+    }
+};
+
 void DescriptionNodeLauout::referenceLayoutSceneNodeWithHexagonalGrid(const JsonType& jsonNode, const Math::Vec2& nodeSize, const DescNodeLayoutCallbackType& callback)
 {
     using namespace Voxol::Scene::Layout;
@@ -14,12 +91,17 @@ void DescriptionNodeLauout::referenceLayoutSceneNodeWithHexagonalGrid(const Json
     int        rings     = 5;
     float      hexRadius = 180;
 
-    Data::JsonValue jsonV;
+    //Data::JsonValue jsonV;
+    //pos = jsonV.parseVec2WithName(jsonNode, "position");
+    //hexRadius = jsonV.parseFloatWithName(jsonNode, "hex-radius");
+    //rings = jsonV.parseIntWithName(jsonNode, "rings");
+    //count = jsonV.parseIntWithName(jsonNode, "count");
 
-    pos = jsonV.parseVec2WithName(jsonNode, "position");
-    hexRadius = jsonV.parseFloatWithName(jsonNode, "hex-radius");
-    rings = jsonV.parseIntWithName(jsonNode, "rings");
-    count = jsonV.parseIntWithName(jsonNode, "count");
+    RefLayoutValue jsonV;
+    pos = jsonV.position(jsonNode);
+    hexRadius = jsonV.hexRadius(jsonNode);
+    rings     = jsonV.rings(jsonNode);
+    count     = jsonV.count(jsonNode);
 
     auto&& positions = PositionDistribution::hexagonalGrid(count, pos, rings, hexRadius);
     auto   tot       = static_cast<int>(positions.size());
@@ -41,16 +123,23 @@ void DescriptionNodeLauout::referenceLayoutSceneNodeWithSpiral(const JsonType& j
     float      start_angle = 0;
     float      step_angle = 30;
 
-    Data::JsonValue jsonV;
-    center       = jsonV.parseVec2WithName(jsonNode, "position");
-    start_radius = jsonV.parseFloatWithName(jsonNode, "start-radius");
-    step_radius  = jsonV.parseFloatWithName(jsonNode, "step-radius");
-    step_angle   = jsonV.parseFloatWithName(jsonNode, "step-angle");
-    start_angle  = jsonV.parseFloatWithName(jsonNode, "start-angle");
-    count        = jsonV.parseIntWithName(jsonNode, "count");
+    //Data::JsonValue jsonV;
+    //center       = jsonV.parseVec2WithName(jsonNode, "position");
+    //start_radius = jsonV.parseFloatWithName(jsonNode, "start-radius");
+    //step_radius  = jsonV.parseFloatWithName(jsonNode, "step-radius");
+    //step_angle   = jsonV.parseFloatWithName(jsonNode, "step-angle");
+    //start_angle  = jsonV.parseFloatWithName(jsonNode, "start-angle");
+    //count        = jsonV.parseIntWithName(jsonNode, "count");
+    RefLayoutValue jsonV;
+    center       = jsonV.position(jsonNode);
+    start_radius = jsonV.startRadius(jsonNode);
+    step_radius  = jsonV.stepRadius(jsonNode);
+    step_angle   = jsonV.stepAngle(jsonNode);
+    start_angle  = jsonV.startAngle(jsonNode);
+    count        = jsonV.count(jsonNode);
 
-    step_angle = Math::degrees_to_radians(step_angle);
-    start_angle = Math::degrees_to_radians(start_angle);
+    //step_angle = Math::degrees_to_radians(step_angle);
+    //start_angle = Math::degrees_to_radians(start_angle);
 
     std::vector<float> angles;
     angles.reserve(count);

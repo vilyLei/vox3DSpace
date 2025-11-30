@@ -108,7 +108,7 @@
                         100
                     ]
                 },
-                "reference-layoutPP0": {
+                "reference-layout": {
                     "type": "default",
                     "method": "spiral",
                     "position": [
@@ -121,7 +121,7 @@
                     "step-radius": 5,
                     "count": 61
                 },
-                "reference-layout": {
+                "reference-layoutPPI": {
                     "type": "default",
                     "method": "hexagonal-grid",
                     "position": [
@@ -162,7 +162,7 @@
                     ],
                     "count": 32
                 },
-                "reference-layoutsT": [
+                "reference-layoutsKKK": [
                     {
                         "type": "default",
                         "method": "grid",
