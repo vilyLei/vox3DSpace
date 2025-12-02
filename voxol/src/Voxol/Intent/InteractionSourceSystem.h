@@ -3,7 +3,7 @@
 
 #include "IntentComponent.h"
 #include "../Scene/EntityCompStorage.h"
-#include "../Tile/TileSystem.h"
+#include "ActionSystem.h"
 #include <functional>
 
 namespace Voxol::Intent
@@ -26,6 +26,7 @@ public:
 public:
     Scene::EntityCompStorage::SP     compStorage;
     Interaction::EntityDirtyCallType entityDirtyCall;
+    ActionSystem::SP                 actionSys;
 
 public:
     void                initialize();
