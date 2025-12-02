@@ -192,14 +192,15 @@ bool EntityRenderSystem::drawUnit(const Draw::DrawContext& rctx, const Scene::Co
     auto&& shdDesc   = shaderingDescPool[shadingEt.shadingDescId];
     auto&& trans     = transformsPool[entity.transformId];
 
-    auto&& vb = compStorage->getEntityGlobalBoundsAt(entity.id);
+    auto   etId      = entity.id;
+    auto&& vb   = compStorage->getEntityGlobalBoundsAt(etId);
     if (!wbounds.intersects(vb))
         return false;
 
 
     if (model.type == Scene::Component::UnitModelType::Text)
     {
-        auto&& strModel = compStorage->entityStringModelMap[entity.id];
+        auto&& strModel = compStorage->entityStringModelMap[etId];
         auto&  textDesc      = strModel.text;
 
         if (!textDesc.text.empty())
@@ -261,9 +262,9 @@ bool EntityRenderSystem::drawUnit(const Draw::DrawContext& rctx, const Scene::Co
 
     auto tempColor     = shdDesc.color;
     drawUnit.blendMode = 1;
-    if (drawingId == 8 && compStorage->textureMap.contains(drawingId))
+    if (drawingId == 8 && compStorage->textureMap.contains(etId))
     {
-        auto tex = compStorage->textureMap.contains(drawingId);
+        auto tex = compStorage->textureMap.contains(etId);
         Render::Gpu::buildTexDrawUnitWithTex(drawUnit, tex, true);
 
     }

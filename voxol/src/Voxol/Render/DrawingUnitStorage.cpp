@@ -148,10 +148,8 @@ void DrawingUnitStorage::initVoassScene()
     auto& sdfRoundedRectUnit  = drawingUnits[5];
     auto& sdfTriangleUnit     = drawingUnits[6];
     auto& strokeShapeUnit     = drawingUnits[7];
-    auto& strokeShapeUnit     = drawingUnits[7];
-    auto& texUnit     = drawingUnits[8];
-
-    Render::Gpu::buildTexDrawUnitWithTex(texUnit, GL_ZERO, true);
+    auto& texUnit             = drawingUnits[8];
+    Render::Gpu::buildTexDrawUnitWithTex(texUnit, GL_ZERO, false);
 
     bool colorClip      = false;
     sdfCircleUnit.color = {0.9f, 0.0, 0.3f, 1.0f};
@@ -185,18 +183,17 @@ void DrawingUnitStorage::initVoassScene()
     Render::Gpu::buildSDFDrawUnit(strokeShapeUnit, Shader::SDFShapeType::DefaultShape, colorClip);
 
     drawingIDIndex       = 8;
-    std::string fileName = "ship01.glsl";
-    auto&       unit_8   = drawingUnits[drawingIDIndex];
-    Render::Gpu::buildSDFDrawUnitWithName(unit_8, fileName, colorClip);
-    nameMap[fileName] = drawingIDIndex;
+    //std::string fileName = "ship01.glsl";
+    //auto&       unit_8   = drawingUnits[drawingIDIndex];
+    //Render::Gpu::buildSDFDrawUnitWithName(unit_8, fileName, colorClip);
+    //nameMap[fileName] = drawingIDIndex;
 
-    drawingIDIndex ++;
-        
+    drawingIDIndex++;
+
     msdfText->initialize("msdf/arial_atlas.png", "msdf/arial_atlas.json");
     msdfText->buildDrawingRes();
     //std::string text = "Hello, Cute Boy!";
     //msdfText->buildText(text, msdfTextDrawUnits, {300, 100}, 50);
-
 }
 
 } // namespace Voxol::Render

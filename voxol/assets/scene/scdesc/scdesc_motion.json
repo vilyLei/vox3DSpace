@@ -28,7 +28,7 @@
                         ]
                     },
                     "style": {
-                        "fill-color": "0xff33b887",
+                        "fill-color": "0xffffffff",
                         "image-url": "letterA.png"
                     }
                 }
