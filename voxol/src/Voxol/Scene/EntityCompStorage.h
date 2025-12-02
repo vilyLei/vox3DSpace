@@ -161,14 +161,16 @@ public:
     // key: shadingId, value: effect ids
     std::unordered_map<uint32_t, std::vector<uint32_t>> shadingShadowIdMap;
 
-    std::unordered_map<uint32_t, Math::Mat33>                    entityGlobalMat33Map;
-    Base::ID::keyUint64Unordered_map<Math::Mat33>                entityInsGlobalMat33Map;
-    std::unordered_map<uint32_t, Component::UnitInstanceMap>     instanceStorage;
-    std::unordered_map<uint32_t, Component::UnitTextModel>       entityStringModelMap;
+    std::unordered_map<uint32_t, Math::Mat33>                entityGlobalMat33Map;
+    Base::ID::keyUint64Unordered_map<Math::Mat33>            entityInsGlobalMat33Map;
+    std::unordered_map<uint32_t, Component::UnitInstanceMap> instanceStorage;
+    std::unordered_map<uint32_t, Component::UnitTextModel>   entityStringModelMap;
 
-    
-    std::unordered_map<uint32_t, Component::UnitIdName> interactionIDMap;
-    std::unordered_map<uint32_t, Component::UnitIdName> actionIDMap;
+
+    std::unordered_map<uint32_t, Component::UnitIdName>         interactionIDMap;
+    std::unordered_map<uint32_t, Component::UnitIdName>         actionIDMap;
+    std::unordered_map<uint32_t, Scene::Component::UnitTexture> textureMap;
+    std::unordered_map<uint32_t, Math::Vec2>                    transformPivotMap;
 
 private:
     std::vector<uint32_t> topoOrder;

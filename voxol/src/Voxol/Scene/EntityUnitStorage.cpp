@@ -33,8 +33,10 @@ void EntityUnitStorage::initalizeFromDescFile(const std::string& fileName)
     }
     drawing->initalize(total);
 
-    comp->interactionIDMap = descParser.fileParser.interactionIDMap;
-    comp->actionIDMap      = descParser.fileParser.actionIDMap;
+    comp->interactionIDMap  = descParser.fileParser.interactionIDMap;
+    comp->actionIDMap       = descParser.fileParser.actionIDMap;
+    comp->transformPivotMap = descParser.fileParser.transformPivotMap;
+    comp->textureMap        = descParser.fileParser.textureMap;
 
     constexpr int poolSzie = 8192;
     total                  = poolSzie;
@@ -70,7 +72,7 @@ void EntityUnitStorage::initalizeFromDescFile(const std::string& fileName)
         e.id = index;
     });
     transformsPool.forEach([&](auto& e, int32_t index) {
-        e = {0,0,1,1,0};
+        e = {0, 0, 1, 1, 0};
     });
     hierarchiesPool.forEach([&](auto& e, uint32_t index) {
         e.parent     = Base::ID::INVALID_ID;
@@ -82,7 +84,6 @@ void EntityUnitStorage::initalizeFromDescFile(const std::string& fileName)
     auto& hierParser = descParser.hierParser;
 
     hierParser.foreachNode(fileParser.rootNode, [&](Describe::SceneNode& node) {
-
         auto i = node.id;
 
         auto textFlag = node.unitModel.type == Component::UnitModelType::Text;

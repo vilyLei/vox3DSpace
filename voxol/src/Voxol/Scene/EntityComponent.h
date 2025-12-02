@@ -50,6 +50,12 @@ struct UnitShadowEntity
 
 
 
+struct UnitTexture
+{
+    GLuint texture = GL_ZERO;
+    std::string name;
+};
+
 struct UnitIdName
 {
     uint32_t    id = Base::ID::INVALID_ID;

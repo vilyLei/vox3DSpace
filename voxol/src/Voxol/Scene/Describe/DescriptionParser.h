@@ -4,6 +4,8 @@
 #include "../../Base/BaseDefine.h"
 #include "DescriptionNode.h"
 #include "../../Math/Vec2.h"
+#include "../../Render/OglGpuResUtils.h"
+
 #include <nlohmann/json.hpp>
 #include <string>
 #include <functional>
@@ -28,11 +30,11 @@ public:
     std::unordered_map<uint32_t, Intent::Interaction::InteractionNodeName>    interactionIDMap;
     Base::ID::keyUint64Unordered_map<Intent::Interaction::InteractionSource>  interactionSrcMap;
     std::unordered_map<uint32_t, Intent::Interaction::InteractionNodeName>    actionIDMap;
-    std::unordered_map<std::string, uint32_t>    textureUrlMap;
-    std::unordered_map<uint32_t, uint32_t>       textureMap;
+    std::unordered_map<std::string, Scene::Component::UnitTexture>            textureUrlMap;
+    std::unordered_map<uint32_t, Scene::Component::UnitTexture>               textureMap;
+    std::unordered_map<uint32_t, Math::Vec2>                                  transformPivotMap;
 
 public:
-
     void initFromFile(const std::string& fileName);
 
     bool hasSceneNodeWithNameFromRoot(const std::string& nodeName);
@@ -77,12 +79,12 @@ public:
     ~DescriptionParser() = default;
 
 public:
-    FileParser  fileParser;
+    FileParser      fileParser;
     HierarchyParser hierParser;
 
 public:
     void initialize();
 };
 
-} // namespace Voxol::Scene
+} // namespace Voxol::Scene::Describe
 #endif
