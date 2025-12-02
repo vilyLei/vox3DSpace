@@ -92,6 +92,13 @@ Math::Bounds EntityCompStorage::getEntityGlobalBoundsAt(const Base::ID::KeyUint6
     auto&&       trans = transformsPool[et.transformId];
     Math::Bounds tb;
     Math::Bounds srcBounds{0, 0, trans.sx, trans.sy};
+
+    if (transformPivotMap.contains(et.id))
+    {
+        auto&& sv = transformPivotMap[et.id];
+        srcBounds.setXYWH(-sv.x * trans.sx, -sv.y * trans.sy, trans.sx, trans.sy);
+    }
+
     srcBounds.mat33MapTo(getEntityGlobalMat33At(id), tb);
     return tb;
 }
@@ -106,6 +113,13 @@ Math::Bounds EntityCompStorage::getEntityLocalBoundsAt(uint32_t id)
     auto&& et    = entitiesPool[id];
     auto&& trans = transformsPool[et.transformId];
 
+    if (transformPivotMap.contains(et.id))
+    {
+        auto&& sv = transformPivotMap[et.id];
+        Math::Bounds bv;
+        bv.setXYWH(-sv.x * trans.sx, -sv.y * trans.sy, trans.sx, trans.sy);
+        return bv;
+    }
     return {0, 0, trans.sx, trans.sy};
 }
 
@@ -117,6 +131,13 @@ Math::Bounds EntityCompStorage::getEntityLocalBoundsAt(const Base::ID::KeyUint64
 
     auto&& et    = entitiesPool[id.protoId()];
     auto&& trans = transformsPool[et.transformId];
+    if (transformPivotMap.contains(et.id))
+    {
+        auto&&       sv = transformPivotMap[et.id];
+        Math::Bounds bv;
+        bv.setXYWH(-sv.x * trans.sx, -sv.y * trans.sy, trans.sx, trans.sy);
+        return bv;
+    }
     return {0, 0, trans.sx, trans.sy};
 }
 
