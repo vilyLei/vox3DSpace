@@ -240,7 +240,7 @@ bool EntityRenderSystem::drawUnit(const Draw::DrawContext& rctx, const Scene::Co
     if (compStorage->transformPivotMap.contains(etId))
     {
         auto&& tv = compStorage->transformPivotMap[etId];
-        svM.setXY(-tv.x, -tv.y);
+        svM.setXY(-tv.x * trans.sx, -tv.y * trans.sy);
     }
     svM.setScaleXY(trans.sx, trans.sy);
     svM.prepend(wM);
