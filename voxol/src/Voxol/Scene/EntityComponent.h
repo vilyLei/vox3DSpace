@@ -3,6 +3,7 @@
 
 #include "../Math/VxRect.h"
 #include "../Base/IDDef.h"
+#include "../Render/OglGpuResUtils.h"
 
 
 namespace Voxol::Scene
