@@ -16,8 +16,7 @@ public:
     static constexpr float RAD_TO_DEG = 180.0f / PI;
     static constexpr float DEG_TO_RAD = PI / 180.0f;
 
-    // 1. 计算最短角度差（带符号）
-    // 返回值在 [-π, π] 或 [-180°, 180°] 范围内
+    // signed value: [-π, π] or [-180°, 180°]
     static float shortestAngleDifference(float from, float to, bool inRadians = true)
     {
         float maxAngle = inRadians ? TWO_PI : 360.0f;
@@ -26,7 +25,7 @@ public:
         float diff = to - from;
         diff       = std::fmod(diff, maxAngle);
 
-        // 归一化到 [-halfMax, halfMax]
+        // value mormalize: [-halfMax, halfMax]
         if (diff > halfMax)
         {
             diff -= maxAngle;
@@ -39,22 +38,18 @@ public:
         return diff;
     }
 
-    // 2. 角度线性插值（考虑最短路径）
     static float lerpAngle(float from, float to, float t, bool inRadians = true)
     {
         t = std::clamp(t, 0.0f, 1.0f);
 
-        // 计算最短路径差值
         float diff = shortestAngleDifference(from, to, inRadians);
-
-        // 插值
+        // interpolation
         float result = from + diff * t;
 
-        // 归一化到 [0, maxAngle)
         return normalizeAngle(result, inRadians);
     }
 
-    // 3. 球形线性插值（更平滑）
+    // sphere linear soomth interpolation process
     static float slerpAngle(float from, float to, float t, bool inRadians = true)
     {
         t = std::clamp(t, 0.0f, 1.0f);
@@ -63,7 +58,7 @@ public:
         float fromRad = inRadians ? from : from * DEG_TO_RAD;
         float diffRad = inRadians ? diff : diff * DEG_TO_RAD;
 
-        // 使用 sin 插值（球形线性插值）
+        // sphere linear interpolation with sin
         float sinDiff = std::sin(diffRad);
         if (std::abs(sinDiff) < 1e-6f)
         {
@@ -76,7 +71,7 @@ public:
         return normalizeAngle(result, inRadians);
     }
 
-    // 4. 带角速度限制的转向
+    // 带角速度限制的转向
     static float rotateTowards(float current, float target, float maxDelta, bool inRadians = true)
     {
         float diff = shortestAngleDifference(current, target, inRadians);
@@ -88,7 +83,7 @@ public:
         return normalizeAngle(result, inRadians);
     }
 
-    // 5. 缓动函数插值
+    // 缓动函数插值
     enum class Easing
     {
         LINEAR,
@@ -104,14 +99,14 @@ public:
         return lerpAngle(from, to, easedT, inRadians);
     }
 
-    // 6. 判断是否需要转向
+    // 判断是否需要转向
     static bool shouldRotate(float current, float target, float tolerance, bool inRadians = true)
     {
         float diff = std::abs(shortestAngleDifference(current, target, inRadians));
         return diff > tolerance;
     }
 
-    // 7. 获取转向方向
+    // 获取转向方向
     // -1: 顺时针/向右转, 1: 逆时针/向左转, 0: 不需要转
     static int getTurnDirection(float current, float target, float tolerance = 0.001f, bool inRadians = true)
     {
@@ -125,7 +120,6 @@ public:
         return diff > 0 ? 1 : -1; // 正数：逆时针，负数：顺时针
     }
 
-    // 8. 角度归一化
     static float normalizeAngle(float angle, bool inRadians = true)
     {
         float maxAngle = inRadians ? TWO_PI : 360.0f;
