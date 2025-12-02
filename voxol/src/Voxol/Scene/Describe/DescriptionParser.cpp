@@ -476,6 +476,7 @@ void DescriptionParser::initialize()
     std::string filePath = "scene/scdesc/scdesc01.json";
     filePath             = "scene/scdesc/scdesc_word_snake.json";
     filePath             = "scene/scdesc/scdesc_pos_distribution.json";
+    filePath             = "scene/scdesc/scdesc_motion.json";
     fileParser.initFromFile(filePath);
 
     HierarchyNode rootHierNode;

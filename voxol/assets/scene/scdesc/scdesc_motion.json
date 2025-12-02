@@ -1,0 +1,36 @@
+{
+    "version": {
+        "runtime-mode": "edit",
+        "major": 0,
+        "minor": 1,
+        "dimension": 2,
+        "unit": "pixel"
+    },
+    "scene": {
+        "nodes": [
+            {
+                "type": "label",
+                "name": "rect-01-label",
+                "transform": {
+                    "position": [
+                        350,
+                        350
+                    ]
+                },
+                "visible": true,
+                "display": {
+                    "shape": {
+                        "type": "rectangle",
+                        "size": [
+                            150,
+                            80
+                        ]
+                    },
+                    "style": {
+                        "fillColor": "0xff33b887"
+                    }
+                }
+            }
+        ]
+    }
+}
