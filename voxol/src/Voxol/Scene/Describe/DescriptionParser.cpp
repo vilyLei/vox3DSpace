@@ -345,10 +345,14 @@ void FileParser::parseNodeDisplayStyle(SceneNode& node, const JsonType& jsonNode
     Data::ColorValue cv;
     cv.parse(jNode);
     node.shaingDesc.color = cv.color.argb();
+    if (jNode.contains("image-url") && jNode["image-url"].is_string())
+    {
+        node.imageUrl = jNode["image-url"];
+    }
 
     if (!node.imageUrl.empty())
     {
-        if (textureUrlMap.contains(node.imageUrl))
+        if (!textureUrlMap.contains(node.imageUrl))
         {
             Render::OglImage imgObj{};
             auto&&           imgData = imgObj.loadPNGFromAssets(node.imageUrl);
