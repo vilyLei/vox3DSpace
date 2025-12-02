@@ -342,12 +342,14 @@ void FileParser::parseNodeDisplayStyle(SceneNode& node, const JsonType& jsonNode
             return;
         }
     }
+
     Data::ColorValue cv;
     cv.parse(jNode);
     node.shaingDesc.color = cv.color.argb();
     if (jNode.contains("image-url") && jNode["image-url"].is_string())
     {
         node.imageUrl = jNode["image-url"];
+        node.unitModel.drawUnitId = 8;
     }
 
     if (!node.imageUrl.empty())

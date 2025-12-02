@@ -148,7 +148,10 @@ void DrawingUnitStorage::initVoassScene()
     auto& sdfRoundedRectUnit  = drawingUnits[5];
     auto& sdfTriangleUnit     = drawingUnits[6];
     auto& strokeShapeUnit     = drawingUnits[7];
-    auto& textUnit     = drawingUnits[8];
+    auto& strokeShapeUnit     = drawingUnits[7];
+    auto& texUnit     = drawingUnits[8];
+
+    Render::Gpu::buildTexDrawUnitWithTex(texUnit, GL_ZERO, true);
 
     bool colorClip      = false;
     sdfCircleUnit.color = {0.9f, 0.0, 0.3f, 1.0f};
