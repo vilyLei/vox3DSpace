@@ -15,7 +15,8 @@
                     "position": [
                         350,
                         350
-                    ]
+                    ],
+                    "pivot-normalized": [0.2, 0.5]
                 },
                 "visible": true,
                 "display": {
