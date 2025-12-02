@@ -402,6 +402,10 @@ void FileParser::parseNodeTransData(SceneNode& node, const JsonType& jsonNode)
         jTrans.parse(jsonNode["transform"]);
         node.transform.pos()    = jTrans.position;
         node.transform.rotation = jTrans.rotation;
+        if (jTrans.pivotNormalized.length() > 0)
+        {
+            transformPivotMap[node.id] = jTrans.pivotNormalized;
+        }
     }
     if (jsonNode.contains("display"))
     {

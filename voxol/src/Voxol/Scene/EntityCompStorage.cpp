@@ -73,6 +73,11 @@ Math::Bounds EntityCompStorage::getEntityGlobalBoundsAt(uint32_t id)
     auto&& trans = transformsPool[et.transformId];
 
     Math::Bounds srcBounds{0, 0, trans.sx, trans.sy};
+    if (transformPivotMap.contains(et.id))
+    {
+        auto&& sv = transformPivotMap[et.id];
+        srcBounds.setXYWH(-sv.x * trans.sx, -sv.y * trans.sy, trans.sx, trans.sy);
+    }
     Math::Bounds tb;
     srcBounds.mat33MapTo(entityGlobalMat33Map[id], tb);
     return tb;
