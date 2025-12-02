@@ -52,6 +52,7 @@ void EntitySystemLayer::initalize(const std::string& configFileName)
             updateBVHAndTileWithEntityId(etId);
         }
     };
+    etSceneSys->actionSys->entityDirtyCall = etSceneSys->interSrcSys->entityDirtyCall;
 
     uiOpLayer                      = std::make_shared<System::UIOperationLayer>();
     uiOpLayer->mouseCtrl.dirtyCall = [&, this](const Math::Bounds& bounds, uint32_t type, const Base::ID::KeyUint64& etId) {

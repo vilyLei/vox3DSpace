@@ -34,7 +34,6 @@ void EntitySceneSystem::initalize(const std::string& configFileName)
 
 
     auto addShadowEffectBVHData = [&](const Base::ID::KeyUint64& key, const Math::Mat33& wmat) {
-
         auto protoId = key.protoId();
 
         if (entitiesPool.isInvalid(protoId)) { return; }
@@ -46,11 +45,11 @@ void EntitySceneSystem::initalize(const std::string& configFileName)
         auto& shadingEt = shaderingEntitiesPool[et.shadingId];
         if (Base::ID::isInvalidID(shadingEt.shadingDescId)) { return; }
 
-        auto&  desc      = shaderingDescPool[shadingEt.shadingDescId];
+        auto& desc = shaderingDescPool[shadingEt.shadingDescId];
         if (desc.flags == 0) { return; }
         auto&& efs = storage->shadingShadowIdMap[shadingEt.shadingDescId];
 
-        auto&& srcBounds = storage->getEntityLocalBoundsAt(protoId);
+        auto&&       srcBounds = storage->getEntityLocalBoundsAt(protoId);
         Math::Bounds vb;
         for (auto& ef : efs)
         {
@@ -88,7 +87,7 @@ void EntitySceneSystem::initalize(const std::string& configFileName)
         if (Base::ID::isInvalidID(et.transformId))
             return;
 
-    
+
         auto&& srcBounds = storage->getEntityLocalBoundsAt(et.id);
         if (srcBounds.isEmpty())
         {
@@ -113,15 +112,22 @@ void EntitySceneSystem::initalize(const std::string& configFileName)
 
     bvh->build();
 
-    
+
     if (!interSrcSys)
     {
-        auto compStorage         = entityStorage->comp;
-        interSrcSys = Intent::InteractionSourceSystem::make();
+
+        auto compStorage = entityStorage->comp;
+
+
+        actionSys              = Intent::ActionSystem::make();
+        actionSys->compStorage = compStorage;
+
+        interSrcSys              = Intent::InteractionSourceSystem::make();
+        interSrcSys->actionSys   = actionSys;
         interSrcSys->compStorage = compStorage;
         interSrcSys->initialize();
-        
-        auto& fileParser     = entityStorage->descParser.fileParser;
+
+        auto& fileParser = entityStorage->descParser.fileParser;
         //interSrcSys->actionIDMap = fileParser.interactionIDMap;
 
         auto& interactionSrcMap = fileParser.interactionSrcMap;
@@ -144,10 +150,6 @@ int EntitySceneSystem::drawQuery(const Math::VxRect& wbounds, int phase)
 
     entityStorage->comp->checkIds(queriedEIds);
 
-    //for (auto key : queriedEIds)
-    //{
-    //    printf("drawQuery(). key: %s\n", key.toString().c_str());
-    //}
     return static_cast<int>(queriedEIds.size());
 }
 
@@ -222,4 +224,4 @@ void EntitySceneSystem::updateBVHBoundsWithEntityId(uint32_t eId, BoundsUpdateCa
     }
 }
 //*/
-} // namespace Voxol::Render
+} // namespace Voxol::Scene

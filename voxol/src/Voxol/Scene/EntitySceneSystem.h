@@ -31,6 +31,7 @@ public:
 
 public:
     Intent::InteractionSourceSystem::SP interSrcSys;
+    Intent::ActionSystem::SP actionSys;
     EntitySysBVH::SP                    bvh = EntitySysBVH::make();
     EntityUnitStorage::SP               entityStorage{};
 
