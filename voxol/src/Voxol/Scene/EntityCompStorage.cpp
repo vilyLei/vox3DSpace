@@ -530,7 +530,7 @@ void EntityCompStorage::traverseBuildGlobalMatPrototypeUnderInstance(uint32_t ii
 }
 void EntityCompStorage::traverseBuildGlobalMat(uint32_t etId, const Math::Mat33& parentMat)
 {
-    if (Base::ID::isInvalidID(etId)) return;
+    if (Base::ID::isInvalidID(etId) || entitiesPool.isInvalid(etId)) return;
 
     auto&&      et       = entitiesPool[etId];
     Math::Mat33 worldMat = parentMat;
@@ -588,6 +588,13 @@ void EntityCompStorage::traverseBuildGlobalMat(uint32_t etId, const Math::Mat33&
     {
         traverseBuildGlobalMat(child, worldMat);
     }
+}
+
+void EntityCompStorage::traverseBuildGlobalMat(uint32_t etId)
+{
+    if (Base::ID::isInvalidID(etId) || entitiesPool.isInvalid(etId)) return;
+    auto&& parentMat = getEntityParentGlobalMatAt(etId);
+    traverseBuildGlobalMat(etId, parentMat);
 }
 
 void EntityCompStorage::markSubtreeDirty(uint32_t rootId)

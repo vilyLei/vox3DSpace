@@ -77,7 +77,7 @@ void EntitySceneSystem::initalize(const std::string& configFileName)
             auto&& mat = wmats[item.first];
             addShadowEffectBVHData(item.first, mat);
             auto&& srcBounds = storage->getEntityLocalBoundsAt(item.first);
-            //Component::defaultRect.mat33MapTo(mat, vb);
+
             srcBounds.mat33MapTo(mat, vb);
             bvh->addItem(item.first, vb);
         }
@@ -165,63 +165,4 @@ void EntitySceneSystem::updateBoundsWithEntityId(uint32_t eId, EntityBoundsRespo
 {
     entityStorage->comp->foreachBoundsWithEntityId(eId, callback);
 }
-/*
-void EntitySceneSystem::updateBVHBoundsWithEntityId(uint32_t eId, BoundsUpdateCallType callback)
-{
-    if (ID::isInvalidID(eId))
-        return;
-
-    auto& compst = entityStorage->comp;
-
-    auto addShadowEffectBVHData = [&](const ID::KeyUint64& key) {
-
-        auto protoId = key.protoId();
-        if (compst->entitiesPool.isInvalid(protoId)) { return; }
-
-        auto&& et = compst->entitiesPool[protoId];
-        if (ID::isInvalidID(et.shadingId)) { return; }
-
-        auto&& shadingEt = compst->shaderingEntitiesPool[et.shadingId];
-        auto&& desc      = compst->shaderingDescPool[shadingEt.shadingDescId];
-        if (desc.flags == 0) { return; }
-        auto&& efs = compst->shadingShadowIdMap[shadingEt.shadingDescId];
-
-        auto&& wmat = compst->getEntityGlobalMat33At(key);
-
-        Math::Bounds vb;
-        for (auto& ef : efs)
-        {
-            auto&& shdData = compst->effectShadowMap[ef];
-            auto   wm      = wmat;
-            wm.offsetXY(shdData.offset);
-            Component::defaultRect.mat33MapTo(wm, vb);
-
-            auto&& efKey = ID::KeyUint64::makeWithEffectShadow(key, ef);
-            auto   pos   = wm.getXY();
-            //printf("efKey: %s\n", efKey.idToString().c_str());
-            //vb.print();
-            //printf("        pos(x=%f,y=%f), offset(x=%f,y=%f)\n", pos.x, pos.y, shdData.offset.x, shdData.offset.y);
-
-            bvh->updateItemBoundsByObjectId(efKey, vb);
-            callback(key, vb);
-        }
-    };
-
-    Math::Bounds vb;
-
-    std::vector<ID::KeyUint64> ids{};
-    compst->collectAllEntities(ID::KeyUint64::make(eId), ids);
-    for (auto pid : ids)
-    {
-        if (pid.flags() > 0)
-            continue;
-
-        auto wm = compst->getEntityGlobalMat33At(pid);
-        addShadowEffectBVHData(pid);
-        Component::defaultRect.mat33MapTo(wm, vb);
-        bvh->updateItemBoundsByObjectId(pid, vb);
-        callback(pid, vb);
-    }
-}
-//*/
 } // namespace Voxol::Scene

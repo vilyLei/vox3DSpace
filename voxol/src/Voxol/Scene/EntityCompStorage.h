@@ -134,6 +134,7 @@ public:
     void traverseBuildGlobalMatInstance(uint32_t iid, const Math::Mat33& parentMat, Component::UnitInstanceMap& insMap);
     void traverseBuildGlobalMatPrototypeUnderInstance(uint32_t iid, uint32_t prototypeRootId, const Math::Mat33& instanceParentMat);
     void traverseBuildGlobalMat(uint32_t etId, const Math::Mat33& parentMat);
+    void traverseBuildGlobalMat(uint32_t etId);
 
     void markSubtreeDirty(uint32_t rootId);
     void updateDirtySubtrees(const std::vector<uint32_t>& roots);
