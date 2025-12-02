@@ -259,7 +259,14 @@ bool EntityRenderSystem::drawUnit(const Draw::DrawContext& rctx, const Scene::Co
 
     //printf(c"xxx xxx trans(x=%f, y=%f)\n", trans.x, trans.y);
 
-    auto tempColor = shdDesc.color;
+    auto tempColor     = shdDesc.color;
+    drawUnit.blendMode = 1;
+    if (drawingId == 8 && compStorage->textureMap.contains(drawingId))
+    {
+        auto tex = compStorage->textureMap.contains(drawingId);
+        Render::Gpu::buildTexDrawUnitWithTex(drawUnit, tex, true);
+
+    }
     // fbo test
     /*
     if (entity.id == 2)
@@ -370,7 +377,6 @@ bool EntityRenderSystem::drawUnit(const Draw::DrawContext& rctx, const Scene::Co
     //printf("render curr ...\n");
 
 
-    drawUnit.blendMode = 1;
     drawUnit.setColor(tempColor);
     //drawUnit.objMat = wM;
     drawUnit.objMat = svM;
