@@ -28,6 +28,8 @@ public:
     std::unordered_map<uint32_t, Intent::Interaction::InteractionNodeName>    interactionIDMap;
     Base::ID::keyUint64Unordered_map<Intent::Interaction::InteractionSource>  interactionSrcMap;
     std::unordered_map<uint32_t, Intent::Interaction::InteractionNodeName>    actionIDMap;
+    std::unordered_map<std::string, uint32_t>    textureUrlMap;
+    std::unordered_map<uint32_t, uint32_t>       textureMap;
 
 public:
 

@@ -28,7 +28,8 @@
                         ]
                     },
                     "style": {
-                        "fill-color": "0xff33b887"
+                        "fill-color": "0xff33b887",
+                        "image-url": "0xff33b887"
                     }
                 }
             }
