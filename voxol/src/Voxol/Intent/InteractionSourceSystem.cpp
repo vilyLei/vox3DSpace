@@ -162,6 +162,10 @@ void InteractionSourceSystem::updateSourceAct(const Base::ID::KeyUint64& srcId, 
     {
         singalParse(item.second, srcId == item.first, actDesc);
     }
+    if (actDesc == "down" && actionSys)
+    {
+        actionSys->updateAction(location);
+    }
 }
 
 void InteractionSourceSystem::execActToDsiplay(Interaction::InteractionSource& srcNode, Interaction::MouseStatus status, std::string actDesc)
@@ -260,6 +264,10 @@ void InteractionSourceSystem::update()
         singalToBehavior(srcNode);
     });
 
+    if (actionSys)
+    {
+        actionSys->update();
+    }
     auto& actionIdMap = compStorage->actionIDMap;
     for (auto&& item : actionIdMap) {
 
