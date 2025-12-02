@@ -287,6 +287,22 @@ void Transform::parse(const JsonType& node)
         position = {vs[0], vs[1]};
     }
 
+    if (node.contains("pivot-normalized") && node["pivot-normalized"].is_array())
+    {
+        auto elements = node["pivot-normalized"];
+        if (elements.size() != 2)
+            return;
+
+        std::vector<float> vs;
+        for (const auto& element : elements)
+        {
+            vs.push_back(element);
+        }
+        if (std::isnan(vs[0]) || std::isnan(vs[1]))
+            return;
+        pivotNormalized = {vs[0], vs[1]};
+    }
+
     if (node.contains("rotation") && node["rotation"].is_number())
     {
         auto v = static_cast<float>(node["rotation"]);

@@ -128,6 +128,7 @@ struct Transform
 {
     uint32_t   id = Base::ID::INVALID_ID;
     Math::Vec2 position;
+    Math::Vec2 pivotNormalized;
     // ratian value
     float      rotation = 0;
     void       parse(const JsonType& node);

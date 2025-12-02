@@ -13,6 +13,8 @@ bool ColorValue::parse(const JsonType& node)
 {
     return parseWithName(node, "color") ||
         parseWithName(node, "fillColor") ||
+        parseWithName(node, "fill-color") ||
+        parseWithName(node, "stroke-color") ||
         parseWithName(node, "strokeColor");
 }
 
@@ -242,7 +244,6 @@ std::string JsonValue::parseStringWithName(const JsonType& node, const std::stri
         return get<std::string>();
     }
     return defaultValue;
-
 }
 int JsonValue::parseIntWithName(const JsonType& node, const std::string& valueName)
 {
@@ -300,7 +301,8 @@ Math::Vec4 JsonValue::parseVec4WithName(const JsonType& node, const std::string&
     return {};
 }
 
-void JsonValue::reset() {
+void JsonValue::reset()
+{
     value = {};
 }
 void JsonValue::parse(const JsonType& j)
