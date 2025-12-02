@@ -269,34 +269,36 @@ void InteractionSourceSystem::update()
         actionSys->update();
     }
     auto& actionIdMap = compStorage->actionIDMap;
-    for (auto&& item : actionIdMap) {
+    //for (auto&& item : actionIdMap) {
 
-        auto etId = item.first;
-        if (Base::ID::isInvalidID(etId))
-            continue;
+        //auto etId = item.first;
+    uint32_t etId = 1;
+    if (Base::ID::isValidID(etId)) {
+
 
         auto&& entity = compStorage->entitiesPool[etId];
         if (Base::ID::isInvalidID(entity.transformId))
-            continue;
+            return;
 
-        return;
-        auto&& trans  = compStorage->transformsPool[entity.transformId];
+        //return;
+        auto&& trans = compStorage->transformsPool[entity.transformId];
 
-        Math::Vec2 offset      = {1,0};
-        auto&& originEtPos = compStorage->getEntityGlobalXYAt(etId);
-        auto&& key   = Base::ID::KeyUint64::make(etId);
-        //entityDirtyCall(0, key);
-        //trans.rotation += 0.2f;
+        Math::Vec2 offset      = {1, 0};
+        auto&&     originEtPos = compStorage->getEntityGlobalXYAt(etId);
+        auto&&     key         = Base::ID::KeyUint64::make(etId);
+        entityDirtyCall(0, key);
+        trans.rotation += 0.05f;
         //trans.pos() += offset;
         //compStorage->setEntityGlobalXYAt(originEtPos + offset, key.protoId());
-        // 
-        
+        //
+
         //auto&& parentMat = compStorage->getEntityParentGlobalMatAt(key.protoId());
         //compStorage->traverseBuildGlobalMat(key.protoId(), parentMat);
         //compStorage->updateAllInstanceGlobalMats(key);
-        //entityDirtyCall(1, key);
-
+        entityDirtyCall(1, key);
     }
+
+    //}
 }
 
 
