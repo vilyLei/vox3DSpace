@@ -33,7 +33,7 @@ public:
     void                singalParse(Interaction::InteractionSource& srcNode, bool selectionFlag, const std::string& actDesc);
     bool                containsSrcId(const Base::ID::KeyUint64& srcId);
     Base::ID::KeyUint64 findSrcId(const std::vector<Base::ID::KeyUint64>& qeIds);
-    void                updateSourceAct(const Base::ID::KeyUint64& srcId, const std::string& actDesc);
+    void                updateSourceAct(const Base::ID::KeyUint64& srcId, const std::string& actDesc, const Scene::Component::UnitLocation& location);
     void                foreachSrcNode(const Interaction::SourceCallbackType& callback);
 
     void execActToDsiplay(Interaction::InteractionSource& srcNode, Interaction::MouseStatus status, std::string actDesc);

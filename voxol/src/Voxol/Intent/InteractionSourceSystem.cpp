@@ -156,7 +156,7 @@ Base::ID::KeyUint64 InteractionSourceSystem::findSrcId(const std::vector<Base::I
 }
 
 /// 由其他交互事件响应逻辑产生触发信号
-void InteractionSourceSystem::updateSourceAct(const Base::ID::KeyUint64& srcId, const std::string& actDesc)
+void InteractionSourceSystem::updateSourceAct(const Base::ID::KeyUint64& srcId, const std::string& actDesc, const Scene::Component::UnitLocation& location)
 {
     for (auto& item : srcMap)
     {

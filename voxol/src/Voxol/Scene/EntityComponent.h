@@ -62,6 +62,11 @@ struct UnitIdName
     uint32_t    id = Base::ID::INVALID_ID;
     std::string name;
 };
+struct UnitLocation
+{
+    Math::Vec2 local;
+    Math::Vec2 global;
+};
 
 struct UnitShadingDesc
 {
