@@ -357,6 +357,8 @@ struct SceneNode
     Component::UnitModel         unitModel;
     Component::UnitEntity        entity;
 
+    std::string imageUrl;
+
     int childrenTotal = 0;
 
     bool hasChild  = false;

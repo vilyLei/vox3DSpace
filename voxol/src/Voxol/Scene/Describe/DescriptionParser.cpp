@@ -2,6 +2,8 @@
 #include "../SceneIRComponent.h"
 #include "../../Math/MathDef.h"
 #include "../Layout/PositionDistributor.h"
+#include "../../Render/OglImage.h"
+#include "../../Render/OglGpuResUtils.h"
 #include "DescriptionNodeLayout.h"
 
 #include <fstream>
@@ -343,6 +345,24 @@ void FileParser::parseNodeDisplayStyle(SceneNode& node, const JsonType& jsonNode
     Data::ColorValue cv;
     cv.parse(jNode);
     node.shaingDesc.color = cv.color.argb();
+
+    if (!node.imageUrl.empty())
+    {
+        if (textureUrlMap.contains(node.imageUrl))
+        {
+            Render::OglImage imgObj{};
+            auto&&           imgData = imgObj.loadPNGFromAssets(node.imageUrl);
+            if (imgData.width > 0 && imgData.height > 0)
+            {
+                auto tex                     = Render::ResUtils::createTextureFromImageBytes(imgData.width, imgData.height, imgData.buffer);
+                textureUrlMap[node.imageUrl] = {tex, node.imageUrl};
+            }
+        }
+        if (textureUrlMap.contains(node.imageUrl))
+        {
+            textureMap[node.id] = textureUrlMap[node.imageUrl];
+        }
+    }
 }
 void FileParser::parseNodeDisplayShape(SceneNode& node, const JsonType& jsonNode)
 {
