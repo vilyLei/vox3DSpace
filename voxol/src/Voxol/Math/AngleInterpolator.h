@@ -1,5 +1,5 @@
-#ifndef VOXOL_MATH_MAT33_H
-#define VOXOL_MATH_MAT33_H
+#ifndef VOXOL_MATH_ANGLE_INTERPOLATOR_H
+#define VOXOL_MATH_ANGLE_INTERPOLATOR_H
 
 #include <cmath>
 #include <numbers>
