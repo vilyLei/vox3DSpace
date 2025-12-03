@@ -30,7 +30,15 @@ void ActionSystem::update(){
         entityDirtyCall(0, key);
         objs[0]->update();
         objs[0]->applyPoints([&](int index, const Math::Vec2& pv0, const Math::Vec2& pv1) -> bool {
-            auto p = index;
+
+            auto i = index + 1;
+
+            auto dv = pv1 - pv0;
+
+            auto&& key = Base::ID::KeyUint64::make(objs[i]->etId());
+            entityDirtyCall(0, key);
+            objs[i]->globalPos( pv0 );
+            objs[i]->rotation( dv.radian() );
             return true;
         });
     }
