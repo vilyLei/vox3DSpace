@@ -3,6 +3,7 @@
 
 #include "IntentComponent.h"
 #include "../Scene/EntityCompStorage.h"
+#include "../Scene/EntityMotionObjectStorage.h"
 #include <functional>
 
 namespace Voxol::Intent
@@ -23,8 +24,9 @@ public:
     ~ActionSystem() = default;
 
 public:
-    Scene::EntityCompStorage::SP     compStorage;
-    Interaction::EntityDirtyCallType entityDirtyCall;
+    Scene::EntityCompStorage::SP         compStorage;
+    Scene::EntityMotionObjectStorage::SP motionObjStorage;
+    Interaction::EntityDirtyCallType     entityDirtyCall;
 
 public:
     void initialize();

@@ -122,6 +122,9 @@ void EntitySceneSystem::initalize(const std::string& configFileName)
         actionSys              = Intent::ActionSystem::make();
         actionSys->compStorage = compStorage;
 
+        motionObjStorage = EntityMotionObjectStorage::make();
+        actionSys->motionObjStorage = motionObjStorage;
+
         interSrcSys              = Intent::InteractionSourceSystem::make();
         interSrcSys->actionSys   = actionSys;
         interSrcSys->compStorage = compStorage;
@@ -170,6 +173,9 @@ void EntitySceneSystem::createEntities(int total)
             auto&& key = Base::ID::KeyUint64::make(id);
             auto&& vb = compStorage->getEntityGlobalBoundsAt(id);
             bvh->addItem(key, vb);
+            auto motionObj = EntityMotionObject::make();
+            motionObj->initialize(id, compStorage);
+            motionObjStorage->addObject(motionObj);
         }
         bvh->build();
     }

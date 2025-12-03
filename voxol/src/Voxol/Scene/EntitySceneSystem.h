@@ -6,6 +6,7 @@
 #include "DrawCtx.h"
 
 #include "EntityUnitStorage.h"
+#include "EntityMotionObjectStorage.h"
 #include "../Intent/InteractionSourceSystem.h"
 #include <functional>
 
@@ -31,7 +32,8 @@ public:
 
 public:
     Intent::InteractionSourceSystem::SP interSrcSys;
-    Intent::ActionSystem::SP actionSys;
+    Intent::ActionSystem::SP             actionSys;
+    Scene::EntityMotionObjectStorage::SP motionObjStorage;
     EntitySysBVH::SP                    bvh = EntitySysBVH::make();
     EntityUnitStorage::SP               entityStorage{};
 
