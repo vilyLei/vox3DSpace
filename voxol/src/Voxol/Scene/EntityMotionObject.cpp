@@ -117,7 +117,7 @@ void EntityMotionObject::applyPoints(PtApplyCallbackType callback)
     for (auto i = 0; i < ptsTotal;)
     {
         auto t = index * stride;
-        if (t < ptsTotal)
+        if (t >= ptsTotal)
             break;
         //if (t < ptsTotal)
         //{
