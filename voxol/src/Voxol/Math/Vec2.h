@@ -2,6 +2,7 @@
 #ifndef VOXOL_MATH_VEC2_H
 #define VOXOL_MATH_VEC2_H
 
+#include "MathDef.h"
 #include <cmath>
 
 namespace Voxol::Math
@@ -57,7 +58,15 @@ struct Vec2
 
     float dot(const Vec2& v) const noexcept { return Dot(*this, v); }
     float cross(const Vec2& v) const noexcept { return Cross(*this, v); }
-    Vec2  normalize() const noexcept { return Normalize(*this); }
+    Vec2         normalize() const noexcept { return Normalize(*this); }
+    inline float radian()
+    {
+        return std::atan2(y, x);
+    }
+    inline float degree()
+    {
+        return std::atan2(y, x) * MATH_PI_OVER_180;
+    }
 
     const float* ptr() const noexcept { return &x; }
     float*       ptr() noexcept { return &x; }

@@ -106,12 +106,16 @@ public:
     Math::Bounds             getEntityLocalBoundsAt(const Base::ID::KeyUint64& id);
 
     uint32_t    getEntityParentIdAt(uint32_t id);
-    Math::Vec2  getEntityGlobalXYAt(uint32_t id);
+    Math::Vec2  getEntityGlobalXYAt(uint32_t id) const;
     void        setEntityGlobalXYAt(const Math::Vec2& pv, uint32_t id);
     Math::Mat33 getEntityWorldMatWithoutScale(uint32_t id);
     Math::Mat33 getEntityParentWorldMatWithoutScale(uint32_t id);
-    Math::Vec2  getEntityLocalXYAt(uint32_t id);
+    Math::Vec2  getEntityLocalXYAt(uint32_t id) const;
     void        setEntityLocalXYAt(const Math::Vec2& pv, uint32_t id);
+    float       getEntityRotationAt(uint32_t id) const;
+    void        setEntityRotationAt(float rad, uint32_t id);
+    void        setEntityColorAt(uint32_t color, uint32_t id);
+    uint32_t    getEntityColorAt(uint32_t id) const;
 
     void getIdsFromId(uint32_t etId, std::vector<Base::ID::KeyUint64>& ids);
 
@@ -172,6 +176,7 @@ public:
     std::unordered_map<uint32_t, Component::UnitIdName>         actionIDMap;
     std::unordered_map<uint32_t, Scene::Component::UnitTexture> textureMap;
     std::unordered_map<uint32_t, Math::Vec2>                    transformPivotMap;
+    std::unordered_map<uint32_t, bool>                          dirtyIdMap;
 
 private:
     std::vector<uint32_t> topoOrder;

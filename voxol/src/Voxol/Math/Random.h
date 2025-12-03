@@ -13,6 +13,95 @@
 namespace Voxol::Math
 {
 
+class SimpleRandom
+{
+private:
+    static std::mt19937_64& get_engine()
+    {
+        static thread_local std::mt19937_64 engine = []() {
+            auto seed = std::chrono::high_resolution_clock::now().time_since_epoch().count();
+            return std::mt19937_64(static_cast<uint64_t>(seed));
+        }();
+        return engine;
+    }
+
+public:
+    // 浮点数：[0, 1)
+    static float get_float()
+    {
+        std::uniform_real_distribution<float> dist(0.0f, 1.0f);
+        return dist(get_engine());
+    }
+
+    static double get_double()
+    {
+        std::uniform_real_distribution<double> dist(0.0, 1.0);
+        return dist(get_engine());
+    }
+
+    // 浮点数指定范围
+    static float get_float(float min, float max)
+    {
+        std::uniform_real_distribution<float> dist(min, max);
+        return dist(get_engine());
+    }
+
+    static double get_double(double min, double max)
+    {
+        std::uniform_real_distribution<double> dist(min, max);
+        return dist(get_engine());
+    }
+
+    // 整数：完整范围
+    static int8_t get_int8()
+    {
+        std::uniform_int_distribution<int16_t> dist(
+            std::numeric_limits<int8_t>::min(),
+            std::numeric_limits<int8_t>::max());
+        return static_cast<int8_t>(dist(get_engine()));
+    }
+
+    static uint8_t get_uint8()
+    {
+        std::uniform_int_distribution<uint16_t> dist(
+            std::numeric_limits<uint8_t>::min(),
+            std::numeric_limits<uint8_t>::max());
+        return static_cast<uint8_t>(dist(get_engine()));
+    }
+
+    static int32_t get_int32()
+    {
+        std::uniform_int_distribution<int32_t> dist(
+            std::numeric_limits<int32_t>::min(),
+            std::numeric_limits<int32_t>::max());
+        return dist(get_engine());
+    }
+
+    static uint32_t get_uint32()
+    {
+        std::uniform_int_distribution<uint32_t> dist(
+            std::numeric_limits<uint32_t>::min(),
+            std::numeric_limits<uint32_t>::max());
+        return dist(get_engine());
+    }
+
+    // 整数指定范围
+    template <typename T>
+        requires std::is_integral_v<T>
+    static T get_int(T min, T max)
+    {
+        std::uniform_int_distribution<T> dist(min, max);
+        return dist(get_engine());
+    }
+
+    // 随机布尔值
+    static bool get_bool(double probability = 0.5)
+    {
+        std::bernoulli_distribution dist(probability);
+        return dist(get_engine());
+    }
+};
+
 template <size_t CacheSize = 1024>
 class FastRandom
 {

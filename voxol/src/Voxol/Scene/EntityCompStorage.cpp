@@ -153,11 +153,14 @@ uint32_t EntityCompStorage::getEntityParentIdAt(uint32_t id)
     return hierarchiesPool[et.hierarchyId].parent;
 }
 
-Math::Vec2 EntityCompStorage::getEntityGlobalXYAt(uint32_t id)
+Math::Vec2 EntityCompStorage::getEntityGlobalXYAt(uint32_t id) const
 {
     if (Base::ID::isInvalidID(id))
         return {};
-    return entityGlobalMat33Map[id].getXY();
+    if (!entityGlobalMat33Map.contains(id))
+        return {};
+    auto&& mat = entityGlobalMat33Map.at(id);
+    return mat.getXY();
 }
 void EntityCompStorage::setEntityGlobalXYAt(const Math::Vec2& pv, uint32_t id)
 {
@@ -203,12 +206,15 @@ Math::Mat33 EntityCompStorage::getEntityParentWorldMatWithoutScale(uint32_t id)
     return parentMat;
 }
 
-Math::Vec2 EntityCompStorage::getEntityLocalXYAt(uint32_t id)
+Math::Vec2 EntityCompStorage::getEntityLocalXYAt(uint32_t id) const
 {
     if (Base::ID::isInvalidID(id))
         return {};
 
-    auto&& et    = entitiesPool[id];
+    auto&& et = entitiesPool[id];
+    if (Base::ID::isInvalidID(et.transformId))
+        return {};
+
     auto&& trans = transformsPool[et.transformId];
     return {trans.x, trans.y};
 }
@@ -217,7 +223,10 @@ void EntityCompStorage::setEntityLocalXYAt(const Math::Vec2& pv, uint32_t id)
 {
     if (Base::ID::isInvalidID(id))
         return;
-    auto&& et    = entitiesPool[id];
+    auto&& et = entitiesPool[id];
+
+    if (Base::ID::isInvalidID(et.transformId))
+        return;
     auto&& trans = transformsPool[et.transformId];
     trans.pos()  = pv;
 
@@ -226,6 +235,70 @@ void EntityCompStorage::setEntityLocalXYAt(const Math::Vec2& pv, uint32_t id)
     auto&& worldMat    = Math::Mat33::makeTranslate(parentTrans.x + trans.x, parentTrans.y + trans.y);
     worldMat.setScaleXY(trans.sx, trans.sy);
     entityGlobalMat33Map[id] = worldMat;
+}
+
+
+
+float EntityCompStorage::getEntityRotationAt(uint32_t id) const
+{
+    if (Base::ID::isInvalidID(id))
+        return {};
+
+    auto&& et = entitiesPool[id];
+    if (Base::ID::isInvalidID(et.transformId))
+        return {};
+
+    auto&& trans = transformsPool[et.transformId];
+    return trans.rotation;
+}
+
+void EntityCompStorage::setEntityRotationAt(float rad, uint32_t id)
+{
+    if (Base::ID::isInvalidID(id))
+        return;
+    auto&& et = entitiesPool[id];
+
+    if (Base::ID::isInvalidID(et.transformId))
+        return;
+    auto&& trans = transformsPool[et.transformId];
+    trans.rotation = rad;
+}
+
+void EntityCompStorage::setEntityColorAt(uint32_t color, uint32_t id) {
+
+    if (Base::ID::isInvalidID(id))
+        return;
+
+    auto&& et = entitiesPool[id];
+    if (Base::ID::isInvalidID(et.shadingId))
+        return;
+
+    auto&& shadingEt = shaderingEntitiesPool[et.shadingId];
+
+    if (Base::ID::isInvalidID(shadingEt.shadingDescId))
+        return;
+
+    auto&& shdDesc = shaderingDescPool[shadingEt.shadingDescId];
+    shdDesc.color  = color;
+}
+
+uint32_t EntityCompStorage::getEntityColorAt(uint32_t id) const {
+
+    uint32_t color = 0xff000000;
+    if (Base::ID::isInvalidID(id))
+        return color;
+
+    auto&& et = entitiesPool[id];
+    if (Base::ID::isInvalidID(et.shadingId))
+        return color;
+
+    auto&& shadingEt = shaderingEntitiesPool[et.shadingId];
+
+    if (Base::ID::isInvalidID(shadingEt.shadingDescId))
+        return color;
+
+    auto&& shdDesc = shaderingDescPool[shadingEt.shadingDescId];
+    return shdDesc.color;
 }
 
 void EntityCompStorage::getIdsFromId(uint32_t etId, std::vector<Base::ID::KeyUint64>& ids)
