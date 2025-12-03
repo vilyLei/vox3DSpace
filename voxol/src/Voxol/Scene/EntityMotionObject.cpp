@@ -108,12 +108,13 @@ void EntityMotionObject::update()
     }
 }
 
-void EntityMotionObject::applyPoints(PtApplyCallbackType callback)
+void EntityMotionObject::applyPoints(PtApplyCallbackType callback, int stride)
 {
     auto ptsTotal = pts.size();
-    auto stride   = 20;
-    auto index    = 1;
+    if (ptsTotal < 1 || stride < 1)
+        return;
 
+    auto index    = 1;
     for (auto i = 0; i < ptsTotal;)
     {
         auto t = index * stride;

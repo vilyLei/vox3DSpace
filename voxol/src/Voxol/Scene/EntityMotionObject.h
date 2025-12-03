@@ -43,7 +43,7 @@ public:
 
     uint32_t etProtoId() const;
     void     update();
-    void     applyPoints(PtApplyCallbackType callback);
+    void     applyPoints(PtApplyCallbackType callback, int stride = 20);
     void     destory();
 
 private:
