@@ -26,7 +26,7 @@ void ActionSystem::update(){
     if (total > 0)
     {
 
-        auto&& key = Base::ID::KeyUint64::make(objs[0]->etId());
+        auto&& key = Base::ID::KeyUint64::make(objs[0]->etProtoId());
         entityDirtyCall(0, key);
         objs[0]->update();
         objs[0]->applyPoints([&](int index, const Math::Vec2& pv0, const Math::Vec2& pv1) -> bool {
@@ -35,7 +35,7 @@ void ActionSystem::update(){
 
             auto dv = pv1 - pv0;
 
-            auto&& key = Base::ID::KeyUint64::make(objs[i]->etId());
+            auto&& key = Base::ID::KeyUint64::make(objs[i]->etProtoId());
             entityDirtyCall(0, key);
             objs[i]->globalPos( pv0 );
             objs[i]->rotation( dv.radian() );

@@ -41,14 +41,14 @@ public:
     void       rotationDeegree(float degree);
     float      rotationDeegree() const;
 
-    uint32_t etId() const;
+    uint32_t etProtoId() const;
     void     update();
     void     applyPoints(PtApplyCallbackType callback);
     void     destory();
 
 private:
     EntityCompStorage::SP compStorage;
-    uint32_t            targetEtId = Base::ID::INVALID_ID;
+    uint32_t            targetEtProtoId = Base::ID::INVALID_ID;
 };
 } // namespace Voxol::Scene
 #endif

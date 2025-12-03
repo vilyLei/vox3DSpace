@@ -13,72 +13,72 @@ EntityMotionObject::SP EntityMotionObject::make()
 
 void EntityMotionObject::initialize(uint32_t etId, EntityCompStorage::SP comp_storage)
 {
-    targetEtId  = etId;
+    targetEtProtoId  = etId;
     compStorage = comp_storage;
 }
 
 bool EntityMotionObject::isValid() const
 {
-    return Base::ID::isValidID(targetEtId);
+    return Base::ID::isValidID(targetEtProtoId);
 }
 
 bool EntityMotionObject::isInvalid() const
 {
-    return Base::ID::isInvalidID(targetEtId);
+    return Base::ID::isInvalidID(targetEtProtoId);
 }
 
 void EntityMotionObject::color(uint32_t c)
 {
-    compStorage->setEntityColorAt(c, targetEtId);
-    compStorage->dirtyIdMap[targetEtId] = true;
+    compStorage->setEntityColorAt(c, targetEtProtoId);
+    compStorage->dirtyIdMap[targetEtProtoId] = true;
 }
 uint32_t EntityMotionObject::color() const
 {
-    return compStorage->getEntityColorAt(targetEtId);
+    return compStorage->getEntityColorAt(targetEtProtoId);
 }
 void EntityMotionObject::globalPos(const Math::Vec2& pos)
 {
-    compStorage->setEntityGlobalXYAt(pos, targetEtId);
-    compStorage->dirtyIdMap[targetEtId] = true;
+    compStorage->setEntityGlobalXYAt(pos, targetEtProtoId);
+    compStorage->dirtyIdMap[targetEtProtoId] = true;
 }
 Math::Vec2 EntityMotionObject::globalPos() const
 {
-    return compStorage->getEntityGlobalXYAt(targetEtId);
+    return compStorage->getEntityGlobalXYAt(targetEtProtoId);
 }
 
 void EntityMotionObject::localPos(const Math::Vec2& pos)
 {
-    compStorage->setEntityLocalXYAt(pos, targetEtId);
-    compStorage->dirtyIdMap[targetEtId] = true;
+    compStorage->setEntityLocalXYAt(pos, targetEtProtoId);
+    compStorage->dirtyIdMap[targetEtProtoId] = true;
 }
 Math::Vec2 EntityMotionObject::localPos() const
 {
-    return compStorage->getEntityLocalXYAt(targetEtId);
+    return compStorage->getEntityLocalXYAt(targetEtProtoId);
 }
 
 void EntityMotionObject::rotation(float rad)
 {
-    compStorage->setEntityRotationAt(rad, targetEtId);
-    compStorage->dirtyIdMap[targetEtId] = true;
+    compStorage->setEntityRotationAt(rad, targetEtProtoId);
+    compStorage->dirtyIdMap[targetEtProtoId] = true;
 }
 float EntityMotionObject::rotation() const
 {
-    return compStorage->getEntityRotationAt(targetEtId);
+    return compStorage->getEntityRotationAt(targetEtProtoId);
 }
 
 void EntityMotionObject::rotationDeegree(float degree)
 {
-    compStorage->setEntityRotationAt(degree * MATH_PI_OVER_180, targetEtId);
-    compStorage->dirtyIdMap[targetEtId] = true;
+    compStorage->setEntityRotationAt(degree * MATH_PI_OVER_180, targetEtProtoId);
+    compStorage->dirtyIdMap[targetEtProtoId] = true;
 }
 float EntityMotionObject::rotationDeegree() const
 {
-    return compStorage->getEntityRotationAt(targetEtId) * MATH_180_OVER_PI;
+    return compStorage->getEntityRotationAt(targetEtProtoId) * MATH_180_OVER_PI;
 }
 
-uint32_t EntityMotionObject::etId() const
+uint32_t EntityMotionObject::etProtoId() const
 {
-    return targetEtId;
+    return targetEtProtoId;
 }
 
 void EntityMotionObject::update()
@@ -134,6 +134,6 @@ void EntityMotionObject::applyPoints(PtApplyCallbackType callback)
 }
 void EntityMotionObject::destory()
 {
-    targetEtId = Base::ID::INVALID_ID;
+    targetEtProtoId = Base::ID::INVALID_ID;
 }
 } // namespace Voxol::Scene

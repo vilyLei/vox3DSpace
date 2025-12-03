@@ -17,10 +17,10 @@ void EntityMotionObjectStorage::initialize()
 void EntityMotionObjectStorage::addObject(const EntityMotionObject::SP& obj)
 {
 
-    if (!obj || obj->isInvalid() || objsMap.contains(obj->etId()))
+    if (!obj || obj->isInvalid() || objsMap.contains(obj->etProtoId()))
         return;
 
-    objsMap[obj->etId()] = obj;
+    objsMap[obj->etProtoId()] = obj;
 }
 void EntityMotionObjectStorage::update(){
 }
