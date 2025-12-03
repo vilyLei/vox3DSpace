@@ -1,6 +1,7 @@
 
-#ifndef VOXOL_MATH_RANDOM_H
-#define VOXOL_MATH_RANDOM_H
+#ifndef VOXOL_MATH_RANDOM_FUNCS_H
+#define VOXOL_MATH_RANDOM_FUNCS_H
+
 #include <random>
 #include <concepts>
 #include <cstdint>
@@ -12,7 +13,6 @@
 namespace Voxol::Math
 {
 
-// 高性能随机数生成器（预生成缓存）
 template <size_t CacheSize = 1024>
 class FastRandom
 {
@@ -53,7 +53,6 @@ private:
         }
     };
 
-    // 各种类型的缓存
     Cache<float>    float_cache;
     Cache<double>   double_cache;
     Cache<int8_t>   int8_cache;
@@ -65,7 +64,6 @@ public:
     FastRandom(uint64_t seed = std::random_device{}()) :
         engine(seed) {}
 
-    // 快速获取各种类型
     float    get_float() { return float_cache.next(engine); }
     double   get_double() { return double_cache.next(engine); }
     int8_t   get_int8() { return int8_cache.next(engine); }
