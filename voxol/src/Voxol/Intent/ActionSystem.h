@@ -34,6 +34,7 @@ public:
     void update();
 
 private:
+    std::vector<Math::Vec2> positions;
 };
 
 
