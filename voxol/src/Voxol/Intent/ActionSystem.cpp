@@ -29,7 +29,17 @@ void ActionSystem::update(){
         auto&& key = Base::ID::KeyUint64::make(objs[0]->etId());
         entityDirtyCall(0, key);
         objs[0]->update();
-        entityDirtyCall(1, key);
+    }
+
+    auto& dirtyMap = compStorage->dirtyIdMap;
+    if (!dirtyMap.empty())
+    {
+        for (auto& item : dirtyMap)
+        {
+            auto&& key = Base::ID::KeyUint64::make(item.first);
+            entityDirtyCall(1, key);
+        }
+        dirtyMap.clear();
     }
 }
 
