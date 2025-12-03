@@ -141,7 +141,7 @@ void EntitySceneSystem::initalize(const std::string& configFileName)
         }
     }
 
-    createEntities(1);
+    createEntities(5);
 }
 
 void EntitySceneSystem::createEntities(int total)
