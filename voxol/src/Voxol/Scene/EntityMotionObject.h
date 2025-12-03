@@ -8,7 +8,7 @@ namespace Voxol::Scene
 {
 using UpdateBVHCallbackType       = std::function<void(uint32_t id)>;
 using UpdateTransformCallbackType = std::function<bool(const Math::Vec2& wPos, Component::UnitTransform& trans)>;
-using PtApplyCallbackType         = std::function<bool(int index, const Math::Vec2& pt0, const Math::Vec2& pt1)>;
+using PtApplyCallbackType         = std::function<bool(int index, const Math::Vec2& pv0, const Math::Vec2& pv1)>;
 
 class EntityMotionObject
 {

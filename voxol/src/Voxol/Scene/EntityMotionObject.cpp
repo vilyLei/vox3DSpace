@@ -118,13 +118,18 @@ void EntityMotionObject::applyPoints(PtApplyCallbackType callback)
     {
         auto t = index * stride;
         if (t < ptsTotal)
-        {
-            auto ptIndex = ptsTotal - index * stride;
-            callback(index - 1, pts[ptIndex - 1], pts[ptIndex]);
-            t += i;
-            index++;
-        }
-        i = t;
+            break;
+        //if (t < ptsTotal)
+        //{
+        auto ptIndex = ptsTotal - index * stride;
+        auto flag    = callback(index - 1, pts[ptIndex - 1], pts[ptIndex]);
+        if (!flag)
+            break;
+
+        //t += i;
+        index++;
+        //}
+        i += t;
     }
 }
 void EntityMotionObject::destory()

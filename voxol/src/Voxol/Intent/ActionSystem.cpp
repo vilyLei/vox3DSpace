@@ -29,6 +29,10 @@ void ActionSystem::update(){
         auto&& key = Base::ID::KeyUint64::make(objs[0]->etId());
         entityDirtyCall(0, key);
         objs[0]->update();
+        objs[0]->applyPoints([&](int index, const Math::Vec2& pv0, const Math::Vec2& pv1) -> bool {
+            auto p = index;
+            return true;
+        });
     }
 
     auto& dirtyMap = compStorage->dirtyIdMap;
