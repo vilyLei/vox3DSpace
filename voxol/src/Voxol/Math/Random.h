@@ -7,9 +7,114 @@
 #include <chrono>
 #include <type_traits>
 #include <limits>
+#include <array>
 
 namespace Voxol::Math
 {
+
+// 高性能随机数生成器（预生成缓存）
+template <size_t CacheSize = 1024>
+class FastRandom
+{
+private:
+    std::mt19937_64 engine;
+
+    // 类型特定的缓存
+    template <typename T>
+    struct Cache
+    {
+        std::array<T, CacheSize> data;
+        size_t                   index = CacheSize; // 初始化为无效值
+
+        void refill(std::mt19937_64& eng)
+        {
+            if constexpr (std::is_floating_point_v<T>)
+            {
+                std::uniform_real_distribution<T> dist(0.0, 1.0);
+                for (auto& val : data) val = dist(eng);
+            }
+            else if constexpr (std::is_integral_v<T>)
+            {
+                std::uniform_int_distribution<T> dist(
+                    std::numeric_limits<T>::min(),
+                    std::numeric_limits<T>::max());
+                for (auto& val : data) val = dist(eng);
+            }
+            index = 0;
+        }
+
+        T next(std::mt19937_64& eng)
+        {
+            if (index >= data.size())
+            {
+                refill(eng);
+            }
+            return data[index++];
+        }
+    };
+
+    // 各种类型的缓存
+    Cache<float>    float_cache;
+    Cache<double>   double_cache;
+    Cache<int8_t>   int8_cache;
+    Cache<uint8_t>  uint8_cache;
+    Cache<int32_t>  int32_cache;
+    Cache<uint32_t> uint32_cache;
+
+public:
+    FastRandom(uint64_t seed = std::random_device{}()) :
+        engine(seed) {}
+
+    // 快速获取各种类型
+    float    get_float() { return float_cache.next(engine); }
+    double   get_double() { return double_cache.next(engine); }
+    int8_t   get_int8() { return int8_cache.next(engine); }
+    uint8_t  get_uint8() { return uint8_cache.next(engine); }
+    int32_t  get_int32() { return int32_cache.next(engine); }
+    uint32_t get_uint32() { return uint32_cache.next(engine); }
+
+    // 指定范围
+    template <typename T>
+    T get_range(T min, T max)
+    {
+        T value;
+        if constexpr (std::is_same_v<T, float>)
+        {
+            value = get_float();
+        }
+        else if constexpr (std::is_same_v<T, double>)
+        {
+            value = get_double();
+        }
+        else if constexpr (std::is_same_v<T, int8_t>)
+        {
+            value = get_int8();
+        }
+        else if constexpr (std::is_same_v<T, uint8_t>)
+        {
+            value = get_uint8();
+        }
+        else if constexpr (std::is_same_v<T, int32_t>)
+        {
+            value = get_int32();
+        }
+        else if constexpr (std::is_same_v<T, uint32_t>)
+        {
+            value = get_uint32();
+        }
+
+        // 映射到指定范围
+        if constexpr (std::is_floating_point_v<T>)
+        {
+            return min + value * (max - min);
+        }
+        else
+        {
+            auto range = static_cast<double>(max - min);
+            return static_cast<T>(min + static_cast<T>(value * range));
+        }
+    }
+};
 class Random
 {
 private:
