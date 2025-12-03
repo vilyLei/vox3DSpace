@@ -105,8 +105,8 @@ void EntitySceneSystem::initalize(const std::string& configFileName)
         auto&& key = Base::ID::KeyUint64::make(et.id);
         addShadowEffectBVHData(key, storage->getEntityGlobalMat33At(et.id));
         auto&& vb = storage->getEntityGlobalBoundsAt(et.id);
-        printf("et.id: %d, add bvh vb: \n", et.id);
-        vb.print();
+        //printf("et.id: %d, add bvh vb: \n", et.id);
+        //vb.print();
         bvh->addItem(key, vb);
     });
 
@@ -137,8 +137,43 @@ void EntitySceneSystem::initalize(const std::string& configFileName)
             interSrcSys->addSource(srcNode);
         }
     }
+
+    createEntities(1);
 }
 
+void EntitySceneSystem::createEntities(int total)
+{
+    if (total < 1)
+        return;
+
+    auto       compStorage = entityStorage->comp;
+    Math::Vec2 pos{200, 100};
+    uint32_t   srcEtId = 1;
+    bool       biulding = false;
+    std::vector<uint32_t> ids;
+    for (auto i = 0; i < total; i++)
+    {
+        
+        auto id = compStorage->appendEntityCopyFromId(srcEtId);
+        if (Base::ID::isInvalidID(id))
+            continue;
+
+        ids.push_back(id);
+    }
+    if (!ids.empty())
+    {
+        compStorage->updateHierarchyInfo();
+        for (auto id : ids)
+        {
+            auto&& key = Base::ID::KeyUint64::make(id);
+            auto&& vb = compStorage->getEntityGlobalBoundsAt(id);
+            compStorage->setEntityGlobalXYAt(pos, id);
+            pos += {10, 10};
+            bvh->addItem(key, vb);
+        }
+        bvh->build();
+    }
+}
 void EntitySceneSystem::update()
 {
     interSrcSys->update();
