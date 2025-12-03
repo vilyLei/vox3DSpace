@@ -1,54 +1,41 @@
-#ifndef VOXOL_SCENE_MOTION_ENTITY_OBJECT_H
-#define VOXOL_SCENE_MOTION_ENTITY_OBJECT_H
 
-#include "EntityCompStorage.h"
-#include <deque>
+#include "EntityMotionObjectStorage.h"
 
 namespace Voxol::Scene
 {
-using UpdateBVHCallbackType       = std::function<void(uint32_t id)>;
-using UpdateTransformCallbackType = std::function<bool(const Math::Vec2& wPos, Component::UnitTransform& trans)>;
-using PtApplyCallbackType         = std::function<bool(int index, const Math::Vec2& pt0, const Math::Vec2& pt1)>;
 
-class EntityMotionObject
+EntityMotionObjectStorage::SP EntityMotionObjectStorage::make()
 {
-public:
-    using SP = std::shared_ptr<EntityMotionObject>;
-    static SP make();
+    auto sp = std::make_shared<EntityMotionObjectStorage>();
+    return sp;
+}
 
-public:
-    EntityMotionObject()  = default;
-    ~EntityMotionObject() = default;
+void EntityMotionObjectStorage::initialize()
+{
+}
 
-public:
-    UpdateBVHCallbackType  bvhUpdateCall;
-    Math::Vec2             targetPos{500, 300};
-    std::deque<Math::Vec2> pts;
+void EntityMotionObjectStorage::addObject(const EntityMotionObject::SP& obj)
+{
 
+    if (!obj || obj->isInvalid() || objsMap.contains(obj->etId()))
+        return;
 
-public:
-    void       initialize(uint32_t etId, EntityCompStorage::SP comp_storage);
-    bool       isValid() const;
-    bool       isInvalid() const;
-    void       color(uint32_t c);
-    uint32_t   color() const;
-    void       localPos(const Math::Vec2& pos);
-    Math::Vec2 localPos() const;
-    void       globalPos(const Math::Vec2& pos);
-    Math::Vec2 globalPos() const;
-    void       rotation(float rad);
-    float      rotation() const;
-    void       rotationDeegree(float degree);
-    float      rotationDeegree() const;
+    objsMap[obj->etId()] = obj;
+}
+void EntityMotionObjectStorage::update(){
+}
 
-    uint32_t etId() const;
-    void     update();
-    void     applyPoints(PtApplyCallbackType callback);
-    void     destory();
+void EntityMotionObjectStorage::foreachObjs(FroreachObjCallbackType callback)
+{
 
-private:
-    EntityCompStorage::SP compStorage;
-    uint32_t            targetEtId = Base::ID::INVALID_ID;
-};
+    for (auto& item : objsMap) {
+
+        auto flag = callback(item.second);
+        if (!flag)
+            break;
+    }
+}
+void EntityMotionObjectStorage::destory(){
+    objsMap.clear();
+}
 } // namespace Voxol::Scene
-#endif
