@@ -25,6 +25,7 @@ uint32_t EntityCompStorage::appendEntityCopyFromId(uint32_t id)
     shaderingEntitiesPool[newId].shadingDescId = newId;
     hierarchiesPool[newId]                     = hierarchiesPool[id];
     transformsPool[newId]                      = transformsPool[id];
+    modelsPool[newId]                          = modelsPool[id];
 
     if (transformPivotMap.contains(id))
     {
