@@ -275,7 +275,7 @@ void InteractionSourceSystem::update()
     uint32_t etId = 1;
     if (Base::ID::isValidID(etId)) {
 
-
+        return;
         auto&& entity = compStorage->entitiesPool[etId];
         if (Base::ID::isInvalidID(entity.transformId))
             return;

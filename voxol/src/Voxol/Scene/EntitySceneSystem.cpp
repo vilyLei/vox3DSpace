@@ -165,10 +165,10 @@ void EntitySceneSystem::createEntities(int total)
         compStorage->updateHierarchyInfo();
         for (auto id : ids)
         {
-            auto&& key = Base::ID::KeyUint64::make(id);
-            auto&& vb = compStorage->getEntityGlobalBoundsAt(id);
             compStorage->setEntityGlobalXYAt(pos, id);
             pos += {10, 10};
+            auto&& key = Base::ID::KeyUint64::make(id);
+            auto&& vb = compStorage->getEntityGlobalBoundsAt(id);
             bvh->addItem(key, vb);
         }
         bvh->build();
