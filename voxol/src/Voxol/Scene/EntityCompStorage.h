@@ -93,7 +93,7 @@ public:
     //    auto& pool = getPool<T>();
     //    return pool.get(index);
     //}
-
+    uint32_t                 appendEntityCopyFromId(uint32_t id);
     bool                     hasParentAt(uint32_t id) const;
     bool                     hasChildAt(uint32_t id) const;
     Component::UnitTransform getEntityLocalTransAt(uint32_t id);
@@ -152,6 +152,7 @@ public:
     void propagateVisibility(uint32_t rootId, bool visible = true);
 
 public:
+    uint32_t                               entityIdMax = 0;
     CompPool<Component::UnitEntity>        entitiesPool{};
     CompPool<Component::UnitShadingEntity> shaderingEntitiesPool{};
     CompPool<Component::UnitModel>         modelsPool{};

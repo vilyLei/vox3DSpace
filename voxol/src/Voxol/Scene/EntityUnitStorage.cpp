@@ -105,7 +105,13 @@ void EntityUnitStorage::initalizeFromDescFile(const std::string& fileName)
         transformsPool[i]        = node.transform;
         modelsPool[i]            = node.unitModel;
         entitiesPool[i]          = node.entity;
+
+        if (comp->entityIdMax < i)
+        {
+            comp->entityIdMax = i;
+        }
     });
+
     comp->updateHierarchyInfo();
 }
 void EntityUnitStorage::initalizeFromIRFile(const std::string& fileName)

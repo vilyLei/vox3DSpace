@@ -10,6 +10,47 @@ EntityCompStorage::SP EntityCompStorage::make()
     return sp;
 }
 
+uint32_t EntityCompStorage::appendEntityCopyFromId(uint32_t id)
+{
+    if (Base::ID::isInvalidID(id) || id < 1)
+        return Base::ID::INVALID_ID;
+
+    entityIdMax++;
+
+    uint32_t newId = entityIdMax;
+
+    shaderingDescPool[newId] = shaderingDescPool[id];
+
+    shaderingEntitiesPool[newId]               = shaderingEntitiesPool[id];
+    shaderingEntitiesPool[newId].shadingDescId = newId;
+    hierarchiesPool[newId]                     = hierarchiesPool[id];
+    transformsPool[newId]                      = transformsPool[id];
+
+    auto entity = entitiesPool[id];
+    entity.id         = newId;
+    entity.shadingId  = newId;
+    entity.transformId  = newId;
+    entity.modelId      = newId;
+    entity.hierarchyId  = newId;
+    entitiesPool[newId] = entity;
+
+    hierarchiesPool[newId].parent = hierarchiesPool[id].parent;
+
+    hierarchiesPool[newId].firstChild = Base::ID::INVALID_ID;
+
+    uint32_t lastSibling = id;
+    while (hierarchiesPool[lastSibling].next != Base::ID::INVALID_ID)
+    {
+        lastSibling = hierarchiesPool[lastSibling].next;
+    }
+
+    // append to tail
+    hierarchiesPool[lastSibling].next = newId;
+    hierarchiesPool[newId].next       = Base::ID::INVALID_ID;
+
+    return newId;
+}
+
 bool EntityCompStorage::hasParentAt(uint32_t id) const
 {
     if (Base::ID::isInvalidID(id))
