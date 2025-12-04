@@ -148,8 +148,10 @@ void DrawingUnitStorage::initVoassScene()
     auto& sdfRoundedRectUnit  = drawingUnits[5];
     auto& sdfTriangleUnit     = drawingUnits[6];
     auto& strokeShapeUnit     = drawingUnits[7];
-    auto& texUnit             = drawingUnits[8];
-    Render::Gpu::buildTexDrawUnitWithTex(texUnit, GL_ZERO, false);
+    auto& imageUnit           = drawingUnits[8];
+    auto& textUnit            = drawingUnits[9];
+
+    Render::Gpu::buildTexDrawUnitWithTex(imageUnit, GL_ZERO, false);
 
     bool colorClip      = false;
     sdfCircleUnit.color = {0.9f, 0.0, 0.3f, 1.0f};
@@ -182,7 +184,7 @@ void DrawingUnitStorage::initVoassScene()
 
     Render::Gpu::buildSDFDrawUnit(strokeShapeUnit, Shader::SDFShapeType::DefaultShape, colorClip);
 
-    drawingIDIndex       = 8;
+    drawingIDIndex = 9;
     //std::string fileName = "ship01.glsl";
     //auto&       unit_8   = drawingUnits[drawingIDIndex];
     //Render::Gpu::buildSDFDrawUnitWithName(unit_8, fileName, colorClip);

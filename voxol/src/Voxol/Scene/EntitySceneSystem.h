@@ -1,7 +1,6 @@
 #ifndef VOXOL_SCENE_ENTITY_SCENE_SYSTEM_H
 #define VOXOL_SCENE_ENTITY_SCENE_SYSTEM_H
 
-//#include "BVH2DV1.h"
 #include "BVH2DV2.h"
 #include "DrawCtx.h"
 
@@ -12,8 +11,6 @@
 
 namespace Voxol::Scene
 {
-
-//using EntitySysBVH = V1::BVH2D;
 using EntitySysBVH = V2::BVH2D;
 
 class EntitySceneSystem

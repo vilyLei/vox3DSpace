@@ -105,20 +105,71 @@ struct UnitTextModel
     Math::Vec2   posOffset;
     Math::Bounds bounds;
 };
+/*
 
+void updateUunitModel(UnitModel& model, const std::string typeName)
+{
+    if (typeName == "rectangle")
+    {
+        model.drawUnitId = 0;
+        model.type       = Component::UnitModelType::Mesh;
+    }
+    else if (typeName == "round-rectangle")
+    {
+        model.drawUnitId = 5;
+        model.type       = Component::UnitModelType::Mesh;
+    }
+    else if (typeName == "circle")
+    {
+        model.drawUnitId = 1;
+        model.type       = Component::UnitModelType::Mesh;
+    }
+    else if (typeName == "text")
+    {
+        model.drawUnitId = 8;
+        model.type       = Component::UnitModelType::Text;
+    };
+}
+*/
 struct UnitModel
 {
     uint32_t      id         = Base::ID::INVALID_ID;
     uint32_t      drawUnitId = Base::ID::INVALID_ID;
     UnitModelType type       = UnitModelType::Mesh;
 
-    constexpr bool isText(){
+    constexpr bool isTextType(){
         return type == UnitModelType::Text;
-    };
-    constexpr bool isMesh()
+    }
+    constexpr bool isMeshType()
     {
         return type == UnitModelType::Mesh;
-    };
+    }
+
+    constexpr void toDrawRect()
+    {
+        drawUnitId = 0;
+        type       = Component::UnitModelType::Mesh;
+    }
+    constexpr void toDrawRoundRect()
+    {
+        drawUnitId = 5;
+        type       = Component::UnitModelType::Mesh;
+    }
+    constexpr void toDrawCircle()
+    {
+        drawUnitId = 1;
+        type       = Component::UnitModelType::Mesh;
+    }
+    constexpr void toDrawText()
+    {
+        drawUnitId = 9;
+        type       = Component::UnitModelType::Text;
+    }
+    constexpr void toDrawImage()
+    {
+        drawUnitId = 8;
+        type       = Component::UnitModelType::Mesh;
+    }
 };
 
 struct UnitHierarchy
@@ -200,7 +251,7 @@ struct UnitInstanceMap
     Base::ID::keyUint64Unordered_map<Base::ID::KeyUint64> map;
     bool                                                  dirty = true;
 };
-void updateUunitModel(UnitModel& model, const std::string typeName);
+void updateUnitModel(UnitModel& model, const std::string typeName, bool hasImage = false);
 
 } // namespace Component
 

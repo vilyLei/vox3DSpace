@@ -4,27 +4,30 @@ namespace Voxol::Scene
 {
 namespace Component
 {
-void updateUunitModel(UnitModel& model, const std::string typeName)
+void updateUnitModel(UnitModel& model, const std::string typeName, bool hasImage)
 {
+
+    if (hasImage) {
+
+        model.toDrawImage();
+
+        return;
+    }
     if (typeName == "rectangle")
     {
-        model.drawUnitId = 0;
-        model.type       = Component::UnitModelType::Mesh;
+        model.toDrawRect();
     }
     else if (typeName == "round-rectangle")
     {
-        model.drawUnitId = 5;
-        model.type       = Component::UnitModelType::Mesh;
+        model.toDrawRoundRect();
     }
     else if (typeName == "circle")
     {
-        model.drawUnitId = 1;
-        model.type       = Component::UnitModelType::Mesh;
+        model.toDrawCircle();
     }
     else if (typeName == "text")
     {
-        model.drawUnitId = 8;
-        model.type       = Component::UnitModelType::Text;
+        model.toDrawText();
     };
 }
 } // namespace Component
