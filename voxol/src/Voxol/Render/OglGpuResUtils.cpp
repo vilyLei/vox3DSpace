@@ -490,7 +490,7 @@ void DrawingUnit::bindGPU()
 
 void DrawingUnit::setTranslateAndScale(float tx, float ty, float sx, float sy)
 {
-    objMat.setTranslateAndScale(tx,ty, sx, sy);
+    objMat.setTranslateAndScale(tx, ty, sx, sy);
 }
 void DrawingUnit::setColor(uint32_t argb32)
 {
@@ -498,7 +498,7 @@ void DrawingUnit::setColor(uint32_t argb32)
     auto r = ((argb32 >> 16) & 0xff) / 255.0f;
     auto g = ((argb32 >> 8) & 0xff) / 255.0f;
     auto b = (argb32 & 0xff) / 255.0f;
-    color  = {r,g,b,a};
+    color  = {r, g, b, a};
 }
 
 GLuint DrawingUnit::getTextureAt(int index) const
@@ -537,19 +537,71 @@ void DrawingUnit::draw()
 
     bindGPU();
 
-    glEnable(GL_BLEND);
-    if ((blendMode < 2 && shader.textures.empty()) || blendMode == 3)
+    if (blendMode < 20)
     {
+        glEnable(GL_BLEND);
+        if ((blendMode < 2 && shader.textures.empty()) || blendMode == 3)
+        {
 
-        glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+            glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+        }
+        else
+        {
+            glBlendFuncSeparate(
+                GL_SRC_ALPHA,
+                GL_ONE_MINUS_SRC_ALPHA,
+                GL_ONE,
+                GL_ONE_MINUS_SRC_ALPHA);
+        }
     }
     else
     {
-        glBlendFuncSeparate(
-            GL_SRC_ALPHA,
-            GL_ONE_MINUS_SRC_ALPHA,
-            GL_ONE,
-            GL_ONE_MINUS_SRC_ALPHA);
+        switch (blendMode)
+        {
+            case 21:
+                glEnable(GL_BLEND);
+                glBlendFunc(GL_ONE, GL_ZERO);
+                break;
+            case 22:
+                glEnable(GL_BLEND);
+                glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+                break;
+            case 23:
+                glEnable(GL_BLEND);
+                glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+                break;
+            case 24:
+                glEnable(GL_BLEND);
+                glBlendFunc(GL_ONE, GL_ONE);
+                break;
+            case 25:
+                glEnable(GL_BLEND);
+                glBlendFunc(GL_ONE, GL_SRC_ALPHA);
+                break;
+            case 26:
+                glEnable(GL_BLEND);
+                glBlendFunc(GL_SRC_COLOR, GL_ONE);
+                break;
+            case 27:
+                glEnable(GL_BLEND);
+                glBlendFunc(GL_DST_COLOR, GL_DST_ALPHA);
+                break;
+            case 28:
+                glEnable(GL_BLEND);
+                glBlendFunc(GL_DST_COLOR, GL_SRC_ALPHA);
+                break;
+            case 20:
+                glDisable(GL_BLEND);
+                break;
+            default:
+                break;
+        }
+        /**
+        
+                rbm.BLAZE = rso.CreateBlendMode("BLAZE", gbm.SRC_COLOR, gbm.ONE, gbe.FUNC_ADD);
+                rbm.OVERLAY = rso.CreateBlendMode("OVERLAY", gbm.DST_COLOR, gbm.DST_ALPHA, gbe.FUNC_ADD);
+                rbm.OVERLAY2 = rso.CreateBlendMode("OVERLAY2", gbm.DST_COLOR, gbm.SRC_ALPHA, gbe.FUNC_ADD);
+        */
     }
 
     mvp.append(objMat);
@@ -632,7 +684,8 @@ void buildTexDrawUnitWithTex(DrawingUnit& unit, GLuint tex, bool uvFlipY)
     }
 }
 
-void buildTexDrawUnitWithTexBlur(DrawingUnit& unit, GLuint tex, bool uvFlipY, int blurType) {
+void buildTexDrawUnitWithTexBlur(DrawingUnit& unit, GLuint tex, bool uvFlipY, int blurType)
+{
 
     auto& shader = unit.shader;
 
@@ -722,7 +775,8 @@ void buildSDFDrawUnit(DrawingUnit& unit, Voass::Render::Shader::SDFShapeType typ
 }
 
 
-void buildSDFDrawUnitWithName(DrawingUnit& unit, const std::string& name, bool clip) {
+void buildSDFDrawUnitWithName(DrawingUnit& unit, const std::string& name, bool clip)
+{
 
     static std::unordered_map<std::string, std::string> codesMap{};
     if (!codesMap.contains(name))
@@ -851,4 +905,4 @@ void buildGlyphTexDrawUnit(DrawingUnit& unit, const RawData::TextGlyphData& glyp
     vert.buildTexRes();
 }
 } // namespace Gpu
-} // namespace Voxol::Test
+} // namespace Voxol::Render
