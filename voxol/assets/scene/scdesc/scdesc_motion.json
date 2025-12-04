@@ -29,7 +29,7 @@
                     },
                     "style": {
                         "fill-color": "0xff338888",
-                        "image-urlY": "letterA.png"
+                        "image-url": "flare_core_02.png"
                     }
                 }
             }

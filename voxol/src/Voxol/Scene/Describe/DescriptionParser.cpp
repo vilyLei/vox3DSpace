@@ -349,7 +349,6 @@ void FileParser::parseNodeDisplayStyle(SceneNode& node, const JsonType& jsonNode
     if (jNode.contains("image-url") && jNode["image-url"].is_string())
     {
         node.imageUrl = jNode["image-url"];
-        node.unitModel.drawUnitId = 8;
     }
 
     if (!node.imageUrl.empty())
@@ -382,9 +381,9 @@ void FileParser::parseNodeDisplayShape(SceneNode& node, const JsonType& jsonNode
     node.transform.scale() = shape.size;
     node.unitModel.id      = node.id;
 
-    Component::updateUunitModel(node.unitModel, shape.type);
+    Component::updateUnitModel(node.unitModel, shape.type, !node.imageUrl.empty());
 
-    if (node.unitModel.isText())
+    if (node.unitModel.isTextType())
     {
         auto&                    textDesc = shape.jsonValue.get<Component::UnitTextDesc>();
         Component::UnitTextModel textModel;
@@ -413,8 +412,8 @@ void FileParser::parseNodeTransData(SceneNode& node, const JsonType& jsonNode)
         node.shadingEntity.id            = id;
         node.shadingEntity.shadingDescId = id;
         node.unitModel.id                = id;
-        parseNodeDisplayShape(node, displayNode);
         parseNodeDisplayStyle(node, displayNode);
+        parseNodeDisplayShape(node, displayNode);
     }
     else
     {
