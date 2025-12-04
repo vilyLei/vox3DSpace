@@ -116,6 +116,10 @@ public:
     void        setEntityRotationAt(float rad, uint32_t id);
     void        setEntityColorAt(uint32_t color, uint32_t id);
     uint32_t    getEntityColorAt(uint32_t id) const;
+    void        setEntityVisibleAt(bool v, uint32_t id);
+    bool        getEntityVisibleAt(uint32_t id) const;
+    void        setEntityPivotAt(const Math::Vec2& pivot, uint32_t id);
+    Math::Vec2  getEntityPivotAt(uint32_t id) const;
 
     void getIdsFromId(uint32_t etId, std::vector<Base::ID::KeyUint64>& ids);
 

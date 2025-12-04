@@ -363,12 +363,44 @@ void EntityCompStorage::getIdsFromId(uint32_t etId, std::vector<Base::ID::KeyUin
     }
 }
 
+void EntityCompStorage::setEntityVisibleAt(bool v, uint32_t id) {
+
+    if (Base::ID::isInvalidID(id))
+        return;
+
+    auto&& et = entitiesPool[id];
+    et.visible = v;
+}
+bool EntityCompStorage::getEntityVisibleAt(uint32_t id) const{
+
+    if (Base::ID::isInvalidID(id))
+        return false;
+
+    auto&& et = entitiesPool[id];
+    return et.visible;
+}
+
+void EntityCompStorage::setEntityPivotAt(const Math::Vec2& pivot, uint32_t id){
+
+    if (Base::ID::isInvalidID(id))
+        return;
+    transformPivotMap[id] = pivot;
+}
+Math::Vec2 EntityCompStorage::getEntityPivotAt(uint32_t id) const{
+
+    if (Base::ID::isInvalidID(id) || !transformPivotMap.contains(id))
+        return {};
+    return transformPivotMap.at(id);
+}
+
 Component::UnitTransform EntityCompStorage::getEntityTransformAt(uint32_t id)
 {
     if (Base::ID::isInvalidID(id))
         return {};
 
     auto&& et = entitiesPool[id];
+    if (Base::ID::isInvalidID(et.transformId))
+        return {};
     return transformsPool[et.transformId];
 }
 void EntityCompStorage::setEntityTransformAt(const Component::UnitTransform& trans, uint32_t id)
