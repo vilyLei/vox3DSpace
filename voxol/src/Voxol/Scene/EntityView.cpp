@@ -76,6 +76,16 @@ float EntityView::rotationDeegree() const
     return compStorage->getEntityRotationAt(targetEtProtoId) * MATH_180_OVER_PI;
 }
 
+void EntityView::visible(bool b)
+{
+    compStorage->setEntityVisibleAt(targetEtProtoId, targetEtProtoId);
+    compStorage->dirtyIdMap[targetEtProtoId] = true;
+}
+bool EntityView::visible() const
+{
+    return compStorage->getEntityVisibleAt(targetEtProtoId);
+}
+
 uint32_t EntityView::etProtoId() const
 {
     return targetEtProtoId;

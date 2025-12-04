@@ -21,7 +21,7 @@ public:
     ~EntityView() = default;
 
 public:
-    UpdateBVHCallbackType  bvhUpdateCall;
+    UpdateBVHCallbackType bvhUpdateCall;
 
 
 public:
@@ -38,6 +38,8 @@ public:
     float      rotation() const;
     void       rotationDeegree(float degree);
     float      rotationDeegree() const;
+    void       visible(bool v);
+    bool       visible() const;
 
     uint32_t etProtoId() const;
     void     update();
@@ -45,7 +47,7 @@ public:
 
 private:
     EntityCompStorage::SP compStorage;
-    uint32_t            targetEtProtoId = Base::ID::INVALID_ID;
+    uint32_t              targetEtProtoId = Base::ID::INVALID_ID;
 };
 } // namespace Voxol::Scene
 #endif
