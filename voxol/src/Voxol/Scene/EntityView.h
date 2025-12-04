@@ -1,5 +1,5 @@
-#ifndef VOXOL_SCENE_ENTITY_MOTION_OBJECT_H
-#define VOXOL_SCENE_ENTITY_MOTION_OBJECT_H
+#ifndef VOXOL_SCENE_ENTITY_VIEW_H
+#define VOXOL_SCENE_ENTITY_VIEW_H
 
 #include "EntityCompStorage.h"
 #include <deque>
@@ -10,20 +10,18 @@ using UpdateBVHCallbackType       = std::function<void(uint32_t id)>;
 using UpdateTransformCallbackType = std::function<bool(const Math::Vec2& wPos, Component::UnitTransform& trans)>;
 using PtApplyCallbackType         = std::function<bool(int index, const Math::Vec2& pv0, const Math::Vec2& pv1)>;
 
-class EntityMotionObject
+class EntityView
 {
 public:
-    using SP = std::shared_ptr<EntityMotionObject>;
+    using SP = std::shared_ptr<EntityView>;
     static SP make();
 
 public:
-    EntityMotionObject()  = default;
-    ~EntityMotionObject() = default;
+    EntityView()  = default;
+    ~EntityView() = default;
 
 public:
     UpdateBVHCallbackType  bvhUpdateCall;
-    Math::Vec2             targetPos{500, 300};
-    std::deque<Math::Vec2> pts;
 
 
 public:
@@ -43,7 +41,6 @@ public:
 
     uint32_t etProtoId() const;
     void     update();
-    void     applyPoints(PtApplyCallbackType callback, int stride = 20);
     void     destory();
 
 private:
