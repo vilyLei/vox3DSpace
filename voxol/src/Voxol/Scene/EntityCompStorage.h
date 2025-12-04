@@ -104,6 +104,8 @@ public:
     Math::Bounds             getEntityGlobalBoundsAt(const Base::ID::KeyUint64& id);
     Math::Bounds             getEntityLocalBoundsAt(uint32_t id);
     Math::Bounds             getEntityLocalBoundsAt(const Base::ID::KeyUint64& id);
+    Math::Mat33             getEntityLocalMatrixAt(uint32_t id);
+    Math::Mat33              getEntityLocalMatrixAt(const Base::ID::KeyUint64& id);
 
     uint32_t    getEntityParentIdAt(uint32_t id);
     Math::Vec2  getEntityGlobalXYAt(uint32_t id) const;
@@ -112,6 +114,7 @@ public:
     Math::Mat33 getEntityParentWorldMatWithoutScale(uint32_t id);
     Math::Vec2  getEntityLocalXYAt(uint32_t id) const;
     void        setEntityLocalXYAt(const Math::Vec2& pv, uint32_t id);
+
     float       getEntityRotationAt(uint32_t id) const;
     void        setEntityRotationAt(float rad, uint32_t id);
     void        setEntityColorAt(uint32_t color, uint32_t id);

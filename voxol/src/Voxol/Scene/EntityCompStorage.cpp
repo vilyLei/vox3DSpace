@@ -157,9 +157,11 @@ Math::Bounds EntityCompStorage::getEntityLocalBoundsAt(uint32_t id)
     {
         return {};
     }
-    auto&& et    = entitiesPool[id];
-    auto&& trans = transformsPool[et.transformId];
+    auto&& et = entitiesPool[id];
+    if (Base::ID::isInvalidID(et.transformId))
+        return {};
 
+    auto&& trans = transformsPool[et.transformId];
     if (transformPivotMap.contains(et.id))
     {
         auto&& sv = transformPivotMap[et.id];
@@ -176,7 +178,10 @@ Math::Bounds EntityCompStorage::getEntityLocalBoundsAt(const Base::ID::KeyUint64
     if (id.isIDInvalid())
         return {};
 
-    auto&& et    = entitiesPool[id.protoId()];
+    auto&& et = entitiesPool[id.protoId()];
+    if (Base::ID::isInvalidID(et.transformId))
+        return {};
+
     auto&& trans = transformsPool[et.transformId];
     if (transformPivotMap.contains(et.id))
     {
@@ -188,6 +193,49 @@ Math::Bounds EntityCompStorage::getEntityLocalBoundsAt(const Base::ID::KeyUint64
     return {0, 0, trans.sx, trans.sy};
 }
 
+Math::Mat33 EntityCompStorage::getEntityLocalMatrixAt(uint32_t id)
+{
+
+    if (Base::ID::isInvalidID(id) || id >= hierarchiesPool.capacity() || !entityGlobalMat33Map.contains(id))
+    {
+        return Math::Mat33::makeIdentity();
+    }
+    auto&& et    = entitiesPool[id];
+    if (Base::ID::isInvalidID(et.transformId))
+        return Math::Mat33::makeIdentity();
+
+    auto&& trans = transformsPool[et.transformId];
+    Math::Mat33 mat;
+    if (transformPivotMap.contains(et.id))
+    {
+        auto&& tv = transformPivotMap[et.id];
+        mat.setXY(-tv.x * trans.sx, -tv.y * trans.sy);
+    }
+    mat.setScaleXY(trans.sx, trans.sy);
+    return mat;
+}
+
+Math::Mat33 EntityCompStorage::getEntityLocalMatrixAt(const Base::ID::KeyUint64& id)
+{
+
+    if (id.isIDInvalid())
+        return {};
+
+    auto&& et = entitiesPool[id.protoId()];
+
+    if (Base::ID::isInvalidID(et.transformId))
+        return Math::Mat33::makeIdentity();
+
+    auto&& trans = transformsPool[et.transformId];
+    Math::Mat33 mat;
+    if (transformPivotMap.contains(et.id))
+    {
+        auto&& tv = transformPivotMap[et.id];
+        mat.setXY(-tv.x * trans.sx, -tv.y * trans.sy);
+    }
+    mat.setScaleXY(trans.sx, trans.sy);
+    return mat;
+}
 uint32_t EntityCompStorage::getEntityParentIdAt(uint32_t id)
 {
     if (Base::ID::isInvalidID(id))
