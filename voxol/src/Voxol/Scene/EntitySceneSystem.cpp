@@ -154,6 +154,8 @@ void EntitySceneSystem::createEntities(int total)
     uint32_t   srcEtId = 1;
     bool       biulding = false;
     std::vector<uint32_t> ids;
+    
+    uint32_t color = 0xff223366;
     for (auto i = 0; i < total; i++)
     {
         
@@ -175,6 +177,8 @@ void EntitySceneSystem::createEntities(int total)
             bvh->addItem(key, vb);
             auto motionObj = EntityMotionObject::make();
             motionObj->initialize(id, compStorage);
+            motionObj->color(color);
+            color += 130;
             motionObjStorage->addObject(motionObj);
         }
         bvh->build();
