@@ -236,15 +236,6 @@ bool EntityRenderSystem::drawUnit(const Draw::DrawContext& rctx, const Scene::Co
     auto&  drs       = *entityStorage->drawing;
     auto&& drawUnit  = drs[drawingId];
 
-    //Math::Mat33 svM;
-    //if (compStorage->transformPivotMap.contains(etId))
-    //{
-    //    auto&& tv = compStorage->transformPivotMap[etId];
-    //    svM.setXY(-tv.x * trans.sx, -tv.y * trans.sy);
-    //}
-    //svM.setScaleXY(trans.sx, trans.sy);
-    //svM.prepend(wM);
-
     auto&& svM = compStorage->getEntityLocalMatrixAt(etId);
     svM.prepend(wM);
 
