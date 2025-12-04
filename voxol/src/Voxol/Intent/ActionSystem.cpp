@@ -36,7 +36,10 @@ void ActionSystem::update(){
         objs[0]->applyPoints([&](int index, const Math::Vec2& pv0, const Math::Vec2& pv1) -> bool {
 
             auto i = index + 1;
-
+            if (i >= total)
+            {
+                return false;
+            }
             auto dv = pv1 - pv0;
 
             auto&& key = Base::ID::KeyUint64::make(objs[i]->etProtoId());

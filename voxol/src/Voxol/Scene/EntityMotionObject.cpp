@@ -102,7 +102,7 @@ void EntityMotionObject::update()
 
     pts.emplace_back(pos);
     auto ptsTotal = pts.size();
-    if (ptsTotal > 130)
+    if (ptsTotal > 330)
     {
         pts.pop_front();
     }
@@ -120,18 +120,16 @@ void EntityMotionObject::applyPoints(PtApplyCallbackType callback, int stride)
         auto t = index * stride;
         if (t >= ptsTotal)
             break;
-        //if (t < ptsTotal)
-        //{
+
         auto ptIndex = ptsTotal - index * stride;
         auto flag    = callback(index - 1, pts[ptIndex - 1], pts[ptIndex]);
         if (!flag)
             break;
 
-        //t += i;
         index++;
-        //}
-        i += t;
+        i = t;
     }
+    auto ti = index;
 }
 void EntityMotionObject::destory()
 {
