@@ -28,6 +28,16 @@ void EntityMotionObjectStorage::addObject(const EntityMotionObject::SP& obj)
     if (!obj || obj->isInvalid() || objsMap.contains(obj->etProtoId()))
         return;
 
+    objs.push_back(obj);
+    objsMap[obj->etProtoId()] = obj;
+}
+void EntityMotionObjectStorage::addObjectToFront(const EntityMotionObject::SP& obj)
+{
+
+    if (!obj || obj->isInvalid() || objsMap.contains(obj->etProtoId()))
+        return;
+
+    objs.push_front(obj);
     objsMap[obj->etProtoId()] = obj;
 }
 
@@ -73,6 +83,7 @@ void EntityMotionObjectStorage::update()
         }
         objs.clear();
     }
+
     foreachObjs([&](const Scene::EntityMotionObject::SP& obj) -> bool {
         objs.emplace_back(obj);
         return true;
@@ -103,10 +114,14 @@ void EntityMotionObjectStorage::update()
 void EntityMotionObjectStorage::foreachObjs(FroreachObjCallbackType callback)
 {
 
-    for (auto& item : objsMap)
+    //for (auto& item : objsMap)
+    for (auto& obj : objs)
     {
-
-        auto& sp = item.second;
+        if (!objsMap.contains(obj->etProtoId()))
+        {
+            continue;
+        }
+        auto& sp = objsMap[obj->etProtoId()];
         if (!sp)
             continue;
 
@@ -117,13 +132,13 @@ void EntityMotionObjectStorage::foreachObjs(FroreachObjCallbackType callback)
 }
 void EntityMotionObjectStorage::destory()
 {
-    objsMap.clear();
-    foodStorage = nullptr;
+    clear();
 }
 
 void EntityMotionObjectStorage::clear()
 {
     objsMap.clear();
+    objs.clear();
     foodStorage = nullptr;
 }
 } // namespace Voxol::Scene

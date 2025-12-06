@@ -3,6 +3,7 @@
 
 #include "EntityMotionObject.h"
 #include <unordered_map>
+#include <deque>
 
 namespace Voxol::Scene
 {
@@ -26,6 +27,7 @@ public:
     void initialize();
     void updateAction(const Scene::Component::UnitLocation& location);
     void addObject(const EntityMotionObject::SP& obj);
+    void addObjectToFront(const EntityMotionObject::SP& obj);
     void setObject(uint32_t protoId, const EntityMotionObject::SP& obj);
     void update();
     void foreachObjs(FroreachObjCallbackType callback);
@@ -33,6 +35,7 @@ public:
     void clear();
 
 private:
+    std::deque<EntityMotionObject::SP>                   objs;
     std::unordered_map<uint32_t, EntityMotionObject::SP> objsMap;
 };
 } // namespace Voxol::Scene
