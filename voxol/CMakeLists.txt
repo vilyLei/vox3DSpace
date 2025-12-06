@@ -9,6 +9,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(SRC_DIR "${CMAKE_SOURCE_DIR}/src")
 set(VOX_DIR "${SRC_DIR}/Voxol")
 set(RENDER_DIR "${VOX_DIR}/Render")
+set(RENDER_GPU_DIR "${VOX_DIR}/Render/Gpu")
 set(MATH_DIR "${VOX_DIR}/Math")
 set(BASE_DIR "${VOX_DIR}/Base")
 set(SCENE_DIR "${VOX_DIR}/Scene")
@@ -36,6 +37,7 @@ set(JSON_INCLUDE_DIR "${SRC_DIR}/thirdPart/json")
 include_directories(
   ${VOX_DIR}
   ${RENDER_DIR}
+  ${RENDER_GPU_DIR}
   ${MATH_DIR}
   ${BASE_DIR}
   ${SCENE_DIR}
@@ -61,6 +63,7 @@ include_directories(
 
 # ================== .cpp files dir setting ==================
 file(GLOB RENDER_SRC "${RENDER_DIR}/*.cpp" "${RENDER_DIR}/*.h")
+file(GLOB RENDER_GPU_SRC "${RENDER_GPU_DIR}/*.cpp" "${RENDER_GPU_DIR}/*.h")
 file(GLOB MATH_SRC "${MATH_DIR}/*.cpp" "${MATH_DIR}/*.h")
 file(GLOB BASE_SRC "${BASE_DIR}/*.cpp" "${BASE_DIR}/*.h")
 file(GLOB SCENE_SRC "${SCENE_DIR}/*.cpp" "${SCENE_DIR}/*.h")
@@ -81,6 +84,7 @@ file(GLOB VOASS_RENDER_SRC "${VOASS_RENDER_DIR}/*.cpp" "${VOASS_RENDER_DIR}/*.h"
 
 set(ALL_SOURCES
   ${RENDER_SRC}
+  ${RENDER_GPU_SRC}
   ${MATH_SRC}
   ${BASE_SRC}
   ${SCENE_SRC}
@@ -101,6 +105,7 @@ set(ALL_SOURCES
 )
 
 source_group("Render" FILES ${RENDER_SRC})
+source_group("Render\\Gpu" FILES ${RENDER_GPU_SRC})
 source_group("Math" FILES ${MATH_SRC})
 source_group("Base" FILES ${BASE_SRC})
 source_group("Scene" FILES ${SCENE_SRC})

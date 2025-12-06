@@ -261,9 +261,9 @@ bool EntityRenderSystem::drawUnit(const Draw::DrawContext& rctx, const Scene::Co
 
     auto tempColor     = shdDesc.color;
     drawUnit.blendMode = 1;
-    if (drawingId == 8 && compStorage->textureMap.contains(etId))
+    if (model.isImageType() && compStorage->textureMap.contains(etId))
     {
-        drawUnit.blendMode = 25;
+        //drawUnit.blendMode = 25;
         auto tex = compStorage->textureMap.contains(etId);
         Render::Gpu::buildTexDrawUnitWithTex(drawUnit, tex, true);
 

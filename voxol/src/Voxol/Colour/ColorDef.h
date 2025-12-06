@@ -75,13 +75,13 @@ struct Color
         value = (value & 0xFFFFFF00) | static_cast<uint32_t>(b);
     }
 
-    constexpr Color WithA(uint8_t a) noexcept
+    constexpr Color withA(uint8_t a) noexcept
     {
         return Color((value & 0x00FFFFFF) | (static_cast<uint32_t>(a) << 24));
     }
-    constexpr Color withR(uint8_t nr) const noexcept
+    constexpr Color withR(uint8_t r) const noexcept
     {
-        return Color((value & 0xFF00FFFFu) | (uint32_t(nr) << 16));
+        return Color((value & 0xFF00FFFFu) | (uint32_t(r) << 16));
     }
     constexpr Color withG(uint8_t g) noexcept
     {
