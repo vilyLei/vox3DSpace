@@ -143,8 +143,8 @@ void EntitySceneSystem::initalize(const std::string& configFileName)
     createEntities(15, {200, 100}, color, dc);
     dc = 0xff0a0800;
     createEntities(8, {500, 300}, color, dc);
-    color = 0xff003355;
-    dc = 0xff00080a;
+    color = 0xff003388;
+    dc = 0xffaa083a;
     createEntities(11, {600, 400}, color, dc);
 }
 
