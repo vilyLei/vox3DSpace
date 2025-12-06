@@ -1,4 +1,5 @@
 #include "EntitySceneSystem.h"
+#include "../Math/Random.h"
 #include <algorithm>
 
 namespace Voxol::Scene
@@ -137,15 +138,19 @@ void EntitySceneSystem::initalize(const std::string& configFileName)
         }
     }
 
+    Colour::Component::Color color       = 0xff552222;
+    Colour::Component::Color dc          = 0xff0a0000;
+    auto                     foodStorage = createFoodEntities(3, {200, 200}, color, dc);
 
-    Colour::Component::Color color = 0xff22aaaa;
-    Colour::Component::Color dc    = 0xff0a0000;
-    auto                     st0   = createEntities(2, {200, 100}, color, dc);
-    dc                             = 0xff0a0800;
-    auto st1                       = createEntities(2, {500, 300}, color, dc);
-    color                          = 0xff003388;
-    dc                             = 0xffaa080a;
-    auto st2                       = createEntities(2, {600, 400}, color, dc);
+    color    = 0xff22aaaa;
+    dc       = 0xff0a0000;
+    auto st0 = createEntities(2, {200, 100}, color, dc);
+
+    //dc                             = 0xff0a0800;
+    //auto st1                       = createEntities(2, {500, 300}, color, dc);
+    //color                          = 0xff003388;
+    //dc                             = 0xffaa080a;
+    //auto st2                       = createEntities(2, {600, 400}, color, dc);
 }
 
 EntityMotionObjectStorage::SP EntitySceneSystem::createEntities(int total, const Math::Vec2& pv, Colour::Component::Color color, Colour::Component::Color dc)
@@ -205,7 +210,6 @@ EntityMotionObjectStorage::SP EntitySceneSystem::createEntities(int total, const
 
 EntityMotionObjectStorage::SP EntitySceneSystem::createFoodEntities(int total, const Math::Vec2& pv, Colour::Component::Color color, Colour::Component::Color dc)
 {
-
     if (total < 1)
         return nullptr;
 
@@ -231,8 +235,9 @@ EntityMotionObjectStorage::SP EntitySceneSystem::createFoodEntities(int total, c
     compStorage->updateHierarchyInfo();
     for (auto id : ids)
     {
+        //pos += {10, 10};
+        pos = {Math::SimpleRandom::get_float() * 500 + 100, Math::SimpleRandom::get_float() * 300 + 100};
         compStorage->setEntityGlobalXYAt(pos, id);
-        pos += {10, 10};
         auto&& key = Base::ID::KeyUint64::make(id);
         auto&& vb  = compStorage->getEntityGlobalBoundsAt(id);
         bvh->addItem(key, vb);
