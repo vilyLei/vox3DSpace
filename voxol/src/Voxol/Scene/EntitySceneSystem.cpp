@@ -145,7 +145,7 @@ void EntitySceneSystem::initalize(const std::string& configFileName)
     color    = 0xff22aaaa;
     dc       = 0xff0a0000;
     auto st0 = createEntities(2, {200, 100}, color, dc);
-
+    st0->foodStorage = foodStorage;
     //dc                             = 0xff0a0800;
     //auto st1                       = createEntities(2, {500, 300}, color, dc);
     //color                          = 0xff003388;

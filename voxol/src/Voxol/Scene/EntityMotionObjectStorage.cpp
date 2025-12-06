@@ -51,6 +51,7 @@ void EntityMotionObjectStorage::update()
     std::vector<Scene::EntityMotionObject::SP> objs;
     objs.reserve(32);
 
+    auto currPos = mainObject->entityView->globalPos();
     if (foodStorage)
     {
 
@@ -59,6 +60,15 @@ void EntityMotionObjectStorage::update()
             return true;
         });
 
+        for (auto& obj : objs) {
+            auto&& pos = obj->entityView->globalPos();
+            auto   dv  = pos - currPos;
+            if (dv.length() < 10)
+            {
+                printf("........... hit ....fdfd\n");
+            }
+
+        }
         objs.clear();
     }
     foreachObjs([&](const Scene::EntityMotionObject::SP& obj) -> bool {
@@ -106,10 +116,12 @@ void EntityMotionObjectStorage::foreachObjs(FroreachObjCallbackType callback)
 void EntityMotionObjectStorage::destory()
 {
     objsMap.clear();
+    foodStorage = nullptr;
 }
 
 void EntityMotionObjectStorage::clear()
 {
     objsMap.clear();
+    foodStorage = nullptr;
 }
 } // namespace Voxol::Scene
