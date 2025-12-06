@@ -2,6 +2,7 @@
 #define VOXOL_SCENE_ENTITY_MOTION_OBJECT_H
 
 #include "EntityCompStorage.h"
+#include "EntityView.h"
 #include <deque>
 
 namespace Voxol::Scene
@@ -21,6 +22,7 @@ public:
     ~EntityMotionObject() = default;
 
 public:
+    EntityView::SP             entityView;
     UpdateBVHCallbackType  bvhUpdateCall;
     Math::Vec2             targetPos{500, 300};
     std::deque<Math::Vec2> pts;
@@ -30,16 +32,6 @@ public:
     void                     initialize(uint32_t etId, EntityCompStorage::SP comp_storage);
     bool                     isValid() const;
     bool                     isInvalid() const;
-    void                     color(const Colour::Component::Color& c);
-    Colour::Component::Color color() const;
-    void                     localPos(const Math::Vec2& pos);
-    Math::Vec2               localPos() const;
-    void                     globalPos(const Math::Vec2& pos);
-    Math::Vec2               globalPos() const;
-    void                     rotation(float rad);
-    float                    rotation() const;
-    void                     rotationDeegree(float degree);
-    float                    rotationDeegree() const;
 
     uint32_t etProtoId() const;
     void     update();
@@ -47,8 +39,8 @@ public:
     void     destory();
 
 private:
-    EntityCompStorage::SP compStorage;
-    uint32_t              targetEtProtoId = Base::ID::INVALID_ID;
+    //EntityCompStorage::SP compStorage;
+    //uint32_t              targetEtProtoId = Base::ID::INVALID_ID;
 };
 } // namespace Voxol::Scene
 #endif

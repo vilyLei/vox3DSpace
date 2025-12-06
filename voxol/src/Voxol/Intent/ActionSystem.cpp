@@ -44,8 +44,8 @@ void ActionSystem::update(){
 
             auto&& key = Base::ID::KeyUint64::make(objs[i]->etProtoId());
             entityDirtyCall(0, key);
-            objs[i]->globalPos( pv0 );
-            objs[i]->rotation( dv.radian() );
+            objs[i]->entityView.globalPos( pv0 );
+            objs[i]->entityView.rotation( dv.radian() );
             return true;
         });
     }

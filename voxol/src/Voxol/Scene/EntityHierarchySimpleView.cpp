@@ -233,4 +233,19 @@ bool EntityHierarchySimpleView::appendTailToParent(uint32_t parentId, uint32_t i
     return insertAfterToParent(parentId, last, id);
 }
 
+void EntityHierarchySimpleView::traverseDFS(uint32_t rootId, const ForeachHierCallbackType& fn) const
+{
+    auto&    hierarchies = compStorage->hierarchiesPool;
+    uint32_t cur         = rootId;
+    while (cur != Base::ID::INVALID_ID)
+    {
+        fn(cur);
+        if (hierarchies[cur].firstChild != Base::ID::INVALID_ID)
+        {
+            traverseDFS(hierarchies[cur].firstChild, fn);
+        }
+        cur = hierarchies[cur].next;
+    }
+}
+
 } // namespace Voxol::Scene

@@ -177,8 +177,8 @@ void EntitySceneSystem::createEntities(int total)
             bvh->addItem(key, vb);
             auto motionObj = EntityMotionObject::make();
             motionObj->initialize(id, compStorage);
-            motionObj->color(color);
-            //color += 130;
+            motionObj->entityView.color(color);
+
             color.r(color.r() + 10);
             motionObjStorage->addObject(motionObj);
         }

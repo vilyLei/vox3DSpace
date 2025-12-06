@@ -13,77 +13,31 @@ EntityMotionObject::SP EntityMotionObject::make()
 
 void EntityMotionObject::initialize(uint32_t etId, EntityCompStorage::SP comp_storage)
 {
-    targetEtProtoId = etId;
-    compStorage     = comp_storage;
+    if (entityView)
+        return;
+
+    entityView = EntityView::make();
+    entityView->initialize(etId, comp_storage);
 }
 
 bool EntityMotionObject::isValid() const
 {
-    return Base::ID::isValidID(targetEtProtoId);
+    return entityView->isValid();
 }
 
 bool EntityMotionObject::isInvalid() const
 {
-    return Base::ID::isInvalidID(targetEtProtoId);
-}
-
-void EntityMotionObject::color(const Colour::Component::Color& c)
-{
-    compStorage->setEntityColorAt(c, targetEtProtoId);
-    compStorage->dirtyIdMap[targetEtProtoId] = true;
-}
-Colour::Component::Color EntityMotionObject::color() const
-{
-    return compStorage->getEntityColorAt(targetEtProtoId);
-}
-void EntityMotionObject::globalPos(const Math::Vec2& pos)
-{
-    compStorage->setEntityGlobalXYAt(pos, targetEtProtoId);
-    compStorage->dirtyIdMap[targetEtProtoId] = true;
-}
-Math::Vec2 EntityMotionObject::globalPos() const
-{
-    return compStorage->getEntityGlobalXYAt(targetEtProtoId);
-}
-
-void EntityMotionObject::localPos(const Math::Vec2& pos)
-{
-    compStorage->setEntityLocalXYAt(pos, targetEtProtoId);
-    compStorage->dirtyIdMap[targetEtProtoId] = true;
-}
-Math::Vec2 EntityMotionObject::localPos() const
-{
-    return compStorage->getEntityLocalXYAt(targetEtProtoId);
-}
-
-void EntityMotionObject::rotation(float rad)
-{
-    compStorage->setEntityRotationAt(rad, targetEtProtoId);
-    compStorage->dirtyIdMap[targetEtProtoId] = true;
-}
-float EntityMotionObject::rotation() const
-{
-    return compStorage->getEntityRotationAt(targetEtProtoId);
-}
-
-void EntityMotionObject::rotationDeegree(float degree)
-{
-    compStorage->setEntityRotationAt(degree * MATH_PI_OVER_180, targetEtProtoId);
-    compStorage->dirtyIdMap[targetEtProtoId] = true;
-}
-float EntityMotionObject::rotationDeegree() const
-{
-    return compStorage->getEntityRotationAt(targetEtProtoId) * MATH_180_OVER_PI;
+    return entityView->isInvalid();
 }
 
 uint32_t EntityMotionObject::etProtoId() const
 {
-    return targetEtProtoId;
+    return entityView->etProtoId();
 }
 
 void EntityMotionObject::update()
 {
-    auto pos    = globalPos();
+    auto pos    = entityView->globalPos();
     auto direcV = targetPos - pos;
     if (direcV.length() <= 2.0f)
     {
@@ -91,14 +45,14 @@ void EntityMotionObject::update()
         direcV    = targetPos - pos;
     }
 
-    auto currRad   = Math::AngleInterpolator::normalizeAngle(rotation());
+    auto currRad   = Math::AngleInterpolator::normalizeAngle(entityView->rotation());
     auto targetRad = Math::AngleInterpolator::normalizeAngle(direcV.radian());
     auto rad       = Math::AngleInterpolator::rotateTowards(currRad, targetRad, 0.02f);
-    rotation(rad);
+    entityView->rotation(rad);
     auto       spd = 2.0f;
     Math::Vec2 spdV{spd * cos(rad), spd * sin(rad)};
     pos += spdV;
-    globalPos(pos);
+    entityView->globalPos(pos);
 
     pts.emplace_back(pos);
     auto ptsTotal = pts.size();
@@ -133,6 +87,8 @@ void EntityMotionObject::applyPoints(PtApplyCallbackType callback, int stride)
 }
 void EntityMotionObject::destory()
 {
-    targetEtProtoId = Base::ID::INVALID_ID;
+    if (entityView)
+        entityView->destory();
+    entityView = nullptr;
 }
 } // namespace Voxol::Scene
