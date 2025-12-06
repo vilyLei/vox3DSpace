@@ -31,7 +31,7 @@ void ActionSystem::update(){
     if (aimEtView)
     {
         static float alphaTime = 0;
-        alphaTime += 0.02;
+        alphaTime += 0.01;
         aimEtView->colorAlpha(0.3f + 0.7f * std::abs(std::cos(alphaTime)));
         aimEtView->rotation(aimEtView->rotation() + 0.05f);
     }
