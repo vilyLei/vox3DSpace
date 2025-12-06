@@ -51,7 +51,7 @@ struct Vec2
     void operator-=(const Vec2& v) noexcept { *this = *this - v; }
     void operator*=(float s) noexcept { *this = *this * s; }
     void operator/=(float s) noexcept { *this = *this / s; }
-    void operator*=(const Vec2& v) noexcept { *this = *this * v; } // element-wise multiply
+    void operator*=(const Vec2& v) noexcept { *this = *this * v; }
 
     float lengthSquared() const noexcept { return Dot(*this, *this); }
     float length() const noexcept { return std::sqrt(lengthSquared()); }

@@ -63,7 +63,7 @@ struct Pos
 
 union Rect
 {
-    int32_t data[4]{};
+    int32_t data[4];
 
     struct
     {
@@ -81,8 +81,12 @@ union Rect
         int32_t maxY;
     };
 
-    Rect() = default;
-    Rect(int32_t minC, int32_t minR, int32_t maxC, int32_t maxR);
+    constexpr Rect() noexcept :
+        data{}
+        {};
+    constexpr Rect(int32_t minC_, int32_t minR_, int32_t maxC_, int32_t maxR_) noexcept :
+        minC(minC_), minR(minR_), maxC(maxC_), maxR(maxR_)
+    {}
 
     [[nodiscard]] int32_t width() const noexcept;
     [[nodiscard]] int32_t height() const noexcept;
@@ -98,10 +102,10 @@ union Rect
 
     [[nodiscard]] Rect unionWith(const Rect& other) const noexcept;
 
-    [[nodiscard]] inline bool isEqual(const Rect& other) const noexcept {
+    [[nodiscard]] bool isEqual(const Rect& other) const noexcept {
         return other.minX == minX && other.minY == minY && other.maxX == maxX && other.maxY == maxY;
     }
-    [[nodiscard]] inline bool isNotEqual(const Rect& other) const noexcept {
+    [[nodiscard]] bool isNotEqual(const Rect& other) const noexcept {
         return other.minX != minX || other.minY != minY || other.maxX != maxX || other.maxY != maxY;
     }
 };
