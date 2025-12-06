@@ -77,7 +77,8 @@ void EntityMotionObjectStorage::update()
             {
                 //printf("........... hit ....fdfd\n");
                 foodStorage->setObject(obj->entityView->etProtoId(), nullptr);
-                addObject(obj);
+                //addObject(obj);
+                addObjectToFront(obj);
             }
 
         }
