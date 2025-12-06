@@ -584,15 +584,15 @@ void DrawingUnit::draw()
                 glEnable(GL_BLEND);
                 glBlendFunc(GL_SRC_COLOR, GL_ONE);
                 break;
-            case 27:
+            case DrawingBlendMode::Overlay:
                 glEnable(GL_BLEND);
                 glBlendFunc(GL_DST_COLOR, GL_DST_ALPHA);
                 break;
-            case 28:
+            case DrawingBlendMode::Overlay2:
                 glEnable(GL_BLEND);
                 glBlendFunc(GL_DST_COLOR, GL_SRC_ALPHA);
                 break;
-            case 20:
+            case DrawingBlendMode::None:
                 glDisable(GL_BLEND);
                 break;
             default:
@@ -756,7 +756,7 @@ void buildSDFDrawUnit(DrawingUnit& unit, Voass::Render::Shader::SDFShapeType typ
     if (clip)
     {
         unit.colorClip = true;
-        unit.drawState.blendMode(2);
+        unit.drawState.blendMode(DrawingBlendMode::PreMultiAlpha);
     }
 
     auto& shader = unit.shader;
@@ -783,7 +783,7 @@ void buildSDFDrawUnitWithName(DrawingUnit& unit, const std::string& name, bool c
     if (clip)
     {
         unit.colorClip = true;
-        unit.drawState.blendMode(2);
+        unit.drawState.blendMode(DrawingBlendMode::PreMultiAlpha);
     }
 
     auto& shader = unit.shader;
