@@ -23,7 +23,6 @@ void ActionSystem::updateAction(const Scene::Component::UnitLocation& location){
 }
 void ActionSystem::update(){
 
-    //aim-cross-sprite
     if (!aimEtView)
     {
         aimEtView = Scene::EntityView::make();
@@ -32,8 +31,6 @@ void ActionSystem::update(){
     if (aimEtView)
     {
         static float alphaTime = 0;
-        //auto&& key = Base::ID::KeyUint64::make(aimEtView->etProtoId());
-        //entityDirtyCall(0, key);
         alphaTime += 0.02;
         aimEtView->colorAlpha(0.3f + 0.7f * std::abs(std::cos(alphaTime)));
         aimEtView->rotation(aimEtView->rotation() + 0.05f);
@@ -47,9 +44,6 @@ void ActionSystem::update(){
     auto total = objs.size();
     if (total > 0)
     {
-
-        auto&& key = Base::ID::KeyUint64::make(objs[0]->etProtoId());
-        //entityDirtyCall(0, key);
         if (!positions.empty())
         {
             objs[0]->targetPos = positions[0];
@@ -65,7 +59,6 @@ void ActionSystem::update(){
             auto dv = pv1 - pv0;
 
             auto&& key = Base::ID::KeyUint64::make(objs[i]->etProtoId());
-            //entityDirtyCall(0, key);
             auto etView = objs[i]->entityView;
             etView->globalPos(pv0);
             etView->rotation(dv.radian());
@@ -74,7 +67,7 @@ void ActionSystem::update(){
     }
     positions.clear();
 
-    auto& dirtyEndMap = compStorage->dirtyEndMap;
+    auto& dirtyEndMap = compStorage->dirtyEntityMap;
     if (!dirtyEndMap.empty())
     {
         for (auto& item : dirtyEndMap)
