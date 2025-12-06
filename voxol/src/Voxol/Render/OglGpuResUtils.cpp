@@ -537,6 +537,8 @@ void DrawingUnit::draw()
 
     bindGPU();
 
+    auto blendMode = drawState.blendMode();
+
     if (blendMode < 20)
     {
         glEnable(GL_BLEND);
@@ -596,12 +598,6 @@ void DrawingUnit::draw()
             default:
                 break;
         }
-        /**
-        
-                rbm.BLAZE = rso.CreateBlendMode("BLAZE", gbm.SRC_COLOR, gbm.ONE, gbe.FUNC_ADD);
-                rbm.OVERLAY = rso.CreateBlendMode("OVERLAY", gbm.DST_COLOR, gbm.DST_ALPHA, gbe.FUNC_ADD);
-                rbm.OVERLAY2 = rso.CreateBlendMode("OVERLAY2", gbm.DST_COLOR, gbm.SRC_ALPHA, gbe.FUNC_ADD);
-        */
     }
 
     mvp.append(objMat);
@@ -760,7 +756,7 @@ void buildSDFDrawUnit(DrawingUnit& unit, Voass::Render::Shader::SDFShapeType typ
     if (clip)
     {
         unit.colorClip = true;
-        unit.blendMode = 2;
+        unit.drawState.blendMode(2);
     }
 
     auto& shader = unit.shader;
@@ -787,7 +783,7 @@ void buildSDFDrawUnitWithName(DrawingUnit& unit, const std::string& name, bool c
     if (clip)
     {
         unit.colorClip = true;
-        unit.blendMode = 2;
+        unit.drawState.blendMode(2);
     }
 
     auto& shader = unit.shader;

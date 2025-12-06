@@ -161,7 +161,8 @@ bool EntityRenderSystem::drawUnitEffect(const Draw::DrawContext& rctx, const Bas
     svM.setScaleXY(trans.sx, trans.sy);
     svM.prepend(wM);
 
-    drawUnit.blendMode = 1;
+    drawUnit.drawState = shdDesc.drawState;
+
     drawUnit.setColor(shdData.color);
     drawUnit.objMat = wM;
     drawUnit.mvp    = vpM;
@@ -197,6 +198,7 @@ bool EntityRenderSystem::drawUnit(const Draw::DrawContext& rctx, const Scene::Co
     if (!wbounds.intersects(vb))
         return false;
 
+    //auto blendMode = shdDesc.drawState.blendMode();
 
     if (model.type == Scene::Component::UnitModelType::Text)
     {
@@ -218,7 +220,7 @@ bool EntityRenderSystem::drawUnit(const Draw::DrawContext& rctx, const Scene::Co
                 objM.prepend(wM);
 
                 unit.objMat    = objM;
-                unit.blendMode = 1;
+                unit.drawState = shdDesc.drawState;
                 unit.setColor(shdDesc.color);
 
                 unit.mvp    = vpM;
@@ -260,7 +262,7 @@ bool EntityRenderSystem::drawUnit(const Draw::DrawContext& rctx, const Scene::Co
     //printf(c"xxx xxx trans(x=%f, y=%f)\n", trans.x, trans.y);
 
     auto tempColor     = shdDesc.color;
-    drawUnit.blendMode = 1;
+    drawUnit.drawState = shdDesc.drawState;
     if (model.isImageType() && compStorage->textureMap.contains(etId))
     {
         //drawUnit.blendMode = 25;
