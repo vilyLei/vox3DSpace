@@ -8,22 +8,6 @@
 namespace Voxol::Render::Gpu
 {
     /*
-    case 21:
-                glEnable(GL_BLEND);
-                glBlendFunc(GL_ONE, GL_ZERO);
-                break;
-            case 22:
-                glEnable(GL_BLEND);
-                glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-                break;
-            case 23:
-                glEnable(GL_BLEND);
-                glBlendFunc(GL_SRC_ALPHA, GL_ONE);
-                break;
-            case 24:
-                glEnable(GL_BLEND);
-                glBlendFunc(GL_ONE, GL_ONE);
-                break;
             case 25:
                 glEnable(GL_BLEND);
                 glBlendFunc(GL_ONE, GL_SRC_ALPHA);
@@ -32,13 +16,9 @@ namespace Voxol::Render::Gpu
                 glEnable(GL_BLEND);
                 glBlendFunc(GL_SRC_COLOR, GL_ONE);
                 break;
-            case 20:
-                glDisable(GL_BLEND);
     */
 struct DrawingBlendMode
 {
-    // glBlendFunc(GL_ONE, GL_ZERO);
-    static constexpr uint8_t Opaque = 1;
     // glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
     static constexpr uint8_t PreMultiAlpha = 2;
     // glBlendFuncSeparate(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA,GL_ONE,GL_ONE_MINUS_SRC_ALPHA);
@@ -48,9 +28,17 @@ struct DrawingBlendMode
 
     // glDisable(GL_BLEND);
     static constexpr uint8_t None = 20;
+    // glBlendFunc(GL_ONE, GL_ZERO);
+    static constexpr uint8_t Opaque = 21;
 
     // glBlendFunc(GL_ONE, GL_ONE);
-    static constexpr uint8_t Add = 24;
+    static constexpr uint8_t Add = 22;
+    // glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+    static constexpr uint8_t AlphaAdd = 23;
+    // glBlendFunc(GL_ONE, GL_SRC_ALPHA);
+    static constexpr uint8_t AlphaAdd2 = 24;
+    // glBlendFunc(GL_SRC_COLOR, GL_ONE);
+    static constexpr uint8_t ColorAdd = 25;
 
     // glBlendFunc(GL_DST_COLOR, GL_DST_ALPHA);
     static constexpr uint8_t Overlay = 27;

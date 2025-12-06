@@ -30,7 +30,7 @@
                     "style": {
                         "fill-color": "0xff338888",
                         "image-url": "spot_01.png",
-                        "blend-mode" : "overlay",
+                        "blend-mode" : "alpha-add",
                         "blend-modeV" : "transparent"
                     }
                 }

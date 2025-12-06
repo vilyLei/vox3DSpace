@@ -542,27 +542,20 @@ void DrawingUnit::draw()
 
         switch (blendMode)
         {
-            case 21:
-                glEnable(GL_BLEND);
-                glBlendFunc(GL_ONE, GL_ZERO);
-                break;
-            case 22:
-                glEnable(GL_BLEND);
-                glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-                break;
-            case 23:
-                glEnable(GL_BLEND);
-                glBlendFunc(GL_SRC_ALPHA, GL_ONE);
-                break;
             case DrawingBlendMode::Add:
                 glEnable(GL_BLEND);
                 glBlendFunc(GL_ONE, GL_ONE);
                 break;
-            case 25:
+
+            case DrawingBlendMode::AlphaAdd:
+                glEnable(GL_BLEND);
+                glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+                break;
+            case DrawingBlendMode::AlphaAdd2:
                 glEnable(GL_BLEND);
                 glBlendFunc(GL_ONE, GL_SRC_ALPHA);
                 break;
-            case 26:
+            case DrawingBlendMode::ColorAdd:
                 glEnable(GL_BLEND);
                 glBlendFunc(GL_SRC_COLOR, GL_ONE);
                 break;
