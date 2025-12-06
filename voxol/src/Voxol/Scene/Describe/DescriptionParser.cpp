@@ -338,6 +338,12 @@ void FileParser::parseNodeDisplayStyle(SceneNode& node, const JsonType& jsonNode
                 Data::ColorValue cv;
                 cv.parseWithName(item, "value");
                 node.shaingDesc.color = cv.color.argb();
+                if (jNode.contains("blend-mode") && jNode["blend-mode"].is_string())
+                {
+                    auto&& blendModeStr = jNode["blend-mode"];
+                    auto&& blendMode    = Render::Gpu::DrawingBlendMode::fromString(blendModeStr);
+                    node.shaingDesc.drawState.blendMode(blendMode);
+                }
             }
             return;
         }
@@ -346,6 +352,13 @@ void FileParser::parseNodeDisplayStyle(SceneNode& node, const JsonType& jsonNode
     Data::ColorValue cv;
     cv.parse(jNode);
     node.shaingDesc.color = cv.color.argb();
+    if (jNode.contains("blend-mode") && jNode["blend-mode"].is_string())
+    {
+        auto&& blendModeStr = jNode["blend-mode"];
+        auto&& blendMode = Render::Gpu::DrawingBlendMode::fromString(blendModeStr);
+        node.shaingDesc.drawState.blendMode(blendMode);
+    }
+
     if (jNode.contains("image-url") && jNode["image-url"].is_string())
     {
         node.imageUrl = jNode["image-url"];

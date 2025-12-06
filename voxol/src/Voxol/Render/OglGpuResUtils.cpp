@@ -554,7 +554,7 @@ void DrawingUnit::draw()
                 glEnable(GL_BLEND);
                 glBlendFunc(GL_SRC_ALPHA, GL_ONE);
                 break;
-            case 24:
+            case DrawingBlendMode::Add:
                 glEnable(GL_BLEND);
                 glBlendFunc(GL_ONE, GL_ONE);
                 break;
@@ -574,9 +574,18 @@ void DrawingUnit::draw()
                 glEnable(GL_BLEND);
                 glBlendFunc(GL_DST_COLOR, GL_SRC_ALPHA);
                 break;
+
+            case DrawingBlendMode::Opaque:
+                glEnable(GL_BLEND);
+                glBlendFunc(GL_ONE, GL_ZERO);
+                break;
             case DrawingBlendMode::Transparent:
                 glEnable(GL_BLEND);
                 glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+                break;
+            case DrawingBlendMode::Alpha:
+                glEnable(GL_BLEND);
+                glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
                 break;
             case DrawingBlendMode::PreMultiAlpha:
                 glEnable(GL_BLEND);

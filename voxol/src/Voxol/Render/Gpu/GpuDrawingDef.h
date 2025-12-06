@@ -37,18 +37,27 @@ namespace Voxol::Render::Gpu
     */
 struct DrawingBlendMode
 {
+    // glBlendFunc(GL_ONE, GL_ZERO);
+    static constexpr uint8_t Opaque = 1;
     // glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
     static constexpr uint8_t PreMultiAlpha = 2;
     // glBlendFuncSeparate(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA,GL_ONE,GL_ONE_MINUS_SRC_ALPHA);
     static constexpr uint8_t Transparent = 3;
+    // glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    static constexpr uint8_t Alpha = 4;
 
     // glDisable(GL_BLEND);
     static constexpr uint8_t None = 20;
+
+    // glBlendFunc(GL_ONE, GL_ONE);
+    static constexpr uint8_t Add = 24;
 
     // glBlendFunc(GL_DST_COLOR, GL_DST_ALPHA);
     static constexpr uint8_t Overlay = 27;
     // glBlendFunc(GL_DST_COLOR, GL_SRC_ALPHA);
     static constexpr uint8_t Overlay2 = 28;
+
+    static uint8_t fromString(const std::string& name);
 };
 struct GPUDrawingState
 {
