@@ -41,17 +41,24 @@ void ActionSystem::update(){
         objs.emplace_back(obj);
         return true;
     });
-    auto total = objs.size();
-    if (total > 0)
+
+    auto& mainObj = motionObjStorage->mainObject;
+
+    if (mainObj)
     {
+        mainObj->update();
         if (!positions.empty())
         {
-            objs[0]->targetPos = positions[0];
+            mainObj->targetPos = positions[0];
         }
-        objs[0]->update();
-        objs[0]->applyPoints([&](int index, const Math::Vec2& pv0, const Math::Vec2& pv1) -> bool {
+    }
 
-            auto i = index + 1;
+    auto total = objs.size();
+    if (mainObj && total > 0)
+    {
+        mainObj->applyPoints([&](int index, const Math::Vec2& pv0, const Math::Vec2& pv1) -> bool {
+
+            auto i = index;
             if (i >= total)
             {
                 return false;

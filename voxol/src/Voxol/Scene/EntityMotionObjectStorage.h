@@ -19,6 +19,8 @@ public:
     ~EntityMotionObjectStorage() = default;
 
 public:
+    EntityMotionObject::SP mainObject;
+
 public:
     void initialize();
     void addObject(const EntityMotionObject::SP& obj);

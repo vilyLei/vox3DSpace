@@ -178,7 +178,14 @@ void EntitySceneSystem::createEntities(int total)
             motionObj->entityView->color(color);
 
             color.r(color.r() + 10);
-            motionObjStorage->addObject(motionObj);
+            if (motionObjStorage->mainObject)
+            {
+                motionObjStorage->addObject(motionObj);
+            }
+            else
+            {
+                motionObjStorage->mainObject = motionObj;
+            }
         }
         bvh->build();
     }
