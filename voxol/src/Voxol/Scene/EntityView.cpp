@@ -41,7 +41,7 @@ bool EntityView::isInvalid() const
 void EntityView::color(const Colour::Component::Color& c)
 {
     compStorage->setEntityColorAt(c, targetEtProtoId);
-    compStorage->dirtyIdMap[targetEtProtoId] = true;
+    compStorage->dirtyEndMap[targetEtProtoId] = true;
 }
 Colour::Component::Color EntityView::color() const
 {
@@ -53,7 +53,7 @@ void EntityView::colorAlpha(float alpha)
     auto c = compStorage->getEntityColorAt(targetEtProtoId);
     c.normaplizedAlpha(alpha);
     compStorage->setEntityColorAt(c, targetEtProtoId);
-    compStorage->dirtyIdMap[targetEtProtoId] = true;
+    compStorage->dirtyEndMap[targetEtProtoId] = true;
 }
 float EntityView::colorAlpha() const
 {
@@ -64,7 +64,7 @@ float EntityView::colorAlpha() const
 void EntityView::globalPos(const Math::Vec2& pos)
 {
     compStorage->setEntityGlobalXYAt(pos, targetEtProtoId);
-    compStorage->dirtyIdMap[targetEtProtoId] = true;
+    compStorage->dirtyEndMap[targetEtProtoId] = true;
 }
 Math::Vec2 EntityView::globalPos() const
 {
@@ -74,7 +74,7 @@ Math::Vec2 EntityView::globalPos() const
 void EntityView::localPos(const Math::Vec2& pos)
 {
     compStorage->setEntityLocalXYAt(pos, targetEtProtoId);
-    compStorage->dirtyIdMap[targetEtProtoId] = true;
+    compStorage->dirtyEndMap[targetEtProtoId] = true;
 }
 Math::Vec2 EntityView::localPos() const
 {
@@ -84,7 +84,7 @@ Math::Vec2 EntityView::localPos() const
 void EntityView::rotation(float rad)
 {
     compStorage->setEntityRotationAt(rad, targetEtProtoId);
-    compStorage->dirtyIdMap[targetEtProtoId] = true;
+    compStorage->dirtyEndMap[targetEtProtoId] = true;
 }
 float EntityView::rotation() const
 {
@@ -94,7 +94,7 @@ float EntityView::rotation() const
 void EntityView::rotationDeegree(float degree)
 {
     compStorage->setEntityRotationAt(degree * MATH_PI_OVER_180, targetEtProtoId);
-    compStorage->dirtyIdMap[targetEtProtoId] = true;
+    compStorage->dirtyEndMap[targetEtProtoId] = true;
 }
 float EntityView::rotationDeegree() const
 {
@@ -104,7 +104,7 @@ float EntityView::rotationDeegree() const
 void EntityView::visible(bool b)
 {
     compStorage->setEntityVisibleAt(targetEtProtoId, targetEtProtoId);
-    compStorage->dirtyIdMap[targetEtProtoId] = true;
+    compStorage->dirtyEndMap[targetEtProtoId] = true;
 }
 bool EntityView::visible() const
 {

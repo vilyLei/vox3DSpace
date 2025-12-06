@@ -74,15 +74,15 @@ void ActionSystem::update(){
     }
     positions.clear();
 
-    auto& dirtyMap = compStorage->dirtyIdMap;
-    if (!dirtyMap.empty())
+    auto& dirtyEndMap = compStorage->dirtyEndMap;
+    if (!dirtyEndMap.empty())
     {
-        for (auto& item : dirtyMap)
+        for (auto& item : dirtyEndMap)
         {
             auto&& key = Base::ID::KeyUint64::make(item.first);
             entityDirtyCall(1, key);
         }
-        dirtyMap.clear();
+        dirtyEndMap.clear();
     }
 }
 

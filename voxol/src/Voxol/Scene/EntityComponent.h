@@ -69,12 +69,17 @@ struct UnitLocation
     Math::Vec2 global;
 };
 
+struct UnitDirtyDesc
+{
+    Base::ID::KeyUint64 key;
+    Math::Bounds globalBounds;
+};
+
 struct UnitShadingDesc
 {
     Colour::Component::Color     color;
     Render::Gpu::GPUDrawingState drawState;
     uint32_t flags = 0x0;
-    //Colour::Component::Color     cc;
 };
 
 struct UnitShadingEntity
