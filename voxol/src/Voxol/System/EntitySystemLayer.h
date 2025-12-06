@@ -33,6 +33,7 @@ public:
     void updateKeyboardParams(int key, int scancode, int action, int mods);
     void updateMouseParams(const System::Mouse::MouseInputParam& param);
 
+    void updateTileWithBVHBoundsAndEntityId(const Base::ID::KeyUint64& eId, int type);
     void updateTileWithEntityId(const Base::ID::KeyUint64& eId);
     void updateBVHAndTileWithEntityId(const Base::ID::KeyUint64& eId);
 

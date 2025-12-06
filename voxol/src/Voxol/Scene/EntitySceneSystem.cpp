@@ -141,7 +141,7 @@ void EntitySceneSystem::initalize(const std::string& configFileName)
         }
     }
 
-    //createEntities(15);
+    createEntities(15);
 }
 
 void EntitySceneSystem::createEntities(int total)
@@ -210,4 +210,5 @@ void EntitySceneSystem::updateBoundsWithEntityId(uint32_t eId, EntityBoundsRespo
 {
     entityStorage->comp->foreachBoundsWithEntityId(eId, callback);
 }
+
 } // namespace Voxol::Scene

@@ -8,14 +8,74 @@ EntitySystemLayer::SP EntitySystemLayer::make()
     return sp;
 }
 
+void EntitySystemLayer::updateTileWithBVHBoundsAndEntityId(const Base::ID::KeyUint64& eId, int type)
+{
+
+    if (eId.isIDInvalid())
+        return;
+
+    auto& compStorage         = etSceneSys->entityStorage->comp;
+
+    auto upateEffectBoundsData = [&, this](const Base::ID::KeyUint64& key, int type) {
+        auto protoId = key.protoId();
+        if (compStorage->entitiesPool.isInvalid(protoId)) { return; }
+
+        auto&& et = compStorage->entitiesPool[protoId];
+        if (Base::ID::isInvalidID(et.shadingId)) { return; }
+
+        auto&& shadingEt = compStorage->shaderingEntitiesPool[et.shadingId];
+        if (compStorage->entitiesPool.isInvalid(shadingEt.shadingDescId)) { return; }
+
+        auto&& desc = compStorage->shaderingDescPool[shadingEt.shadingDescId];
+        if (desc.flags == 0) { return; }
+        auto&& efs = compStorage->shadingShadowIdMap[shadingEt.shadingDescId];
+
+        //auto&& wmat = compStorage->getEntityGlobalMat33At(key);
+
+        //Math::Bounds vb;
+        for (auto& ef : efs)
+        {
+            //auto&& shdData = compStorage->effectShadowMap[ef];
+            //auto   wm      = wmat;
+            //wm.offsetXY(shdData.offset);
+            //srcBounds.mat33MapTo(wm, vb);
+
+            auto&& efKey = Base::ID::KeyUint64::makeWithEffectShadow(key, ef);
+            auto&& bounds = etSceneSys->bvh->getBoundsAt(efKey);
+            //callback(key, vb);
+            tileSys->addDirtyBounds(bounds, type);
+        }
+    };
+
+    //Math::Bounds vb;
+
+    std::vector<Base::ID::KeyUint64> ids{};
+    compStorage->collectAllEntities(eId, ids);
+    for (auto pid : ids)
+    {
+        if (pid.flags() > 0)
+            continue;
+
+        //auto&& srcBounds = compStorage->getEntityLocalBoundsAt(pid);
+        //auto   wm        = compStorage->getEntityGlobalMat33At(pid);
+        upateEffectBoundsData(pid, type);
+        //srcBounds.mat33MapTo(wm, vb);
+        //callback(pid, vb);
+
+        auto&& bounds = etSceneSys->bvh->getBoundsAt(pid);
+        //callback(key, vb);
+        tileSys->addDirtyBounds(bounds, type);
+    }
+}
 void EntitySystemLayer::updateTileWithEntityId(const Base::ID::KeyUint64& eId)
 {
     if (eId.isIDInvalid())
         return;
 
-    etSceneSys->updateBoundsWithEntityId(eId.protoId(), [this](const Base::ID::KeyUint64& etId, const Math::Bounds& bounds) {
-        tileSys->addDirtyBounds(bounds, 0);
-    });
+    //etSceneSys->updateBoundsWithEntityId(eId.protoId(), [this](const Base::ID::KeyUint64& etId, const Math::Bounds& bounds) {
+    //    tileSys->addDirtyBounds(bounds, 0);
+    //});
+    updateTileWithBVHBoundsAndEntityId(eId, 0);
 }
 void EntitySystemLayer::updateBVHAndTileWithEntityId(const Base::ID::KeyUint64& eId)
 {
