@@ -61,8 +61,8 @@
                         "fill-color": "0xff338888",
                         "image-urlP": "spot_02.png",
                         "blend-modeY" : "alpha-add2",
-                        "blend-modeP" : "transparent",
-                        "blend-mode" : "premultiplied-alpha"
+                        "blend-mode" : "transparent",
+                        "blend-modeT" : "premultiplied-alpha"
                     }
                 }
             },

@@ -16,13 +16,22 @@ namespace Voxol::Math
 class SimpleRandom
 {
 private:
-    static std::mt19937_64& get_engine()
+    static std::mt19937_64& get_engineBase()
     {
         static thread_local std::mt19937_64 engine = []() {
             auto seed = std::chrono::high_resolution_clock::now().time_since_epoch().count();
             return std::mt19937_64(static_cast<uint64_t>(seed));
         }();
         return engine;
+    }
+    static std::mt19937_64& get_engine()
+    {
+        static thread_local std::mt19937_64 eng = []() {
+            std::random_device rd;
+            auto               time_seed = std::chrono::steady_clock::now().time_since_epoch().count();
+            return std::mt19937_64(rd() ^ static_cast<uint64_t>(time_seed));
+        }();
+        return eng;
     }
 
 public:
@@ -31,6 +40,21 @@ public:
     {
         std::uniform_real_distribution<float> dist(0.0f, 1.0f);
         return dist(get_engine());
+    }
+    static std::array<float, 2> get_float2()
+    {
+        std::uniform_real_distribution<float> dist(0.0f, 1.0f);
+        return {dist(get_engine()), dist(get_engine())};
+    }
+    static std::array<float, 3> get_float3()
+    {
+        std::uniform_real_distribution<float> dist(0.0f, 1.0f);
+        return {dist(get_engine()), dist(get_engine()), dist(get_engine())};
+    }
+    static std::array<float, 4> get_float4()
+    {
+        std::uniform_real_distribution<float> dist(0.0f, 1.0f);
+        return {dist(get_engine()), dist(get_engine()), dist(get_engine()), dist(get_engine())};
     }
 
     static double get_double()

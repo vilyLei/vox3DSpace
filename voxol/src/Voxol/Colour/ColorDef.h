@@ -92,21 +92,21 @@ struct Color
         vf     = vf > 0 ? vf : 0;
         vf     = vf < 1 ? vf : 1;
         auto v = static_cast<uint32_t>(vf * 255);
-        value  = (value & 0x00FFFFFF) | (v << 16);
+        value  = (value & 0xFF00FFFF) | (v << 16);
     }
     constexpr void normaplizedGreen(float vf) noexcept
     {
         vf     = vf > 0 ? vf : 0;
         vf     = vf < 1 ? vf : 1;
         auto v = static_cast<uint32_t>(vf * 255);
-        value  = (value & 0x00FFFFFF) | (v << 8);
+        value  = (value & 0xFFFF00FF) | (v << 8);
     }
     constexpr void normaplizedBlue(float vf) noexcept
     {
         vf     = vf > 0 ? vf : 0;
         vf     = vf < 1 ? vf : 1;
         auto v = static_cast<uint32_t>(vf * 255);
-        value  = (value & 0x00FFFFFF) | v;
+        value  = (value & 0xFFFFFF00) | v;
     }
 
     constexpr float normaplizedAlpha() noexcept

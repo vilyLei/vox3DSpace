@@ -243,14 +243,23 @@ EntityMotionObjectStorage::SP EntitySceneSystem::createFoodEntities(int total, c
         bvh->addItem(key, vb);
         auto motionObj = EntityMotionObject::make();
         motionObj->initialize(id, compStorage);
+
+        auto float3 = Math::SimpleRandom::get_float3();
+        color.normaplizedRed(float3[0] * 0.7f + 0.3f);
+        color.normaplizedGreen(float3[1] * 0.7f + 0.3f);
+        color.normaplizedBlue(float3[2] * 0.7f + 0.3f);
+        //color.normaplizedRed(0.3f);
+        //color.normaplizedGreen(0.3f);
+        //color.normaplizedBlue(0.3f);
+
         motionObj->entityView->color(color);
         motionObj->entityView->visible(true);
 
         //color.r(color.r() + 10);
 
-        color.r(color.r() + dc.r());
-        color.g(color.g() + dc.g());
-        color.b(color.b() + dc.b());
+        //color.r(color.r() + dc.r());
+        //color.g(color.g() + dc.g());
+        //color.b(color.b() + dc.b());
 
         motionObjStorage->addObject(motionObj);
     }
