@@ -20,6 +20,10 @@ void ActionSystem::updateAction(const Scene::Component::UnitLocation& location){
         entityDirtyCall(0, key);
         aimEtView->globalPos(location.global);
     }
+    if (motionObjStorage)
+    {
+        motionObjStorage->updateAction(location);
+    }
 }
 void ActionSystem::update(){
 
@@ -36,6 +40,7 @@ void ActionSystem::update(){
         aimEtView->rotation(aimEtView->rotation() + 0.05f);
     }
 
+    /*
     std::vector<Scene::EntityMotionObject::SP> objs;
     motionObjStorage->foreachObjs([&](const Scene::EntityMotionObject::SP& obj) -> bool {
         objs.emplace_back(obj);
@@ -72,7 +77,10 @@ void ActionSystem::update(){
             return true;
         });
     }
+    //*/
     positions.clear();
+
+    motionObjStorage->update();
 
     auto& dirtyEndMap = compStorage->dirtyEntityMap;
     if (!dirtyEndMap.empty())

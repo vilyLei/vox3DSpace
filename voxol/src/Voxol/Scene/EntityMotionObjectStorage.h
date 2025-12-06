@@ -23,6 +23,7 @@ public:
 
 public:
     void initialize();
+    void updateAction(const Scene::Component::UnitLocation& location);
     void addObject(const EntityMotionObject::SP& obj);
     void update();
     void foreachObjs(FroreachObjCallbackType callback);
