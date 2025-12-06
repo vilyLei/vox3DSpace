@@ -30,24 +30,14 @@ void EntitySystemLayer::updateTileWithBVHBoundsAndEntityId(const Base::ID::KeyUi
         if (desc.flags == 0) { return; }
         auto&& efs = compStorage->shadingShadowIdMap[shadingEt.shadingDescId];
 
-        //auto&& wmat = compStorage->getEntityGlobalMat33At(key);
-
-        //Math::Bounds vb;
         for (auto& ef : efs)
         {
-            //auto&& shdData = compStorage->effectShadowMap[ef];
-            //auto   wm      = wmat;
-            //wm.offsetXY(shdData.offset);
-            //srcBounds.mat33MapTo(wm, vb);
-
             auto&& efKey = Base::ID::KeyUint64::makeWithEffectShadow(key, ef);
             auto&& bounds = etSceneSys->bvh->getBoundsAt(efKey);
-            //callback(key, vb);
             tileSys->addDirtyBounds(bounds, type);
         }
     };
 
-    //Math::Bounds vb;
 
     std::vector<Base::ID::KeyUint64> ids{};
     compStorage->collectAllEntities(eId, ids);
@@ -56,14 +46,9 @@ void EntitySystemLayer::updateTileWithBVHBoundsAndEntityId(const Base::ID::KeyUi
         if (pid.flags() > 0)
             continue;
 
-        //auto&& srcBounds = compStorage->getEntityLocalBoundsAt(pid);
-        //auto   wm        = compStorage->getEntityGlobalMat33At(pid);
         upateEffectBoundsData(pid, type);
-        //srcBounds.mat33MapTo(wm, vb);
-        //callback(pid, vb);
 
         auto&& bounds = etSceneSys->bvh->getBoundsAt(pid);
-        //callback(key, vb);
         tileSys->addDirtyBounds(bounds, type);
     }
 }
