@@ -207,11 +207,6 @@ bool EntityRenderSystem::drawUnit(const Draw::DrawContext& rctx, const Scene::Co
 
         if (!textDesc.text.empty())
         {
-            //auto pos        = wM.getXY();
-            //auto ph  = strModel.bounds.height();
-            //pos += strModel.posOffset;
-            //auto&& glyphUnits = entityStorage->getDrawUnitsFromText(textDesc.text, textDesc.fontSize, pos);
-
             auto&& glyphUnits = entityStorage->getDrawUnitsFromText(textDesc.text, textDesc.fontSize, {});
             for (auto& unit : glyphUnits)
             {
