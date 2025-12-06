@@ -39,7 +39,7 @@ constexpr Math::VxRect  defaultRect{0, 0, 1, 1};
 
 struct UnitEffectShadowDesc
 {
-    uint32_t   color = 0xff000000;
+    Colour::Component::Color color;
     Math::Vec2 offset;
     float      blurRadius = 0;
 };

@@ -23,7 +23,7 @@ void OglTestScene::initScene()
             etSysLayers[0]->initalize("scene/IR/scIR_interaction.json");
         }
 
-        boundsUnit.color = {0.0f, 0.3, 0.3f, 1.f};
+        boundsUnit.colorData = {0.0f, 0.3, 0.3f, 1.f};
         boundsUnit.vertex.toLine();
         boundsUnit.vertex.lineWidth = 5;
         Render::Gpu::buildBaseDrawUnit(boundsUnit);
@@ -35,11 +35,11 @@ void OglTestScene::initScene()
         initVoassScene();
         return;
     }
-    baseDrawUnit.color = {0.1f, 0.6, 0.3f, 1.0f};
+    baseDrawUnit.colorData = {0.1f, 0.6, 0.3f, 1.0f};
     baseDrawUnit.objMat.setTo(100, 100, 200, 80);
     Render::Gpu::buildBaseDrawUnit(baseDrawUnit);
 
-    texDrawUnit.color = {0.9f, 0.9, 0.9f, 1.0f};
+    texDrawUnit.colorData = {0.9f, 0.9, 0.9f, 1.0f};
     texDrawUnit.objMat.setTo(150, 70, 100, 220);
     Render::Gpu::buildTexDrawUnit(texDrawUnit);
 
@@ -48,7 +48,7 @@ void OglTestScene::initScene()
 
     time += 0.1f;
 
-    redFormatexDrawUnit.color = {0.2f + std::abs(std::cos(time)) * 0.5f, 0.0, 0.3f, 1.0f};
+    redFormatexDrawUnit.colorData = {0.2f + std::abs(std::cos(time)) * 0.5f, 0.0, 0.3f, 1.0f};
 
     redFormatexDrawUnit.objMat.setTo(220, 220, 70, 70);
     Render::Gpu::buildRedFormatTexDrawUnit(redFormatexDrawUnit);
@@ -60,7 +60,7 @@ void OglTestScene::initScene()
     char32_t ch         = U'жа';
     auto&&   glyData    = textBuilder.createGlyph(ch, 32);
     auto&    imgData    = glyData.image;
-    glyphDrawUnit.color = {0.0f, 0.3, 0.3f, 1.0f};
+    glyphDrawUnit.colorData = {0.0f, 0.3, 0.3f, 1.0f};
     glyphDrawUnit.objMat.setTo(360, 320, imgData.width, imgData.height);
 
     //Gpu::buildRedFormatTexDrawUnit(glyphDrawUnit, imgData);
@@ -113,7 +113,7 @@ void OglTestScene::render(const Voxol::Math::Mat33& vpMat)
         auto bvh = etSceneSys->bvh;
         auto& mouseCtrl   = uiOpLayer->mouseCtrl;
 
-        boundsUnit.color  = {0.0f, 0.3, 0.3f, 1.f};
+        boundsUnit.colorData     = {0.0f, 0.3, 0.3f, 1.f};
         auto& queriedEIds = mouseCtrl.qeIds;
         Math::Bounds bounds;
         bounds.toLimit();
@@ -132,14 +132,14 @@ void OglTestScene::render(const Voxol::Math::Mat33& vpMat)
         boundsUnit.draw();
         if (mouseCtrl.isBoundsSelection())
         {
-            boundsUnit.color            = {0.6f, 0.0, 0.6f, 1.f};
+            boundsUnit.colorData        = {0.6f, 0.0, 0.6f, 1.f};
             boundsUnit.vertex.lineWidth = 1;
             vb                          = mouseCtrl.selectionBounds;
             boundsUnit.objMat.setTo(vb.x(), vb.y(), vb.width(), vb.height());
             boundsUnit.mvp = vpMat;
             boundsUnit.draw();
 
-            boundsUnit.color            = {0.0f, 0.6, 0.6f, 1.f};
+            boundsUnit.colorData        = {0.0f, 0.6, 0.6f, 1.f};
             boundsUnit.vertex.lineWidth = 1;
             vb                          = bounds;
             boundsUnit.objMat.setTo(vb.x(), vb.y(), vb.width(), vb.height());
@@ -220,42 +220,42 @@ void OglTestScene::initVoassScene()
 
     //Gpu::DrawingUnit sdfCircleUnit{};
     bool colorClip      = false;
-    sdfCircleUnit.color = {0.9f, 0.0, 0.3f, 1.0f};
+    sdfCircleUnit.colorData = {0.9f, 0.0, 0.3f, 1.0f};
     sdfCircleUnit.objMat.setTo(100, 100, 200, 200);
     Render::Gpu::buildSDFDrawUnit(sdfCircleUnit, Shader::SDFShapeType::Circle, colorClip);
     //Gpu::buildSDFDrawUnit(sdfCircleUnit, Shader::SDFShapeType::MultiCircles);
 
-    sdfMultiCirclesUnit.color = {0.6f, 0.0, 0.3f, 1.0f};
+    sdfMultiCirclesUnit.colorData = {0.6f, 0.0, 0.3f, 1.0f};
     sdfMultiCirclesUnit.objMat.setTo(330, 100, 200, 200);
     //Gpu::buildSDFDrawUnit(sdfCircleUnit, Shader::SDFShapeType::Circle);
     Render::Gpu::buildSDFDrawUnit(sdfMultiCirclesUnit, Shader::SDFShapeType::MultiCircles, colorClip);
 
 
-    sdfSectorUnit.color = {0.6f, 0.2, 0.5f, 1.f};
+    sdfSectorUnit.colorData = {0.6f, 0.2, 0.5f, 1.f};
     sdfSectorUnit.objMat.setTo(100, 100, 200, 200);
     Render::Gpu::buildSDFDrawUnit(sdfSectorUnit, Shader::SDFShapeType::Sector, colorClip);
 
-    sdfRingUnit.color = {0.6f, 0.2f, 0.6f, 0.5f};
+    sdfRingUnit.colorData = {0.6f, 0.2f, 0.6f, 0.5f};
     sdfRingUnit.objMat.setTo(100, 100, 200, 200);
     Render::Gpu::buildSDFDrawUnit(sdfRingUnit, Shader::SDFShapeType::Ring, colorClip);
 
-    sdfRoundedRectUnit.color = {0.5f, 0.6, 0.3f, 1.f};
+    sdfRoundedRectUnit.colorData = {0.5f, 0.6, 0.3f, 1.f};
     sdfRoundedRectUnit.objMat.setTo(300, 260, 200, 200);
     Render::Gpu::buildSDFDrawUnit(sdfRoundedRectUnit, Shader::SDFShapeType::RoundedRect, colorClip);
 
-    sdfTriangleUnit.color = {0.7f, 0.2, 0.2f, 1.f};
+    sdfTriangleUnit.colorData = {0.7f, 0.2, 0.2f, 1.f};
     sdfTriangleUnit.objMat.setTo(300, 350, 200, 200);
     Render::Gpu::buildSDFDrawUnit(sdfTriangleUnit, Shader::SDFShapeType::Triangle, colorClip);
 
 
-    sdfRectUnit.color = {0.1f, 0.6, 0.3f, 1.0f};
+    sdfRectUnit.colorData = {0.1f, 0.6, 0.3f, 1.0f};
     sdfRectUnit.objMat.setTo(100, 100, 200, 80);
     Render::Gpu::buildSDFDrawUnit(sdfRectUnit, Shader::SDFShapeType::Rect, colorClip);
 
     Render::Gpu::buildSDFDrawUnit(strokeShapeUnit, Shader::SDFShapeType::DefaultShape, colorClip);
 
 
-    boundsUnit.color = {0.0f, 0.3, 0.3f, 1.f};
+    boundsUnit.colorData = {0.0f, 0.3, 0.3f, 1.f};
     boundsUnit.objMat.setTo(0, 0, 150, 150);
     boundsUnit.vertex.toLine();
     boundsUnit.vertex.lineWidth = 5;
@@ -334,21 +334,21 @@ void OglTestScene::renderSdfUnits(const Voxol::Math::Mat33& vpMat)
     auto& sdfRectUnit         = sdfDrawUnits[6];
     auto& strokeShapeUnit     = sdfDrawUnits[7];
 
-    sdfCircleUnit.color = {0.9f, 0.0, 0.7f, 1.0f};
+    sdfCircleUnit.colorData = {0.9f, 0.0, 0.7f, 1.0f};
     sdfCircleUnit.mvp   = vpMat;
     sdfCircleUnit.draw();
 
-    sdfCircleUnit.color = {0.7f, 0.7, 0.7f, 1.0f};
+    sdfCircleUnit.colorData = {0.7f, 0.7, 0.7f, 1.0f};
     sdfCircleUnit.mvp   = vpMat;
     sdfCircleUnit.draw();
 
-    sdfMultiCirclesUnit.color = {0.6f, 0.0, 0.3f, 1.0f};
+    sdfMultiCirclesUnit.colorData = {0.6f, 0.0, 0.3f, 1.0f};
     sdfMultiCirclesUnit.objMat.setTo(330, 100, 200, 200);
     sdfMultiCirclesUnit.mvp = vpMat;
     sdfMultiCirclesUnit.draw();
 
     sdfMultiCirclesUnit.objMat.setTo(360, 130, 200, 200);
-    sdfMultiCirclesUnit.color = {0.0, 0.7, 0.7f, 1.0f};
+    sdfMultiCirclesUnit.colorData = {0.0, 0.7, 0.7f, 1.0f};
     sdfMultiCirclesUnit.mvp   = vpMat;
     sdfMultiCirclesUnit.draw();
 
@@ -358,18 +358,18 @@ void OglTestScene::renderSdfUnits(const Voxol::Math::Mat33& vpMat)
     sdfRingUnit.mvp = vpMat;
     sdfRingUnit.draw();
 
-    sdfRoundedRectUnit.color = {0.5f, 0.6, 0.3f, 1.f};
+    sdfRoundedRectUnit.colorData = {0.5f, 0.6, 0.3f, 1.f};
     sdfRoundedRectUnit.objMat.setTo(300, 260, 200, 200);
     sdfRoundedRectUnit.mvp = vpMat;
     sdfRoundedRectUnit.draw();
 
-    sdfRoundedRectUnit.color = {0.5f, 0.6, 0.3f, 1.f};
+    sdfRoundedRectUnit.colorData = {0.5f, 0.6, 0.3f, 1.f};
     sdfRoundedRectUnit.objMat.setTo(500, 260, 200, 200);
     sdfRoundedRectUnit.mvp = vpMat;
     sdfRoundedRectUnit.draw();
 
 
-    sdfRectUnit.color = {0.1f, 0.6, 0.3f, 1.0f};
+    sdfRectUnit.colorData = {0.1f, 0.6, 0.3f, 1.0f};
     sdfRectUnit.objMat.setTo(100, 300, 300, 30, 3.1415926f / 3);
     sdfRectUnit.mvp = vpMat;
     sdfRectUnit.draw();
@@ -378,7 +378,7 @@ void OglTestScene::renderSdfUnits(const Voxol::Math::Mat33& vpMat)
     sdfTriangleUnit.mvp = vpMat;
     sdfTriangleUnit.draw();
 
-    strokeShapeUnit.color = {0.5f, 0.3, 0.3f, 1.0f};
+    strokeShapeUnit.colorData = {0.5f, 0.3, 0.3f, 1.0f};
     strokeShapeUnit.objMat.setTo(700, 300, 100, 100);
     strokeShapeUnit.mvp = vpMat;
     strokeShapeUnit.draw();

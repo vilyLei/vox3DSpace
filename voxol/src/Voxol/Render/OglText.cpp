@@ -261,7 +261,7 @@ void OglTextField::testInit(OglTextGlyphBuilder& builder)
         float h = img.height * scale;
 
         auto& unit = mUnits[i];
-        unit.color = {0.0f, 0.7f, 0.7f, 1.0f};
+        unit.colorData = {0.0f, 0.7f, 0.7f, 1.0f};
         unit.objMat.setTo(xpos, ypos, w, h);
         Gpu::buildGlyphTexDrawUnit(unit, chData);
     }
@@ -378,7 +378,7 @@ void MSDFText::buildText(const std::string&             text,
         float pw = (glyph.planeRight - glyph.planeLeft) * scale;
         float ph = (glyph.planeTop - glyph.planeBottom) * scale;
 
-        unit.color = color;
+        unit.colorData = color;
         // pos.y is base line
         unit.objMat.setTo(pos.x + penX + x0,
                           pos.y - y1,

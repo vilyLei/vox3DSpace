@@ -546,13 +546,14 @@ void DrawingUnit::setTranslateAndScale(float tx, float ty, float sx, float sy)
 {
     objMat.setTranslateAndScale(tx, ty, sx, sy);
 }
-void DrawingUnit::setColor(uint32_t argb32)
+void DrawingUnit::setColor(const Colour::Component::Color& color)
 {
-    auto a = ((argb32 >> 24) & 0xff) / 255.0f;
-    auto r = ((argb32 >> 16) & 0xff) / 255.0f;
-    auto g = ((argb32 >> 8) & 0xff) / 255.0f;
-    auto b = (argb32 & 0xff) / 255.0f;
-    color  = {r, g, b, a};
+    //auto a = ((argb32 >> 24) & 0xff) / 255.0f;
+    //auto r = ((argb32 >> 16) & 0xff) / 255.0f;
+    //auto g = ((argb32 >> 8) & 0xff) / 255.0f;
+    //auto b = (argb32 & 0xff) / 255.0f;
+    //color  = {r, g, b, a};
+    colorData = color.toRGBABF4();
 }
 
 GLuint DrawingUnit::getTextureAt(int index) const
@@ -606,7 +607,7 @@ void DrawingUnit::draw(Gpu::GPUDrawingStateContext& drawStateCtx)
     mvp.append(objMat);
 
     glUniformMatrix3fv(shader.matrixLoc, 1, GL_FALSE, mvp.ptr());
-    glUniform4fv(shader.colorLoc, 1, color.data());
+    glUniform4fv(shader.colorLoc, 1, colorData.data());
     vertex.draw();
 }
 
@@ -629,7 +630,7 @@ void DrawingUnit::draw()
     mvp.append(objMat);
 
     glUniformMatrix3fv(shader.matrixLoc, 1, GL_FALSE, mvp.ptr());
-    glUniform4fv(shader.colorLoc, 1, color.data());
+    glUniform4fv(shader.colorLoc, 1, colorData.data());
     vertex.draw();
 }
 

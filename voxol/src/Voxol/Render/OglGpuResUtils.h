@@ -5,6 +5,7 @@
 #include "../Math/Mat33.h"
 #include "./Gpu/GpuDrawingDef.h"
 #include "SDFShaderCode.h"
+#include "../Colour/ColorDef.h"
 
 #include <iostream>
 #include <cmath>
@@ -120,7 +121,7 @@ struct DrawingUnit
     VertNode vertex{};
     ShdNode  shader{};
 
-    std::array<float, 4> color{1.0f, 1.0f, 1.0f, 1.0f};
+    std::array<float, 4> colorData{1.0f, 1.0f, 1.0f, 1.0f};
     Voxol::Math::Mat33   objMat{};
     Voxol::Math::Mat33   mvp{};
 
@@ -130,7 +131,7 @@ struct DrawingUnit
     bool   hasTexture() const;
     void   bindGPU();
     void   setTranslateAndScale(float tx, float ty, float sx = 1.0f, float sy = 1.0f);
-    void   setColor(uint32_t argb32);
+    void   setColor(const Colour::Component::Color& color);
     GLuint getTextureAt(int index) const;
     void   setTextureAt(GLuint tex, int index);
     void   draw(Gpu::GPUDrawingStateContext& drawStateCtx);
