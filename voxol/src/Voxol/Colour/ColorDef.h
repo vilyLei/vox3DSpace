@@ -62,12 +62,6 @@ struct Color
     {
         value = (value & 0x00FFFFFF) | (static_cast<uint32_t>(v) << 24);
     }
-    constexpr void a(float vf) noexcept
-    {
-        vf = vf > 0 ? vf : 0;
-        auto v = static_cast<uint32_t>(vf * 255);
-        value = (value & 0x00FFFFFF) | (v << 24);
-    }
     constexpr void r(uint8_t v) noexcept
     {
         value = (value & 0xFF00FFFF) | (static_cast<uint32_t>(v) << 16);
@@ -79,6 +73,32 @@ struct Color
     constexpr void b(uint8_t v) noexcept
     {
         value = (value & 0xFFFFFF00) | static_cast<uint32_t>(v);
+    }
+
+    
+    constexpr void a(float vf) noexcept
+    {
+        vf     = vf > 0 ? vf : 0;
+        auto v = static_cast<uint32_t>(vf * 255);
+        value  = (value & 0x00FFFFFF) | (v << 24);
+    }
+    constexpr void r(float vf) noexcept
+    {
+        vf     = vf > 0 ? vf : 0;
+        auto v = static_cast<uint32_t>(vf * 255);
+        value  = (value & 0x00FFFFFF) | (v << 16);
+    }
+    constexpr void g(float vf) noexcept
+    {
+        vf     = vf > 0 ? vf : 0;
+        auto v = static_cast<uint32_t>(vf * 255);
+        value  = (value & 0x00FFFFFF) | (v << 8);
+    }
+    constexpr void b(float vf) noexcept
+    {
+        vf     = vf > 0 ? vf : 0;
+        auto v = static_cast<uint32_t>(vf * 255);
+        value  = (value & 0x00FFFFFF) | v;
     }
 
     constexpr void setA(uint8_t a) noexcept
