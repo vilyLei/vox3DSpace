@@ -73,7 +73,7 @@ void EntityMotionObjectStorage::update()
         for (auto& obj : objs) {
             auto&& pos = obj->entityView->globalPos();
             auto   dv  = pos - currPos;
-            if (dv.lengthSquared() < 500)
+            if (dv.lengthSquared() < 600)
             {
                 //printf("........... hit ....fdfd\n");
                 foodStorage->setObject(obj->entityView->etProtoId(), nullptr);
