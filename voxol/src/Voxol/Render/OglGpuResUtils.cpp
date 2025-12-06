@@ -599,58 +599,6 @@ void DrawingUnit::draw(Gpu::GPUDrawingStateContext& drawStateCtx)
         auto blendMode = drawState.blendMode();
         if (blendMode != srcBlendMode) {
             oglUpdateBlendMode(blendMode);
-            /*
-            switch (blendMode)
-            {
-                case DrawingBlendMode::Add:
-                    glEnable(GL_BLEND);
-                    glBlendFunc(GL_ONE, GL_ONE);
-                    break;
-
-                case DrawingBlendMode::AlphaAdd:
-                    glEnable(GL_BLEND);
-                    glBlendFunc(GL_SRC_ALPHA, GL_ONE);
-                    break;
-                case DrawingBlendMode::AlphaAdd2:
-                    glEnable(GL_BLEND);
-                    glBlendFunc(GL_ONE, GL_SRC_ALPHA);
-                    break;
-                case DrawingBlendMode::ColorAdd:
-                    glEnable(GL_BLEND);
-                    glBlendFunc(GL_SRC_COLOR, GL_ONE);
-                    break;
-                case DrawingBlendMode::Overlay:
-                    glEnable(GL_BLEND);
-                    glBlendFunc(GL_DST_COLOR, GL_DST_ALPHA);
-                    break;
-                case DrawingBlendMode::Overlay2:
-                    glEnable(GL_BLEND);
-                    glBlendFunc(GL_DST_COLOR, GL_SRC_ALPHA);
-                    break;
-
-                case DrawingBlendMode::Opaque:
-                    glEnable(GL_BLEND);
-                    glBlendFunc(GL_ONE, GL_ZERO);
-                    break;
-                case DrawingBlendMode::Transparent:
-                    glEnable(GL_BLEND);
-                    glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-                    break;
-                case DrawingBlendMode::Alpha:
-                    glEnable(GL_BLEND);
-                    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-                    break;
-                case DrawingBlendMode::PreMultiAlpha:
-                    glEnable(GL_BLEND);
-                    glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-                    break;
-                case DrawingBlendMode::None:
-                    glDisable(GL_BLEND);
-                    break;
-                default:
-                    break;
-            }
-            //*/
         }
 
     }
@@ -673,64 +621,9 @@ void DrawingUnit::draw()
 
     bindGPU();
 
+    auto blendMode = drawState.blendMode();
     {
-        auto blendMode         = drawState.blendMode();
-        {
-
-            oglUpdateBlendMode(blendMode);
-            /*
-            switch (blendMode)
-            {
-                case DrawingBlendMode::Add:
-                    glEnable(GL_BLEND);
-                    glBlendFunc(GL_ONE, GL_ONE);
-                    break;
-
-                case DrawingBlendMode::AlphaAdd:
-                    glEnable(GL_BLEND);
-                    glBlendFunc(GL_SRC_ALPHA, GL_ONE);
-                    break;
-                case DrawingBlendMode::AlphaAdd2:
-                    glEnable(GL_BLEND);
-                    glBlendFunc(GL_ONE, GL_SRC_ALPHA);
-                    break;
-                case DrawingBlendMode::ColorAdd:
-                    glEnable(GL_BLEND);
-                    glBlendFunc(GL_SRC_COLOR, GL_ONE);
-                    break;
-                case DrawingBlendMode::Overlay:
-                    glEnable(GL_BLEND);
-                    glBlendFunc(GL_DST_COLOR, GL_DST_ALPHA);
-                    break;
-                case DrawingBlendMode::Overlay2:
-                    glEnable(GL_BLEND);
-                    glBlendFunc(GL_DST_COLOR, GL_SRC_ALPHA);
-                    break;
-
-                case DrawingBlendMode::Opaque:
-                    glEnable(GL_BLEND);
-                    glBlendFunc(GL_ONE, GL_ZERO);
-                    break;
-                case DrawingBlendMode::Transparent:
-                    glEnable(GL_BLEND);
-                    glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-                    break;
-                case DrawingBlendMode::Alpha:
-                    glEnable(GL_BLEND);
-                    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-                    break;
-                case DrawingBlendMode::PreMultiAlpha:
-                    glEnable(GL_BLEND);
-                    glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-                    break;
-                case DrawingBlendMode::None:
-                    glDisable(GL_BLEND);
-                    break;
-                default:
-                    break;
-            }
-            //*/
-        }
+        oglUpdateBlendMode(blendMode);
     }
 
     mvp.append(objMat);
