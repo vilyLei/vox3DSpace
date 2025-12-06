@@ -51,7 +51,7 @@ struct GPUDrawingState
 {
     uint32_t value;
     constexpr GPUDrawingState() noexcept :
-        value(0xFF000001) {}
+        value(0xFF000000 | DrawingBlendMode::Alpha) {}
     constexpr GPUDrawingState(uint8_t blendMode, uint8_t cullFace, uint8_t depthTest, uint8_t colorMask = 255) noexcept :
         value((static_cast<uint32_t>(colorMask) << 24) |
               (static_cast<uint32_t>(depthTest) << 16) |
@@ -68,7 +68,7 @@ struct GPUDrawingState
 
     constexpr void reset() noexcept
     {
-        value = 0xff000001;
+        value = 0xFF000000 | DrawingBlendMode::Alpha;
     }
 
     constexpr void colorMask(uint8_t v) noexcept
