@@ -58,6 +58,23 @@ struct Color
             (uint32_t(g()) << 8) | uint32_t(r());
     }
 
+    constexpr void a(uint8_t v) noexcept
+    {
+        value = (value & 0x00FFFFFF) | (static_cast<uint32_t>(v) << 24);
+    }
+    constexpr void r(uint8_t v) noexcept
+    {
+        value = (value & 0xFF00FFFF) | (static_cast<uint32_t>(v) << 16);
+    }
+    constexpr void g(uint8_t v) noexcept
+    {
+        value = (value & 0xFFFF00FF) | (static_cast<uint32_t>(v) << 8);
+    }
+    constexpr void b(uint8_t v) noexcept
+    {
+        value = (value & 0xFFFFFF00) | static_cast<uint32_t>(v);
+    }
+
     constexpr void setA(uint8_t a) noexcept
     {
         value = (value & 0x00FFFFFF) | (static_cast<uint32_t>(a) << 24);
