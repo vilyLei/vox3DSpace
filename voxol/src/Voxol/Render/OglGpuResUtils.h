@@ -134,6 +134,7 @@ struct DrawingUnit
     GLuint getTextureAt(int index) const;
     void   setTextureAt(GLuint tex, int index);
     void   draw(Gpu::GPUDrawingStateContext& drawStateCtx);
+    void   draw();
 };
 
 void buildBaseDrawUnit(DrawingUnit& unit);

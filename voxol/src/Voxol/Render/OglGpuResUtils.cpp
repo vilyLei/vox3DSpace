@@ -607,6 +607,81 @@ void DrawingUnit::draw(Gpu::GPUDrawingStateContext& drawStateCtx)
 }
 
 
+void DrawingUnit::draw()
+{
+    if (shader.program <= GL_ZERO)
+        return;
+
+    if (shader.textures.size() != shader.texLocs.size())
+        return;
+
+    bindGPU();
+
+    {
+        auto blendMode         = drawState.blendMode();
+        {
+
+            switch (blendMode)
+            {
+                case DrawingBlendMode::Add:
+                    glEnable(GL_BLEND);
+                    glBlendFunc(GL_ONE, GL_ONE);
+                    break;
+
+                case DrawingBlendMode::AlphaAdd:
+                    glEnable(GL_BLEND);
+                    glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+                    break;
+                case DrawingBlendMode::AlphaAdd2:
+                    glEnable(GL_BLEND);
+                    glBlendFunc(GL_ONE, GL_SRC_ALPHA);
+                    break;
+                case DrawingBlendMode::ColorAdd:
+                    glEnable(GL_BLEND);
+                    glBlendFunc(GL_SRC_COLOR, GL_ONE);
+                    break;
+                case DrawingBlendMode::Overlay:
+                    glEnable(GL_BLEND);
+                    glBlendFunc(GL_DST_COLOR, GL_DST_ALPHA);
+                    break;
+                case DrawingBlendMode::Overlay2:
+                    glEnable(GL_BLEND);
+                    glBlendFunc(GL_DST_COLOR, GL_SRC_ALPHA);
+                    break;
+
+                case DrawingBlendMode::Opaque:
+                    glEnable(GL_BLEND);
+                    glBlendFunc(GL_ONE, GL_ZERO);
+                    break;
+                case DrawingBlendMode::Transparent:
+                    glEnable(GL_BLEND);
+                    glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+                    break;
+                case DrawingBlendMode::Alpha:
+                    glEnable(GL_BLEND);
+                    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+                    break;
+                case DrawingBlendMode::PreMultiAlpha:
+                    glEnable(GL_BLEND);
+                    glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+                    break;
+                case DrawingBlendMode::None:
+                    glDisable(GL_BLEND);
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
+    mvp.append(objMat);
+
+    glUniformMatrix3fv(shader.matrixLoc, 1, GL_FALSE, mvp.ptr());
+    glUniform4fv(shader.colorLoc, 1, color.data());
+    vertex.draw();
+}
+
+
 void buildBaseDrawUnit(DrawingUnit& unit)
 {
     auto& shader     = unit.shader;
