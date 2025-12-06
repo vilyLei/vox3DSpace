@@ -207,7 +207,7 @@ void InteractionSourceSystem::execActToDsiplay(Interaction::InteractionSource& s
         {
             entity.visible = !entity.visible;
         }
-        printf("modifyDstFunc() etId: %d, actDesc: %s, color: 0x%x\n", etId, actDesc.c_str(), shdDesc.color);
+        printf("modifyDstFunc() etId: %d, actDesc: %s, color: %s\n", etId, actDesc.c_str(), shdDesc.color.toCSSString().c_str());
 
         //compStorage->foreachBoundsWithEntityId(etId, [this](const Base::ID::KeyUint64& etId, const Math::Bounds& bounds) {
         //    tileSys->addDirtyBounds(bounds, 0);

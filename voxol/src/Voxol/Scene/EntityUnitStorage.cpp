@@ -194,7 +194,7 @@ void EntityUnitStorage::initalizeFromIRFile(const std::string& fileName)
         desc.flags                  = descData.effects.empty() ? 0 : static_cast<uint32_t>(descData.effects.size());
         comp->shadingShadowIdMap[i] = descData.effects;
 
-        printf("        desc.color: %x, unit.description: %d\n", desc.color, unit.description);
+        printf("        desc.color: %s, unit.description: %d\n", desc.color.toHexString().c_str(), unit.description);
         auto&& descEt        = shaderingEntitiesPool[i];
         descEt.shadingDescId = unit.description;
     };
