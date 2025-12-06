@@ -51,7 +51,8 @@ Colour::Component::Color EntityView::color() const
 void EntityView::colorAlpha(float alpha)
 {
     auto c = compStorage->getEntityColorAt(targetEtProtoId);
-    c.setA(alpha);
+    c.a(alpha);
+    auto a = c.a();
     compStorage->setEntityColorAt(c, targetEtProtoId);
     compStorage->dirtyIdMap[targetEtProtoId] = true;
 }

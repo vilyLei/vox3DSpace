@@ -62,6 +62,12 @@ struct Color
     {
         value = (value & 0x00FFFFFF) | (static_cast<uint32_t>(v) << 24);
     }
+    constexpr void a(float vf) noexcept
+    {
+        vf = vf > 0 ? vf : 0;
+        auto v = static_cast<uint32_t>(vf * 255);
+        value = (value & 0x00FFFFFF) | (v << 24);
+    }
     constexpr void r(uint8_t v) noexcept
     {
         value = (value & 0xFF00FFFF) | (static_cast<uint32_t>(v) << 16);

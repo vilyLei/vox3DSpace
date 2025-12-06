@@ -35,7 +35,7 @@ void ActionSystem::update(){
         auto&& key = Base::ID::KeyUint64::make(aimEtView->etProtoId());
         entityDirtyCall(0, key);
         alphaTime += 0.05;
-        //aimEtView->colorAlpha(std::cos(alphaTime) * 0.5f + 0.5f);
+        aimEtView->colorAlpha(0.5f + 0.5f * std::abs(std::cos(alphaTime)));
         //aimEtView->colorAlpha(1);
         aimEtView->rotation(aimEtView->rotation() + 0.05f);
         //aimEtView->globalPos(location.global);
