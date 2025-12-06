@@ -52,7 +52,6 @@ struct UnitShadowEntity
 };
 
 
-
 struct UnitTexture
 {
     GLuint texture = GL_ZERO;

@@ -14,8 +14,32 @@ void ActionSystem::initialize() {
 void ActionSystem::updateAction(const Scene::Component::UnitLocation& location){
 
     positions.emplace_back(location.global);
+    if (aimEtView)
+    {
+        auto&& key = Base::ID::KeyUint64::make(aimEtView->etProtoId());
+        entityDirtyCall(0, key);
+        aimEtView->globalPos(location.global);
+    }
 }
 void ActionSystem::update(){
+
+    //aim-cross-sprite
+    if (!aimEtView)
+    {
+        aimEtView = Scene::EntityView::make();
+        aimEtView->initializeWithName("aim-cross-sprite", compStorage);
+    }
+    if (aimEtView)
+    {
+        static float alphaTime = 0;
+        auto&& key = Base::ID::KeyUint64::make(aimEtView->etProtoId());
+        entityDirtyCall(0, key);
+        alphaTime += 0.05;
+        //aimEtView->colorAlpha(std::cos(alphaTime) * 0.5f + 0.5f);
+        //aimEtView->colorAlpha(1);
+        aimEtView->rotation(aimEtView->rotation() + 0.05f);
+        //aimEtView->globalPos(location.global);
+    }
 
     std::vector<Scene::EntityMotionObject::SP> objs;
     motionObjStorage->foreachObjs([&](const Scene::EntityMotionObject::SP& obj) -> bool {
@@ -44,8 +68,9 @@ void ActionSystem::update(){
 
             auto&& key = Base::ID::KeyUint64::make(objs[i]->etProtoId());
             entityDirtyCall(0, key);
-            objs[i]->entityView.globalPos( pv0 );
-            objs[i]->entityView.rotation( dv.radian() );
+            auto etView = objs[i]->entityView;
+            etView->globalPos(pv0);
+            etView->rotation(dv.radian());
             return true;
         });
     }

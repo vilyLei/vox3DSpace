@@ -158,7 +158,6 @@ void EntitySceneSystem::createEntities(int total)
     Colour::Component::Color color = 0xff22aaaa;
     for (auto i = 0; i < total; i++)
     {
-        
         auto id = compStorage->copyAndppendEntityFromId(srcEtId);
         if (Base::ID::isInvalidID(id))
             continue;
@@ -177,7 +176,7 @@ void EntitySceneSystem::createEntities(int total)
             bvh->addItem(key, vb);
             auto motionObj = EntityMotionObject::make();
             motionObj->initialize(id, compStorage);
-            motionObj->entityView.color(color);
+            motionObj->entityView->color(color);
 
             color.r(color.r() + 10);
             motionObjStorage->addObject(motionObj);

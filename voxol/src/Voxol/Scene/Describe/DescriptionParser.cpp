@@ -92,10 +92,10 @@ void FileParser::buildInteraction(Intent::Interaction::InteractionSource& srcNod
     auto visible = true;
     for (auto& tarAct : tarNode.actions)
     {
-        if (!nodeNameMap.contains(tarAct.target))
+        if (!entityNameMap.contains(tarAct.target))
             continue;
 
-        auto&& ni = nodeNameMap[tarAct.target];
+        auto&& ni = entityNameMap[tarAct.target];
 
         printf("FileParser::buildInteraction(), srcActType: %s, ni.id: %d\n", srcActType.c_str(), ni.id);
         auto tarKeyId = Base::ID::KeyUint64::make(ni.id);
@@ -448,7 +448,7 @@ void FileParser::parseNodeData(SceneNode& node, const JsonType& jsonNode)
     }
 
     auto id                = node.id;
-    nodeNameMap[node.name] = {id, node.name};
+    entityNameMap[node.name] = {id, node.name};
 
     parseNodeTransData(node, jsonNode);
     auto& entity       = node.entity;

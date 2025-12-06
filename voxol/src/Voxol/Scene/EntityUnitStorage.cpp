@@ -37,6 +37,7 @@ void EntityUnitStorage::initalizeFromDescFile(const std::string& fileName)
     comp->actionIDMap       = descParser.fileParser.actionIDMap;
     comp->transformPivotMap = descParser.fileParser.transformPivotMap;
     comp->textureMap        = descParser.fileParser.textureMap;
+    comp->entityNameMap     = descParser.fileParser.entityNameMap;
 
     constexpr int poolSzie = 8192;
     total                  = poolSzie;

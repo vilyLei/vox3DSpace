@@ -183,6 +183,7 @@ public:
 
     std::unordered_map<uint32_t, Component::UnitIdName>         interactionIDMap;
     std::unordered_map<uint32_t, Component::UnitIdName>         actionIDMap;
+    std::unordered_map<std::string, Component::UnitIdName>      entityNameMap;
     std::unordered_map<uint32_t, Scene::Component::UnitTexture> textureMap;
     std::unordered_map<uint32_t, Math::Vec2>                    transformPivotMap;
     std::unordered_map<uint32_t, bool>                          dirtyIdMap;

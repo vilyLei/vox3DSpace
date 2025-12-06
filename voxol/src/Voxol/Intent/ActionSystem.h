@@ -3,6 +3,7 @@
 
 #include "IntentComponent.h"
 #include "../Scene/EntityCompStorage.h"
+#include "../Scene/EntityView.h"
 #include "../Scene/EntityMotionObjectStorage.h"
 #include <functional>
 
@@ -34,6 +35,7 @@ public:
     void update();
 
 private:
+    Scene::EntityView::SP   aimEtView;
     std::vector<Math::Vec2> positions;
 };
 

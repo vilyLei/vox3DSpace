@@ -11,8 +11,19 @@ EntityView::SP EntityView::make()
     return sp;
 }
 
+void EntityView::initializeWithName(const std::string& name, EntityCompStorage::SP comp_storage)
+{
+    if (!comp_storage || !comp_storage->entityNameMap.contains(name))
+        return;
+
+    compStorage = comp_storage;    
+    targetEtProtoId = compStorage->entityNameMap[name].id;
+}
 void EntityView::initialize(uint32_t etId, EntityCompStorage::SP comp_storage)
 {
+    if (!comp_storage)
+        return;
+
     targetEtProtoId = etId;
     compStorage     = comp_storage;
 }

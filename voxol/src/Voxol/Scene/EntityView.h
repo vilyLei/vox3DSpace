@@ -25,6 +25,7 @@ public:
 
 
 public:
+    void                     initializeWithName(const std::string& name, EntityCompStorage::SP comp_storage);
     void                     initialize(uint32_t etId, EntityCompStorage::SP comp_storage);
     bool                     isValid() const;
     bool                     isInvalid() const;
