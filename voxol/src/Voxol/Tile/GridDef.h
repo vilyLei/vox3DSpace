@@ -8,6 +8,7 @@
 #include "../Math/VxRect.h"
 #include "../Math/Vec2.h"
 #include "../Render/OglGpuResUtils.h"
+#include <format>
 
 namespace Voxol::Tile
 {
@@ -19,7 +20,7 @@ struct Pos
 {
     union
     {
-        int64_t value = 0;
+        int64_t value;
 
         struct
         {
@@ -36,17 +37,27 @@ struct Pos
         };
     };
 
-    Pos() = default;
-    Pos(int32_t r, int32_t c, int32_t level = 0) :
-        r(r), c(c), level(level) {}
+    constexpr Pos() noexcept :
+        value(0)
+        {};
+    constexpr Pos(int32_t r_, int32_t c_, int32_t level_ = 0) noexcept :
+        r(r_), c(c_), level(level_) {}
 
-    [[nodiscard]] inline bool operator==(const Pos& other) const noexcept
+    bool operator==(const Pos& other) const noexcept
     {
         return value == other.value;
     }
-    [[nodiscard]] inline bool operator!=(const Pos& other) const noexcept
+    bool operator!=(const Pos& other) const noexcept
     {
         return value != other.value;
+    }
+    std::string toStringWithRC()
+    {
+        return std::format("RC::Pos(r={}, c={}, level={})\n", static_cast<int>(r), static_cast<int>(c), static_cast<int>(level));
+    }
+    std::string toStringWithXY()
+    {
+        return std::format("RC::Pos(x={}, y={}, depth={})\n", static_cast<int>(x), static_cast<int>(y), static_cast<int>(depth));
     }
 };
 

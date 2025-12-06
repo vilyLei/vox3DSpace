@@ -247,6 +247,7 @@ void OglRenderer::render()
     }
     rctx.zoom            = view.desc.zoom;
     mScene.drawCtx.dirty = dirty;
+    //rctx.clearParam.clearColor = {0.1f,0.1f,0.1f,1};
     auto& params         = rctx.drawParam;
     if (dirty)
     {

@@ -23,7 +23,7 @@ struct Vec2
     };
     constexpr Vec2() noexcept :
         data{} {}
-    constexpr Vec2(float x_, float y_) :
+    constexpr Vec2(float x_, float y_) noexcept :
         x(x_), y(y_) {}
 
     bool operator==(const Vec2& v) const noexcept { return x == v.x && y == v.y; }
