@@ -20,9 +20,8 @@ void ActionSystem::addMotionObjStorage(const Scene::EntityMotionObjectStorage::S
     motionObjStorages.emplace_back(motionObjStorage);
 }
 
-void ActionSystem::updateAction(const Scene::Component::UnitLocation& location){
-
-    //positions.emplace_back(location.global);
+void ActionSystem::updateAction(const Scene::Component::UnitLocation& location)
+{
 
     if (aimEtView)
     {
@@ -36,7 +35,8 @@ void ActionSystem::updateAction(const Scene::Component::UnitLocation& location){
         storage->updateAction(location);
     }
 }
-void ActionSystem::update(){
+void ActionSystem::update()
+{
 
     if (!aimEtView)
     {
@@ -50,46 +50,6 @@ void ActionSystem::update(){
         aimEtView->colorAlpha(0.3f + 0.7f * std::abs(std::cos(alphaTime)));
         aimEtView->rotation(aimEtView->rotation() + 0.05f);
     }
-
-    /*
-    std::vector<Scene::EntityMotionObject::SP> objs;
-    motionObjStorage->foreachObjs([&](const Scene::EntityMotionObject::SP& obj) -> bool {
-        objs.emplace_back(obj);
-        return true;
-    });
-
-    auto& mainObj = motionObjStorage->mainObject;
-
-    if (mainObj)
-    {
-        mainObj->update();
-        if (!positions.empty())
-        {
-            mainObj->targetPos = positions[0];
-        }
-    }
-
-    auto total = objs.size();
-    if (mainObj && total > 0)
-    {
-        mainObj->applyPoints([&](int index, const Math::Vec2& pv0, const Math::Vec2& pv1) -> bool {
-
-            auto i = index;
-            if (i >= total)
-            {
-                return false;
-            }
-            auto dv = pv1 - pv0;
-
-            auto&& key = Base::ID::KeyUint64::make(objs[i]->etProtoId());
-            auto etView = objs[i]->entityView;
-            etView->globalPos(pv0);
-            etView->rotation(dv.radian());
-            return true;
-        });
-    }
-    //*/
-    //positions.clear();
 
     for (auto& storage : motionObjStorages)
     {
@@ -111,7 +71,8 @@ void ActionSystem::update(){
                 flag = 1;
                 entityDirtyCall(1, desc.key);
             }
-            else {
+            else
+            {
                 flag = 2;
             }
         }

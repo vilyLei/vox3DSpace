@@ -25,9 +25,9 @@ public:
     ~ActionSystem() = default;
 
 public:
-    Scene::EntityCompStorage::SP         compStorage;
+    Scene::EntityCompStorage::SP                      compStorage;
     std::vector<Scene::EntityMotionObjectStorage::SP> motionObjStorages;
-    Interaction::EntityDirtyCallType     entityDirtyCall;
+    Interaction::EntityDirtyCallType                  entityDirtyCall;
 
 public:
     void addMotionObjStorage(const Scene::EntityMotionObjectStorage::SP& motionObjStorage);
@@ -37,8 +37,7 @@ public:
     void update();
 
 private:
-    Scene::EntityView::SP   aimEtView;
-    //std::vector<Math::Vec2> positions;
+    Scene::EntityView::SP aimEtView;
 };
 
 

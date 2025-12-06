@@ -35,7 +35,7 @@ public:
 
 public:
     void                                   initalize(const std::string& configFileName = {});
-    void                                   createEntities(int total, const Math::Vec2& pv);
+    void                                   createEntities(int total, const Math::Vec2& pv, Colour::Component::Color color, Colour::Component::Color dc);
     void                                   update();
     int                                    drawQuery(const Math::VxRect& bounds, int phase);
     void                                   clear();

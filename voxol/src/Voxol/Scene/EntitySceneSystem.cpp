@@ -137,13 +137,18 @@ void EntitySceneSystem::initalize(const std::string& configFileName)
         }
     }
 
-
-    createEntities(15, {200, 100});
-    createEntities(8, {500, 300});
-    createEntities(11, {600, 400});
+    
+    Colour::Component::Color color = 0xff22aaaa;
+    Colour::Component::Color dc = 0xff0a0000;
+    createEntities(15, {200, 100}, color, dc);
+    dc = 0xff0a0800;
+    createEntities(8, {500, 300}, color, dc);
+    color = 0xff003355;
+    dc = 0xff00080a;
+    createEntities(11, {600, 400}, color, dc);
 }
 
-void EntitySceneSystem::createEntities(int total, const Math::Vec2& pv)
+void EntitySceneSystem::createEntities(int total, const Math::Vec2& pv, Colour::Component::Color color, Colour::Component::Color dc)
 {
     if (total < 1)
         return;
@@ -157,7 +162,6 @@ void EntitySceneSystem::createEntities(int total, const Math::Vec2& pv)
     bool                  biulding = false;
     std::vector<uint32_t> ids;
 
-    Colour::Component::Color color = 0xff22aaaa;
     for (auto i = 0; i < total; i++)
     {
         auto id = compStorage->copyAndppendEntityFromId(srcEtId);
@@ -181,7 +185,12 @@ void EntitySceneSystem::createEntities(int total, const Math::Vec2& pv)
         motionObj->initialize(id, compStorage);
         motionObj->entityView->color(color);
 
-        color.r(color.r() + 10);
+        //color.r(color.r() + 10);
+
+        color.r(color.r() + dc.r());
+        color.g(color.g() + dc.g());
+        color.b(color.b() + dc.b());
+
         if (motionObjStorage->mainObject)
         {
             motionObjStorage->addObject(motionObj);
