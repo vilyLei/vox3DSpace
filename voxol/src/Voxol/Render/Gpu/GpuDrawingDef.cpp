@@ -12,6 +12,10 @@ uint8_t DrawingBlendMode::fromString(const std::string& name)
         return DrawingBlendMode::Add;
     if (name == "opaque")
         return DrawingBlendMode::Opaque;
+    if (name == "overlay")
+        return DrawingBlendMode::Overlay;
+    if (name == "overlay2")
+        return DrawingBlendMode::Overlay2;
 
     return DrawingBlendMode::None;
 }
