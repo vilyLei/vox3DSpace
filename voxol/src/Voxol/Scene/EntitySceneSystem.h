@@ -29,19 +29,18 @@ public:
 
 public:
     Intent::InteractionSourceSystem::SP interSrcSys;
-    Intent::ActionSystem::SP             actionSys;
-    //Scene::EntityMotionObjectStorage::SP motionObjStorage;
-    EntitySysBVH::SP                    bvh = EntitySysBVH::make();
-    EntityUnitStorage::SP               entityStorage{};
+    Intent::ActionSystem::SP            actionSys;
+    EntitySysBVH::SP      bvh = EntitySysBVH::make();
+    EntityUnitStorage::SP entityStorage{};
 
 public:
-    void                             initalize(const std::string& configFileName = {});
-    void                             createEntities(int total, const EntityMotionObjectStorage::SP& storage);
-    void                             update();
-    int                              drawQuery(const Math::VxRect& bounds, int phase);
-    void                             clear();
+    void                                   initalize(const std::string& configFileName = {});
+    void                                   createEntities(int total, const Math::Vec2& pv);
+    void                                   update();
+    int                                    drawQuery(const Math::VxRect& bounds, int phase);
+    void                                   clear();
     const std::vector<Base::ID::KeyUint64> getQueriedEIds() const;
-    void                             updateBoundsWithEntityId(uint32_t eId, EntityBoundsResponseCallType callback);
+    void                                   updateBoundsWithEntityId(uint32_t eId, EntityBoundsResponseCallType callback);
 
 private:
     std::vector<Base::ID::KeyUint64> queriedEIds{};

@@ -138,18 +138,21 @@ void EntitySceneSystem::initalize(const std::string& configFileName)
     }
 
 
-    auto motionObjStorage = EntityMotionObjectStorage::make();
-    actionSys->addMotionObjStorage(motionObjStorage);
-    createEntities(15, motionObjStorage);
+    createEntities(15, {200, 100});
+    createEntities(8, {500, 300});
+    createEntities(11, {600, 400});
 }
 
-void EntitySceneSystem::createEntities(int total, const EntityMotionObjectStorage::SP& storage)
+void EntitySceneSystem::createEntities(int total, const Math::Vec2& pv)
 {
     if (total < 1)
         return;
 
+    auto pos              = pv;
+    auto motionObjStorage = EntityMotionObjectStorage::make();
+    actionSys->addMotionObjStorage(motionObjStorage);
+
     auto                  compStorage = entityStorage->comp;
-    Math::Vec2            pos{200, 100};
     uint32_t              srcEtId  = 1;
     bool                  biulding = false;
     std::vector<uint32_t> ids;
@@ -179,13 +182,13 @@ void EntitySceneSystem::createEntities(int total, const EntityMotionObjectStorag
         motionObj->entityView->color(color);
 
         color.r(color.r() + 10);
-        if (storage->mainObject)
+        if (motionObjStorage->mainObject)
         {
-            storage->addObject(motionObj);
+            motionObjStorage->addObject(motionObj);
         }
         else
         {
-            storage->mainObject = motionObj;
+            motionObjStorage->mainObject = motionObj;
         }
     }
     bvh->build();
