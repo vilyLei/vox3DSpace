@@ -30,6 +30,8 @@ public:
     bool       isInvalid() const;
     void       color(uint32_t c);
     uint32_t   color() const;
+    void       colorAlpha(float alpha);
+    float      colorAlpha() const;
     void       localPos(const Math::Vec2& pos);
     Math::Vec2 localPos() const;
     void       globalPos(const Math::Vec2& pos);

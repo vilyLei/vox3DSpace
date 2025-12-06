@@ -36,6 +36,18 @@ uint32_t EntityView::color() const
 {
     return compStorage->getEntityColorAt(targetEtProtoId);
 }
+
+void EntityView::colorAlpha(float alpha)
+{
+    //compStorage->setEntityColorAt(c, targetEtProtoId);
+    //compStorage->dirtyIdMap[targetEtProtoId] = true;
+}
+float EntityView::colorAlpha() const
+{
+    //return compStorage->getEntityColorAt(targetEtProtoId);
+    return 1.0f;
+}
+
 void EntityView::globalPos(const Math::Vec2& pos)
 {
     compStorage->setEntityGlobalXYAt(pos, targetEtProtoId);
