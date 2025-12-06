@@ -184,6 +184,7 @@ void EntitySceneSystem::createEntities(int total, const Math::Vec2& pv, Colour::
         auto motionObj = EntityMotionObject::make();
         motionObj->initialize(id, compStorage);
         motionObj->entityView->color(color);
+        motionObj->entityView->visible(true);
 
         //color.r(color.r() + 10);
 
