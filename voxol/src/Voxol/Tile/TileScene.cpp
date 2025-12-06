@@ -67,8 +67,6 @@ int TileScene::buildGridContent(Grid::Unit& unit, const Render::Draw::DrawContex
     //clearParam.clearColor = ctx.clearParam.clearColor;
     clearParam.clearColor = ctx.clearParam.clearColor;
 
-    clearParam.clearColor = {0.5f,0.7f,1.0f,1.0f};
-
     Render::Draw::FBOCtxNode fboCtx;
     fboCtx.viewMat    = viewM;
     fboCtx.projMat    = gridProjMat;
