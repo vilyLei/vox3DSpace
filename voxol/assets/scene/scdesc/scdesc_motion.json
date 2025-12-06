@@ -7,6 +7,36 @@
         "unit": "pixel"
     },
     "scene": {
+        "nodesT": [
+            {
+                "type": "label",
+                "name": "rect-01-label",
+                "transform": {
+                    "position": [
+                        350,
+                        350
+                    ],
+                    "pivot-normalized": [0.5, 0.5]
+                },
+                "visible": false,
+                "display": {
+                    "shape": {
+                        "type": "rectangle",
+                        "size": [
+                            30,
+                            30
+                        ]
+                    },
+                    "style": {
+                        "fill-color": "0xff338888",
+                        "image-urlP": "spot_02.png",
+                        "blend-modeY" : "alpha-add2",
+                        "blend-modeP" : "transparent",
+                        "blend-mode" : "premultiplied-alpha"
+                    }
+                }
+            }
+        ],
         "nodes": [
             {
                 "type": "label",
@@ -18,7 +48,7 @@
                     ],
                     "pivot-normalized": [0.5, 0.5]
                 },
-                "visible": true,
+                "visible": false,
                 "display": {
                     "shape": {
                         "type": "rectangle",

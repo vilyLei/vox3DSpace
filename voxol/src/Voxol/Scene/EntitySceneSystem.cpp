@@ -139,13 +139,13 @@ void EntitySceneSystem::initalize(const std::string& configFileName)
     }
 
     Colour::Component::Color color       = 0xff552222;
-    Colour::Component::Color dc          = 0xff0a0000;
-    auto                     foodStorage = createFoodEntities(3, {200, 200}, color, dc);
+    Colour::Component::Color dc          = 0xff0a0a00;
+    //auto                     foodStorage = createFoodEntities(8, {200, 200}, color, dc);
 
     color    = 0xff22aaaa;
     dc       = 0xff0a0000;
-    auto st0 = createEntities(2, {200, 100}, color, dc);
-    st0->foodStorage = foodStorage;
+    auto st0 = createEntities(1, {200, 100}, color, dc);
+    //st0->foodStorage = foodStorage;
     //dc                             = 0xff0a0800;
     //auto st1                       = createEntities(2, {500, 300}, color, dc);
     //color                          = 0xff003388;
@@ -236,7 +236,7 @@ EntityMotionObjectStorage::SP EntitySceneSystem::createFoodEntities(int total, c
     for (auto id : ids)
     {
         //pos += {10, 10};
-        pos = {Math::SimpleRandom::get_float() * 500 + 100, Math::SimpleRandom::get_float() * 300 + 100};
+        pos = {Math::SimpleRandom::get_float() * 900 + 100, Math::SimpleRandom::get_float() * 500 + 100};
         compStorage->setEntityGlobalXYAt(pos, id);
         auto&& key = Base::ID::KeyUint64::make(id);
         auto&& vb  = compStorage->getEntityGlobalBoundsAt(id);
