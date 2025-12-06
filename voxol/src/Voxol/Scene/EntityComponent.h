@@ -40,8 +40,8 @@ constexpr Math::VxRect  defaultRect{0, 0, 1, 1};
 struct UnitEffectShadowDesc
 {
     Colour::Component::Color color;
-    Math::Vec2 offset;
-    float      blurRadius = 0;
+    Math::Vec2               offset;
+    float                    blurRadius = 0;
 };
 
 struct UnitShadowEntity
@@ -54,7 +54,7 @@ struct UnitShadowEntity
 
 struct UnitTexture
 {
-    GLuint texture = GL_ZERO;
+    GLuint      texture = GL_ZERO;
     std::string name;
 };
 
@@ -72,14 +72,38 @@ struct UnitLocation
 struct UnitDirtyDesc
 {
     Base::ID::KeyUint64 key;
-    Math::Bounds globalBounds;
+    int32_t             flag = 0;
+    constexpr void      reset() noexcept
+    {
+        flag = 0;
+    }
+    constexpr void shadingDirty() noexcept
+    {
+        flag |= 1;
+    }
+    constexpr void boundsDirty() noexcept
+    {
+        flag |= 2;
+    }
+    constexpr bool isShadingDirty() const noexcept
+    {
+        return (flag & 1) != 0;
+    }
+    constexpr bool isBoundsDirty() const noexcept
+    {
+        return (flag & 2) != 0;
+    }
+    constexpr bool isDirty() const noexcept
+    {
+        return flag > 0;
+    }
 };
 
 struct UnitShadingDesc
 {
     Colour::Component::Color     color;
     Render::Gpu::GPUDrawingState drawState;
-    uint32_t flags = 0x0;
+    uint32_t                     flags = 0x0;
 };
 
 struct UnitShadingEntity
@@ -108,7 +132,7 @@ struct UnitTextDesc
 };
 struct UnitTextModel
 {
-    uint32_t id = Base::ID::INVALID_ID;
+    uint32_t     id = Base::ID::INVALID_ID;
     UnitTextDesc text;
     Math::Vec2   posOffset;
     Math::Bounds bounds;
@@ -119,7 +143,8 @@ struct UnitModel
     uint32_t      drawUnitId = Base::ID::INVALID_ID;
     UnitModelType type       = UnitModelType::Mesh;
 
-    constexpr bool isTextType(){
+    constexpr bool isTextType()
+    {
         return type == UnitModelType::Text;
     }
     constexpr bool isMeshType()
@@ -177,7 +202,7 @@ struct UnitEntity
 
     bool visible       = true;
     bool globalVisible = true; // derived visibility
-    bool dirty   = true;
+    bool dirty         = true;
 };
 
 

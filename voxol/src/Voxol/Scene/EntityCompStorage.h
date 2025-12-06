@@ -186,7 +186,7 @@ public:
     std::unordered_map<std::string, Component::UnitIdName>      entityNameMap;
     std::unordered_map<uint32_t, Scene::Component::UnitTexture> textureMap;
     std::unordered_map<uint32_t, Math::Vec2>                    transformPivotMap;
-    std::unordered_map<uint32_t, bool>                          dirtyEntityMap;
+    std::unordered_map<uint32_t, Component::UnitDirtyDesc>      dirtyEntityMap;
 
 private:
     std::vector<uint32_t> topoOrder;

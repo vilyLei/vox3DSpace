@@ -17,103 +17,132 @@ void EntityView::initializeWithName(const std::string& name, EntityCompStorage::
         return;
 
     compStorage = comp_storage;    
-    targetEtProtoId = compStorage->entityNameMap[name].id;
+    auto id = compStorage->entityNameMap[name].id;
+    targetKey   = Base::ID::KeyUint64::make(id);
 }
 void EntityView::initialize(uint32_t etId, EntityCompStorage::SP comp_storage)
 {
-    if (!comp_storage)
+    if (Base::ID::isInvalidID(etId) || !comp_storage)
         return;
 
-    targetEtProtoId = etId;
+    targetKey   = Base::ID::KeyUint64::make(etId);
     compStorage     = comp_storage;
+}
+
+void EntityView::initialize(const Base::ID::KeyUint64& etId, EntityCompStorage::SP comp_storage)
+{
+    if (etId.isIDInvalid() || !comp_storage)
+        return;
+
+    targetKey   = etId;
+    compStorage = comp_storage;
 }
 
 bool EntityView::isValid() const
 {
-    return Base::ID::isValidID(targetEtProtoId);
+    return targetKey.isIDValid();
 }
 
 bool EntityView::isInvalid() const
 {
-    return Base::ID::isInvalidID(targetEtProtoId);
+    return targetKey.isIDInvalid();
 }
 
 void EntityView::color(const Colour::Component::Color& c)
 {
-    compStorage->setEntityColorAt(c, targetEtProtoId);
-    compStorage->dirtyEntityMap[targetEtProtoId] = true;
+    compStorage->setEntityColorAt(c, targetKey.protoId());
+    auto&& desc = compStorage->dirtyEntityMap[targetKey.protoId()];
+    desc.key    = targetKey;
+    desc.shadingDirty();
 }
 Colour::Component::Color EntityView::color() const
 {
-    return compStorage->getEntityColorAt(targetEtProtoId);
+    return compStorage->getEntityColorAt(targetKey.protoId());
 }
 
 void EntityView::colorAlpha(float alpha)
 {
-    auto c = compStorage->getEntityColorAt(targetEtProtoId);
+    auto c = compStorage->getEntityColorAt(targetKey.protoId());
     c.normaplizedAlpha(alpha);
-    compStorage->setEntityColorAt(c, targetEtProtoId);
-    compStorage->dirtyEntityMap[targetEtProtoId] = true;
+    compStorage->setEntityColorAt(c, targetKey.protoId());
+    auto&& desc = compStorage->dirtyEntityMap[targetKey.protoId()];
+    desc.key    = targetKey;
+    desc.shadingDirty();
 }
 float EntityView::colorAlpha() const
 {
-    auto c = compStorage->getEntityColorAt(targetEtProtoId);
+    auto c = compStorage->getEntityColorAt(targetKey.protoId());
     return c.normaplizedAlpha();
 }
 
 void EntityView::globalPos(const Math::Vec2& pos)
 {
-    compStorage->setEntityGlobalXYAt(pos, targetEtProtoId);
-    compStorage->dirtyEntityMap[targetEtProtoId] = true;
+    compStorage->setEntityGlobalXYAt(pos, targetKey.protoId());
+    auto&& desc = compStorage->dirtyEntityMap[targetKey.protoId()];
+    desc.key    = targetKey;
+    desc.boundsDirty();
 }
 Math::Vec2 EntityView::globalPos() const
 {
-    return compStorage->getEntityGlobalXYAt(targetEtProtoId);
+    return compStorage->getEntityGlobalXYAt(targetKey.protoId());
 }
 
 void EntityView::localPos(const Math::Vec2& pos)
 {
-    compStorage->setEntityLocalXYAt(pos, targetEtProtoId);
-    compStorage->dirtyEntityMap[targetEtProtoId] = true;
+    compStorage->setEntityLocalXYAt(pos, targetKey.protoId());
+    auto&& desc = compStorage->dirtyEntityMap[targetKey.protoId()];
+    desc.key    = targetKey;
+    desc.boundsDirty();
 }
 Math::Vec2 EntityView::localPos() const
 {
-    return compStorage->getEntityLocalXYAt(targetEtProtoId);
+    return compStorage->getEntityLocalXYAt(targetKey.protoId());
 }
 
 void EntityView::rotation(float rad)
 {
-    compStorage->setEntityRotationAt(rad, targetEtProtoId);
-    compStorage->dirtyEntityMap[targetEtProtoId] = true;
+    compStorage->setEntityRotationAt(rad, targetKey.protoId());
+    auto&& desc = compStorage->dirtyEntityMap[targetKey.protoId()];
+    desc.key    = targetKey;
+    desc.boundsDirty();
 }
 float EntityView::rotation() const
 {
-    return compStorage->getEntityRotationAt(targetEtProtoId);
+    return compStorage->getEntityRotationAt(targetKey.protoId());
 }
 
 void EntityView::rotationDeegree(float degree)
 {
-    compStorage->setEntityRotationAt(degree * MATH_PI_OVER_180, targetEtProtoId);
-    compStorage->dirtyEntityMap[targetEtProtoId] = true;
+    compStorage->setEntityRotationAt(degree * MATH_PI_OVER_180, targetKey.protoId());
+    auto&& desc = compStorage->dirtyEntityMap[targetKey.protoId()];
+    desc.key    = targetKey;
+    desc.boundsDirty();
 }
 float EntityView::rotationDeegree() const
 {
-    return compStorage->getEntityRotationAt(targetEtProtoId) * MATH_180_OVER_PI;
+    return compStorage->getEntityRotationAt(targetKey.protoId()) * MATH_180_OVER_PI;
 }
 
 void EntityView::visible(bool b)
 {
-    compStorage->setEntityVisibleAt(targetEtProtoId, targetEtProtoId);
-    compStorage->dirtyEntityMap[targetEtProtoId] = true;
+    compStorage->setEntityVisibleAt(targetKey.protoId(), targetKey.protoId());
+    auto&& desc = compStorage->dirtyEntityMap[targetKey.protoId()];
+    desc.key    = targetKey;
+    desc.boundsDirty();
 }
 bool EntityView::visible() const
 {
-    return compStorage->getEntityVisibleAt(targetEtProtoId);
+    return compStorage->getEntityVisibleAt(targetKey.protoId());
 }
 
 uint32_t EntityView::etProtoId() const
 {
-    return targetEtProtoId;
+    return targetKey.protoId();
+}
+
+Base::ID::KeyUint64 EntityView::etKeyId() const
+{
+    return targetKey;
 }
 
 void EntityView::update()
@@ -122,7 +151,7 @@ void EntityView::update()
 
 void EntityView::destory()
 {
-    targetEtProtoId = Base::ID::INVALID_ID;
+    targetKey   = Base::ID::INVALID_KEY;
     compStorage     = nullptr;
 }
 } // namespace Voxol::Scene

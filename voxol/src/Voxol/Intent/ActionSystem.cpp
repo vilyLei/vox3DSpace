@@ -72,9 +72,11 @@ void ActionSystem::update(){
     {
         for (auto& item : dirtyEndMap)
         {
-            auto&& key = Base::ID::KeyUint64::make(item.first);
-            entityDirtyCall(0, key);
-            entityDirtyCall(1, key);
+            //auto&& key = Base::ID::KeyUint64::make(item.first);
+            auto& desc = item.second;
+
+            entityDirtyCall(0, desc.key);
+            entityDirtyCall(1, desc.key);
         }
         dirtyEndMap.clear();
     }

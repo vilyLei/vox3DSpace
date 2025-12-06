@@ -27,6 +27,8 @@ public:
 public:
     void                     initializeWithName(const std::string& name, EntityCompStorage::SP comp_storage);
     void                     initialize(uint32_t etId, EntityCompStorage::SP comp_storage);
+    void                     initialize(const Base::ID::KeyUint64& etId, EntityCompStorage::SP comp_storage);
+
     bool                     isValid() const;
     bool                     isInvalid() const;
     void                     color(const Colour::Component::Color& c);
@@ -44,13 +46,14 @@ public:
     void                     visible(bool v);
     bool                     visible() const;
 
-    uint32_t etProtoId() const;
-    void     update();
-    void     destory();
+    uint32_t            etProtoId() const;
+    Base::ID::KeyUint64 etKeyId() const;
+    void                update();
+    void                destory();
 
 private:
     EntityCompStorage::SP compStorage;
-    uint32_t              targetEtProtoId = Base::ID::INVALID_ID;
+    Base::ID::KeyUint64   targetKey = Base::ID::INVALID_KEY;
 };
 } // namespace Voxol::Scene
 #endif
