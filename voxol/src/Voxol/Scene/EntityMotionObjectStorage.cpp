@@ -108,7 +108,7 @@ void EntityMotionObjectStorage::foreachObjs(FroreachObjCallbackType callback)
 
         auto& sp = item.second;
         if (!sp)
-            break;
+            continue;
 
         auto flag = callback(sp);
         if (!flag)
