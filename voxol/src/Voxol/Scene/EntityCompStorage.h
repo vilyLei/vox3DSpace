@@ -93,6 +93,7 @@ public:
     //    auto& pool = getPool<T>();
     //    return pool.get(index);
     //}
+    uint32_t                 createEntity(uint32_t color, const Math::Vec2& size);
     uint32_t                 copyAndppendEntityFromId(uint32_t id);
     bool                     hasParentAt(uint32_t id) const;
     bool                     hasChildAt(uint32_t id) const;

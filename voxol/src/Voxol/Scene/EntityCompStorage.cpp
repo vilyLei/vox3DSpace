@@ -9,7 +9,35 @@ EntityCompStorage::SP EntityCompStorage::make()
     auto sp = std::make_shared<EntityCompStorage>();
     return sp;
 }
+uint32_t EntityCompStorage::createEntity(uint32_t color, const Math::Vec2& size)
+{
+    entityIdMax++;
 
+    uint32_t newId = entityIdMax;
+
+    auto&& shdDesc = shaderingDescPool[newId];
+    auto&& model   = modelsPool[newId];
+    model.toDrawRect();
+    shdDesc.color       = color;
+    auto&& shdEt        = shaderingEntitiesPool[newId];
+    shdEt.id            = newId;
+    shdEt.shadingDescId = newId;
+    transformsPool[newId].scale() = size;
+
+    auto&& entity    = entitiesPool[newId];
+    entity.id        = newId;
+    entity.shadingId = newId;
+    entity.transformId = newId;
+    entity.modelId     = newId;
+    entity.hierarchyId = newId;
+
+    auto&& hier     = hierarchiesPool[newId];
+    hier.parent     = Base::ID::INVALID_ID;
+    hier.firstChild = Base::ID::INVALID_ID;
+    hier.next       = Base::ID::INVALID_ID;
+
+    return newId;
+}
 uint32_t EntityCompStorage::copyAndppendEntityFromId(uint32_t id)
 {
     if (Base::ID::isInvalidID(id) || id < 1)
