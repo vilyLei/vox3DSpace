@@ -7,20 +7,11 @@
 
 namespace Voxol::Render::Gpu
 {
-/*
-            case 25:
-                glEnable(GL_BLEND);
-                glBlendFunc(GL_ONE, GL_SRC_ALPHA);
-                break;
-            case 26:
-                glEnable(GL_BLEND);
-                glBlendFunc(GL_SRC_COLOR, GL_ONE);
-                break;
-    */
+
 struct DrawingBlendMode
 {
     // glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-    static constexpr uint8_t PreMultiAlpha = 2;
+    static constexpr uint8_t PremultipliedAlpha = 2;
     // glBlendFuncSeparate(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA,GL_ONE,GL_ONE_MINUS_SRC_ALPHA);
     static constexpr uint8_t Transparent = 3;
     // glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

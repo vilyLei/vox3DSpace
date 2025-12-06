@@ -397,7 +397,7 @@ namespace Gpu
             glEnable(GL_BLEND);
             glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
             break;
-        case DrawingBlendMode::PreMultiAlpha:
+        case DrawingBlendMode::PremultipliedAlpha:
             glEnable(GL_BLEND);
             glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
             break;
@@ -783,7 +783,7 @@ void buildSDFDrawUnit(DrawingUnit& unit, Voass::Render::Shader::SDFShapeType typ
     if (clip)
     {
         unit.colorClip = true;
-        unit.drawState.blendMode(DrawingBlendMode::PreMultiAlpha);
+        unit.drawState.blendMode(DrawingBlendMode::PremultipliedAlpha);
     }
 
     auto& shader = unit.shader;
@@ -810,7 +810,7 @@ void buildSDFDrawUnitWithName(DrawingUnit& unit, const std::string& name, bool c
     if (clip)
     {
         unit.colorClip = true;
-        unit.drawState.blendMode(DrawingBlendMode::PreMultiAlpha);
+        unit.drawState.blendMode(DrawingBlendMode::PremultipliedAlpha);
     }
 
     auto& shader = unit.shader;

@@ -27,6 +27,8 @@ uint8_t DrawingBlendMode::fromString(const std::string& name)
         return DrawingBlendMode::Overlay;
     if (name == "overlay2")
         return DrawingBlendMode::Overlay2;
+    if (name == "premultiplied-alpha")
+        return DrawingBlendMode::PremultipliedAlpha;
 
     return DrawingBlendMode::None;
 }
