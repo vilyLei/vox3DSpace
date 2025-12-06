@@ -156,6 +156,7 @@ struct UnitHierarchy
 {
     uint32_t parent     = Base::ID::INVALID_ID;
     uint32_t next       = Base::ID::INVALID_ID;
+    uint32_t prev       = Base::ID::INVALID_ID;
     uint32_t firstChild = Base::ID::INVALID_ID;
 };
 struct UnitEntity
