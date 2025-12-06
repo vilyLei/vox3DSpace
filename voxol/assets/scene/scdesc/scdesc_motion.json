@@ -29,7 +29,7 @@
                     },
                     "style": {
                         "fill-color": "0xff338888",
-                        "image-url": "spot_01.png",
+                        "image-url": "spot_02.png",
                         "blend-mode" : "alpha-add",
                         "blend-modeP" : "transparent"
                     }
