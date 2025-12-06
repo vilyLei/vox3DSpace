@@ -142,7 +142,7 @@ void UnitTexPool::dispose()
         freeTextures.erase(tex);
     }
     glDeleteTextures(DISPOSE_NUM, ts.data());
-    printf("UnitTexPool::dispose() call tot: %zu, freeTextures.size(): %zu\n", tot, freeTextures.size());
+    //printf("UnitTexPool::dispose() call tot: %zu, freeTextures.size(): %zu\n", tot, freeTextures.size());
 }
 } // namespace Grid
 } // namespace Voxol::Tile
