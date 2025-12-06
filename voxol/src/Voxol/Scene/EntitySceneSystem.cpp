@@ -122,9 +122,6 @@ void EntitySceneSystem::initalize(const std::string& configFileName)
         actionSys              = Intent::ActionSystem::make();
         actionSys->compStorage = compStorage;
 
-        motionObjStorage = EntityMotionObjectStorage::make();
-        actionSys->addMotionObjStorage( motionObjStorage );
-
         interSrcSys              = Intent::InteractionSourceSystem::make();
         interSrcSys->actionSys   = actionSys;
         interSrcSys->compStorage = compStorage;
@@ -140,20 +137,23 @@ void EntitySceneSystem::initalize(const std::string& configFileName)
         }
     }
 
-    createEntities(15);
+
+    auto motionObjStorage = EntityMotionObjectStorage::make();
+    actionSys->addMotionObjStorage(motionObjStorage);
+    createEntities(15, motionObjStorage);
 }
 
-void EntitySceneSystem::createEntities(int total)
+void EntitySceneSystem::createEntities(int total, const EntityMotionObjectStorage::SP& storage)
 {
     if (total < 1)
         return;
 
-    auto       compStorage = entityStorage->comp;
-    Math::Vec2 pos{200, 100};
-    uint32_t   srcEtId = 1;
-    bool       biulding = false;
+    auto                  compStorage = entityStorage->comp;
+    Math::Vec2            pos{200, 100};
+    uint32_t              srcEtId  = 1;
+    bool                  biulding = false;
     std::vector<uint32_t> ids;
-    
+
     Colour::Component::Color color = 0xff22aaaa;
     for (auto i = 0; i < total; i++)
     {
@@ -163,32 +163,32 @@ void EntitySceneSystem::createEntities(int total)
 
         ids.push_back(id);
     }
-    if (!ids.empty())
-    {
-        compStorage->updateHierarchyInfo();
-        for (auto id : ids)
-        {
-            compStorage->setEntityGlobalXYAt(pos, id);
-            pos += {10, 10};
-            auto&& key = Base::ID::KeyUint64::make(id);
-            auto&& vb = compStorage->getEntityGlobalBoundsAt(id);
-            bvh->addItem(key, vb);
-            auto motionObj = EntityMotionObject::make();
-            motionObj->initialize(id, compStorage);
-            motionObj->entityView->color(color);
+    if (ids.empty())
+        return;
 
-            color.r(color.r() + 10);
-            if (motionObjStorage->mainObject)
-            {
-                motionObjStorage->addObject(motionObj);
-            }
-            else
-            {
-                motionObjStorage->mainObject = motionObj;
-            }
+    compStorage->updateHierarchyInfo();
+    for (auto id : ids)
+    {
+        compStorage->setEntityGlobalXYAt(pos, id);
+        pos += {10, 10};
+        auto&& key = Base::ID::KeyUint64::make(id);
+        auto&& vb  = compStorage->getEntityGlobalBoundsAt(id);
+        bvh->addItem(key, vb);
+        auto motionObj = EntityMotionObject::make();
+        motionObj->initialize(id, compStorage);
+        motionObj->entityView->color(color);
+
+        color.r(color.r() + 10);
+        if (storage->mainObject)
+        {
+            storage->addObject(motionObj);
         }
-        bvh->build();
+        else
+        {
+            storage->mainObject = motionObj;
+        }
     }
+    bvh->build();
 }
 void EntitySceneSystem::update()
 {

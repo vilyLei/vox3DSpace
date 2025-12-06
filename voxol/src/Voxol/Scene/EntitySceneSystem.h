@@ -30,13 +30,13 @@ public:
 public:
     Intent::InteractionSourceSystem::SP interSrcSys;
     Intent::ActionSystem::SP             actionSys;
-    Scene::EntityMotionObjectStorage::SP motionObjStorage;
+    //Scene::EntityMotionObjectStorage::SP motionObjStorage;
     EntitySysBVH::SP                    bvh = EntitySysBVH::make();
     EntityUnitStorage::SP               entityStorage{};
 
 public:
     void                             initalize(const std::string& configFileName = {});
-    void                             createEntities(int total);
+    void                             createEntities(int total, const EntityMotionObjectStorage::SP& storage);
     void                             update();
     int                              drawQuery(const Math::VxRect& bounds, int phase);
     void                             clear();
