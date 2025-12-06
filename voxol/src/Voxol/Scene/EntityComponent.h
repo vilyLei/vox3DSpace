@@ -3,6 +3,7 @@
 
 #include "../Math/VxRect.h"
 #include "../Base/IDDef.h"
+#include "../Render/Gpu/GpuDrawingDef.h"
 #include "../Render/OglGpuResUtils.h"
 
 
@@ -71,6 +72,7 @@ struct UnitLocation
 struct UnitShadingDesc
 {
     uint32_t color = 0xff000000;
+    Render::Gpu::GPUDrawingState drawState;
     uint32_t flags = 0x0;
 };
 
