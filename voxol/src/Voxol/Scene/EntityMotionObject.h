@@ -27,19 +27,19 @@ public:
 
 
 public:
-    void       initialize(uint32_t etId, EntityCompStorage::SP comp_storage);
-    bool       isValid() const;
-    bool       isInvalid() const;
-    void       color(uint32_t c);
-    uint32_t   color() const;
-    void       localPos(const Math::Vec2& pos);
-    Math::Vec2 localPos() const;
-    void       globalPos(const Math::Vec2& pos);
-    Math::Vec2 globalPos() const;
-    void       rotation(float rad);
-    float      rotation() const;
-    void       rotationDeegree(float degree);
-    float      rotationDeegree() const;
+    void                     initialize(uint32_t etId, EntityCompStorage::SP comp_storage);
+    bool                     isValid() const;
+    bool                     isInvalid() const;
+    void                     color(const Colour::Component::Color& c);
+    Colour::Component::Color color() const;
+    void                     localPos(const Math::Vec2& pos);
+    Math::Vec2               localPos() const;
+    void                     globalPos(const Math::Vec2& pos);
+    Math::Vec2               globalPos() const;
+    void                     rotation(float rad);
+    float                    rotation() const;
+    void                     rotationDeegree(float degree);
+    float                    rotationDeegree() const;
 
     uint32_t etProtoId() const;
     void     update();
@@ -48,7 +48,7 @@ public:
 
 private:
     EntityCompStorage::SP compStorage;
-    uint32_t            targetEtProtoId = Base::ID::INVALID_ID;
+    uint32_t              targetEtProtoId = Base::ID::INVALID_ID;
 };
 } // namespace Voxol::Scene
 #endif

@@ -13,8 +13,8 @@ EntityMotionObject::SP EntityMotionObject::make()
 
 void EntityMotionObject::initialize(uint32_t etId, EntityCompStorage::SP comp_storage)
 {
-    targetEtProtoId  = etId;
-    compStorage = comp_storage;
+    targetEtProtoId = etId;
+    compStorage     = comp_storage;
 }
 
 bool EntityMotionObject::isValid() const
@@ -27,12 +27,12 @@ bool EntityMotionObject::isInvalid() const
     return Base::ID::isInvalidID(targetEtProtoId);
 }
 
-void EntityMotionObject::color(uint32_t c)
+void EntityMotionObject::color(const Colour::Component::Color& c)
 {
     compStorage->setEntityColorAt(c, targetEtProtoId);
     compStorage->dirtyIdMap[targetEtProtoId] = true;
 }
-uint32_t EntityMotionObject::color() const
+Colour::Component::Color EntityMotionObject::color() const
 {
     return compStorage->getEntityColorAt(targetEtProtoId);
 }
@@ -114,7 +114,7 @@ void EntityMotionObject::applyPoints(PtApplyCallbackType callback, int stride)
     if (ptsTotal < 1 || stride < 1)
         return;
 
-    auto index    = 1;
+    auto index = 1;
     for (auto i = 0; i < ptsTotal;)
     {
         auto t = index * stride;

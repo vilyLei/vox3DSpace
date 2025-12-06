@@ -221,7 +221,7 @@ bool EntityRenderSystem::drawUnit(const Draw::DrawContext& rctx, const Scene::Co
 
                 unit.objMat    = objM;
                 unit.drawState = shdDesc.drawState;
-                unit.setColor(shdDesc.color);
+                unit.setColor(shdDesc.color.argb());
 
                 unit.mvp    = vpM;
                 unit.draw(rctx.drawStateCtx);
@@ -380,7 +380,7 @@ bool EntityRenderSystem::drawUnit(const Draw::DrawContext& rctx, const Scene::Co
     //printf("render curr ...\n");
 
 
-    drawUnit.setColor(tempColor);
+    drawUnit.setColor(tempColor.argb());
     //drawUnit.objMat = wM;
     drawUnit.objMat = svM;
     drawUnit.mvp    = vpM;

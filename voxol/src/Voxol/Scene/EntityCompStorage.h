@@ -105,7 +105,7 @@ public:
     Math::Bounds             getEntityGlobalBoundsAt(const Base::ID::KeyUint64& id);
     Math::Bounds             getEntityLocalBoundsAt(uint32_t id);
     Math::Bounds             getEntityLocalBoundsAt(const Base::ID::KeyUint64& id);
-    Math::Mat33             getEntityLocalMatrixAt(uint32_t id);
+    Math::Mat33              getEntityLocalMatrixAt(uint32_t id);
     Math::Mat33              getEntityLocalMatrixAt(const Base::ID::KeyUint64& id);
 
     uint32_t    getEntityParentIdAt(uint32_t id);
@@ -116,14 +116,14 @@ public:
     Math::Vec2  getEntityLocalXYAt(uint32_t id) const;
     void        setEntityLocalXYAt(const Math::Vec2& pv, uint32_t id);
 
-    float       getEntityRotationAt(uint32_t id) const;
-    void        setEntityRotationAt(float rad, uint32_t id);
-    void        setEntityColorAt(uint32_t color, uint32_t id);
-    uint32_t    getEntityColorAt(uint32_t id) const;
-    void        setEntityVisibleAt(bool v, uint32_t id);
-    bool        getEntityVisibleAt(uint32_t id) const;
-    void        setEntityPivotAt(const Math::Vec2& pivot, uint32_t id);
-    Math::Vec2  getEntityPivotAt(uint32_t id) const;
+    float                    getEntityRotationAt(uint32_t id) const;
+    void                     setEntityRotationAt(float rad, uint32_t id);
+    void                     setEntityColorAt(const Colour::Component::Color& color, uint32_t id);
+    Colour::Component::Color getEntityColorAt(uint32_t id) const;
+    void                     setEntityVisibleAt(bool v, uint32_t id);
+    bool                     getEntityVisibleAt(uint32_t id) const;
+    void                     setEntityPivotAt(const Math::Vec2& pivot, uint32_t id);
+    Math::Vec2               getEntityPivotAt(uint32_t id) const;
 
     void getIdsFromId(uint32_t etId, std::vector<Base::ID::KeyUint64>& ids);
 

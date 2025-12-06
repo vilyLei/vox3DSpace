@@ -13,8 +13,8 @@ EntityView::SP EntityView::make()
 
 void EntityView::initialize(uint32_t etId, EntityCompStorage::SP comp_storage)
 {
-    targetEtProtoId  = etId;
-    compStorage = comp_storage;
+    targetEtProtoId = etId;
+    compStorage     = comp_storage;
 }
 
 bool EntityView::isValid() const
@@ -27,12 +27,12 @@ bool EntityView::isInvalid() const
     return Base::ID::isInvalidID(targetEtProtoId);
 }
 
-void EntityView::color(uint32_t c)
+void EntityView::color(const Colour::Component::Color& c)
 {
     compStorage->setEntityColorAt(c, targetEtProtoId);
     compStorage->dirtyIdMap[targetEtProtoId] = true;
 }
-uint32_t EntityView::color() const
+Colour::Component::Color EntityView::color() const
 {
     return compStorage->getEntityColorAt(targetEtProtoId);
 }

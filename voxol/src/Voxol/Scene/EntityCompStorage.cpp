@@ -391,7 +391,8 @@ void EntityCompStorage::setEntityRotationAt(float rad, uint32_t id)
     trans.rotation = rad;
 }
 
-void EntityCompStorage::setEntityColorAt(uint32_t color, uint32_t id) {
+void EntityCompStorage::setEntityColorAt(const Colour::Component::Color& color, uint32_t id)
+{
 
     if (Base::ID::isInvalidID(id))
         return;
@@ -409,9 +410,10 @@ void EntityCompStorage::setEntityColorAt(uint32_t color, uint32_t id) {
     shdDesc.color  = color;
 }
 
-uint32_t EntityCompStorage::getEntityColorAt(uint32_t id) const {
+Colour::Component::Color EntityCompStorage::getEntityColorAt(uint32_t id) const
+{
 
-    uint32_t color = 0xff000000;
+    Colour::Component::Color color;
     if (Base::ID::isInvalidID(id))
         return color;
 

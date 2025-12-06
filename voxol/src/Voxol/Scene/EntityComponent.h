@@ -5,6 +5,7 @@
 #include "../Base/IDDef.h"
 #include "../Render/Gpu/GpuDrawingDef.h"
 #include "../Render/OglGpuResUtils.h"
+#include "../Colour/ColorDef.h"
 
 
 namespace Voxol::Scene
@@ -71,9 +72,10 @@ struct UnitLocation
 
 struct UnitShadingDesc
 {
-    uint32_t color = 0xff000000;
+    Colour::Component::Color     color;
     Render::Gpu::GPUDrawingState drawState;
     uint32_t flags = 0x0;
+    //Colour::Component::Color     cc;
 };
 
 struct UnitShadingEntity
