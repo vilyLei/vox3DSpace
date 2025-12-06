@@ -103,7 +103,7 @@ bool TileScene::releaseGrid(const RC::Pos& pos)
     auto&& node = viewUnitIndexMap[pos.value];
     unitIndexPool.release(node.index);
     auto& unit = gridUnits[node.index].drawUnit;
-    printf("release grid node(r=%zu, c=%zu, level=%zu)\n", node.pos.r, node.pos.c, node.pos.level);
+    //printf("release grid node(r=%zu, c=%zu, level=%zu)\n", node.pos.r, node.pos.c, node.pos.level);
     texPool.release(unit.getTextureAt(0));
     return true;
 }
@@ -119,7 +119,7 @@ void TileScene::testFreeViewGrids()
         }
         else
         {
-            printf("remove an element from the viewUnitIndexMap ...\n");
+            //printf("remove an element from the viewUnitIndexMap ...\n");
             releaseGrid(node);
             it = viewUnitIndexMap.erase(it);
         }

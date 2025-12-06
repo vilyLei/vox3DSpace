@@ -537,27 +537,9 @@ void DrawingUnit::draw()
 
     bindGPU();
 
-    auto blendMode = drawState.blendMode();
-
-    if (blendMode < 20)
     {
-        glEnable(GL_BLEND);
-        if ((blendMode < 2 && shader.textures.empty()) || blendMode == 3)
-        {
+        auto blendMode = drawState.blendMode();
 
-            glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-        }
-        else
-        {
-            glBlendFuncSeparate(
-                GL_SRC_ALPHA,
-                GL_ONE_MINUS_SRC_ALPHA,
-                GL_ONE,
-                GL_ONE_MINUS_SRC_ALPHA);
-        }
-    }
-    else
-    {
         switch (blendMode)
         {
             case 21:
@@ -591,6 +573,14 @@ void DrawingUnit::draw()
             case DrawingBlendMode::Overlay2:
                 glEnable(GL_BLEND);
                 glBlendFunc(GL_DST_COLOR, GL_SRC_ALPHA);
+                break;
+            case DrawingBlendMode::Transparent:
+                glEnable(GL_BLEND);
+                glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+                break;
+            case DrawingBlendMode::PreMultiAlpha:
+                glEnable(GL_BLEND);
+                glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
                 break;
             case DrawingBlendMode::None:
                 glDisable(GL_BLEND);
