@@ -26,17 +26,19 @@ public:
 
 public:
     Scene::EntityCompStorage::SP         compStorage;
-    Scene::EntityMotionObjectStorage::SP motionObjStorage;
+    std::vector<Scene::EntityMotionObjectStorage::SP> motionObjStorages;
     Interaction::EntityDirtyCallType     entityDirtyCall;
 
 public:
+    void addMotionObjStorage(const Scene::EntityMotionObjectStorage::SP& motionObjStorage);
+
     void initialize();
     void updateAction(const Scene::Component::UnitLocation& location);
     void update();
 
 private:
     Scene::EntityView::SP   aimEtView;
-    std::vector<Math::Vec2> positions;
+    //std::vector<Math::Vec2> positions;
 };
 
 

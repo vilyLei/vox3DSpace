@@ -123,7 +123,7 @@ void EntitySceneSystem::initalize(const std::string& configFileName)
         actionSys->compStorage = compStorage;
 
         motionObjStorage = EntityMotionObjectStorage::make();
-        actionSys->motionObjStorage = motionObjStorage;
+        actionSys->addMotionObjStorage( motionObjStorage );
 
         interSrcSys              = Intent::InteractionSourceSystem::make();
         interSrcSys->actionSys   = actionSys;

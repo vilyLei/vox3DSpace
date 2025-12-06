@@ -8,21 +8,32 @@ ActionSystem::SP ActionSystem::make()
     return sp;
 }
 
-void ActionSystem::initialize() {
 
+void ActionSystem::initialize()
+{
 }
+
+void ActionSystem::addMotionObjStorage(const Scene::EntityMotionObjectStorage::SP& motionObjStorage)
+{
+    if (!motionObjStorage)
+        return;
+    motionObjStorages.emplace_back(motionObjStorage);
+}
+
 void ActionSystem::updateAction(const Scene::Component::UnitLocation& location){
 
-    positions.emplace_back(location.global);
+    //positions.emplace_back(location.global);
+
     if (aimEtView)
     {
         auto&& key = Base::ID::KeyUint64::make(aimEtView->etProtoId());
         entityDirtyCall(0, key);
         aimEtView->globalPos(location.global);
     }
-    if (motionObjStorage)
+
+    for (auto& storage : motionObjStorages)
     {
-        motionObjStorage->updateAction(location);
+        storage->updateAction(location);
     }
 }
 void ActionSystem::update(){
@@ -78,9 +89,12 @@ void ActionSystem::update(){
         });
     }
     //*/
-    positions.clear();
+    //positions.clear();
 
-    motionObjStorage->update();
+    for (auto& storage : motionObjStorages)
+    {
+        storage->update();
+    }
 
     auto& dirtyEndMap = compStorage->dirtyEntityMap;
     if (!dirtyEndMap.empty())
