@@ -140,17 +140,20 @@ void EntitySceneSystem::initalize(const std::string& configFileName)
 
     Colour::Component::Color color       = 0xff552222;
     Colour::Component::Color dc          = 0xff0a0a00;
-    auto                     foodStorage = createFoodEntities(8, {200, 200}, color, dc);
+    auto                     foodStorage = createFoodEntities(26, {200, 200}, color, dc);
 
     color    = 0xff22aaaa;
     dc       = 0xff0a0000;
     auto st0 = createEntities(1, {200, 100}, color, dc);
-    st0->foodStorage = foodStorage;
-    //dc                             = 0xff0a0800;
-    //auto st1                       = createEntities(2, {500, 300}, color, dc);
-    //color                          = 0xff003388;
-    //dc                             = 0xffaa080a;
-    //auto st2                       = createEntities(2, {600, 400}, color, dc);
+    st0->foodStorage               = foodStorage;
+    color                          = 0xff2233aa;
+    dc                             = 0xff0a0800;
+    auto st1                       = createEntities(1, {500, 300}, color, dc);
+    st1->foodStorage               = foodStorage;
+    color                          = 0xff003322;
+    dc                             = 0xffaa080a;
+    auto st2                       = createEntities(1, {600, 400}, color, dc);
+    st2->foodStorage               = foodStorage;
 }
 
 EntityMotionObjectStorage::SP EntitySceneSystem::createEntities(int total, const Math::Vec2& pv, Colour::Component::Color color, Colour::Component::Color dc)
