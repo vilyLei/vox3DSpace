@@ -157,9 +157,7 @@ bool EntityRenderSystem::drawUnitEffect(const Draw::DrawContext& rctx, const Bas
     auto&  drs        = *entityStorage->drawing;
     auto&& drawUnit   = drs[drawingId];
 
-    Math::Mat33 svM;
-    svM.setScaleXY(trans.sx, trans.sy);
-    svM.prepend(wM);
+    auto&& svM = compStorage->getEntityLocalMatrixAt(etId);
 
     drawUnit.drawState = shdDesc.drawState;
 
