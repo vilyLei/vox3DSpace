@@ -51,15 +51,14 @@ Colour::Component::Color EntityView::color() const
 void EntityView::colorAlpha(float alpha)
 {
     auto c = compStorage->getEntityColorAt(targetEtProtoId);
-    c.a(alpha);
-    auto a = c.a();
+    c.normaplizedAlpha(alpha);
     compStorage->setEntityColorAt(c, targetEtProtoId);
     compStorage->dirtyIdMap[targetEtProtoId] = true;
 }
 float EntityView::colorAlpha() const
 {
-    //return compStorage->getEntityColorAt(targetEtProtoId);
-    return 1.0f;
+    auto c = compStorage->getEntityColorAt(targetEtProtoId);
+    return c.normaplizedAlpha();
 }
 
 void EntityView::globalPos(const Math::Vec2& pos)

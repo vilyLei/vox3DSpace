@@ -76,29 +76,50 @@ struct Color
     }
 
     
-    constexpr void a(float vf) noexcept
+    constexpr void normaplizedAlpha(float vf) noexcept
     {
         vf     = vf > 0 ? vf : 0;
+        vf     = vf < 1 ? vf : 1;
         auto v = static_cast<uint32_t>(vf * 255);
         value  = (value & 0x00FFFFFF) | (v << 24);
     }
-    constexpr void r(float vf) noexcept
+    constexpr void normaplizedRed(float vf) noexcept
     {
         vf     = vf > 0 ? vf : 0;
+        vf     = vf < 1 ? vf : 1;
         auto v = static_cast<uint32_t>(vf * 255);
         value  = (value & 0x00FFFFFF) | (v << 16);
     }
-    constexpr void g(float vf) noexcept
+    constexpr void normaplizedGreen(float vf) noexcept
     {
         vf     = vf > 0 ? vf : 0;
+        vf     = vf < 1 ? vf : 1;
         auto v = static_cast<uint32_t>(vf * 255);
         value  = (value & 0x00FFFFFF) | (v << 8);
     }
-    constexpr void b(float vf) noexcept
+    constexpr void normaplizedBlue(float vf) noexcept
     {
         vf     = vf > 0 ? vf : 0;
+        vf     = vf < 1 ? vf : 1;
         auto v = static_cast<uint32_t>(vf * 255);
         value  = (value & 0x00FFFFFF) | v;
+    }
+
+    constexpr float normaplizedAlpha() noexcept
+    {
+        return a() / 255.0f;
+    }
+    constexpr float normaplizedRed() noexcept
+    {
+        return r() / 255.0f;
+    }
+    constexpr float normaplizeGreen() noexcept
+    {
+        return g() / 255.0f;
+    }
+    constexpr float normaplizeBlue() noexcept
+    {
+        return b() / 255.0f;
     }
 
     constexpr void setA(uint8_t a) noexcept

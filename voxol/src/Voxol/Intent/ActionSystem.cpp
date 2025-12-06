@@ -34,11 +34,9 @@ void ActionSystem::update(){
         static float alphaTime = 0;
         auto&& key = Base::ID::KeyUint64::make(aimEtView->etProtoId());
         entityDirtyCall(0, key);
-        alphaTime += 0.05;
+        alphaTime += 0.02;
         aimEtView->colorAlpha(0.5f + 0.5f * std::abs(std::cos(alphaTime)));
-        //aimEtView->colorAlpha(1);
         aimEtView->rotation(aimEtView->rotation() + 0.05f);
-        //aimEtView->globalPos(location.global);
     }
 
     std::vector<Scene::EntityMotionObject::SP> objs;
