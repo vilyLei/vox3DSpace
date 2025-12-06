@@ -7,7 +7,7 @@
 
 namespace Voxol::Render::Gpu
 {
-    /*
+/*
             case 25:
                 glEnable(GL_BLEND);
                 glBlendFunc(GL_ONE, GL_SRC_ALPHA);
@@ -66,9 +66,16 @@ struct GPUDrawingState
     constexpr uint8_t cullFace() const noexcept { return (value >> 8) & 0xFF; }
     constexpr uint8_t blendMode() const noexcept { return value & 0xFF; }
 
+    bool operator==(const GPUDrawingState& v) const noexcept { return value == v.value; }
+    bool operator!=(const GPUDrawingState& v) const noexcept { return value != v.value; }
+
     constexpr void reset() noexcept
     {
         value = 0xFF000000 | DrawingBlendMode::Alpha;
+    }
+    constexpr void clear() noexcept
+    {
+        value = 0;
     }
 
     constexpr void colorMask(uint8_t v) noexcept
@@ -104,8 +111,15 @@ struct GPUDrawingState
     {
         return GPUDrawingState((value & 0xFFFFFF00) | static_cast<uint32_t>(v));
     }
-
     std::string toString() const;
+};
+struct GPUDrawingStateContext
+{
+    GPUDrawingState drawState;
+    void            clear()
+    {
+        drawState.clear();
+    }
 };
 } // namespace Voxol::Render::Gpu
 #endif

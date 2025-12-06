@@ -10,6 +10,7 @@
 #include <vector>
 #include "OglFbo.h"
 #include "../base/ScopeGuard.h"
+#include "./Gpu/GpuDrawingDef.h"
 
 namespace Voxol::Render
 {
@@ -110,6 +111,8 @@ struct DrawContext
 
     DrawCallType  drawCall;
     DrawQueryType drawQueryCall;
+
+    mutable Gpu::GPUDrawingStateContext drawStateCtx;
 
     float zoom  = 1;
     bool  dirty = true;

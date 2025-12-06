@@ -124,16 +124,16 @@ struct DrawingUnit
     Voxol::Math::Mat33   objMat{};
     Voxol::Math::Mat33   mvp{};
 
-    GPUDrawingState      drawState;
+    GPUDrawingState drawState;
 
-    bool                 colorClip = false;
-    bool                 hasTexture() const;
+    bool   colorClip = false;
+    bool   hasTexture() const;
     void   bindGPU();
     void   setTranslateAndScale(float tx, float ty, float sx = 1.0f, float sy = 1.0f);
     void   setColor(uint32_t argb32);
     GLuint getTextureAt(int index) const;
     void   setTextureAt(GLuint tex, int index);
-    void   draw();
+    void   draw(Gpu::GPUDrawingStateContext& drawStateCtx);
 };
 
 void buildBaseDrawUnit(DrawingUnit& unit);

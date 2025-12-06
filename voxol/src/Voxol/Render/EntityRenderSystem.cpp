@@ -32,6 +32,8 @@ int EntityRenderSystem::render(const Draw::DrawContext& rctx, const Math::Mat33&
     if (queriedEIds.empty())
         return 0;
 
+    rctx.drawStateCtx.clear();
+
     auto& compStorage = entityStorage->comp;
 
     auto   total        = queriedEIds.size();
@@ -164,7 +166,7 @@ bool EntityRenderSystem::drawUnitEffect(const Draw::DrawContext& rctx, const Bas
     drawUnit.setColor(shdData.color);
     drawUnit.objMat = wM;
     drawUnit.mvp    = vpM;
-    drawUnit.draw();
+    drawUnit.draw(rctx.drawStateCtx);
 
     return true;
 }
@@ -222,7 +224,7 @@ bool EntityRenderSystem::drawUnit(const Draw::DrawContext& rctx, const Scene::Co
                 unit.setColor(shdDesc.color);
 
                 unit.mvp    = vpM;
-                unit.draw();
+                unit.draw(rctx.drawStateCtx);
             }
         }
         return true;
@@ -382,7 +384,7 @@ bool EntityRenderSystem::drawUnit(const Draw::DrawContext& rctx, const Scene::Co
     //drawUnit.objMat = wM;
     drawUnit.objMat = svM;
     drawUnit.mvp    = vpM;
-    drawUnit.draw();
+    drawUnit.draw(rctx.drawStateCtx);
     return true;
 }
 
