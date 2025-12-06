@@ -93,7 +93,7 @@ public:
     //    auto& pool = getPool<T>();
     //    return pool.get(index);
     //}
-    uint32_t                 appendEntityCopyFromId(uint32_t id);
+    uint32_t                 copyAndppendEntityFromId(uint32_t id);
     bool                     hasParentAt(uint32_t id) const;
     bool                     hasChildAt(uint32_t id) const;
     Component::UnitTransform getEntityLocalTransAt(uint32_t id);

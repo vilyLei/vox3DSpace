@@ -10,7 +10,7 @@ EntityCompStorage::SP EntityCompStorage::make()
     return sp;
 }
 
-uint32_t EntityCompStorage::appendEntityCopyFromId(uint32_t id)
+uint32_t EntityCompStorage::copyAndppendEntityFromId(uint32_t id)
 {
     if (Base::ID::isInvalidID(id) || id < 1)
         return Base::ID::INVALID_ID;
@@ -30,6 +30,10 @@ uint32_t EntityCompStorage::appendEntityCopyFromId(uint32_t id)
     if (transformPivotMap.contains(id))
     {
         transformPivotMap[newId] = transformPivotMap[id];
+    }
+    if (textureMap.contains(id))
+    {
+        textureMap[newId] = textureMap[id];
     }
 
     auto entity = entitiesPool[id];

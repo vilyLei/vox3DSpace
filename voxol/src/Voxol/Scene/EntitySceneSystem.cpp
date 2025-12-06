@@ -141,7 +141,7 @@ void EntitySceneSystem::initalize(const std::string& configFileName)
         }
     }
 
-    createEntities(15);
+    createEntities(3);
 }
 
 void EntitySceneSystem::createEntities(int total)
@@ -159,7 +159,7 @@ void EntitySceneSystem::createEntities(int total)
     for (auto i = 0; i < total; i++)
     {
         
-        auto id = compStorage->appendEntityCopyFromId(srcEtId);
+        auto id = compStorage->copyAndppendEntityFromId(srcEtId);
         if (Base::ID::isInvalidID(id))
             continue;
 
