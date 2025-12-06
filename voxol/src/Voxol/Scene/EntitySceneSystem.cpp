@@ -137,29 +137,29 @@ void EntitySceneSystem::initalize(const std::string& configFileName)
         }
     }
 
-    
+
     Colour::Component::Color color = 0xff22aaaa;
-    Colour::Component::Color dc = 0xff0a0000;
-    createEntities(15, {200, 100}, color, dc);
-    dc = 0xff0a0800;
-    createEntities(8, {500, 300}, color, dc);
-    color = 0xff003388;
-    dc = 0xffaa083a;
-    createEntities(11, {600, 400}, color, dc);
+    Colour::Component::Color dc    = 0xff0a0000;
+    auto                     st0   = createEntities(2, {200, 100}, color, dc);
+    dc                             = 0xff0a0800;
+    auto st1                       = createEntities(2, {500, 300}, color, dc);
+    color                          = 0xff003388;
+    dc                             = 0xffaa080a;
+    auto st2                       = createEntities(2, {600, 400}, color, dc);
 }
 
-void EntitySceneSystem::createEntities(int total, const Math::Vec2& pv, Colour::Component::Color color, Colour::Component::Color dc)
+EntityMotionObjectStorage::SP EntitySceneSystem::createEntities(int total, const Math::Vec2& pv, Colour::Component::Color color, Colour::Component::Color dc)
 {
     if (total < 1)
-        return;
+        return nullptr;
 
     auto pos              = pv;
     auto motionObjStorage = EntityMotionObjectStorage::make();
     actionSys->addMotionObjStorage(motionObjStorage);
 
     auto                  compStorage = entityStorage->comp;
-    uint32_t              srcEtId  = 1;
-    bool                  biulding = false;
+    uint32_t              srcEtId     = 1;
+    bool                  biulding    = false;
     std::vector<uint32_t> ids;
 
     for (auto i = 0; i < total; i++)
@@ -171,7 +171,62 @@ void EntitySceneSystem::createEntities(int total, const Math::Vec2& pv, Colour::
         ids.push_back(id);
     }
     if (ids.empty())
-        return;
+        return nullptr;
+
+    compStorage->updateHierarchyInfo();
+    for (auto id : ids)
+    {
+        compStorage->setEntityGlobalXYAt(pos, id);
+        pos += {10, 10};
+        auto&& key = Base::ID::KeyUint64::make(id);
+        auto&& vb  = compStorage->getEntityGlobalBoundsAt(id);
+        bvh->addItem(key, vb);
+        auto motionObj = EntityMotionObject::make();
+        motionObj->initialize(id, compStorage);
+        motionObj->entityView->color(color);
+        motionObj->entityView->visible(true);
+
+        color.r(color.r() + dc.r());
+        color.g(color.g() + dc.g());
+        color.b(color.b() + dc.b());
+
+        if (motionObjStorage->mainObject)
+        {
+            motionObjStorage->addObject(motionObj);
+        }
+        else
+        {
+            motionObjStorage->mainObject = motionObj;
+        }
+    }
+    bvh->build();
+    return motionObjStorage;
+}
+
+EntityMotionObjectStorage::SP EntitySceneSystem::createFoodEntities(int total, const Math::Vec2& pv, Colour::Component::Color color, Colour::Component::Color dc)
+{
+
+    if (total < 1)
+        return nullptr;
+
+    auto pos              = pv;
+    auto motionObjStorage = EntityMotionObjectStorage::make();
+
+    auto                  compStorage = entityStorage->comp;
+    uint32_t              srcEtId     = 1;
+    bool                  biulding    = false;
+    std::vector<uint32_t> ids;
+
+    for (auto i = 0; i < total; i++)
+    {
+        auto id = compStorage->copyAndppendEntityFromId(srcEtId);
+        if (Base::ID::isInvalidID(id))
+            continue;
+
+        ids.push_back(id);
+    }
+    if (ids.empty())
+        return nullptr;
 
     compStorage->updateHierarchyInfo();
     for (auto id : ids)
@@ -192,17 +247,12 @@ void EntitySceneSystem::createEntities(int total, const Math::Vec2& pv, Colour::
         color.g(color.g() + dc.g());
         color.b(color.b() + dc.b());
 
-        if (motionObjStorage->mainObject)
-        {
-            motionObjStorage->addObject(motionObj);
-        }
-        else
-        {
-            motionObjStorage->mainObject = motionObj;
-        }
+        motionObjStorage->addObject(motionObj);
     }
     bvh->build();
+    return motionObjStorage;
 }
+
 void EntitySceneSystem::update()
 {
     interSrcSys->update();

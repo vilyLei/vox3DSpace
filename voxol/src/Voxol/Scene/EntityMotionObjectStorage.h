@@ -19,15 +19,18 @@ public:
     ~EntityMotionObjectStorage() = default;
 
 public:
-    EntityMotionObject::SP mainObject;
+    EntityMotionObject::SP        mainObject;
+    EntityMotionObjectStorage::SP foodStorage;
 
 public:
     void initialize();
     void updateAction(const Scene::Component::UnitLocation& location);
     void addObject(const EntityMotionObject::SP& obj);
+    void setObject(uint32_t protoId, const EntityMotionObject::SP& obj);
     void update();
     void foreachObjs(FroreachObjCallbackType callback);
     void destory();
+    void clear();
 
 private:
     std::unordered_map<uint32_t, EntityMotionObject::SP> objsMap;

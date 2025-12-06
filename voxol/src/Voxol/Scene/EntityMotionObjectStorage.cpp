@@ -16,7 +16,8 @@ void EntityMotionObjectStorage::initialize()
 
 void EntityMotionObjectStorage::updateAction(const Scene::Component::UnitLocation& location)
 {
-    if (mainObject) {
+    if (mainObject)
+    {
 
         mainObject->targetPos = location.global;
     }
@@ -29,7 +30,20 @@ void EntityMotionObjectStorage::addObject(const EntityMotionObject::SP& obj)
 
     objsMap[obj->etProtoId()] = obj;
 }
-void EntityMotionObjectStorage::update(){
+
+void EntityMotionObjectStorage::setObject(uint32_t protoId, const EntityMotionObject::SP& obj)
+{
+
+    if (Base::ID::isInvalidID(protoId))
+        return;
+
+    
+    objsMap[protoId] = obj;
+
+}
+
+void EntityMotionObjectStorage::update()
+{
 
     if (!mainObject)
         return;
@@ -37,6 +51,16 @@ void EntityMotionObjectStorage::update(){
     std::vector<Scene::EntityMotionObject::SP> objs;
     objs.reserve(32);
 
+    if (foodStorage)
+    {
+
+        foodStorage->foreachObjs([&](const Scene::EntityMotionObject::SP& obj) -> bool {
+            objs.emplace_back(obj);
+            return true;
+        });
+
+        objs.clear();
+    }
     foreachObjs([&](const Scene::EntityMotionObject::SP& obj) -> bool {
         objs.emplace_back(obj);
         return true;
@@ -48,15 +72,15 @@ void EntityMotionObjectStorage::update(){
     if (mainObject && total > 0)
     {
         mainObject->applyPoints([&](int index, const Math::Vec2& pv0, const Math::Vec2& pv1) -> bool {
+
             auto i = index;
             if (i >= total)
-            {
                 return false;
-            }
+
             auto dv = pv1 - pv0;
 
-            auto&& key    = Base::ID::KeyUint64::make(objs[i]->etProtoId());
             auto   etView = objs[i]->entityView;
+
             etView->globalPos(pv0);
             etView->rotation(dv.radian());
             return true;
@@ -67,14 +91,25 @@ void EntityMotionObjectStorage::update(){
 void EntityMotionObjectStorage::foreachObjs(FroreachObjCallbackType callback)
 {
 
-    for (auto& item : objsMap) {
+    for (auto& item : objsMap)
+    {
 
-        auto flag = callback(item.second);
+        auto& sp = item.second;
+        if (!sp)
+            break;
+
+        auto flag = callback(sp);
         if (!flag)
             break;
     }
 }
-void EntityMotionObjectStorage::destory(){
+void EntityMotionObjectStorage::destory()
+{
+    objsMap.clear();
+}
+
+void EntityMotionObjectStorage::clear()
+{
     objsMap.clear();
 }
 } // namespace Voxol::Scene
