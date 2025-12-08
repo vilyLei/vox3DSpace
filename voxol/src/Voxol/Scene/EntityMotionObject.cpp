@@ -52,8 +52,8 @@ void EntityMotionObject::update()
     dRad      = std::abs(dRad);
     dRad      = dRad > 0.1 ? 0.1f : dRad;
     dRad      = dRad > 0.02f ? dRad : 0.02f;
-    //auto rad       = Math::AngleInterpolator::rotateTowards(currRad, targetRad, 0.02f);
-    auto rad = Math::AngleInterpolator::rotateTowards(currRad, targetRad, dRad);
+    auto rad       = Math::AngleInterpolator::rotateTowards(currRad, targetRad, 0.02f);
+    //auto rad = Math::AngleInterpolator::rotateTowards(currRad, targetRad, dRad);
     entityView->rotation(rad);
     auto       spd = 2.0f;
     Math::Vec2 spdV{spd * cos(rad), spd * sin(rad)};
