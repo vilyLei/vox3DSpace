@@ -47,7 +47,12 @@ void EntityMotionObject::update()
 
     auto currRad   = Math::AngleInterpolator::normalizeAngle(entityView->rotation());
     auto targetRad = Math::AngleInterpolator::normalizeAngle(direcV.radian());
-    auto rad       = Math::AngleInterpolator::rotateTowards(currRad, targetRad, 0.02f);
+
+    auto dRad = Math::AngleInterpolator::shortestAngleDifference(currRad, targetRad, true) * 0.05f;
+    dRad      = std::abs(dRad);
+    dRad      = dRad > 0.02 ? dRad : 0.02f;
+    //auto rad       = Math::AngleInterpolator::rotateTowards(currRad, targetRad, 0.02f);
+    auto rad = Math::AngleInterpolator::rotateTowards(currRad, targetRad, dRad);
     entityView->rotation(rad);
     auto       spd = 2.0f;
     Math::Vec2 spdV{spd * cos(rad), spd * sin(rad)};
