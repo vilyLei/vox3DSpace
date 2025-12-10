@@ -311,6 +311,8 @@ struct HierarchyNode
         info += ", firstChild=" + std::to_string(hieraychy.firstChild);
         info += ", next=" + std::to_string(hieraychy.next);
         info += ", id=" + std::to_string(id);
+        info += ", firstChid=" + std::to_string(hieraychy.firstChild) + ", next=" + std::to_string(hieraychy.next);
+        info += ", prev=" + std::to_string(hieraychy.prev);
         info = "HierarchyNode(name=" + name + info + ")";
         printf("%s\n", info.c_str());
     }
