@@ -493,12 +493,14 @@ void HierarchyParser::parse(SceneNode& parentNode, HierarchyNode& parentHierNode
     auto& children = parentNode.children;
     if (children.empty())
     {
+        parentHierNode.hieraychy.prev = parentNode.hieraychy.prev;
         parentNode.hieraychy = parentHierNode.hieraychy;
         parentHierNode.print();
         return;
     }
 
     parentHierNode.hieraychy.firstChild = children[0].id;
+    children[0].hieraychy.prev          = parentNode.id;
     for (auto i = 0; i < children.size(); ++i)
     {
         auto&&        child = children[i];
@@ -506,10 +508,14 @@ void HierarchyParser::parse(SceneNode& parentNode, HierarchyNode& parentHierNode
         hierNode.hieraychy.parent = parentNode.id;
 
         if ((i + 1) < children.size())
+        {
             hierNode.hieraychy.next = children[i + 1].id;
+            children[i + 1].hieraychy.prev = child.id;
+        }
 
         parse(child, hierNode);
     }
+    parentHierNode.hieraychy.prev = parentNode.hieraychy.prev;
     parentNode.hieraychy = parentHierNode.hieraychy;
     parentHierNode.print();
 }
