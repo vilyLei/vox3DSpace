@@ -51,4 +51,5 @@ voxol/src/build/
 voxol/src-vs/
 voxol/build/
 voxol/buildvs/
+mmmathsl/build/
 *.code-workspace
