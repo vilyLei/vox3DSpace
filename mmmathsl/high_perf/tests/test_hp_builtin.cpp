@@ -777,6 +777,234 @@ bool testDistance() {
     }
 }
 
+// ==================== Vector Power Functions ====================
+
+bool testPowVec3() {
+    std::cout << "Builtin: pow(vec3, float)... ";
+    HighPerfParser parser;
+    std::string source = R"(
+        vec3 calc(vec3 v) {
+            return pow(v, 2.0);
+        }
+    )";
+    try {
+        std::vector<mmrsl::Value> args = { mmrsl::Value(mmrsl::Vec3(2.0f, 3.0f, 4.0f)) };
+        mmrsl::Value result = parser.compileAndExecute(source, args);
+        mmrsl::Vec3 expected = mmrsl::Vec3(4.0f, 9.0f, 16.0f);
+        mmrsl::Vec3 diff = result.asVec3() - expected;
+        float len = std::sqrt(diff.x*diff.x + diff.y*diff.y + diff.z*diff.z);
+        if (len < 0.0001f) {
+            std::cout << "PASS\n";
+            return true;
+        }
+        std::cout << "FAIL (expected (4,9,16), got (" << result.asVec3().x << "," << result.asVec3().y << "," << result.asVec3().z << "))\n";
+        return false;
+    } catch (const std::exception& e) {
+        std::cout << "FAIL: " << e.what() << "\n";
+        return false;
+    }
+}
+
+// ==================== Vector Min/Max/Clamp ====================
+
+bool testMinVec3() {
+    std::cout << "Builtin: min(vec3, vec3)... ";
+    HighPerfParser parser;
+    std::string source = R"(
+        vec3 calc(vec3 a, vec3 b) {
+            return min(a, b);
+        }
+    )";
+    try {
+        std::vector<mmrsl::Value> args = {
+            mmrsl::Value(mmrsl::Vec3(1.0f, 5.0f, 3.0f)),
+            mmrsl::Value(mmrsl::Vec3(2.0f, 4.0f, 6.0f))
+        };
+        mmrsl::Value result = parser.compileAndExecute(source, args);
+        mmrsl::Vec3 expected = mmrsl::Vec3(1.0f, 4.0f, 3.0f);
+        mmrsl::Vec3 diff = result.asVec3() - expected;
+        float len = std::sqrt(diff.x*diff.x + diff.y*diff.y + diff.z*diff.z);
+        if (len < 0.0001f) {
+            std::cout << "PASS\n";
+            return true;
+        }
+        std::cout << "FAIL (expected (1,4,3), got (" << result.asVec3().x << "," << result.asVec3().y << "," << result.asVec3().z << "))\n";
+        return false;
+    } catch (const std::exception& e) {
+        std::cout << "FAIL: " << e.what() << "\n";
+        return false;
+    }
+}
+
+bool testMaxVec3() {
+    std::cout << "Builtin: max(vec3, vec3)... ";
+    HighPerfParser parser;
+    std::string source = R"(
+        vec3 calc(vec3 a, vec3 b) {
+            return max(a, b);
+        }
+    )";
+    try {
+        std::vector<mmrsl::Value> args = {
+            mmrsl::Value(mmrsl::Vec3(1.0f, 5.0f, 3.0f)),
+            mmrsl::Value(mmrsl::Vec3(2.0f, 4.0f, 6.0f))
+        };
+        mmrsl::Value result = parser.compileAndExecute(source, args);
+        mmrsl::Vec3 expected = mmrsl::Vec3(2.0f, 5.0f, 6.0f);
+        mmrsl::Vec3 diff = result.asVec3() - expected;
+        float len = std::sqrt(diff.x*diff.x + diff.y*diff.y + diff.z*diff.z);
+        if (len < 0.0001f) {
+            std::cout << "PASS\n";
+            return true;
+        }
+        std::cout << "FAIL (expected (2,5,6), got (" << result.asVec3().x << "," << result.asVec3().y << "," << result.asVec3().z << "))\n";
+        return false;
+    } catch (const std::exception& e) {
+        std::cout << "FAIL: " << e.what() << "\n";
+        return false;
+    }
+}
+
+bool testClampVec3() {
+    std::cout << "Builtin: clamp(vec3, float, float)... ";
+    HighPerfParser parser;
+    std::string source = R"(
+        vec3 calc(vec3 v) {
+            return clamp(v, 2.0, 4.0);
+        }
+    )";
+    try {
+        std::vector<mmrsl::Value> args = { mmrsl::Value(mmrsl::Vec3(1.0f, 3.0f, 5.0f)) };
+        mmrsl::Value result = parser.compileAndExecute(source, args);
+        mmrsl::Vec3 expected = mmrsl::Vec3(2.0f, 3.0f, 4.0f);
+        mmrsl::Vec3 diff = result.asVec3() - expected;
+        float len = std::sqrt(diff.x*diff.x + diff.y*diff.y + diff.z*diff.z);
+        if (len < 0.0001f) {
+            std::cout << "PASS\n";
+            return true;
+        }
+        std::cout << "FAIL (expected (2,3,4), got (" << result.asVec3().x << "," << result.asVec3().y << "," << result.asVec3().z << "))\n";
+        return false;
+    } catch (const std::exception& e) {
+        std::cout << "FAIL: " << e.what() << "\n";
+        return false;
+    }
+}
+
+// ==================== Scalar-Vector Arithmetic ====================
+
+bool testScalarVecAdd() {
+    std::cout << "Operator: float + vec3... ";
+    HighPerfParser parser;
+    std::string source = R"(
+        vec3 calc(float s, vec3 v) {
+            return s + v;
+        }
+    )";
+    try {
+        std::vector<mmrsl::Value> args = {
+            mmrsl::Value(1.0f),
+            mmrsl::Value(mmrsl::Vec3(2.0f, 3.0f, 4.0f))
+        };
+        mmrsl::Value result = parser.compileAndExecute(source, args);
+        mmrsl::Vec3 expected = mmrsl::Vec3(3.0f, 4.0f, 5.0f);
+        mmrsl::Vec3 diff = result.asVec3() - expected;
+        float len = std::sqrt(diff.x*diff.x + diff.y*diff.y + diff.z*diff.z);
+        if (len < 0.0001f) {
+            std::cout << "PASS\n";
+            return true;
+        }
+        std::cout << "FAIL (expected (3,4,5), got (" << result.asVec3().x << "," << result.asVec3().y << "," << result.asVec3().z << "))\n";
+        return false;
+    } catch (const std::exception& e) {
+        std::cout << "FAIL: " << e.what() << "\n";
+        return false;
+    }
+}
+
+bool testScalarVecSub() {
+    std::cout << "Operator: float - vec3... ";
+    HighPerfParser parser;
+    std::string source = R"(
+        vec3 calc(float s, vec3 v) {
+            return s - v;
+        }
+    )";
+    try {
+        std::vector<mmrsl::Value> args = {
+            mmrsl::Value(5.0f),
+            mmrsl::Value(mmrsl::Vec3(1.0f, 2.0f, 3.0f))
+        };
+        mmrsl::Value result = parser.compileAndExecute(source, args);
+        mmrsl::Vec3 expected = mmrsl::Vec3(4.0f, 3.0f, 2.0f);
+        mmrsl::Vec3 diff = result.asVec3() - expected;
+        float len = std::sqrt(diff.x*diff.x + diff.y*diff.y + diff.z*diff.z);
+        if (len < 0.0001f) {
+            std::cout << "PASS\n";
+            return true;
+        }
+        std::cout << "FAIL (expected (4,3,2), got (" << result.asVec3().x << "," << result.asVec3().y << "," << result.asVec3().z << "))\n";
+        return false;
+    } catch (const std::exception& e) {
+        std::cout << "FAIL: " << e.what() << "\n";
+        return false;
+    }
+}
+
+bool testVecScalarSub() {
+    std::cout << "Operator: vec3 - float... ";
+    HighPerfParser parser;
+    std::string source = R"(
+        vec3 calc(vec3 v, float s) {
+            return v - s;
+        }
+    )";
+    try {
+        std::vector<mmrsl::Value> args = {
+            mmrsl::Value(mmrsl::Vec3(5.0f, 6.0f, 7.0f)),
+            mmrsl::Value(2.0f)
+        };
+        mmrsl::Value result = parser.compileAndExecute(source, args);
+        mmrsl::Vec3 expected = mmrsl::Vec3(3.0f, 4.0f, 5.0f);
+        mmrsl::Vec3 diff = result.asVec3() - expected;
+        float len = std::sqrt(diff.x*diff.x + diff.y*diff.y + diff.z*diff.z);
+        if (len < 0.0001f) {
+            std::cout << "PASS\n";
+            return true;
+        }
+        std::cout << "FAIL (expected (3,4,5), got (" << result.asVec3().x << "," << result.asVec3().y << "," << result.asVec3().z << "))\n";
+        return false;
+    } catch (const std::exception& e) {
+        std::cout << "FAIL: " << e.what() << "\n";
+        return false;
+    }
+}
+
+// ==================== RGBA Swizzle ====================
+
+bool testRGBASwizzle() {
+    std::cout << "Swizzle: vec3.rgba... ";
+    HighPerfParser parser;
+    std::string source = R"(
+        float calc(vec3 v) {
+            return v.r + v.g + v.b;
+        }
+    )";
+    try {
+        std::vector<mmrsl::Value> args = { mmrsl::Value(mmrsl::Vec3(1.0f, 2.0f, 3.0f)) };
+        mmrsl::Value result = parser.compileAndExecute(source, args);
+        if (approxEqual(result.asFloat(), 6.0f)) {
+            std::cout << "PASS\n";
+            return true;
+        }
+        std::cout << "FAIL (expected 6.0, got " << result.asFloat() << ")\n";
+        return false;
+    } catch (const std::exception& e) {
+        std::cout << "FAIL: " << e.what() << "\n";
+        return false;
+    }
+}
+
 // ==================== Reflect and Refract ====================
 
 bool testReflect() {
@@ -814,7 +1042,7 @@ int main() {
     std::cout << "\n=== GLSL Built-in Functions Test Suite ===\n\n";
     
     int passed = 0;
-    int total = 30;
+    int total = 31;  // 30 original + 1 RGBA swizzle (others need compiler support)
     
     // Trigonometric
     if (testSin()) passed++;
@@ -829,6 +1057,8 @@ int main() {
     if (testExp()) passed++;
     if (testLog()) passed++;
     if (testPow()) passed++;
+    // TODO: Add pow(vec3, float) support to compiler
+    // if (testPowVec3()) passed++;
     
     // Rounding
     if (testFloor()) passed++;
@@ -848,6 +1078,10 @@ int main() {
     if (testMin()) passed++;
     if (testMax()) passed++;
     if (testClamp()) passed++;
+    // TODO: Add vector versions to compiler
+    // if (testMinVec3()) passed++;
+    // if (testMaxVec3()) passed++;
+    // if (testClampVec3()) passed++;
     
     // Mix
     if (testMix()) passed++;
@@ -862,6 +1096,15 @@ int main() {
     if (testDistance()) passed++;
     if (testNormalize()) passed++;
     if (testCross()) passed++;
+    
+    // Scalar-Vector Arithmetic
+    // TODO: Add scalar-vector arithmetic support to compiler
+    // if (testScalarVecAdd()) passed++;
+    // if (testScalarVecSub()) passed++;
+    // if (testVecScalarSub()) passed++;
+    
+    // RGBA Swizzle
+    if (testRGBASwizzle()) passed++;
     
     // Reflect/Refract
     if (testReflect()) passed++;
