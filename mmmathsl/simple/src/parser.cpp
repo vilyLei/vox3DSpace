@@ -557,7 +557,9 @@ ExprPtr RecursiveParser::parsePostfix(ExprPtr primary) {
                 return nullptr;
             }
             std::string member = advance().lexeme;
-            if (member != "x" && member != "y" && member != "z" && member != "w") {
+            // Support XYZW and RGBA swizzles
+            if (member != "x" && member != "y" && member != "z" && member != "w" &&
+                member != "r" && member != "g" && member != "b" && member != "a") {
                 error("Invalid member name: " + member);
                 return nullptr;
             }

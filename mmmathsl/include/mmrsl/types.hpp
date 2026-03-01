@@ -57,6 +57,10 @@ struct Vec2 {
     Vec2 operator-() const noexcept { return Vec2(-x, -y); }
 };
 
+// Non-member scalar addition/subtraction (scalar + vector, scalar - vector)
+inline Vec2 operator+(float s, const Vec2& v) noexcept { return Vec2(s + v.x, s + v.y); }
+inline Vec2 operator-(float s, const Vec2& v) noexcept { return Vec2(s - v.x, s - v.y); }
+
 // Non-member scalar multiplication (scalar * vector)
 inline Vec2 operator*(float s, const Vec2& v) noexcept { return v * s; }
 
@@ -89,6 +93,10 @@ struct Vec3 {
     Vec3 operator/(float s) const noexcept { return Vec3(x / s, y / s, z / s); }
     Vec3 operator-() const noexcept { return Vec3(-x, -y, -z); }
 };
+
+// Non-member scalar addition/subtraction (scalar + vector, scalar - vector)
+inline Vec3 operator+(float s, const Vec3& v) noexcept { return Vec3(s + v.x, s + v.y, s + v.z); }
+inline Vec3 operator-(float s, const Vec3& v) noexcept { return Vec3(s - v.x, s - v.y, s - v.z); }
 
 // Non-member scalar multiplication (scalar * vector)
 inline Vec3 operator*(float s, const Vec3& v) noexcept { return v * s; }
@@ -123,6 +131,10 @@ struct Vec4 {
     Vec4 operator/(float s) const noexcept { return Vec4(x / s, y / s, z / s, w / s); }
     Vec4 operator-() const noexcept { return Vec4(-x, -y, -z, -w); }
 };
+
+// Non-member scalar addition/subtraction (scalar + vector, scalar - vector)
+inline Vec4 operator+(float s, const Vec4& v) noexcept { return Vec4(s + v.x, s + v.y, s + v.z, s + v.w); }
+inline Vec4 operator-(float s, const Vec4& v) noexcept { return Vec4(s - v.x, s - v.y, s - v.z, s - v.w); }
 
 // Non-member scalar multiplication (scalar * vector)
 inline Vec4 operator*(float s, const Vec4& v) noexcept { return v * s; }

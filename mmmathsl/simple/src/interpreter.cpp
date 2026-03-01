@@ -189,6 +189,26 @@ Value Interpreter::evaluateBinary(const BinaryExpr& expr) {
             if (left.isInt() && right.isInt()) {
                 return Value(left.asInt() + right.asInt());
             }
+            // Scalar + Vector
+            if (left.isFloat() && right.isVec2()) {
+                return Value(Vec2(left.asFloat()) + right.asVec2());
+            }
+            if (left.isFloat() && right.isVec3()) {
+                return Value(Vec3(left.asFloat()) + right.asVec3());
+            }
+            if (left.isFloat() && right.isVec4()) {
+                return Value(Vec4(left.asFloat()) + right.asVec4());
+            }
+            // Vector + Scalar
+            if (left.isVec2() && right.isFloat()) {
+                return Value(left.asVec2() + Vec2(right.asFloat()));
+            }
+            if (left.isVec3() && right.isFloat()) {
+                return Value(left.asVec3() + Vec3(right.asFloat()));
+            }
+            if (left.isVec4() && right.isFloat()) {
+                return Value(left.asVec4() + Vec4(right.asFloat()));
+            }
             // vec2 + vec2
             if (left.isVec2() && right.isVec2()) {
                 return Value(left.asVec2() + right.asVec2());
@@ -221,6 +241,26 @@ Value Interpreter::evaluateBinary(const BinaryExpr& expr) {
             }
             if (left.isInt() && right.isInt()) {
                 return Value(left.asInt() - right.asInt());
+            }
+            // Scalar - Vector
+            if (left.isFloat() && right.isVec2()) {
+                return Value(Vec2(left.asFloat()) - right.asVec2());
+            }
+            if (left.isFloat() && right.isVec3()) {
+                return Value(Vec3(left.asFloat()) - right.asVec3());
+            }
+            if (left.isFloat() && right.isVec4()) {
+                return Value(Vec4(left.asFloat()) - right.asVec4());
+            }
+            // Vector - Scalar
+            if (left.isVec2() && right.isFloat()) {
+                return Value(left.asVec2() - Vec2(right.asFloat()));
+            }
+            if (left.isVec3() && right.isFloat()) {
+                return Value(left.asVec3() - Vec3(right.asFloat()));
+            }
+            if (left.isVec4() && right.isFloat()) {
+                return Value(left.asVec4() - Vec4(right.asFloat()));
             }
             if (left.isVec2() && right.isVec2()) {
                 return Value(left.asVec2() - right.asVec2());
@@ -609,25 +649,25 @@ Value Interpreter::evaluateMemberAccess(const MemberAccessExpr& expr) {
     
     if (object.isVec2()) {
         Vec2 v = object.asVec2();
-        if (expr.member == "x") return Value(v.x);
-        if (expr.member == "y") return Value(v.y);
+        if (expr.member == "x" || expr.member == "r") return Value(v.x);
+        if (expr.member == "y" || expr.member == "g") return Value(v.y);
         throw RuntimeError("vec2 does not have member '" + expr.member + "'");
     }
     
     if (object.isVec3()) {
         Vec3 v = object.asVec3();
-        if (expr.member == "x") return Value(v.x);
-        if (expr.member == "y") return Value(v.y);
-        if (expr.member == "z") return Value(v.z);
+        if (expr.member == "x" || expr.member == "r") return Value(v.x);
+        if (expr.member == "y" || expr.member == "g") return Value(v.y);
+        if (expr.member == "z" || expr.member == "b") return Value(v.z);
         throw RuntimeError("vec3 does not have member '" + expr.member + "'");
     }
     
     if (object.isVec4()) {
         Vec4 v = object.asVec4();
-        if (expr.member == "x") return Value(v.x);
-        if (expr.member == "y") return Value(v.y);
-        if (expr.member == "z") return Value(v.z);
-        if (expr.member == "w") return Value(v.w);
+        if (expr.member == "x" || expr.member == "r") return Value(v.x);
+        if (expr.member == "y" || expr.member == "g") return Value(v.y);
+        if (expr.member == "z" || expr.member == "b") return Value(v.z);
+        if (expr.member == "w" || expr.member == "a") return Value(v.w);
         throw RuntimeError("vec4 does not have member '" + expr.member + "'");
     }
     
@@ -781,20 +821,58 @@ Value Interpreter::callBuiltin(const std::string& name, const std::vector<Value>
         if (args.size() != 2) {
             throw RuntimeError("min() takes exactly 2 arguments");
         }
+        // Scalar min
         if (args[0].isFloat() && args[1].isFloat()) {
             return Value(std::min(args[0].asFloat(), args[1].asFloat()));
         }
-        throw RuntimeError("min() requires float arguments");
+        // vec2 min
+        if (args[0].isVec2() && args[1].isVec2()) {
+            Vec2 a = args[0].asVec2();
+            Vec2 b = args[1].asVec2();
+            return Value(Vec2(std::min(a.x, b.x), std::min(a.y, b.y)));
+        }
+        // vec3 min
+        if (args[0].isVec3() && args[1].isVec3()) {
+            Vec3 a = args[0].asVec3();
+            Vec3 b = args[1].asVec3();
+            return Value(Vec3(std::min(a.x, b.x), std::min(a.y, b.y), std::min(a.z, b.z)));
+        }
+        // vec4 min
+        if (args[0].isVec4() && args[1].isVec4()) {
+            Vec4 a = args[0].asVec4();
+            Vec4 b = args[1].asVec4();
+            return Value(Vec4(std::min(a.x, b.x), std::min(a.y, b.y), std::min(a.z, b.z), std::min(a.w, b.w)));
+        }
+        throw RuntimeError("min() requires compatible arguments");
     }
     
     if (name == "max") {
         if (args.size() != 2) {
             throw RuntimeError("max() takes exactly 2 arguments");
         }
+        // Scalar max
         if (args[0].isFloat() && args[1].isFloat()) {
             return Value(std::max(args[0].asFloat(), args[1].asFloat()));
         }
-        throw RuntimeError("max() requires float arguments");
+        // vec2 max
+        if (args[0].isVec2() && args[1].isVec2()) {
+            Vec2 a = args[0].asVec2();
+            Vec2 b = args[1].asVec2();
+            return Value(Vec2(std::max(a.x, b.x), std::max(a.y, b.y)));
+        }
+        // vec3 max
+        if (args[0].isVec3() && args[1].isVec3()) {
+            Vec3 a = args[0].asVec3();
+            Vec3 b = args[1].asVec3();
+            return Value(Vec3(std::max(a.x, b.x), std::max(a.y, b.y), std::max(a.z, b.z)));
+        }
+        // vec4 max
+        if (args[0].isVec4() && args[1].isVec4()) {
+            Vec4 a = args[0].asVec4();
+            Vec4 b = args[1].asVec4();
+            return Value(Vec4(std::max(a.x, b.x), std::max(a.y, b.y), std::max(a.z, b.z), std::max(a.w, b.w)));
+        }
+        throw RuntimeError("max() requires compatible arguments");
     }
     
     if (name == "dot") {
@@ -1012,13 +1090,47 @@ Value Interpreter::callBuiltin(const std::string& name, const std::vector<Value>
     // Interpolation functions
     if (name == "clamp") {
         if (args.size() != 3) throw RuntimeError("clamp() takes exactly 3 arguments");
+        // Scalar clamp
         if (args[0].isFloat() && args[1].isFloat() && args[2].isFloat()) {
             float x = args[0].asFloat();
             float minVal = args[1].asFloat();
             float maxVal = args[2].asFloat();
             return Value(x < minVal ? minVal : (x > maxVal ? maxVal : x));
         }
-        throw RuntimeError("clamp() requires float arguments");
+        // vec2 clamp
+        if (args[0].isVec2() && args[1].isFloat() && args[2].isFloat()) {
+            Vec2 v = args[0].asVec2();
+            float minVal = args[1].asFloat();
+            float maxVal = args[2].asFloat();
+            return Value(Vec2(
+                v.x < minVal ? minVal : (v.x > maxVal ? maxVal : v.x),
+                v.y < minVal ? minVal : (v.y > maxVal ? maxVal : v.y)
+            ));
+        }
+        // vec3 clamp
+        if (args[0].isVec3() && args[1].isFloat() && args[2].isFloat()) {
+            Vec3 v = args[0].asVec3();
+            float minVal = args[1].asFloat();
+            float maxVal = args[2].asFloat();
+            return Value(Vec3(
+                v.x < minVal ? minVal : (v.x > maxVal ? maxVal : v.x),
+                v.y < minVal ? minVal : (v.y > maxVal ? maxVal : v.y),
+                v.z < minVal ? minVal : (v.z > maxVal ? maxVal : v.z)
+            ));
+        }
+        // vec4 clamp
+        if (args[0].isVec4() && args[1].isFloat() && args[2].isFloat()) {
+            Vec4 v = args[0].asVec4();
+            float minVal = args[1].asFloat();
+            float maxVal = args[2].asFloat();
+            return Value(Vec4(
+                v.x < minVal ? minVal : (v.x > maxVal ? maxVal : v.x),
+                v.y < minVal ? minVal : (v.y > maxVal ? maxVal : v.y),
+                v.z < minVal ? minVal : (v.z > maxVal ? maxVal : v.z),
+                v.w < minVal ? minVal : (v.w > maxVal ? maxVal : v.w)
+            ));
+        }
+        throw RuntimeError("clamp() requires compatible arguments");
     }
     
     if (name == "mix") {

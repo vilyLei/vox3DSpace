@@ -773,13 +773,14 @@ uint8_t Compiler::compileMemberAccess(const MemberAccessExpr& expr) {
     uint8_t objectReg = compileExpression(*expr.object);
     uint8_t resultReg = allocateRegister();
     
-    if (expr.member == "x") {
+    // Support XYZW and RGBA swizzles
+    if (expr.member == "x" || expr.member == "r") {
         currentFunc_->emit(OpCode::MEMBER_X, resultReg, objectReg, 0);
-    } else if (expr.member == "y") {
+    } else if (expr.member == "y" || expr.member == "g") {
         currentFunc_->emit(OpCode::MEMBER_Y, resultReg, objectReg, 0);
-    } else if (expr.member == "z") {
+    } else if (expr.member == "z" || expr.member == "b") {
         currentFunc_->emit(OpCode::MEMBER_Z, resultReg, objectReg, 0);
-    } else if (expr.member == "w") {
+    } else if (expr.member == "w" || expr.member == "a") {
         currentFunc_->emit(OpCode::MEMBER_W, resultReg, objectReg, 0);
     } else {
         setError("Unknown member: " + expr.member);

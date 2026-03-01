@@ -46,7 +46,7 @@ if(NOT GLM_ROOT OR NOT EXISTS "${GLM_ROOT}")
     message(STATUS "GLM fetched via FetchContent: ${GLM_ROOT}")
 endif()
 
-# 最终验�?
+# 最终验�?
 if(NOT EXISTS "${GLM_ROOT}/glm/glm.hpp")
     message(FATAL_ERROR "GLM not found at ${GLM_ROOT}. Please set GLM_ROOT via:\n"
         "  - cmake -DGLM_ROOT=/path/to/glm\n"
@@ -132,6 +132,10 @@ target_link_libraries(mmrsl_hp_complex PRIVATE mmrsl)
 add_executable(mmrsl_hp_builtin high_perf/tests/test_hp_builtin.cpp)
 target_link_libraries(mmrsl_hp_builtin PRIVATE mmrsl)
 
+# High-performance version pipeline test executable
+add_executable(mmrsl_hp_pipeline high_perf/tests/test_hp_pipeline.cpp)
+target_link_libraries(mmrsl_hp_pipeline PRIVATE mmrsl)
+
 # Apply UTF-8 encoding to all test executables on MSVC
 if(MSVC)
     target_compile_options(mmrsl_test PRIVATE /utf-8)
@@ -139,6 +143,7 @@ if(MSVC)
     target_compile_options(mmrsl_hp_stress PRIVATE /utf-8)
     target_compile_options(mmrsl_hp_complex PRIVATE /utf-8)
     target_compile_options(mmrsl_hp_builtin PRIVATE /utf-8)
+    target_compile_options(mmrsl_hp_pipeline PRIVATE /utf-8)
 endif()
 
 # Link Windows PSAPI for memory monitoring

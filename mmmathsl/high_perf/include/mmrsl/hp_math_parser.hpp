@@ -2,8 +2,8 @@
 
 // High-performance math parser using bytecode VM
 
-#include "compiler.hpp"
-#include "vm.hpp"
+#include "mmrsl/detail/compiler.hpp"
+#include "mmrsl/detail/vm.hpp"
 #include "../../../simple/include/mmrsl/lexer.hpp"
 #include "../../../simple/include/mmrsl/parser.hpp"
 #include <chrono>
