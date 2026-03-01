@@ -161,6 +161,12 @@ Value VM::execute(const BytecodeFunction& func, const std::vector<Value>& args) 
             case OpCode::DIV_VEC2_FLOAT:
                 divVec2Float(inst.regDest, inst.regSrc1, inst.regSrc2);
                 break;
+            case OpCode::ADD_FLOAT_VEC2:
+                addFloatVec2(inst.regDest, inst.regSrc1, inst.regSrc2);
+                break;
+            case OpCode::SUB_FLOAT_VEC2:
+                subFloatVec2(inst.regDest, inst.regSrc1, inst.regSrc2);
+                break;
             case OpCode::NEG_VEC2:
                 negVec2(inst.regDest, inst.regSrc1);
                 break;
@@ -181,6 +187,15 @@ Value VM::execute(const BytecodeFunction& func, const std::vector<Value>& args) 
             case OpCode::DIV_VEC3_FLOAT:
                 divVec3Float(inst.regDest, inst.regSrc1, inst.regSrc2);
                 break;
+            case OpCode::SUB_VEC3_FLOAT:
+                subVec3Float(inst.regDest, inst.regSrc1, inst.regSrc2);
+                break;
+            case OpCode::ADD_FLOAT_VEC3:
+                addFloatVec3(inst.regDest, inst.regSrc1, inst.regSrc2);
+                break;
+            case OpCode::SUB_FLOAT_VEC3:
+                subFloatVec3(inst.regDest, inst.regSrc1, inst.regSrc2);
+                break;
             case OpCode::NEG_VEC3:
                 negVec3(inst.regDest, inst.regSrc1);
                 break;
@@ -200,6 +215,12 @@ Value VM::execute(const BytecodeFunction& func, const std::vector<Value>& args) 
                 break;
             case OpCode::DIV_VEC4_FLOAT:
                 divVec4Float(inst.regDest, inst.regSrc1, inst.regSrc2);
+                break;
+            case OpCode::ADD_FLOAT_VEC4:
+                addFloatVec4(inst.regDest, inst.regSrc1, inst.regSrc2);
+                break;
+            case OpCode::SUB_FLOAT_VEC4:
+                subFloatVec4(inst.regDest, inst.regSrc1, inst.regSrc2);
                 break;
             case OpCode::NEG_VEC4:
                 negVec4(inst.regDest, inst.regSrc1);
@@ -259,6 +280,15 @@ Value VM::execute(const BytecodeFunction& func, const std::vector<Value>& args) 
                 break;
             case OpCode::CALL_POW:
                 callPow(inst.regDest, inst.regSrc1, inst.regSrc2);
+                break;
+            case OpCode::CALL_POW_VEC2:
+                callPowVec2(inst.regDest, inst.regSrc1, inst.regSrc2);
+                break;
+            case OpCode::CALL_POW_VEC3:
+                callPowVec3(inst.regDest, inst.regSrc1, inst.regSrc2);
+                break;
+            case OpCode::CALL_POW_VEC4:
+                callPowVec4(inst.regDest, inst.regSrc1, inst.regSrc2);
                 break;
             case OpCode::CALL_MOD_FLOAT:
                 callModFloat(inst.regDest, inst.regSrc1, inst.regSrc2);
@@ -329,8 +359,35 @@ Value VM::execute(const BytecodeFunction& func, const std::vector<Value>& args) 
             case OpCode::CALL_MAX_FLOAT:
                 callMaxFloat(inst.regDest, inst.regSrc1, inst.regSrc2);
                 break;
+            case OpCode::CALL_MIN_VEC2:
+                callMinVec2(inst.regDest, inst.regSrc1, inst.regSrc2);
+                break;
+            case OpCode::CALL_MAX_VEC2:
+                callMaxVec2(inst.regDest, inst.regSrc1, inst.regSrc2);
+                break;
+            case OpCode::CALL_MIN_VEC3:
+                callMinVec3(inst.regDest, inst.regSrc1, inst.regSrc2);
+                break;
+            case OpCode::CALL_MAX_VEC3:
+                callMaxVec3(inst.regDest, inst.regSrc1, inst.regSrc2);
+                break;
+            case OpCode::CALL_MIN_VEC4:
+                callMinVec4(inst.regDest, inst.regSrc1, inst.regSrc2);
+                break;
+            case OpCode::CALL_MAX_VEC4:
+                callMaxVec4(inst.regDest, inst.regSrc1, inst.regSrc2);
+                break;
             case OpCode::CALL_CLAMP_FLOAT:
                 callClampFloat(inst.regDest, inst.regSrc1, inst.regSrc2);
+                break;
+            case OpCode::CALL_CLAMP_VEC2:
+                callClampVec2(inst.regDest, inst.regSrc1, inst.regSrc2);
+                break;
+            case OpCode::CALL_CLAMP_VEC3:
+                callClampVec3(inst.regDest, inst.regSrc1, inst.regSrc2);
+                break;
+            case OpCode::CALL_CLAMP_VEC4:
+                callClampVec4(inst.regDest, inst.regSrc1, inst.regSrc2);
                 break;
             case OpCode::CALL_MIX_FLOAT:
                 callMixFloat(inst.regDest, inst.regSrc1, inst.regSrc2);
@@ -625,8 +682,18 @@ void VM::addVec2(uint8_t rd, uint8_t rs1, uint8_t rs2) {
     registers_[rd] = Value(registers_[rs1].asVec2() + registers_[rs2].asVec2());
 }
 
+void VM::addFloatVec2(uint8_t rd, uint8_t rs1, uint8_t rs2) {
+    // scalar + vec2: rs1 = scalar, rs2 = vec2
+    registers_[rd] = Value(Vec2(registers_[rs1].asFloat()) + registers_[rs2].asVec2());
+}
+
 void VM::subVec2(uint8_t rd, uint8_t rs1, uint8_t rs2) {
     registers_[rd] = Value(registers_[rs1].asVec2() - registers_[rs2].asVec2());
+}
+
+void VM::subFloatVec2(uint8_t rd, uint8_t rs1, uint8_t rs2) {
+    // scalar - vec2: rs1 = scalar, rs2 = vec2
+    registers_[rd] = Value(Vec2(registers_[rs1].asFloat()) - registers_[rs2].asVec2());
 }
 
 void VM::mulVec2(uint8_t rd, uint8_t rs1, uint8_t rs2) {
@@ -655,6 +722,16 @@ void VM::addVec3(uint8_t rd, uint8_t rs1, uint8_t rs2) {
     registers_[rd] = Value(registers_[rs1].asVec3() + registers_[rs2].asVec3());
 }
 
+void VM::addFloatVec3(uint8_t rd, uint8_t rs1, uint8_t rs2) {
+    // scalar + vec3: rs1 = scalar, rs2 = vec3
+    registers_[rd] = Value(Vec3(registers_[rs1].asFloat()) + registers_[rs2].asVec3());
+}
+
+void VM::subFloatVec3(uint8_t rd, uint8_t rs1, uint8_t rs2) {
+    // scalar - vec3: rs1 = scalar, rs2 = vec3
+    registers_[rd] = Value(Vec3(registers_[rs1].asFloat()) - registers_[rs2].asVec3());
+}
+
 void VM::subVec3(uint8_t rd, uint8_t rs1, uint8_t rs2) {
     registers_[rd] = Value(registers_[rs1].asVec3() - registers_[rs2].asVec3());
 }
@@ -676,6 +753,11 @@ void VM::divVec3Float(uint8_t rd, uint8_t rs1, uint8_t rs2) {
     registers_[rd] = Value(registers_[rs1].asVec3() / divisor);
 }
 
+void VM::subVec3Float(uint8_t rd, uint8_t rs1, uint8_t rs2) {
+    // vec3 - scalar: rs1 = vec3, rs2 = scalar
+    registers_[rd] = Value(registers_[rs1].asVec3() - Vec3(registers_[rs2].asFloat()));
+}
+
 void VM::negVec3(uint8_t rd, uint8_t rs) {
     registers_[rd] = Value(-registers_[rs].asVec3());
 }
@@ -685,8 +767,18 @@ void VM::addVec4(uint8_t rd, uint8_t rs1, uint8_t rs2) {
     registers_[rd] = Value(registers_[rs1].asVec4() + registers_[rs2].asVec4());
 }
 
+void VM::addFloatVec4(uint8_t rd, uint8_t rs1, uint8_t rs2) {
+    // scalar + vec4: rs1 = scalar, rs2 = vec4
+    registers_[rd] = Value(Vec4(registers_[rs1].asFloat()) + registers_[rs2].asVec4());
+}
+
 void VM::subVec4(uint8_t rd, uint8_t rs1, uint8_t rs2) {
     registers_[rd] = Value(registers_[rs1].asVec4() - registers_[rs2].asVec4());
+}
+
+void VM::subFloatVec4(uint8_t rd, uint8_t rs1, uint8_t rs2) {
+    // scalar - vec4: rs1 = scalar, rs2 = vec4
+    registers_[rd] = Value(Vec4(registers_[rs1].asFloat()) - registers_[rs2].asVec4());
 }
 
 void VM::mulVec4(uint8_t rd, uint8_t rs1, uint8_t rs2) {
@@ -788,6 +880,36 @@ void VM::callPow(uint8_t rd, uint8_t rs1, uint8_t rs2) {
     float base = registers_[rs1].asFloat();
     float exponent = registers_[rs2].asFloat();
     registers_[rd] = Value(std::pow(base, exponent));
+}
+
+void VM::callPowVec2(uint8_t rd, uint8_t rs1, uint8_t rs2) {
+    Vec2 base = registers_[rs1].asVec2();
+    float exponent = registers_[rs2].asFloat();
+    registers_[rd] = Value(Vec2(
+        std::pow(base.x, exponent),
+        std::pow(base.y, exponent)
+    ));
+}
+
+void VM::callPowVec3(uint8_t rd, uint8_t rs1, uint8_t rs2) {
+    Vec3 base = registers_[rs1].asVec3();
+    float exponent = registers_[rs2].asFloat();
+    registers_[rd] = Value(Vec3(
+        std::pow(base.x, exponent),
+        std::pow(base.y, exponent),
+        std::pow(base.z, exponent)
+    ));
+}
+
+void VM::callPowVec4(uint8_t rd, uint8_t rs1, uint8_t rs2) {
+    Vec4 base = registers_[rs1].asVec4();
+    float exponent = registers_[rs2].asFloat();
+    registers_[rd] = Value(Vec4(
+        std::pow(base.x, exponent),
+        std::pow(base.y, exponent),
+        std::pow(base.z, exponent),
+        std::pow(base.w, exponent)
+    ));
 }
 
 void VM::callModFloat(uint8_t rd, uint8_t rs1, uint8_t rs2) {
@@ -940,6 +1062,66 @@ void VM::callMaxFloat(uint8_t rd, uint8_t rs1, uint8_t rs2) {
     registers_[rd] = Value(std::max(registers_[rs1].asFloat(), registers_[rs2].asFloat()));
 }
 
+void VM::callMinVec2(uint8_t rd, uint8_t rs1, uint8_t rs2) {
+    Vec2 a = registers_[rs1].asVec2();
+    Vec2 b = registers_[rs2].asVec2();
+    registers_[rd] = Value(Vec2(
+        std::min(a.x, b.x),
+        std::min(a.y, b.y)
+    ));
+}
+
+void VM::callMaxVec2(uint8_t rd, uint8_t rs1, uint8_t rs2) {
+    Vec2 a = registers_[rs1].asVec2();
+    Vec2 b = registers_[rs2].asVec2();
+    registers_[rd] = Value(Vec2(
+        std::max(a.x, b.x),
+        std::max(a.y, b.y)
+    ));
+}
+
+void VM::callMinVec3(uint8_t rd, uint8_t rs1, uint8_t rs2) {
+    Vec3 a = registers_[rs1].asVec3();
+    Vec3 b = registers_[rs2].asVec3();
+    registers_[rd] = Value(Vec3(
+        std::min(a.x, b.x),
+        std::min(a.y, b.y),
+        std::min(a.z, b.z)
+    ));
+}
+
+void VM::callMaxVec3(uint8_t rd, uint8_t rs1, uint8_t rs2) {
+    Vec3 a = registers_[rs1].asVec3();
+    Vec3 b = registers_[rs2].asVec3();
+    registers_[rd] = Value(Vec3(
+        std::max(a.x, b.x),
+        std::max(a.y, b.y),
+        std::max(a.z, b.z)
+    ));
+}
+
+void VM::callMinVec4(uint8_t rd, uint8_t rs1, uint8_t rs2) {
+    Vec4 a = registers_[rs1].asVec4();
+    Vec4 b = registers_[rs2].asVec4();
+    registers_[rd] = Value(Vec4(
+        std::min(a.x, b.x),
+        std::min(a.y, b.y),
+        std::min(a.z, b.z),
+        std::min(a.w, b.w)
+    ));
+}
+
+void VM::callMaxVec4(uint8_t rd, uint8_t rs1, uint8_t rs2) {
+    Vec4 a = registers_[rs1].asVec4();
+    Vec4 b = registers_[rs2].asVec4();
+    registers_[rd] = Value(Vec4(
+        std::max(a.x, b.x),
+        std::max(a.y, b.y),
+        std::max(a.z, b.z),
+        std::max(a.w, b.w)
+    ));
+}
+
 void VM::callClampFloat(uint8_t rd, uint8_t rs1, uint8_t rs2) {
     // clamp(value, min, max)
     // rs1 = value, rs2 = min, thirdParam_ = max
@@ -948,6 +1130,42 @@ void VM::callClampFloat(uint8_t rd, uint8_t rs1, uint8_t rs2) {
     float maxVal = thirdParam_.asFloat();
     // Use std::min and std::max for C++14 compatibility
     registers_[rd] = Value(std::min(std::max(value, minVal), maxVal));
+}
+
+void VM::callClampVec2(uint8_t rd, uint8_t rs1, uint8_t rs2) {
+    // clamp(vec, min, max) - min/max are scalar
+    Vec2 value = registers_[rs1].asVec2();
+    float minVal = registers_[rs2].asFloat();
+    float maxVal = thirdParam_.asFloat();
+    registers_[rd] = Value(Vec2(
+        std::min(std::max(value.x, minVal), maxVal),
+        std::min(std::max(value.y, minVal), maxVal)
+    ));
+}
+
+void VM::callClampVec3(uint8_t rd, uint8_t rs1, uint8_t rs2) {
+    // clamp(vec, min, max) - min/max are scalar
+    Vec3 value = registers_[rs1].asVec3();
+    float minVal = registers_[rs2].asFloat();
+    float maxVal = thirdParam_.asFloat();
+    registers_[rd] = Value(Vec3(
+        std::min(std::max(value.x, minVal), maxVal),
+        std::min(std::max(value.y, minVal), maxVal),
+        std::min(std::max(value.z, minVal), maxVal)
+    ));
+}
+
+void VM::callClampVec4(uint8_t rd, uint8_t rs1, uint8_t rs2) {
+    // clamp(vec, min, max) - min/max are scalar
+    Vec4 value = registers_[rs1].asVec4();
+    float minVal = registers_[rs2].asFloat();
+    float maxVal = thirdParam_.asFloat();
+    registers_[rd] = Value(Vec4(
+        std::min(std::max(value.x, minVal), maxVal),
+        std::min(std::max(value.y, minVal), maxVal),
+        std::min(std::max(value.z, minVal), maxVal),
+        std::min(std::max(value.w, minVal), maxVal)
+    ));
 }
 
 void VM::callMixFloat(uint8_t rd, uint8_t rs1, uint8_t rs2) {

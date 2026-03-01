@@ -36,6 +36,8 @@ enum class OpCode : uint8_t {
     MUL_VEC2,               // Component-wise multiply
     MUL_VEC2_FLOAT,         // vec2 * scalar
     DIV_VEC2_FLOAT,         // vec2 / scalar
+    ADD_FLOAT_VEC2,         // scalar + vec2
+    SUB_FLOAT_VEC2,         // scalar - vec2
     NEG_VEC2,
     
     // Vector arithmetic - vec3
@@ -44,6 +46,9 @@ enum class OpCode : uint8_t {
     MUL_VEC3,
     MUL_VEC3_FLOAT,
     DIV_VEC3_FLOAT,
+    SUB_VEC3_FLOAT,         // vec3 - scalar
+    ADD_FLOAT_VEC3,         // scalar + vec3
+    SUB_FLOAT_VEC3,         // scalar - vec3
     NEG_VEC3,
     
     // Vector arithmetic - vec4
@@ -52,6 +57,8 @@ enum class OpCode : uint8_t {
     MUL_VEC4,
     MUL_VEC4_FLOAT,
     DIV_VEC4_FLOAT,
+    ADD_FLOAT_VEC4,         // scalar + vec4
+    SUB_FLOAT_VEC4,         // scalar - vec4
     NEG_VEC4,
     
     // Built-in functions (operand = register index)
@@ -73,6 +80,9 @@ enum class OpCode : uint8_t {
     CALL_EXP,               // exp(float) -> float
     CALL_LOG,               // log(float) -> float
     CALL_POW,               // pow(float, float) -> float
+    CALL_POW_VEC2,          // pow(vec2, float) -> vec2
+    CALL_POW_VEC3,          // pow(vec3, float) -> vec3
+    CALL_POW_VEC4,          // pow(vec4, float) -> vec4
     
     CALL_MOD_FLOAT,         // mod(float, float) -> float
     
@@ -101,9 +111,18 @@ enum class OpCode : uint8_t {
     
     CALL_MIN_FLOAT,         // min(float, float) -> float
     CALL_MAX_FLOAT,         // max(float, float) -> float
+    CALL_MIN_VEC2,          // min(vec2, vec2) -> vec2
+    CALL_MAX_VEC2,          // max(vec2, vec2) -> vec2
+    CALL_MIN_VEC3,          // min(vec3, vec3) -> vec3
+    CALL_MAX_VEC3,          // max(vec3, vec3) -> vec3
+    CALL_MIN_VEC4,          // min(vec4, vec4) -> vec4
+    CALL_MAX_VEC4,          // max(vec4, vec4) -> vec4
     
     // Clamp and mix functions
     CALL_CLAMP_FLOAT,       // clamp(float, float, float) -> float
+    CALL_CLAMP_VEC2,        // clamp(vec2, float, float) -> vec2
+    CALL_CLAMP_VEC3,        // clamp(vec3, float, float) -> vec3
+    CALL_CLAMP_VEC4,        // clamp(vec4, float, float) -> vec4
     CALL_MIX_FLOAT,         // mix(float, float, float) -> float
     CALL_MIX_VEC2,          // mix(vec2, vec2, float) -> vec2
     CALL_MIX_VEC3,          // mix(vec3, vec3, float) -> vec3

@@ -1042,7 +1042,7 @@ int main() {
     std::cout << "\n=== GLSL Built-in Functions Test Suite ===\n\n";
     
     int passed = 0;
-    int total = 31;  // 30 original + 1 RGBA swizzle (others need compiler support)
+    int total = 38;  // All tests enabled
     
     // Trigonometric
     if (testSin()) passed++;
@@ -1057,8 +1057,7 @@ int main() {
     if (testExp()) passed++;
     if (testLog()) passed++;
     if (testPow()) passed++;
-    // TODO: Add pow(vec3, float) support to compiler
-    // if (testPowVec3()) passed++;
+    if (testPowVec3()) passed++;
     
     // Rounding
     if (testFloor()) passed++;
@@ -1078,10 +1077,9 @@ int main() {
     if (testMin()) passed++;
     if (testMax()) passed++;
     if (testClamp()) passed++;
-    // TODO: Add vector versions to compiler
-    // if (testMinVec3()) passed++;
-    // if (testMaxVec3()) passed++;
-    // if (testClampVec3()) passed++;
+    if (testMinVec3()) passed++;
+    if (testMaxVec3()) passed++;
+    if (testClampVec3()) passed++;
     
     // Mix
     if (testMix()) passed++;
@@ -1098,10 +1096,9 @@ int main() {
     if (testCross()) passed++;
     
     // Scalar-Vector Arithmetic
-    // TODO: Add scalar-vector arithmetic support to compiler
-    // if (testScalarVecAdd()) passed++;
-    // if (testScalarVecSub()) passed++;
-    // if (testVecScalarSub()) passed++;
+    if (testScalarVecAdd()) passed++;
+    if (testScalarVecSub()) passed++;
+    if (testVecScalarSub()) passed++;
     
     // RGBA Swizzle
     if (testRGBASwizzle()) passed++;

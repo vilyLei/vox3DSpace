@@ -78,6 +78,8 @@ private:
     void mulVec2(uint8_t rd, uint8_t rs1, uint8_t rs2);
     void mulVec2Float(uint8_t rd, uint8_t rs1, uint8_t rs2);
     void divVec2Float(uint8_t rd, uint8_t rs1, uint8_t rs2);
+    void addFloatVec2(uint8_t rd, uint8_t rs1, uint8_t rs2);
+    void subFloatVec2(uint8_t rd, uint8_t rs1, uint8_t rs2);
     void negVec2(uint8_t rd, uint8_t rs);
     
     void addVec3(uint8_t rd, uint8_t rs1, uint8_t rs2);
@@ -85,6 +87,9 @@ private:
     void mulVec3(uint8_t rd, uint8_t rs1, uint8_t rs2);
     void mulVec3Float(uint8_t rd, uint8_t rs1, uint8_t rs2);
     void divVec3Float(uint8_t rd, uint8_t rs1, uint8_t rs2);
+    void subVec3Float(uint8_t rd, uint8_t rs1, uint8_t rs2);
+    void addFloatVec3(uint8_t rd, uint8_t rs1, uint8_t rs2);
+    void subFloatVec3(uint8_t rd, uint8_t rs1, uint8_t rs2);
     void negVec3(uint8_t rd, uint8_t rs);
     
     void addVec4(uint8_t rd, uint8_t rs1, uint8_t rs2);
@@ -92,6 +97,8 @@ private:
     void mulVec4(uint8_t rd, uint8_t rs1, uint8_t rs2);
     void mulVec4Float(uint8_t rd, uint8_t rs1, uint8_t rs2);
     void divVec4Float(uint8_t rd, uint8_t rs1, uint8_t rs2);
+    void addFloatVec4(uint8_t rd, uint8_t rs1, uint8_t rs2);
+    void subFloatVec4(uint8_t rd, uint8_t rs1, uint8_t rs2);
     void negVec4(uint8_t rd, uint8_t rs);
     
     // Built-in functions
@@ -113,6 +120,9 @@ private:
     void callExp(uint8_t rd, uint8_t rs);
     void callLog(uint8_t rd, uint8_t rs);
     void callPow(uint8_t rd, uint8_t rs1, uint8_t rs2);
+    void callPowVec2(uint8_t rd, uint8_t rs1, uint8_t rs2);
+    void callPowVec3(uint8_t rd, uint8_t rs1, uint8_t rs2);
+    void callPowVec4(uint8_t rd, uint8_t rs1, uint8_t rs2);
     void callModFloat(uint8_t rd, uint8_t rs1, uint8_t rs2);
     
     void callDotVec2(uint8_t rd, uint8_t rs1, uint8_t rs2);
@@ -135,8 +145,17 @@ private:
     
     void callMinFloat(uint8_t rd, uint8_t rs1, uint8_t rs2);
     void callMaxFloat(uint8_t rd, uint8_t rs1, uint8_t rs2);
+    void callMinVec2(uint8_t rd, uint8_t rs1, uint8_t rs2);
+    void callMaxVec2(uint8_t rd, uint8_t rs1, uint8_t rs2);
+    void callMinVec3(uint8_t rd, uint8_t rs1, uint8_t rs2);
+    void callMaxVec3(uint8_t rd, uint8_t rs1, uint8_t rs2);
+    void callMinVec4(uint8_t rd, uint8_t rs1, uint8_t rs2);
+    void callMaxVec4(uint8_t rd, uint8_t rs1, uint8_t rs2);
     
     void callClampFloat(uint8_t rd, uint8_t rs1, uint8_t rs2);
+    void callClampVec2(uint8_t rd, uint8_t rs1, uint8_t rs2);
+    void callClampVec3(uint8_t rd, uint8_t rs1, uint8_t rs2);
+    void callClampVec4(uint8_t rd, uint8_t rs1, uint8_t rs2);
     void callMixFloat(uint8_t rd, uint8_t rs1, uint8_t rs2);
     void callMixVec2(uint8_t rd, uint8_t rs1, uint8_t rs2);
     void callMixVec3(uint8_t rd, uint8_t rs1, uint8_t rs2);

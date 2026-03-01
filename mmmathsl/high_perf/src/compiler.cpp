@@ -208,10 +208,16 @@ uint8_t Compiler::compileBinary(const BinaryExpr& expr) {
                 currentFunc_->emit(OpCode::ADD_FLOAT, resultReg, leftReg, rightReg);
             } else if (leftType == TypeKind::Vec2 && rightType == TypeKind::Vec2) {
                 currentFunc_->emit(OpCode::ADD_VEC2, resultReg, leftReg, rightReg);
+            } else if (leftType == TypeKind::Float && rightType == TypeKind::Vec2) {
+                currentFunc_->emit(OpCode::ADD_FLOAT_VEC2, resultReg, leftReg, rightReg);
             } else if (leftType == TypeKind::Vec3 && rightType == TypeKind::Vec3) {
                 currentFunc_->emit(OpCode::ADD_VEC3, resultReg, leftReg, rightReg);
+            } else if (leftType == TypeKind::Float && rightType == TypeKind::Vec3) {
+                currentFunc_->emit(OpCode::ADD_FLOAT_VEC3, resultReg, leftReg, rightReg);
             } else if (leftType == TypeKind::Vec4 && rightType == TypeKind::Vec4) {
                 currentFunc_->emit(OpCode::ADD_VEC4, resultReg, leftReg, rightReg);
+            } else if (leftType == TypeKind::Float && rightType == TypeKind::Vec4) {
+                currentFunc_->emit(OpCode::ADD_FLOAT_VEC4, resultReg, leftReg, rightReg);
             } else {
                 setError("Invalid operand types for '+' operator");
             }
@@ -221,10 +227,19 @@ uint8_t Compiler::compileBinary(const BinaryExpr& expr) {
                 currentFunc_->emit(OpCode::SUB_FLOAT, resultReg, leftReg, rightReg);
             } else if (leftType == TypeKind::Vec2 && rightType == TypeKind::Vec2) {
                 currentFunc_->emit(OpCode::SUB_VEC2, resultReg, leftReg, rightReg);
+            } else if (leftType == TypeKind::Float && rightType == TypeKind::Vec2) {
+                currentFunc_->emit(OpCode::SUB_FLOAT_VEC2, resultReg, leftReg, rightReg);
             } else if (leftType == TypeKind::Vec3 && rightType == TypeKind::Vec3) {
                 currentFunc_->emit(OpCode::SUB_VEC3, resultReg, leftReg, rightReg);
+            } else if (leftType == TypeKind::Float && rightType == TypeKind::Vec3) {
+                currentFunc_->emit(OpCode::SUB_FLOAT_VEC3, resultReg, leftReg, rightReg);
+            } else if (leftType == TypeKind::Vec3 && rightType == TypeKind::Float) {
+                // vec3 - float: subtract float from each component
+                currentFunc_->emit(OpCode::SUB_VEC3_FLOAT, resultReg, leftReg, rightReg);
             } else if (leftType == TypeKind::Vec4 && rightType == TypeKind::Vec4) {
                 currentFunc_->emit(OpCode::SUB_VEC4, resultReg, leftReg, rightReg);
+            } else if (leftType == TypeKind::Float && rightType == TypeKind::Vec4) {
+                currentFunc_->emit(OpCode::SUB_FLOAT_VEC4, resultReg, leftReg, rightReg);
             } else {
                 setError("Invalid operand types for '-' operator");
             }
@@ -482,7 +497,18 @@ uint8_t Compiler::compileCall(const CallExpr& expr) {
     } else if (expr.function == "log" && argRegs.size() == 1) {
         currentFunc_->emit(OpCode::CALL_LOG, resultReg, argRegs[0], 0);
     } else if (expr.function == "pow" && argRegs.size() == 2) {
-        currentFunc_->emit(OpCode::CALL_POW, resultReg, argRegs[0], argRegs[1]);
+        TypeKind argType = getExpressionType(*expr.arguments[0]);
+        if (argType == TypeKind::Float) {
+            currentFunc_->emit(OpCode::CALL_POW, resultReg, argRegs[0], argRegs[1]);
+        } else if (argType == TypeKind::Vec2) {
+            currentFunc_->emit(OpCode::CALL_POW_VEC2, resultReg, argRegs[0], argRegs[1]);
+        } else if (argType == TypeKind::Vec3) {
+            currentFunc_->emit(OpCode::CALL_POW_VEC3, resultReg, argRegs[0], argRegs[1]);
+        } else if (argType == TypeKind::Vec4) {
+            currentFunc_->emit(OpCode::CALL_POW_VEC4, resultReg, argRegs[0], argRegs[1]);
+        } else {
+            setError("pow() requires float, vec2, vec3, or vec4 as first argument");
+        }
     } else if (expr.function == "mod" && argRegs.size() == 2) {
         currentFunc_->emit(OpCode::CALL_MOD_FLOAT, resultReg, argRegs[0], argRegs[1]);
     } else if (expr.function == "dot" && argRegs.size() == 2) {
@@ -538,13 +564,46 @@ uint8_t Compiler::compileCall(const CallExpr& expr) {
         currentFunc_->emit(OpCode::LOAD_THIRD_PARAM, 0, argRegs[2], 0);
         currentFunc_->emit(OpCode::REFRACT_VEC3, resultReg, argRegs[0], argRegs[1]);
     } else if (expr.function == "min" && argRegs.size() == 2) {
-        currentFunc_->emit(OpCode::CALL_MIN_FLOAT, resultReg, argRegs[0], argRegs[1]);
+        TypeKind argType = getExpressionType(*expr.arguments[0]);
+        if (argType == TypeKind::Float) {
+            currentFunc_->emit(OpCode::CALL_MIN_FLOAT, resultReg, argRegs[0], argRegs[1]);
+        } else if (argType == TypeKind::Vec2) {
+            currentFunc_->emit(OpCode::CALL_MIN_VEC2, resultReg, argRegs[0], argRegs[1]);
+        } else if (argType == TypeKind::Vec3) {
+            currentFunc_->emit(OpCode::CALL_MIN_VEC3, resultReg, argRegs[0], argRegs[1]);
+        } else if (argType == TypeKind::Vec4) {
+            currentFunc_->emit(OpCode::CALL_MIN_VEC4, resultReg, argRegs[0], argRegs[1]);
+        } else {
+            setError("min() requires float, vec2, vec3, or vec4 arguments");
+        }
     } else if (expr.function == "max" && argRegs.size() == 2) {
-        currentFunc_->emit(OpCode::CALL_MAX_FLOAT, resultReg, argRegs[0], argRegs[1]);
+        TypeKind argType = getExpressionType(*expr.arguments[0]);
+        if (argType == TypeKind::Float) {
+            currentFunc_->emit(OpCode::CALL_MAX_FLOAT, resultReg, argRegs[0], argRegs[1]);
+        } else if (argType == TypeKind::Vec2) {
+            currentFunc_->emit(OpCode::CALL_MAX_VEC2, resultReg, argRegs[0], argRegs[1]);
+        } else if (argType == TypeKind::Vec3) {
+            currentFunc_->emit(OpCode::CALL_MAX_VEC3, resultReg, argRegs[0], argRegs[1]);
+        } else if (argType == TypeKind::Vec4) {
+            currentFunc_->emit(OpCode::CALL_MAX_VEC4, resultReg, argRegs[0], argRegs[1]);
+        } else {
+            setError("max() requires float, vec2, vec3, or vec4 arguments");
+        }
     } else if (expr.function == "clamp" && argRegs.size() == 3) {
         // clamp(value, min, max) - use LOAD_THIRD_PARAM for max
+        TypeKind argType = getExpressionType(*expr.arguments[0]);
         currentFunc_->emit(OpCode::LOAD_THIRD_PARAM, 0, argRegs[2], 0);
-        currentFunc_->emit(OpCode::CALL_CLAMP_FLOAT, resultReg, argRegs[0], argRegs[1]);
+        if (argType == TypeKind::Float) {
+            currentFunc_->emit(OpCode::CALL_CLAMP_FLOAT, resultReg, argRegs[0], argRegs[1]);
+        } else if (argType == TypeKind::Vec2) {
+            currentFunc_->emit(OpCode::CALL_CLAMP_VEC2, resultReg, argRegs[0], argRegs[1]);
+        } else if (argType == TypeKind::Vec3) {
+            currentFunc_->emit(OpCode::CALL_CLAMP_VEC3, resultReg, argRegs[0], argRegs[1]);
+        } else if (argType == TypeKind::Vec4) {
+            currentFunc_->emit(OpCode::CALL_CLAMP_VEC4, resultReg, argRegs[0], argRegs[1]);
+        } else {
+            setError("clamp() requires float, vec2, vec3, or vec4 as first argument");
+        }
     } else if (expr.function == "mix" && argRegs.size() == 3) {
         // mix(a, b, t) - use LOAD_THIRD_PARAM for t
         TypeKind argType = getExpressionType(*expr.arguments[0]);
