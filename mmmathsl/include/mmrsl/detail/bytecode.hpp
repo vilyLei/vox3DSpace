@@ -174,6 +174,16 @@ enum class OpCode : uint8_t {
     LOGICAL_OR,             // || (logical or)
     LOGICAL_NOT,            // ! (logical not)
     
+    // Move operations (copy register to register)
+    MOV_FLOAT,              // Move float between registers
+    MOV_BOOL,               // Move bool between registers
+    MOV_VEC2,               // Move vec2 between registers
+    MOV_VEC3,               // Move vec3 between registers
+    MOV_VEC4,               // Move vec4 between registers
+    MOV_MAT2,               // Move mat2 between registers
+    MOV_MAT3,               // Move mat3 between registers
+    MOV_MAT4,               // Move mat4 between registers
+    
     // Control flow
     RETURN,                 // Return value from register 0
     JUMP,                   // Unconditional jump to offset (stored in regSrc1 as 16-bit offset)

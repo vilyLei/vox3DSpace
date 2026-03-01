@@ -171,8 +171,24 @@ Value Interpreter::evaluateExpression(const Expression& expr) {
     if (auto index = dynamic_cast<const IndexExpr*>(&expr)) {
         return evaluateIndex(*index);
     }
+    if (auto ternary = dynamic_cast<const TernaryExpr*>(&expr)) {
+        return evaluateTernary(*ternary);
+    }
     
     throw RuntimeError("Unknown expression type");
+}
+
+Value Interpreter::evaluateTernary(const TernaryExpr& expr) {
+    Value condValue = evaluateExpression(*expr.condition);
+    if (!condValue.isBool()) {
+        throw RuntimeError("Ternary condition must be boolean");
+    }
+    
+    if (condValue.asBool()) {
+        return evaluateExpression(*expr.thenExpr);
+    } else {
+        return evaluateExpression(*expr.elseExpr);
+    }
 }
 
 Value Interpreter::evaluateBinary(const BinaryExpr& expr) {

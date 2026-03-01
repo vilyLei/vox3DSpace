@@ -53,6 +53,7 @@ private:
     Value evaluateConstructor(const ConstructorExpr& expr);
     Value evaluateMemberAccess(const MemberAccessExpr& expr);
     Value evaluateIndex(const IndexExpr& expr);
+    Value evaluateTernary(const TernaryExpr& expr);
     
     // Built-in functions
     Value callBuiltin(const std::string& name, const std::vector<Value>& args);

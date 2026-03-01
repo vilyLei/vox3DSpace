@@ -79,6 +79,7 @@ private:
     uint8_t compileConstructor(const ConstructorExpr& expr);
     uint8_t compileMemberAccess(const MemberAccessExpr& expr);
     uint8_t compileIndexAccess(const IndexExpr& expr);
+    uint8_t compileTernary(const TernaryExpr& expr);
     
     // Helper functions
     uint16_t getOrCreateLocal(const std::string& name);
@@ -87,6 +88,7 @@ private:
     void freeRegister(uint8_t reg);
     
     void setError(const std::string& msg);
+    void emitMove(uint8_t destReg, uint8_t srcReg, TypeKind type);
     
     // Check if builtin function exists but has wrong argument count
     void checkBuiltinFunctionArgCount(const std::string& funcName, size_t actualCount);

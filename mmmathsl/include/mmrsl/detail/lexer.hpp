@@ -54,6 +54,10 @@ enum class TokenType {
     Comma, Semicolon,
     Period,
     
+    // Ternary operator
+    Question,       // ?
+    Colon,          // :
+    
     // Special
     Unknown
 };

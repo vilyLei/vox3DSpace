@@ -183,6 +183,8 @@ uint8_t Compiler::compileExpression(const Expression& expr) {
         result = compileMemberAccess(*member);
     } else if (auto index = dynamic_cast<const IndexExpr*>(&expr)) {
         result = compileIndexAccess(*index);
+    } else if (auto ternary = dynamic_cast<const TernaryExpr*>(&expr)) {
+        result = compileTernary(*ternary);
     } else {
         setError("Unknown expression type");
     }
@@ -887,6 +889,89 @@ uint8_t Compiler::compileIndexAccess(const IndexExpr& expr) {
     return resultReg;
 }
 
+uint8_t Compiler::compileTernary(const TernaryExpr& expr) {
+    // Compile condition
+    uint8_t condReg = compileExpression(*expr.condition);
+    
+    // Emit JUMP_IF_FALSE with placeholder offset
+    size_t jumpIfFalseIdx = currentFunc_->code.size();
+    currentFunc_->emit(OpCode::JUMP_IF_FALSE, condReg, 0, 0);  // Placeholder
+    
+    // Condition register no longer needed
+    freeRegister(condReg);
+    
+    // Compile then expression
+    uint8_t thenReg = compileExpression(*expr.thenExpr);
+    
+    // Allocate result register
+    uint8_t resultReg = allocateRegister();
+    
+    // Move then result to result register
+    TypeKind thenType = getExpressionType(*expr.thenExpr);
+    emitMove(resultReg, thenReg, thenType);
+    freeRegister(thenReg);
+    
+    // Emit JUMP to skip else branch
+    size_t jumpOverElseIdx = currentFunc_->code.size();
+    currentFunc_->emit(OpCode::JUMP, 0, 0, 0);  // Placeholder
+    
+    // Backpatch the JUMP_IF_FALSE to jump to else branch
+    size_t elseStartIdx = currentFunc_->code.size();
+    int16_t thenOffset = static_cast<int16_t>(elseStartIdx - jumpIfFalseIdx - 1);
+    currentFunc_->code[jumpIfFalseIdx].regSrc1 = static_cast<uint8_t>(thenOffset & 0xFF);
+    currentFunc_->code[jumpIfFalseIdx].regSrc2 = static_cast<uint8_t>((thenOffset >> 8) & 0xFF);
+    
+    // Compile else expression
+    uint8_t elseReg = compileExpression(*expr.elseExpr);
+    
+    // Move else result to result register
+    TypeKind elseType = getExpressionType(*expr.elseExpr);
+    emitMove(resultReg, elseReg, elseType);
+    freeRegister(elseReg);
+    
+    // Backpatch the JUMP to skip over else branch
+    size_t afterElseIdx = currentFunc_->code.size();
+    int16_t elseOffset = static_cast<int16_t>(afterElseIdx - jumpOverElseIdx - 1);
+    currentFunc_->code[jumpOverElseIdx].regSrc1 = static_cast<uint8_t>(elseOffset & 0xFF);
+    currentFunc_->code[jumpOverElseIdx].regSrc2 = static_cast<uint8_t>((elseOffset >> 8) & 0xFF);
+    
+    return resultReg;
+}
+
+void Compiler::emitMove(uint8_t destReg, uint8_t srcReg, TypeKind type) {
+    // Emit appropriate move instruction based on type
+    switch (type) {
+        case TypeKind::Float:
+            currentFunc_->emit(OpCode::MOV_FLOAT, destReg, srcReg, 0);
+            break;
+        case TypeKind::Bool:
+            currentFunc_->emit(OpCode::MOV_BOOL, destReg, srcReg, 0);
+            break;
+        case TypeKind::Vec2:
+            currentFunc_->emit(OpCode::MOV_VEC2, destReg, srcReg, 0);
+            break;
+        case TypeKind::Vec3:
+            currentFunc_->emit(OpCode::MOV_VEC3, destReg, srcReg, 0);
+            break;
+        case TypeKind::Vec4:
+            currentFunc_->emit(OpCode::MOV_VEC4, destReg, srcReg, 0);
+            break;
+        case TypeKind::Mat2:
+            currentFunc_->emit(OpCode::MOV_MAT2, destReg, srcReg, 0);
+            break;
+        case TypeKind::Mat3:
+            currentFunc_->emit(OpCode::MOV_MAT3, destReg, srcReg, 0);
+            break;
+        case TypeKind::Mat4:
+            currentFunc_->emit(OpCode::MOV_MAT4, destReg, srcReg, 0);
+            break;
+        default:
+            // Default to float move
+            currentFunc_->emit(OpCode::MOV_FLOAT, destReg, srcReg, 0);
+            break;
+    }
+}
+
 void Compiler::setError(const std::string& msg) {
     if (errorMsg_.empty()) {
         errorMsg_ = msg;
@@ -1066,6 +1151,9 @@ TypeKind Compiler::getExpressionType(const Expression& expr) {
         return ctor->type;
     } else if (auto member = dynamic_cast<const MemberAccessExpr*>(&expr)) {
         return TypeKind::Float; // Member access always returns float
+    } else if (auto ternary = dynamic_cast<const TernaryExpr*>(&expr)) {
+        // Ternary expression type is the type of the then/else branches (they should match)
+        return getExpressionType(*ternary->thenExpr);
     }
     
     return TypeKind::Float;

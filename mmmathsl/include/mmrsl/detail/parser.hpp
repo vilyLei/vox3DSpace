@@ -110,6 +110,19 @@ public:
     std::string toString() const override;
 };
 
+// Ternary conditional expression: condition ? thenExpr : elseExpr
+class TernaryExpr : public Expression {
+public:
+    ExprPtr condition;
+    ExprPtr thenExpr;
+    ExprPtr elseExpr;
+    
+    TernaryExpr(ExprPtr cond, ExprPtr thenE, ExprPtr elseE)
+        : condition(std::move(cond)), thenExpr(std::move(thenE)), elseExpr(std::move(elseE)) {}
+    
+    std::string toString() const override;
+};
+
 // Index expression: m[i] or m[i][j]
 class IndexExpr : public Expression {
 public:
@@ -297,6 +310,7 @@ private:
     
     // Expression parsing (precedence climbing)
     ExprPtr parseExpression();
+    ExprPtr parseTernary();     // ? :
     ExprPtr parseLogical();     // &&, ||
     ExprPtr parseComparison();  // comparison operators
     ExprPtr parseAssignment();  // lowest precedence

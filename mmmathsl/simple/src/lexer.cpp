@@ -62,6 +62,8 @@ std::string tokenTypeToString(TokenType type) {
         case TokenType::Comma: return ",";
         case TokenType::Semicolon: return ";";
         case TokenType::Period: return ".";
+        case TokenType::Question: return "?";
+        case TokenType::Colon: return ":";
         case TokenType::Unknown: return "Unknown";
     }
     return "Unknown";
@@ -166,6 +168,8 @@ Token Lexer::nextToken() {
         case ',': return makeToken(TokenType::Comma, ",");
         case ';': return makeToken(TokenType::Semicolon, ";");
         case '.': return makeToken(TokenType::Period, ".");
+        case '?': return makeToken(TokenType::Question, "?");
+        case ':': return makeToken(TokenType::Colon, ":");
         default:
             throw LexerError(std::string("Unexpected character: ") + c, startLoc);
     }

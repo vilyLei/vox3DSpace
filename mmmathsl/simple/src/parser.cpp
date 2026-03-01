@@ -45,6 +45,10 @@ std::string MemberAccessExpr::toString() const {
     return object->toString() + "." + member;
 }
 
+std::string TernaryExpr::toString() const {
+    return "(" + condition->toString() + " ? " + thenExpr->toString() + " : " + elseExpr->toString() + ")";
+}
+
 std::string IndexExpr::toString() const {
     std::string result = object->toString() + "[" + index->toString() + "]";
     if (secondIndex) {
@@ -404,9 +408,30 @@ StmtPtr RecursiveParser::parseIfStmt() {
 ExprPtr RecursiveParser::parseExpression() {
     exprDepth_++;
     checkExprDepth();
-    auto result = parseLogical();
+    auto result = parseTernary();
     exprDepth_--;
     return result;
+}
+
+ExprPtr RecursiveParser::parseTernary() {
+    ExprPtr condition = parseLogical();
+    
+    // Ternary conditional: condition ? thenExpr : elseExpr
+    if (match(TokenType::Question)) {
+        ExprPtr thenExpr = parseExpression();  // Right-associative: parse full expression
+        
+        if (!match(TokenType::Colon)) {
+            error("Expected ':' after '?' in ternary expression");
+            return nullptr;
+        }
+        
+        ExprPtr elseExpr = parseExpression();  // Right-associative: parse full expression
+        
+        incrementNodeCount();
+        return std::make_unique<TernaryExpr>(std::move(condition), std::move(thenExpr), std::move(elseExpr));
+    }
+    
+    return condition;
 }
 
 ExprPtr RecursiveParser::parseLogical() {

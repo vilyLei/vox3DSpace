@@ -496,6 +496,32 @@ Value VM::execute(const BytecodeFunction& func, const std::vector<Value>& args) 
                 logicalNot(inst.regDest, inst.regSrc1);
                 break;
                 
+            // Move operations
+            case OpCode::MOV_FLOAT:
+                registers_[inst.regDest] = registers_[inst.regSrc1];
+                break;
+            case OpCode::MOV_BOOL:
+                registers_[inst.regDest] = registers_[inst.regSrc1];
+                break;
+            case OpCode::MOV_VEC2:
+                registers_[inst.regDest] = registers_[inst.regSrc1];
+                break;
+            case OpCode::MOV_VEC3:
+                registers_[inst.regDest] = registers_[inst.regSrc1];
+                break;
+            case OpCode::MOV_VEC4:
+                registers_[inst.regDest] = registers_[inst.regSrc1];
+                break;
+            case OpCode::MOV_MAT2:
+                registers_[inst.regDest] = registers_[inst.regSrc1];
+                break;
+            case OpCode::MOV_MAT3:
+                registers_[inst.regDest] = registers_[inst.regSrc1];
+                break;
+            case OpCode::MOV_MAT4:
+                registers_[inst.regDest] = registers_[inst.regSrc1];
+                break;
+                
             // Control flow
             case OpCode::RETURN:
                 return registers_[0];
