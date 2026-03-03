@@ -1,12 +1,14 @@
-// Test: Scene with per-object independent motion, color and rotation scripts
+// Test: Scene with per-object independent motion, color and rotation scripts (file-based)
 //
-// Three objects, each fully driven by its own mmrsl scripts:
+// Three objects, each fully driven by its own mmrsl scripts loaded from .glsl files:
 //
 //  Object 1 - Rectangle: circular orbit + rainbow color + clockwise 90 deg/sec
 //  Object 2 - Triangle:  horizontal oscillation + blue-white + counter-clockwise 45 deg/sec
 //  Object 3 - Rectangle: Lissajous (figure-8) + red-green + fast spin 180 deg/sec
 //
+// Scripts are loaded from vkapp/scripts/ directory and support hot-reload.
 // Expected result: Three shapes moving independently with different trajectories and colors.
+// Try editing scripts/*.glsl while the program is running to see changes immediately.
 // Close the window to exit.
 
 #define GLFW_INCLUDE_VULKAN
@@ -51,78 +53,6 @@ static const std::vector<Vertex> triVertices = {
 static const std::vector<uint16_t> triIndices = {0, 1, 2};
 
 // ---------------------------------------------------------------------------
-// Object 1 - Rectangle: circular orbit, rainbow color, CW 90 deg/sec
-// ---------------------------------------------------------------------------
-
-static const char* OBJ1_POS_SCRIPT = R"(
-vec2 positionScript(float t) {
-    return vec2(0.55 * cos(t), 0.35 * sin(t));
-}
-)";
-
-static const char* OBJ1_COLOR_SCRIPT = R"(
-vec4 colorScript(float t) {
-    float r = 0.5 + 0.5 * sin(t);
-    float g = 0.5 + 0.5 * sin(t + 2.094);
-    float b = 0.5 + 0.5 * sin(t + 4.189);
-    return vec4(r, g, b, 1.0);
-}
-)";
-
-static const char* OBJ1_ROT_SCRIPT = R"(
-float rotationScript(float t) {
-    return t * 1.5708;
-}
-)";
-
-// ---------------------------------------------------------------------------
-// Object 2 - Triangle: horizontal oscillation, blue-white, CCW 45 deg/sec
-// ---------------------------------------------------------------------------
-
-static const char* OBJ2_POS_SCRIPT = R"(
-vec2 positionScript(float t) {
-    return vec2(0.65 * sin(t * 1.5), 0.0);
-}
-)";
-
-static const char* OBJ2_COLOR_SCRIPT = R"(
-vec4 colorScript(float t) {
-    float v = 0.5 + 0.5 * sin(t * 2.0);
-    return vec4(v, v, 1.0, 1.0);
-}
-)";
-
-static const char* OBJ2_ROT_SCRIPT = R"(
-float rotationScript(float t) {
-    return -(t * 0.7854);
-}
-)";
-
-// ---------------------------------------------------------------------------
-// Object 3 - Rectangle: Lissajous figure-8, red-green oscillation, fast spin
-// ---------------------------------------------------------------------------
-
-static const char* OBJ3_POS_SCRIPT = R"(
-vec2 positionScript(float t) {
-    return vec2(0.5 * sin(t * 0.9), 0.4 * sin(t * 1.8));
-}
-)";
-
-static const char* OBJ3_COLOR_SCRIPT = R"(
-vec4 colorScript(float t) {
-    float r = 0.5 + 0.5 * sin(t * 1.5);
-    float g = 0.5 + 0.5 * sin(t * 1.5 + 3.1416);
-    return vec4(r, g, 0.2, 1.0);
-}
-)";
-
-static const char* OBJ3_ROT_SCRIPT = R"(
-float rotationScript(float t) {
-    return t * 3.1416;
-}
-)";
-
-// ---------------------------------------------------------------------------
 // Test class
 // ---------------------------------------------------------------------------
 
@@ -153,11 +83,12 @@ private:
     bool                             framebufferResized_ = false;
 
     Scene scene_;
+    uint32_t frameCount_ = 0;
 
     void init() {
         createInstance();
 
-        window_ = std::make_unique<Window>(WIDTH, HEIGHT, "Test: Per-Object Motion Scripts");
+        window_ = std::make_unique<Window>(WIDTH, HEIGHT, "Test: Script Hot-Reload");
         window_->setResizeCallback([this](int, int) { framebufferResized_ = true; });
         surface_ = window_->createSurface(instance_);
 
@@ -180,33 +111,33 @@ private:
         // Object 1: rectangle, circular orbit
         {
             RenderObjectDesc d;
-            d.vertices        = rectVertices;
-            d.indices         = rectIndices;
-            d.colorScript     = OBJ1_COLOR_SCRIPT;
-            d.rotationScript  = OBJ1_ROT_SCRIPT;
-            d.positionScript  = OBJ1_POS_SCRIPT;
+            d.vertices       = rectVertices;
+            d.indices        = rectIndices;
+            d.scriptPaths    = {"scripts/obj1_color.glsl",
+                                "scripts/obj1_rotation.glsl",
+                                "scripts/obj1_position.glsl"};
             scene_.addObject(std::make_unique<RenderObject>(device_.get(), d));
         }
 
         // Object 2: triangle, horizontal oscillation
         {
             RenderObjectDesc d;
-            d.vertices        = triVertices;
-            d.indices         = triIndices;
-            d.colorScript     = OBJ2_COLOR_SCRIPT;
-            d.rotationScript  = OBJ2_ROT_SCRIPT;
-            d.positionScript  = OBJ2_POS_SCRIPT;
+            d.vertices       = triVertices;
+            d.indices        = triIndices;
+            d.scriptPaths    = {"scripts/obj2_color.glsl",
+                                "scripts/obj2_rotation.glsl",
+                                "scripts/obj2_position.glsl"};
             scene_.addObject(std::make_unique<RenderObject>(device_.get(), d));
         }
 
         // Object 3: rectangle, Lissajous figure-8
         {
             RenderObjectDesc d;
-            d.vertices        = rectVertices;
-            d.indices         = rectIndices;
-            d.colorScript     = OBJ3_COLOR_SCRIPT;
-            d.rotationScript  = OBJ3_ROT_SCRIPT;
-            d.positionScript  = OBJ3_POS_SCRIPT;
+            d.vertices       = rectVertices;
+            d.indices        = rectIndices;
+            d.scriptPaths    = {"scripts/obj3_color.glsl",
+                                "scripts/obj3_rotation.glsl",
+                                "scripts/obj3_position.glsl"};
             scene_.addObject(std::make_unique<RenderObject>(device_.get(), d));
         }
 
@@ -214,6 +145,8 @@ private:
 
         std::cout << "Initialization OK. Scene has "
                   << scene_.objectCount() << " objects." << std::endl;
+        std::cout << "Scripts loaded from scripts/ directory." << std::endl;
+        std::cout << "Edit .glsl files while running to see hot-reload in action!" << std::endl;
     }
 
     vk::RenderPass createRenderPass() {
@@ -289,6 +222,12 @@ private:
 
         device_->getDevice().resetFences(inFlightFence_);
 
+        // Hot-reload: check for script changes every ~60 frames (~1 second at 60fps)
+        if (frameCount_ % 60 == 0) {
+            scene_.reloadScripts();
+        }
+        ++frameCount_;
+
         auto  now    = std::chrono::high_resolution_clock::now();
         float t      = std::chrono::duration<float>(now - startTime).count();
         float aspect = static_cast<float>(window_->getWidth())
@@ -361,10 +300,13 @@ private:
 };
 
 int main() {
-    std::cout << "=== Per-Object Motion Script Test ===" << std::endl;
+    std::cout << "=== Script Hot-Reload Test ===" << std::endl;
     std::cout << "Object 1 (rect):     circular orbit    | rainbow color    | CW  90 deg/sec" << std::endl;
     std::cout << "Object 2 (triangle): horizontal bounce | blue-white pulse | CCW 45 deg/sec" << std::endl;
     std::cout << "Object 3 (rect):     figure-8 Lissajous| red-green cycle  | fast 180 deg/sec" << std::endl;
+    std::cout << std::endl;
+    std::cout << "Scripts are loaded from scripts/*.glsl files." << std::endl;
+    std::cout << "Try editing them while the program runs - changes apply immediately!" << std::endl;
     std::cout << "Close the window to end the test." << std::endl;
 
     try {

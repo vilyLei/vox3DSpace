@@ -11,8 +11,16 @@
 #include <string>
 #include <vector>
 #include <memory>
+#include <filesystem>
 
 namespace vkapp {
+
+// Script file paths for hot-reload support
+struct ScriptPaths {
+    std::string colorScript;    // path to .glsl file
+    std::string rotationScript; // path to .glsl file
+    std::string positionScript; // path to .glsl file (optional, empty = use static position)
+};
 
 // Descriptor for constructing a RenderObject
 struct RenderObjectDesc {
@@ -20,9 +28,14 @@ struct RenderObjectDesc {
     std::vector<uint16_t> indices;
     glm::vec2             position   = {0.0f, 0.0f}; // fallback when positionScript is empty
     float                 scale      = 1.0f;
+
+    // Inline scripts (used if scriptPaths are empty)
     std::string           colorScript;    // mmrsl: vec4 f(float t)
     std::string           rotationScript; // mmrsl: float f(float t)
     std::string           positionScript; // mmrsl: vec2 f(float t) -> world XY (optional)
+
+    // File-based scripts (takes precedence over inline scripts if set)
+    ScriptPaths           scriptPaths;
 };
 
 // A self-contained renderable object:
@@ -42,6 +55,10 @@ public:
 
     // Record draw commands into an already-started render pass
     void draw(vk::CommandBuffer cmd, vk::PipelineLayout layout) const;
+
+    // Reload and recompile scripts if source files have changed.
+    // Returns true if any script was reloaded.
+    bool reloadIfChanged();
 
 private:
     void createVertexBuffer(const std::vector<Vertex>& vertices);
@@ -67,6 +84,13 @@ private:
     mmrsl::HighPerfParser                rotParser_;
     mmrsl::HighPerfParser                posParser_;
     bool                                 hasPositionScript_ = false;
+
+    // File paths and modification times for hot-reload
+    ScriptPaths                          scriptPaths_;
+    std::filesystem::file_time_type      colorMtime_;
+    std::filesystem::file_time_type      rotMtime_;
+    std::filesystem::file_time_type      posMtime_;
+    bool                                 hasPositionPath_ = false;
 };
 
 } // namespace vkapp

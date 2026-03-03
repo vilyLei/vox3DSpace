@@ -1,4 +1,5 @@
 #include "render_object.hpp"
+#include "script_loader.hpp"
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <stdexcept>
@@ -10,6 +11,7 @@ RenderObject::RenderObject(VulkanDevice* device, const RenderObjectDesc& desc)
     : device_(device)
     , position_(desc.position)
     , scale_(desc.scale)
+    , scriptPaths_(desc.scriptPaths)
 {
     // Create command pool for buffer copy
     QueueFamilyIndices indices = device_->getQueueFamilyIndices();
@@ -25,17 +27,46 @@ RenderObject::RenderObject(VulkanDevice* device, const RenderObjectDesc& desc)
     // Create per-object uniform buffer
     uniformBuffer_ = std::make_unique<VulkanUniformBuffer>(device_);
 
+    // Determine script sources: file paths take precedence over inline strings
+    std::string colorSrc, rotSrc, posSrc;
+
+    if (!scriptPaths_.colorScript.empty()) {
+        colorSrc = ScriptLoader::load(scriptPaths_.colorScript);
+        colorMtime_ = ScriptLoader::lastModified(scriptPaths_.colorScript);
+    } else {
+        colorSrc = desc.colorScript;
+    }
+
+    if (!scriptPaths_.rotationScript.empty()) {
+        rotSrc = ScriptLoader::load(scriptPaths_.rotationScript);
+        rotMtime_ = ScriptLoader::lastModified(scriptPaths_.rotationScript);
+    } else {
+        rotSrc = desc.rotationScript;
+    }
+
+    if (!scriptPaths_.positionScript.empty()) {
+        posSrc = ScriptLoader::load(scriptPaths_.positionScript);
+        posMtime_ = ScriptLoader::lastModified(scriptPaths_.positionScript);
+        hasPositionPath_ = true;
+    } else if (!desc.positionScript.empty()) {
+        posSrc = desc.positionScript;
+    }
+
     // Compile mmrsl scripts
-    if (!colorParser_.compile(desc.colorScript)) {
-        throw std::runtime_error("RenderObject color script compile failed: "
-                                 + colorParser_.getLastError());
+    if (!colorSrc.empty()) {
+        if (!colorParser_.compile(colorSrc)) {
+            throw std::runtime_error("RenderObject color script compile failed: "
+                                     + colorParser_.getLastError());
+        }
     }
-    if (!rotParser_.compile(desc.rotationScript)) {
-        throw std::runtime_error("RenderObject rotation script compile failed: "
-                                 + rotParser_.getLastError());
+    if (!rotSrc.empty()) {
+        if (!rotParser_.compile(rotSrc)) {
+            throw std::runtime_error("RenderObject rotation script compile failed: "
+                                     + rotParser_.getLastError());
+        }
     }
-    if (!desc.positionScript.empty()) {
-        if (!posParser_.compile(desc.positionScript)) {
+    if (!posSrc.empty()) {
+        if (!posParser_.compile(posSrc)) {
             throw std::runtime_error("RenderObject position script compile failed: "
                                      + posParser_.getLastError());
         }
@@ -93,6 +124,49 @@ void RenderObject::draw(vk::CommandBuffer cmd, vk::PipelineLayout layout) const 
 
     // Draw
     cmd.drawIndexed(indexCount_, 1, 0, 0, 0);
+}
+
+bool RenderObject::reloadIfChanged() {
+    bool reloaded = false;
+
+    // Check color script
+    if (!scriptPaths_.colorScript.empty()) {
+        auto mtime = ScriptLoader::lastModified(scriptPaths_.colorScript);
+        if (mtime != colorMtime_) {
+            std::string src = ScriptLoader::load(scriptPaths_.colorScript);
+            if (colorParser_.compile(src)) {
+                colorMtime_ = mtime;
+                reloaded = true;
+            }
+            // On compile failure, keep old script running (log error?)
+        }
+    }
+
+    // Check rotation script
+    if (!scriptPaths_.rotationScript.empty()) {
+        auto mtime = ScriptLoader::lastModified(scriptPaths_.rotationScript);
+        if (mtime != rotMtime_) {
+            std::string src = ScriptLoader::load(scriptPaths_.rotationScript);
+            if (rotParser_.compile(src)) {
+                rotMtime_ = mtime;
+                reloaded = true;
+            }
+        }
+    }
+
+    // Check position script
+    if (hasPositionPath_) {
+        auto mtime = ScriptLoader::lastModified(scriptPaths_.positionScript);
+        if (mtime != posMtime_) {
+            std::string src = ScriptLoader::load(scriptPaths_.positionScript);
+            if (posParser_.compile(src)) {
+                posMtime_ = mtime;
+                reloaded = true;
+            }
+        }
+    }
+
+    return reloaded;
 }
 
 // ---------------------------------------------------------------------------

@@ -105,6 +105,7 @@ set(TEST_SOURCES
 set(SCENE_SOURCES
     src/scene/render_object.cpp
     src/scene/scene.cpp
+    src/scene/script_loader.cpp
 )
 
 # Test: Window
@@ -140,6 +141,11 @@ add_dependencies(test_color_rotation shaders)
 add_custom_command(TARGET test_color_rotation POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory
     ${SHADER_BINARY_DIR} $<TARGET_FILE_DIR:test_color_rotation>/shaders
+)
+add_custom_command(TARGET test_color_rotation POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+    ${CMAKE_CURRENT_SOURCE_DIR}/scripts
+    $<TARGET_FILE_DIR:test_color_rotation>/scripts
 )
 
 target_include_directories(vkapp PRIVATE

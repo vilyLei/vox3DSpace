@@ -18,4 +18,10 @@ void Scene::drawAll(vk::CommandBuffer cmd, vk::PipelineLayout layout) const {
     }
 }
 
+void Scene::reloadScripts() {
+    for (auto& obj : objects_) {
+        obj->reloadIfChanged();
+    }
+}
+
 } // namespace vkapp

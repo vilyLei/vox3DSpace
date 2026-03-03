@@ -28,6 +28,9 @@ public:
     // Record draw commands for every object into cmd
     void drawAll(vk::CommandBuffer cmd, vk::PipelineLayout layout) const;
 
+    // Reload scripts if source files have changed (for hot-reload)
+    void reloadScripts();
+
     std::size_t objectCount() const { return objects_.size(); }
 
 private:
