@@ -236,6 +236,29 @@ add_custom_command(TARGET test_vis_stress_16 POST_BUILD
     $<TARGET_FILE_DIR:test_vis_stress_16>/scripts
 )
 
+# test_vis_lissajous: Lissajous figures test (verifies sin/cos compound math)
+add_executable(test_vis_lissajous tests/test_vis_lissajous.cpp ${TEST_SOURCES} ${SCENE_SOURCES})
+target_include_directories(test_vis_lissajous PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/src
+    ${Vulkan_INCLUDE_DIRS}
+    ${GLFW3_INCLUDE_DIR}
+    ${GLM_ROOT}
+    ${MMRSL_ROOT}/include
+)
+target_link_libraries(test_vis_lissajous PRIVATE ${Vulkan_LIBRARIES} ${GLFW3_LIBRARY} mmrsl)
+source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES tests/test_vis_lissajous.cpp ${TEST_SOURCES} ${SCENE_SOURCES})
+add_dependencies(test_vis_lissajous shaders)
+add_custom_command(TARGET test_vis_lissajous POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+    ${SHADER_BINARY_DIR} $<TARGET_FILE_DIR:test_vis_lissajous>/shaders
+)
+add_custom_command(TARGET test_vis_lissajous POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+    ${CMAKE_CURRENT_SOURCE_DIR}/scripts
+    $<TARGET_FILE_DIR:test_vis_lissajous>/scripts
+)
+set_property(TARGET test_vis_lissajous PROPERTY VS_DEBUGGER_WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
+
 target_include_directories(vkapp PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/src
     ${Vulkan_INCLUDE_DIRS}
