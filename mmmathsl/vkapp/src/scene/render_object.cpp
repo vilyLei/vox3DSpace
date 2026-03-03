@@ -89,11 +89,11 @@ void RenderObject::update(float t, const glm::mat4& view, const glm::mat4& proj)
     // Rotation angle from script
     float angle = rotParser_.execute({mmrsl::Value(t)}).asFloat();
 
-    // World position: from script or fallback to static position_
+    // World position: base position_ + optional script offset
     glm::vec2 pos = position_;
     if (hasPositionScript_) {
         auto pv = posParser_.execute({mmrsl::Value(t)}).asVec2();
-        pos = {pv.x, pv.y};
+        pos += glm::vec2(pv.x, pv.y);
     }
 
     // Model = translate * rotate * scale

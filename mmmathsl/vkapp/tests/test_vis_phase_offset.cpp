@@ -267,6 +267,9 @@ private:
         device_->getDevice().destroySemaphore(renderFinished_);
         device_->getDevice().destroySemaphore(imageAvailable_);
 
+        // Must clear scene (RenderObject buffers) before destroying device
+        scene_.clear();
+
         renderer_.reset();
         device_->getDevice().destroyRenderPass(renderPass_);
         pipeline_.reset();

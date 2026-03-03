@@ -1,24 +1,23 @@
-// Visual Test: Symmetry / Instance Independence
+// Visual Test: Stress 16 Instances
 //
-// Purpose: Verify that two RenderObject instances execute scripts independently.
-// Uses mirror scripts to produce symmetric motion for visual validation.
+// Purpose: Verify stability with 16 simultaneous RenderObject instances,
+// each running independent mmrsl scripts every frame.
 //
 // Expected visual result:
-//   - Two GREEN rectangles, symmetrically distributed left and right
-//   - They move in perfect horizontal reciprocating motion (like mirror pendulums)
-//   - At any moment, the two rectangles are symmetric about the Y-axis
+//   - 4x4 grid of small rectangles filling the screen
+//   - All rectangles cycle through rainbow colors (same script, same time)
+//   - All rectangles stationary at their fixed grid positions
 //
 // Pass criteria:
-//   - Color: Both rectangles are pure green
-//   - Symmetry: Rectangles are symmetric about screen center vertical line
-//   - Motion: When left moves left, right moves right by equal distance
-//   - Independence: No overlap or interference between trajectories
+//   - All 16 rectangles visible in 4x4 layout
+//   - Smooth color cycling (no glitches)
+//   - No crash or frame rate drop for 10+ seconds
+//   - No memory errors
 //
 // Failure indicators:
-//   - Different colors (scripts not executing independently)
-//   - Asymmetric motion (shared state or random seed)
-//   - Only one rectangle visible (object not created correctly)
-//   - Rotating rectangles (rotation script error)
+//   - Missing rectangles
+//   - Incorrect colors or frozen colors
+//   - Crash or hang
 
 #define GLFW_INCLUDE_VULKAN
 #include <filesystem>
@@ -43,16 +42,20 @@
 
 using namespace vkapp;
 
-// Rectangle mesh data
+// Small rectangle for grid layout
 static const std::vector<Vertex> rectVertices = {
-    {{-0.2f, -0.2f}, {1.0f, 1.0f, 1.0f}},
-    {{ 0.2f, -0.2f}, {1.0f, 1.0f, 1.0f}},
-    {{ 0.2f,  0.2f}, {1.0f, 1.0f, 1.0f}},
-    {{-0.2f,  0.2f}, {1.0f, 1.0f, 1.0f}}
+    {{-0.1f, -0.1f}, {1.0f, 1.0f, 1.0f}},
+    {{ 0.1f, -0.1f}, {1.0f, 1.0f, 1.0f}},
+    {{ 0.1f,  0.1f}, {1.0f, 1.0f, 1.0f}},
+    {{-0.1f,  0.1f}, {1.0f, 1.0f, 1.0f}}
 };
 static const std::vector<uint16_t> rectIndices = {0, 1, 2, 2, 3, 0};
 
-class SymmetryTest {
+static constexpr int GRID_W    = 4;
+static constexpr int GRID_H    = 4;
+static constexpr int NUM_OBJS  = GRID_W * GRID_H;  // 16
+
+class Stress16Test {
 public:
     void run() {
         init();
@@ -63,7 +66,7 @@ public:
 
 private:
     static constexpr int WIDTH  = 800;
-    static constexpr int HEIGHT = 600;
+    static constexpr int HEIGHT = 800;
 
     std::unique_ptr<Window>          window_;
     vk::Instance                     instance_;
@@ -80,13 +83,28 @@ private:
 
     Scene scene_;
 
+    // Per-object base position for 4x4 grid
+    // Positions range from -0.75 to +0.75 in both axes
+    glm::vec2 gridPos_[NUM_OBJS];
+
     void init() {
         std::cout << "[DEBUG] Current working directory: "
                   << std::filesystem::current_path() << std::endl;
 
+        // Pre-compute 4x4 grid positions
+        for (int row = 0; row < GRID_H; ++row) {
+            for (int col = 0; col < GRID_W; ++col) {
+                int idx = row * GRID_W + col;
+                gridPos_[idx] = {
+                    -0.75f + col * 0.5f,
+                    -0.75f + row * 0.5f
+                };
+            }
+        }
+
         createInstance();
 
-        window_ = std::make_unique<Window>(WIDTH, HEIGHT, "Test: Symmetry / Instance Independence");
+        window_ = std::make_unique<Window>(WIDTH, HEIGHT, "Test: Stress 16 Instances");
         window_->setResizeCallback([this](int, int) { framebufferResized_ = true; });
         surface_ = window_->createSurface(instance_);
 
@@ -106,43 +124,37 @@ private:
 
         renderer_ = std::make_unique<Renderer>(device_.get(), swapChain_.get(), pipeline_.get());
 
-        // Auto-detect script directory (Release or Debug)
+        // Auto-detect script directory
         std::string scriptDir;
-        if (std::filesystem::exists("Release/scripts/test_vis_symmetry")) {
-            scriptDir = "Release/scripts/test_vis_symmetry/";
+        if (std::filesystem::exists("Release/scripts/test_vis_stress_16")) {
+            scriptDir = "Release/scripts/test_vis_stress_16/";
             std::cout << "[DEBUG] Using Release/scripts/" << std::endl;
-        } else if (std::filesystem::exists("Debug/scripts/test_vis_symmetry")) {
-            scriptDir = "Debug/scripts/test_vis_symmetry/";
+        } else if (std::filesystem::exists("Debug/scripts/test_vis_stress_16")) {
+            scriptDir = "Debug/scripts/test_vis_stress_16/";
             std::cout << "[DEBUG] Using Debug/scripts/" << std::endl;
         } else {
-            scriptDir = "scripts/test_vis_symmetry/";
+            scriptDir = "scripts/test_vis_stress_16/";
             std::cout << "[DEBUG] Using scripts/ (fallback)" << std::endl;
         }
 
-        // Create left rectangle
-        RenderObjectDesc left;
-        left.vertices    = rectVertices;
-        left.indices     = rectIndices;
-        left.scriptPaths = {scriptDir + "left_color.glsl",
-                            scriptDir + "left_rotation.glsl",
-                            scriptDir + "left_position.glsl"};
-        scene_.addObject(std::make_unique<RenderObject>(device_.get(), left));
-
-        // Create right rectangle
-        RenderObjectDesc right;
-        right.vertices    = rectVertices;
-        right.indices     = rectIndices;
-        right.scriptPaths = {scriptDir + "right_color.glsl",
-                             scriptDir + "right_rotation.glsl",
-                             scriptDir + "right_position.glsl"};
-        scene_.addObject(std::make_unique<RenderObject>(device_.get(), right));
+        // Create 16 instances on a 4x4 grid
+        // Each object's base position is set via desc.position (static grid offset)
+        // The position script returns vec2(0,0) which is added as a relative offset
+        for (int i = 0; i < NUM_OBJS; ++i) {
+            RenderObjectDesc d;
+            d.vertices    = rectVertices;
+            d.indices     = rectIndices;
+            d.position    = {gridPos_[i].x, gridPos_[i].y};
+            d.scriptPaths = {scriptDir + "color.glsl",
+                             scriptDir + "rotation.glsl",
+                             scriptDir + "position.glsl"};
+            scene_.addObject(std::make_unique<RenderObject>(device_.get(), d));
+        }
 
         createSyncObjects();
 
-        std::cout << "Initialization OK." << std::endl;
-        std::cout << "Expected: Two GREEN rectangles moving symmetrically." << std::endl;
-        std::cout << "Left:  x = -0.5 * sin(t)" << std::endl;
-        std::cout << "Right: x =  0.5 * sin(t)" << std::endl;
+        std::cout << "Initialization OK: " << NUM_OBJS << " instances created." << std::endl;
+        std::cout << "Expected: 4x4 grid of rainbow-cycling rectangles." << std::endl;
         std::cout << "Close window to end test." << std::endl;
     }
 
@@ -275,7 +287,7 @@ private:
 
     void createInstance() {
         vk::ApplicationInfo appInfo{};
-        appInfo.pApplicationName   = "SymmetryTest";
+        appInfo.pApplicationName   = "Stress16Test";
         appInfo.applicationVersion = VK_MAKE_VERSION(1, 0, 0);
         appInfo.apiVersion         = VK_API_VERSION_1_0;
 
@@ -294,19 +306,18 @@ private:
 };
 
 int main() {
-    std::cout << "=== TEST: test_vis_symmetry ===" << std::endl;
-    std::cout << "=== Visual Test: Symmetry / Instance Independence ===" << std::endl;
-    std::cout << "Purpose: Verify two RenderObject instances execute scripts independently" << std::endl;
+    std::cout << "=== TEST: test_vis_stress_16 ===" << std::endl;
+    std::cout << "=== Visual Test: Stress 16 Instances ===" << std::endl;
+    std::cout << "Purpose: Verify stability with 16 simultaneous RenderObject instances" << std::endl;
     std::cout << std::endl;
     std::cout << "PASS criteria:" << std::endl;
-    std::cout << "  - Color: Both rectangles pure GREEN" << std::endl;
-    std::cout << "  - Symmetry: Symmetric about screen center vertical line" << std::endl;
-    std::cout << "  - Motion: Left moves left, right moves right by equal distance" << std::endl;
-    std::cout << "  - Independence: No overlap or interference" << std::endl;
+    std::cout << "  - All 16 rectangles visible in 4x4 grid" << std::endl;
+    std::cout << "  - Smooth rainbow color cycling" << std::endl;
+    std::cout << "  - No crash or hang for 10+ seconds" << std::endl;
     std::cout << std::endl;
 
     try {
-        SymmetryTest test;
+        Stress16Test test;
         test.run();
         return 0;
     } catch (const std::exception& e) {

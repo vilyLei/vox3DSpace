@@ -22,6 +22,9 @@ public:
 
     void addObject(std::unique_ptr<RenderObject> obj);
 
+    // Explicitly destroy all RenderObjects (must be called before VulkanDevice is destroyed)
+    void clear() { objects_.clear(); }
+
     // Update all objects: runs scripts, uploads UBOs
     void update(float t, const glm::mat4& view, const glm::mat4& proj);
 
