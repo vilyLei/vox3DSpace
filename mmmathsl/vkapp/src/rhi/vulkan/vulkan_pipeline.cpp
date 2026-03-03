@@ -75,8 +75,8 @@ void VulkanPipeline::createGraphicsPipeline(const std::string& vertPath, const s
     rasterizer.rasterizerDiscardEnable = VK_FALSE;
     rasterizer.polygonMode = vk::PolygonMode::eFill;
     rasterizer.lineWidth = 1.0f;
-    rasterizer.cullMode = vk::CullModeFlagBits::eBack;
-    rasterizer.frontFace = vk::FrontFace::eClockwise;
+    rasterizer.cullMode = vk::CullModeFlagBits::eNone;  // Disable culling for 2D rect
+    rasterizer.frontFace = vk::FrontFace::eCounterClockwise;
     rasterizer.depthBiasEnable = VK_FALSE;
     
     vk::PipelineMultisampleStateCreateInfo multisampling{};

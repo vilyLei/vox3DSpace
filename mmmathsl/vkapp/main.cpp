@@ -15,6 +15,7 @@
 #include <stdexcept>
 #include <vector>
 #include <chrono>
+#include <cmath>
 
 namespace vkapp {
 
@@ -216,14 +217,20 @@ private:
         float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
         
         UniformBufferObject ubo{};
-        // Model: rotate around Z axis
+        // Model: rotate around Z axis at 90 deg/sec
         ubo.model = glm::rotate(glm::mat4(1.0f), time * glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
         // View: camera at (0, 0, 2) looking at origin
         ubo.view = glm::lookAt(glm::vec3(0.0f, 0.0f, 2.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
         // Proj: perspective with reasonable FOV
-        ubo.proj = glm::perspective(glm::radians(45.0f), 
-            static_cast<float>(WINDOW_WIDTH) / static_cast<float>(WINDOW_HEIGHT), 0.1f, 100.0f);
+        ubo.proj = glm::perspective(glm::radians(45.0f),
+            static_cast<float>(window_->getWidth()) / static_cast<float>(window_->getHeight()), 0.1f, 100.0f);
         ubo.proj[1][1] *= -1; // Flip Y for Vulkan
+        
+        // Color cycling: HSV-like smooth rainbow using sin waves
+        float r = 0.5f + 0.5f * std::sin(time * 1.0f);
+        float g = 0.5f + 0.5f * std::sin(time * 1.0f + glm::radians(120.0f));
+        float b = 0.5f + 0.5f * std::sin(time * 1.0f + glm::radians(240.0f));
+        ubo.colorTint = glm::vec4(r, g, b, 1.0f);
         
         uniformBuffer_->update(ubo);
     }

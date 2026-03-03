@@ -57,7 +57,7 @@ add_custom_target(shaders ALL DEPENDS ${SHADER_BINARIES})
 # Executable
 # ============================================================================
 
-add_executable(vkapp 
+set(SOURCES
     main.cpp
     src/application/platform/window.cpp
     src/rhi/vulkan/vulkan_device.cpp
@@ -66,6 +66,58 @@ add_executable(vkapp
     src/rhi/vulkan/vulkan_uniform_buffer.cpp
     src/renderer/renderer.cpp
 )
+
+set(HEADERS
+    src/core/types.hpp
+    src/application/platform/window.hpp
+    src/rhi/vulkan/vulkan_device.hpp
+    src/rhi/vulkan/vulkan_swapchain.hpp
+    src/rhi/vulkan/vulkan_pipeline.hpp
+    src/rhi/vulkan/vulkan_uniform_buffer.hpp
+    src/renderer/renderer.hpp
+)
+
+add_executable(vkapp ${SOURCES} ${HEADERS})
+
+# Organize files in Visual Studio
+source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${SOURCES} ${HEADERS})
+
+# ============================================================================
+# Test Executables
+# ============================================================================
+
+set(TEST_SOURCES
+    src/application/platform/window.cpp
+    src/rhi/vulkan/vulkan_device.cpp
+    src/rhi/vulkan/vulkan_swapchain.cpp
+    src/rhi/vulkan/vulkan_pipeline.cpp
+    src/rhi/vulkan/vulkan_uniform_buffer.cpp
+    src/renderer/renderer.cpp
+)
+
+# Test: Window
+add_executable(test_window tests/test_window.cpp ${TEST_SOURCES})
+target_include_directories(test_window PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src ${Vulkan_INCLUDE_DIRS} ${GLFW3_INCLUDE_DIR} ${GLM_ROOT})
+target_link_libraries(test_window PRIVATE ${Vulkan_LIBRARIES} ${GLFW3_LIBRARY})
+source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES tests/test_window.cpp ${TEST_SOURCES})
+
+# Test: Device
+add_executable(test_device tests/test_device.cpp ${TEST_SOURCES})
+target_include_directories(test_device PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src ${Vulkan_INCLUDE_DIRS} ${GLFW3_INCLUDE_DIR} ${GLM_ROOT})
+target_link_libraries(test_device PRIVATE ${Vulkan_LIBRARIES} ${GLFW3_LIBRARY})
+source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES tests/test_device.cpp ${TEST_SOURCES})
+
+# Test: Buffer
+add_executable(test_buffer tests/test_buffer.cpp ${TEST_SOURCES})
+target_include_directories(test_buffer PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src ${Vulkan_INCLUDE_DIRS} ${GLFW3_INCLUDE_DIR} ${GLM_ROOT})
+target_link_libraries(test_buffer PRIVATE ${Vulkan_LIBRARIES} ${GLFW3_LIBRARY})
+source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES tests/test_buffer.cpp ${TEST_SOURCES})
+
+# Test: Color Rotation (visual)
+add_executable(test_color_rotation tests/test_color_rotation.cpp ${TEST_SOURCES})
+target_include_directories(test_color_rotation PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src ${Vulkan_INCLUDE_DIRS} ${GLFW3_INCLUDE_DIR} ${GLM_ROOT})
+target_link_libraries(test_color_rotation PRIVATE ${Vulkan_LIBRARIES} ${GLFW3_LIBRARY})
+source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES tests/test_color_rotation.cpp ${TEST_SOURCES})
 
 target_include_directories(vkapp PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/src
