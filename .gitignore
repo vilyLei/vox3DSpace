@@ -52,4 +52,5 @@ voxol/src-vs/
 voxol/build/
 voxol/buildvs/
 mmmathsl/build/
+mmmathsl/vkapp/build/
 *.code-workspace
