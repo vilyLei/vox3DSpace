@@ -4,6 +4,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <stdexcept>
 #include <cstring>
+#include <iostream>
 
 namespace vkapp {
 
@@ -137,8 +138,10 @@ bool RenderObject::reloadIfChanged() {
             if (colorParser_.compile(src)) {
                 colorMtime_ = mtime;
                 reloaded = true;
+            } else {
+                std::cerr << "[HotReload] Color script compile failed (keeping old): "
+                          << colorParser_.getLastError() << std::endl;
             }
-            // On compile failure, keep old script running (log error?)
         }
     }
 
@@ -150,6 +153,9 @@ bool RenderObject::reloadIfChanged() {
             if (rotParser_.compile(src)) {
                 rotMtime_ = mtime;
                 reloaded = true;
+            } else {
+                std::cerr << "[HotReload] Rotation script compile failed (keeping old): "
+                          << rotParser_.getLastError() << std::endl;
             }
         }
     }
@@ -162,6 +168,9 @@ bool RenderObject::reloadIfChanged() {
             if (posParser_.compile(src)) {
                 posMtime_ = mtime;
                 reloaded = true;
+            } else {
+                std::cerr << "[HotReload] Position script compile failed (keeping old): "
+                          << posParser_.getLastError() << std::endl;
             }
         }
     }
