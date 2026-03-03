@@ -170,6 +170,50 @@ add_custom_command(TARGET test_vis_constant POST_BUILD
     $<TARGET_FILE_DIR:test_vis_constant>/scripts
 )
 
+# Test: Visual Symmetry / Instance Independence
+add_executable(test_vis_symmetry tests/test_vis_symmetry.cpp ${TEST_SOURCES} ${SCENE_SOURCES})
+target_include_directories(test_vis_symmetry PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/src
+    ${Vulkan_INCLUDE_DIRS}
+    ${GLFW3_INCLUDE_DIR}
+    ${GLM_ROOT}
+    ${MMRSL_ROOT}/include
+)
+target_link_libraries(test_vis_symmetry PRIVATE ${Vulkan_LIBRARIES} ${GLFW3_LIBRARY} mmrsl)
+source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES tests/test_vis_symmetry.cpp ${TEST_SOURCES} ${SCENE_SOURCES})
+add_dependencies(test_vis_symmetry shaders)
+add_custom_command(TARGET test_vis_symmetry POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+    ${SHADER_BINARY_DIR} $<TARGET_FILE_DIR:test_vis_symmetry>/shaders
+)
+add_custom_command(TARGET test_vis_symmetry POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+    ${CMAKE_CURRENT_SOURCE_DIR}/scripts
+    $<TARGET_FILE_DIR:test_vis_symmetry>/scripts
+)
+
+# Test: Visual Phase Offset
+add_executable(test_vis_phase_offset tests/test_vis_phase_offset.cpp ${TEST_SOURCES} ${SCENE_SOURCES})
+target_include_directories(test_vis_phase_offset PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/src
+    ${Vulkan_INCLUDE_DIRS}
+    ${GLFW3_INCLUDE_DIR}
+    ${GLM_ROOT}
+    ${MMRSL_ROOT}/include
+)
+target_link_libraries(test_vis_phase_offset PRIVATE ${Vulkan_LIBRARIES} ${GLFW3_LIBRARY} mmrsl)
+source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES tests/test_vis_phase_offset.cpp ${TEST_SOURCES} ${SCENE_SOURCES})
+add_dependencies(test_vis_phase_offset shaders)
+add_custom_command(TARGET test_vis_phase_offset POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+    ${SHADER_BINARY_DIR} $<TARGET_FILE_DIR:test_vis_phase_offset>/shaders
+)
+add_custom_command(TARGET test_vis_phase_offset POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+    ${CMAKE_CURRENT_SOURCE_DIR}/scripts
+    $<TARGET_FILE_DIR:test_vis_phase_offset>/scripts
+)
+
 target_include_directories(vkapp PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/src
     ${Vulkan_INCLUDE_DIRS}

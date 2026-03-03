@@ -145,6 +145,7 @@ void testUniformBufferCreation() {
 }
 
 int main() {
+    std::cout << "=== TEST: test_buffer ===" << std::endl;
     std::cout << "=== Buffer Tests ===" << std::endl;
     
     try {

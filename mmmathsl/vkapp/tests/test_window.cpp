@@ -50,6 +50,7 @@ void testWindowExtensions() {
 }
 
 int main() {
+    std::cout << "=== TEST: test_window ===" << std::endl;
     std::cout << "=== Window Tests ===" << std::endl;
     
     try {

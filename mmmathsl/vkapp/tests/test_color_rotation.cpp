@@ -300,6 +300,7 @@ private:
 };
 
 int main() {
+    std::cout << "=== TEST: test_color_rotation ===" << std::endl;
     std::cout << "=== Script Hot-Reload Test ===" << std::endl;
     std::cout << "Object 1 (rect):     circular orbit    | rainbow color    | CW  90 deg/sec" << std::endl;
     std::cout << "Object 2 (triangle): horizontal bounce | blue-white pulse | CCW 45 deg/sec" << std::endl;

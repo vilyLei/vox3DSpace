@@ -1,24 +1,24 @@
-// Visual Test: Constant Output
+// Visual Test: Phase Offset
 //
-// Purpose: Verify that mmrsl scripts correctly output constant values.
-// This is the most basic correctness baseline test.
+// Purpose: Verify that time variable 't' is correctly passed to each script,
+// and multiple instances can produce phase-shifted behaviors from the same time base.
 //
 // Expected visual result:
-//   - A pure RED rectangle (RGB: 255, 0, 0)
-//   - Stationary at screen center
-//   - No rotation (rectangle edges parallel to window edges)
+//   - 3 rectangles with different colors (Red, Green, Blue)
+//   - They move vertically in sinusoidal motion with 120° phase offset
+//   - Creates a wave-like motion effect
 //
 // Pass criteria:
-//   - Color: Pure red, no variation
-//   - Position: Center of screen, no movement
-//   - Rotation: None
-//   - Stability: No crash or flicker for 10+ seconds
+//   - Color: Three rectangles are Red, Green, Blue respectively
+//   - Phase: Motion has sequence, forming a wave pattern
+//   - Synchronization: Same period, only phase differs
+//   - Independence: Each rectangle moves without interference
 //
 // Failure indicators:
-//   - Wrong color (black, white, rainbow, etc.)
-//   - Moving or rotating rectangle
-//   - Rectangle not at center
-//   - Program crash
+//   - Wrong colors (scripts not executing correctly)
+//   - Same phase motion (phase offset not working)
+//   - Different periods (time variable passed incorrectly)
+//   - Only one rectangle moves (instances not independent)
 
 #define GLFW_INCLUDE_VULKAN
 #include <filesystem>
@@ -45,14 +45,14 @@ using namespace vkapp;
 
 // Rectangle mesh data
 static const std::vector<Vertex> rectVertices = {
-    {{-0.3f, -0.3f}, {1.0f, 1.0f, 1.0f}},
-    {{ 0.3f, -0.3f}, {1.0f, 1.0f, 1.0f}},
-    {{ 0.3f,  0.3f}, {1.0f, 1.0f, 1.0f}},
-    {{-0.3f,  0.3f}, {1.0f, 1.0f, 1.0f}}
+    {{-0.15f, -0.15f}, {1.0f, 1.0f, 1.0f}},
+    {{ 0.15f, -0.15f}, {1.0f, 1.0f, 1.0f}},
+    {{ 0.15f,  0.15f}, {1.0f, 1.0f, 1.0f}},
+    {{-0.15f,  0.15f}, {1.0f, 1.0f, 1.0f}}
 };
 static const std::vector<uint16_t> rectIndices = {0, 1, 2, 2, 3, 0};
 
-class ConstantOutputTest {
+class PhaseOffsetTest {
 public:
     void run() {
         init();
@@ -83,10 +83,10 @@ private:
     void init() {
         std::cout << "[DEBUG] Current working directory: "
                   << std::filesystem::current_path() << std::endl;
-        std::cout << "[DEBUG] Looking for scripts at: scripts/test_vis_constant/" << std::endl;
+
         createInstance();
 
-        window_ = std::make_unique<Window>(WIDTH, HEIGHT, "Test: Constant Output");
+        window_ = std::make_unique<Window>(WIDTH, HEIGHT, "Test: Phase Offset");
         window_->setResizeCallback([this](int, int) { framebufferResized_ = true; });
         surface_ = window_->createSurface(instance_);
 
@@ -108,30 +108,51 @@ private:
 
         // Auto-detect script directory (Release or Debug)
         std::string scriptDir;
-        if (std::filesystem::exists("Release/scripts/test_vis_constant")) {
-            scriptDir = "Release/scripts/test_vis_constant/";
+        if (std::filesystem::exists("Release/scripts/test_vis_phase_offset")) {
+            scriptDir = "Release/scripts/test_vis_phase_offset/";
             std::cout << "[DEBUG] Using Release/scripts/" << std::endl;
-        } else if (std::filesystem::exists("Debug/scripts/test_vis_constant")) {
-            scriptDir = "Debug/scripts/test_vis_constant/";
+        } else if (std::filesystem::exists("Debug/scripts/test_vis_phase_offset")) {
+            scriptDir = "Debug/scripts/test_vis_phase_offset/";
             std::cout << "[DEBUG] Using Debug/scripts/" << std::endl;
         } else {
-            scriptDir = "scripts/test_vis_constant/";
+            scriptDir = "scripts/test_vis_phase_offset/";
             std::cout << "[DEBUG] Using scripts/ (fallback)" << std::endl;
         }
 
-        // Create one rectangle with constant scripts
-        RenderObjectDesc d;
-        d.vertices    = rectVertices;
-        d.indices     = rectIndices;
-        d.scriptPaths = {scriptDir + "color.glsl",
-                         scriptDir + "rotation.glsl",
-                         scriptDir + "position.glsl"};
-        scene_.addObject(std::make_unique<RenderObject>(device_.get(), d));
+        // Create Object 1 (Red, 0° phase)
+        RenderObjectDesc obj1;
+        obj1.vertices    = rectVertices;
+        obj1.indices     = rectIndices;
+        obj1.scriptPaths = {scriptDir + "obj1_color.glsl",
+                            scriptDir + "obj1_rotation.glsl",
+                            scriptDir + "obj1_position.glsl"};
+        scene_.addObject(std::make_unique<RenderObject>(device_.get(), obj1));
+
+        // Create Object 2 (Green, 120° phase)
+        RenderObjectDesc obj2;
+        obj2.vertices    = rectVertices;
+        obj2.indices     = rectIndices;
+        obj2.scriptPaths = {scriptDir + "obj2_color.glsl",
+                            scriptDir + "obj2_rotation.glsl",
+                            scriptDir + "obj2_position.glsl"};
+        scene_.addObject(std::make_unique<RenderObject>(device_.get(), obj2));
+
+        // Create Object 3 (Blue, 240° phase)
+        RenderObjectDesc obj3;
+        obj3.vertices    = rectVertices;
+        obj3.indices     = rectIndices;
+        obj3.scriptPaths = {scriptDir + "obj3_color.glsl",
+                            scriptDir + "obj3_rotation.glsl",
+                            scriptDir + "obj3_position.glsl"};
+        scene_.addObject(std::make_unique<RenderObject>(device_.get(), obj3));
 
         createSyncObjects();
 
         std::cout << "Initialization OK." << std::endl;
-        std::cout << "Expected: Pure RED rectangle at center, NO motion." << std::endl;
+        std::cout << "Expected: Three rectangles (Red, Green, Blue) with wave motion." << std::endl;
+        std::cout << "Obj1 (Red):   y = 0.3 * sin(t)       [0 deg phase]" << std::endl;
+        std::cout << "Obj2 (Green): y = 0.3 * sin(t+2.09)  [120 deg phase]" << std::endl;
+        std::cout << "Obj3 (Blue):  y = 0.3 * sin(t+4.19)  [240 deg phase]" << std::endl;
         std::cout << "Close window to end test." << std::endl;
     }
 
@@ -261,7 +282,7 @@ private:
 
     void createInstance() {
         vk::ApplicationInfo appInfo{};
-        appInfo.pApplicationName   = "ConstantOutputTest";
+        appInfo.pApplicationName   = "PhaseOffsetTest";
         appInfo.applicationVersion = VK_MAKE_VERSION(1, 0, 0);
         appInfo.apiVersion         = VK_API_VERSION_1_0;
 
@@ -280,19 +301,19 @@ private:
 };
 
 int main() {
-    std::cout << "=== TEST: test_vis_constant ===" << std::endl;
-    std::cout << "=== Visual Test: Constant Output ===" << std::endl;
-    std::cout << "Purpose: Verify mmrsl constant output correctness" << std::endl;
+    std::cout << "=== TEST: test_vis_phase_offset ===" << std::endl;
+    std::cout << "=== Visual Test: Phase Offset ===" << std::endl;
+    std::cout << "Purpose: Verify time variable 't' and phase-shifted behaviors" << std::endl;
     std::cout << std::endl;
     std::cout << "PASS criteria:" << std::endl;
-    std::cout << "  - Color: Pure RED (no variation)" << std::endl;
-    std::cout << "  - Position: Screen center (no movement)" << std::endl;
-    std::cout << "  - Rotation: None (edges parallel to window)" << std::endl;
-    std::cout << "  - Stability: No crash/flicker for 10+ seconds" << std::endl;
+    std::cout << "  - Color: Red, Green, Blue rectangles" << std::endl;
+    std::cout << "  - Phase: Sequential motion forming wave pattern" << std::endl;
+    std::cout << "  - Sync: Same period, different phase" << std::endl;
+    std::cout << "  - Independence: No interference between objects" << std::endl;
     std::cout << std::endl;
 
     try {
-        ConstantOutputTest test;
+        PhaseOffsetTest test;
         test.run();
         return 0;
     } catch (const std::exception& e) {

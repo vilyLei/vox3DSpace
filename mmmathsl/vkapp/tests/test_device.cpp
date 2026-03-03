@@ -89,6 +89,7 @@ void testMemoryTypeQuery() {
 }
 
 int main() {
+    std::cout << "=== TEST: test_device ===" << std::endl;
     std::cout << "=== Device Tests ===" << std::endl;
     
     try {

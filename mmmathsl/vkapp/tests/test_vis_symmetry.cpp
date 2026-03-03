@@ -1,24 +1,24 @@
-// Visual Test: Constant Output
+// Visual Test: Symmetry / Instance Independence
 //
-// Purpose: Verify that mmrsl scripts correctly output constant values.
-// This is the most basic correctness baseline test.
+// Purpose: Verify that two RenderObject instances execute scripts independently.
+// Uses mirror scripts to produce symmetric motion for visual validation.
 //
 // Expected visual result:
-//   - A pure RED rectangle (RGB: 255, 0, 0)
-//   - Stationary at screen center
-//   - No rotation (rectangle edges parallel to window edges)
+//   - Two GREEN rectangles, symmetrically distributed left and right
+//   - They move in perfect horizontal reciprocating motion (like mirror pendulums)
+//   - At any moment, the two rectangles are symmetric about the Y-axis
 //
 // Pass criteria:
-//   - Color: Pure red, no variation
-//   - Position: Center of screen, no movement
-//   - Rotation: None
-//   - Stability: No crash or flicker for 10+ seconds
+//   - Color: Both rectangles are pure green
+//   - Symmetry: Rectangles are symmetric about screen center vertical line
+//   - Motion: When left moves left, right moves right by equal distance
+//   - Independence: No overlap or interference between trajectories
 //
 // Failure indicators:
-//   - Wrong color (black, white, rainbow, etc.)
-//   - Moving or rotating rectangle
-//   - Rectangle not at center
-//   - Program crash
+//   - Different colors (scripts not executing independently)
+//   - Asymmetric motion (shared state or random seed)
+//   - Only one rectangle visible (object not created correctly)
+//   - Rotating rectangles (rotation script error)
 
 #define GLFW_INCLUDE_VULKAN
 #include <filesystem>
@@ -45,14 +45,14 @@ using namespace vkapp;
 
 // Rectangle mesh data
 static const std::vector<Vertex> rectVertices = {
-    {{-0.3f, -0.3f}, {1.0f, 1.0f, 1.0f}},
-    {{ 0.3f, -0.3f}, {1.0f, 1.0f, 1.0f}},
-    {{ 0.3f,  0.3f}, {1.0f, 1.0f, 1.0f}},
-    {{-0.3f,  0.3f}, {1.0f, 1.0f, 1.0f}}
+    {{-0.2f, -0.2f}, {1.0f, 1.0f, 1.0f}},
+    {{ 0.2f, -0.2f}, {1.0f, 1.0f, 1.0f}},
+    {{ 0.2f,  0.2f}, {1.0f, 1.0f, 1.0f}},
+    {{-0.2f,  0.2f}, {1.0f, 1.0f, 1.0f}}
 };
 static const std::vector<uint16_t> rectIndices = {0, 1, 2, 2, 3, 0};
 
-class ConstantOutputTest {
+class SymmetryTest {
 public:
     void run() {
         init();
@@ -83,10 +83,10 @@ private:
     void init() {
         std::cout << "[DEBUG] Current working directory: "
                   << std::filesystem::current_path() << std::endl;
-        std::cout << "[DEBUG] Looking for scripts at: scripts/test_vis_constant/" << std::endl;
+
         createInstance();
 
-        window_ = std::make_unique<Window>(WIDTH, HEIGHT, "Test: Constant Output");
+        window_ = std::make_unique<Window>(WIDTH, HEIGHT, "Test: Symmetry / Instance Independence");
         window_->setResizeCallback([this](int, int) { framebufferResized_ = true; });
         surface_ = window_->createSurface(instance_);
 
@@ -108,30 +108,41 @@ private:
 
         // Auto-detect script directory (Release or Debug)
         std::string scriptDir;
-        if (std::filesystem::exists("Release/scripts/test_vis_constant")) {
-            scriptDir = "Release/scripts/test_vis_constant/";
+        if (std::filesystem::exists("Release/scripts/test_vis_symmetry")) {
+            scriptDir = "Release/scripts/test_vis_symmetry/";
             std::cout << "[DEBUG] Using Release/scripts/" << std::endl;
-        } else if (std::filesystem::exists("Debug/scripts/test_vis_constant")) {
-            scriptDir = "Debug/scripts/test_vis_constant/";
+        } else if (std::filesystem::exists("Debug/scripts/test_vis_symmetry")) {
+            scriptDir = "Debug/scripts/test_vis_symmetry/";
             std::cout << "[DEBUG] Using Debug/scripts/" << std::endl;
         } else {
-            scriptDir = "scripts/test_vis_constant/";
+            scriptDir = "scripts/test_vis_symmetry/";
             std::cout << "[DEBUG] Using scripts/ (fallback)" << std::endl;
         }
 
-        // Create one rectangle with constant scripts
-        RenderObjectDesc d;
-        d.vertices    = rectVertices;
-        d.indices     = rectIndices;
-        d.scriptPaths = {scriptDir + "color.glsl",
-                         scriptDir + "rotation.glsl",
-                         scriptDir + "position.glsl"};
-        scene_.addObject(std::make_unique<RenderObject>(device_.get(), d));
+        // Create left rectangle
+        RenderObjectDesc left;
+        left.vertices    = rectVertices;
+        left.indices     = rectIndices;
+        left.scriptPaths = {scriptDir + "left_color.glsl",
+                            scriptDir + "left_rotation.glsl",
+                            scriptDir + "left_position.glsl"};
+        scene_.addObject(std::make_unique<RenderObject>(device_.get(), left));
+
+        // Create right rectangle
+        RenderObjectDesc right;
+        right.vertices    = rectVertices;
+        right.indices     = rectIndices;
+        right.scriptPaths = {scriptDir + "right_color.glsl",
+                             scriptDir + "right_rotation.glsl",
+                             scriptDir + "right_position.glsl"};
+        scene_.addObject(std::make_unique<RenderObject>(device_.get(), right));
 
         createSyncObjects();
 
         std::cout << "Initialization OK." << std::endl;
-        std::cout << "Expected: Pure RED rectangle at center, NO motion." << std::endl;
+        std::cout << "Expected: Two GREEN rectangles moving symmetrically." << std::endl;
+        std::cout << "Left:  x = -0.5 * sin(t)" << std::endl;
+        std::cout << "Right: x =  0.5 * sin(t)" << std::endl;
         std::cout << "Close window to end test." << std::endl;
     }
 
@@ -261,7 +272,7 @@ private:
 
     void createInstance() {
         vk::ApplicationInfo appInfo{};
-        appInfo.pApplicationName   = "ConstantOutputTest";
+        appInfo.pApplicationName   = "SymmetryTest";
         appInfo.applicationVersion = VK_MAKE_VERSION(1, 0, 0);
         appInfo.apiVersion         = VK_API_VERSION_1_0;
 
@@ -280,19 +291,19 @@ private:
 };
 
 int main() {
-    std::cout << "=== TEST: test_vis_constant ===" << std::endl;
-    std::cout << "=== Visual Test: Constant Output ===" << std::endl;
-    std::cout << "Purpose: Verify mmrsl constant output correctness" << std::endl;
+    std::cout << "=== TEST: test_vis_symmetry ===" << std::endl;
+    std::cout << "=== Visual Test: Symmetry / Instance Independence ===" << std::endl;
+    std::cout << "Purpose: Verify two RenderObject instances execute scripts independently" << std::endl;
     std::cout << std::endl;
     std::cout << "PASS criteria:" << std::endl;
-    std::cout << "  - Color: Pure RED (no variation)" << std::endl;
-    std::cout << "  - Position: Screen center (no movement)" << std::endl;
-    std::cout << "  - Rotation: None (edges parallel to window)" << std::endl;
-    std::cout << "  - Stability: No crash/flicker for 10+ seconds" << std::endl;
+    std::cout << "  - Color: Both rectangles pure GREEN" << std::endl;
+    std::cout << "  - Symmetry: Symmetric about screen center vertical line" << std::endl;
+    std::cout << "  - Motion: Left moves left, right moves right by equal distance" << std::endl;
+    std::cout << "  - Independence: No overlap or interference" << std::endl;
     std::cout << std::endl;
 
     try {
-        ConstantOutputTest test;
+        SymmetryTest test;
         test.run();
         return 0;
     } catch (const std::exception& e) {
