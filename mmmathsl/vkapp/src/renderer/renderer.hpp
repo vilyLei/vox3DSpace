@@ -9,9 +9,6 @@ namespace vkapp {
 class VulkanDevice;
 class VulkanSwapChain;
 class VulkanPipeline;
-class Window;
-
-struct Vertex;
 
 class Renderer {
 public:
@@ -21,33 +18,27 @@ public:
     Renderer(const Renderer&) = delete;
     Renderer& operator=(const Renderer&) = delete;
 
-    void createVertexBuffer(const std::vector<Vertex>& vertices);
-    void createIndexBuffer(const std::vector<uint16_t>& indices);
-    
-    void beginFrame(uint32_t imageIndex, vk::DescriptorSet descriptorSet = nullptr);
+    // Begin render pass + bind pipeline. Call before scene_.drawAll()
+    void beginFrame(uint32_t imageIndex);
+    // End render pass and close command buffer
     void endFrame();
-    void draw();
+    // Submit the command buffer to the graphics queue
     void submit(vk::Semaphore waitSemaphore, vk::Semaphore signalSemaphore, vk::Fence fence);
+
+    // Expose current command buffer so RenderObjects can record into it
+    vk::CommandBuffer getCommandBuffer() const { return commandBuffers_[0]; }
 
 private:
     void createCommandPool();
     void createCommandBuffers();
-    void createSyncObjects();
-    void copyBuffer(vk::Buffer src, vk::Buffer dst, vk::DeviceSize size);
 
-    VulkanDevice* device_;
+    VulkanDevice*    device_;
     VulkanSwapChain* swapChain_;
-    VulkanPipeline* pipeline_;
-    
-    vk::CommandPool commandPool_;
+    VulkanPipeline*  pipeline_;
+
+    vk::CommandPool                commandPool_;
     std::vector<vk::CommandBuffer> commandBuffers_;
-    
-    vk::Buffer vertexBuffer_;
-    vk::DeviceMemory vertexBufferMemory_;
-    vk::Buffer indexBuffer_;
-    vk::DeviceMemory indexBufferMemory_;
-    
-    uint32_t indexCount_ = 0;
+
     uint32_t currentImageIndex_ = 0;
 };
 

@@ -19,6 +19,13 @@ set(GLFW3_LIBRARY "D:/dev/webdev/vox3DSpace/space3d/openglLibs/libx64/lib/glfw3.
 set(GLM_ROOT "D:/dev/webdev/vox3DSpace/space3d/externals/glm")
 
 # ============================================================================
+# mmrsl Static Library
+# ============================================================================
+
+set(MMRSL_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/..")
+add_subdirectory(${MMRSL_ROOT} ${CMAKE_CURRENT_BINARY_DIR}/mmrsl_build)
+
+# ============================================================================
 # Shader Compilation
 # ============================================================================
 
@@ -95,6 +102,11 @@ set(TEST_SOURCES
     src/renderer/renderer.cpp
 )
 
+set(SCENE_SOURCES
+    src/scene/render_object.cpp
+    src/scene/scene.cpp
+)
+
 # Test: Window
 add_executable(test_window tests/test_window.cpp ${TEST_SOURCES})
 target_include_directories(test_window PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src ${Vulkan_INCLUDE_DIRS} ${GLFW3_INCLUDE_DIR} ${GLM_ROOT})
@@ -113,11 +125,22 @@ target_include_directories(test_buffer PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src $
 target_link_libraries(test_buffer PRIVATE ${Vulkan_LIBRARIES} ${GLFW3_LIBRARY})
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES tests/test_buffer.cpp ${TEST_SOURCES})
 
-# Test: Color Rotation (visual)
-add_executable(test_color_rotation tests/test_color_rotation.cpp ${TEST_SOURCES})
-target_include_directories(test_color_rotation PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src ${Vulkan_INCLUDE_DIRS} ${GLFW3_INCLUDE_DIR} ${GLM_ROOT})
-target_link_libraries(test_color_rotation PRIVATE ${Vulkan_LIBRARIES} ${GLFW3_LIBRARY})
-source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES tests/test_color_rotation.cpp ${TEST_SOURCES})
+# Test: Color Rotation / Scene (visual)
+add_executable(test_color_rotation tests/test_color_rotation.cpp ${TEST_SOURCES} ${SCENE_SOURCES})
+target_include_directories(test_color_rotation PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/src
+    ${Vulkan_INCLUDE_DIRS}
+    ${GLFW3_INCLUDE_DIR}
+    ${GLM_ROOT}
+    ${MMRSL_ROOT}/include
+)
+target_link_libraries(test_color_rotation PRIVATE ${Vulkan_LIBRARIES} ${GLFW3_LIBRARY} mmrsl)
+source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES tests/test_color_rotation.cpp ${TEST_SOURCES} ${SCENE_SOURCES})
+add_dependencies(test_color_rotation shaders)
+add_custom_command(TARGET test_color_rotation POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+    ${SHADER_BINARY_DIR} $<TARGET_FILE_DIR:test_color_rotation>/shaders
+)
 
 target_include_directories(vkapp PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/src
