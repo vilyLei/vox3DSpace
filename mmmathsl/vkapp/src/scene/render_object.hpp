@@ -18,10 +18,11 @@ namespace vkapp {
 struct RenderObjectDesc {
     std::vector<Vertex>   vertices;
     std::vector<uint16_t> indices;
-    glm::vec2             position   = {0.0f, 0.0f}; // world-space translation
+    glm::vec2             position   = {0.0f, 0.0f}; // fallback when positionScript is empty
     float                 scale      = 1.0f;
     std::string           colorScript;    // mmrsl: vec4 f(float t)
     std::string           rotationScript; // mmrsl: float f(float t)
+    std::string           positionScript; // mmrsl: vec2 f(float t) -> world XY (optional)
 };
 
 // A self-contained renderable object:
@@ -64,6 +65,8 @@ private:
 
     mmrsl::HighPerfParser                colorParser_;
     mmrsl::HighPerfParser                rotParser_;
+    mmrsl::HighPerfParser                posParser_;
+    bool                                 hasPositionScript_ = false;
 };
 
 } // namespace vkapp

@@ -1,12 +1,13 @@
-// Test: Scene with multiple RenderObjects (visual test)
+// Test: Scene with per-object independent motion, color and rotation scripts
 //
-// This test creates a Scene with two independently controlled objects:
-//   - A rectangle (left):  rainbow color cycling  + clockwise rotation  90 deg/sec
-//   - A triangle (right):  blue-white oscillation + counter-clockwise   45 deg/sec
+// Three objects, each fully driven by its own mmrsl scripts:
 //
-// Each object owns its own mmrsl scripts for color and rotation behavior.
-// Expected result: Two shapes spinning independently with different colors.
-// Press ESC or close the window to exit.
+//  Object 1 - Rectangle: circular orbit + rainbow color + clockwise 90 deg/sec
+//  Object 2 - Triangle:  horizontal oscillation + blue-white + counter-clockwise 45 deg/sec
+//  Object 3 - Rectangle: Lissajous (figure-8) + red-green + fast spin 180 deg/sec
+//
+// Expected result: Three shapes moving independently with different trajectories and colors.
+// Close the window to exit.
 
 #define GLFW_INCLUDE_VULKAN
 #include "application/platform/window.hpp"
@@ -35,26 +36,31 @@ using namespace vkapp;
 // ---------------------------------------------------------------------------
 
 static const std::vector<Vertex> rectVertices = {
-    {{-0.4f, -0.4f}, {1.0f, 1.0f, 1.0f}},
-    {{ 0.4f, -0.4f}, {1.0f, 1.0f, 1.0f}},
-    {{ 0.4f,  0.4f}, {1.0f, 1.0f, 1.0f}},
-    {{-0.4f,  0.4f}, {1.0f, 1.0f, 1.0f}}
+    {{-0.3f, -0.3f}, {1.0f, 1.0f, 1.0f}},
+    {{ 0.3f, -0.3f}, {1.0f, 1.0f, 1.0f}},
+    {{ 0.3f,  0.3f}, {1.0f, 1.0f, 1.0f}},
+    {{-0.3f,  0.3f}, {1.0f, 1.0f, 1.0f}}
 };
 static const std::vector<uint16_t> rectIndices = {0, 1, 2, 2, 3, 0};
 
 static const std::vector<Vertex> triVertices = {
-    {{ 0.0f, -0.4f}, {1.0f, 1.0f, 1.0f}},
-    {{ 0.4f,  0.4f}, {1.0f, 1.0f, 1.0f}},
-    {{-0.4f,  0.4f}, {1.0f, 1.0f, 1.0f}}
+    {{ 0.0f, -0.3f}, {1.0f, 1.0f, 1.0f}},
+    {{ 0.3f,  0.3f}, {1.0f, 1.0f, 1.0f}},
+    {{-0.3f,  0.3f}, {1.0f, 1.0f, 1.0f}}
 };
 static const std::vector<uint16_t> triIndices = {0, 1, 2};
 
 // ---------------------------------------------------------------------------
-// mmrsl scripts
+// Object 1 - Rectangle: circular orbit, rainbow color, CW 90 deg/sec
 // ---------------------------------------------------------------------------
 
-// Rectangle: rainbow color cycling (120 deg phase offset between channels)
-static const char* RECT_COLOR_SCRIPT = R"(
+static const char* OBJ1_POS_SCRIPT = R"(
+vec2 positionScript(float t) {
+    return vec2(0.55 * cos(t), 0.35 * sin(t));
+}
+)";
+
+static const char* OBJ1_COLOR_SCRIPT = R"(
 vec4 colorScript(float t) {
     float r = 0.5 + 0.5 * sin(t);
     float g = 0.5 + 0.5 * sin(t + 2.094);
@@ -63,25 +69,56 @@ vec4 colorScript(float t) {
 }
 )";
 
-// Rectangle: clockwise rotation, 90 deg/sec (pi/2 rad/sec)
-static const char* RECT_ROT_SCRIPT = R"(
+static const char* OBJ1_ROT_SCRIPT = R"(
 float rotationScript(float t) {
     return t * 1.5708;
 }
 )";
 
-// Triangle: blue-white oscillation
-static const char* TRI_COLOR_SCRIPT = R"(
+// ---------------------------------------------------------------------------
+// Object 2 - Triangle: horizontal oscillation, blue-white, CCW 45 deg/sec
+// ---------------------------------------------------------------------------
+
+static const char* OBJ2_POS_SCRIPT = R"(
+vec2 positionScript(float t) {
+    return vec2(0.65 * sin(t * 1.5), 0.0);
+}
+)";
+
+static const char* OBJ2_COLOR_SCRIPT = R"(
 vec4 colorScript(float t) {
     float v = 0.5 + 0.5 * sin(t * 2.0);
     return vec4(v, v, 1.0, 1.0);
 }
 )";
 
-// Triangle: counter-clockwise rotation, 45 deg/sec (pi/4 rad/sec)
-static const char* TRI_ROT_SCRIPT = R"(
+static const char* OBJ2_ROT_SCRIPT = R"(
 float rotationScript(float t) {
     return -(t * 0.7854);
+}
+)";
+
+// ---------------------------------------------------------------------------
+// Object 3 - Rectangle: Lissajous figure-8, red-green oscillation, fast spin
+// ---------------------------------------------------------------------------
+
+static const char* OBJ3_POS_SCRIPT = R"(
+vec2 positionScript(float t) {
+    return vec2(0.5 * sin(t * 0.9), 0.4 * sin(t * 1.8));
+}
+)";
+
+static const char* OBJ3_COLOR_SCRIPT = R"(
+vec4 colorScript(float t) {
+    float r = 0.5 + 0.5 * sin(t * 1.5);
+    float g = 0.5 + 0.5 * sin(t * 1.5 + 3.1416);
+    return vec4(r, g, 0.2, 1.0);
+}
+)";
+
+static const char* OBJ3_ROT_SCRIPT = R"(
+float rotationScript(float t) {
+    return t * 3.1416;
 }
 )";
 
@@ -89,7 +126,7 @@ float rotationScript(float t) {
 // Test class
 // ---------------------------------------------------------------------------
 
-class SceneTest {
+class SceneMotionTest {
 public:
     void run() {
         init();
@@ -120,7 +157,7 @@ private:
     void init() {
         createInstance();
 
-        window_ = std::make_unique<Window>(WIDTH, HEIGHT, "Test: Scene Objects");
+        window_ = std::make_unique<Window>(WIDTH, HEIGHT, "Test: Per-Object Motion Scripts");
         window_->setResizeCallback([this](int, int) { framebufferResized_ = true; });
         surface_ = window_->createSurface(instance_);
 
@@ -130,8 +167,6 @@ private:
         renderPass_ = createRenderPass();
         swapChain_->createFramebuffers(renderPass_);
 
-        // We need a descriptor set layout for the pipeline.
-        // Borrow layout from a temporary UBO (each RenderObject owns its own).
         VulkanUniformBuffer tempUbo(device_.get());
         pipeline_ = std::make_unique<VulkanPipeline>(
             device_.get(), renderPass_,
@@ -142,25 +177,38 @@ private:
 
         renderer_ = std::make_unique<Renderer>(device_.get(), swapChain_.get(), pipeline_.get());
 
-        // Add rectangle (left side)
-        RenderObjectDesc rectDesc;
-        rectDesc.vertices        = rectVertices;
-        rectDesc.indices         = rectIndices;
-        rectDesc.position        = {-0.45f, 0.0f};
-        rectDesc.scale           = 1.0f;
-        rectDesc.colorScript     = RECT_COLOR_SCRIPT;
-        rectDesc.rotationScript  = RECT_ROT_SCRIPT;
-        scene_.addObject(std::make_unique<RenderObject>(device_.get(), rectDesc));
+        // Object 1: rectangle, circular orbit
+        {
+            RenderObjectDesc d;
+            d.vertices        = rectVertices;
+            d.indices         = rectIndices;
+            d.colorScript     = OBJ1_COLOR_SCRIPT;
+            d.rotationScript  = OBJ1_ROT_SCRIPT;
+            d.positionScript  = OBJ1_POS_SCRIPT;
+            scene_.addObject(std::make_unique<RenderObject>(device_.get(), d));
+        }
 
-        // Add triangle (right side)
-        RenderObjectDesc triDesc;
-        triDesc.vertices         = triVertices;
-        triDesc.indices          = triIndices;
-        triDesc.position         = {+0.45f, 0.0f};
-        triDesc.scale            = 1.0f;
-        triDesc.colorScript      = TRI_COLOR_SCRIPT;
-        triDesc.rotationScript   = TRI_ROT_SCRIPT;
-        scene_.addObject(std::make_unique<RenderObject>(device_.get(), triDesc));
+        // Object 2: triangle, horizontal oscillation
+        {
+            RenderObjectDesc d;
+            d.vertices        = triVertices;
+            d.indices         = triIndices;
+            d.colorScript     = OBJ2_COLOR_SCRIPT;
+            d.rotationScript  = OBJ2_ROT_SCRIPT;
+            d.positionScript  = OBJ2_POS_SCRIPT;
+            scene_.addObject(std::make_unique<RenderObject>(device_.get(), d));
+        }
+
+        // Object 3: rectangle, Lissajous figure-8
+        {
+            RenderObjectDesc d;
+            d.vertices        = rectVertices;
+            d.indices         = rectIndices;
+            d.colorScript     = OBJ3_COLOR_SCRIPT;
+            d.rotationScript  = OBJ3_ROT_SCRIPT;
+            d.positionScript  = OBJ3_POS_SCRIPT;
+            scene_.addObject(std::make_unique<RenderObject>(device_.get(), d));
+        }
 
         createSyncObjects();
 
@@ -241,7 +289,6 @@ private:
 
         device_->getDevice().resetFences(inFlightFence_);
 
-        // Compute time and camera matrices
         auto  now    = std::chrono::high_resolution_clock::now();
         float t      = std::chrono::duration<float>(now - startTime).count();
         float aspect = static_cast<float>(window_->getWidth())
@@ -251,12 +298,10 @@ private:
                                      glm::vec3(0.f),
                                      glm::vec3(0.f, 1.f, 0.f));
         glm::mat4 proj = glm::perspective(glm::radians(45.f), aspect, 0.1f, 100.f);
-        proj[1][1] *= -1.f; // Vulkan Y-flip
+        proj[1][1] *= -1.f;
 
-        // Update all scene objects (runs mmrsl scripts, uploads UBOs)
         scene_.update(t, view, proj);
 
-        // Record and submit
         renderer_->beginFrame(imageIndex);
         scene_.drawAll(renderer_->getCommandBuffer(), pipeline_->getLayout());
         renderer_->endFrame();
@@ -297,13 +342,13 @@ private:
 
     void createInstance() {
         vk::ApplicationInfo appInfo{};
-        appInfo.pApplicationName = "SceneTest";
+        appInfo.pApplicationName   = "SceneMotionTest";
         appInfo.applicationVersion = VK_MAKE_VERSION(1, 0, 0);
-        appInfo.apiVersion = VK_API_VERSION_1_0;
+        appInfo.apiVersion         = VK_API_VERSION_1_0;
 
         glfwInit();
-        uint32_t count = 0;
-        const char** exts = glfwGetRequiredInstanceExtensions(&count);
+        uint32_t     count = 0;
+        const char** exts  = glfwGetRequiredInstanceExtensions(&count);
         std::vector<const char*> extensions(exts, exts + count);
 
         vk::InstanceCreateInfo ci{};
@@ -316,13 +361,14 @@ private:
 };
 
 int main() {
-    std::cout << "=== Scene RenderObject Test ===" << std::endl;
-    std::cout << "You should see a rectangle (left) and a triangle (right)," << std::endl;
-    std::cout << "each spinning independently with different color animations." << std::endl;
+    std::cout << "=== Per-Object Motion Script Test ===" << std::endl;
+    std::cout << "Object 1 (rect):     circular orbit    | rainbow color    | CW  90 deg/sec" << std::endl;
+    std::cout << "Object 2 (triangle): horizontal bounce | blue-white pulse | CCW 45 deg/sec" << std::endl;
+    std::cout << "Object 3 (rect):     figure-8 Lissajous| red-green cycle  | fast 180 deg/sec" << std::endl;
     std::cout << "Close the window to end the test." << std::endl;
 
     try {
-        SceneTest test;
+        SceneMotionTest test;
         test.run();
         return 0;
     } catch (const std::exception& e) {

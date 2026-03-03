@@ -34,6 +34,13 @@ RenderObject::RenderObject(VulkanDevice* device, const RenderObjectDesc& desc)
         throw std::runtime_error("RenderObject rotation script compile failed: "
                                  + rotParser_.getLastError());
     }
+    if (!desc.positionScript.empty()) {
+        if (!posParser_.compile(desc.positionScript)) {
+            throw std::runtime_error("RenderObject position script compile failed: "
+                                     + posParser_.getLastError());
+        }
+        hasPositionScript_ = true;
+    }
 }
 
 RenderObject::~RenderObject() {
@@ -50,8 +57,15 @@ void RenderObject::update(float t, const glm::mat4& view, const glm::mat4& proj)
     // Rotation angle from script
     float angle = rotParser_.execute({mmrsl::Value(t)}).asFloat();
 
+    // World position: from script or fallback to static position_
+    glm::vec2 pos = position_;
+    if (hasPositionScript_) {
+        auto pv = posParser_.execute({mmrsl::Value(t)}).asVec2();
+        pos = {pv.x, pv.y};
+    }
+
     // Model = translate * rotate * scale
-    ubo.model = glm::translate(glm::mat4(1.0f), glm::vec3(position_, 0.0f))
+    ubo.model = glm::translate(glm::mat4(1.0f), glm::vec3(pos, 0.0f))
               * glm::rotate(glm::mat4(1.0f), angle, glm::vec3(0.0f, 0.0f, 1.0f))
               * glm::scale(glm::mat4(1.0f), glm::vec3(scale_, scale_, 1.0f));
 
