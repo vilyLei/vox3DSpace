@@ -1,0 +1,17 @@
+## 1. 系统概述
+- **目标**：基于vulkan skd实现一个若干视觉显示相关的demo。
+- **范围**
+    - 在vkapp里面建立src目录，所有源码都在这个目录里面。
+    - 要按照渲染模块render、场景模块scene、其他功能utils三个模块来实现渲染的公共系统。
+    - 先实现绘制一个红色矩形的demo。
+- **功能需求**：
+    - 在window系统中用vulkan context创建程序，能打开窗口。窗口系统用glfw3实现。
+    - 创建项目需要的cmakelists文件，期望能用cmake构建和编译项目。cmake版本是3.25。会用cmake来创建visual studio项目，我用的是visual studio 2022.
+    - 用c++20标准实现相关代码。
+- **相关库及头文件**：
+    - vulkan 路径的环境变量是: VULKAN_SDK
+    - vulkan 头文件: 1. %VULKAN_SDK%/Include
+    - vulkan库的位置是： %VULKAN_SDK%/Lib/vulkan-1.lib
+    - glm源码: D:/dev/webdev\vox3DSpace/space3d/externals/glm
+    - glfw3头文件位置: D:/dev/webdev/vox3DSpace/space3d/openglLibs/libx64/include
+    - 可以将.glsls格式的hader文件编译为.spv的程序位置是: %VULKAN_SDK%/Bin/glslc.exe
