@@ -59,6 +59,12 @@ add_custom_target(shaders ALL DEPENDS ${SHADER_BINARIES})
 
 add_executable(vkapp 
     main.cpp
+    src/application/platform/window.cpp
+    src/rhi/vulkan/vulkan_device.cpp
+    src/rhi/vulkan/vulkan_swapchain.cpp
+    src/rhi/vulkan/vulkan_pipeline.cpp
+    src/rhi/vulkan/vulkan_uniform_buffer.cpp
+    src/renderer/renderer.cpp
 )
 
 target_include_directories(vkapp PRIVATE
