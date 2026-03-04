@@ -259,6 +259,133 @@ add_custom_command(TARGET test_vis_lissajous POST_BUILD
 )
 set_property(TARGET test_vis_lissajous PROPERTY VS_DEBUGGER_WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
 
+# test_vis_bounce: Bounce test (verifies abs() and compound arithmetic)
+add_executable(test_vis_bounce tests/test_vis_bounce.cpp ${TEST_SOURCES} ${SCENE_SOURCES})
+target_include_directories(test_vis_bounce PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/src
+    ${Vulkan_INCLUDE_DIRS}
+    ${GLFW3_INCLUDE_DIR}
+    ${GLM_ROOT}
+    ${MMRSL_ROOT}/include
+)
+target_link_libraries(test_vis_bounce PRIVATE ${Vulkan_LIBRARIES} ${GLFW3_LIBRARY} mmrsl)
+source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES tests/test_vis_bounce.cpp ${TEST_SOURCES} ${SCENE_SOURCES})
+add_dependencies(test_vis_bounce shaders)
+add_custom_command(TARGET test_vis_bounce POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+    ${SHADER_BINARY_DIR} $<TARGET_FILE_DIR:test_vis_bounce>/shaders
+)
+add_custom_command(TARGET test_vis_bounce POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+    ${CMAKE_CURRENT_SOURCE_DIR}/scripts
+    $<TARGET_FILE_DIR:test_vis_bounce>/scripts
+)
+set_property(TARGET test_vis_bounce PROPERTY VS_DEBUGGER_WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
+
+# test_vis_pulse: Pulse test (verifies scale script support)
+add_executable(test_vis_pulse tests/test_vis_pulse.cpp ${TEST_SOURCES} ${SCENE_SOURCES})
+target_include_directories(test_vis_pulse PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/src
+    ${Vulkan_INCLUDE_DIRS}
+    ${GLFW3_INCLUDE_DIR}
+    ${GLM_ROOT}
+    ${MMRSL_ROOT}/include
+)
+target_link_libraries(test_vis_pulse PRIVATE ${Vulkan_LIBRARIES} ${GLFW3_LIBRARY} mmrsl)
+source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES tests/test_vis_pulse.cpp ${TEST_SOURCES} ${SCENE_SOURCES})
+add_dependencies(test_vis_pulse shaders)
+add_custom_command(TARGET test_vis_pulse POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+    ${SHADER_BINARY_DIR} $<TARGET_FILE_DIR:test_vis_pulse>/shaders
+)
+add_custom_command(TARGET test_vis_pulse POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+    ${CMAKE_CURRENT_SOURCE_DIR}/scripts
+    $<TARGET_FILE_DIR:test_vis_pulse>/scripts
+)
+set_property(TARGET test_vis_pulse PROPERTY VS_DEBUGGER_WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
+
+# test_vis_particle: Particle burst test (verifies position+scale script composition)
+add_executable(test_vis_particle tests/test_vis_particle.cpp ${TEST_SOURCES} ${SCENE_SOURCES})
+target_include_directories(test_vis_particle PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/src
+    ${Vulkan_INCLUDE_DIRS}
+    ${GLFW3_INCLUDE_DIR}
+    ${GLM_ROOT}
+    ${MMRSL_ROOT}/include
+)
+target_link_libraries(test_vis_particle PRIVATE ${Vulkan_LIBRARIES} ${GLFW3_LIBRARY} mmrsl)
+source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES tests/test_vis_particle.cpp ${TEST_SOURCES} ${SCENE_SOURCES})
+add_dependencies(test_vis_particle shaders)
+add_custom_command(TARGET test_vis_particle POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+    ${SHADER_BINARY_DIR} $<TARGET_FILE_DIR:test_vis_particle>/shaders
+)
+add_custom_command(TARGET test_vis_particle POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+    ${CMAKE_CURRENT_SOURCE_DIR}/scripts
+    $<TARGET_FILE_DIR:test_vis_particle>/scripts
+)
+set_property(TARGET test_vis_particle PROPERTY VS_DEBUGGER_WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
+
+# test_vis_fast_reload: Hot-reload test (verifies script file change detection)
+add_executable(test_vis_fast_reload tests/test_vis_fast_reload.cpp ${TEST_SOURCES} ${SCENE_SOURCES})
+target_include_directories(test_vis_fast_reload PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/src
+    ${Vulkan_INCLUDE_DIRS}
+    ${GLFW3_INCLUDE_DIR}
+    ${GLM_ROOT}
+    ${MMRSL_ROOT}/include
+)
+target_link_libraries(test_vis_fast_reload PRIVATE ${Vulkan_LIBRARIES} ${GLFW3_LIBRARY} mmrsl)
+source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES tests/test_vis_fast_reload.cpp ${TEST_SOURCES} ${SCENE_SOURCES})
+add_dependencies(test_vis_fast_reload shaders)
+add_custom_command(TARGET test_vis_fast_reload POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+    ${SHADER_BINARY_DIR} $<TARGET_FILE_DIR:test_vis_fast_reload>/shaders
+)
+add_custom_command(TARGET test_vis_fast_reload POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+    ${CMAKE_CURRENT_SOURCE_DIR}/scripts
+    $<TARGET_FILE_DIR:test_vis_fast_reload>/scripts
+)
+set_property(TARGET test_vis_fast_reload PROPERTY VS_DEBUGGER_WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
+
+# Helper macro for visual test targets
+macro(add_vis_test TARGET_NAME)
+    add_executable(${TARGET_NAME} tests/${TARGET_NAME}.cpp ${TEST_SOURCES} ${SCENE_SOURCES})
+    target_include_directories(${TARGET_NAME} PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}/src
+        ${Vulkan_INCLUDE_DIRS}
+        ${GLFW3_INCLUDE_DIR}
+        ${GLM_ROOT}
+        ${MMRSL_ROOT}/include
+    )
+    target_link_libraries(${TARGET_NAME} PRIVATE ${Vulkan_LIBRARIES} ${GLFW3_LIBRARY} mmrsl)
+    source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES tests/${TARGET_NAME}.cpp ${TEST_SOURCES} ${SCENE_SOURCES})
+    add_dependencies(${TARGET_NAME} shaders)
+    add_custom_command(TARGET ${TARGET_NAME} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${SHADER_BINARY_DIR} $<TARGET_FILE_DIR:${TARGET_NAME}>/shaders
+    )
+    add_custom_command(TARGET ${TARGET_NAME} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${CMAKE_CURRENT_SOURCE_DIR}/scripts
+        $<TARGET_FILE_DIR:${TARGET_NAME}>/scripts
+    )
+    set_property(TARGET ${TARGET_NAME} PROPERTY VS_DEBUGGER_WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
+endmacro()
+
+# Complex visual tests
+add_vis_test(test_vis_spiral)
+add_vis_test(test_vis_epicycloid)
+add_vis_test(test_vis_wave_interference)
+add_vis_test(test_vis_gravity)
+add_vis_test(test_vis_spring)
+add_vis_test(test_vis_heatmap)
+add_vis_test(test_vis_orbit)
+add_vis_test(test_vis_pulse_move)
+
 target_include_directories(vkapp PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/src
     ${Vulkan_INCLUDE_DIRS}

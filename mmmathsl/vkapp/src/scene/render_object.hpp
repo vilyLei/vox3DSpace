@@ -19,7 +19,8 @@ namespace vkapp {
 struct ScriptPaths {
     std::string colorScript;    // path to .glsl file
     std::string rotationScript; // path to .glsl file
-    std::string positionScript; // path to .glsl file (optional, empty = use static position)
+    std::string positionScript; // path to .glsl file (optional)
+    std::string scaleScript;    // path to .glsl file (optional, float multiplier on base scale)
 };
 
 // Descriptor for constructing a RenderObject
@@ -32,7 +33,8 @@ struct RenderObjectDesc {
     // Inline scripts (used if scriptPaths are empty)
     std::string           colorScript;    // mmrsl: vec4 f(float t)
     std::string           rotationScript; // mmrsl: float f(float t)
-    std::string           positionScript; // mmrsl: vec2 f(float t) -> world XY (optional)
+    std::string           positionScript; // mmrsl: vec2 f(float t) -> world XY offset (optional)
+    std::string           scaleScript;    // mmrsl: float f(float t) -> scale multiplier (optional)
 
     // File-based scripts (takes precedence over inline scripts if set)
     ScriptPaths           scriptPaths;
@@ -83,14 +85,18 @@ private:
     mmrsl::HighPerfParser                colorParser_;
     mmrsl::HighPerfParser                rotParser_;
     mmrsl::HighPerfParser                posParser_;
+    mmrsl::HighPerfParser                scaleParser_;
     bool                                 hasPositionScript_ = false;
+    bool                                 hasScaleScript_    = false;
 
     // File paths and modification times for hot-reload
     ScriptPaths                          scriptPaths_;
     std::filesystem::file_time_type      colorMtime_;
     std::filesystem::file_time_type      rotMtime_;
     std::filesystem::file_time_type      posMtime_;
+    std::filesystem::file_time_type      scaleMtime_;
     bool                                 hasPositionPath_ = false;
+    bool                                 hasScalePath_    = false;
 };
 
 } // namespace vkapp

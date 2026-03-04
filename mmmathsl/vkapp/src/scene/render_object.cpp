@@ -53,6 +53,16 @@ RenderObject::RenderObject(VulkanDevice* device, const RenderObjectDesc& desc)
         posSrc = desc.positionScript;
     }
 
+    // Scale script
+    std::string scaleSrc;
+    if (!scriptPaths_.scaleScript.empty()) {
+        scaleSrc = ScriptLoader::load(scriptPaths_.scaleScript);
+        scaleMtime_ = ScriptLoader::lastModified(scriptPaths_.scaleScript);
+        hasScalePath_ = true;
+    } else if (!desc.scaleScript.empty()) {
+        scaleSrc = desc.scaleScript;
+    }
+
     // Compile mmrsl scripts
     if (!colorSrc.empty()) {
         if (!colorParser_.compile(colorSrc)) {
@@ -72,6 +82,13 @@ RenderObject::RenderObject(VulkanDevice* device, const RenderObjectDesc& desc)
                                      + posParser_.getLastError());
         }
         hasPositionScript_ = true;
+    }
+    if (!scaleSrc.empty()) {
+        if (!scaleParser_.compile(scaleSrc)) {
+            throw std::runtime_error("RenderObject scale script compile failed: "
+                                     + scaleParser_.getLastError());
+        }
+        hasScaleScript_ = true;
     }
 }
 
@@ -97,9 +114,14 @@ void RenderObject::update(float t, const glm::mat4& view, const glm::mat4& proj)
     }
 
     // Model = translate * rotate * scale
+    // Scale: base scale_ multiplied by optional script output
+    float finalScale = scale_;
+    if (hasScaleScript_) {
+        finalScale *= scaleParser_.execute({mmrsl::Value(t)}).asFloat();
+    }
     ubo.model = glm::translate(glm::mat4(1.0f), glm::vec3(pos, 0.0f))
               * glm::rotate(glm::mat4(1.0f), angle, glm::vec3(0.0f, 0.0f, 1.0f))
-              * glm::scale(glm::mat4(1.0f), glm::vec3(scale_, scale_, 1.0f));
+              * glm::scale(glm::mat4(1.0f), glm::vec3(finalScale, finalScale, 1.0f));
 
     ubo.view = view;
     ubo.proj = proj;
@@ -171,6 +193,21 @@ bool RenderObject::reloadIfChanged() {
             } else {
                 std::cerr << "[HotReload] Position script compile failed (keeping old): "
                           << posParser_.getLastError() << std::endl;
+            }
+        }
+    }
+
+    // Check scale script
+    if (hasScalePath_) {
+        auto mtime = ScriptLoader::lastModified(scriptPaths_.scaleScript);
+        if (mtime != scaleMtime_) {
+            std::string src = ScriptLoader::load(scriptPaths_.scaleScript);
+            if (scaleParser_.compile(src)) {
+                scaleMtime_ = mtime;
+                reloaded = true;
+            } else {
+                std::cerr << "[HotReload] Scale script compile failed (keeping old): "
+                          << scaleParser_.getLastError() << std::endl;
             }
         }
     }
