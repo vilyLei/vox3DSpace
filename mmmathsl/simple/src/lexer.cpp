@@ -20,6 +20,9 @@ std::string tokenTypeToString(TokenType type) {
         case TokenType::Return: return "return";
         case TokenType::If: return "if";
         case TokenType::Else: return "else";
+        case TokenType::For: return "for";
+        case TokenType::Break: return "break";
+        case TokenType::Continue: return "continue";
         case TokenType::Floor: return "floor";
         case TokenType::Sin: return "sin";
         case TokenType::Cos: return "cos";
@@ -43,6 +46,8 @@ std::string tokenTypeToString(TokenType type) {
         case TokenType::Multiply: return "*";
         case TokenType::Divide: return "/";
         case TokenType::Modulo: return "%";
+        case TokenType::Increment: return "++";
+        case TokenType::Decrement: return "--";
         case TokenType::Assign: return "=";
         case TokenType::Greater: return ">";
         case TokenType::GreaterEqual: return ">=";
@@ -116,8 +121,12 @@ Token Lexer::nextToken() {
     advance();
     
     switch (c) {
-        case '+': return makeToken(TokenType::Plus, "+");
-        case '-': return makeToken(TokenType::Minus, "-");
+        case '+': 
+            if (match('+')) return makeToken(TokenType::Increment, "++");
+            return makeToken(TokenType::Plus, "+");
+        case '-': 
+            if (match('-')) return makeToken(TokenType::Decrement, "--");
+            return makeToken(TokenType::Minus, "-");
         case '*': return makeToken(TokenType::Multiply, "*");
         case '/': return makeToken(TokenType::Divide, "/");
         case '%': return makeToken(TokenType::Modulo, "%");
@@ -310,8 +319,11 @@ TokenType Lexer::lookupKeyword(const std::string& identifier) {
         
         // Keywords
         {"return", TokenType::Return},
-        {"if", TokenType::If},
-        {"else", TokenType::Else},
+        {"if",     TokenType::If},
+        {"else",   TokenType::Else},
+        {"for",    TokenType::For},
+        {"break",  TokenType::Break},
+        {"continue", TokenType::Continue},
         
         // Built-in functions
         {"floor", TokenType::Floor},

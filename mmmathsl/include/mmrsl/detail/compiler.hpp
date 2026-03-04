@@ -68,6 +68,16 @@ private:
     void compileReturn(const ReturnStmt& stmt);
     void compileCompound(const CompoundStmt& stmt);
     void compileIf(const IfStmt& stmt);
+    void compileFor(const ForStmt& stmt);
+    void compileBreak(const BreakStmt& stmt);
+    void compileContinue(const ContinueStmt& stmt);
+    
+    // Loop context for break/continue backpatching (nested loop support)
+    struct LoopContext {
+        std::vector<size_t> breakPatches;    // indices of JUMP instructions to patch with loop-end
+        std::vector<size_t> continuePatches; // indices of JUMP instructions to patch with update-start
+    };
+    std::vector<LoopContext> loopStack_;  // supports nested loops
     
     // Expression compilation - returns register containing result
     uint8_t compileExpression(const Expression& expr);

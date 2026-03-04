@@ -208,6 +208,17 @@ enum class OpCode : uint8_t {
     JUMP,                   // Unconditional jump to offset (stored in regSrc1 as 16-bit offset)
     JUMP_IF_FALSE,          // Jump if register value is false (bool)
     
+    // Int arithmetic (for loop counters)
+    ADD_INT,                // int + int
+    SUB_INT,                // int - int
+    MUL_INT,                // int * int
+    DIV_INT,                // int / int (integer division)
+    MOD_INT,                // int % int (integer modulo)
+    
+    // Type conversion
+    INT_TO_FLOAT,           // float(int) -> float
+    FLOAT_TO_INT,           // int(float) -> int
+    
     // Special
     NOP,                    // No operation
     HALT                    // Stop execution

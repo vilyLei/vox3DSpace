@@ -140,6 +140,10 @@ target_link_libraries(mmrsl_hp_pipeline PRIVATE mmrsl)
 add_executable(mmrsl_hp_ternary high_perf/tests/test_hp_ternary.cpp)
 target_link_libraries(mmrsl_hp_ternary PRIVATE mmrsl)
 
+# High-performance version for loop test executable
+add_executable(mmrsl_hp_for_loop high_perf/tests/test_hp_for_loop.cpp)
+target_link_libraries(mmrsl_hp_for_loop PRIVATE mmrsl)
+
 # Apply UTF-8 encoding to all test executables on MSVC
 if(MSVC)
     target_compile_options(mmrsl_test PRIVATE /utf-8)
@@ -149,6 +153,7 @@ if(MSVC)
     target_compile_options(mmrsl_hp_builtin PRIVATE /utf-8)
     target_compile_options(mmrsl_hp_pipeline PRIVATE /utf-8)
     target_compile_options(mmrsl_hp_ternary PRIVATE /utf-8)
+    target_compile_options(mmrsl_hp_for_loop PRIVATE /utf-8)
 endif()
 
 # Link Windows PSAPI for memory monitoring

@@ -202,6 +202,32 @@ public:
     std::string toString() const override;
 };
 
+// For loop statement: for (init; condition; update) body
+class ForStmt : public Statement {
+public:
+    StmtPtr init;         // VarDeclStmt or AssignStmt (can be null)
+    ExprPtr condition;    // boolean expression (can be null = infinite loop)
+    StmtPtr update;       // AssignStmt synthesized from i++ / i-- / i=expr (can be null)
+    StmtPtr body;
+    
+    ForStmt(StmtPtr i, ExprPtr cond, StmtPtr upd, StmtPtr b)
+        : init(std::move(i)), condition(std::move(cond)), update(std::move(upd)), body(std::move(b)) {}
+    
+    std::string toString() const override;
+};
+
+// break;
+class BreakStmt : public Statement {
+public:
+    std::string toString() const override;
+};
+
+// continue;
+class ContinueStmt : public Statement {
+public:
+    std::string toString() const override;
+};
+
 // Function parameter
 struct Parameter {
     TypeKind type;
@@ -307,6 +333,9 @@ private:
     StmtPtr parseAssignOrExprStmt();
     StmtPtr parseReturnStmt();
     StmtPtr parseIfStmt();
+    StmtPtr parseForStmt();
+    StmtPtr parseBreakStmt();
+    StmtPtr parseContinueStmt();
     
     // Expression parsing (precedence climbing)
     ExprPtr parseExpression();

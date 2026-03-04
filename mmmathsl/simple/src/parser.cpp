@@ -90,6 +90,25 @@ std::string IfStmt::toString() const {
     return result;
 }
 
+std::string ForStmt::toString() const {
+    std::string result = "for (";
+    if (init) result += init->toString(); else result += ";";
+    result += " ";
+    if (condition) result += condition->toString();
+    result += ";";
+    if (update) result += " " + update->toString();
+    result += ") " + body->toString();
+    return result;
+}
+
+std::string BreakStmt::toString() const {
+    return "break;";
+}
+
+std::string ContinueStmt::toString() const {
+    return "continue;";
+}
+
 std::string FunctionDecl::toString() const {
     std::string result = typeKindToString(returnType) + " " + name + "(";
     for (size_t i = 0; i < parameters.size(); ++i) {
@@ -303,6 +322,21 @@ StmtPtr RecursiveParser::parseStatement() {
         return parseIfStmt();
     }
     
+    // For statement
+    if (match(TokenType::For)) {
+        return parseForStmt();
+    }
+    
+    // Break statement
+    if (match(TokenType::Break)) {
+        return parseBreakStmt();
+    }
+    
+    // Continue statement
+    if (match(TokenType::Continue)) {
+        return parseContinueStmt();
+    }
+    
     // Assignment or expression
     return parseAssignOrExprStmt();
 }
@@ -332,6 +366,7 @@ StmtPtr RecursiveParser::parseVarDecl() {
 
 StmtPtr RecursiveParser::parseAssignOrExprStmt() {
     // Check if it's an assignment (identifier followed by =)
+    // or i++ / i-- (identifier followed by ++ / --)
     if (check(TokenType::Identifier)) {
         size_t lookahead = pos_ + 1;
         if (lookahead < tokens_.size() && tokens_[lookahead].type == TokenType::Assign) {
@@ -346,6 +381,27 @@ StmtPtr RecursiveParser::parseAssignOrExprStmt() {
             
             incrementNodeCount();
             return std::make_unique<AssignStmt>(name, std::move(value));
+        }
+        // Handle i++ and i-- (synthesize into i = i + 1 / i = i - 1)
+        if (lookahead < tokens_.size() && 
+            (tokens_[lookahead].type == TokenType::Increment ||
+             tokens_[lookahead].type == TokenType::Decrement)) {
+            std::string name = advance().lexeme;
+            bool isIncrement = (peek().type == TokenType::Increment);
+            advance();  // consume ++ or --
+            
+            if (!match(TokenType::Semicolon)) {
+                error("Expected ';' after ++/--");
+                return nullptr;
+            }
+            
+            // Synthesize: name = name + 1  or  name = name - 1
+            auto varExpr = std::make_unique<VariableExpr>(name);
+            auto oneExpr = std::make_unique<LiteralExpr>(Value(1));
+            TokenType op = isIncrement ? TokenType::Plus : TokenType::Minus;
+            auto binExpr = std::make_unique<BinaryExpr>(op, std::move(varExpr), std::move(oneExpr));
+            incrementNodeCount();
+            return std::make_unique<AssignStmt>(name, std::move(binExpr));
         }
     }
     
@@ -402,6 +458,126 @@ StmtPtr RecursiveParser::parseIfStmt() {
     
     incrementNodeCount();
     return std::make_unique<IfStmt>(std::move(condition), std::move(thenBranch), std::move(elseBranch));
+}
+
+StmtPtr RecursiveParser::parseForStmt() {
+    // for ( [init] ; [condition] ; [update] ) body
+    if (!match(TokenType::LeftParen)) {
+        error("Expected '(' after 'for'");
+        return nullptr;
+    }
+    
+    // Parse init: variable declaration OR assignment OR empty
+    StmtPtr init = nullptr;
+    if (!check(TokenType::Semicolon)) {
+        // Check if it starts with a type keyword (var decl)
+        if (check(TokenType::Int) || check(TokenType::Float) || check(TokenType::Bool) ||
+            check(TokenType::Vec2) || check(TokenType::Vec3) || check(TokenType::Vec4) ||
+            check(TokenType::Mat2) || check(TokenType::Mat3) || check(TokenType::Mat4)) {
+            size_t lookahead = pos_ + 1;
+            if (lookahead < tokens_.size() && tokens_[lookahead].type == TokenType::Identifier) {
+                // Parse var decl WITHOUT the trailing semicolon (we consume it below)
+                TypeKind type = parseType();
+                if (!check(TokenType::Identifier)) {
+                    error("Expected variable name in for-init");
+                    return nullptr;
+                }
+                std::string name = advance().lexeme;
+                ExprPtr initializer = nullptr;
+                if (match(TokenType::Assign)) {
+                    initializer = parseExpression();
+                }
+                incrementNodeCount();
+                init = std::make_unique<VarDeclStmt>(type, name, std::move(initializer));
+            }
+        } else if (check(TokenType::Identifier)) {
+            // Assignment: name = expr
+            size_t lookahead = pos_ + 1;
+            if (lookahead < tokens_.size() && tokens_[lookahead].type == TokenType::Assign) {
+                std::string name = advance().lexeme;
+                advance();  // consume '='
+                ExprPtr value = parseExpression();
+                incrementNodeCount();
+                init = std::make_unique<AssignStmt>(name, std::move(value));
+            }
+        }
+    }
+    if (!match(TokenType::Semicolon)) {
+        error("Expected ';' after for-init");
+        return nullptr;
+    }
+    
+    // Parse condition (optional)
+    ExprPtr condition = nullptr;
+    if (!check(TokenType::Semicolon)) {
+        condition = parseExpression();
+    }
+    if (!match(TokenType::Semicolon)) {
+        error("Expected ';' after for-condition");
+        return nullptr;
+    }
+    
+    // Parse update (optional): identifier = expr  OR  identifier++  OR  identifier--
+    StmtPtr update = nullptr;
+    if (!check(TokenType::RightParen)) {
+        if (check(TokenType::Identifier)) {
+            size_t lookahead = pos_ + 1;
+            if (lookahead < tokens_.size() && tokens_[lookahead].type == TokenType::Assign) {
+                std::string name = advance().lexeme;
+                advance();  // consume '='
+                ExprPtr value = parseExpression();
+                incrementNodeCount();
+                update = std::make_unique<AssignStmt>(name, std::move(value));
+            } else if (lookahead < tokens_.size() &&
+                       (tokens_[lookahead].type == TokenType::Increment ||
+                        tokens_[lookahead].type == TokenType::Decrement)) {
+                std::string name = advance().lexeme;
+                bool isIncrement = (peek().type == TokenType::Increment);
+                advance();  // consume ++ or --
+                // Synthesize: name = name + 1  or  name = name - 1
+                auto varExpr = std::make_unique<VariableExpr>(name);
+                auto oneExpr = std::make_unique<LiteralExpr>(Value(1));
+                TokenType op = isIncrement ? TokenType::Plus : TokenType::Minus;
+                auto binExpr = std::make_unique<BinaryExpr>(op, std::move(varExpr), std::move(oneExpr));
+                incrementNodeCount();
+                update = std::make_unique<AssignStmt>(name, std::move(binExpr));
+            }
+        }
+    }
+    
+    if (!match(TokenType::RightParen)) {
+        error("Expected ')' after for-update");
+        return nullptr;
+    }
+    
+    // Parse body
+    StmtPtr body;
+    if (check(TokenType::LeftBrace)) {
+        body = parseCompoundStmt();
+    } else {
+        body = parseStatement();
+    }
+    
+    incrementNodeCount();
+    return std::make_unique<ForStmt>(std::move(init), std::move(condition), std::move(update), std::move(body));
+}
+
+StmtPtr RecursiveParser::parseBreakStmt() {
+    if (!match(TokenType::Semicolon)) {
+        error("Expected ';' after 'break'");
+        return nullptr;
+    }
+    incrementNodeCount();
+    return std::make_unique<BreakStmt>();
+}
+
+StmtPtr RecursiveParser::parseContinueStmt() {
+    if (!match(TokenType::Semicolon)) {
+        error("Expected ';' after 'continue'");
+        return nullptr;
+    }
+    incrementNodeCount();
+    return std::make_unique<ContinueStmt>();
 }
 
 // Expression parsing
@@ -517,7 +693,8 @@ ExprPtr RecursiveParser::parsePrimary() {
     }
     
     // Constructor or function call
-    if (check(TokenType::Vec2) || check(TokenType::Vec3) || check(TokenType::Vec4) ||
+    if (check(TokenType::Float) || check(TokenType::Int) ||
+        check(TokenType::Vec2) || check(TokenType::Vec3) || check(TokenType::Vec4) ||
         check(TokenType::Mat2) || check(TokenType::Mat3) || check(TokenType::Mat4)) {
         return parseConstructor();
     }

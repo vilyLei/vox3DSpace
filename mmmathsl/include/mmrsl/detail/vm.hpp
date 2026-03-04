@@ -224,6 +224,17 @@ private:
     void memberZ(uint8_t rd, uint8_t rs);
     void memberW(uint8_t rd, uint8_t rs);
     
+    // Int arithmetic
+    void addInt(uint8_t rd, uint8_t rs1, uint8_t rs2);
+    void subInt(uint8_t rd, uint8_t rs1, uint8_t rs2);
+    void mulInt(uint8_t rd, uint8_t rs1, uint8_t rs2);
+    void divInt(uint8_t rd, uint8_t rs1, uint8_t rs2);
+    void modInt(uint8_t rd, uint8_t rs1, uint8_t rs2);
+    
+    // Type conversion
+    void intToFloat(uint8_t rd, uint8_t rs);
+    void floatToInt(uint8_t rd, uint8_t rs);
+    
     // Error handling
     void setError(const std::string& msg);
 };

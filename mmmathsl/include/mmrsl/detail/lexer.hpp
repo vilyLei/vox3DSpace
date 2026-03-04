@@ -19,6 +19,9 @@ enum class TokenType {
     Return,
     If,
     Else,
+    For,
+    Break,
+    Continue,
     
     // Built-in functions
     Floor, Sin, Cos, Tan, Abs, Sqrt, Min, Max, Dot, Cross,
@@ -32,6 +35,8 @@ enum class TokenType {
     
     // Operators
     Plus, Minus, Multiply, Divide, Modulo,
+    Increment,      // ++
+    Decrement,      // --
     Assign,
     
     // Comparison operators

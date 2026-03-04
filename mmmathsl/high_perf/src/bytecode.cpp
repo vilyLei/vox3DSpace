@@ -215,6 +215,13 @@ const char* opcodeToString(OpCode op) {
         case OpCode::RETURN: return "RETURN";
         case OpCode::JUMP: return "JUMP";
         case OpCode::JUMP_IF_FALSE: return "JUMP_IF_FALSE";
+        case OpCode::ADD_INT: return "ADD_INT";
+        case OpCode::SUB_INT: return "SUB_INT";
+        case OpCode::MUL_INT: return "MUL_INT";
+        case OpCode::DIV_INT: return "DIV_INT";
+        case OpCode::MOD_INT: return "MOD_INT";
+        case OpCode::INT_TO_FLOAT: return "INT_TO_FLOAT";
+        case OpCode::FLOAT_TO_INT: return "FLOAT_TO_INT";
         case OpCode::NOP: return "NOP";
         case OpCode::HALT: return "HALT";
     }

@@ -24,6 +24,7 @@ BytecodeFunction Compiler::compile(const Program& program) {
     maxNestingDepth_ = 0;
     currentExprDepth_ = 0; // Reset expression depth
     maxExprDepth_ = 0;
+    loopStack_.clear();  // Reset loop context stack
     errorMsg_.clear();
     
     if (!program.function) {
@@ -96,6 +97,12 @@ void Compiler::compileStatement(const Statement& stmt) {
         compileCompound(*compound);
     } else if (auto ifStmt = dynamic_cast<const IfStmt*>(&stmt)) {
         compileIf(*ifStmt);
+    } else if (auto forStmt = dynamic_cast<const ForStmt*>(&stmt)) {
+        compileFor(*forStmt);
+    } else if (auto breakStmt = dynamic_cast<const BreakStmt*>(&stmt)) {
+        compileBreak(*breakStmt);
+    } else if (auto continueStmt = dynamic_cast<const ContinueStmt*>(&stmt)) {
+        compileContinue(*continueStmt);
     } else {
         setError("Unsupported statement type");
     }
@@ -118,6 +125,14 @@ void Compiler::compileVarDecl(const VarDeclStmt& stmt) {
     // Compile initializer if present
     if (stmt.initializer) {
         uint8_t reg = compileExpression(*stmt.initializer);
+        // Coerce int to float if variable is declared as float
+        TypeKind initType = getExpressionType(*stmt.initializer);
+        if (stmt.type == TypeKind::Float && initType == TypeKind::Int) {
+            uint8_t floatReg = allocateRegister();
+            currentFunc_->emit(OpCode::INT_TO_FLOAT, floatReg, reg, 0);
+            freeRegister(reg);
+            reg = floatReg;
+        }
         currentFunc_->emit(OpCode::STORE_LOCAL, reg, localIdx);
         freeRegister(reg);
     }
@@ -126,12 +141,33 @@ void Compiler::compileVarDecl(const VarDeclStmt& stmt) {
 void Compiler::compileAssign(const AssignStmt& stmt) {
     uint16_t localIdx = getLocal(stmt.name);
     uint8_t reg = compileExpression(*stmt.value);
+    // Coerce int to float if the target variable is a float
+    auto varTypeIt = localVarTypes_.find(stmt.name);
+    if (varTypeIt != localVarTypes_.end() && varTypeIt->second == TypeKind::Float) {
+        TypeKind valType = getExpressionType(*stmt.value);
+        if (valType == TypeKind::Int) {
+            uint8_t floatReg = allocateRegister();
+            currentFunc_->emit(OpCode::INT_TO_FLOAT, floatReg, reg, 0);
+            freeRegister(reg);
+            reg = floatReg;
+        }
+    }
     currentFunc_->emit(OpCode::STORE_LOCAL, reg, localIdx);
     freeRegister(reg);
 }
 
 void Compiler::compileReturn(const ReturnStmt& stmt) {
     uint8_t reg = compileExpression(*stmt.value);
+    // Coerce int to float if function return type is float
+    if (currentFunc_->returnType == TypeKind::Float) {
+        TypeKind exprType = getExpressionType(*stmt.value);
+        if (exprType == TypeKind::Int) {
+            uint8_t floatReg = allocateRegister();
+            currentFunc_->emit(OpCode::INT_TO_FLOAT, floatReg, reg, 0);
+            freeRegister(reg);
+            reg = floatReg;
+        }
+    }
     // Ensure result is in register 0 (convention for return value)
     if (reg != 0) {
         // Lazy initialization: allocate return temp on first use
@@ -201,11 +237,39 @@ uint8_t Compiler::compileBinary(const BinaryExpr& expr) {
     TypeKind leftType = getExpressionType(*expr.left);
     TypeKind rightType = getExpressionType(*expr.right);
     
+    // Auto-coerce Int to Float for mixed arithmetic (Int op Float or Float op Int)
+    // This handles cases like `s * 1` or `1 + s` where s is float
+    auto coerceIntRegToFloat = [&](uint8_t& reg, TypeKind& kind) {
+        if (kind == TypeKind::Int) {
+            uint8_t floatReg = allocateRegister();
+            currentFunc_->emit(OpCode::INT_TO_FLOAT, floatReg, reg, 0);
+            freeRegister(reg);
+            reg = floatReg;
+            kind = TypeKind::Float;
+        }
+    };
+    // For pure arithmetic ops (+,-,*,/,%), coerce Int<->Float to Float
+    bool isArithOp = (expr.op == TokenType::Plus || expr.op == TokenType::Minus ||
+                      expr.op == TokenType::Multiply || expr.op == TokenType::Divide ||
+                      expr.op == TokenType::Modulo);
+    bool isCmpOp = (expr.op == TokenType::Greater || expr.op == TokenType::GreaterEqual ||
+                    expr.op == TokenType::Less || expr.op == TokenType::LessEqual ||
+                    expr.op == TokenType::Equal || expr.op == TokenType::NotEqual);
+    if (isArithOp || isCmpOp) {
+        if (leftType == TypeKind::Float && rightType == TypeKind::Int) {
+            coerceIntRegToFloat(rightReg, rightType);
+        } else if (leftType == TypeKind::Int && rightType == TypeKind::Float) {
+            coerceIntRegToFloat(leftReg, leftType);
+        }
+    }
+    
     // Select appropriate instruction based on types and operator
     switch (expr.op) {
         case TokenType::Plus:
             if (leftType == TypeKind::Float && rightType == TypeKind::Float) {
                 currentFunc_->emit(OpCode::ADD_FLOAT, resultReg, leftReg, rightReg);
+            } else if (leftType == TypeKind::Int && rightType == TypeKind::Int) {
+                currentFunc_->emit(OpCode::ADD_INT, resultReg, leftReg, rightReg);
             } else if (leftType == TypeKind::Vec2 && rightType == TypeKind::Vec2) {
                 currentFunc_->emit(OpCode::ADD_VEC2, resultReg, leftReg, rightReg);
             } else if (leftType == TypeKind::Float && rightType == TypeKind::Vec2) {
@@ -225,6 +289,8 @@ uint8_t Compiler::compileBinary(const BinaryExpr& expr) {
         case TokenType::Minus:
             if (leftType == TypeKind::Float && rightType == TypeKind::Float) {
                 currentFunc_->emit(OpCode::SUB_FLOAT, resultReg, leftReg, rightReg);
+            } else if (leftType == TypeKind::Int && rightType == TypeKind::Int) {
+                currentFunc_->emit(OpCode::SUB_INT, resultReg, leftReg, rightReg);
             } else if (leftType == TypeKind::Vec2 && rightType == TypeKind::Vec2) {
                 currentFunc_->emit(OpCode::SUB_VEC2, resultReg, leftReg, rightReg);
             } else if (leftType == TypeKind::Float && rightType == TypeKind::Vec2) {
@@ -247,6 +313,8 @@ uint8_t Compiler::compileBinary(const BinaryExpr& expr) {
         case TokenType::Multiply:
             if (leftType == TypeKind::Float && rightType == TypeKind::Float) {
                 currentFunc_->emit(OpCode::MUL_FLOAT, resultReg, leftReg, rightReg);
+            } else if (leftType == TypeKind::Int && rightType == TypeKind::Int) {
+                currentFunc_->emit(OpCode::MUL_INT, resultReg, leftReg, rightReg);
             } else if (leftType == TypeKind::Vec2 && rightType == TypeKind::Vec2) {
                 currentFunc_->emit(OpCode::MUL_VEC2, resultReg, leftReg, rightReg);
             } else if (leftType == TypeKind::Vec2 && rightType == TypeKind::Float) {
@@ -287,6 +355,8 @@ uint8_t Compiler::compileBinary(const BinaryExpr& expr) {
         case TokenType::Divide:
             if (leftType == TypeKind::Float && rightType == TypeKind::Float) {
                 currentFunc_->emit(OpCode::DIV_FLOAT, resultReg, leftReg, rightReg);
+            } else if (leftType == TypeKind::Int && rightType == TypeKind::Int) {
+                currentFunc_->emit(OpCode::DIV_INT, resultReg, leftReg, rightReg);
             } else if (leftType == TypeKind::Vec2 && rightType == TypeKind::Float) {
                 currentFunc_->emit(OpCode::DIV_VEC2_FLOAT, resultReg, leftReg, rightReg);
             } else if (leftType == TypeKind::Vec3 && rightType == TypeKind::Float) {
@@ -300,6 +370,8 @@ uint8_t Compiler::compileBinary(const BinaryExpr& expr) {
         case TokenType::Modulo:
             if (leftType == TypeKind::Float && rightType == TypeKind::Float) {
                 currentFunc_->emit(OpCode::MOD_FLOAT, resultReg, leftReg, rightReg);
+            } else if (leftType == TypeKind::Int && rightType == TypeKind::Int) {
+                currentFunc_->emit(OpCode::MOD_INT, resultReg, leftReg, rightReg);
             } else {
                 setError("Invalid operand types for '%' operator");
             }
@@ -308,12 +380,16 @@ uint8_t Compiler::compileBinary(const BinaryExpr& expr) {
         case TokenType::Greater:
             if (leftType == TypeKind::Float && rightType == TypeKind::Float) {
                 currentFunc_->emit(OpCode::CMP_GT, resultReg, leftReg, rightReg);
+            } else if (leftType == TypeKind::Int && rightType == TypeKind::Int) {
+                currentFunc_->emit(OpCode::CMP_GT, resultReg, leftReg, rightReg);
             } else {
                 setError("Invalid operand types for '>' operator");
             }
             break;
         case TokenType::GreaterEqual:
             if (leftType == TypeKind::Float && rightType == TypeKind::Float) {
+                currentFunc_->emit(OpCode::CMP_GE, resultReg, leftReg, rightReg);
+            } else if (leftType == TypeKind::Int && rightType == TypeKind::Int) {
                 currentFunc_->emit(OpCode::CMP_GE, resultReg, leftReg, rightReg);
             } else {
                 setError("Invalid operand types for '>=' operator");
@@ -322,12 +398,16 @@ uint8_t Compiler::compileBinary(const BinaryExpr& expr) {
         case TokenType::Less:
             if (leftType == TypeKind::Float && rightType == TypeKind::Float) {
                 currentFunc_->emit(OpCode::CMP_LT, resultReg, leftReg, rightReg);
+            } else if (leftType == TypeKind::Int && rightType == TypeKind::Int) {
+                currentFunc_->emit(OpCode::CMP_LT, resultReg, leftReg, rightReg);
             } else {
                 setError("Invalid operand types for '<' operator");
             }
             break;
         case TokenType::LessEqual:
             if (leftType == TypeKind::Float && rightType == TypeKind::Float) {
+                currentFunc_->emit(OpCode::CMP_LE, resultReg, leftReg, rightReg);
+            } else if (leftType == TypeKind::Int && rightType == TypeKind::Int) {
                 currentFunc_->emit(OpCode::CMP_LE, resultReg, leftReg, rightReg);
             } else {
                 setError("Invalid operand types for '<=' operator");
@@ -336,12 +416,16 @@ uint8_t Compiler::compileBinary(const BinaryExpr& expr) {
         case TokenType::Equal:
             if (leftType == TypeKind::Float && rightType == TypeKind::Float) {
                 currentFunc_->emit(OpCode::CMP_EQ, resultReg, leftReg, rightReg);
+            } else if (leftType == TypeKind::Int && rightType == TypeKind::Int) {
+                currentFunc_->emit(OpCode::CMP_EQ, resultReg, leftReg, rightReg);
             } else {
                 setError("Invalid operand types for '==' operator");
             }
             break;
         case TokenType::NotEqual:
             if (leftType == TypeKind::Float && rightType == TypeKind::Float) {
+                currentFunc_->emit(OpCode::CMP_NE, resultReg, leftReg, rightReg);
+            } else if (leftType == TypeKind::Int && rightType == TypeKind::Int) {
                 currentFunc_->emit(OpCode::CMP_NE, resultReg, leftReg, rightReg);
             } else {
                 setError("Invalid operand types for '!=' operator");
@@ -382,6 +466,13 @@ uint8_t Compiler::compileUnary(const UnaryExpr& expr) {
             uint8_t resultReg = allocateRegister();
             if (operandType == TypeKind::Float) {
                 currentFunc_->emit(OpCode::NEG_FLOAT, resultReg, operandReg, 0);
+            } else if (operandType == TypeKind::Int) {
+                // Emit 0 - operand using SUB_INT
+                uint8_t zeroReg = allocateRegister();
+                uint16_t zeroIdx = currentFunc_->addConstant(Value(0));
+                currentFunc_->emit(OpCode::LOAD_CONST_INT, zeroReg, zeroIdx);
+                currentFunc_->emit(OpCode::SUB_INT, resultReg, zeroReg, operandReg);
+                freeRegister(zeroReg);
             } else if (operandType == TypeKind::Vec2) {
                 currentFunc_->emit(OpCode::NEG_VEC2, resultReg, operandReg, 0);
             } else if (operandType == TypeKind::Vec3) {
@@ -416,11 +507,8 @@ uint8_t Compiler::compileUnary(const UnaryExpr& expr) {
 uint8_t Compiler::compileLiteral(const LiteralExpr& expr) {
     uint8_t reg = allocateRegister();
     
-    // For arithmetic operations, convert int to float
+    // Keep int values as int (for loop counters and integer arithmetic)
     Value val = expr.value;
-    if (val.isInt()) {
-        val = Value(static_cast<float>(val.asInt()));
-    }
     
     // Check constant pool size limit
     if (currentFunc_->constants.size() >= MAX_CONSTANT_POOL_SIZE) {
@@ -688,6 +776,38 @@ uint8_t Compiler::compileConstructor(const ConstructorExpr& expr) {
     }
     
     uint8_t resultReg = allocateRegister();
+    
+    // Handle scalar type conversions: float(x) and int(x)
+    if (expr.type == TypeKind::Float) {
+        if (argRegs.size() == 1) {
+            TypeKind argType = getExpressionType(*expr.arguments[0]);
+            if (argType == TypeKind::Int) {
+                currentFunc_->emit(OpCode::INT_TO_FLOAT, resultReg, argRegs[0], 0);
+            } else {
+                // Already float, just move
+                currentFunc_->emit(OpCode::MOV_FLOAT, resultReg, argRegs[0], 0);
+            }
+        } else {
+            setError("float() constructor requires 1 argument");
+        }
+        for (uint8_t reg : argRegs) freeRegister(reg);
+        return resultReg;
+    }
+    if (expr.type == TypeKind::Int) {
+        if (argRegs.size() == 1) {
+            TypeKind argType = getExpressionType(*expr.arguments[0]);
+            if (argType == TypeKind::Float) {
+                currentFunc_->emit(OpCode::FLOAT_TO_INT, resultReg, argRegs[0], 0);
+            } else {
+                // Already int: copy via register move (MOV_FLOAT copies Value as-is)
+                currentFunc_->emit(OpCode::MOV_FLOAT, resultReg, argRegs[0], 0);
+            }
+        } else {
+            setError("int() constructor requires 1 argument");
+        }
+        for (uint8_t reg : argRegs) freeRegister(reg);
+        return resultReg;
+    }
     
     // Create the value based on constructor type and arguments
     if (expr.type == TypeKind::Vec2) {
@@ -1090,11 +1210,111 @@ void Compiler::compileIf(const IfStmt& stmt) {
     currentNestingDepth_--;
 }
 
+void Compiler::compileFor(const ForStmt& stmt) {
+    // Check nesting depth limit
+    currentNestingDepth_++;
+    if (currentNestingDepth_ > MAX_NESTING_DEPTH) {
+        setError("Maximum nesting depth exceeded in for loop");
+        currentNestingDepth_--;
+        return;
+    }
+    if (currentNestingDepth_ > maxNestingDepth_) {
+        maxNestingDepth_ = currentNestingDepth_;
+    }
+    
+    // Push a new loop context for break/continue tracking
+    loopStack_.push_back(LoopContext{});
+    
+    // Emit init
+    if (stmt.init) {
+        compileStatement(*stmt.init);
+    }
+    
+    // loop_start: position before condition check
+    size_t loopStartIdx = currentFunc_->code.size();
+    
+    // Emit condition check; if no condition, loop forever (until break)
+    size_t jumpIfFalseIdx = SIZE_MAX;
+    if (stmt.condition) {
+        uint8_t condReg = compileExpression(*stmt.condition);
+        jumpIfFalseIdx = currentFunc_->code.size();
+        currentFunc_->emit(OpCode::JUMP_IF_FALSE, condReg, 0, 0);  // Placeholder
+        freeRegister(condReg);
+    }
+    
+    // Emit body
+    if (stmt.body) {
+        compileStatement(*stmt.body);
+    }
+    
+    // update_target: continue patches jump here
+    size_t updateTargetIdx = currentFunc_->code.size();
+    
+    // Patch all continue jumps to point here
+    for (size_t patchIdx : loopStack_.back().continuePatches) {
+        int16_t offset = static_cast<int16_t>(static_cast<int>(updateTargetIdx) - static_cast<int>(patchIdx) - 1);
+        currentFunc_->code[patchIdx].regSrc1 = static_cast<uint8_t>(offset & 0xFF);
+        currentFunc_->code[patchIdx].regSrc2 = static_cast<uint8_t>((offset >> 8) & 0xFF);
+    }
+    
+    // Emit update
+    if (stmt.update) {
+        compileStatement(*stmt.update);
+    }
+    
+    // Emit backward jump to loop_start
+    size_t backJumpIdx = currentFunc_->code.size();
+    int16_t backOffset = static_cast<int16_t>(static_cast<int>(loopStartIdx) - static_cast<int>(backJumpIdx) - 1);
+    currentFunc_->emit(OpCode::JUMP, 0,
+        static_cast<uint8_t>(backOffset & 0xFF),
+        static_cast<uint8_t>((backOffset >> 8) & 0xFF));
+    
+    // loop_end: patch condition jump and break jumps here
+    size_t loopEndIdx = currentFunc_->code.size();
+    
+    if (jumpIfFalseIdx != SIZE_MAX) {
+        int16_t condOffset = static_cast<int16_t>(static_cast<int>(loopEndIdx) - static_cast<int>(jumpIfFalseIdx) - 1);
+        currentFunc_->code[jumpIfFalseIdx].regSrc1 = static_cast<uint8_t>(condOffset & 0xFF);
+        currentFunc_->code[jumpIfFalseIdx].regSrc2 = static_cast<uint8_t>((condOffset >> 8) & 0xFF);
+    }
+    
+    // Patch all break jumps to point to loop_end
+    for (size_t patchIdx : loopStack_.back().breakPatches) {
+        int16_t offset = static_cast<int16_t>(static_cast<int>(loopEndIdx) - static_cast<int>(patchIdx) - 1);
+        currentFunc_->code[patchIdx].regSrc1 = static_cast<uint8_t>(offset & 0xFF);
+        currentFunc_->code[patchIdx].regSrc2 = static_cast<uint8_t>((offset >> 8) & 0xFF);
+    }
+    
+    // Pop loop context
+    loopStack_.pop_back();
+    currentNestingDepth_--;
+}
+
+void Compiler::compileBreak(const BreakStmt&) {
+    if (loopStack_.empty()) {
+        setError("'break' used outside of loop");
+        return;
+    }
+    // Emit JUMP placeholder; record index for patching
+    size_t jumpIdx = currentFunc_->code.size();
+    currentFunc_->emit(OpCode::JUMP, 0, 0, 0);
+    loopStack_.back().breakPatches.push_back(jumpIdx);
+}
+
+void Compiler::compileContinue(const ContinueStmt&) {
+    if (loopStack_.empty()) {
+        setError("'continue' used outside of loop");
+        return;
+    }
+    // Emit JUMP placeholder; record index for patching
+    size_t jumpIdx = currentFunc_->code.size();
+    currentFunc_->emit(OpCode::JUMP, 0, 0, 0);
+    loopStack_.back().continuePatches.push_back(jumpIdx);
+}
+
 TypeKind Compiler::getExpressionType(const Expression& expr) {
     if (auto literal = dynamic_cast<const LiteralExpr*>(&expr)) {
-        TypeKind kind = literal->value.kind();
-        if (kind == TypeKind::Int) return TypeKind::Float;  // Ints are compiled as floats
-        return kind;
+        return literal->value.kind();  // preserve Int kind (no longer converted to Float)
     } else if (auto var = dynamic_cast<const VariableExpr*>(&expr)) {
         // Look up variable type from local declaration
         auto it = localVarTypes_.find(var->name);
@@ -1117,6 +1337,12 @@ TypeKind Compiler::getExpressionType(const Expression& expr) {
         
         // For arithmetic operations, result type depends on operands
         if (leftType == TypeKind::Float && rightType == TypeKind::Float) {
+            return TypeKind::Float;
+        } else if (leftType == TypeKind::Int && rightType == TypeKind::Int) {
+            return TypeKind::Int;
+        } else if ((leftType == TypeKind::Float && rightType == TypeKind::Int) ||
+                   (leftType == TypeKind::Int && rightType == TypeKind::Float)) {
+            // Mixed int/float arithmetic coerces to float
             return TypeKind::Float;
         } else if (leftType == TypeKind::Vec2 && rightType == TypeKind::Vec2) {
             return TypeKind::Vec2;

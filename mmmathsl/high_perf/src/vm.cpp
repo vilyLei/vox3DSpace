@@ -602,6 +602,29 @@ Value VM::execute(const BytecodeFunction& func, const std::vector<Value>& args) 
                 return registers_[0];
             case OpCode::NOP:
                 break;
+            // Int arithmetic
+            case OpCode::ADD_INT:
+                addInt(inst.regDest, inst.regSrc1, inst.regSrc2);
+                break;
+            case OpCode::SUB_INT:
+                subInt(inst.regDest, inst.regSrc1, inst.regSrc2);
+                break;
+            case OpCode::MUL_INT:
+                mulInt(inst.regDest, inst.regSrc1, inst.regSrc2);
+                break;
+            case OpCode::DIV_INT:
+                divInt(inst.regDest, inst.regSrc1, inst.regSrc2);
+                break;
+            case OpCode::MOD_INT:
+                modInt(inst.regDest, inst.regSrc1, inst.regSrc2);
+                break;
+            // Type conversion
+            case OpCode::INT_TO_FLOAT:
+                intToFloat(inst.regDest, inst.regSrc1);
+                break;
+            case OpCode::FLOAT_TO_INT:
+                floatToInt(inst.regDest, inst.regSrc1);
+                break;
             default:
                 setError("Unknown opcode: " + std::to_string(static_cast<int>(inst.opcode)));
                 break;
@@ -1256,8 +1279,8 @@ void VM::mulMat4Vec4(uint8_t rd, uint8_t rs1, uint8_t rs2) {
 void VM::mat2Index(uint8_t rd, uint8_t rs1, uint8_t rs2) {
     // rs1 contains first index (column), rs2 contains matrix, extraParams_[0] contains second index (row)
     Mat2 m = registers_[rs2].asMat2();
-    int col = static_cast<int>(registers_[rs1].asFloat());
-    int row = static_cast<int>(extraParams_[0].asFloat());
+    int col = registers_[rs1].isInt() ? registers_[rs1].asInt() : static_cast<int>(registers_[rs1].asFloat());
+    int row = extraParams_[0].isInt() ? extraParams_[0].asInt() : static_cast<int>(extraParams_[0].asFloat());
     if (row < 0 || row >= 2 || col < 0 || col >= 2) {
         setError("mat2 index out of bounds");
         return;
@@ -1268,8 +1291,8 @@ void VM::mat2Index(uint8_t rd, uint8_t rs1, uint8_t rs2) {
 void VM::mat3Index(uint8_t rd, uint8_t rs1, uint8_t rs2) {
     // rs1 contains first index (column), rs2 contains matrix, extraParams_[0] contains second index (row)
     Mat3 m = registers_[rs2].asMat3();
-    int col = static_cast<int>(registers_[rs1].asFloat());
-    int row = static_cast<int>(extraParams_[0].asFloat());
+    int col = registers_[rs1].isInt() ? registers_[rs1].asInt() : static_cast<int>(registers_[rs1].asFloat());
+    int row = extraParams_[0].isInt() ? extraParams_[0].asInt() : static_cast<int>(extraParams_[0].asFloat());
     if (row < 0 || row >= 3 || col < 0 || col >= 3) {
         setError("mat3 index out of bounds");
         return;
@@ -1280,8 +1303,8 @@ void VM::mat3Index(uint8_t rd, uint8_t rs1, uint8_t rs2) {
 void VM::mat4Index(uint8_t rd, uint8_t rs1, uint8_t rs2) {
     // rs1 contains first index (column), rs2 contains matrix, extraParams_[0] contains second index (row)
     Mat4 m = registers_[rs2].asMat4();
-    int col = static_cast<int>(registers_[rs1].asFloat());
-    int row = static_cast<int>(extraParams_[0].asFloat());
+    int col = registers_[rs1].isInt() ? registers_[rs1].asInt() : static_cast<int>(registers_[rs1].asFloat());
+    int row = extraParams_[0].isInt() ? extraParams_[0].asInt() : static_cast<int>(extraParams_[0].asFloat());
     if (row < 0 || row >= 4 || col < 0 || col >= 4) {
         setError("mat4 index out of bounds");
         return;
@@ -1293,7 +1316,7 @@ void VM::mat4Index(uint8_t rd, uint8_t rs1, uint8_t rs2) {
 void VM::vec2Index(uint8_t rd, uint8_t rs1, uint8_t rs2) {
     // rs1 contains index, rs2 contains vector
     Vec2 v = registers_[rs2].asVec2();
-    int idx = static_cast<int>(registers_[rs1].asFloat());
+    int idx = registers_[rs1].isInt() ? registers_[rs1].asInt() : static_cast<int>(registers_[rs1].asFloat());
     if (idx < 0 || idx >= 2) {
         setError("vec2 index out of bounds");
         return;
@@ -1304,7 +1327,7 @@ void VM::vec2Index(uint8_t rd, uint8_t rs1, uint8_t rs2) {
 void VM::vec3Index(uint8_t rd, uint8_t rs1, uint8_t rs2) {
     // rs1 contains index, rs2 contains vector
     Vec3 v = registers_[rs2].asVec3();
-    int idx = static_cast<int>(registers_[rs1].asFloat());
+    int idx = registers_[rs1].isInt() ? registers_[rs1].asInt() : static_cast<int>(registers_[rs1].asFloat());
     if (idx < 0 || idx >= 3) {
         setError("vec3 index out of bounds");
         return;
@@ -1315,7 +1338,7 @@ void VM::vec3Index(uint8_t rd, uint8_t rs1, uint8_t rs2) {
 void VM::vec4Index(uint8_t rd, uint8_t rs1, uint8_t rs2) {
     // rs1 contains index, rs2 contains vector
     Vec4 v = registers_[rs2].asVec4();
-    int idx = static_cast<int>(registers_[rs1].asFloat());
+    int idx = registers_[rs1].isInt() ? registers_[rs1].asInt() : static_cast<int>(registers_[rs1].asFloat());
     if (idx < 0 || idx >= 4) {
         setError("vec4 index out of bounds");
         return;
@@ -1684,39 +1707,103 @@ void VM::memberW(uint8_t rd, uint8_t rs) {
 
 // Comparison operations (result is bool)
 void VM::cmpGt(uint8_t rd, uint8_t rs1, uint8_t rs2) {
-    float a = registers_[rs1].asFloat();
-    float b = registers_[rs2].asFloat();
-    registers_[rd] = Value(a > b);
+    if (registers_[rs1].isInt() && registers_[rs2].isInt()) {
+        registers_[rd] = Value(registers_[rs1].asInt() > registers_[rs2].asInt());
+    } else {
+        float a = registers_[rs1].asFloat();
+        float b = registers_[rs2].asFloat();
+        registers_[rd] = Value(a > b);
+    }
 }
 
 void VM::cmpGe(uint8_t rd, uint8_t rs1, uint8_t rs2) {
-    float a = registers_[rs1].asFloat();
-    float b = registers_[rs2].asFloat();
-    registers_[rd] = Value(a >= b);
+    if (registers_[rs1].isInt() && registers_[rs2].isInt()) {
+        registers_[rd] = Value(registers_[rs1].asInt() >= registers_[rs2].asInt());
+    } else {
+        float a = registers_[rs1].asFloat();
+        float b = registers_[rs2].asFloat();
+        registers_[rd] = Value(a >= b);
+    }
 }
 
 void VM::cmpLt(uint8_t rd, uint8_t rs1, uint8_t rs2) {
-    float a = registers_[rs1].asFloat();
-    float b = registers_[rs2].asFloat();
-    registers_[rd] = Value(a < b);
+    if (registers_[rs1].isInt() && registers_[rs2].isInt()) {
+        registers_[rd] = Value(registers_[rs1].asInt() < registers_[rs2].asInt());
+    } else {
+        float a = registers_[rs1].asFloat();
+        float b = registers_[rs2].asFloat();
+        registers_[rd] = Value(a < b);
+    }
 }
 
 void VM::cmpLe(uint8_t rd, uint8_t rs1, uint8_t rs2) {
-    float a = registers_[rs1].asFloat();
-    float b = registers_[rs2].asFloat();
-    registers_[rd] = Value(a <= b);
+    if (registers_[rs1].isInt() && registers_[rs2].isInt()) {
+        registers_[rd] = Value(registers_[rs1].asInt() <= registers_[rs2].asInt());
+    } else {
+        float a = registers_[rs1].asFloat();
+        float b = registers_[rs2].asFloat();
+        registers_[rd] = Value(a <= b);
+    }
 }
 
 void VM::cmpEq(uint8_t rd, uint8_t rs1, uint8_t rs2) {
-    float a = registers_[rs1].asFloat();
-    float b = registers_[rs2].asFloat();
-    registers_[rd] = Value(a == b);
+    if (registers_[rs1].isInt() && registers_[rs2].isInt()) {
+        registers_[rd] = Value(registers_[rs1].asInt() == registers_[rs2].asInt());
+    } else {
+        float a = registers_[rs1].asFloat();
+        float b = registers_[rs2].asFloat();
+        registers_[rd] = Value(a == b);
+    }
 }
 
 void VM::cmpNe(uint8_t rd, uint8_t rs1, uint8_t rs2) {
-    float a = registers_[rs1].asFloat();
-    float b = registers_[rs2].asFloat();
-    registers_[rd] = Value(a != b);
+    if (registers_[rs1].isInt() && registers_[rs2].isInt()) {
+        registers_[rd] = Value(registers_[rs1].asInt() != registers_[rs2].asInt());
+    } else {
+        float a = registers_[rs1].asFloat();
+        float b = registers_[rs2].asFloat();
+        registers_[rd] = Value(a != b);
+    }
+}
+
+// Int arithmetic
+void VM::addInt(uint8_t rd, uint8_t rs1, uint8_t rs2) {
+    registers_[rd] = Value(registers_[rs1].asInt() + registers_[rs2].asInt());
+}
+
+void VM::subInt(uint8_t rd, uint8_t rs1, uint8_t rs2) {
+    registers_[rd] = Value(registers_[rs1].asInt() - registers_[rs2].asInt());
+}
+
+void VM::mulInt(uint8_t rd, uint8_t rs1, uint8_t rs2) {
+    registers_[rd] = Value(registers_[rs1].asInt() * registers_[rs2].asInt());
+}
+
+void VM::divInt(uint8_t rd, uint8_t rs1, uint8_t rs2) {
+    int divisor = registers_[rs2].asInt();
+    if (divisor == 0) {
+        setError("Integer division by zero");
+        return;
+    }
+    registers_[rd] = Value(registers_[rs1].asInt() / divisor);
+}
+
+void VM::modInt(uint8_t rd, uint8_t rs1, uint8_t rs2) {
+    int divisor = registers_[rs2].asInt();
+    if (divisor == 0) {
+        setError("Integer modulo by zero");
+        return;
+    }
+    registers_[rd] = Value(registers_[rs1].asInt() % divisor);
+}
+
+// Type conversion
+void VM::intToFloat(uint8_t rd, uint8_t rs) {
+    registers_[rd] = Value(static_cast<float>(registers_[rs].asInt()));
+}
+
+void VM::floatToInt(uint8_t rd, uint8_t rs) {
+    registers_[rd] = Value(static_cast<int>(registers_[rs].asFloat()));
 }
 
 void VM::logicalAnd(uint8_t rd, uint8_t rs1, uint8_t rs2) {

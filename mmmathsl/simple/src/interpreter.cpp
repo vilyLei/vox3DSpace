@@ -37,7 +37,9 @@ Interpreter::Interpreter() = default;
 
 Value Interpreter::execute(const FunctionDecl& function, const std::vector<Value>& arguments) {
     env_.clear();
-    isReturning_ = false;  // Reset return flag at function entry
+    isReturning_ = false;   // Reset return flag at function entry
+    isBreaking_ = false;    // Reset break flag at function entry
+    isContinuing_ = false;  // Reset continue flag at function entry
     
     // Bind parameters
     if (arguments.size() != function.parameters.size()) {
@@ -76,6 +78,15 @@ Value Interpreter::executeStatement(const Statement& stmt) {
     }
     if (auto ifStmt = dynamic_cast<const IfStmt*>(&stmt)) {
         return executeIf(*ifStmt);
+    }
+    if (auto forStmt = dynamic_cast<const ForStmt*>(&stmt)) {
+        return executeFor(*forStmt);
+    }
+    if (auto breakStmt = dynamic_cast<const BreakStmt*>(&stmt)) {
+        return executeBreak(*breakStmt);
+    }
+    if (auto continueStmt = dynamic_cast<const ContinueStmt*>(&stmt)) {
+        return executeContinue(*continueStmt);
     }
     
     throw RuntimeError("Unknown statement type");
@@ -120,8 +131,8 @@ Value Interpreter::executeCompound(const CompoundStmt& stmt) {
     Value result;
     for (const auto& s : stmt.statements) {
         result = executeStatement(*s);
-        // If return flag is set, propagate the value up
-        if (isReturning_) {
+        // Propagate control flow flags
+        if (isReturning_ || isBreaking_ || isContinuing_) {
             return result;
         }
     }
@@ -139,11 +150,63 @@ Value Interpreter::executeIf(const IfStmt& stmt) {
     } else if (stmt.elseBranch) {
         result = executeStatement(*stmt.elseBranch);
     }
-    // If return flag was set in the branch, propagate it up
-    if (isReturning_) {
+    // If return/break/continue flag was set in the branch, propagate it up
+    if (isReturning_ || isBreaking_ || isContinuing_) {
         return result;
     }
     return Value();  // void
+}
+
+Value Interpreter::executeFor(const ForStmt& stmt) {
+    // Execute init
+    if (stmt.init) {
+        executeStatement(*stmt.init);
+    }
+    
+    while (true) {
+        // Check condition (null = infinite loop until break)
+        if (stmt.condition) {
+            Value condValue = evaluateExpression(*stmt.condition);
+            if (!condValue.isBool()) {
+                throw RuntimeError("For condition must be boolean");
+            }
+            if (!condValue.asBool()) break;
+        }
+        
+        // Execute body
+        executeStatement(*stmt.body);
+        
+        // Handle break
+        if (isBreaking_) {
+            isBreaking_ = false;
+            break;
+        }
+        
+        // Handle return (propagate up)
+        if (isReturning_) break;
+        
+        // Handle continue (clear flag and execute update)
+        if (isContinuing_) {
+            isContinuing_ = false;
+        }
+        
+        // Execute update
+        if (stmt.update) {
+            executeStatement(*stmt.update);
+        }
+    }
+    
+    return Value();  // void
+}
+
+Value Interpreter::executeBreak(const BreakStmt&) {
+    isBreaking_ = true;
+    return Value();
+}
+
+Value Interpreter::executeContinue(const ContinueStmt&) {
+    isContinuing_ = true;
+    return Value();
 }
 
 Value Interpreter::evaluateExpression(const Expression& expr) {
@@ -194,6 +257,20 @@ Value Interpreter::evaluateTernary(const TernaryExpr& expr) {
 Value Interpreter::evaluateBinary(const BinaryExpr& expr) {
     Value left = evaluateExpression(*expr.left);
     Value right = evaluateExpression(*expr.right);
+    
+    // Auto-coerce mixed int/float for arithmetic and comparison (match compiler behavior)
+    bool isArithOrCmp = (expr.op == TokenType::Plus || expr.op == TokenType::Minus ||
+                         expr.op == TokenType::Multiply || expr.op == TokenType::Divide ||
+                         expr.op == TokenType::Modulo ||
+                         expr.op == TokenType::Greater || expr.op == TokenType::GreaterEqual ||
+                         expr.op == TokenType::Less || expr.op == TokenType::LessEqual ||
+                         expr.op == TokenType::Equal || expr.op == TokenType::NotEqual);
+    if (isArithOrCmp) {
+        if (left.isFloat() && right.isInt())
+            right = Value(static_cast<float>(right.asInt()));
+        else if (left.isInt() && right.isFloat())
+            left = Value(static_cast<float>(left.asInt()));
+    }
     
     // Handle vector/matrix operations
     switch (expr.op) {
@@ -770,6 +847,20 @@ Value Interpreter::evaluateIndex(const IndexExpr& expr) {
 }
 
 Value Interpreter::callBuiltin(const std::string& name, const std::vector<Value>& args) {
+    // Type conversion: float(x) and int(x)
+    if (name == "float") {
+        if (args.size() != 1) throw RuntimeError("float() takes exactly 1 argument");
+        if (args[0].isFloat()) return args[0];
+        if (args[0].isInt()) return Value(static_cast<float>(args[0].asInt()));
+        throw RuntimeError("float() requires numeric argument");
+    }
+    if (name == "int") {
+        if (args.size() != 1) throw RuntimeError("int() takes exactly 1 argument");
+        if (args[0].isInt()) return args[0];
+        if (args[0].isFloat()) return Value(static_cast<int>(args[0].asFloat()));
+        throw RuntimeError("int() requires numeric argument");
+    }
+    
     if (name == "floor") {
         if (args.size() != 1) {
             throw RuntimeError("floor() takes exactly 1 argument");

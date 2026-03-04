@@ -34,6 +34,8 @@ public:
 private:
     Environment env_;
     bool isReturning_ = false;  // Flag to propagate return from nested statements
+    bool isBreaking_ = false;   // Flag to propagate break from for loops
+    bool isContinuing_ = false; // Flag to propagate continue from for loops
     
     // Statement execution
     Value executeStatement(const Statement& stmt);
@@ -42,6 +44,9 @@ private:
     Value executeReturn(const ReturnStmt& stmt);
     Value executeCompound(const CompoundStmt& stmt);
     Value executeIf(const IfStmt& stmt);
+    Value executeFor(const ForStmt& stmt);
+    Value executeBreak(const BreakStmt& stmt);
+    Value executeContinue(const ContinueStmt& stmt);
     
     // Expression evaluation
     Value evaluateExpression(const Expression& expr);
