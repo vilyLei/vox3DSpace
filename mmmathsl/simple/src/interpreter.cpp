@@ -40,6 +40,7 @@ Value Interpreter::execute(const FunctionDecl& function, const std::vector<Value
     isReturning_ = false;   // Reset return flag at function entry
     isBreaking_ = false;    // Reset break flag at function entry
     isContinuing_ = false;  // Reset continue flag at function entry
+    loopIterationCount_ = 0; // Reset loop iteration counter at function entry
     
     // Bind parameters
     if (arguments.size() != function.parameters.size()) {
@@ -164,6 +165,12 @@ Value Interpreter::executeFor(const ForStmt& stmt) {
     }
     
     while (true) {
+        // DoS protection: limit total loop iterations across all loops
+        if (++loopIterationCount_ > MAX_LOOP_ITERATIONS) {
+            throw RuntimeError("Maximum loop iteration count (" +
+                std::to_string(MAX_LOOP_ITERATIONS) + ") exceeded");
+        }
+        
         // Check condition (null = infinite loop until break)
         if (stmt.condition) {
             Value condValue = evaluateExpression(*stmt.condition);

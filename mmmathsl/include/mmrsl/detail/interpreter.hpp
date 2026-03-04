@@ -20,6 +20,9 @@ private:
     std::unordered_map<std::string, Value> variables_;
 };
 
+// Max total loop iterations across all loops in a single function execution (DoS protection)
+constexpr uint32_t MAX_LOOP_ITERATIONS = 32768;
+
 // Interpreter for AST execution
 class Interpreter {
 public:
@@ -33,9 +36,10 @@ public:
     
 private:
     Environment env_;
-    bool isReturning_ = false;  // Flag to propagate return from nested statements
-    bool isBreaking_ = false;   // Flag to propagate break from for loops
-    bool isContinuing_ = false; // Flag to propagate continue from for loops
+    bool isReturning_ = false;   // Flag to propagate return from nested statements
+    bool isBreaking_ = false;    // Flag to propagate break from for loops
+    bool isContinuing_ = false;  // Flag to propagate continue from for loops
+    uint32_t loopIterationCount_ = 0;  // Total loop iterations counter (DoS protection)
     
     // Statement execution
     Value executeStatement(const Statement& stmt);
