@@ -396,6 +396,12 @@ StmtPtr RecursiveParser::parseAssignOrExprStmt() {
             }
             
             // Synthesize: name = name + 1  or  name = name - 1
+            // The literal 1 is an Int (TypeKind::Int).  When the target variable is
+            // a float, both engines coerce the mixed-type binary expression to Float
+            // before the assignment, so the result is always correct at runtime.
+            // If strict no-coercion type checking is ever added, this desugaring site
+            // must be updated to inspect the variable's declared type and produce
+            // either Value(1) (Int) or Value(1.0f) (Float) accordingly.
             auto varExpr = std::make_unique<VariableExpr>(name);
             auto oneExpr = std::make_unique<LiteralExpr>(Value(1));
             TokenType op = isIncrement ? TokenType::Plus : TokenType::Minus;
@@ -499,6 +505,10 @@ StmtPtr RecursiveParser::parseForStmt() {
                 ExprPtr value = parseExpression();
                 incrementNodeCount();
                 init = std::make_unique<AssignStmt>(name, std::move(value));
+            } else {
+                // identifier exists but is not followed by '=' — not a recognised init form
+                error("Expected '=' after identifier in for-init (bare expressions are not allowed)");
+                return nullptr;
             }
         }
     }
@@ -535,12 +545,18 @@ StmtPtr RecursiveParser::parseForStmt() {
                 bool isIncrement = (peek().type == TokenType::Increment);
                 advance();  // consume ++ or --
                 // Synthesize: name = name + 1  or  name = name - 1
+                // See the identical comment in parseAssignOrExprStmt for the rationale
+                // behind using an Int literal here.
                 auto varExpr = std::make_unique<VariableExpr>(name);
                 auto oneExpr = std::make_unique<LiteralExpr>(Value(1));
                 TokenType op = isIncrement ? TokenType::Plus : TokenType::Minus;
                 auto binExpr = std::make_unique<BinaryExpr>(op, std::move(varExpr), std::move(oneExpr));
                 incrementNodeCount();
                 update = std::make_unique<AssignStmt>(name, std::move(binExpr));
+            } else {
+                // identifier exists but is not followed by '=', '++', or '--'
+                error("Expected '=', '++', or '--' after identifier in for-update");
+                return nullptr;
             }
         }
     }

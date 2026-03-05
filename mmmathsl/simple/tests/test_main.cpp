@@ -385,6 +385,79 @@ bool testContinueOutsideLoop() {
     }
 }
 
+bool testFloatIncrement() {
+    // float x++  desugars to  x = x + 1  where 1 is an Int literal.
+    // Both engines must coerce Int→Float in the binary expression so that
+    // the result stays float.  This test guards that coercion path.
+    std::cout << "Test: float variable ++ desugars correctly... ";
+
+    SimpleParser parser;
+    std::string source = R"(
+        float test(float x) {
+            x++;
+            x++;
+            return x;
+        }
+    )";
+
+    try {
+        std::vector<Value> args = {Value(0.5f)};
+        Value result = parser.compileAndExecute(source, args);
+        float expected = 2.5f;  // 0.5 + 1 + 1
+        if (result.isFloat() && std::abs(result.asFloat() - expected) < 0.0001f) {
+            std::cout << "PASS\n";
+            return true;
+        }
+        std::cout << "FAIL: got " << result.asFloat() << " expected " << expected << "\n";
+        return false;
+    } catch (const std::exception& e) {
+        std::cout << "FAIL: exception: " << e.what() << "\n";
+        return false;
+    }
+}
+
+bool testMalformedForInit() {
+    // A bare identifier in for-init not followed by '=' must be a parse error,
+    // not silently dropped.
+    std::cout << "Test: malformed for-init is a parse error... ";
+
+    SimpleParser parser;
+    std::string source = R"(
+        float test(float x) {
+            for (x; x < 1.0; x = x + 1.0) {}
+            return x;
+        }
+    )";
+
+    if (!parser.compile(source)) {
+        std::cout << "PASS (compilation failed as expected)\n";
+        return true;
+    }
+    std::cout << "FAIL: Expected parse error for malformed for-init\n";
+    return false;
+}
+
+bool testMalformedForUpdate() {
+    // A bare identifier in for-update not followed by '=', '++', or '--' must
+    // be a parse error, not silently dropped.
+    std::cout << "Test: malformed for-update is a parse error... ";
+
+    SimpleParser parser;
+    std::string source = R"(
+        float test(float x) {
+            for (int i = 0; i < 3; i) {}
+            return x;
+        }
+    )";
+
+    if (!parser.compile(source)) {
+        std::cout << "PASS (compilation failed as expected)\n";
+        return true;
+    }
+    std::cout << "FAIL: Expected parse error for malformed for-update\n";
+    return false;
+}
+
 bool testNestedLoopBreak() {
     // break inside the inner loop must only exit the inner loop;
     // the outer loop continues normally.
@@ -466,7 +539,7 @@ int main() {
     std::cout << "=== SimpleParser Test Suite ===\n\n";
 
     int passed = 0;
-    int total = 14;
+    int total = 17;
 
     if (testBasicArithmetic()) passed++;
     if (testVectorOperations()) passed++;
@@ -480,6 +553,9 @@ int main() {
     if (testVec2CrossProduct()) passed++;
     if (testBreakOutsideLoop()) passed++;
     if (testContinueOutsideLoop()) passed++;
+    if (testFloatIncrement()) passed++;
+    if (testMalformedForInit()) passed++;
+    if (testMalformedForUpdate()) passed++;
     if (testNestedLoopBreak()) passed++;
     if (testNestedLoopContinue()) passed++;
 
