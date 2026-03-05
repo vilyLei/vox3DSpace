@@ -385,11 +385,88 @@ bool testContinueOutsideLoop() {
     }
 }
 
+bool testNestedLoopBreak() {
+    // break inside the inner loop must only exit the inner loop;
+    // the outer loop continues normally.
+    std::cout << "Test: break in nested for only exits inner loop... ";
+
+    SimpleParser parser;
+    // Outer loop runs i = 0..2 (3 iterations).
+    // Inner loop immediately breaks after the first iteration.
+    // The result accumulates outer_i values: 0 + 1 + 2 = 3.
+    std::string source = R"(
+        float test(float dummy) {
+            float result = 0.0;
+            for (int i = 0; i < 3; i = i + 1) {
+                result = result + i * 1.0;
+                for (int j = 0; j < 10; j = j + 1) {
+                    break;
+                }
+            }
+            return result;
+        }
+    )";
+
+    try {
+        std::vector<Value> args = {Value(0.0f)};
+        Value result = parser.compileAndExecute(source, args);
+        float expected = 0.0f + 1.0f + 2.0f;  // 3.0
+        if (result.isFloat() && std::abs(result.asFloat() - expected) < 0.0001f) {
+            std::cout << "PASS\n";
+            return true;
+        }
+        std::cout << "FAIL: got " << result.asFloat() << " expected " << expected << "\n";
+        return false;
+    } catch (const std::exception& e) {
+        std::cout << "FAIL: exception: " << e.what() << "\n";
+        return false;
+    }
+}
+
+bool testNestedLoopContinue() {
+    // continue inside the inner loop must only skip the rest of the inner body
+    // and run the inner update; the outer loop continues normally.
+    std::cout << "Test: continue in nested for only affects inner loop... ";
+
+    SimpleParser parser;
+    // Outer runs i = 0..1.  Inner runs j = 0..2, skipping j==1 via continue.
+    // Inner accumulates j values excluding 1: 0 + 2 = 2, twice → total = 4.
+    std::string source = R"(
+        float test(float dummy) {
+            float result = 0.0;
+            for (int i = 0; i < 2; i = i + 1) {
+                for (int j = 0; j < 3; j = j + 1) {
+                    if (j == 1) {
+                        continue;
+                    }
+                    result = result + j * 1.0;
+                }
+            }
+            return result;
+        }
+    )";
+
+    try {
+        std::vector<Value> args = {Value(0.0f)};
+        Value result = parser.compileAndExecute(source, args);
+        float expected = 4.0f;  // (0+2) * 2 iterations
+        if (result.isFloat() && std::abs(result.asFloat() - expected) < 0.0001f) {
+            std::cout << "PASS\n";
+            return true;
+        }
+        std::cout << "FAIL: got " << result.asFloat() << " expected " << expected << "\n";
+        return false;
+    } catch (const std::exception& e) {
+        std::cout << "FAIL: exception: " << e.what() << "\n";
+        return false;
+    }
+}
+
 int main() {
     std::cout << "=== SimpleParser Test Suite ===\n\n";
 
     int passed = 0;
-    int total = 12;
+    int total = 14;
 
     if (testBasicArithmetic()) passed++;
     if (testVectorOperations()) passed++;
@@ -403,6 +480,8 @@ int main() {
     if (testVec2CrossProduct()) passed++;
     if (testBreakOutsideLoop()) passed++;
     if (testContinueOutsideLoop()) passed++;
+    if (testNestedLoopBreak()) passed++;
+    if (testNestedLoopContinue()) passed++;
 
     std::cout << "\n=== Results ===\n";
     std::cout << "Passed: " << passed << "/" << total << "\n";

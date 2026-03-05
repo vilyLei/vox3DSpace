@@ -172,6 +172,20 @@ Value Interpreter::executeFor(const ForStmt& stmt) {
         }
     };
 
+    // Control-flow flag protocol for loop implementors
+    // ─────────────────────────────────────────────────
+    // isBreaking_ / isContinuing_ :
+    //   Set by executeBreak/executeContinue deep in the call tree.
+    //   Intermediate frames (executeCompound, executeIf) detect the flag and
+    //   return early WITHOUT clearing it, so it propagates up to the nearest
+    //   enclosing executeFor.  THIS executeFor is responsible for clearing the
+    //   flag once it has acted on it.  Any future loop construct (while, do-while)
+    //   must follow the same pattern: detect the flag, act, clear, then continue
+    //   or break the C++ while(true).
+    //
+    // isReturning_ :
+    //   Never cleared by any loop or compound statement — only cleared at the
+    //   function-call boundary (execute()).  Propagates all the way to the top.
     while (true) {
         // DoS protection: limit total loop iterations across all loops
         if (++loopIterationCount_ > MAX_LOOP_ITERATIONS) {
@@ -193,16 +207,16 @@ Value Interpreter::executeFor(const ForStmt& stmt) {
 
         // Handle break — exit the loop immediately, no update
         if (isBreaking_) {
-            isBreaking_ = false;
+            isBreaking_ = false;  // consumed here; must not propagate to outer loop
             break;
         }
 
         // Handle return — propagate up, no update
-        if (isReturning_) break;
+        if (isReturning_) break;  // isReturning_ is NOT cleared; propagates to caller
 
         // Handle continue — run the update then restart the condition check
         if (isContinuing_) {
-            isContinuing_ = false;
+            isContinuing_ = false;  // consumed here; must not propagate to outer loop
             runUpdate();
             continue;
         }
