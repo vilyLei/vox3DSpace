@@ -100,6 +100,10 @@ private:
     void setError(const std::string& msg);
     void emitMove(uint8_t destReg, uint8_t srcReg, TypeKind type);
     
+    // Compute and write a 16-bit signed jump offset into the placeholder instruction at
+    // patchIdx, targeting targetIdx.  Calls setError() if the offset exceeds int16_t range.
+    void patchJump(size_t patchIdx, size_t targetIdx);
+    
     // Check if builtin function exists but has wrong argument count
     void checkBuiltinFunctionArgCount(const std::string& funcName, size_t actualCount);
     

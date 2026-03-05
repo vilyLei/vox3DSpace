@@ -1096,9 +1096,7 @@ uint8_t Compiler::compileTernary(const TernaryExpr& expr) {
     
     // Backpatch the JUMP_IF_FALSE to jump to else branch
     size_t elseStartIdx = currentFunc_->code.size();
-    int16_t thenOffset = static_cast<int16_t>(elseStartIdx - jumpIfFalseIdx - 1);
-    currentFunc_->code[jumpIfFalseIdx].regSrc1 = static_cast<uint8_t>(thenOffset & 0xFF);
-    currentFunc_->code[jumpIfFalseIdx].regSrc2 = static_cast<uint8_t>((thenOffset >> 8) & 0xFF);
+    patchJump(jumpIfFalseIdx, elseStartIdx);
     
     // Compile else expression
     uint8_t elseReg = compileExpression(*expr.elseExpr);
@@ -1110,9 +1108,7 @@ uint8_t Compiler::compileTernary(const TernaryExpr& expr) {
     
     // Backpatch the JUMP to skip over else branch
     size_t afterElseIdx = currentFunc_->code.size();
-    int16_t elseOffset = static_cast<int16_t>(afterElseIdx - jumpOverElseIdx - 1);
-    currentFunc_->code[jumpOverElseIdx].regSrc1 = static_cast<uint8_t>(elseOffset & 0xFF);
-    currentFunc_->code[jumpOverElseIdx].regSrc2 = static_cast<uint8_t>((elseOffset >> 8) & 0xFF);
+    patchJump(jumpOverElseIdx, afterElseIdx);
     
     return resultReg;
 }
@@ -1157,6 +1153,19 @@ void Compiler::setError(const std::string& msg) {
     }
 }
 
+void Compiler::patchJump(size_t patchIdx, size_t targetIdx) {
+    // Offset = targetIdx - patchIdx - 1  (PC is already past the JUMP instruction)
+    int rawOffset = static_cast<int>(targetIdx) - static_cast<int>(patchIdx) - 1;
+    if (rawOffset < -32768 || rawOffset > 32767) {
+        setError("Jump offset " + std::to_string(rawOffset) +
+                 " exceeds int16_t range [-32768, 32767]; code block is too large");
+        return;
+    }
+    int16_t offset = static_cast<int16_t>(rawOffset);
+    currentFunc_->code[patchIdx].regSrc1 = static_cast<uint8_t>(offset & 0xFF);
+    currentFunc_->code[patchIdx].regSrc2 = static_cast<uint8_t>((offset >> 8) & 0xFF);
+}
+
 void Compiler::compileIf(const IfStmt& stmt) {
     // Check nesting depth limit
     currentNestingDepth_++;
@@ -1192,9 +1201,7 @@ void Compiler::compileIf(const IfStmt& stmt) {
     
     // Backpatch the JUMP_IF_FALSE to jump to after the then branch (or to else)
     size_t afterThenIdx = currentFunc_->code.size();
-    int16_t thenOffset = static_cast<int16_t>(afterThenIdx - jumpIfFalseIdx - 1);
-    currentFunc_->code[jumpIfFalseIdx].regSrc1 = static_cast<uint8_t>(thenOffset & 0xFF);
-    currentFunc_->code[jumpIfFalseIdx].regSrc2 = static_cast<uint8_t>((thenOffset >> 8) & 0xFF);
+    patchJump(jumpIfFalseIdx, afterThenIdx);
     
     // Compile else branch if present
     if (stmt.elseBranch) {
@@ -1202,9 +1209,7 @@ void Compiler::compileIf(const IfStmt& stmt) {
         
         // Backpatch the JUMP to skip over else branch
         size_t afterElseIdx = currentFunc_->code.size();
-        int16_t elseOffset = static_cast<int16_t>(afterElseIdx - jumpOverElseIdx - 1);
-        currentFunc_->code[jumpOverElseIdx].regSrc1 = static_cast<uint8_t>(elseOffset & 0xFF);
-        currentFunc_->code[jumpOverElseIdx].regSrc2 = static_cast<uint8_t>((elseOffset >> 8) & 0xFF);
+        patchJump(jumpOverElseIdx, afterElseIdx);
     }
     
     currentNestingDepth_--;
@@ -1252,9 +1257,7 @@ void Compiler::compileFor(const ForStmt& stmt) {
     
     // Patch all continue jumps to point here
     for (size_t patchIdx : loopStack_.back().continuePatches) {
-        int16_t offset = static_cast<int16_t>(static_cast<int>(updateTargetIdx) - static_cast<int>(patchIdx) - 1);
-        currentFunc_->code[patchIdx].regSrc1 = static_cast<uint8_t>(offset & 0xFF);
-        currentFunc_->code[patchIdx].regSrc2 = static_cast<uint8_t>((offset >> 8) & 0xFF);
+        patchJump(patchIdx, updateTargetIdx);
     }
     
     // Emit update
@@ -1264,7 +1267,15 @@ void Compiler::compileFor(const ForStmt& stmt) {
     
     // Emit backward jump to loop_start
     size_t backJumpIdx = currentFunc_->code.size();
-    int16_t backOffset = static_cast<int16_t>(static_cast<int>(loopStartIdx) - static_cast<int>(backJumpIdx) - 1);
+    int rawBack = static_cast<int>(loopStartIdx) - static_cast<int>(backJumpIdx) - 1;
+    if (rawBack < -32768 || rawBack > 32767) {
+        setError("Backward jump offset " + std::to_string(rawBack) +
+                 " exceeds int16_t range; loop body is too large");
+        loopStack_.pop_back();
+        currentNestingDepth_--;
+        return;
+    }
+    int16_t backOffset = static_cast<int16_t>(rawBack);
     currentFunc_->emit(OpCode::JUMP, 0,
         static_cast<uint8_t>(backOffset & 0xFF),
         static_cast<uint8_t>((backOffset >> 8) & 0xFF));
@@ -1273,16 +1284,12 @@ void Compiler::compileFor(const ForStmt& stmt) {
     size_t loopEndIdx = currentFunc_->code.size();
     
     if (jumpIfFalseIdx != SIZE_MAX) {
-        int16_t condOffset = static_cast<int16_t>(static_cast<int>(loopEndIdx) - static_cast<int>(jumpIfFalseIdx) - 1);
-        currentFunc_->code[jumpIfFalseIdx].regSrc1 = static_cast<uint8_t>(condOffset & 0xFF);
-        currentFunc_->code[jumpIfFalseIdx].regSrc2 = static_cast<uint8_t>((condOffset >> 8) & 0xFF);
+        patchJump(jumpIfFalseIdx, loopEndIdx);
     }
     
     // Patch all break jumps to point to loop_end
     for (size_t patchIdx : loopStack_.back().breakPatches) {
-        int16_t offset = static_cast<int16_t>(static_cast<int>(loopEndIdx) - static_cast<int>(patchIdx) - 1);
-        currentFunc_->code[patchIdx].regSrc1 = static_cast<uint8_t>(offset & 0xFF);
-        currentFunc_->code[patchIdx].regSrc2 = static_cast<uint8_t>((offset >> 8) & 0xFF);
+        patchJump(patchIdx, loopEndIdx);
     }
     
     // Pop loop context

@@ -163,14 +163,22 @@ Value Interpreter::executeFor(const ForStmt& stmt) {
     if (stmt.init) {
         executeStatement(*stmt.init);
     }
-    
+
+    // Capture the update step so both the normal path and the continue path
+    // can call it explicitly rather than relying on fall-through.
+    auto runUpdate = [&]() {
+        if (stmt.update) {
+            executeStatement(*stmt.update);
+        }
+    };
+
     while (true) {
         // DoS protection: limit total loop iterations across all loops
         if (++loopIterationCount_ > MAX_LOOP_ITERATIONS) {
             throw RuntimeError("Maximum loop iteration count (" +
                 std::to_string(MAX_LOOP_ITERATIONS) + ") exceeded");
         }
-        
+
         // Check condition (null = infinite loop until break)
         if (stmt.condition) {
             Value condValue = evaluateExpression(*stmt.condition);
@@ -179,30 +187,30 @@ Value Interpreter::executeFor(const ForStmt& stmt) {
             }
             if (!condValue.asBool()) break;
         }
-        
+
         // Execute body
         executeStatement(*stmt.body);
-        
-        // Handle break
+
+        // Handle break — exit the loop immediately, no update
         if (isBreaking_) {
             isBreaking_ = false;
             break;
         }
-        
-        // Handle return (propagate up)
+
+        // Handle return — propagate up, no update
         if (isReturning_) break;
-        
-        // Handle continue (clear flag and execute update)
+
+        // Handle continue — run the update then restart the condition check
         if (isContinuing_) {
             isContinuing_ = false;
+            runUpdate();
+            continue;
         }
-        
-        // Execute update
-        if (stmt.update) {
-            executeStatement(*stmt.update);
-        }
+
+        // Normal path — run the update then restart the condition check
+        runUpdate();
     }
-    
+
     return Value();  // void
 }
 
