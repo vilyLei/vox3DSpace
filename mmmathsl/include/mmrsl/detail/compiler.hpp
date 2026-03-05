@@ -13,6 +13,10 @@ namespace highPerf {
 // DoS protection limits
 constexpr size_t MAX_SOURCE_LENGTH = 8192;        // 8KB source code limit
 constexpr size_t MAX_IDENTIFIER_LENGTH = 64;      // Max identifier name length
+// Control-flow nesting depth limit (counts each if/for construct as one level).
+// Note: the parser enforces a separate brace-nesting depth limit (64) which is
+// intentionally higher, so the compiler's limit fires first for deeply nested
+// control flow.
 constexpr int MAX_NESTING_DEPTH = 32;             // Max if/for/while nesting
 constexpr int MAX_EXPRESSION_DEPTH = 64;          // Max expression nesting
 constexpr size_t MAX_CONSTANT_POOL_SIZE = 1024;   // Max constants

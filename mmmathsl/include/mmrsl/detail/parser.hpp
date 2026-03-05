@@ -10,7 +10,14 @@ namespace mmrsl {
 
 // DoS protection limits
 constexpr size_t MAX_AST_NODES = 10000;       // Max AST nodes during parsing
-constexpr size_t MAX_NESTING_DEPTH = 64;      // Max statement nesting depth
+// Brace-nesting depth limit (each { } block counts as one level, including the
+// function body itself).  A 32-deep if/for nesting already consumes 33 brace levels
+// (function body + 32 control-flow bodies), so this is set to 64 to give the
+// compiler's control-flow limit (MAX_NESTING_DEPTH = 32 in compiler.hpp) room to fire
+// first.  The two limits measure different things:
+//   parser  — raw brace depth (structural, DoS protection)
+//   compiler — if/for control-flow depth (semantic, code-quality guard)
+constexpr size_t MAX_NESTING_DEPTH = 64;      // Max brace nesting depth
 constexpr size_t MAX_EXPRESSION_DEPTH = 64;   // Max expression nesting depth
 
 // Forward declarations

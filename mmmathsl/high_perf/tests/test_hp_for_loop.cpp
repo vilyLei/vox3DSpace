@@ -260,6 +260,150 @@ void testLoopWithParameter() {
     }
 }
 
+// Test 11: break/continue in nested loop — inner only, outer continues
+// Outer runs i=0..2. Inner runs j=0..4 but breaks at j==2 and skips j==1 via continue.
+// Each outer iteration adds j=0 (skip j=1) j=0: acc += 0+2 = 2, total = 3*2 = 6.
+// Precise: inner collects j=0 (continue at 1) j=2 (break at 3) → 0+2=2, 3 times → 6
+void testNestedBreakContinueInnerOnly() {
+    HighPerfParser parser;
+    std::string source = R"(
+        float test() {
+            float acc = 0.0;
+            for (int i = 0; i < 3; i++) {
+                for (int j = 0; j < 10; j++) {
+                    if (j == 1) continue;
+                    if (j == 3) break;
+                    acc = acc + float(j);
+                }
+            }
+            return acc;
+        }
+    )";
+
+    try {
+        std::vector<mmrsl::Value> args = {};
+        mmrsl::Value result = parser.compileAndExecute(source, args);
+        // inner per iteration: j=0 (acc+=0), j=1 (skip), j=2 (acc+=2), j=3 (break) → 2 per outer
+        // 3 outer iterations → 6.0
+        checkTest(floatEquals(result.asFloat(), 6.0f),
+                  "Nested break/continue — inner only, outer continues (= 6)");
+    } catch (const std::exception& e) {
+        checkTest(false, std::string("Nested break/continue - Exception: ") + e.what());
+    }
+}
+
+// Test 12: for(;;) { break; } — infinite loop with immediate break (no condition, no init, no update)
+void testInfiniteLoopImmediateBreak() {
+    HighPerfParser parser;
+    std::string source = R"(
+        float test() {
+            float result = 42.0;
+            for (;;) {
+                break;
+            }
+            return result;
+        }
+    )";
+
+    try {
+        std::vector<mmrsl::Value> args = {};
+        mmrsl::Value result = parser.compileAndExecute(source, args);
+        checkTest(floatEquals(result.asFloat(), 42.0f),
+                  "Infinite loop with immediate break (for(;;){break;} = 42)");
+    } catch (const std::exception& e) {
+        checkTest(false, std::string("Infinite loop immediate break - Exception: ") + e.what());
+    }
+}
+
+// Test 13: for without init and without update — condition-only loop
+void testForNoInitNoUpdate() {
+    HighPerfParser parser;
+    std::string source = R"(
+        float test(float n) {
+            float acc = 0.0;
+            for (; acc < n;) {
+                acc = acc + 1.0;
+            }
+            return acc;
+        }
+    )";
+
+    try {
+        std::vector<mmrsl::Value> args = {mmrsl::Value(5.0f)};
+        mmrsl::Value result = parser.compileAndExecute(source, args);
+        checkTest(floatEquals(result.asFloat(), 5.0f),
+                  "For without init/update — condition-only loop (count to 5)");
+    } catch (const std::exception& e) {
+        checkTest(false, std::string("For no-init no-update - Exception: ") + e.what());
+    }
+}
+
+// Test 14: float x = 1.0; x++ — desugared ++ on float variable
+// Desugar: x = x + 1  where 1 is Int.  Compiler must coerce Int→Float.
+void testFloatVariableIncrement() {
+    HighPerfParser parser;
+    std::string source = R"(
+        float test() {
+            float x = 0.5;
+            x++;
+            x++;
+            return x;
+        }
+    )";
+
+    try {
+        std::vector<mmrsl::Value> args = {};
+        mmrsl::Value result = parser.compileAndExecute(source, args);
+        checkTest(floatEquals(result.asFloat(), 2.5f),
+                  "Float variable ++ type coercion (0.5 + 1 + 1 = 2.5)");
+    } catch (const std::exception& e) {
+        checkTest(false, std::string("Float variable increment - Exception: ") + e.what());
+    }
+}
+
+// Test 15: break outside loop is a compile-time error
+void testBreakOutsideLoop() {
+    HighPerfParser parser;
+    std::string source = R"(
+        float test() {
+            break;
+            return 0.0;
+        }
+    )";
+
+    bool compiled = parser.compile(source);
+    checkTest(!compiled,
+              "Break outside loop is a compile-time error");
+}
+
+// Test 16: continue after return — dead code, must not cause a crash or wrong result
+// The compiler emits a JUMP for the continue but it is unreachable.
+// The function should compile and return the correct value.
+void testContinueAfterReturn() {
+    HighPerfParser parser;
+    std::string source = R"(
+        float test() {
+            float acc = 0.0;
+            for (int i = 0; i < 3; i++) {
+                acc = acc + float(i);
+                return acc;
+                continue;
+            }
+            return acc;
+        }
+    )";
+
+    try {
+        std::vector<mmrsl::Value> args = {};
+        mmrsl::Value result = parser.compileAndExecute(source, args);
+        // return fires on first iteration (i=0), so result = 0.0
+        checkTest(floatEquals(result.asFloat(), 0.0f),
+                  "Continue after return — dead code, function returns on first iteration (= 0)");
+    } catch (const std::exception& e) {
+        checkTest(false, std::string("Continue after return - Exception: ") + e.what());
+    }
+}
+
 // Main test runner
 int main() {
     std::cout << "=== For Loop Test Suite ===" << std::endl << std::endl;
@@ -274,6 +418,12 @@ int main() {
     testZeroIterationLoop();
     testBreakAndContinueTogether();
     testLoopWithParameter();
+    testNestedBreakContinueInnerOnly();
+    testInfiniteLoopImmediateBreak();
+    testForNoInitNoUpdate();
+    testFloatVariableIncrement();
+    testBreakOutsideLoop();
+    testContinueAfterReturn();
 
     std::cout << std::endl << "=== Results ===" << std::endl;
     std::cout << "Passed: " << g_testsPassed << "/" << (g_testsPassed + g_testsFailed) << std::endl;

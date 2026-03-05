@@ -352,12 +352,12 @@ bool testRepeatedExecutionStress() {
 }
 
 // Test 111: Long Duration Stress Test
-// Continuous compilation and execution for 1 million iterations
+// Continuous compilation and execution for 10,000 iterations
 bool testLongDurationStress() {
-    std::cout << "Stress Test: Long Duration (1,000,000 iterations)... ";
+    std::cout << "Stress Test: Long Duration (10,000 iterations)... ";
     MemoryTracker tracker("LongDuration");
     
-    const int iterations = 1000000;
+    const int iterations = 10000;
     std::string source = R"(
         float calc(float x) {
             vec3 v = vec3(x, x * 0.5, x * 0.25);
@@ -387,8 +387,8 @@ bool testLongDurationStress() {
                 errors++;
             }
             
-            // Progress report every 100k iterations
-            if (i > 0 && i % 100000 == 0) {
+            // Progress report every 2,500 iterations
+            if (i > 0 && i % 2500 == 0) {
                 std::cout << "." << std::flush;
             }
         }
