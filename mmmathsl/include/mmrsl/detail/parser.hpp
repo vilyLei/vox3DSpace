@@ -288,6 +288,7 @@ private:
     size_t astNodeCount_ = 0;  // AST node counter for DoS protection
     size_t nestingDepth_ = 0;   // Statement nesting depth
     size_t exprDepth_ = 0;      // Expression nesting depth
+    size_t loopDepth_ = 0;      // Loop nesting depth (for break/continue validation)
     
     // Increment and check AST node count
     void incrementNodeCount() {

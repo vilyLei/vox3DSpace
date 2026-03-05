@@ -550,19 +550,25 @@ StmtPtr RecursiveParser::parseForStmt() {
         return nullptr;
     }
     
-    // Parse body
+    // Parse body — increment loopDepth_ so break/continue inside are valid
+    loopDepth_++;
     StmtPtr body;
     if (check(TokenType::LeftBrace)) {
         body = parseCompoundStmt();
     } else {
         body = parseStatement();
     }
+    loopDepth_--;
     
     incrementNodeCount();
     return std::make_unique<ForStmt>(std::move(init), std::move(condition), std::move(update), std::move(body));
 }
 
 StmtPtr RecursiveParser::parseBreakStmt() {
+    if (loopDepth_ == 0) {
+        error("'break' used outside of loop");
+        return nullptr;
+    }
     if (!match(TokenType::Semicolon)) {
         error("Expected ';' after 'break'");
         return nullptr;
@@ -572,6 +578,10 @@ StmtPtr RecursiveParser::parseBreakStmt() {
 }
 
 StmtPtr RecursiveParser::parseContinueStmt() {
+    if (loopDepth_ == 0) {
+        error("'continue' used outside of loop");
+        return nullptr;
+    }
     if (!match(TokenType::Semicolon)) {
         error("Expected ';' after 'continue'");
         return nullptr;

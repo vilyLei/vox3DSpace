@@ -345,12 +345,52 @@ bool testVec2CrossProduct() {
     }
 }
 
+bool testBreakOutsideLoop() {
+    std::cout << "Test: break outside loop is a parse error... ";
+
+    SimpleParser parser;
+    std::string source = R"(
+        float test(float x) {
+            break;
+            return x;
+        }
+    )";
+
+    if (!parser.compile(source)) {
+        std::cout << "PASS (compilation failed as expected)\n";
+        return true;
+    } else {
+        std::cout << "FAIL: Expected parse error for 'break' outside loop\n";
+        return false;
+    }
+}
+
+bool testContinueOutsideLoop() {
+    std::cout << "Test: continue outside loop is a parse error... ";
+
+    SimpleParser parser;
+    std::string source = R"(
+        float test(float x) {
+            continue;
+            return x;
+        }
+    )";
+
+    if (!parser.compile(source)) {
+        std::cout << "PASS (compilation failed as expected)\n";
+        return true;
+    } else {
+        std::cout << "FAIL: Expected parse error for 'continue' outside loop\n";
+        return false;
+    }
+}
+
 int main() {
     std::cout << "=== SimpleParser Test Suite ===\n\n";
-    
+
     int passed = 0;
-    int total = 10;
-    
+    int total = 12;
+
     if (testBasicArithmetic()) passed++;
     if (testVectorOperations()) passed++;
     if (testBuiltinFunctions()) passed++;
@@ -361,9 +401,11 @@ int main() {
     if (testVec2DotProduct()) passed++;
     if (testVec3CrossProduct()) passed++;
     if (testVec2CrossProduct()) passed++;
-    
+    if (testBreakOutsideLoop()) passed++;
+    if (testContinueOutsideLoop()) passed++;
+
     std::cout << "\n=== Results ===\n";
     std::cout << "Passed: " << passed << "/" << total << "\n";
-    
+
     return (passed == total) ? 0 : 1;
 }
