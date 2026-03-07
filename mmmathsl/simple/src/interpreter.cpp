@@ -166,6 +166,15 @@ Value Interpreter::executeFor(const ForStmt& stmt) {
 
     // Capture the update step so both the normal path and the continue path
     // can call it explicitly rather than relying on fall-through.
+    //
+    // Safety assumption: the update expression must NOT produce control-flow
+    // side effects (i.e. it must not set isContinuing_ or isBreaking_ internally).
+    // Currently the grammar restricts update to AssignStmt or synthesized i++/i--,
+    // both of which are pure assignments with no control-flow semantics.
+    // If a future extension allows function calls or other complex expressions in
+    // the update slot, this assumption must be revisited: isContinuing_ is already
+    // cleared BEFORE runUpdate() is called, so any new continue raised inside
+    // runUpdate() would be silently lost.
     auto runUpdate = [&]() {
         if (stmt.update) {
             executeStatement(*stmt.update);
@@ -284,6 +293,25 @@ Value Interpreter::evaluateTernary(const TernaryExpr& expr) {
 }
 
 Value Interpreter::evaluateBinary(const BinaryExpr& expr) {
+    // Short-circuit evaluation for && and || — must be handled BEFORE evaluating right.
+    // This matches GLSL/C semantics and the HP VM (which emits JUMP_IF_FALSE for &&/||).
+    if (expr.op == TokenType::And) {
+        Value lv = evaluateExpression(*expr.left);
+        if (!lv.isBool()) throw RuntimeError("Invalid operands for &&");
+        if (!lv.asBool()) return Value(false);      // short-circuit: right not evaluated
+        Value rv = evaluateExpression(*expr.right);
+        if (!rv.isBool()) throw RuntimeError("Invalid operands for &&");
+        return Value(rv.asBool());
+    }
+    if (expr.op == TokenType::Or) {
+        Value lv = evaluateExpression(*expr.left);
+        if (!lv.isBool()) throw RuntimeError("Invalid operands for ||");
+        if (lv.asBool()) return Value(true);        // short-circuit: right not evaluated
+        Value rv = evaluateExpression(*expr.right);
+        if (!rv.isBool()) throw RuntimeError("Invalid operands for ||");
+        return Value(rv.asBool());
+    }
+
     Value left = evaluateExpression(*expr.left);
     Value right = evaluateExpression(*expr.right);
     

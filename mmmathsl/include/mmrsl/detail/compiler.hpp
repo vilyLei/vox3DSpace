@@ -114,14 +114,32 @@ private:
     // Get type of expression (for instruction selection)
     TypeKind getExpressionType(const Expression& expr);
     
-    // RAII guard for exception-safe compilation
+    // RAII guard for exception-safe compilation.
+    // On normal completion, call release() to suppress cleanup.
+    // On exception (or when not released), the destructor performs a full state reset
+    // so the Compiler is in a clean state if reused in the future.
     class CompileGuard {
         Compiler* compiler_;
     public:
         explicit CompileGuard(Compiler* c) : compiler_(c) {}
         ~CompileGuard() {
             if (compiler_) {
-                compiler_->currentFunc_ = nullptr;
+                // Full reset — clears all mutable state, not just currentFunc_.
+                // Prevents stale localVars_, loopStack_, usedRegisters_, etc. from
+                // corrupting a hypothetical future reuse of this Compiler object.
+                compiler_->currentFunc_        = nullptr;
+                compiler_->errorMsg_.clear();
+                compiler_->localVars_.clear();
+                compiler_->localVarTypes_.clear();
+                compiler_->loopStack_.clear();
+                compiler_->usedRegisters_.reset();
+                compiler_->nextLocalIndex_     = 0;
+                compiler_->returnTempIdx_      = 0xFFFF;
+                compiler_->maxUsedRegister_    = 0;
+                compiler_->currentNestingDepth_= 0;
+                compiler_->maxNestingDepth_    = 0;
+                compiler_->currentExprDepth_   = 0;
+                compiler_->maxExprDepth_       = 0;
             }
         }
         void release() { compiler_ = nullptr; }

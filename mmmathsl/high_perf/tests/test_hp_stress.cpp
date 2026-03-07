@@ -638,6 +638,34 @@ bool testDeepRecursionSimulation() {
     }
 }
 
+// Test: Nesting Depth Exceeded — 33 levels of if-nesting must be rejected by the compiler
+bool testNestingDepthExceeded() {
+    std::cout << "Stress Test: Nesting Depth Exceeded (33 levels should be rejected)...\n";
+    MemoryTracker tracker("NestingDepthExceeded");
+
+    // 33 levels of if-nesting — one level beyond MAX_NESTING_DEPTH (32)
+    // The compiler must reject this with a compile error
+    std::string source = "float calc(float x) {\n";
+    for (int i = 0; i < 33; i++) {
+        source += "    if (x > 0.0) {\n";
+    }
+    source += "        return 1.0;\n";
+    for (int i = 0; i < 33; i++) {
+        source += "    }\n";
+    }
+    source += "    return 0.0;\n}";
+
+    HighPerfParser parser;
+    bool compiled = parser.compile(source);
+    if (compiled) {
+        std::cout << "FAIL (expected compile error for 33-level nesting, but compilation succeeded)\n";
+        return false;
+    }
+
+    std::cout << "PASS\n";
+    return true;
+}
+
 // Test 116: Heavy Matrix Operations Stress Test
 // Tests intensive matrix computations
 bool testHeavyMatrixOperations() {
@@ -820,10 +848,10 @@ bool testMaxLocalVariablesDeterministic() {
     }
 }
 int runStressTests() {
-    std::cout << "\n=== High-Performance mmrsl Stress Test Suite ===\n\n";
+    std::cout << "=== TEST: test_hp_stress ===\n\n";
     
     int passed = 0;
-    int total = 14;
+    int total = 15;
     
     if (testHighFrequencyCompilation()) passed++;
     if (testLargeConstantPool()) passed++;
@@ -836,6 +864,7 @@ int runStressTests() {
     if (testRapidScriptVariation()) passed++;
     if (testMixedWorkload()) passed++;
     if (testDeepRecursionSimulation()) passed++;
+    if (testNestingDepthExceeded()) passed++;
     if (testHeavyMatrixOperations()) passed++;
     if (testConcurrentCompilationSimulation()) passed++;
     if (testMaxLocalVariablesDeterministic()) passed++;

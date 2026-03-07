@@ -1,75 +1,8 @@
 #include "mmrsl/detail/vm.hpp"
 #include <cmath>
-#include <glm/glm.hpp>
-#include <glm/vec2.hpp>
-#include <glm/vec3.hpp>
-#include <glm/vec4.hpp>
-#include <glm/mat2x2.hpp>
-#include <glm/mat3x3.hpp>
-#include <glm/mat4x4.hpp>
 
 namespace mmrsl {
 namespace highPerf {
-
-// ============================================================================
-// POD to GLM conversion helpers (internal use only)
-// ============================================================================
-
-inline glm::vec2 toGlm(const Vec2& v) { return glm::vec2(v.x, v.y); }
-inline glm::vec3 toGlm(const Vec3& v) { return glm::vec3(v.x, v.y, v.z); }
-inline glm::vec4 toGlm(const Vec4& v) { return glm::vec4(v.x, v.y, v.z, v.w); }
-
-inline glm::mat2 toGlm(const Mat2& m) {
-    return glm::mat2(
-        m[0][0], m[0][1],
-        m[1][0], m[1][1]
-    );
-}
-
-inline glm::mat3 toGlm(const Mat3& m) {
-    return glm::mat3(
-        m[0][0], m[0][1], m[0][2],
-        m[1][0], m[1][1], m[1][2],
-        m[2][0], m[2][1], m[2][2]
-    );
-}
-
-inline glm::mat4 toGlm(const Mat4& m) {
-    return glm::mat4(
-        m[0][0], m[0][1], m[0][2], m[0][3],
-        m[1][0], m[1][1], m[1][2], m[1][3],
-        m[2][0], m[2][1], m[2][2], m[2][3],
-        m[3][0], m[3][1], m[3][2], m[3][3]
-    );
-}
-
-inline Vec2 fromGlm(const glm::vec2& v) { return Vec2(v.x, v.y); }
-inline Vec3 fromGlm(const glm::vec3& v) { return Vec3(v.x, v.y, v.z); }
-inline Vec4 fromGlm(const glm::vec4& v) { return Vec4(v.x, v.y, v.z, v.w); }
-
-inline Mat2 fromGlm(const glm::mat2& m) {
-    return Mat2(
-        m[0][0], m[0][1],
-        m[1][0], m[1][1]
-    );
-}
-
-inline Mat3 fromGlm(const glm::mat3& m) {
-    return Mat3(
-        m[0][0], m[0][1], m[0][2],
-        m[1][0], m[1][1], m[1][2],
-        m[2][0], m[2][1], m[2][2]
-    );
-}
-
-inline Mat4 fromGlm(const glm::mat4& m) {
-    return Mat4(
-        m[0][0], m[0][1], m[0][2], m[0][3],
-        m[1][0], m[1][1], m[1][2], m[1][3],
-        m[2][0], m[2][1], m[2][2], m[2][3],
-        m[3][0], m[3][1], m[3][2], m[3][3]
-    );
-}
 
 VM::VM() : pc_(0), currentFunc_(nullptr), instructionCount_(0), maxInstructions_(MAX_INSTRUCTIONS) {
     reset();
@@ -585,16 +518,35 @@ Value VM::execute(const BytecodeFunction& func, const std::vector<Value>& args) 
             case OpCode::JUMP: {
                 // Jump offset stored in regSrc1 and regSrc2 as 16-bit signed offset
                 int16_t offset = static_cast<int16_t>((inst.regSrc2 << 8) | inst.regSrc1);
-                pc_ = static_cast<size_t>(static_cast<int>(pc_) + offset);
+                int newPc = static_cast<int>(pc_) + offset;
+                if (newPc < 0 || static_cast<size_t>(newPc) > func.code.size()) {
+                    setError("JUMP target out of bounds: pc=" + std::to_string(pc_) +
+                             " offset=" + std::to_string(offset) +
+                             " newPc=" + std::to_string(newPc));
+                    return Value();
+                }
+                pc_ = static_cast<size_t>(newPc);
                 break;
             }
             case OpCode::JUMP_IF_FALSE: {
-                // Check condition register (bool)
-                bool condition = registers_[inst.regDest].asBool();
-                if (!condition) {
+                // regDest holds the condition source register (see Issue 10 comment in bytecode.hpp)
+                const Value& condVal = registers_[inst.regDest];
+                if (!condVal.isBool()) {
+                    setError("JUMP_IF_FALSE: condition register is not Bool (got " +
+                             std::to_string(static_cast<int>(condVal.kind())) + ")");
+                    break;
+                }
+                if (!condVal.asBool()) {
                     // Jump offset stored in regSrc1 and regSrc2
                     int16_t offset = static_cast<int16_t>((inst.regSrc2 << 8) | inst.regSrc1);
-                    pc_ = static_cast<size_t>(static_cast<int>(pc_) + offset);
+                    int newPc = static_cast<int>(pc_) + offset;
+                    if (newPc < 0 || static_cast<size_t>(newPc) > func.code.size()) {
+                        setError("JUMP_IF_FALSE target out of bounds: pc=" + std::to_string(pc_) +
+                                 " offset=" + std::to_string(offset) +
+                                 " newPc=" + std::to_string(newPc));
+                        return Value();
+                    }
+                    pc_ = static_cast<size_t>(newPc);
                 }
                 break;
             }
@@ -1252,27 +1204,74 @@ void VM::callSmoothStepFloat(uint8_t rd, uint8_t rs1, uint8_t rs2) {
 
 // Matrix multiplication
 void VM::mulMat2Mat2(uint8_t rd, uint8_t rs1, uint8_t rs2) {
-    registers_[rd] = Value(fromGlm(toGlm(registers_[rs1].asMat2()) * toGlm(registers_[rs2].asMat2())));
+    Mat2 a = registers_[rs1].asMat2();
+    Mat2 b = registers_[rs2].asMat2();
+    // Column-major: result[col][row] = sum over k of a[k][row] * b[col][k]
+    registers_[rd] = Value(Mat2(
+        a[0][0]*b[0][0] + a[1][0]*b[0][1],  // col0 row0
+        a[0][1]*b[0][0] + a[1][1]*b[0][1],  // col0 row1
+        a[0][0]*b[1][0] + a[1][0]*b[1][1],  // col1 row0
+        a[0][1]*b[1][0] + a[1][1]*b[1][1]   // col1 row1
+    ));
 }
 
 void VM::mulMat3Mat3(uint8_t rd, uint8_t rs1, uint8_t rs2) {
-    registers_[rd] = Value(fromGlm(toGlm(registers_[rs1].asMat3()) * toGlm(registers_[rs2].asMat3())));
+    Mat3 a = registers_[rs1].asMat3();
+    Mat3 b = registers_[rs2].asMat3();
+    registers_[rd] = Value(Mat3(
+        a[0][0]*b[0][0] + a[1][0]*b[0][1] + a[2][0]*b[0][2],
+        a[0][1]*b[0][0] + a[1][1]*b[0][1] + a[2][1]*b[0][2],
+        a[0][2]*b[0][0] + a[1][2]*b[0][1] + a[2][2]*b[0][2],
+        a[0][0]*b[1][0] + a[1][0]*b[1][1] + a[2][0]*b[1][2],
+        a[0][1]*b[1][0] + a[1][1]*b[1][1] + a[2][1]*b[1][2],
+        a[0][2]*b[1][0] + a[1][2]*b[1][1] + a[2][2]*b[1][2],
+        a[0][0]*b[2][0] + a[1][0]*b[2][1] + a[2][0]*b[2][2],
+        a[0][1]*b[2][0] + a[1][1]*b[2][1] + a[2][1]*b[2][2],
+        a[0][2]*b[2][0] + a[1][2]*b[2][1] + a[2][2]*b[2][2]
+    ));
 }
 
 void VM::mulMat4Mat4(uint8_t rd, uint8_t rs1, uint8_t rs2) {
-    registers_[rd] = Value(fromGlm(toGlm(registers_[rs1].asMat4()) * toGlm(registers_[rs2].asMat4())));
+    Mat4 a = registers_[rs1].asMat4();
+    Mat4 b = registers_[rs2].asMat4();
+    Mat4 r;
+    for (int col = 0; col < 4; ++col)
+        for (int row = 0; row < 4; ++row) {
+            r[col][row] = 0.0f;
+            for (int k = 0; k < 4; ++k)
+                r[col][row] += a[k][row] * b[col][k];
+        }
+    registers_[rd] = Value(r);
 }
 
 void VM::mulMat2Vec2(uint8_t rd, uint8_t rs1, uint8_t rs2) {
-    registers_[rd] = Value(fromGlm(toGlm(registers_[rs1].asMat2()) * toGlm(registers_[rs2].asVec2())));
+    Mat2 m = registers_[rs1].asMat2();
+    Vec2 v = registers_[rs2].asVec2();
+    registers_[rd] = Value(Vec2(
+        m[0][0]*v.x + m[1][0]*v.y,
+        m[0][1]*v.x + m[1][1]*v.y
+    ));
 }
 
 void VM::mulMat3Vec3(uint8_t rd, uint8_t rs1, uint8_t rs2) {
-    registers_[rd] = Value(fromGlm(toGlm(registers_[rs1].asMat3()) * toGlm(registers_[rs2].asVec3())));
+    Mat3 m = registers_[rs1].asMat3();
+    Vec3 v = registers_[rs2].asVec3();
+    registers_[rd] = Value(Vec3(
+        m[0][0]*v.x + m[1][0]*v.y + m[2][0]*v.z,
+        m[0][1]*v.x + m[1][1]*v.y + m[2][1]*v.z,
+        m[0][2]*v.x + m[1][2]*v.y + m[2][2]*v.z
+    ));
 }
 
 void VM::mulMat4Vec4(uint8_t rd, uint8_t rs1, uint8_t rs2) {
-    registers_[rd] = Value(fromGlm(toGlm(registers_[rs1].asMat4()) * toGlm(registers_[rs2].asVec4())));
+    Mat4 m = registers_[rs1].asMat4();
+    Vec4 v = registers_[rs2].asVec4();
+    registers_[rd] = Value(Vec4(
+        m[0][0]*v.x + m[1][0]*v.y + m[2][0]*v.z + m[3][0]*v.w,
+        m[0][1]*v.x + m[1][1]*v.y + m[2][1]*v.z + m[3][1]*v.w,
+        m[0][2]*v.x + m[1][2]*v.y + m[2][2]*v.z + m[3][2]*v.w,
+        m[0][3]*v.x + m[1][3]*v.y + m[2][3]*v.z + m[3][3]*v.w
+    ));
 }
 
 // Matrix element access
@@ -1426,14 +1425,28 @@ void VM::inverseMat3(uint8_t rd, uint8_t rs) {
     const Value& v = registers_[rs];
     if (v.isMat3()) {
         Mat3 m = v.asMat3();
-        // Use GLM for 3x3 inverse (complex calculation)
-        glm::mat3 glmM = toGlm(m);
-        float det = glm::determinant(glmM);
+        // Cofactor expansion for 3x3 inverse (column-major: m[col][row])
+        float c00 =  m[1][1]*m[2][2] - m[2][1]*m[1][2];
+        float c10 = -(m[0][1]*m[2][2] - m[2][1]*m[0][2]);
+        float c20 =  m[0][1]*m[1][2] - m[1][1]*m[0][2];
+        float det = m[0][0]*c00 + m[1][0]*c10 + m[2][0]*c20;
         if (std::abs(det) < MATRIX_EPSILON) {
             setError("Matrix is singular (determinant is zero)");
             return;
         }
-        registers_[rd] = Value(fromGlm(glm::inverse(glmM)));
+        float invDet = 1.0f / det;
+        float c01 = -(m[1][0]*m[2][2] - m[2][0]*m[1][2]);
+        float c11 =  m[0][0]*m[2][2] - m[2][0]*m[0][2];
+        float c21 = -(m[0][0]*m[1][2] - m[1][0]*m[0][2]);
+        float c02 =  m[1][0]*m[2][1] - m[2][0]*m[1][1];
+        float c12 = -(m[0][0]*m[2][1] - m[2][0]*m[0][1]);
+        float c22 =  m[0][0]*m[1][1] - m[1][0]*m[0][1];
+        // Transpose of cofactor matrix, scaled by 1/det (column-major output)
+        registers_[rd] = Value(Mat3(
+            c00*invDet, c10*invDet, c20*invDet,
+            c01*invDet, c11*invDet, c21*invDet,
+            c02*invDet, c12*invDet, c22*invDet
+        ));
     } else {
         setError("inverse() requires mat3 argument");
     }
@@ -1443,14 +1456,43 @@ void VM::inverseMat4(uint8_t rd, uint8_t rs) {
     const Value& v = registers_[rs];
     if (v.isMat4()) {
         Mat4 m = v.asMat4();
-        // Use GLM for 4x4 inverse (complex calculation)
-        glm::mat4 glmM = toGlm(m);
-        float det = glm::determinant(glmM);
+        // Cramer's rule for 4x4 inverse (column-major: m[col][row])
+        float s0 = m[0][0]*m[1][1] - m[1][0]*m[0][1];
+        float s1 = m[0][0]*m[2][1] - m[2][0]*m[0][1];
+        float s2 = m[0][0]*m[3][1] - m[3][0]*m[0][1];
+        float s3 = m[1][0]*m[2][1] - m[2][0]*m[1][1];
+        float s4 = m[1][0]*m[3][1] - m[3][0]*m[1][1];
+        float s5 = m[2][0]*m[3][1] - m[3][0]*m[2][1];
+        float c0 = m[0][2]*m[1][3] - m[1][2]*m[0][3];
+        float c1 = m[0][2]*m[2][3] - m[2][2]*m[0][3];
+        float c2 = m[0][2]*m[3][3] - m[3][2]*m[0][3];
+        float c3 = m[1][2]*m[2][3] - m[2][2]*m[1][3];
+        float c4 = m[1][2]*m[3][3] - m[3][2]*m[1][3];
+        float c5 = m[2][2]*m[3][3] - m[3][2]*m[2][3];
+        float det = s0*c5 - s1*c4 + s2*c3 + s3*c2 - s4*c1 + s5*c0;
         if (std::abs(det) < MATRIX_EPSILON) {
             setError("Matrix is singular (determinant is zero)");
             return;
         }
-        registers_[rd] = Value(fromGlm(glm::inverse(glmM)));
+        float invDet = 1.0f / det;
+        Mat4 r;
+        r[0][0] = ( m[1][1]*c5 - m[2][1]*c4 + m[3][1]*c3) * invDet;
+        r[0][1] = (-m[0][1]*c5 + m[2][1]*c2 - m[3][1]*c1) * invDet;
+        r[0][2] = ( m[0][1]*c4 - m[1][1]*c2 + m[3][1]*c0) * invDet;
+        r[0][3] = (-m[0][1]*c3 + m[1][1]*c1 - m[2][1]*c0) * invDet;
+        r[1][0] = (-m[1][0]*c5 + m[2][0]*c4 - m[3][0]*c3) * invDet;
+        r[1][1] = ( m[0][0]*c5 - m[2][0]*c2 + m[3][0]*c1) * invDet;
+        r[1][2] = (-m[0][0]*c4 + m[1][0]*c2 - m[3][0]*c0) * invDet;
+        r[1][3] = ( m[0][0]*c3 - m[1][0]*c1 + m[2][0]*c0) * invDet;
+        r[2][0] = ( m[1][3]*s5 - m[2][3]*s4 + m[3][3]*s3) * invDet;
+        r[2][1] = (-m[0][3]*s5 + m[2][3]*s2 - m[3][3]*s1) * invDet;
+        r[2][2] = ( m[0][3]*s4 - m[1][3]*s2 + m[3][3]*s0) * invDet;
+        r[2][3] = (-m[0][3]*s3 + m[1][3]*s1 - m[2][3]*s0) * invDet;
+        r[3][0] = (-m[1][2]*s5 + m[2][2]*s4 - m[3][2]*s3) * invDet;
+        r[3][1] = ( m[0][2]*s5 - m[2][2]*s2 + m[3][2]*s1) * invDet;
+        r[3][2] = (-m[0][2]*s4 + m[1][2]*s2 - m[3][2]*s0) * invDet;
+        r[3][3] = ( m[0][2]*s3 - m[1][2]*s1 + m[2][2]*s0) * invDet;
+        registers_[rd] = Value(r);
     } else {
         setError("inverse() requires mat4 argument");
     }
@@ -1807,18 +1849,30 @@ void VM::floatToInt(uint8_t rd, uint8_t rs) {
 }
 
 void VM::logicalAnd(uint8_t rd, uint8_t rs1, uint8_t rs2) {
+    if (!registers_[rs1].isBool() || !registers_[rs2].isBool()) {
+        setError("LOGICAL_AND: operands must be Bool");
+        return;
+    }
     bool a = registers_[rs1].asBool();
     bool b = registers_[rs2].asBool();
     registers_[rd] = Value(a && b);
 }
 
 void VM::logicalOr(uint8_t rd, uint8_t rs1, uint8_t rs2) {
+    if (!registers_[rs1].isBool() || !registers_[rs2].isBool()) {
+        setError("LOGICAL_OR: operands must be Bool");
+        return;
+    }
     bool a = registers_[rs1].asBool();
     bool b = registers_[rs2].asBool();
     registers_[rd] = Value(a || b);
 }
 
 void VM::logicalNot(uint8_t rd, uint8_t rs1) {
+    if (!registers_[rs1].isBool()) {
+        setError("LOGICAL_NOT: operand must be Bool");
+        return;
+    }
     bool a = registers_[rs1].asBool();
     registers_[rd] = Value(!a);
 }

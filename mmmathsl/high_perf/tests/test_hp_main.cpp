@@ -2309,7 +2309,7 @@ bool testPhongLighting() {
             return false;
         }
         
-        // At 45 degrees: diffuse = cos(45) â‰?0.707
+        // At 45 degrees: diffuse = cos(45) ï¿½?0.707
         // Result should be approximately (0.707, 0, 0)
         mmrsl::Vec3 res = result.asVec3();
         if (res.x < 0.6f || res.x > 0.8f || res.y != 0.0f || res.z != 0.0f) {
@@ -2843,7 +2843,7 @@ bool testMultipleScriptsCompilation() {
             return false;
         }
         
-        // Test another triangle: equilateral with side 2 (area = sqrt(3) â‰?1.732)
+        // Test another triangle: equilateral with side 2 (area = sqrt(3) ï¿½?1.732)
         triangleArgs[0] = mmrsl::Value(2.0f);
         triangleArgs[1] = mmrsl::Value(2.0f);
         triangleArgs[2] = mmrsl::Value(2.0f);
@@ -3579,7 +3579,7 @@ bool testBoundaryValuesAndSpecialFloats() {
             return false;
         }
         
-        // x = -0.5 â†?clamped to 0.0
+        // x = -0.5 ï¿½?clamped to 0.0
         args[0] = mmrsl::Value(-0.5f);
         result = parser.execute(args);
         if (!result.isFloat() || std::abs(result.asFloat() - 0.0f) >= 0.001f) {
@@ -3587,7 +3587,7 @@ bool testBoundaryValuesAndSpecialFloats() {
             return false;
         }
         
-        // x = 0.5 â†?unchanged
+        // x = 0.5 ï¿½?unchanged
         args[0] = mmrsl::Value(0.5f);
         result = parser.execute(args);
         if (!result.isFloat() || std::abs(result.asFloat() - 0.5f) >= 0.001f) {
@@ -3595,7 +3595,7 @@ bool testBoundaryValuesAndSpecialFloats() {
             return false;
         }
         
-        // x = 1.5 â†?clamped to 1.0
+        // x = 1.5 ï¿½?clamped to 1.0
         args[0] = mmrsl::Value(1.5f);
         result = parser.execute(args);
         if (!result.isFloat() || std::abs(result.asFloat() - 1.0f) >= 0.001f) {
@@ -3603,7 +3603,7 @@ bool testBoundaryValuesAndSpecialFloats() {
             return false;
         }
         
-        // x = 0.0 â†?boundary value
+        // x = 0.0 ï¿½?boundary value
         args[0] = mmrsl::Value(0.0f);
         result = parser.execute(args);
         if (!result.isFloat() || std::abs(result.asFloat() - 0.0f) >= 0.001f) {
@@ -3611,7 +3611,7 @@ bool testBoundaryValuesAndSpecialFloats() {
             return false;
         }
         
-        // x = 1.0 â†?boundary value
+        // x = 1.0 ï¿½?boundary value
         args[0] = mmrsl::Value(1.0f);
         result = parser.execute(args);
         if (!result.isFloat() || std::abs(result.asFloat() - 1.0f) >= 0.001f) {
@@ -4562,7 +4562,7 @@ bool testVariableReassignment() {
             return false;
         }
         
-        // x = 1.0: v = 1 â†?2 â†?5 â†?25 â†?5.0
+        // x = 1.0: v = 1 ï¿½?2 ï¿½?5 ï¿½?25 ï¿½?5.0
         std::vector<mmrsl::Value> args = { mmrsl::Value(1.0f) };
         mmrsl::Value result = parser.execute(args);
         
@@ -4571,7 +4571,7 @@ bool testVariableReassignment() {
             return false;
         }
         
-        // x = 2.0: v = 2 â†?4 â†?7 â†?49 â†?7.0
+        // x = 2.0: v = 2 ï¿½?4 ï¿½?7 ï¿½?49 ï¿½?7.0
         args[0] = mmrsl::Value(2.0f);
         result = parser.execute(args);
         
@@ -4600,7 +4600,7 @@ bool testVariableReassignment() {
             return false;
         }
         
-        // x = -5: result = 0 â†?(not >0) â†?0+1 = 1 â†?(not >10) â†?1
+        // x = -5: result = 0 ï¿½?(not >0) ï¿½?0+1 = 1 ï¿½?(not >10) ï¿½?1
         args[0] = mmrsl::Value(-5.0f);
         result = parser.execute(args);
         
@@ -4609,7 +4609,7 @@ bool testVariableReassignment() {
             return false;
         }
         
-        // x = 5: result = 0 â†?5 â†?5+1 = 6 â†?(not >10) â†?6
+        // x = 5: result = 0 ï¿½?5 ï¿½?5+1 = 6 ï¿½?(not >10) ï¿½?6
         args[0] = mmrsl::Value(5.0f);
         result = parser.execute(args);
         
@@ -4618,7 +4618,7 @@ bool testVariableReassignment() {
             return false;
         }
         
-        // x = 15: result = 0 â†?15 â†?15+1 = 16 â†?(>10) â†?16*2 = 32
+        // x = 15: result = 0 ï¿½?15 ï¿½?15+1 = 16 ï¿½?(>10) ï¿½?16*2 = 32
         args[0] = mmrsl::Value(15.0f);
         result = parser.execute(args);
         
@@ -4672,7 +4672,7 @@ bool testVariableReassignment() {
             return false;
         }
         
-        // v = (1,0,0): result = (1,0,0) â†?(2,0,0) â†?(3,2,3) â†?normalize
+        // v = (1,0,0): result = (1,0,0) ï¿½?(2,0,0) ï¿½?(3,2,3) ï¿½?normalize
         args[0] = mmrsl::Value(mmrsl::Vec3(1.0f, 0.0f, 0.0f));
         result = parser.execute(args);
         
@@ -4681,7 +4681,7 @@ bool testVariableReassignment() {
             return false;
         }
         
-        // Just verify it's a normalized vector (length â‰?1)
+        // Just verify it's a normalized vector (length ï¿½?1)
         mmrsl::Vec3 v = result.asVec3();
         float len = std::sqrt(v.x*v.x + v.y*v.y + v.z*v.z);
         if (std::abs(len - 1.0f) >= 0.001f) {
@@ -5169,7 +5169,7 @@ bool testMultipleReturnPaths() {
             return false;
         }
         
-        // First quadrant: x=1, y=1 â†?1
+        // First quadrant: x=1, y=1 ï¿½?1
         std::vector<mmrsl::Value> doubleArgs = { mmrsl::Value(1.0f), mmrsl::Value(1.0f) };
         result = parser.execute(doubleArgs);
         
@@ -5178,7 +5178,7 @@ bool testMultipleReturnPaths() {
             return false;
         }
         
-        // Fourth quadrant: x=1, y=-1 â†?2
+        // Fourth quadrant: x=1, y=-1 ï¿½?2
         doubleArgs[0] = mmrsl::Value(1.0f);
         doubleArgs[1] = mmrsl::Value(-1.0f);
         result = parser.execute(doubleArgs);
@@ -5188,7 +5188,7 @@ bool testMultipleReturnPaths() {
             return false;
         }
         
-        // Second quadrant: x=-1, y=1 â†?3
+        // Second quadrant: x=-1, y=1 ï¿½?3
         doubleArgs[0] = mmrsl::Value(-1.0f);
         doubleArgs[1] = mmrsl::Value(1.0f);
         result = parser.execute(doubleArgs);
@@ -5198,7 +5198,7 @@ bool testMultipleReturnPaths() {
             return false;
         }
         
-        // Third quadrant: x=-1, y=-1 â†?4
+        // Third quadrant: x=-1, y=-1 ï¿½?4
         doubleArgs[0] = mmrsl::Value(-1.0f);
         doubleArgs[1] = mmrsl::Value(-1.0f);
         result = parser.execute(doubleArgs);
@@ -5269,7 +5269,7 @@ bool testVectorSwizzleSimulation() {
             return false;
         }
         
-        // v = (1, 2, 3) â†?(3, 2, 1)
+        // v = (1, 2, 3) ï¿½?(3, 2, 1)
         std::vector<mmrsl::Value> args = { mmrsl::Value(mmrsl::Vec3(1.0f, 2.0f, 3.0f)) };
         mmrsl::Value result = parser.execute(args);
         
@@ -5296,7 +5296,7 @@ bool testVectorSwizzleSimulation() {
             return false;
         }
         
-        // v = (1, 2, 3, 4) â†?(4, 3, 2, 1)
+        // v = (1, 2, 3, 4) ï¿½?(4, 3, 2, 1)
         args[0] = mmrsl::Value(mmrsl::Vec4(1.0f, 2.0f, 3.0f, 4.0f));
         result = parser.execute(args);
         
@@ -5355,7 +5355,7 @@ bool testVectorSwizzleSimulation() {
             return false;
         }
         
-        // color = (1, 0.5, 0) orange â†?(0, 0.5, 1) cyan-ish
+        // color = (1, 0.5, 0) orange ï¿½?(0, 0.5, 1) cyan-ish
         args[0] = mmrsl::Value(mmrsl::Vec3(1.0f, 0.5f, 0.0f));
         result = parser.execute(args);
         
@@ -5382,7 +5382,7 @@ bool testVectorSwizzleSimulation() {
             return false;
         }
         
-        // uv = (0.5, 0.25) â†?(0.5, 0.25, 0, 1)
+        // uv = (0.5, 0.25) ï¿½?(0.5, 0.25, 0, 1)
         args[0] = mmrsl::Value(mmrsl::Vec2(0.5f, 0.25f));
         result = parser.execute(args);
         
@@ -5974,7 +5974,7 @@ bool testNoiseFunctions() {
 }
 
 int main() {
-    std::cout << "=== High-Performance mmrsl Test Suite ===\n\n";
+    std::cout << "=== TEST: test_hp_main ===\n\n";
     
     int passed = 0;
     int total = 104;

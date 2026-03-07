@@ -7,57 +7,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 # ============================================================================
-# GLM Configuration (B + D方案: CMake选项 + FetchContent)
-# ============================================================================
-
-# Option 1: CMake 选项（优先级最高）
-set(GLM_ROOT "" CACHE PATH "Path to GLM library (optional)")
-
-# Option 2: 环境变量回退
-if(NOT GLM_ROOT)
-    set(GLM_ROOT "$ENV{GLM_ROOT}")
-endif()
-
-# Option 3: 自动查找常见位置
-if(NOT GLM_ROOT OR NOT EXISTS "${GLM_ROOT}")
-    find_path(GLM_INCLUDE_DIR glm/glm.hpp
-        PATHS
-            "${CMAKE_CURRENT_SOURCE_DIR}/../externals/glm"
-            "${CMAKE_CURRENT_SOURCE_DIR}/externals/glm"
-            "/usr/include"
-            "/usr/local/include"
-        DOC "GLM include directory"
-    )
-    if(GLM_INCLUDE_DIR)
-        set(GLM_ROOT "${GLM_INCLUDE_DIR}")
-    endif()
-endif()
-
-# Option 4: FetchContent 自动下载
-if(NOT GLM_ROOT OR NOT EXISTS "${GLM_ROOT}")
-    include(FetchContent)
-    FetchContent_Declare(
-        glm
-        GIT_REPOSITORY https://github.com/g-truc/glm.git
-        GIT_TAG 0.9.9.8
-    )
-    FetchContent_MakeAvailable(glm)
-    set(GLM_ROOT "${glm_SOURCE_DIR}")
-    message(STATUS "GLM fetched via FetchContent: ${GLM_ROOT}")
-endif()
-
-# 最终验�?
-if(NOT EXISTS "${GLM_ROOT}/glm/glm.hpp")
-    message(FATAL_ERROR "GLM not found at ${GLM_ROOT}. Please set GLM_ROOT via:\n"
-        "  - cmake -DGLM_ROOT=/path/to/glm\n"
-        "  - Environment variable GLM_ROOT\n"
-        "  - Place GLM in ${CMAKE_CURRENT_SOURCE_DIR}/externals/glm")
-endif()
-
-message(STATUS "GLM root: ${GLM_ROOT}")
-
-# ============================================================================
-# Unified mmrsl Library
+# Unified mmrsl Library (zero external dependencies)
 # ============================================================================
 
 # Public headers (zero-dependency API)
@@ -95,8 +45,6 @@ target_include_directories(mmrsl
     PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
         $<INSTALL_INTERFACE:include>
-    PRIVATE
-        ${GLM_ROOT}
 )
 
 # Enable warnings

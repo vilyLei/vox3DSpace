@@ -1,4 +1,5 @@
 #include "mmrsl/detail/compiler.hpp"
+#include <cassert>
 
 namespace mmrsl {
 namespace highPerf {
@@ -56,22 +57,31 @@ BytecodeFunction Compiler::compile(const Program& program) {
         (void)idx; // Parameters are initialized by caller
     }
     
-    // Compile function body
-    compileCompound(*program.function->body);
-    
-    // Check if the last statement is already a return
-    bool hasTrailingReturn = false;
-    if (!program.function->body->statements.empty()) {
-        if (dynamic_cast<const ReturnStmt*>(program.function->body->statements.back().get())) {
-            hasTrailingReturn = true;
+    // Compile function body.
+    // Wrapped in try-catch to convert CompilerError (thrown by BytecodeFunction::emit()
+    // when MAX_BYTECODE_INSTRUCTIONS is exceeded) into the standard setError() path.
+    // This ensures all error reporting goes through getLastError(), preserving the
+    // public API contract regardless of whether the error was detected by setError() or throw.
+    try {
+        compileCompound(*program.function->body);
+        
+        // Check if the last statement is already a return
+        bool hasTrailingReturn = false;
+        if (!program.function->body->statements.empty()) {
+            if (dynamic_cast<const ReturnStmt*>(program.function->body->statements.back().get())) {
+                hasTrailingReturn = true;
+            }
         }
+        
+        // Only emit trailing return if function doesn't end with one
+        if (!hasTrailingReturn) {
+            currentFunc_->emit(OpCode::RETURN);
+        }
+        currentFunc_->emit(OpCode::HALT);
+    } catch (const CompilerError& e) {
+        // Convert emit()-level CompilerError into the unified setError() path
+        setError(std::string("Bytecode limit: ") + e.what());
     }
-    
-    // Only emit trailing return if function doesn't end with one
-    if (!hasTrailingReturn) {
-        currentFunc_->emit(OpCode::RETURN);
-    }
-    currentFunc_->emit(OpCode::HALT);
     
     func.numLocals = static_cast<uint8_t>(nextLocalIndex_);
     // Use high-water mark for peak register usage (+1 because registers are 0-indexed)
@@ -187,6 +197,7 @@ void Compiler::compileReturn(const ReturnStmt& stmt) {
 void Compiler::compileCompound(const CompoundStmt& stmt) {
     for (const auto& s : stmt.statements) {
         compileStatement(*s);
+        if (hasError()) return;  // stop on first error — avoids cascading UB
     }
 }
 
@@ -545,6 +556,12 @@ uint8_t Compiler::compileCall(const CallExpr& expr) {
     std::vector<uint8_t> argRegs;
     for (const auto& arg : expr.arguments) {
         argRegs.push_back(compileExpression(*arg));
+        if (hasError()) {
+            // Free all argument registers compiled so far, then bail out.
+            // resultReg has not been allocated yet so no leak there.
+            for (uint8_t reg : argRegs) freeRegister(reg);
+            return allocateRegister();  // return a dummy register so callers stay consistent
+        }
     }
     
     uint8_t resultReg = allocateRegister();
@@ -1119,6 +1136,12 @@ void Compiler::emitMove(uint8_t destReg, uint8_t srcReg, TypeKind type) {
         case TypeKind::Float:
             currentFunc_->emit(OpCode::MOV_FLOAT, destReg, srcReg, 0);
             break;
+        case TypeKind::Int:
+            // No dedicated MOV_INT opcode yet; Value carries its own type tag so
+            // MOV_FLOAT performs an identical register copy at the VM level.
+            // If a MOV_INT opcode is added in the future, update this case.
+            currentFunc_->emit(OpCode::MOV_FLOAT, destReg, srcReg, 0);
+            break;
         case TypeKind::Bool:
             currentFunc_->emit(OpCode::MOV_BOOL, destReg, srcReg, 0);
             break;
@@ -1141,7 +1164,7 @@ void Compiler::emitMove(uint8_t destReg, uint8_t srcReg, TypeKind type) {
             currentFunc_->emit(OpCode::MOV_MAT4, destReg, srcReg, 0);
             break;
         default:
-            // Default to float move
+            // Unknown type — fall back to float move
             currentFunc_->emit(OpCode::MOV_FLOAT, destReg, srcReg, 0);
             break;
     }
@@ -1154,6 +1177,13 @@ void Compiler::setError(const std::string& msg) {
 }
 
 void Compiler::patchJump(size_t patchIdx, size_t targetIdx) {
+    // Guard: patchIdx must be a valid instruction slot
+    if (!currentFunc_ || patchIdx >= currentFunc_->code.size()) {
+        setError("patchJump: patchIdx " + std::to_string(patchIdx) +
+                 " is out of bounds (code size = " +
+                 std::to_string(currentFunc_ ? currentFunc_->code.size() : 0) + ")");
+        return;
+    }
     // Offset = targetIdx - patchIdx - 1  (PC is already past the JUMP instruction)
     int rawOffset = static_cast<int>(targetIdx) - static_cast<int>(patchIdx) - 1;
     if (rawOffset < -32768 || rawOffset > 32767) {
@@ -1191,6 +1221,7 @@ void Compiler::compileIf(const IfStmt& stmt) {
     
     // Compile then branch
     compileStatement(*stmt.thenBranch);
+    if (hasError()) { currentNestingDepth_--; return; }
     
     // If there's an else branch, we need to jump over it after the then branch
     size_t jumpOverElseIdx = 0;
@@ -1206,6 +1237,7 @@ void Compiler::compileIf(const IfStmt& stmt) {
     // Compile else branch if present
     if (stmt.elseBranch) {
         compileStatement(*stmt.elseBranch);
+        if (hasError()) { currentNestingDepth_--; return; }
         
         // Backpatch the JUMP to skip over else branch
         size_t afterElseIdx = currentFunc_->code.size();
@@ -1233,6 +1265,7 @@ void Compiler::compileFor(const ForStmt& stmt) {
     // Emit init
     if (stmt.init) {
         compileStatement(*stmt.init);
+        if (hasError()) { loopStack_.pop_back(); currentNestingDepth_--; return; }
     }
     
     // loop_start: position before condition check
@@ -1250,6 +1283,7 @@ void Compiler::compileFor(const ForStmt& stmt) {
     // Emit body
     if (stmt.body) {
         compileStatement(*stmt.body);
+        if (hasError()) { loopStack_.pop_back(); currentNestingDepth_--; return; }
     }
     
     // update_target: continue patches jump here
@@ -1263,6 +1297,7 @@ void Compiler::compileFor(const ForStmt& stmt) {
     // Emit update
     if (stmt.update) {
         compileStatement(*stmt.update);
+        if (hasError()) { loopStack_.pop_back(); currentNestingDepth_--; return; }
     }
     
     // Emit backward jump to loop_start
@@ -1328,7 +1363,12 @@ TypeKind Compiler::getExpressionType(const Expression& expr) {
         if (it != localVarTypes_.end()) {
             return it->second;
         }
-        return TypeKind::Float; // Default
+        // Variable not found in type map.  This can happen if the variable was not
+        // declared before use (getLocal will setError() when we actually emit code).
+        // Fall back to Float so that the caller can continue; the real error will be
+        // raised at the compileVariable / compileAssign site.
+        assert(false && "getExpressionType: variable not in localVarTypes_ — declaration missing?");
+        return TypeKind::Float;
     } else if (auto binary = dynamic_cast<const BinaryExpr*>(&expr)) {
         // Check for comparison and logical operators first
         // These return Bool regardless of operand types
@@ -1389,9 +1429,17 @@ TypeKind Compiler::getExpressionType(const Expression& expr) {
             call->function == "abs" || call->function == "sign" ||
             call->function == "sqrt" || call->function == "exp" || call->function == "log" ||
             call->function == "dot" || call->function == "length" || call->function == "distance" ||
-            call->function == "pow" || call->function == "mod" ||
-            call->function == "min" || call->function == "max" || call->function == "clamp" ||
+            call->function == "mod" ||
             call->function == "step" || call->function == "smoothstep") {
+            return TypeKind::Float;
+        } else if (call->function == "pow" || call->function == "min" ||
+                   call->function == "max" || call->function == "clamp") {
+            // These functions preserve the type of their first argument:
+            //   pow(float,float)->float, pow(vec2,float)->vec2, pow(vec3,float)->vec3, ...
+            //   min/max(vecN,vecN)->vecN, clamp(vecN,...)->vecN
+            if (!call->arguments.empty()) {
+                return getExpressionType(*call->arguments[0]);
+            }
             return TypeKind::Float;
         } else if (call->function == "cross") {
             return TypeKind::Vec3;

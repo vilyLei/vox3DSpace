@@ -3,6 +3,15 @@
 
 namespace mmrsl {
 
+// RAII guard for parser depth counters.
+// Increments the counter on construction and guarantees decrement on destruction,
+// making depth tracking exception-safe.
+struct DepthGuard {
+    size_t& depth;
+    explicit DepthGuard(size_t& d) : depth(d) { ++depth; }
+    ~DepthGuard() { --depth; }
+};
+
 // ==================== AST toString implementations ====================
 
 std::string BinaryExpr::toString() const {
@@ -276,8 +285,8 @@ std::unique_ptr<CompoundStmt> RecursiveParser::parseCompoundStmt() {
         return nullptr;
     }
     
-    // Check nesting depth
-    nestingDepth_++;
+    // RAII guard: ensures nestingDepth_ is decremented even if an exception is thrown
+    DepthGuard nestGuard(nestingDepth_);
     checkNestingDepth();
     
     std::vector<StmtPtr> statements;
@@ -290,12 +299,10 @@ std::unique_ptr<CompoundStmt> RecursiveParser::parseCompoundStmt() {
     }
     
     if (!match(TokenType::RightBrace)) {
-        nestingDepth_--;
         error("Expected '}'");
         return nullptr;
     }
     
-    nestingDepth_--;
     incrementNodeCount();
     return std::make_unique<CompoundStmt>(std::move(statements));
 }
@@ -566,15 +573,14 @@ StmtPtr RecursiveParser::parseForStmt() {
         return nullptr;
     }
     
-    // Parse body — increment loopDepth_ so break/continue inside are valid
-    loopDepth_++;
+    // Parse body — RAII guard ensures loopDepth_ is decremented even on exception
+    DepthGuard loopGuard(loopDepth_);
     StmtPtr body;
     if (check(TokenType::LeftBrace)) {
         body = parseCompoundStmt();
     } else {
         body = parseStatement();
     }
-    loopDepth_--;
     
     incrementNodeCount();
     return std::make_unique<ForStmt>(std::move(init), std::move(condition), std::move(update), std::move(body));

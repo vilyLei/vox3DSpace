@@ -206,7 +206,11 @@ enum class OpCode : uint8_t {
     // Control flow
     RETURN,                 // Return value from register 0
     JUMP,                   // Unconditional jump to offset (stored in regSrc1 as 16-bit offset)
-    JUMP_IF_FALSE,          // Jump if register value is false (bool)
+    JUMP_IF_FALSE,          // Conditional jump: regDest = condition source register (READ, not write);
+                            // jump offset (signed int16) packed as regSrc2<<8 | regSrc1.
+                            // Note: unlike all other instructions where regDest is the write target,
+                            // JUMP_IF_FALSE uses regDest as a READ source for the condition bool.
+                            // Future refactor candidate: move condReg to regSrc1 for consistency.
     
     // Int arithmetic (for loop counters)
     ADD_INT,                // int + int

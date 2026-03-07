@@ -215,8 +215,18 @@ void Lexer::skipWhitespace() {
         } else if (c == '/') {
             // Check for comment
             if (pos_ + 1 < source_.size() && source_[pos_ + 1] == '/') {
-                // Single line comment, skip to end of line
+                // Single-line comment — skip to end of line
                 while (!isAtEnd() && peek() != '\n') {
+                    advance();
+                }
+            } else if (pos_ + 1 < source_.size() && source_[pos_ + 1] == '*') {
+                // Block comment — skip until closing '*/'
+                advance(); advance();  // consume '/' and '*'
+                while (!isAtEnd()) {
+                    if (peek() == '*' && pos_ + 1 < source_.size() && source_[pos_ + 1] == '/') {
+                        advance(); advance();  // consume '*' and '/'
+                        break;
+                    }
                     advance();
                 }
             } else {

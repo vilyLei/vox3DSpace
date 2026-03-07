@@ -1036,13 +1036,45 @@ bool testReflect() {
     }
 }
 
+bool testRefract() {
+    std::cout << "Builtin: refract()... ";
+    HighPerfParser parser;
+    // refract(I, N, eta): I = (0, -1, 0) incident, N = (0, 1, 0) normal, eta = 1.0 (no bending)
+    // With eta=1.0: k = 1 - 1*(1 - (-1)^2) = 1 - 0 = 1, result = 1*I - (1*(-1)+1)*N = I = (0,-1,0)
+    std::string source = R"(
+        vec3 calc(vec3 i, vec3 n, float eta) {
+            return refract(i, n, eta);
+        }
+    )";
+    try {
+        std::vector<mmrsl::Value> args = {
+            mmrsl::Value(mmrsl::Vec3(0.0f, -1.0f, 0.0f)),
+            mmrsl::Value(mmrsl::Vec3(0.0f,  1.0f, 0.0f)),
+            mmrsl::Value(1.0f)
+        };
+        mmrsl::Value result = parser.compileAndExecute(source, args);
+        mmrsl::Vec3 expected = mmrsl::Vec3(0.0f, -1.0f, 0.0f);
+        mmrsl::Vec3 diff = result.asVec3() - expected;
+        float len = std::sqrt(diff.x*diff.x + diff.y*diff.y + diff.z*diff.z);
+        if (len < 0.0001f) {
+            std::cout << "PASS\n";
+            return true;
+        }
+        std::cout << "FAIL\n";
+        return false;
+    } catch (const std::exception& e) {
+        std::cout << "FAIL: " << e.what() << "\n";
+        return false;
+    }
+}
+
 // ==================== Test Runner ====================
 
 int main() {
-    std::cout << "\n=== GLSL Built-in Functions Test Suite ===\n\n";
+    std::cout << "=== TEST: test_hp_builtin ===\n\n";
     
     int passed = 0;
-    int total = 38;  // All tests enabled
+    int total = 39;  // All tests enabled
     
     // Trigonometric
     if (testSin()) passed++;
@@ -1105,6 +1137,7 @@ int main() {
     
     // Reflect/Refract
     if (testReflect()) passed++;
+    if (testRefract()) passed++;
     
     std::cout << "\n=== Results ===\n";
     std::cout << "Passed: " << passed << "/" << total << "\n";

@@ -20,8 +20,12 @@ private:
     std::unordered_map<std::string, Value> variables_;
 };
 
-// Max total loop iterations across all loops in a single function execution (DoS protection)
-constexpr uint32_t MAX_LOOP_ITERATIONS = 32768;
+// Total loop iterations across ALL loops in a single function execution (DoS protection).
+// This is a cumulative counter shared across nested loops, intentionally set high enough
+// for typical GLSL compute patterns (e.g. for(200){for(200){}} = 40,000 iterations).
+// An infinite loop will still be caught; an accidental double-nested 200x200 will not
+// be rejected as a false positive.
+constexpr uint32_t MAX_LOOP_ITERATIONS = 1'000'000;
 
 // Interpreter for AST execution
 class Interpreter {

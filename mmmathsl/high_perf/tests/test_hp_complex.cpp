@@ -420,7 +420,7 @@ bool testDeepLogicalNesting60() {
 
 // Test runner
 int runComplexTests() {
-    std::cout << "\n=== High-Performance mmrsl Complex Expression Test Suite ===\n\n";
+    std::cout << "=== TEST: test_hp_complex ===\n\n";
     
     MemoryStats startStats = getMemoryUsage();
     std::cout << "[Memory] Initial: WorkingSet=" << startStats.workingSetMB 

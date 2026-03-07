@@ -406,7 +406,7 @@ void testContinueAfterReturn() {
 
 // Main test runner
 int main() {
-    std::cout << "=== For Loop Test Suite ===" << std::endl << std::endl;
+    std::cout << "=== TEST: test_hp_for_loop ===\n\n";
 
     testBasicCountingLoop();
     testBreakExitsEarly();

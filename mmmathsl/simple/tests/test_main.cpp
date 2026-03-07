@@ -536,7 +536,7 @@ bool testNestedLoopContinue() {
 }
 
 int main() {
-    std::cout << "=== SimpleParser Test Suite ===\n\n";
+    std::cout << "=== TEST: test_simple_parser ===\n\n";
 
     int passed = 0;
     int total = 17;

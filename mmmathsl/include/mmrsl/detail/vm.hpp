@@ -8,7 +8,13 @@ namespace mmrsl {
 namespace highPerf {
 
 // VM execution limits for DoS protection
-constexpr uint64_t MAX_INSTRUCTIONS = 32768;  // Max instructions per execution (32K)
+// Max VM instructions executed per function call (DoS protection).
+// Each loop iteration typically emits ~10 bytecode instructions (condition check,
+// body, update, back-jump, etc.).  With MAX_LOOP_ITERATIONS = 1,000,000 (see
+// interpreter.hpp), a worst-case loop could execute up to ~10,000,000 instructions.
+// Both limits should be set consistently so neither fires before the other on
+// legitimate workloads.
+constexpr uint64_t MAX_INSTRUCTIONS = 10'000'000;
 
 // VM execution error
 class VMError : public std::runtime_error {

@@ -2,6 +2,7 @@
 #include "mmrsl/detail/compiler.hpp"
 #include <sstream>
 #include <iomanip>
+#include <cstring>
 
 namespace mmrsl {
 namespace highPerf {
@@ -12,9 +13,15 @@ uint16_t BytecodeFunction::addConstant(const Value& value) {
         if (constants[i].kind() == value.kind()) {
             bool match = false;
             switch (value.kind()) {
-                case TypeKind::Float:
-                    match = (constants[i].asFloat() == value.asFloat());
+                case TypeKind::Float: {
+                    // Use bit-exact comparison (std::memcmp) instead of == to correctly
+                    // handle NaN (NaN != NaN under IEEE 754) and signed zero
+                    // (+0.0f == -0.0f under IEEE 754 but are distinct bit patterns).
+                    float a = constants[i].asFloat();
+                    float b = value.asFloat();
+                    match = (std::memcmp(&a, &b, sizeof(float)) == 0);
                     break;
+                }
                 case TypeKind::Int:
                     match = (constants[i].asInt() == value.asInt());
                     break;
@@ -261,12 +268,24 @@ std::string BytecodeFunction::disassemble() const {
             case OpCode::ADD_VEC2:
             case OpCode::SUB_VEC2:
             case OpCode::MUL_VEC2:
+            case OpCode::ADD_FLOAT_VEC2:
+            case OpCode::SUB_FLOAT_VEC2:
             case OpCode::ADD_VEC3:
             case OpCode::SUB_VEC3:
             case OpCode::MUL_VEC3:
+            case OpCode::ADD_FLOAT_VEC3:
+            case OpCode::SUB_FLOAT_VEC3:
+            case OpCode::SUB_VEC3_FLOAT:
             case OpCode::ADD_VEC4:
             case OpCode::SUB_VEC4:
             case OpCode::MUL_VEC4:
+            case OpCode::ADD_FLOAT_VEC4:
+            case OpCode::SUB_FLOAT_VEC4:
+            case OpCode::ADD_INT:
+            case OpCode::SUB_INT:
+            case OpCode::MUL_INT:
+            case OpCode::DIV_INT:
+            case OpCode::MOD_INT:
                 oss << " r" << (int)inst.regDest << ", r" << (int)inst.regSrc1 << ", r" << (int)inst.regSrc2;
                 break;
             case OpCode::MUL_VEC2_FLOAT:
@@ -297,6 +316,8 @@ std::string BytecodeFunction::disassemble() const {
             case OpCode::CALL_SQRT:
             case OpCode::CALL_EXP:
             case OpCode::CALL_LOG:
+            case OpCode::INT_TO_FLOAT:
+            case OpCode::FLOAT_TO_INT:
             case OpCode::INVERSE_MAT2:
             case OpCode::INVERSE_MAT3:
             case OpCode::INVERSE_MAT4:
@@ -372,10 +393,23 @@ std::string BytecodeFunction::disassemble() const {
             case OpCode::CALL_MIN_FLOAT:
             case OpCode::CALL_MAX_FLOAT:
             case OpCode::CALL_POW:
+            case OpCode::CALL_ATAN2:
+            case OpCode::CALL_POW_VEC2:
+            case OpCode::CALL_POW_VEC3:
+            case OpCode::CALL_POW_VEC4:
+            case OpCode::CALL_MIN_VEC2:
+            case OpCode::CALL_MIN_VEC3:
+            case OpCode::CALL_MIN_VEC4:
+            case OpCode::CALL_MAX_VEC2:
+            case OpCode::CALL_MAX_VEC3:
+            case OpCode::CALL_MAX_VEC4:
                 oss << " r" << (int)inst.regDest << ", r" << (int)inst.regSrc1 << ", r" << (int)inst.regSrc2;
                 break;
             // Function calls with 3 operands (use thirdParam)
             case OpCode::CALL_CLAMP_FLOAT:
+            case OpCode::CALL_CLAMP_VEC2:
+            case OpCode::CALL_CLAMP_VEC3:
+            case OpCode::CALL_CLAMP_VEC4:
                 oss << " r" << (int)inst.regDest << ", r" << (int)inst.regSrc1 << ", r" << (int)inst.regSrc2 << ", thirdParam";
                 break;
             // Mix functions
@@ -392,6 +426,15 @@ std::string BytecodeFunction::disassemble() const {
             case OpCode::NORMALIZE_VEC2:
             case OpCode::NORMALIZE_VEC3:
             case OpCode::NORMALIZE_VEC4:
+            // Move instructions (unary copy: dest = src)
+            case OpCode::MOV_FLOAT:
+            case OpCode::MOV_BOOL:
+            case OpCode::MOV_VEC2:
+            case OpCode::MOV_VEC3:
+            case OpCode::MOV_VEC4:
+            case OpCode::MOV_MAT2:
+            case OpCode::MOV_MAT3:
+            case OpCode::MOV_MAT4:
                 oss << " r" << (int)inst.regDest << ", r" << (int)inst.regSrc1;
                 break;
             // Constructors (dest, src1, src2)
