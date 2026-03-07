@@ -21,7 +21,7 @@ bool approxEqual(float a, float b, float epsilon = 0.0001f) {
 
 bool testSin() {
     std::cout << "Builtin: sin()... ";
-    HighPerfParser parser;
+    BytecodeParser parser;
     std::string source = R"(
         float calc(float x) {
             return sin(x);
@@ -44,7 +44,7 @@ bool testSin() {
 
 bool testCos() {
     std::cout << "Builtin: cos()... ";
-    HighPerfParser parser;
+    BytecodeParser parser;
     std::string source = R"(
         float calc(float x) {
             return cos(x);
@@ -67,7 +67,7 @@ bool testCos() {
 
 bool testTan() {
     std::cout << "Builtin: tan()... ";
-    HighPerfParser parser;
+    BytecodeParser parser;
     std::string source = R"(
         float calc(float x) {
             return tan(x);
@@ -90,7 +90,7 @@ bool testTan() {
 
 bool testAsin() {
     std::cout << "Builtin: asin()... ";
-    HighPerfParser parser;
+    BytecodeParser parser;
     std::string source = R"(
         float calc(float x) {
             return asin(x);
@@ -113,7 +113,7 @@ bool testAsin() {
 
 bool testAcos() {
     std::cout << "Builtin: acos()... ";
-    HighPerfParser parser;
+    BytecodeParser parser;
     std::string source = R"(
         float calc(float x) {
             return acos(x);
@@ -136,7 +136,7 @@ bool testAcos() {
 
 bool testAtan() {
     std::cout << "Builtin: atan()... ";
-    HighPerfParser parser;
+    BytecodeParser parser;
     std::string source = R"(
         float calc(float x) {
             return atan(x);
@@ -161,7 +161,7 @@ bool testAtan() {
 
 bool testSqrt() {
     std::cout << "Builtin: sqrt()... ";
-    HighPerfParser parser;
+    BytecodeParser parser;
     std::string source = R"(
         float calc(float x) {
             return sqrt(x);
@@ -184,7 +184,7 @@ bool testSqrt() {
 
 bool testExp() {
     std::cout << "Builtin: exp()... ";
-    HighPerfParser parser;
+    BytecodeParser parser;
     std::string source = R"(
         float calc(float x) {
             return exp(x);
@@ -207,7 +207,7 @@ bool testExp() {
 
 bool testLog() {
     std::cout << "Builtin: log()... ";
-    HighPerfParser parser;
+    BytecodeParser parser;
     std::string source = R"(
         float calc(float x) {
             return log(x);
@@ -230,7 +230,7 @@ bool testLog() {
 
 bool testPow() {
     std::cout << "Builtin: pow()... ";
-    HighPerfParser parser;
+    BytecodeParser parser;
     std::string source = R"(
         float calc(float x) {
             return pow(x, 3.0);
@@ -253,7 +253,7 @@ bool testPow() {
 
 bool testRadians() {
     std::cout << "Builtin: radians()... ";
-    HighPerfParser parser;
+    BytecodeParser parser;
     std::string source = R"(
         float calc(float x) {
             return radians(x);
@@ -276,7 +276,7 @@ bool testRadians() {
 
 bool testDegrees() {
     std::cout << "Builtin: degrees()... ";
-    HighPerfParser parser;
+    BytecodeParser parser;
     std::string source = R"(
         float calc(float x) {
             return degrees(x);
@@ -301,7 +301,7 @@ bool testDegrees() {
 
 bool testFloor() {
     std::cout << "Builtin: floor()... ";
-    HighPerfParser parser;
+    BytecodeParser parser;
     std::string source = R"(
         float calc(float x) {
             return floor(x);
@@ -324,7 +324,7 @@ bool testFloor() {
 
 bool testCeil() {
     std::cout << "Builtin: ceil()... ";
-    HighPerfParser parser;
+    BytecodeParser parser;
     std::string source = R"(
         float calc(float x) {
             return ceil(x);
@@ -347,7 +347,7 @@ bool testCeil() {
 
 bool testFract() {
     std::cout << "Builtin: fract()... ";
-    HighPerfParser parser;
+    BytecodeParser parser;
     std::string source = R"(
         float calc(float x) {
             return fract(x);
@@ -370,7 +370,7 @@ bool testFract() {
 
 bool testMod() {
     std::cout << "Builtin: mod()... ";
-    HighPerfParser parser;
+    BytecodeParser parser;
     std::string source = R"(
         float calc(float x) {
             return mod(x, 3.0);
@@ -393,7 +393,7 @@ bool testMod() {
 
 bool testAbs() {
     std::cout << "Builtin: abs()... ";
-    HighPerfParser parser;
+    BytecodeParser parser;
     std::string source = R"(
         float calc(float x) {
             return abs(x);
@@ -416,7 +416,7 @@ bool testAbs() {
 
 bool testSign() {
     std::cout << "Builtin: sign()... ";
-    HighPerfParser parser;
+    BytecodeParser parser;
     std::string source = R"(
         float calc(float x) {
             return sign(x);
@@ -459,7 +459,7 @@ bool testSign() {
 
 bool testMin() {
     std::cout << "Builtin: min()... ";
-    HighPerfParser parser;
+    BytecodeParser parser;
     std::string source = R"(
         float calc(float x) {
             return min(x, 5.0);
@@ -482,7 +482,7 @@ bool testMin() {
 
 bool testMax() {
     std::cout << "Builtin: max()... ";
-    HighPerfParser parser;
+    BytecodeParser parser;
     std::string source = R"(
         float calc(float x) {
             return max(x, 5.0);
@@ -505,7 +505,7 @@ bool testMax() {
 
 bool testClamp() {
     std::cout << "Builtin: clamp()... ";
-    HighPerfParser parser;
+    BytecodeParser parser;
     std::string source = R"(
         float calc(float x) {
             return clamp(x, 0.0, 1.0);
@@ -548,7 +548,7 @@ bool testClamp() {
 
 bool testMix() {
     std::cout << "Builtin: mix()... ";
-    HighPerfParser parser;
+    BytecodeParser parser;
     std::string source = R"(
         float calc(float x) {
             return mix(0.0, 10.0, x);
@@ -573,7 +573,7 @@ bool testMix() {
 
 bool testStep() {
     std::cout << "Builtin: step()... ";
-    HighPerfParser parser;
+    BytecodeParser parser;
     std::string source = R"(
         float calc(float x) {
             return step(0.5, x);
@@ -606,7 +606,7 @@ bool testStep() {
 
 bool testSmoothStep() {
     std::cout << "Builtin: smoothstep()... ";
-    HighPerfParser parser;
+    BytecodeParser parser;
     std::string source = R"(
         float calc(float x) {
             return smoothstep(0.0, 1.0, x);
@@ -649,7 +649,7 @@ bool testSmoothStep() {
 
 bool testDot() {
     std::cout << "Builtin: dot()... ";
-    HighPerfParser parser;
+    BytecodeParser parser;
     std::string source = R"(
         float calc(vec3 a, vec3 b) {
             return dot(a, b);
@@ -675,7 +675,7 @@ bool testDot() {
 
 bool testLength() {
     std::cout << "Builtin: length()... ";
-    HighPerfParser parser;
+    BytecodeParser parser;
     std::string source = R"(
         float calc(vec3 v) {
             return length(v);
@@ -698,7 +698,7 @@ bool testLength() {
 
 bool testNormalize() {
     std::cout << "Builtin: normalize()... ";
-    HighPerfParser parser;
+    BytecodeParser parser;
     std::string source = R"(
         vec3 calc(vec3 v) {
             return normalize(v);
@@ -724,7 +724,7 @@ bool testNormalize() {
 
 bool testCross() {
     std::cout << "Builtin: cross()... ";
-    HighPerfParser parser;
+    BytecodeParser parser;
     std::string source = R"(
         vec3 calc(vec3 a, vec3 b) {
             return cross(a, b);
@@ -753,7 +753,7 @@ bool testCross() {
 
 bool testDistance() {
     std::cout << "Builtin: distance()... ";
-    HighPerfParser parser;
+    BytecodeParser parser;
     std::string source = R"(
         float calc(vec3 a, vec3 b) {
             return distance(a, b);
@@ -781,7 +781,7 @@ bool testDistance() {
 
 bool testPowVec3() {
     std::cout << "Builtin: pow(vec3, float)... ";
-    HighPerfParser parser;
+    BytecodeParser parser;
     std::string source = R"(
         vec3 calc(vec3 v) {
             return pow(v, 2.0);
@@ -809,7 +809,7 @@ bool testPowVec3() {
 
 bool testMinVec3() {
     std::cout << "Builtin: min(vec3, vec3)... ";
-    HighPerfParser parser;
+    BytecodeParser parser;
     std::string source = R"(
         vec3 calc(vec3 a, vec3 b) {
             return min(a, b);
@@ -838,7 +838,7 @@ bool testMinVec3() {
 
 bool testMaxVec3() {
     std::cout << "Builtin: max(vec3, vec3)... ";
-    HighPerfParser parser;
+    BytecodeParser parser;
     std::string source = R"(
         vec3 calc(vec3 a, vec3 b) {
             return max(a, b);
@@ -867,7 +867,7 @@ bool testMaxVec3() {
 
 bool testClampVec3() {
     std::cout << "Builtin: clamp(vec3, float, float)... ";
-    HighPerfParser parser;
+    BytecodeParser parser;
     std::string source = R"(
         vec3 calc(vec3 v) {
             return clamp(v, 2.0, 4.0);
@@ -895,7 +895,7 @@ bool testClampVec3() {
 
 bool testScalarVecAdd() {
     std::cout << "Operator: float + vec3... ";
-    HighPerfParser parser;
+    BytecodeParser parser;
     std::string source = R"(
         vec3 calc(float s, vec3 v) {
             return s + v;
@@ -924,7 +924,7 @@ bool testScalarVecAdd() {
 
 bool testScalarVecSub() {
     std::cout << "Operator: float - vec3... ";
-    HighPerfParser parser;
+    BytecodeParser parser;
     std::string source = R"(
         vec3 calc(float s, vec3 v) {
             return s - v;
@@ -953,7 +953,7 @@ bool testScalarVecSub() {
 
 bool testVecScalarSub() {
     std::cout << "Operator: vec3 - float... ";
-    HighPerfParser parser;
+    BytecodeParser parser;
     std::string source = R"(
         vec3 calc(vec3 v, float s) {
             return v - s;
@@ -984,7 +984,7 @@ bool testVecScalarSub() {
 
 bool testRGBASwizzle() {
     std::cout << "Swizzle: vec3.rgba... ";
-    HighPerfParser parser;
+    BytecodeParser parser;
     std::string source = R"(
         float calc(vec3 v) {
             return v.r + v.g + v.b;
@@ -1009,7 +1009,7 @@ bool testRGBASwizzle() {
 
 bool testReflect() {
     std::cout << "Builtin: reflect()... ";
-    HighPerfParser parser;
+    BytecodeParser parser;
     std::string source = R"(
         vec3 calc(vec3 i, vec3 n) {
             return reflect(i, n);
@@ -1038,7 +1038,7 @@ bool testReflect() {
 
 bool testRefract() {
     std::cout << "Builtin: refract()... ";
-    HighPerfParser parser;
+    BytecodeParser parser;
     // refract(I, N, eta): I = (0, -1, 0) incident, N = (0, 1, 0) normal, eta = 1.0 (no bending)
     // With eta=1.0: k = 1 - 1*(1 - (-1)^2) = 1 - 0 = 1, result = 1*I - (1*(-1)+1)*N = I = (0,-1,0)
     std::string source = R"(

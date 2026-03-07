@@ -90,28 +90,28 @@ bool SimpleParser::isCompiled() const {
 }
 
 // ============================================================================
-// HighPerfParser Implementation
+// BytecodeParser Implementation
 // ============================================================================
 
-class HighPerfParser::Impl {
+class BytecodeParser::Impl {
 public:
-    std::unique_ptr<highPerf::BytecodeFunction> bytecodeFunc_;
-    std::unique_ptr<highPerf::VM> vm_;
-    highPerf::Compiler compiler_;
+    std::unique_ptr<bytecode::BytecodeFunction> bytecodeFunc_;
+    std::unique_ptr<bytecode::VM> vm_;
+    bytecode::Compiler compiler_;
     double compileTimeMs_ = 0.0;
     double executeTimeMs_ = 0.0;
     std::string lastError_;
     std::string functionName_;
 };
 
-HighPerfParser::HighPerfParser() : impl_(std::make_unique<Impl>()) {}
+BytecodeParser::BytecodeParser() : impl_(std::make_unique<Impl>()) {}
 
-HighPerfParser::~HighPerfParser() = default;
+BytecodeParser::~BytecodeParser() = default;
 
-HighPerfParser::HighPerfParser(HighPerfParser&&) noexcept = default;
-HighPerfParser& HighPerfParser::operator=(HighPerfParser&&) noexcept = default;
+BytecodeParser::BytecodeParser(BytecodeParser&&) noexcept = default;
+BytecodeParser& BytecodeParser::operator=(BytecodeParser&&) noexcept = default;
 
-bool HighPerfParser::compile(const std::string& source) {
+bool BytecodeParser::compile(const std::string& source) {
     auto start = std::chrono::high_resolution_clock::now();
     
     // Clear previous state before attempting new compilation
@@ -134,8 +134,8 @@ bool HighPerfParser::compile(const std::string& source) {
         }
         
         // Compile to bytecode
-        impl_->bytecodeFunc_ = std::make_unique<highPerf::BytecodeFunction>(impl_->compiler_.compile(*program));
-        impl_->vm_ = std::make_unique<highPerf::VM>();
+        impl_->bytecodeFunc_ = std::make_unique<bytecode::BytecodeFunction>(impl_->compiler_.compile(*program));
+        impl_->vm_ = std::make_unique<bytecode::VM>();
         
         auto end = std::chrono::high_resolution_clock::now();
         impl_->compileTimeMs_ = std::chrono::duration<double, std::milli>(end - start).count();
@@ -149,7 +149,7 @@ bool HighPerfParser::compile(const std::string& source) {
     }
 }
 
-Value HighPerfParser::execute(const std::vector<Value>& arguments) {
+Value BytecodeParser::execute(const std::vector<Value>& arguments) {
     if (!impl_->bytecodeFunc_ || !impl_->vm_) {
         throw RuntimeError("No compiled bytecode");
     }
@@ -162,44 +162,44 @@ Value HighPerfParser::execute(const std::vector<Value>& arguments) {
     return result;
 }
 
-Value HighPerfParser::compileAndExecute(const std::string& source, const std::vector<Value>& arguments) {
+Value BytecodeParser::compileAndExecute(const std::string& source, const std::vector<Value>& arguments) {
     if (!compile(source)) {
         throw RuntimeError(impl_->lastError_);
     }
     return execute(arguments);
 }
 
-std::string HighPerfParser::getFunctionName() const {
+std::string BytecodeParser::getFunctionName() const {
     // BytecodeFunction doesn't store function name currently
     return "";
 }
 
-TypeKind HighPerfParser::getReturnType() const {
+TypeKind BytecodeParser::getReturnType() const {
     return impl_->bytecodeFunc_ ? impl_->bytecodeFunc_->returnType : TypeKind::Void;
 }
 
-std::vector<TypeKind> HighPerfParser::getParameterTypes() const {
+std::vector<TypeKind> BytecodeParser::getParameterTypes() const {
     if (!impl_->bytecodeFunc_) return {};
     return impl_->bytecodeFunc_->paramTypes;
 }
 
-std::string HighPerfParser::getLastError() const {
+std::string BytecodeParser::getLastError() const {
     return impl_->lastError_;
 }
 
-bool HighPerfParser::isCompiled() const {
+bool BytecodeParser::isCompiled() const {
     return impl_->bytecodeFunc_ != nullptr;
 }
 
-double HighPerfParser::getLastCompileTimeMs() const {
+double BytecodeParser::getLastCompileTimeMs() const {
     return impl_->compileTimeMs_;
 }
 
-double HighPerfParser::getLastExecuteTimeMs() const {
+double BytecodeParser::getLastExecuteTimeMs() const {
     return impl_->executeTimeMs_;
 }
 
-std::string HighPerfParser::getBytecodeDisassembly() const {
+std::string BytecodeParser::getBytecodeDisassembly() const {
     if (!impl_->bytecodeFunc_) return "";
     return impl_->bytecodeFunc_->disassemble();
 }

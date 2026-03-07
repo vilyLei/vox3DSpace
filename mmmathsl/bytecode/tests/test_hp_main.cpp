@@ -10,7 +10,7 @@ using namespace mmrsl;
 
 bool testBasicArithmetic() {
     std::cout << "Test: Basic Arithmetic... ";
-    HighPerfParser parser;
+    BytecodeParser parser;
     std::string source = R"(
         float calc(float a, float b) {
             return a + b * 2.0;
@@ -35,7 +35,7 @@ bool testBasicArithmetic() {
 
 bool testVectorOperations() {
     std::cout << "Test: Vector Operations... ";
-    HighPerfParser parser;
+    BytecodeParser parser;
     std::string source = R"(
         vec2 calc(vec2 a, vec2 b) {
             vec2 c = a + b;
@@ -66,7 +66,7 @@ bool testVectorOperations() {
 
 bool testDotProduct() {
     std::cout << "Test: Dot Product... ";
-    HighPerfParser parser;
+    BytecodeParser parser;
     std::string source = R"(
         float calc(vec3 a, vec3 b) {
             return dot(a, b);
@@ -94,7 +94,7 @@ bool testDotProduct() {
 
 bool testCrossProduct() {
     std::cout << "Test: Cross Product... ";
-    HighPerfParser parser;
+    BytecodeParser parser;
     std::string source = R"(
         vec3 calc(vec3 a, vec3 b) {
             return cross(a, b);
@@ -128,7 +128,7 @@ bool testCrossProduct() {
 
 bool testVectorLength() {
     std::cout << "Test: Vector Length... ";
-    HighPerfParser parser;
+    BytecodeParser parser;
     std::string source = R"(
         float calc(vec3 v) {
             return sqrt(dot(v, v));
@@ -154,7 +154,7 @@ bool testVectorLength() {
 // Matrix Tests
 bool testMat3VectorMul() {
     std::cout << "Test: Matrix-Vector Multiplication (mat3 * vec3)... ";
-    HighPerfParser parser;
+    BytecodeParser parser;
     std::string source = R"(
         vec3 calc(mat3 m, vec3 v) {
             return m * v;
@@ -185,7 +185,7 @@ bool testMat3VectorMul() {
 
 bool testMat2Determinant() {
     std::cout << "Test: Matrix Determinant (2x2)... ";
-    HighPerfParser parser;
+    BytecodeParser parser;
     std::string source = R"(
         float calc(mat2 m) {
             return m[0][0] * m[1][1] - m[0][1] * m[1][0];
@@ -213,7 +213,7 @@ bool testMat2Determinant() {
 
 bool testRotation2D() {
     std::cout << "Test: 2D Rotation Matrix... ";
-    HighPerfParser parser;
+    BytecodeParser parser;
     std::string source = R"(
         vec2 calc(vec2 p, float angle) {
             float c = cos(angle);
@@ -243,7 +243,7 @@ bool testRotation2D() {
 
 bool testMat3Trace() {
     std::cout << "Test: Matrix Trace (3x3)... ";
-    HighPerfParser parser;
+    BytecodeParser parser;
     std::string source = R"(
         float calc(mat3 m) {
             return m[0][0] + m[1][1] + m[2][2];
@@ -269,7 +269,7 @@ bool testMat3Trace() {
 
 bool testMat4VectorMul() {
     std::cout << "Test: Matrix-Vector Multiplication (mat4 * vec4)... ";
-    HighPerfParser parser;
+    BytecodeParser parser;
     std::string source = R"(
         vec4 calc(mat4 m, vec4 v) {
             return m * v;
@@ -298,7 +298,7 @@ bool testMat4VectorMul() {
 
 bool testTransformPoint() {
     std::cout << "Test: Transform Point (vec2 * scale)... ";
-    HighPerfParser parser;
+    BytecodeParser parser;
     std::string source = R"(
         vec2 calc(vec2 p, float scale) {
             return p * scale;
@@ -326,7 +326,7 @@ bool testTransformPoint() {
 
 bool testMat2Mul() {
     std::cout << "Test: Matrix-Matrix Multiplication (mat2 * mat2)... ";
-    HighPerfParser parser;
+    BytecodeParser parser;
     std::string source = R"(
         mat2 calc(mat2 a, mat2 b) {
             return a * b;
@@ -352,7 +352,7 @@ bool testMat2Mul() {
 
 bool testMat3Transpose() {
     std::cout << "Test: Matrix Transpose (3x3)... ";
-    HighPerfParser parser;
+    BytecodeParser parser;
     // Simplified test: just verify matrix element access works
     std::string source = R"(
         float calc(mat3 m) {
@@ -379,7 +379,7 @@ bool testMat3Transpose() {
 
 bool testOrthographicProjection() {
     std::cout << "Test: Orthographic Projection... ";
-    HighPerfParser parser;
+    BytecodeParser parser;
     std::string source = R"(
         vec2 calc(vec3 p) {
             return vec2(p.x, p.y);
@@ -404,7 +404,7 @@ bool testOrthographicProjection() {
 
 bool testMat4Column() {
     std::cout << "Test: Matrix Element Access (mat4)... ";
-    HighPerfParser parser;
+    BytecodeParser parser;
     // Simplified test: just verify mat4 element access works
     std::string source = R"(
         float calc(mat4 m) {
@@ -432,7 +432,7 @@ bool testMat4Column() {
 // Test 16: Vector Scaling and Addition (common in transformations)
 bool testVec3ScaleAndAdd() {
     std::cout << "Test: Vector Scale and Add... ";
-    HighPerfParser parser;
+    BytecodeParser parser;
     std::string source = R"(
         vec3 calc(vec3 a, vec3 b, float s) {
             return a + b * s;
@@ -462,7 +462,7 @@ bool testVec3ScaleAndAdd() {
 // Test 17: Matrix Identity Check (diagonal elements)
 bool testMat3IdentityCheck() {
     std::cout << "Test: Matrix Identity Check... ";
-    HighPerfParser parser;
+    BytecodeParser parser;
     std::string source = R"(
         float calc(mat3 m) {
             float diag = m[0][0] + m[1][1] + m[2][2];
@@ -491,7 +491,7 @@ bool testMat3IdentityCheck() {
 // Test 18: Vector Length Squared (avoid sqrt for performance)
 bool testVec3LengthSquared() {
     std::cout << "Test: Vector Length Squared... ";
-    HighPerfParser parser;
+    BytecodeParser parser;
     std::string source = R"(
         float calc(vec3 v) {
             return dot(v, v);
@@ -517,7 +517,7 @@ bool testVec3LengthSquared() {
 // Test 19: Matrix Diagonal Extraction
 bool testMat2Diagonal() {
     std::cout << "Test: Matrix Diagonal Extraction... ";
-    HighPerfParser parser;
+    BytecodeParser parser;
     std::string source = R"(
         vec2 calc(mat2 m) {
             return vec2(m[0][0], m[1][1]);
@@ -546,7 +546,7 @@ bool testMat2Diagonal() {
 // Test 20: Vector Component-wise Multiplication (simplified)
 bool testVec3ComponentMul() {
     std::cout << "Test: Vector Component-wise Multiplication... ";
-    HighPerfParser parser;
+    BytecodeParser parser;
     // Use member access and manual construction
     std::string source = R"(
         float calc(vec3 a, vec3 b) {
@@ -579,7 +579,7 @@ bool testVec3ComponentMul() {
 // Test 21: Vector Scale Transform (simplified without mat2 constructor)
 bool testMat3VecTransform() {
     std::cout << "Test: Vector Scale Transform... ";
-    HighPerfParser parser;
+    BytecodeParser parser;
     std::string source = R"(
         vec2 calc(vec2 p, float scale) {
             return p * scale;
@@ -608,7 +608,7 @@ bool testMat3VecTransform() {
 // Test 22: Vector Distance Squared
 bool testVec3DistanceSquared() {
     std::cout << "Test: Vector Distance Squared... ";
-    HighPerfParser parser;
+    BytecodeParser parser;
     std::string source = R"(
         float calc(vec3 a, vec3 b) {
             vec3 diff = a - b;
@@ -638,7 +638,7 @@ bool testVec3DistanceSquared() {
 // Test 23: Matrix Element Access (simplified)
 bool testMat3ElementSum() {
     std::cout << "Test: Matrix Element Access... ";
-    HighPerfParser parser;
+    BytecodeParser parser;
     std::string source = R"(
         float calc(mat3 m) {
             return m[0][0] + m[1][1] + m[2][2];
@@ -665,7 +665,7 @@ bool testMat3ElementSum() {
 // Test 24: Vector Negation (simplified)
 bool testVec3Negation() {
     std::cout << "Test: Vector Negation... ";
-    HighPerfParser parser;
+    BytecodeParser parser;
     std::string source = R"(
         float calc(vec3 v) {
             float nx = -v.x;
@@ -694,7 +694,7 @@ bool testVec3Negation() {
 // Test 25: Matrix-Vector Chain Operations
 bool testMatVecChain() {
     std::cout << "Test: Matrix-Vector Chain Operations... ";
-    HighPerfParser parser;
+    BytecodeParser parser;
     std::string source = R"(
         vec3 calc(mat3 m, vec3 v) {
             vec3 temp = m * v;
@@ -725,7 +725,7 @@ bool testMatVecChain() {
 // Test 26: 3D Point Transform with mat4 (Translation) - using mat4*vec4
 bool testMat4PointTransform() {
     std::cout << "Test: 3D Point Transform (Translation)... ";
-    HighPerfParser parser;
+    BytecodeParser parser;
     std::string source = R"(
         vec4 calc(mat4 m, vec4 p) {
             return m * p;
@@ -761,7 +761,7 @@ bool testMat4PointTransform() {
 // Test 27: 3D Point Transform with Scale - simplified
 bool testMat4PointScale() {
     std::cout << "Test: 3D Point Transform (Scale)... ";
-    HighPerfParser parser;
+    BytecodeParser parser;
     std::string source = R"(
         float calc(mat4 m, vec3 p) {
             // Extract scale components from diagonal
@@ -802,7 +802,7 @@ bool testMat4PointScale() {
 // Test 28: 3D Point Transform with Combined Scale and Translation - using mat4*vec4
 bool testMat4PointScaleTranslate() {
     std::cout << "Test: 3D Point Transform (Scale + Translate)... ";
-    HighPerfParser parser;
+    BytecodeParser parser;
     std::string source = R"(
         vec4 calc(mat4 m, vec4 p) {
             return m * p;
@@ -842,7 +842,7 @@ bool testMat4PointScaleTranslate() {
 // Test 29: Direction Vector Transform (w=0, no translation) - simplified
 bool testMat4DirectionTransform() {
     std::cout << "Test: Direction Vector Transform (No Translation)... ";
-    HighPerfParser parser;
+    BytecodeParser parser;
     std::string source = R"(
         float calc(mat4 m, vec3 dir) {
             // Direction should only be affected by rotation/scale, not translation
@@ -881,7 +881,7 @@ bool testMat4DirectionTransform() {
 // Test 30: mat4 Identity Transform
 bool testMat4ExtractComponents() {
     std::cout << "Test: mat4 Identity Transform... ";
-    HighPerfParser parser;
+    BytecodeParser parser;
     std::string source = R"(
         vec4 calc(mat4 m, vec4 p) {
             return m * p;
@@ -912,7 +912,7 @@ bool testMat4ExtractComponents() {
 // Test 31: RGB to YUV Conversion (BT.601 standard)
 bool testRGBtoYUV() {
     std::cout << "Test: RGB to YUV Conversion... ";
-    HighPerfParser parser;
+    BytecodeParser parser;
     // BT.601 standard coefficients
     // Y = 0.299*R + 0.587*G + 0.114*B
     // U = -0.169*R - 0.331*G + 0.5*B + 128
@@ -952,7 +952,7 @@ bool testRGBtoYUV() {
 // Test 32: RGB to Grayscale (Luminance)
 bool testRGBtoGrayscale() {
     std::cout << "Test: RGB to Grayscale... ";
-    HighPerfParser parser;
+    BytecodeParser parser;
     // Luminance formula: Y = 0.299*R + 0.587*G + 0.114*B
     std::string source = R"(
         float calc(vec3 rgb) {
@@ -982,7 +982,7 @@ bool testRGBtoGrayscale() {
 // Test 33: RGB Color Inversion
 bool testRGBInversion() {
     std::cout << "Test: RGB Color Inversion... ";
-    HighPerfParser parser;
+    BytecodeParser parser;
     std::string source = R"(
         vec3 calc(vec3 rgb) {
             float r = 255.0 - rgb.x;
@@ -1014,7 +1014,7 @@ bool testRGBInversion() {
 // Test 34: RGB Brightness Adjustment
 bool testRGBBrightness() {
     std::cout << "Test: RGB Brightness Adjustment... ";
-    HighPerfParser parser;
+    BytecodeParser parser;
     std::string source = R"(
         vec3 calc(vec3 rgb, float brightness) {
             float r = rgb.x * brightness;
@@ -1047,7 +1047,7 @@ bool testRGBBrightness() {
 // Test 35: RGB to Sepia Tone Conversion
 bool testRGBtoSepia() {
     std::cout << "Test: RGB to Sepia Tone... ";
-    HighPerfParser parser;
+    BytecodeParser parser;
     // Sepia tone conversion matrix approximation
     std::string source = R"(
         vec3 calc(vec3 rgb) {
@@ -1086,7 +1086,7 @@ bool testRGBtoSepia() {
 // Test 36: Hue Rotation (simplified - 180 degree shift)
 bool testHueRotation() {
     std::cout << "Test: Hue Rotation (180 degrees)... ";
-    HighPerfParser parser;
+    BytecodeParser parser;
     // Simplified hue rotation: swap R and B channels for 180 degree shift
     // This is an approximation that works well for pure colors
     std::string source = R"(
@@ -1121,7 +1121,7 @@ bool testHueRotation() {
 // Test 37: Hue Shift using RGB approximation
 bool testHueShiftApproximation() {
     std::cout << "Test: Hue Shift Approximation (120 degrees)... ";
-    HighPerfParser parser;
+    BytecodeParser parser;
     // 120 degree hue shift: R->G, G->B, B->R
     std::string source = R"(
         vec3 calc(vec3 rgb) {
@@ -1159,7 +1159,7 @@ bool testHueShiftApproximation() {
 // Test 38: Saturation Adjustment (simplified)
 bool testSaturationAdjustment() {
     std::cout << "Test: Saturation Adjustment... ";
-    HighPerfParser parser;
+    BytecodeParser parser;
     // Simple saturation: move color towards or away from grayscale
     std::string source = R"(
         vec3 calc(vec3 rgb, float saturation) {
@@ -1204,7 +1204,7 @@ bool testSaturationAdjustment() {
 // Test 39: Clamp Function
 bool testClampFunction() {
     std::cout << "Test: Clamp Function... ";
-    HighPerfParser parser;
+    BytecodeParser parser;
     std::string source = R"(
         float calc(float value) {
             return clamp(value, 0.0, 1.0);
@@ -1233,7 +1233,7 @@ bool testClampFunction() {
 // Test 40: Mix Function (Float)
 bool testMixFunctionFloat() {
     std::cout << "Test: Mix Function (Float)... ";
-    HighPerfParser parser;
+    BytecodeParser parser;
     std::string source = R"(
         float calc(float a, float b, float t) {
             return mix(a, b, t);
@@ -1264,7 +1264,7 @@ bool testMixFunctionFloat() {
 // Test 41: Mix Function (Vec3)
 bool testMixFunctionVec3() {
     std::cout << "Test: Mix Function (Vec3)... ";
-    HighPerfParser parser;
+    BytecodeParser parser;
     std::string source = R"(
         vec3 calc(vec3 a, vec3 b, float t) {
             return mix(a, b, t);
@@ -1295,7 +1295,7 @@ bool testMixFunctionVec3() {
 // Test 42: sRGB to Linear Color Space Conversion
 bool testSrgbToLinear() {
     std::cout << "Test: sRGB to Linear Conversion... ";
-    HighPerfParser parser;
+    BytecodeParser parser;
     // sRGB to linear conversion formula
     // For each channel c:
     // if c <= 0.04045: linear = c / 12.92
@@ -1340,7 +1340,7 @@ bool testSrgbToLinear() {
 // Test 43: Linear to sRGB Color Space Conversion
 bool testLinearToSrgb() {
     std::cout << "Test: Linear to sRGB Conversion... ";
-    HighPerfParser parser;
+    BytecodeParser parser;
     // Linear to sRGB conversion formula
     // For each channel c:
     // if c <= 0.0031308: srgb = c * 12.92
@@ -1385,7 +1385,7 @@ bool testLinearToSrgb() {
 // Test 44: sRGB Hue Shift by Arbitrary Angle
 bool testSrgbHueShift() {
     std::cout << "Test: sRGB Hue Shift by Angle... ";
-    HighPerfParser parser;
+    BytecodeParser parser;
     // Real hue rotation supporting arbitrary angles
     // Using simplified rotation in RGB color cube
     std::string source = R"(
@@ -1450,7 +1450,7 @@ bool testSrgbHueShift() {
 // Test 45: If statement with comparison operators
 bool testIfStatement() {
     std::cout << "Test: If Statement with Comparison... ";
-    HighPerfParser parser;
+    BytecodeParser parser;
     std::string source = R"(
         float calc(float x) {
             if (x > 0.5) {
@@ -1487,7 +1487,7 @@ bool testIfStatement() {
 // Test 46: Multiple comparison operators
 bool testMultipleComparisons() {
     std::cout << "Test: Multiple Comparison Operators with &&... ";
-    HighPerfParser parser;
+    BytecodeParser parser;
     std::string source = R"(
         float calc(float x) {
             if (x >= 0.0 && x <= 1.0) {
@@ -1533,7 +1533,7 @@ bool testMultipleComparisons() {
 // Test 47: Less than and greater than or equal
 bool testLessThanGreaterEqual() {
     std::cout << "Test: Less Than and Greater Equal... ";
-    HighPerfParser parser;
+    BytecodeParser parser;
     std::string source = R"(
         float calc(float x) {
             if (x < 0.0) {
@@ -1582,7 +1582,7 @@ bool testLessThanGreaterEqual() {
 // Test 48: Equal and not equal operators
 bool testEqualNotEqual() {
     std::cout << "Test: Equal and Not Equal Operators... ";
-    HighPerfParser parser;
+    BytecodeParser parser;
     std::string source = R"(
         float calc(float x) {
             if (x == 0.0) {
@@ -1631,7 +1631,7 @@ bool testEqualNotEqual() {
 // Test 49: If without else
 bool testIfWithoutElse() {
     std::cout << "Test: If Without Else... ";
-    HighPerfParser parser;
+    BytecodeParser parser;
     std::string source = R"(
         float calc(float x) {
             float result = 0.0;
@@ -1670,7 +1670,7 @@ bool testIfWithoutElse() {
 // Test 50: Clamp using if statement
 bool testClampWithIf() {
     std::cout << "Test: Clamp Using If Statement... ";
-    HighPerfParser parser;
+    BytecodeParser parser;
     std::string source = R"(
         float calc(float x) {
             if (x < 0.0) {
@@ -1721,7 +1721,7 @@ bool testClampWithIf() {
 // Debug test for logical operators
 bool testDebugLogical() {
     std::cout << "Test: Debug Logical Operators... ";
-    HighPerfParser parser;
+    BytecodeParser parser;
     std::string source = R"(
         bool calc(float x) {
             bool a = x >= 0.0;
@@ -1748,7 +1748,7 @@ bool testDebugLogical() {
 // Debug test 2: direct && in return
 bool testDebugLogical2() {
     std::cout << "Test: Debug Logical Operators 2... ";
-    HighPerfParser parser;
+    BytecodeParser parser;
     std::string source = R"(
         bool calc(float x) {
             return (x >= 0.0) && (x <= 1.0);
@@ -1773,7 +1773,7 @@ bool testDebugLogical2() {
 // Test 53: Circle containment test
 bool testCircleContainment() {
     std::cout << "Test: Circle Containment (2D)... ";
-    HighPerfParser parser;
+    BytecodeParser parser;
     std::string source = R"(
         bool calc(vec2 point, vec2 center, float radius) {
             vec2 diff = point - center;
@@ -1821,7 +1821,7 @@ bool testCircleContainment() {
 // Test 54: Sphere containment test
 bool testSphereContainment() {
     std::cout << "Test: Sphere Containment (3D)... ";
-    HighPerfParser parser;
+    BytecodeParser parser;
     std::string source = R"(
         bool calc(vec3 point, vec3 center, float radius) {
             vec3 diff = point - center;
@@ -1869,7 +1869,7 @@ bool testSphereContainment() {
 // Test 55: Ring (annulus) containment test
 bool testRingContainment() {
     std::cout << "Test: Ring Containment (2D)... ";
-    HighPerfParser parser;
+    BytecodeParser parser;
     std::string source = R"(
         bool calc(vec2 point, vec2 center, float innerRadius, float outerRadius) {
             vec2 diff = point - center;
@@ -1918,7 +1918,7 @@ bool testRingContainment() {
 // Test 56: Box containment test (3D AABB)
 bool testBoxContainment() {
     std::cout << "Test: Box Containment (3D AABB)... ";
-    HighPerfParser parser;
+    BytecodeParser parser;
     std::string source = R"(
         bool calc(vec3 point, vec3 minBound, vec3 maxBound) {
             return (point.x >= minBound.x && point.x <= maxBound.x) &&
@@ -1966,7 +1966,7 @@ bool testBoxContainment() {
 // Test 58: Length function test
 bool testLengthFunction() {
     std::cout << "Test: Length Function... ";
-    HighPerfParser parser;
+    BytecodeParser parser;
     
     // Test vec2 length
     std::string source2 = R"(
@@ -2008,7 +2008,7 @@ bool testLengthFunction() {
 // Test 59: Normalize function test
 bool testNormalizeFunction() {
     std::cout << "Test: Normalize Function... ";
-    HighPerfParser parser;
+    BytecodeParser parser;
     
     std::string source = R"(
         vec3 calc(vec3 v) {
@@ -2041,7 +2041,7 @@ bool testNormalizeFunction() {
 // Test 60: Reflect function test
 bool testReflectFunction() {
     std::cout << "Test: Reflect Function... ";
-    HighPerfParser parser;
+    BytecodeParser parser;
     
     std::string source = R"(
         vec3 calc(vec3 I, vec3 N) {
@@ -2079,7 +2079,7 @@ bool testReflectFunction() {
 // Test 61: Refract function test
 bool testRefractFunction() {
     std::cout << "Test: Refract Function... ";
-    HighPerfParser parser;
+    BytecodeParser parser;
     
     std::string source = R"(
         vec3 calc(vec3 I, vec3 N, float eta) {
@@ -2124,7 +2124,7 @@ bool testRefractFunction() {
 // Test 64: Cook-Torrance BRDF lighting model test
 bool testCookTorranceLighting() {
     std::cout << "Test: Cook-Torrance BRDF Lighting Model... ";
-    HighPerfParser parser;
+    BytecodeParser parser;
     
     // Simplified Cook-Torrance model
     std::string source = R"(
@@ -2239,7 +2239,7 @@ bool testCookTorranceLighting() {
 // Test 63: Phong lighting model test
 bool testPhongLighting() {
     std::cout << "Test: Phong Lighting Model... ";
-    HighPerfParser parser;
+    BytecodeParser parser;
     
     std::string source = R"(
         vec3 calc(vec3 normal, vec3 lightDir, vec3 viewDir, vec3 lightColor) {
@@ -2309,7 +2309,7 @@ bool testPhongLighting() {
             return false;
         }
         
-        // At 45 degrees: diffuse = cos(45) ï¿½?0.707
+        // At 45 degrees: diffuse = cos(45) ï¿?0.707
         // Result should be approximately (0.707, 0, 0)
         mmrsl::Vec3 res = result.asVec3();
         if (res.x < 0.6f || res.x > 0.8f || res.y != 0.0f || res.z != 0.0f) {
@@ -2328,7 +2328,7 @@ bool testPhongLighting() {
 // Test 62: Simple lighting calculation test
 bool testSimpleLighting() {
     std::cout << "Test: Simple Lighting Calculation... ";
-    HighPerfParser parser;
+    BytecodeParser parser;
     
     std::string source = R"(
         float calc(vec3 normal, vec3 lightDir) {
@@ -2370,7 +2370,7 @@ bool testSimpleLighting() {
 // Test 57: Cylinder containment test
 bool testCylinderContainment() {
     std::cout << "Test: Cylinder Containment (3D)... ";
-    HighPerfParser parser;
+    BytecodeParser parser;
     std::string source = R"(
         bool calc(vec3 point, vec3 center, float radius, float height) {
             vec2 xy = vec2(point.x, point.y);
@@ -2424,7 +2424,7 @@ bool testCylinderContainment() {
 // Test 52: Logical NOT operator
 bool testLogicalNot() {
     std::cout << "Test: Logical NOT Operator... ";
-    HighPerfParser parser;
+    BytecodeParser parser;
     std::string source = R"(
         float calc(float x) {
             if (!(x > 0.5)) {
@@ -2462,7 +2462,7 @@ bool testLogicalNot() {
 // Test 51: Logical OR operator
 bool testLogicalOr() {
     std::cout << "Test: Logical OR Operator... ";
-    HighPerfParser parser;
+    BytecodeParser parser;
     std::string source = R"(
         float calc(float x) {
             if (x < 0.0 || x > 1.0) {
@@ -2508,7 +2508,7 @@ bool testLogicalOr() {
 // Test: Vector constructors (vec2, vec3, vec4)
 bool testVectorConstructors() {
     std::cout << "Test: Vector Constructors (vec2/vec3/vec4)... ";
-    HighPerfParser parser;
+    BytecodeParser parser;
     std::string source = R"(
         float calc(float x) {
             vec2 v2 = vec2(1.0, 2.0);
@@ -2537,7 +2537,7 @@ bool testVectorConstructors() {
 // Test: Matrix constructor mat2
 bool testMat2Constructor() {
     std::cout << "Test: Matrix Constructor (mat2)... ";
-    HighPerfParser parser;
+    BytecodeParser parser;
     std::string source = R"(
         float calc(float x) {
             mat2 m = mat2(1.0, 2.0, 3.0, 4.0);
@@ -2567,7 +2567,7 @@ bool testMat2Constructor() {
 // Test: Matrix constructor mat3
 bool testMat3Constructor() {
     std::cout << "Test: Matrix Constructor (mat3)... ";
-    HighPerfParser parser;
+    BytecodeParser parser;
     std::string source = R"(
         float calc(float x) {
             mat3 m = mat3(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0);
@@ -2597,7 +2597,7 @@ bool testMat3Constructor() {
 // Test: Matrix constructor mat4 with translation
 bool testMat4Constructor() {
     std::cout << "Test: Matrix Constructor (mat4)... ";
-    HighPerfParser parser;
+    BytecodeParser parser;
     std::string source = R"(
         vec4 calc(float x) {
             mat4 m = mat4(1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 10.0, 20.0, 30.0, 1.0);
@@ -2632,7 +2632,7 @@ bool testMat4Constructor() {
 // Test: Combined vector and matrix operations with constructors
 bool testVecMatConstructorChain() {
     std::cout << "Test: Vector/Matrix Constructor Chain... ";
-    HighPerfParser parser;
+    BytecodeParser parser;
     std::string source = R"(
         vec3 calc(float x) {
             vec3 pos = vec3(1.0, 2.0, 3.0);
@@ -2667,7 +2667,7 @@ bool testVecMatConstructorChain() {
 // Test: mat4 scale matrix constructor
 bool testMat4ScaleConstructor() {
     std::cout << "Test: mat4 Scale Matrix Constructor... ";
-    HighPerfParser parser;
+    BytecodeParser parser;
     std::string source = R"(
         vec4 calc(float x) {
             mat4 scale = mat4(2.0, 0.0, 0.0, 0.0, 0.0, 3.0, 0.0, 0.0, 0.0, 0.0, 4.0, 0.0, 0.0, 0.0, 0.0, 1.0);
@@ -2702,7 +2702,7 @@ bool testMat4ScaleConstructor() {
 // Debug test 3: && in if condition
 bool testDebugLogical3() {
     std::cout << "Test: Debug Logical Operators 3 (if &&)... ";
-    HighPerfParser parser;
+    BytecodeParser parser;
     std::string source = R"(
         float calc(float x) {
             if ((x >= 0.0) && (x <= 1.0)) {
@@ -2731,7 +2731,7 @@ bool testDebugLogical3() {
 // Debug test 4: simple && in if condition
 bool testDebugLogical4() {
     std::cout << "Test: Debug Logical Operators 4 (simple if &&)... ";
-    HighPerfParser parser;
+    BytecodeParser parser;
     std::string source = R"(
         float calc(float x) {
             if (true && true) {
@@ -2759,7 +2759,7 @@ bool testDebugLogical4() {
 // Debug test 5: simple if with literal
 bool testDebugLogical5() {
     std::cout << "Test: Debug Logical Operators 5 (if true with else)... ";
-    HighPerfParser parser;
+    BytecodeParser parser;
     std::string source = R"(
         float calc(float x) {
             if (true) {
@@ -2827,7 +2827,7 @@ bool testMultipleScriptsCompilation() {
     )";
     
     try {
-        HighPerfParser parser;
+        BytecodeParser parser;
         
         // Test triangle area script
         // Triangle with sides 3, 4, 5 (right triangle, area = 6)
@@ -2843,7 +2843,7 @@ bool testMultipleScriptsCompilation() {
             return false;
         }
         
-        // Test another triangle: equilateral with side 2 (area = sqrt(3) ï¿½?1.732)
+        // Test another triangle: equilateral with side 2 (area = sqrt(3) ï¿?1.732)
         triangleArgs[0] = mmrsl::Value(2.0f);
         triangleArgs[1] = mmrsl::Value(2.0f);
         triangleArgs[2] = mmrsl::Value(2.0f);
@@ -2905,7 +2905,7 @@ bool testMultipleScriptsCompilation() {
 bool testCompileOnceExecuteMultiple() {
     std::cout << "Test: Compile Once, Execute Multiple Times... ";
     
-    HighPerfParser parser;
+    BytecodeParser parser;
     
     // Quadratic function: f(x) = ax^2 + bx + c
     std::string source = R"(
@@ -2986,7 +2986,7 @@ bool testCompileOnceExecuteMultiple() {
 bool testMatrixNonDiagonalIndexing() {
     std::cout << "Test: Matrix Non-Diagonal Element Indexing... ";
     
-    HighPerfParser parser;
+    BytecodeParser parser;
     
     // Test mat2 non-diagonal elements
     // Use a non-symmetric matrix where m[0][1] != m[1][0]
@@ -3090,7 +3090,7 @@ bool testMatrixNonDiagonalIndexing() {
 bool testComplexExpressionRegisterReuse() {
     std::cout << "Test: Complex Expression Register Reuse... ";
     
-    HighPerfParser parser;
+    BytecodeParser parser;
     
     // Many intermediate variables to stress register allocation
     std::string source = R"(
@@ -3179,7 +3179,7 @@ bool testComplexExpressionRegisterReuse() {
 bool testDeeplyNestedExpression() {
     std::cout << "Test: Deeply Nested Expression... ";
     
-    HighPerfParser parser;
+    BytecodeParser parser;
     
     // Deeply nested expression with multiple function calls
     std::string source = R"(
@@ -3248,7 +3248,7 @@ bool testDeeplyNestedExpression() {
 bool testComplexControlFlow() {
     std::cout << "Test: Complex Control Flow (nested if/else + sequential ifs)... ";
     
-    HighPerfParser parser;
+    BytecodeParser parser;
     
     // Test 1: Nested if/else
     std::string nestedIfSource = R"(
@@ -3352,7 +3352,7 @@ bool testComplexControlFlow() {
 bool testRepeatedCompilationStateIsolation() {
     std::cout << "Test: Repeated Compilation State Isolation... ";
     
-    HighPerfParser parser;
+    BytecodeParser parser;
     
     try {
         // First compilation: vec3 operation
@@ -3462,7 +3462,7 @@ bool testRepeatedCompilationStateIsolation() {
 bool testBoundaryValuesAndSpecialFloats() {
     std::cout << "Test: Boundary Values and Special Floating-Point Cases... ";
     
-    HighPerfParser parser;
+    BytecodeParser parser;
     
     try {
         // Test 1: Division by zero detection
@@ -3579,7 +3579,7 @@ bool testBoundaryValuesAndSpecialFloats() {
             return false;
         }
         
-        // x = -0.5 ï¿½?clamped to 0.0
+        // x = -0.5 ï¿?clamped to 0.0
         args[0] = mmrsl::Value(-0.5f);
         result = parser.execute(args);
         if (!result.isFloat() || std::abs(result.asFloat() - 0.0f) >= 0.001f) {
@@ -3587,7 +3587,7 @@ bool testBoundaryValuesAndSpecialFloats() {
             return false;
         }
         
-        // x = 0.5 ï¿½?unchanged
+        // x = 0.5 ï¿?unchanged
         args[0] = mmrsl::Value(0.5f);
         result = parser.execute(args);
         if (!result.isFloat() || std::abs(result.asFloat() - 0.5f) >= 0.001f) {
@@ -3595,7 +3595,7 @@ bool testBoundaryValuesAndSpecialFloats() {
             return false;
         }
         
-        // x = 1.5 ï¿½?clamped to 1.0
+        // x = 1.5 ï¿?clamped to 1.0
         args[0] = mmrsl::Value(1.5f);
         result = parser.execute(args);
         if (!result.isFloat() || std::abs(result.asFloat() - 1.0f) >= 0.001f) {
@@ -3603,7 +3603,7 @@ bool testBoundaryValuesAndSpecialFloats() {
             return false;
         }
         
-        // x = 0.0 ï¿½?boundary value
+        // x = 0.0 ï¿?boundary value
         args[0] = mmrsl::Value(0.0f);
         result = parser.execute(args);
         if (!result.isFloat() || std::abs(result.asFloat() - 0.0f) >= 0.001f) {
@@ -3611,7 +3611,7 @@ bool testBoundaryValuesAndSpecialFloats() {
             return false;
         }
         
-        // x = 1.0 ï¿½?boundary value
+        // x = 1.0 ï¿?boundary value
         args[0] = mmrsl::Value(1.0f);
         result = parser.execute(args);
         if (!result.isFloat() || std::abs(result.asFloat() - 1.0f) >= 0.001f) {
@@ -3632,7 +3632,7 @@ bool testBoundaryValuesAndSpecialFloats() {
 bool testMixedTypeOperations() {
     std::cout << "Test: Mixed Type Operations Completeness... ";
     
-    HighPerfParser parser;
+    BytecodeParser parser;
     
     try {
         // Test 1: float * vec3 (both orders should produce same result)
@@ -3812,7 +3812,7 @@ bool testMixedTypeOperations() {
 bool testBooleanLogicChain() {
     std::cout << "Test: Boolean Logic Chain Operations... ";
     
-    HighPerfParser parser;
+    BytecodeParser parser;
     
     try {
         // Test 1: Compound logical expression with &&
@@ -4017,7 +4017,7 @@ bool testBooleanLogicChain() {
 bool testDirectExpressionComposition() {
     std::cout << "Test: Direct Expression Composition... ";
     
-    HighPerfParser parser;
+    BytecodeParser parser;
     
     try {
         // Test 1: Constructor directly participates in operations
@@ -4186,7 +4186,7 @@ bool testDirectExpressionComposition() {
 bool testUnaryOperatorsComplexContext() {
     std::cout << "Test: Unary Operators in Complex Contexts... ";
     
-    HighPerfParser parser;
+    BytecodeParser parser;
     
     try {
         // Test 1: Negation of function call result
@@ -4370,7 +4370,7 @@ bool testUnaryOperatorsComplexContext() {
 bool testOperatorPrecedence() {
     std::cout << "Test: Operator Precedence... ";
     
-    HighPerfParser parser;
+    BytecodeParser parser;
     
     try {
         // Test 1: Multiplication precedence over addition
@@ -4542,7 +4542,7 @@ bool testOperatorPrecedence() {
 bool testVariableReassignment() {
     std::cout << "Test: Variable Multiple Reassignment... ";
     
-    HighPerfParser parser;
+    BytecodeParser parser;
     
     try {
         // Test 1: Same variable repeatedly overwritten
@@ -4562,7 +4562,7 @@ bool testVariableReassignment() {
             return false;
         }
         
-        // x = 1.0: v = 1 ï¿½?2 ï¿½?5 ï¿½?25 ï¿½?5.0
+        // x = 1.0: v = 1 ï¿?2 ï¿?5 ï¿?25 ï¿?5.0
         std::vector<mmrsl::Value> args = { mmrsl::Value(1.0f) };
         mmrsl::Value result = parser.execute(args);
         
@@ -4571,7 +4571,7 @@ bool testVariableReassignment() {
             return false;
         }
         
-        // x = 2.0: v = 2 ï¿½?4 ï¿½?7 ï¿½?49 ï¿½?7.0
+        // x = 2.0: v = 2 ï¿?4 ï¿?7 ï¿?49 ï¿?7.0
         args[0] = mmrsl::Value(2.0f);
         result = parser.execute(args);
         
@@ -4600,7 +4600,7 @@ bool testVariableReassignment() {
             return false;
         }
         
-        // x = -5: result = 0 ï¿½?(not >0) ï¿½?0+1 = 1 ï¿½?(not >10) ï¿½?1
+        // x = -5: result = 0 ï¿?(not >0) ï¿?0+1 = 1 ï¿?(not >10) ï¿?1
         args[0] = mmrsl::Value(-5.0f);
         result = parser.execute(args);
         
@@ -4609,7 +4609,7 @@ bool testVariableReassignment() {
             return false;
         }
         
-        // x = 5: result = 0 ï¿½?5 ï¿½?5+1 = 6 ï¿½?(not >10) ï¿½?6
+        // x = 5: result = 0 ï¿?5 ï¿?5+1 = 6 ï¿?(not >10) ï¿?6
         args[0] = mmrsl::Value(5.0f);
         result = parser.execute(args);
         
@@ -4618,7 +4618,7 @@ bool testVariableReassignment() {
             return false;
         }
         
-        // x = 15: result = 0 ï¿½?15 ï¿½?15+1 = 16 ï¿½?(>10) ï¿½?16*2 = 32
+        // x = 15: result = 0 ï¿?15 ï¿?15+1 = 16 ï¿?(>10) ï¿?16*2 = 32
         args[0] = mmrsl::Value(15.0f);
         result = parser.execute(args);
         
@@ -4672,7 +4672,7 @@ bool testVariableReassignment() {
             return false;
         }
         
-        // v = (1,0,0): result = (1,0,0) ï¿½?(2,0,0) ï¿½?(3,2,3) ï¿½?normalize
+        // v = (1,0,0): result = (1,0,0) ï¿?(2,0,0) ï¿?(3,2,3) ï¿?normalize
         args[0] = mmrsl::Value(mmrsl::Vec3(1.0f, 0.0f, 0.0f));
         result = parser.execute(args);
         
@@ -4681,7 +4681,7 @@ bool testVariableReassignment() {
             return false;
         }
         
-        // Just verify it's a normalized vector (length ï¿½?1)
+        // Just verify it's a normalized vector (length ï¿?1)
         mmrsl::Vec3 v = result.asVec3();
         float len = std::sqrt(v.x*v.x + v.y*v.y + v.z*v.z);
         if (std::abs(len - 1.0f) >= 0.001f) {
@@ -4702,7 +4702,7 @@ bool testVariableReassignment() {
 bool testAcesToneMapping() {
     std::cout << "Test: ACES Tone Mapping... ";
     
-    HighPerfParser parser;
+    BytecodeParser parser;
     
     std::string acesSource = R"(
         vec3 calc(vec3 color) {
@@ -4835,7 +4835,7 @@ bool testAcesToneMapping() {
 bool testMatrixBoundsChecking() {
     std::cout << "Test: Matrix Runtime Bounds Checking... ";
     
-    HighPerfParser parser;
+    BytecodeParser parser;
     
     try {
         // Test 1: mat2 column index out of bounds
@@ -4970,7 +4970,7 @@ bool testMatrixBoundsChecking() {
 bool testConstantPoolDeduplication() {
     std::cout << "Test: Constant Pool Deduplication... ";
     
-    HighPerfParser parser;
+    BytecodeParser parser;
     
     // This function uses 1.0 four times, but it should only appear once in the constant pool
     std::string dedupSource = R"(
@@ -5079,7 +5079,7 @@ bool testConstantPoolDeduplication() {
 bool testMultipleReturnPaths() {
     std::cout << "Test: Multiple Return Paths... ";
     
-    HighPerfParser parser;
+    BytecodeParser parser;
     
     try {
         // Test 1: Piecewise function with multiple returns
@@ -5169,7 +5169,7 @@ bool testMultipleReturnPaths() {
             return false;
         }
         
-        // First quadrant: x=1, y=1 ï¿½?1
+        // First quadrant: x=1, y=1 ï¿?1
         std::vector<mmrsl::Value> doubleArgs = { mmrsl::Value(1.0f), mmrsl::Value(1.0f) };
         result = parser.execute(doubleArgs);
         
@@ -5178,7 +5178,7 @@ bool testMultipleReturnPaths() {
             return false;
         }
         
-        // Fourth quadrant: x=1, y=-1 ï¿½?2
+        // Fourth quadrant: x=1, y=-1 ï¿?2
         doubleArgs[0] = mmrsl::Value(1.0f);
         doubleArgs[1] = mmrsl::Value(-1.0f);
         result = parser.execute(doubleArgs);
@@ -5188,7 +5188,7 @@ bool testMultipleReturnPaths() {
             return false;
         }
         
-        // Second quadrant: x=-1, y=1 ï¿½?3
+        // Second quadrant: x=-1, y=1 ï¿?3
         doubleArgs[0] = mmrsl::Value(-1.0f);
         doubleArgs[1] = mmrsl::Value(1.0f);
         result = parser.execute(doubleArgs);
@@ -5198,7 +5198,7 @@ bool testMultipleReturnPaths() {
             return false;
         }
         
-        // Third quadrant: x=-1, y=-1 ï¿½?4
+        // Third quadrant: x=-1, y=-1 ï¿?4
         doubleArgs[0] = mmrsl::Value(-1.0f);
         doubleArgs[1] = mmrsl::Value(-1.0f);
         result = parser.execute(doubleArgs);
@@ -5254,7 +5254,7 @@ bool testMultipleReturnPaths() {
 bool testVectorSwizzleSimulation() {
     std::cout << "Test: Vector Swizzle Simulation... ";
     
-    HighPerfParser parser;
+    BytecodeParser parser;
     
     try {
         // Test 1: vec3 component reversal (simulating .zyx swizzle)
@@ -5269,7 +5269,7 @@ bool testVectorSwizzleSimulation() {
             return false;
         }
         
-        // v = (1, 2, 3) ï¿½?(3, 2, 1)
+        // v = (1, 2, 3) ï¿?(3, 2, 1)
         std::vector<mmrsl::Value> args = { mmrsl::Value(mmrsl::Vec3(1.0f, 2.0f, 3.0f)) };
         mmrsl::Value result = parser.execute(args);
         
@@ -5296,7 +5296,7 @@ bool testVectorSwizzleSimulation() {
             return false;
         }
         
-        // v = (1, 2, 3, 4) ï¿½?(4, 3, 2, 1)
+        // v = (1, 2, 3, 4) ï¿?(4, 3, 2, 1)
         args[0] = mmrsl::Value(mmrsl::Vec4(1.0f, 2.0f, 3.0f, 4.0f));
         result = parser.execute(args);
         
@@ -5355,7 +5355,7 @@ bool testVectorSwizzleSimulation() {
             return false;
         }
         
-        // color = (1, 0.5, 0) orange ï¿½?(0, 0.5, 1) cyan-ish
+        // color = (1, 0.5, 0) orange ï¿?(0, 0.5, 1) cyan-ish
         args[0] = mmrsl::Value(mmrsl::Vec3(1.0f, 0.5f, 0.0f));
         result = parser.execute(args);
         
@@ -5382,7 +5382,7 @@ bool testVectorSwizzleSimulation() {
             return false;
         }
         
-        // uv = (0.5, 0.25) ï¿½?(0.5, 0.25, 0, 1)
+        // uv = (0.5, 0.25) ï¿?(0.5, 0.25, 0, 1)
         args[0] = mmrsl::Value(mmrsl::Vec2(0.5f, 0.25f));
         result = parser.execute(args);
         
@@ -5411,7 +5411,7 @@ bool testVectorSwizzleSimulation() {
 bool testPerformanceBenchmark() {
     std::cout << "Test: Performance Benchmark... ";
     
-    HighPerfParser hpParser;
+    BytecodeParser hpParser;
     mmrsl::SimpleParser simpleParser;
     
     // Complex expression with multiple function calls
@@ -5514,7 +5514,7 @@ bool testPerformanceBenchmark() {
 bool testSourceLengthLimit() {
     std::cout << "Test: Source Code Length Limit... ";
     
-    HighPerfParser parser;
+    BytecodeParser parser;
     
     // Create a source that is exactly at the limit (should pass)
     std::string validSource = R"(
@@ -5586,7 +5586,7 @@ bool testSourceLengthLimit() {
 bool testNestingDepthLimit() {
     std::cout << "Test: DoS Protection - Nesting Depth Limit... ";
     
-    HighPerfParser parser;
+    BytecodeParser parser;
     
     // Create deeply nested if statements (exceeds 32 limit)
     std::string deepNesting = "float calc(float x) {\n";
@@ -5624,7 +5624,7 @@ bool testNestingDepthLimit() {
 bool testExpressionDepthLimit() {
     std::cout << "Test: DoS Protection - Expression Depth Limit... ";
     
-    HighPerfParser parser;
+    BytecodeParser parser;
     
     // Create deeply nested expression (exceeds 64 limit)
     std::string deepExpr = "float calc(float x) { return ";
@@ -5662,7 +5662,7 @@ bool testExpressionDepthLimit() {
 bool testLocalVariableLimit() {
     std::cout << "Test: DoS Protection - Local Variable Limit... ";
     
-    HighPerfParser parser;
+    BytecodeParser parser;
     
     // Create function with too many local variables (exceeds 128 limit)
     // Use shorter variable names to stay under source length limit
@@ -5698,7 +5698,7 @@ bool testLocalVariableLimit() {
 bool testIdentifierLengthLimit() {
     std::cout << "Test: DoS Protection - Identifier Length Limit... ";
     
-    HighPerfParser parser;
+    BytecodeParser parser;
     
     // Create variable with very long name (exceeds 64 limit)
     std::string longName = "float calc(float x) {\n";
@@ -5731,7 +5731,7 @@ bool testIdentifierLengthLimit() {
 bool testTransformChain() {
     std::cout << "Test: Transform Chain (Model-View-Projection)... ";
     
-    HighPerfParser parser;
+    BytecodeParser parser;
     
     // Transform chain: scale * translate * view
     std::string transformSource = R"(
@@ -5768,7 +5768,7 @@ bool testTransformChain() {
 bool testMatrixInverse() {
     std::cout << "Test: Matrix Inverse... ";
     
-    HighPerfParser parser;
+    BytecodeParser parser;
     
     // Test mat2 inverse
     std::string mat2Source = R"(
@@ -5836,7 +5836,7 @@ bool testMatrixInverse() {
 bool testMatrixTranspose() {
     std::cout << "Test: Matrix Transpose... ";
     
-    HighPerfParser parser;
+    BytecodeParser parser;
     
     // Test mat2 transpose
     std::string mat2Source = R"(
@@ -5900,7 +5900,7 @@ bool testMatrixTranspose() {
 bool testNoiseFunctions() {
     std::cout << "Test: Noise Functions... ";
     
-    HighPerfParser parser;
+    BytecodeParser parser;
     
     // Test noise1 - 1D noise returns float
     std::string noise1Source = R"(

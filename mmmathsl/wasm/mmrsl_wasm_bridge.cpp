@@ -1,5 +1,5 @@
 // mmrsl WASM bridge — Embind bindings for JS/TS consumers
-// Exposes: HighPerfParser only (SimpleParser excluded to minimize WASM size)
+// Exposes: BytecodeParser only (SimpleParser excluded to minimize WASM size)
 
 #include <emscripten/bind.h>
 #include "mmrsl/mmrsl.hpp"
@@ -124,12 +124,12 @@ static Value jsToValue(const val& obj) {
 }
 
 // ============================================================================
-// JS-facing wrapper for HighPerfParser
+// JS-facing wrapper for BytecodeParser
 // ============================================================================
 
-class JsHighPerfParser {
+class JsBytecodeParser {
 public:
-    JsHighPerfParser() = default;
+    JsBytecodeParser() = default;
 
     bool compile(const std::string& source) {
         return parser_.compile(source);
@@ -175,7 +175,7 @@ public:
     std::string getBytecodeDisassembly() const  { return parser_.getBytecodeDisassembly(); }
 
 private:
-    HighPerfParser parser_;
+    BytecodeParser parser_;
 };
 
 // ============================================================================
@@ -183,15 +183,15 @@ private:
 // ============================================================================
 
 EMSCRIPTEN_BINDINGS(mmrsl_module) {
-    class_<JsHighPerfParser>("HighPerfParser")
+    class_<JsBytecodeParser>("BytecodeParser")
         .constructor<>()
-        .function("compile",                &JsHighPerfParser::compile)
-        .function("execute",                &JsHighPerfParser::execute)
-        .function("compileAndExecute",      &JsHighPerfParser::compileAndExecute)
-        .function("getLastError",           &JsHighPerfParser::getLastError)
-        .function("isCompiled",             &JsHighPerfParser::isCompiled)
-        .function("getFunctionName",        &JsHighPerfParser::getFunctionName)
-        .function("getLastCompileTimeMs",   &JsHighPerfParser::getLastCompileTimeMs)
-        .function("getLastExecuteTimeMs",   &JsHighPerfParser::getLastExecuteTimeMs)
-        .function("getBytecodeDisassembly", &JsHighPerfParser::getBytecodeDisassembly);
+        .function("compile",                &JsBytecodeParser::compile)
+        .function("execute",                &JsBytecodeParser::execute)
+        .function("compileAndExecute",      &JsBytecodeParser::compileAndExecute)
+        .function("getLastError",           &JsBytecodeParser::getLastError)
+        .function("isCompiled",             &JsBytecodeParser::isCompiled)
+        .function("getFunctionName",        &JsBytecodeParser::getFunctionName)
+        .function("getLastCompileTimeMs",   &JsBytecodeParser::getLastCompileTimeMs)
+        .function("getLastExecuteTimeMs",   &JsBytecodeParser::getLastExecuteTimeMs)
+        .function("getBytecodeDisassembly", &JsBytecodeParser::getBytecodeDisassembly);
 }

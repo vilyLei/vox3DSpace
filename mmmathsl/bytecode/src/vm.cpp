@@ -2,7 +2,7 @@
 #include <cmath>
 
 namespace mmrsl {
-namespace highPerf {
+namespace bytecode {
 
 VM::VM() : pc_(0), currentFunc_(nullptr), instructionCount_(0), maxInstructions_(MAX_INSTRUCTIONS) {
     reset();
@@ -1881,5 +1881,5 @@ void VM::setError(const std::string& msg) {
     lastError_ = msg;
 }
 
-} // namespace highPerf
+} // namespace bytecode
 } // namespace mmrsl

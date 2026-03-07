@@ -88,21 +88,21 @@ private:
 };
 
 // ============================================================================
-// High-Performance Bytecode VM
+// Bytecode VM Parser (compile to bytecode, execute via register-based VM)
 // ============================================================================
 
-class HighPerfParser : public Parser {
+class BytecodeParser : public Parser {
 public:
-    HighPerfParser();
-    ~HighPerfParser();
+    BytecodeParser();
+    ~BytecodeParser();
     
     // Disable copy
-    HighPerfParser(const HighPerfParser&) = delete;
-    HighPerfParser& operator=(const HighPerfParser&) = delete;
+    BytecodeParser(const BytecodeParser&) = delete;
+    BytecodeParser& operator=(const BytecodeParser&) = delete;
     
     // Enable move
-    HighPerfParser(HighPerfParser&&) noexcept;
-    HighPerfParser& operator=(HighPerfParser&&) noexcept;
+    BytecodeParser(BytecodeParser&&) noexcept;
+    BytecodeParser& operator=(BytecodeParser&&) noexcept;
     
     // Parser interface
     bool compile(const std::string& source) override;
@@ -114,7 +114,7 @@ public:
     std::string getLastError() const override;
     bool isCompiled() const override;
     
-    // Performance statistics (High-Performance VM only)
+    // Performance statistics (bytecode VM only)
     double getLastCompileTimeMs() const;
     double getLastExecuteTimeMs() const;
     

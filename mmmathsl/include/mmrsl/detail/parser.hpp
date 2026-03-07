@@ -15,8 +15,8 @@ constexpr size_t MAX_AST_NODES = 10000;       // Max AST nodes during parsing
 // (function body + 32 control-flow bodies), so this is set to 64 to give the
 // compiler's control-flow limit (MAX_NESTING_DEPTH = 32 in compiler.hpp) room to fire
 // first.  The two limits measure different things:
-//   parser  â€” raw brace depth (structural, DoS protection)
-//   compiler â€” if/for control-flow depth (semantic, code-quality guard)
+//   parser  â€?raw brace depth (structural, DoS protection)
+//   compiler â€?if/for control-flow depth (semantic, code-quality guard)
 constexpr size_t MAX_NESTING_DEPTH = 64;      // Max brace nesting depth
 constexpr size_t MAX_EXPRESSION_DEPTH = 64;   // Max expression nesting depth
 

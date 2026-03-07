@@ -2,7 +2,7 @@
 #include <cassert>
 
 namespace mmrsl {
-namespace highPerf {
+namespace bytecode {
 
 Compiler::Compiler() 
     : currentFunc_(nullptr), nextLocalIndex_(0), returnTempIdx_(0xFFFF), 
@@ -197,7 +197,7 @@ void Compiler::compileReturn(const ReturnStmt& stmt) {
 void Compiler::compileCompound(const CompoundStmt& stmt) {
     for (const auto& s : stmt.statements) {
         compileStatement(*s);
-        if (hasError()) return;  // stop on first error â€” avoids cascading UB
+        if (hasError()) return;  // stop on first error â€?avoids cascading UB
     }
 }
 
@@ -1164,7 +1164,7 @@ void Compiler::emitMove(uint8_t destReg, uint8_t srcReg, TypeKind type) {
             currentFunc_->emit(OpCode::MOV_MAT4, destReg, srcReg, 0);
             break;
         default:
-            // Unknown type â€” fall back to float move
+            // Unknown type â€?fall back to float move
             currentFunc_->emit(OpCode::MOV_FLOAT, destReg, srcReg, 0);
             break;
     }
@@ -1367,7 +1367,7 @@ TypeKind Compiler::getExpressionType(const Expression& expr) {
         // declared before use (getLocal will setError() when we actually emit code).
         // Fall back to Float so that the caller can continue; the real error will be
         // raised at the compileVariable / compileAssign site.
-        assert(false && "getExpressionType: variable not in localVarTypes_ â€” declaration missing?");
+        assert(false && "getExpressionType: variable not in localVarTypes_ â€?declaration missing?");
         return TypeKind::Float;
     } else if (auto binary = dynamic_cast<const BinaryExpr*>(&expr)) {
         // Check for comparison and logical operators first
@@ -1544,5 +1544,5 @@ void Compiler::checkBuiltinFunctionArgCount(const std::string& funcName, size_t 
     }
 }
 
-} // namespace highPerf
+} // namespace bytecode
 } // namespace mmrsl

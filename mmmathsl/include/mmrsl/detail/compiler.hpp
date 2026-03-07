@@ -8,7 +8,7 @@
 #include <bitset>
 
 namespace mmrsl {
-namespace highPerf {
+namespace bytecode {
 
 // DoS protection limits
 constexpr size_t MAX_SOURCE_LENGTH = 8192;        // 8KB source code limit
@@ -124,7 +124,7 @@ private:
         explicit CompileGuard(Compiler* c) : compiler_(c) {}
         ~CompileGuard() {
             if (compiler_) {
-                // Full reset â€” clears all mutable state, not just currentFunc_.
+                // Full reset â€?clears all mutable state, not just currentFunc_.
                 // Prevents stale localVars_, loopStack_, usedRegisters_, etc. from
                 // corrupting a hypothetical future reuse of this Compiler object.
                 compiler_->currentFunc_        = nullptr;
@@ -147,5 +147,5 @@ private:
     friend class CompileGuard;
 };
 
-} // namespace highPerf
+} // namespace bytecode
 } // namespace mmrsl

@@ -5,7 +5,7 @@
 #include <cstring>
 
 namespace mmrsl {
-namespace highPerf {
+namespace bytecode {
 
 uint16_t BytecodeFunction::addConstant(const Value& value) {
     // Check if constant already exists
@@ -478,5 +478,5 @@ std::string BytecodeFunction::disassemble() const {
     return oss.str();
 }
 
-} // namespace highPerf
+} // namespace bytecode
 } // namespace mmrsl

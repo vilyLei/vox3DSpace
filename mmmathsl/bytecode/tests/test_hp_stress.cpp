@@ -116,7 +116,7 @@ bool testHighFrequencyCompilation() {
     
     try {
         for (int i = 0; i < iterations; i++) {
-            HighPerfParser parser;
+            BytecodeParser parser;
             std::vector<mmrsl::Value> args = { mmrsl::Value(1.5f) };
             mmrsl::Value result = parser.compileAndExecute(source, args);
             
@@ -156,7 +156,7 @@ bool testLargeConstantPool() {
     source += "    return sum;\n}";
     
     try {
-        HighPerfParser parser;
+        BytecodeParser parser;
         std::vector<mmrsl::Value> args = { mmrsl::Value(0.0f) };
         mmrsl::Value result = parser.compileAndExecute(source, args);
         
@@ -196,7 +196,7 @@ bool testDeepExpressionNesting() {
     source += "; }";
     
     try {
-        HighPerfParser parser;
+        BytecodeParser parser;
         std::vector<mmrsl::Value> args = { mmrsl::Value(1.0f) };
         mmrsl::Value result = parser.compileAndExecute(source, args);
         
@@ -231,7 +231,7 @@ bool testManyLocalVariables() {
     source += "    return sum;\n}";
     
     try {
-        HighPerfParser parser;
+        BytecodeParser parser;
         std::vector<mmrsl::Value> args = { mmrsl::Value(0.0f) };
         mmrsl::Value result = parser.compileAndExecute(source, args);
         
@@ -282,7 +282,7 @@ bool testComplexNestedControlFlow() {
     )";
     
     try {
-        HighPerfParser parser;
+        BytecodeParser parser;
         
         // Test different branches
         struct TestCase { float input; float expected; };
@@ -325,7 +325,7 @@ bool testRepeatedExecutionStress() {
     )";
     
     try {
-        HighPerfParser parser;
+        BytecodeParser parser;
         parser.compile(source);
         
         auto start = std::chrono::high_resolution_clock::now();
@@ -371,7 +371,7 @@ bool testLongDurationStress() {
     
     try {
         for (int i = 0; i < iterations; i++) {
-            HighPerfParser parser;
+            BytecodeParser parser;
             float input = i * 0.001f;
             std::vector<mmrsl::Value> args = { mmrsl::Value(input) };
             
@@ -433,7 +433,7 @@ bool testMemoryPressure() {
     source += "    return r;\n}";
     
     try {
-        HighPerfParser parser;
+        BytecodeParser parser;
         std::vector<mmrsl::Value> args = { mmrsl::Value(0.0f) };
         
         auto start = std::chrono::high_resolution_clock::now();
@@ -474,7 +474,7 @@ bool testRapidScriptVariation() {
             source += "    float b = " + std::to_string((i + 1) * 0.001f) + ";\n";
             source += "    return sin(x + a) * cos(x + b) + a * b;\n}";
             
-            HighPerfParser parser;
+            BytecodeParser parser;
             std::vector<mmrsl::Value> args = { mmrsl::Value(1.0f) };
             
             try {
@@ -566,7 +566,7 @@ bool testMixedWorkload() {
             // Cycle through different script types
             const char* source = templates[i % numTemplates];
             
-            HighPerfParser parser;
+            BytecodeParser parser;
             float input = (i % 100) * 0.1f;
             std::vector<mmrsl::Value> args = { mmrsl::Value(input) };
             
@@ -619,7 +619,7 @@ bool testDeepRecursionSimulation() {
     source += "    return 0.0;\n}";
     
     try {
-        HighPerfParser parser;
+        BytecodeParser parser;
         
         // Test at boundary
         std::vector<mmrsl::Value> args = { mmrsl::Value(3.5f) };
@@ -638,12 +638,12 @@ bool testDeepRecursionSimulation() {
     }
 }
 
-// Test: Nesting Depth Exceeded â€” 33 levels of if-nesting must be rejected by the compiler
+// Test: Nesting Depth Exceeded â€?33 levels of if-nesting must be rejected by the compiler
 bool testNestingDepthExceeded() {
     std::cout << "Stress Test: Nesting Depth Exceeded (33 levels should be rejected)...\n";
     MemoryTracker tracker("NestingDepthExceeded");
 
-    // 33 levels of if-nesting â€” one level beyond MAX_NESTING_DEPTH (32)
+    // 33 levels of if-nesting â€?one level beyond MAX_NESTING_DEPTH (32)
     // The compiler must reject this with a compile error
     std::string source = "float calc(float x) {\n";
     for (int i = 0; i < 33; i++) {
@@ -655,7 +655,7 @@ bool testNestingDepthExceeded() {
     }
     source += "    return 0.0;\n}";
 
-    HighPerfParser parser;
+    BytecodeParser parser;
     bool compiled = parser.compile(source);
     if (compiled) {
         std::cout << "FAIL (expected compile error for 33-level nesting, but compilation succeeded)\n";
@@ -685,7 +685,7 @@ bool testHeavyMatrixOperations() {
     )";
     
     try {
-        HighPerfParser parser;
+        BytecodeParser parser;
         parser.compile(source);
         
         auto start = std::chrono::high_resolution_clock::now();
@@ -736,7 +736,7 @@ bool testConcurrentCompilationSimulation() {
     try {
         for (int i = 0; i < iterations; i++) {
             // Rapidly create and destroy parsers
-            HighPerfParser parser;
+            BytecodeParser parser;
             const char* source = scripts[i % numScripts];
             std::vector<mmrsl::Value> args = { mmrsl::Value(0.5f) };
             
@@ -813,7 +813,7 @@ bool testMaxLocalVariablesDeterministic() {
         auto start = std::chrono::high_resolution_clock::now();
         
         for (int run = 0; run < numRuns; ++run) {
-            HighPerfParser parser;
+            BytecodeParser parser;
             std::vector<mmrsl::Value> args = { mmrsl::Value(seed) };
             mmrsl::Value result = parser.compileAndExecute(source, args);
             

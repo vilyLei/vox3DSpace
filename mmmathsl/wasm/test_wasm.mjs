@@ -2,8 +2,8 @@ import createMmrslModule from './dist/mmrsl.js';
 
 const Module = await createMmrslModule();
 
-// Test 1: HighPerfParser compile once, execute many
-const hp = new Module.HighPerfParser();
+// Test 1: BytecodeParser compile once, execute many
+const hp = new Module.BytecodeParser();
 const ok = hp.compile('vec3 calc(float t) { return vec3(sin(t), cos(t), 0.0); }');
 console.log('compile:', ok, '  error:', hp.getLastError());
 

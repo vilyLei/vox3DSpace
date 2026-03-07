@@ -116,7 +116,7 @@ bool testMaxLocalVars120() {
         float expected = 0.0f;
         
         for (int run = 0; run < 5; ++run) {
-            HighPerfParser parser;
+            BytecodeParser parser;
             std::vector<mmrsl::Value> args = { mmrsl::Value(seed) };
             mmrsl::Value result = parser.compileAndExecute(source, args);
             
@@ -154,7 +154,7 @@ bool testDeepNesting60() {
     source += ";}";
     
     try {
-        HighPerfParser parser;
+        BytecodeParser parser;
         std::vector<mmrsl::Value> args = { mmrsl::Value(1.0f) };
         mmrsl::Value result = parser.compileAndExecute(source, args);
         
@@ -184,7 +184,7 @@ bool testLargeConstantPool100() {
     source += "return s;}";
     
     try {
-        HighPerfParser parser;
+        BytecodeParser parser;
         std::vector<mmrsl::Value> args = { mmrsl::Value(0.0f) };
         mmrsl::Value result = parser.compileAndExecute(source, args);
         
@@ -227,7 +227,7 @@ bool testComplexMixedExpression() {
     )";
     
     try {
-        HighPerfParser parser;
+        BytecodeParser parser;
         std::vector<mmrsl::Value> args = { mmrsl::Value(2.0f) };
         mmrsl::Value result = parser.compileAndExecute(source, args);
         
@@ -267,7 +267,7 @@ bool testManyMatrixOperations() {
     )";
     
     try {
-        HighPerfParser parser;
+        BytecodeParser parser;
         parser.compile(source);
         
         auto start = std::chrono::high_resolution_clock::now();
@@ -324,7 +324,7 @@ bool testDeepIfNesting30() {
               << std::count(source.begin(), source.end(), '{') << " blocks\n";
     
     try {
-        HighPerfParser parser;
+        BytecodeParser parser;
         
         // Test value that reaches innermost level
         std::vector<mmrsl::Value> args = { mmrsl::Value(5.0f) };
@@ -385,7 +385,7 @@ bool testDeepLogicalNesting60() {
     std::cout << "  Source: " << source.length() << " bytes\n";
     
     try {
-        HighPerfParser parser;
+        BytecodeParser parser;
         
         // Test value that satisfies all conditions
         std::vector<mmrsl::Value> args = { mmrsl::Value(1.0f) };

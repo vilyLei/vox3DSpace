@@ -48,7 +48,7 @@ bool testSimplePipeline() {
     
     try {
         // Stage 1: Scale
-        HighPerfParser stage1;
+        BytecodeParser stage1;
         if (!stage1.compile(stage1Script)) {
             std::cout << "FAIL (stage1 compile: " << stage1.getLastError() << ")" << std::endl;
             return false;
@@ -64,7 +64,7 @@ bool testSimplePipeline() {
         Vec3 scaledColor = result1.asVec3();
         
         // Stage 2: Offset
-        HighPerfParser stage2;
+        BytecodeParser stage2;
         if (!stage2.compile(stage2Script)) {
             std::cout << "FAIL (stage2 compile: " << stage2.getLastError() << ")" << std::endl;
             return false;
@@ -79,7 +79,7 @@ bool testSimplePipeline() {
         Vec3 offsetColor = result2.asVec3();
         
         // Stage 3: Clamp
-        HighPerfParser stage3;
+        BytecodeParser stage3;
         if (!stage3.compile(stage3Script)) {
             std::cout << "FAIL (stage3 compile: " << stage3.getLastError() << ")" << std::endl;
             return false;
@@ -140,7 +140,7 @@ bool testMatrixPipeline() {
     
     try {
         // Stage 1: Rotate
-        HighPerfParser stage1;
+        BytecodeParser stage1;
         if (!stage1.compile(stage1Script)) {
             std::cout << "FAIL (stage1 compile: " << stage1.getLastError() << ")" << std::endl;
             return false;
@@ -156,7 +156,7 @@ bool testMatrixPipeline() {
         Vec3 rotated = result1.asVec3();
         
         // Stage 2: Scale
-        HighPerfParser stage2;
+        BytecodeParser stage2;
         if (!stage2.compile(stage2Script)) {
             std::cout << "FAIL (stage2 compile: " << stage2.getLastError() << ")" << std::endl;
             return false;
@@ -171,7 +171,7 @@ bool testMatrixPipeline() {
         Vec3 scaled = result2.asVec3();
         
         // Stage 3: Translate
-        HighPerfParser stage3;
+        BytecodeParser stage3;
         if (!stage3.compile(stage3Script)) {
             std::cout << "FAIL (stage3 compile: " << stage3.getLastError() << ")" << std::endl;
             return false;
@@ -205,7 +205,7 @@ bool testCompiledScriptReuse() {
     )";
     
     try {
-        HighPerfParser parser;
+        BytecodeParser parser;
         if (!parser.compile(script)) {
             std::cout << "FAIL (compile: " << parser.getLastError() << ")" << std::endl;
             return false;
@@ -265,7 +265,7 @@ bool testSingleScriptVsPipeline() {
     
     try {
         // Single script approach
-        HighPerfParser single;
+        BytecodeParser single;
         if (!single.compile(singleScript)) {
             std::cout << "FAIL (single compile: " << single.getLastError() << ")" << std::endl;
             return false;
@@ -276,7 +276,7 @@ bool testSingleScriptVsPipeline() {
         Vec3 singleVec = singleResult.asVec3();
         
         // Pipeline approach
-        HighPerfParser stage1, stage2, stage3;
+        BytecodeParser stage1, stage2, stage3;
         if (!stage1.compile(script1) || !stage2.compile(script2) || !stage3.compile(script3)) {
             std::cout << "FAIL (pipeline compile)" << std::endl;
             return false;
@@ -333,7 +333,7 @@ bool testMixedTypePipeline() {
     
     try {
         // Stage 1: Create color
-        HighPerfParser stage1;
+        BytecodeParser stage1;
         if (!stage1.compile(stage1Script)) {
             std::cout << "FAIL (stage1 compile: " << stage1.getLastError() << ")" << std::endl;
             return false;
@@ -348,7 +348,7 @@ bool testMixedTypePipeline() {
         Vec3 color = result1.asVec3();
         
         // Stage 2: Add alpha
-        HighPerfParser stage2;
+        BytecodeParser stage2;
         if (!stage2.compile(stage2Script)) {
             std::cout << "FAIL (stage2 compile: " << stage2.getLastError() << ")" << std::endl;
             return false;
@@ -363,7 +363,7 @@ bool testMixedTypePipeline() {
         Vec4 colorWithAlpha = result2.asVec4();
         
         // Stage 3: Premultiply
-        HighPerfParser stage3;
+        BytecodeParser stage3;
         if (!stage3.compile(stage3Script)) {
             std::cout << "FAIL (stage3 compile: " << stage3.getLastError() << ")" << std::endl;
             return false;

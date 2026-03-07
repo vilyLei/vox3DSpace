@@ -82,10 +82,10 @@ private:
     // Command pool needed for buffer copy operations
     vk::CommandPool                      commandPool_;
 
-    mmrsl::HighPerfParser                colorParser_;
-    mmrsl::HighPerfParser                rotParser_;
-    mmrsl::HighPerfParser                posParser_;
-    mmrsl::HighPerfParser                scaleParser_;
+    mmrsl::BytecodeParser                colorParser_;
+    mmrsl::BytecodeParser                rotParser_;
+    mmrsl::BytecodeParser                posParser_;
+    mmrsl::BytecodeParser                scaleParser_;
     bool                                 hasPositionScript_ = false;
     bool                                 hasScaleScript_    = false;
 

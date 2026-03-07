@@ -5,7 +5,7 @@
 #include <stdexcept>
 
 namespace mmrsl {
-namespace highPerf {
+namespace bytecode {
 
 // VM execution limits for DoS protection
 // Max VM instructions executed per function call (DoS protection).
@@ -245,5 +245,5 @@ private:
     void setError(const std::string& msg);
 };
 
-} // namespace highPerf
+} // namespace bytecode
 } // namespace mmrsl

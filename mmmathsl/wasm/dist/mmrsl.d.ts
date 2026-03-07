@@ -12,7 +12,7 @@ export interface ClassHandle {
   [Symbol.dispose](): void;
   clone(): this;
 }
-export interface HighPerfParser extends ClassHandle {
+export interface BytecodeParser extends ClassHandle {
   compile(_0: EmbindString): boolean;
   execute(_0: any): any;
   compileAndExecute(_0: EmbindString, _1: any): any;
@@ -24,21 +24,9 @@ export interface HighPerfParser extends ClassHandle {
   getBytecodeDisassembly(): string;
 }
 
-export interface SimpleParser extends ClassHandle {
-  compile(_0: EmbindString): boolean;
-  execute(_0: any): any;
-  compileAndExecute(_0: EmbindString, _1: any): any;
-  getLastError(): string;
-  isCompiled(): boolean;
-  getFunctionName(): string;
-}
-
 interface EmbindModule {
-  HighPerfParser: {
-    new(): HighPerfParser;
-  };
-  SimpleParser: {
-    new(): SimpleParser;
+  BytecodeParser: {
+    new(): BytecodeParser;
   };
 }
 

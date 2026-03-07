@@ -33,9 +33,9 @@ set(SOURCES
     simple/src/lexer.cpp
     simple/src/parser.cpp
     simple/src/interpreter.cpp
-    high_perf/src/bytecode.cpp
-    high_perf/src/vm.cpp
-    high_perf/src/compiler.cpp
+    bytecode/src/bytecode.cpp
+    bytecode/src/vm.cpp
+    bytecode/src/compiler.cpp
 )
 
 # Create unified static library
@@ -65,50 +65,50 @@ add_executable(mmrsl_test simple/tests/test_main.cpp)
 target_link_libraries(mmrsl_test PRIVATE mmrsl)
 
 # High-performance version test executable
-add_executable(mmrsl_hp_test high_perf/tests/test_hp_main.cpp)
-target_link_libraries(mmrsl_hp_test PRIVATE mmrsl)
+add_executable(mmrsl_bc_test bytecode/tests/test_hp_main.cpp)
+target_link_libraries(mmrsl_bc_test PRIVATE mmrsl)
 
-# High-performance version stress test executable
-add_executable(mmrsl_hp_stress high_perf/tests/test_hp_stress.cpp)
-target_link_libraries(mmrsl_hp_stress PRIVATE mmrsl)
+# Bytecode VM stress test executable
+add_executable(mmrsl_bc_stress bytecode/tests/test_hp_stress.cpp)
+target_link_libraries(mmrsl_bc_stress PRIVATE mmrsl)
 
-# High-performance version complex expression test executable
-add_executable(mmrsl_hp_complex high_perf/tests/test_hp_complex.cpp)
-target_link_libraries(mmrsl_hp_complex PRIVATE mmrsl)
+# Bytecode VM complex expression test executable
+add_executable(mmrsl_bc_complex bytecode/tests/test_hp_complex.cpp)
+target_link_libraries(mmrsl_bc_complex PRIVATE mmrsl)
 
-# High-performance version built-in functions test executable
-add_executable(mmrsl_hp_builtin high_perf/tests/test_hp_builtin.cpp)
-target_link_libraries(mmrsl_hp_builtin PRIVATE mmrsl)
+# Bytecode VM built-in functions test executable
+add_executable(mmrsl_bc_builtin bytecode/tests/test_hp_builtin.cpp)
+target_link_libraries(mmrsl_bc_builtin PRIVATE mmrsl)
 
-# High-performance version pipeline test executable
-add_executable(mmrsl_hp_pipeline high_perf/tests/test_hp_pipeline.cpp)
-target_link_libraries(mmrsl_hp_pipeline PRIVATE mmrsl)
+# Bytecode VM pipeline test executable
+add_executable(mmrsl_bc_pipeline bytecode/tests/test_hp_pipeline.cpp)
+target_link_libraries(mmrsl_bc_pipeline PRIVATE mmrsl)
 
-# High-performance version ternary operator test executable
-add_executable(mmrsl_hp_ternary high_perf/tests/test_hp_ternary.cpp)
-target_link_libraries(mmrsl_hp_ternary PRIVATE mmrsl)
+# Bytecode VM ternary operator test executable
+add_executable(mmrsl_bc_ternary bytecode/tests/test_hp_ternary.cpp)
+target_link_libraries(mmrsl_bc_ternary PRIVATE mmrsl)
 
-# High-performance version for loop test executable
-add_executable(mmrsl_hp_for_loop high_perf/tests/test_hp_for_loop.cpp)
-target_link_libraries(mmrsl_hp_for_loop PRIVATE mmrsl)
+# Bytecode VM for loop test executable
+add_executable(mmrsl_bc_for_loop bytecode/tests/test_hp_for_loop.cpp)
+target_link_libraries(mmrsl_bc_for_loop PRIVATE mmrsl)
 
 # Apply UTF-8 encoding to all test executables on MSVC
 if(MSVC)
     target_compile_options(mmrsl_test PRIVATE /utf-8)
-    target_compile_options(mmrsl_hp_test PRIVATE /utf-8)
-    target_compile_options(mmrsl_hp_stress PRIVATE /utf-8)
-    target_compile_options(mmrsl_hp_complex PRIVATE /utf-8)
-    target_compile_options(mmrsl_hp_builtin PRIVATE /utf-8)
-    target_compile_options(mmrsl_hp_pipeline PRIVATE /utf-8)
-    target_compile_options(mmrsl_hp_ternary PRIVATE /utf-8)
-    target_compile_options(mmrsl_hp_for_loop PRIVATE /utf-8)
+    target_compile_options(mmrsl_bc_test PRIVATE /utf-8)
+    target_compile_options(mmrsl_bc_stress PRIVATE /utf-8)
+    target_compile_options(mmrsl_bc_complex PRIVATE /utf-8)
+    target_compile_options(mmrsl_bc_builtin PRIVATE /utf-8)
+    target_compile_options(mmrsl_bc_pipeline PRIVATE /utf-8)
+    target_compile_options(mmrsl_bc_ternary PRIVATE /utf-8)
+    target_compile_options(mmrsl_bc_for_loop PRIVATE /utf-8)
 endif()
 
 # Link Windows PSAPI for memory monitoring
 if(WIN32)
-    target_link_libraries(mmrsl_hp_stress PRIVATE psapi)
-    target_link_libraries(mmrsl_hp_complex PRIVATE psapi)
-    target_link_libraries(mmrsl_hp_builtin PRIVATE psapi)
+    target_link_libraries(mmrsl_bc_stress PRIVATE psapi)
+    target_link_libraries(mmrsl_bc_complex PRIVATE psapi)
+    target_link_libraries(mmrsl_bc_builtin PRIVATE psapi)
 endif()
 
 # ============================================================================
@@ -120,16 +120,8 @@ set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT m
 # WASM target (only when building with Emscripten)
 # ============================================================================
 if(EMSCRIPTEN)
-    # WASM-only slim source set: exclude SimpleParser/Interpreter to minimize output size
-    set(WASM_SOURCES
-        src/mmrsl.cpp
-        simple/src/types.cpp
-        high_perf/src/bytecode.cpp
-        high_perf/src/vm.cpp
-        high_perf/src/compiler.cpp
-    )
-
-    add_executable(mmrsl_wasm wasm/mmrsl_wasm_bridge.cpp ${WASM_SOURCES})
+    add_executable(mmrsl_wasm wasm/mmrsl_wasm_bridge.cpp)
+    target_link_libraries(mmrsl_wasm PRIVATE mmrsl)
     target_include_directories(mmrsl_wasm PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/include
     )

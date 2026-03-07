@@ -29,7 +29,7 @@ bool floatEquals(float a, float b, float epsilon = 0.0001f) {
 
 // Test 1: Basic ternary with true condition
 void testBasicTernaryTrue() {
-    HighPerfParser parser;
+    BytecodeParser parser;
     std::string source = R"(
         float test(float x) {
             return x > 0.0 ? 1.0 : 0.0;
@@ -47,7 +47,7 @@ void testBasicTernaryTrue() {
 
 // Test 2: Basic ternary with false condition
 void testBasicTernaryFalse() {
-    HighPerfParser parser;
+    BytecodeParser parser;
     std::string source = R"(
         float test(float x) {
             return x > 0.0 ? 1.0 : 0.0;
@@ -65,7 +65,7 @@ void testBasicTernaryFalse() {
 
 // Test 3: Ternary with expressions in branches
 void testTernaryWithExpressions() {
-    HighPerfParser parser;
+    BytecodeParser parser;
     std::string source = R"(
         float test(float a, float b) {
             return a > b ? a * 2.0 : b * 3.0;
@@ -83,7 +83,7 @@ void testTernaryWithExpressions() {
 
 // Test 4: Nested ternary operator
 void testNestedTernary() {
-    HighPerfParser parser;
+    BytecodeParser parser;
     std::string source = R"(
         float test(float x) {
             return x > 10.0 ? 3.0 : (x > 5.0 ? 2.0 : 1.0);
@@ -110,7 +110,7 @@ void testNestedTernary() {
 
 // Test 5: Ternary with logical operators in condition
 void testTernaryWithLogicalOps() {
-    HighPerfParser parser;
+    BytecodeParser parser;
     std::string source = R"(
         float test(float x, float y) {
             return (x > 0.0 && y > 0.0) ? 1.0 : 0.0;
@@ -137,7 +137,7 @@ void testTernaryWithLogicalOps() {
 
 // Test 6: Ternary with vec3 return type (true branch)
 void testTernaryWithVec3True() {
-    HighPerfParser parser;
+    BytecodeParser parser;
     std::string source = R"(
         vec3 test(float x) {
             return x > 0.0 ? vec3(1.0, 0.0, 0.0) : vec3(0.0, 1.0, 0.0);
@@ -157,7 +157,7 @@ void testTernaryWithVec3True() {
 
 // Test 7: Ternary with vec3 false branch
 void testTernaryWithVec3False() {
-    HighPerfParser parser;
+    BytecodeParser parser;
     std::string source = R"(
         vec3 test(float x) {
             return x > 0.0 ? vec3(1.0, 0.0, 0.0) : vec3(0.0, 1.0, 0.0);
@@ -177,7 +177,7 @@ void testTernaryWithVec3False() {
 
 // Test 8: Ternary with comparison operators
 void testTernaryWithComparisons() {
-    HighPerfParser parser;
+    BytecodeParser parser;
     std::string source = R"(
         float test(float x) {
             return x >= 5.0 ? 10.0 : (x <= 2.0 ? 1.0 : 5.0);
@@ -204,7 +204,7 @@ void testTernaryWithComparisons() {
 
 // Test 9: Ternary in variable initialization
 void testTernaryInVarInit() {
-    HighPerfParser parser;
+    BytecodeParser parser;
     std::string source = R"(
         float test(float x) {
             float result = x > 5.0 ? 100.0 : 50.0;
@@ -228,7 +228,7 @@ void testTernaryInVarInit() {
 
 // Test 10: Ternary with equality check
 void testTernaryWithEquality() {
-    HighPerfParser parser;
+    BytecodeParser parser;
     std::string source = R"(
         float test(float x) {
             return x == 5.0 ? 1.0 : 0.0;
@@ -251,7 +251,7 @@ void testTernaryWithEquality() {
 
 // Test 11: Ternary with float return in both branches (absolute value)
 void testTernaryFloatBranches() {
-    HighPerfParser parser;
+    BytecodeParser parser;
     std::string source = R"(
         float test(float x) {
             return x < 0.0 ? -x : x;
@@ -274,7 +274,7 @@ void testTernaryFloatBranches() {
 
 // Test 12: Ternary with complex condition
 void testTernaryComplexCondition() {
-    HighPerfParser parser;
+    BytecodeParser parser;
     std::string source = R"(
         float test(float x, float y, float z) {
             return (x > y || y > z) ? x + y : y + z;

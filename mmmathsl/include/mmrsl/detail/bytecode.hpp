@@ -6,7 +6,7 @@
 #include <string>
 
 namespace mmrsl {
-namespace highPerf {
+namespace bytecode {
 
 // Bytecode opcodes - type specialized for performance
 enum class OpCode : uint8_t {
@@ -282,5 +282,5 @@ struct BytecodeFunction {
 // Convert opcode to string for debugging
 const char* opcodeToString(OpCode op);
 
-} // namespace highPerf
+} // namespace bytecode
 } // namespace mmrsl
