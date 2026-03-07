@@ -54,4 +54,6 @@ voxol/buildvs/
 mmmathsl/build/
 mmmathsl/vkapp/build/
 mmmathsl/vkapp/_deps/
+mmmathsl/wasm/build/
+mmmathsl/wasm/dst/
 *.code-workspace

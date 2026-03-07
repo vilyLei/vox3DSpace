@@ -115,3 +115,48 @@ endif()
 # Visual Studio specific settings
 # ============================================================================
 set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT mmrsl_test)
+
+# ============================================================================
+# WASM target (only when building with Emscripten)
+# ============================================================================
+if(EMSCRIPTEN)
+    # WASM-only slim source set: exclude SimpleParser/Interpreter to minimize output size
+    set(WASM_SOURCES
+        src/mmrsl.cpp
+        simple/src/types.cpp
+        high_perf/src/bytecode.cpp
+        high_perf/src/vm.cpp
+        high_perf/src/compiler.cpp
+    )
+
+    add_executable(mmrsl_wasm wasm/mmrsl_wasm_bridge.cpp ${WASM_SOURCES})
+    target_include_directories(mmrsl_wasm PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}/include
+    )
+
+    # Embind + exception support + optimization
+    target_compile_options(mmrsl_wasm PRIVATE
+        -std=c++20
+        -O2
+        -fexceptions
+    )
+    target_link_options(mmrsl_wasm PRIVATE
+        --bind                          # enable Embind
+        -fexceptions                    # C++ exception support across WASM boundary
+        -sEXPORT_ES6=1                  # output ES6 module
+        -sMODULARIZE=1                  # wrap in factory function: createMmrslModule()
+        -sEXPORT_NAME=createMmrslModule
+        -sALLOW_MEMORY_GROWTH=1         # dynamic heap growth
+        -sINITIAL_MEMORY=33554432       # 32MB initial heap
+        -sENVIRONMENT=web,worker,node  # target web + web worker + node (for testing)
+        "--emit-tsd=mmrsl.d.ts"         # generate TypeScript type declarations
+    )
+
+    # Output to wasm/dist/
+    set_target_properties(mmrsl_wasm PROPERTIES
+        RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/wasm/dist"
+        OUTPUT_NAME "mmrsl"
+        SUFFIX ".js"
+    )
+endif()
+
